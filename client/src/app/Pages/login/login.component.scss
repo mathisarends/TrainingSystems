@@ -1,0 +1,26 @@
+.centered-form {
+  height: 75vh;
+}
+.custom-form {
+  width: 100%;
+  max-width: 500px;
+  padding: 4rem 2rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.65rem;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.custom-form h2 {
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  text-align: center;
+}
+.custom-form .btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  width: 100%;
+}
+.custom-form .form-text {
+  font-size: 0.875rem;
+  color: #6c757d;
+}
