@@ -25,4 +25,21 @@ export class RegisterComponent {
       console.error('Navigation error:', error);
     }
   }
+
+  togglePasswordVisibility(event: Event): void {
+    const eyeIcon = event.target as HTMLElement;
+    const pwField = eyeIcon.parentElement?.querySelector(
+      '.password'
+    ) as HTMLInputElement;
+
+    if (pwField) {
+      if (pwField.type === 'password') {
+        pwField.type = 'text';
+        eyeIcon.classList.replace('bx-hide', 'bx-show');
+      } else {
+        pwField.type = 'password';
+        eyeIcon.classList.replace('bx-show', 'bx-hide');
+      }
+    }
+  }
 }

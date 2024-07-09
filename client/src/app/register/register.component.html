@@ -16,6 +16,10 @@
             placeholder="Create password"
             class="password"
           />
+          <i
+            class="bx bx-hide eye-icon"
+            (click)="togglePasswordVisibility($event)"
+          ></i>
         </div>
         <div class="field input-field">
           <input
@@ -23,7 +27,10 @@
             placeholder="Confirm password"
             class="password"
           />
-          <i class="bx bx-hide eye-icon"></i>
+          <i
+            class="bx bx-hide eye-icon"
+            (click)="togglePasswordVisibility($event)"
+          ></i>
         </div>
         <div class="field button-field">
           <button>Signup</button>

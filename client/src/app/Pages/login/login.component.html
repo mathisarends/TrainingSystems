@@ -8,7 +8,10 @@
         </div>
         <div class="field input-field">
           <input type="password" placeholder="Password" class="password" />
-          <i class="bx bx-hide eye-icon"></i>
+          <i
+            class="bx bx-hide eye-icon"
+            (click)="togglePasswordVisibility($event)"
+          ></i>
         </div>
         <div class="form-link">
           <a href="#" class="forgot-pass">Forgot password?</a>

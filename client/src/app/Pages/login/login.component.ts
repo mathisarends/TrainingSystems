@@ -25,4 +25,21 @@ export class LoginComponent {
       console.error('Navigation error:', error);
     }
   }
+
+  togglePasswordVisibility(event: Event): void {
+    const eyeIcon = event.target as HTMLElement;
+    const pwFields =
+      eyeIcon.parentElement?.parentElement?.querySelectorAll('.password');
+    pwFields?.forEach((password) => {
+      if (password instanceof HTMLInputElement) {
+        if (password.type === 'password') {
+          password.type = 'text';
+          eyeIcon.classList.replace('bx-hide', 'bx-show');
+        } else {
+          password.type = 'password';
+          eyeIcon.classList.replace('bx-show', 'bx-hide');
+        }
+      }
+    });
+  }
 }
