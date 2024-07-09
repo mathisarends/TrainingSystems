@@ -1,8 +1,15 @@
-import { Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { ModalService } from '../../../service/modalService';
 import { LoginComponent } from '../../Pages/login/login.component';
+import { AuthenticatorService } from '../../auth/authenticator.service';
 
 @Component({
   selector: 'app-header',
@@ -11,15 +18,36 @@ import { LoginComponent } from '../../Pages/login/login.component';
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   @ViewChildren('navLink') navLinks!: QueryList<ElementRef>;
 
-  constructor(private router: Router, private modalService: ModalService) {
+  isAuthenticated: boolean = false;
+
+  constructor(
+    private router: Router,
+    private modalService: ModalService,
+    private authService: AuthenticatorService
+  ) {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
         this.updateActiveLink();
       });
+  }
+
+  ngOnInit(): void {
+    // Abonnieren des Anmeldestatus
+    this.authService.isAuthenticated$.subscribe((status) => {
+      console.log(
+        '🚀 ~ HeaderComponent ~ this.authService.isAuthenticated$.subscribe ~ status:',
+        status
+      );
+      this.isAuthenticated = status;
+      console.log(
+        '🚀 ~ HeaderComponent ~ this.authService.isAuthenticated$.subscribe ~ this.isAuthenticated:',
+        this.isAuthenticated
+      );
+    });
   }
 
   async navigateTo(event: Event) {
@@ -44,10 +72,6 @@ export class HeaderComponent {
     });
   }
 
-  test() {
-    this.modalService.open(LoginComponent, 'Login', 'Anmelden');
-  }
-
   updateActiveLink() {
     this.removeActiveState();
     const currentUrl = this.router.url;
@@ -58,5 +82,22 @@ export class HeaderComponent {
         linkElement.classList.add('active');
       }
     });
+  }
+
+  handleLogin(event: Event) {
+    event.preventDefault();
+
+    this.router.navigate(['login']);
+  }
+
+  handleLogout(event: Event) {
+    event.preventDefault();
+    // handle real logout here, if sucessful represent state in header
+    this.authService.logout();
+  }
+
+  // how to call modal Service
+  test() {
+    this.modalService.open(LoginComponent, 'Login', 'Anmelden');
   }
 }
