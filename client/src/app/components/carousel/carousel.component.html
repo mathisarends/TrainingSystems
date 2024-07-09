@@ -1,7 +1,7 @@
 <div id="carouselExampleCaptions" class="carousel slide h-100">
   <div class="carousel-indicators">
+    @for (slide of slides; track slide; let i = $index) {
     <button
-      *ngFor="let slide of slides; let i = index"
       type="button"
       data-bs-target="#carouselExampleCaptions"
       [attr.data-bs-slide-to]="i"
@@ -9,19 +9,18 @@
       [attr.aria-current]="i === 0 ? 'true' : null"
       [attr.aria-label]="'Slide ' + (i + 1)"
     ></button>
+    }
   </div>
   <div class="carousel-inner h-100">
-    <div
-      *ngFor="let slide of slides; let i = index"
-      class="carousel-item h-100"
-      [class.active]="i === 0"
-    >
+    @for (slide of slides; track slide; let i = $index) {
+    <div class="carousel-item h-100" [class.active]="i === 0">
       <img [src]="slide.image" class="d-block w-100 h-100" [alt]="slide.alt" />
       <div class="carousel-caption d-none d-md-block">
         <h5>{{ slide.label }}</h5>
         <p>{{ slide.text }}</p>
       </div>
     </div>
+    }
   </div>
   <button
     class="carousel-control-prev"

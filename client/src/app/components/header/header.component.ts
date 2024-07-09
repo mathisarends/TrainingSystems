@@ -38,15 +38,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     // Abonnieren des Anmeldestatus
     this.authService.isAuthenticated$.subscribe((status) => {
-      console.log(
-        '🚀 ~ HeaderComponent ~ this.authService.isAuthenticated$.subscribe ~ status:',
-        status
-      );
       this.isAuthenticated = status;
-      console.log(
-        '🚀 ~ HeaderComponent ~ this.authService.isAuthenticated$.subscribe ~ this.isAuthenticated:',
-        this.isAuthenticated
-      );
     });
   }
 

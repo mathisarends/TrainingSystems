@@ -94,7 +94,11 @@
           class="dropdown-menu text-small shadow"
           aria-labelledby="dropdownUser2"
         >
-          <li><a class="dropdown-item" href="#">Profile</a></li>
+          <li>
+            <a class="dropdown-item" href="profile" (click)="navigateTo($event)"
+              >Profile</a
+            >
+          </li>
           <li><hr class="dropdown-divider" /></li>
           @if (isAuthenticated) {
           <li>
