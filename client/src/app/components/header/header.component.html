@@ -24,21 +24,39 @@
         aria-labelledby="dropdownNavLink"
       >
         <li>
-          <a class="dropdown-item" [routerLink]="['/']" aria-current="page"
+          <a
+            href="/"
+            #navLink
+            class="dropdown-item"
+            (click)="navigateTo($event)"
             >Übersicht</a
           >
         </li>
         <li>
-          <a class="dropdown-item" [routerLink]="['/training']"
+          <a
+            href="/training"
+            #navLink
+            class="dropdown-item"
+            (click)="navigateTo($event)"
             >Trainingspläne</a
           >
         </li>
         <li>
-          <a class="dropdown-item" [routerLink]="['/volume']">Volumenrechner</a>
+          <a
+            href="/volume"
+            #navLink
+            class="dropdown-item"
+            (click)="navigateTo($event)"
+            >Volumenrechner</a
+          >
         </li>
         <li><hr class="dropdown-divider" /></li>
         <li>
-          <a class="dropdown-item" [routerLink]="['/statistics']"
+          <a
+            href="/statistics"
+            #navLink
+            class="dropdown-item"
+            (click)="navigateTo($event)"
             >Statistiken</a
           >
         </li>
@@ -58,6 +76,7 @@
       <div class="flex-shrink-0 dropdown">
         <a
           href="#"
+          #navLink
           class="d-block link-dark text-decoration-none dropdown-toggle"
           id="dropdownUser2"
           data-bs-toggle="dropdown"
