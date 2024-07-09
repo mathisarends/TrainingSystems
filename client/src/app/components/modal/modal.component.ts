@@ -18,6 +18,8 @@ import { ModalService } from '../../../service/modalService';
 })
 export class ModalComponent implements OnInit, AfterViewInit {
   @Input() title: string = 'Default Title';
+  @Input() confirmButtonText: string = 'Submit';
+
   @Input() childComponentType!: any;
   @ViewChild('modalContent', { read: ViewContainerRef })
   modalContent!: ViewContainerRef;

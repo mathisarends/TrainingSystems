@@ -1,3 +1,7 @@
 header {
   padding-inline: 7.5%;
 }
+
+.blur-background > *:not(app-modal) {
+  filter: blur(3.5px);
+}

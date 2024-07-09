@@ -45,7 +45,7 @@ export class HeaderComponent {
   }
 
   test() {
-    this.modalService.open(LoginComponent, 'Login');
+    this.modalService.open(LoginComponent, 'Login', 'Anmelden');
   }
 
   updateActiveLink() {
