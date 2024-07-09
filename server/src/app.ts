@@ -2,10 +2,10 @@ import express, { Express } from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import http from 'node:http';
-
 import config from '../config.json' assert { type: 'json' };
+import startDB from './db.js';
 
-function configureApp(app: Express) {
+async function configureApp(app: Express) {
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
   app.use(cookieParser());
@@ -18,7 +18,8 @@ function configureApp(app: Express) {
 
 export async function start() {
   const app = express();
-  configureApp(app);
+  await configureApp(app);
+  await startDB(app);
   startHttpServer(app, config.server.port);
 }
 

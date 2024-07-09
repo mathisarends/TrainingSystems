@@ -9,5 +9,7 @@ coverage/
 # Mac only
 .DS_Store
 
+.env
+
 
 
