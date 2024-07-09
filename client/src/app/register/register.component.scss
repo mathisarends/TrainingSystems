@@ -21,10 +21,6 @@
   background: #fff;
   border: 1px solid rgb(226, 226, 226);
 }
-.form.signup {
-  opacity: 0;
-  pointer-events: none;
-}
 .forms.show-signup .form.signup {
   opacity: 1;
   pointer-events: auto;
