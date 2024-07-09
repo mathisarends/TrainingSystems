@@ -1,6 +1,8 @@
 import { Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { ModalService } from '../../../service/modalService';
+import { LoginComponent } from '../../Pages/login/login.component';
 
 @Component({
   selector: 'app-header',
@@ -12,7 +14,7 @@ import { filter } from 'rxjs/operators';
 export class HeaderComponent {
   @ViewChildren('navLink') navLinks!: QueryList<ElementRef>;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private modalService: ModalService) {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -40,6 +42,10 @@ export class HeaderComponent {
     this.navLinks.forEach((link) => {
       link.nativeElement.classList.remove('active');
     });
+  }
+
+  test() {
+    this.modalService.open(LoginComponent, 'Login');
   }
 
   updateActiveLink() {
