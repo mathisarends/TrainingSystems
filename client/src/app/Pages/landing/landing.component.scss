@@ -1,3 +1,33 @@
 /* #carouselExampleCaptions {
   padding-inline: 7.5%;
 } */
+
+/* #landing-container {
+
+} */
+
+.landing-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  padding-inline: 7.5%;
+}
+
+.carousel-item img {
+  object-fit: cover;
+  width: 100%;
+}
+
+.carousel-item {
+  min-height: 400px; /* Setze eine Mindesthöhe für das Carousel */
+}
+
+.hero-section {
+  min-height: 400px; /* Gleiche Mindesthöhe wie das Carousel */
+}
+
+@media (max-width: 1368px) {
+  .landing-grid {
+    grid-template-columns: 1fr;
+  }
+}
