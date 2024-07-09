@@ -10,6 +10,10 @@ function configureApp(app: Express) {
   app.use(express.json());
   app.use(cookieParser());
   app.use(cors());
+
+  app.get('/', (req, res) => {
+    res.json({ message: 'Hallo ich bin die Welt' });
+  });
 }
 
 export async function start() {

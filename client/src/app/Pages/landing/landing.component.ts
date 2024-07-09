@@ -21,14 +21,9 @@ export class LandingComponent {
   }
 
   getData() {
-    this.httpClient
-      .request<any>(
-        HttpMethods.GET,
-        'https://jsonplaceholder.typicode.com/posts'
-      )
-      .subscribe((response) => {
-        console.log('GET response', response);
-      });
+    this.httpClient.request<any>(HttpMethods.GET, '').subscribe((response) => {
+      console.log('GET response', response);
+    });
   }
 
   carouselSlides: Slide[] = [
