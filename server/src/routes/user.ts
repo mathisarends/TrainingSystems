@@ -12,9 +12,12 @@ const router = express.Router();
  */
 router.post('/register', async (req, res) => {
   const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
+  console.log('test');
 
-  if (req.body.password !== req.body.repeatPassword) {
-    res.status(400).json({ error: 'Die angegebenen Passwörter stimmen nicht überein' });
+  console.log(req.body);
+
+  if (req.body.password !== req.body.confirmPassword) {
+    return res.status(400).json({ error: 'Die angegebenen Passwörter stimmen nicht überein' });
   }
 
   try {
@@ -22,11 +25,11 @@ router.post('/register', async (req, res) => {
     const user = await userDAO.findOne(filter);
 
     if (user) {
-      res.status(409).json({ error: 'Es existiert bereits ein Benutzer mit diesem Namen' });
+      return res.status(409).json({ error: 'Es existiert bereits ein Benutzer mit diesem Namen' });
     }
 
     if (!validateUsername(req.body.username!)) {
-      res.status(400).json({ error: 'Der Nutzername muss mindestens 3 Zeichen lang sein' });
+      return res.status(400).json({ error: 'Der Nutzername muss mindestens 3 Zeichen lang sein' });
     }
 
     const userObj: Omit<User, 'id' | 'createdAt'> = {

@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpClientService } from '../../../service/http-client.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { HttpMethods } from '../../types/httpMethods';
 
 @Component({
   selector: 'app-login',
@@ -9,7 +12,7 @@ import { Router } from '@angular/router';
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private httpClient: HttpClientService) {}
 
   async navigateTo(event: Event) {
     event.preventDefault();
@@ -41,5 +44,39 @@ export class LoginComponent {
         }
       }
     });
+  }
+
+  async onSubmit(event: Event) {
+    event.preventDefault();
+
+    const form = event.target as HTMLFormElement;
+    const formData = new FormData(form);
+    const data = {
+      email: formData.get('email'),
+      password: formData.get('password'),
+    };
+
+    try {
+      this.httpClient
+        .request<any>(HttpMethods.POST, 'user/login', data)
+        .subscribe({
+          next: (response: Response) => {
+            console.log('Login successful:', response);
+            this.router.navigate(['/']);
+          },
+          error: (error: HttpErrorResponse) => {
+            console.error('Login error:', error);
+            if (error.status === 401) {
+              console.log('Unauthorized: Wrong credentials');
+            } else if (error.status === 400) {
+              console.log('Bad request:', error.error);
+            } else {
+              console.log('An unknown error occurred');
+            }
+          },
+        });
+    } catch (error) {
+      console.error('Unexpected error:', error);
+    }
   }
 }

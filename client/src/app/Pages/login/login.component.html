@@ -2,7 +2,7 @@
   <div class="form login">
     <div class="form-content">
       <header>Login</header>
-      <form action="#">
+      <form (submit)="onSubmit($event)">
         <div class="field input-field">
           <input type="email" placeholder="Email" class="input" name="email" />
         </div>

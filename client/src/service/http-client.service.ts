@@ -14,6 +14,7 @@ import { environment } from '../app/config/environment';
 })
 export class HttpClientService {
   private baseUrl: string = environment.apiUrl;
+
   constructor(private http: HttpClient) {}
 
   /**
@@ -37,21 +38,28 @@ export class HttpClientService {
   ): Observable<T> {
     const fullUrl = `${this.baseUrl}/${url}`;
 
+    const options = {
+      body,
+      params,
+      headers,
+      withCredentials: true,
+    };
+
     switch (method) {
       case HttpMethods.GET:
-        return this.http.get<T>(fullUrl, { params, headers });
+        return this.http.get<T>(fullUrl, { ...options });
       case HttpMethods.POST:
-        return this.http.post<T>(fullUrl, body, { headers });
+        return this.http.post<T>(fullUrl, body, options);
       case HttpMethods.PUT:
-        return this.http.put<T>(fullUrl, body, { headers });
+        return this.http.put<T>(fullUrl, body, options);
       case HttpMethods.DELETE:
-        return this.http.delete<T>(fullUrl, { params, headers });
+        return this.http.delete<T>(fullUrl, { ...options });
       case HttpMethods.PATCH:
-        return this.http.patch<T>(fullUrl, body, { headers });
+        return this.http.patch<T>(fullUrl, body, options);
       case HttpMethods.HEAD:
-        return this.http.head<T>(fullUrl, { params, headers });
+        return this.http.head<T>(fullUrl, { ...options });
       case HttpMethods.OPTIONS:
-        return this.http.options<T>(fullUrl, { params, headers });
+        return this.http.options<T>(fullUrl, { ...options });
       default:
         throw new Error('Invalid HTTP method');
     }
