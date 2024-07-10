@@ -24,6 +24,11 @@ async function configureApp(app: Express) {
   app.get('/', (req, res) => {
     res.json({ message: 'Hallo ich bin die Welt' });
   });
+
+  app.post('/api/login', async (req, res) => {
+    console.log(req.body);
+    res.redirect('http://localhost:4200/');
+  });
 }
 
 export async function start() {
