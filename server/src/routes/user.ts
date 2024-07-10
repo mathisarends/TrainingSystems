@@ -3,6 +3,12 @@ import { MongoGenericDAO } from '../models/mongo-generic.dao.js';
 import { User } from '../models/user.js';
 import bcrypt from 'bcryptjs';
 import { authService } from '../service/authService.js';
+import { OAuth2Client } from 'google-auth-library';
+
+import dotenv from 'dotenv';
+dotenv.config();
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const router = express.Router();
 
@@ -59,7 +65,7 @@ router.post('/login', async (req, res) => {
     const filter: Partial<User> = { email: req.body.email };
     const user = await userDAO.findOne(filter);
 
-    if (!user || !(await bcrypt.compare(req.body.password, user.password))) {
+    if (!user || !(await bcrypt.compare(req.body.password, user.password!))) {
       authService.removeToken(res);
       res.status(401).json({ error: 'Keine gültige Email und Passwort Kombination' });
     }
@@ -69,6 +75,45 @@ router.post('/login', async (req, res) => {
   } catch (error) {
     console.error(`Error while trying to login ${error}`);
     res.status(500).json({ error: error });
+  }
+});
+
+router.post('/login/oauth2', async (req, res) => {
+  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
+  const token = req.body.credential;
+
+  try {
+    const ticket = await googleClient.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID
+    });
+    const payload = ticket.getPayload();
+
+    if (!payload) {
+      return res.status(401).json({ error: 'Invalid Google token' });
+    }
+    /* const { sub, email, name, picture } = payload; */ // maybe use sub and picture in the future
+    const { email, name } = payload;
+
+    const filter: Partial<User> = { email: req.body.email };
+    const user = await userDAO.findOne(filter);
+
+    if (!user && name && email) {
+      // user ist nicht vorhanden hier dann neuen erstellen
+      const userObj: Omit<User, 'id' | 'createdAt'> = {
+        username: name,
+        email: email
+      };
+
+      const createdUser = await userDAO.create(userObj);
+      authService.createAndSetToken({ id: createdUser.id }, res);
+    } else if (user) {
+      authService.createAndSetToken({ id: user.id }, res);
+    }
+    res.redirect('http://localhost:4200');
+  } catch (error) {
+    console.error('Error during Google login', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 

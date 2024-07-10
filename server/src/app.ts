@@ -2,11 +2,13 @@ import express, { Express } from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import http from 'node:http';
+import dotenv from 'dotenv';
 import config from '../config.json' assert { type: 'json' };
 import startDB from './db.js';
 
 // Routers
 import userRouter from './routes/user.js';
+dotenv.config();
 
 async function configureApp(app: Express) {
   app.use(express.urlencoded({ extended: true }));
@@ -23,11 +25,6 @@ async function configureApp(app: Express) {
 
   app.get('/', (req, res) => {
     res.json({ message: 'Hallo ich bin die Welt' });
-  });
-
-  app.post('/api/login', async (req, res) => {
-    console.log(req.body);
-    res.redirect('http://localhost:4200/');
   });
 }
 

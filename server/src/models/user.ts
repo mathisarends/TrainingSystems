@@ -19,7 +19,7 @@ export interface User extends Entity {
   email: string;
 
   /**
-   * The password of the user.
+   * The password of the user. If logged in with google its not required
    */
-  password: string;
+  password?: string;
 }
