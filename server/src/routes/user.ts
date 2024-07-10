@@ -95,7 +95,7 @@ router.post('/login/oauth2', async (req, res) => {
     /* const { sub, email, name, picture } = payload; */ // maybe use sub and picture in the future
     const { email, name } = payload;
 
-    const filter: Partial<User> = { email: req.body.email };
+    const filter: Partial<User> = { email: email };
     const user = await userDAO.findOne(filter);
 
     if (!user && name && email) {
