@@ -5,11 +5,16 @@ import http from 'node:http';
 import config from '../config.json' assert { type: 'json' };
 import startDB from './db.js';
 
+// Routers
+import userRouter from './routes/user.js';
+
 async function configureApp(app: Express) {
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
   app.use(cookieParser());
   app.use(cors());
+
+  app.use('/user', userRouter);
 
   app.get('/', (req, res) => {
     res.json({ message: 'Hallo ich bin die Welt' });
