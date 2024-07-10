@@ -1,0 +1,98 @@
+<div class="row no-gutters">
+  <div class="col-md-12">
+    <div class="card-body">
+      <form id="create-training-form">
+        <!-- Platzhalterbild -->
+        <div class="form-group text-center mb-4 position-relative">
+          <img
+            src="https://via.placeholder.com/150"
+            alt="Cover Bild Platzhalter"
+            id="cover-image"
+            class="img-fluid mb-2"
+            style="width: 150px; height: 150px; cursor: pointer"
+          />
+          <input
+            type="file"
+            id="cover-image-input"
+            class="form-control-file position-absolute"
+            style="
+              opacity: 0;
+              width: 150px;
+              height: 150px;
+              top: 0;
+              left: 0;
+              cursor: pointer;
+            "
+            (change)="handleImageUpload($event)"
+          />
+        </div>
+
+        <div class="form-floating mb-4">
+          <input
+            type="text"
+            class="form-control"
+            id="training_title"
+            name="title"
+            placeholder="Titel"
+            required
+          />
+          <label for="training_title">Titel</label>
+        </div>
+
+        <div class="form-floating mb-4">
+          <select
+            name="trainingFrequency"
+            id="training_frequency"
+            class="form-control"
+            required
+          >
+            <option value="" disabled selected hidden></option>
+            <option value="3">3</option>
+            <option value="4" selected>4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+          </select>
+          <label for="training_frequency">Trainings / Woche</label>
+        </div>
+
+        <div class="form-floating mb-4">
+          <select
+            name="trainingWeeks"
+            id="training_weeks"
+            class="form-control"
+            required
+          >
+            <option value="" disabled selected hidden></option>
+            <option value="3">3</option>
+            <option value="4" selected>4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+          </select>
+          <label for="training_weeks">Blocklänge (Wochen)</label>
+        </div>
+
+        <div class="form-floating mb-4">
+          <select
+            name="trainingPhase"
+            id="trainingPhaseSelector"
+            class="form-control"
+            required
+          >
+            <option selected value="hypertrophie">Hypertrophie</option>
+            <option value="kraft">Kraft</option>
+          </select>
+          <label for="trainingPhaseSelector">Trainingsphase</label>
+        </div>
+
+        <div class="form-floating mb-4">
+          <select name="weightPlaceholders" class="form-control" required>
+            <option value="max" selected>basierend auf Rechenmax</option>
+            <option value="lastWeek">basierend auf letzter Woche</option>
+            <option value="off">keine Gewichtsempfehlungen</option>
+          </select>
+          <label for="weightPlaceholders">Gewichtsempfehlungen</label>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
