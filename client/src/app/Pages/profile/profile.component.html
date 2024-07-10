@@ -1,17 +1,20 @@
+@if (isLoading) {
+<app-spinner></app-spinner>
+} @else {
 <div class="container my-5 profile-container">
   <div class="bg-white shadow rounded overflow-hidden">
     <div class="px-4 pt-0 pb-4 cover">
       <div class="media align-items-end profile-head">
         <div class="profile mr-3">
           <img
-            src="/images/profile-placeholder.webp"
-            alt="..."
+            [src]="profile.pictureUrl || '/images/profile-placeholder.webp'"
+            alt="Profilbild"
             width="130"
             class="rounded mb-2 img-thumbnail"
           />
         </div>
         <div class="media-body mb-3 text-dark">
-          <h4 class="mt-0 mb-0">Mark Williams</h4>
+          <h4 class="mt-0 mb-0">{{ profile.username }}</h4>
           <p class="small mb-4">
             <i class="fas fa-map-marker-alt mr-2"></i>New York
           </p>
@@ -86,3 +89,5 @@
     </div>
   </div>
 </div>
+
+}
