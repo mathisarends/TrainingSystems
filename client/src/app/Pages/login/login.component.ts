@@ -92,28 +92,24 @@ export class LoginComponent implements OnInit {
       password: formData.get('password'),
     };
 
-    try {
-      this.httpClient
-        .request<any>(HttpMethods.POST, 'user/login', data)
-        .subscribe({
-          next: (response: Response) => {
-            console.log('Login successful:', response);
-            this.router.navigate(['/']);
-          },
-          error: (error: HttpErrorResponse) => {
-            console.error('Login error:', error);
-            if (error.status === 401) {
-              console.log('Unauthorized: Wrong credentials');
-            } else if (error.status === 400) {
-              console.log('Bad request:', error.error);
-            } else {
-              console.log('An unknown error occurred');
-            }
-          },
-        });
-    } catch (error) {
-      console.error('Unexpected error:', error);
-    }
+    this.httpClient
+      .request<any>(HttpMethods.POST, 'user/login', data)
+      .subscribe({
+        next: (response: Response) => {
+          console.log('Login successful:', response);
+          this.router.navigate(['/']);
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Login error:', error);
+          if (error.status === 401) {
+            console.log('Unauthorized: Wrong credentials');
+          } else if (error.status === 400) {
+            console.log('Bad request:', error.error);
+          } else {
+            console.log('An unknown error occurred');
+          }
+        },
+      });
   }
 
   onGoogleLogin(event: Event): void {

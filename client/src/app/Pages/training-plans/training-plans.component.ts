@@ -10,6 +10,7 @@ import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { TrainingCardsComponent } from '../../components/training-card/training-card.component';
 
 import { BasicTrainingPlanView } from '../../../../../shared/models/dtos/training/trainingDto.types.js';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-training-plans',
@@ -33,10 +34,6 @@ export class TrainingPlansComponent implements OnInit {
       .subscribe((response) => {
         this.trainingPlans = response.trainingPlanDtos;
         this.isLoading = false;
-        console.log(
-          '🚀 ~ TrainingPlansComponent ~ .subscribe ~ this.trainingPlans:',
-          this.trainingPlans
-        );
       });
   }
 
@@ -46,5 +43,25 @@ export class TrainingPlansComponent implements OnInit {
       'Trainingsplan erstellen',
       'Erstellen'
     );
+  }
+
+  deleteTrainingPlan(index: number) {
+    // hier den modalService drauf werfen
+    if (
+      confirm('Bist du sicher, dass du diesen Trainingsplan löschen möchtest?')
+    ) {
+      this.httpClient
+        .request<any>(HttpMethods.DELETE, `training/delete/${index}`)
+        .subscribe({
+          next: (response: Response) => {
+            this.trainingPlans.splice(index, 1);
+          },
+          error: (error: HttpErrorResponse) => {
+            if (error.status === 404) {
+              console.log('Route oder Nutzer nicht gefunden');
+            }
+          },
+        });
+    }
   }
 }

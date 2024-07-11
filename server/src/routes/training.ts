@@ -25,11 +25,7 @@ router.get('/plans', authService.authenticationMiddleware, async (req, res) => {
     return res.status(404).json({ error: 'Benutzer nicht gefunden' });
   }
 
-  const trainingPlanDtos: BasicTrainingPlanView[] = [];
-
-  for (const trainingPlan of user.trainingPlans) {
-    trainingPlanDtos.push(TrainingPlanDTO.getBasicView(trainingPlan));
-  }
+  const trainingPlanDtos = getAllPlansBasic(user.trainingPlans);
 
   res.status(200).json({ trainingPlanDtos });
 });
@@ -65,12 +61,51 @@ router.post('/create', authService.authenticationMiddleware, async (req, res) =>
 
     console.log('Der Plan wurde erfolgreich erstellt');
 
-    res.status(200).json({ newTrainingPlan });
+    const trainingPlanDtos = getAllPlansBasic(user.trainingPlans);
+
+    res.status(200).json({ trainingPlanDtos });
   } catch (error) {
     console.error('Es ist ein Fehler beim erstellen des Trainingplans aufgetreten', error);
     res.status(500).json({ error: error });
   }
 });
+
+router.delete('/delete/:index', authService.authenticationMiddleware, async (req, res) => {
+  const trainingPlanIndex = Number(req.params.index);
+  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
+
+  const userClaimsSet = res.locals.user;
+
+  try {
+    const user: User | null = await userDAO.findOne({ id: userClaimsSet.id });
+    if (!user) {
+      return res.status(404).json({ error: 'Benutzer nicht gefunden' });
+    }
+
+    if (trainingPlanIndex < 0 || trainingPlanIndex >= user.trainingPlans.length) {
+      return res.status(400).json({ error: 'Ungültiger Trainingsplanindex' });
+    }
+
+    user.trainingPlans.splice(trainingPlanIndex, 1);
+
+    await userDAO.update(user);
+    res.status(201).json({ message: 'Trainingsplan erfolgreich gelöscht' });
+  } catch (error) {
+    const errMessage = 'Es ist ein Fehler beim Löschen des Trainingsplans aufgetreten ' + error;
+    console.error(errMessage);
+    res.status(500).json({ error: 'Es ist ein Fehler beim Löschen des Trainingsplans aufgetreten' });
+  }
+});
+
+function getAllPlansBasic(trainingPlans: TrainingPlan[]): BasicTrainingPlanView[] {
+  const trainingPlanDtos: BasicTrainingPlanView[] = [];
+
+  for (const trainingPlan of trainingPlans) {
+    trainingPlanDtos.push(TrainingPlanDTO.getBasicView(trainingPlan));
+  }
+
+  return trainingPlanDtos;
+}
 
 function createNewTrainingPlanWithPlaceholders(weeks: number, daysPerWeek: number): TrainingWeek[] {
   const trainingWeeks: TrainingWeek[] = [];

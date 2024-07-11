@@ -1,3 +1,5 @@
+<!-- training-plans.component.html -->
+@if (trainingPlans) {
 <!-- + Button with Label -->
 <div class="container mt-4 mb-3">
   <div class="d-flex justify-content-end align-items-center">
@@ -42,7 +44,13 @@
               <span class="text-muted">{{ trainingPlan.lastUpdated }}</span>
             </p>
             <a href="" class="btn btn-light btn-md m-1">Ansehen</a>
-            <a href="" class="btn btn-light btn-md">Löschen</a>
+            <button
+              type="button"
+              class="btn btn-light btn-md"
+              (click)="deleteTrainingPlan(i)"
+            >
+              Löschen
+            </button>
           </div>
         </div>
       </div>
@@ -50,3 +58,6 @@
     </div>
   </div>
 </section>
+} @else {
+<app-spinner></app-spinner>
+}
