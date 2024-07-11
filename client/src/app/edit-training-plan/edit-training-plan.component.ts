@@ -70,7 +70,7 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy {
       this.trainingForm.patchValue({
         title: response.trainingPlanEditView.title,
         trainingFrequency: response.trainingPlanEditView.trainingFrequency,
-        trainingWeeks: response.trainingPlanEditView.trainingWeeks,
+        trainingWeeks: response.trainingPlanEditView.trainingWeeks.length,
         weightPlaceholders:
           response.trainingPlanEditView.weightRecommandationBase,
         coverImage: response.trainingPlanEditView.coverImage || '',
