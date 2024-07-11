@@ -7,8 +7,20 @@ import { Subject } from 'rxjs';
 export class ModalEventsService {
   private confirmClickSubject = new Subject<void>();
 
+  /**
+   * An observable that emits when the confirm click event occurs.
+   * Components can subscribe to this observable to react to click events
+   * on the submit button in a modal and then perform specific actions such as
+   * submitting a form.
+   */
   confirmClick$ = this.confirmClickSubject.asObservable();
 
+  /**
+   * Emits the confirm click event to all subscribers.
+   * This method is used to notify subscribers that the submit button in the modal
+   * has been clicked, allowing them to perform specific actions related to the
+   * modal content, such as form submission.
+   */
   emitConfirmClick() {
     this.confirmClickSubject.next();
   }

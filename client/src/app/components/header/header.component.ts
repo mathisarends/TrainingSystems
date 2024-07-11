@@ -1,7 +1,9 @@
 import {
   Component,
   ElementRef,
+  EventEmitter,
   OnInit,
+  Output,
   QueryList,
   ViewChildren,
 } from '@angular/core';
@@ -12,6 +14,7 @@ import { LoginComponent } from '../../Pages/login/login.component';
 import { AuthenticatorService } from '../../auth/authenticator.service';
 import { ProfileService } from '../../Pages/profile/profileService';
 import { User } from '../../types/user';
+import { SearchService } from '../../search.service';
 
 @Component({
   selector: 'app-header',
@@ -25,6 +28,8 @@ export class HeaderComponent implements OnInit {
   profile: User | null = null; // Holds user profile data
   isAuthenticated: boolean = false; // Tracks authentication status
 
+  @Output() searchInput: EventEmitter<string> = new EventEmitter<string>();
+
   /**
    * Creates an instance of HeaderComponent.
    * Subscribes to router events and initializes services.
@@ -37,7 +42,8 @@ export class HeaderComponent implements OnInit {
     private router: Router,
     private modalService: ModalService,
     private authService: AuthenticatorService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private searchService: SearchService
   ) {
     // Subscribe to router events to update active link on navigation end
     this.router.events
@@ -69,6 +75,17 @@ export class HeaderComponent implements OnInit {
         console.log('Profile successfully loaded');
       },
     });
+  }
+
+  /**
+   * Handles the search input event and emits the value.
+   * @param event - The input event
+   */
+  onSearchInput(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    console.log(inputElement.value);
+
+    this.searchService.updateSearchText(inputElement.value);
   }
 
   /**

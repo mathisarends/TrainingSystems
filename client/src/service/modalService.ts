@@ -22,9 +22,16 @@ export class ModalService {
     private environmentInjector: EnvironmentInjector
   ) {}
 
+  /**
+   * Opens a modal dialog with the specified component, title, and button text.
+   * Optionally, data can be passed to the child component.
+   *
+   * @param component - The component to be rendered inside the modal.
+   * @param title - The title of the modal dialog.
+   * @param buttonText - The text to display on the confirm button.
+   * @param componentData - Optional data to pass to the child component.
+   */
   open(component: any, title: string, buttonText: string, componentData?: any) {
-    console.log('test 1');
-
     // Create the overlay component
     this.overlayComponentRef = createComponent(ModalOverlayComponent, {
       environmentInjector: this.environmentInjector,
@@ -54,6 +61,9 @@ export class ModalService {
     }
   }
 
+  /**
+   * Closes the modal dialog and cleans up the components.
+   */
   close() {
     this.appRef.detachView(this.modalComponentRef.hostView);
     this.modalComponentRef.destroy();
