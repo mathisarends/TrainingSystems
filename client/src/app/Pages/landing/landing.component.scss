@@ -2,12 +2,10 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
-  padding-inline: 6% !important;
 }
 
 @media (max-width: 1368px) {
   .landing-grid {
     grid-template-columns: 1fr;
-    padding-inline: 2.5%;
   }
 }
