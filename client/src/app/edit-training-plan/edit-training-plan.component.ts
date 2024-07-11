@@ -13,6 +13,7 @@ import { HttpClientService } from '../../service/http-client.service';
 import { CommonModule } from '@angular/common';
 
 import { SpinnerComponent } from '../components/spinner/spinner.component';
+import { ModalService } from '../../service/modalService';
 
 @Component({
   selector: 'app-edit-training-plan',
@@ -29,6 +30,7 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private modalEventsService: ModalEventsService,
+    private modalService: ModalService,
     private httpClient: HttpClientService
   ) {
     this.trainingForm = this.fb.group({
@@ -90,16 +92,32 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSubmit() {
+  async onSubmit() {
     if (this.trainingForm.valid) {
       const formData = this.trainingForm.value;
-      console.log(
-        '🚀 ~ EditTrainingPlanComponent ~ onSubmit ~ formData:',
-        formData
-      );
 
-      // Here you can make a PUT request to update the training plan
-      // this.httpClient.request<any>(HttpMethods.PUT, `update/${this.index}`, formData).subscribe();
+      try {
+        const response: any = await firstValueFrom(
+          this.httpClient.request<any>(
+            HttpMethods.PATCH,
+            `training/edit/${this.index}`,
+            formData
+          )
+        );
+
+        console.log('Training plan successfully updated:', response);
+        this.modalService.close();
+      } catch (error) {
+        const httpError = error as HttpErrorResponse;
+
+        console.error('Error updating training plan:', error);
+
+        if (httpError.status === 404) {
+          console.log('Training plan not found');
+        } else {
+          console.error('An error occurred:', httpError.message);
+        }
+      }
     } else {
       this.trainingForm.markAllAsTouched(); // Show validation errors
     }

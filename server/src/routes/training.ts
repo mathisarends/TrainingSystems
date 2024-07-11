@@ -141,6 +141,21 @@ router.patch('/edit/:index', authService.authenticationMiddleware, async (req, r
     if (!user) {
       return res.status(404).json({ error: 'Benutzer nicht gefunden' });
     }
+
+    const trainingPlan = user.trainingPlans[trainingPlanIndex];
+
+    trainingPlan.title = req.body.title;
+    trainingPlan.trainingFrequency = req.body.trainingFrequency;
+    trainingPlan.weightRecommandationBase = req.body.weightPlaceholders;
+
+    if (trainingPlan.trainingWeeks.length !== req.body.trainingWeeks) {
+      const difference = trainingPlan.trainingWeeks.length - parseInt(req.body.trainingWeeks);
+
+      handleWeekDifference(trainingPlan, difference);
+    }
+
+    await userDAO.update(user);
+    res.status(200).json({ message: 'Trainingsplan erfolgreich aktualisiert' });
   } catch (error) {
     const errMessage = 'Es ist ein Fehler beim Editieren des Trainingsplans aufgetreten ' + error;
     console.error(errMessage);
@@ -173,6 +188,36 @@ function createNewTrainingPlanWithPlaceholders(weeks: number, daysPerWeek: numbe
   }
 
   return trainingWeeks;
+}
+
+function handleWeekDifference(trainingPlan: TrainingPlan, difference: number) {
+  const absoluteDifference = Math.abs(difference);
+
+  if (difference < 0) {
+    addNewTrainingWeeks(trainingPlan.trainingWeeks, trainingPlan.trainingFrequency, absoluteDifference);
+  } else {
+    removeTrainingWeeks(trainingPlan.trainingWeeks, absoluteDifference);
+  }
+}
+
+function addNewTrainingWeeks(trainingWeeks: TrainingWeek[], trainingFrequency: number, addedWeeks: number) {
+  const emptyTrainingDay = {
+    exercises: []
+  };
+
+  for (let j = 0; j < addedWeeks; j++) {
+    const trainingDays = [];
+    for (let i = 0; i < trainingFrequency; i++) {
+      trainingDays.push(emptyTrainingDay);
+    }
+    trainingWeeks.push({ trainingDays });
+  }
+}
+
+export function removeTrainingWeeks(trainingWeeks: TrainingWeek[], removeTrainingWeeks: number) {
+  for (let i = 0; i < removeTrainingWeeks; i++) {
+    trainingWeeks.pop();
+  }
 }
 
 export default router;

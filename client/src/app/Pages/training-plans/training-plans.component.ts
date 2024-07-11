@@ -77,7 +77,7 @@ export class TrainingPlansComponent implements OnInit {
       EditTrainingPlanComponent,
       'Trainingsplan bearbeiten',
       'Übernehmen',
-      { index }
+      { url: `training/delete/${index}` }
     );
   }
 
@@ -91,6 +91,7 @@ export class TrainingPlansComponent implements OnInit {
           )
         );
         this.trainingPlans.splice(index, 1);
+        this.modalService.close();
       } catch (error) {
         console.error('Error deleting training plan:', error);
         if (error instanceof HttpErrorResponse && error.status === 404) {

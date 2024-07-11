@@ -1,13 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { ModalEventsService } from '../../service/modal-events.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClientService } from '../../service/http-client.service';
 import { HttpMethods } from '../types/httpMethods';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ModalService } from '../../service/modalService';
 
+/**
+ * Component for creating a training form.
+ */
 @Component({
   selector: 'app-create-training-form',
   standalone: true,
@@ -19,8 +23,15 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
   trainingForm: FormGroup;
 
+  /**
+   * Constructor to initialize the form and inject dependencies.
+   * @param fb - FormBuilder to create the form group.
+   * @param modalEventsService - Service to handle modal events.
+   * @param httpClient - Service to handle HTTP requests.
+   */
   constructor(
     private fb: FormBuilder,
+    private modalService: ModalService,
     private modalEventsService: ModalEventsService,
     private httpClient: HttpClientService
   ) {
@@ -33,41 +44,53 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Lifecycle hook to handle initialization tasks.
+   */
   ngOnInit() {
     this.subscription.add(
       this.modalEventsService.confirmClick$.subscribe(() => this.onSubmit())
     );
   }
 
+  /**
+   * Lifecycle hook to handle cleanup tasks.
+   */
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
 
-  onSubmit() {
+  /**
+   * Handles form submission.
+   */
+  async onSubmit() {
     if (this.trainingForm.valid) {
       const formData = this.trainingForm.value;
-      console.log(
-        '🚀 ~ CreateTrainingFormComponent ~ onSubmit ~ formData:',
-        formData
-      );
-      this.httpClient
-        .request<any>(HttpMethods.POST, 'training/create', formData)
-        .subscribe({
-          next: (response: Response) => {
-            console.log('Training plan sucessfully created:', response);
-          },
-          error: (error: HttpErrorResponse) => {
-            console.error('Login error:', error);
-            if (error.status === 404) {
-              console.log('Nutzer nicht angemeldet');
-            }
-          },
-        });
+
+      try {
+        const response = await firstValueFrom(
+          this.httpClient.request<any>(
+            HttpMethods.POST,
+            'training/create',
+            formData
+          )
+        );
+
+        this.modalService.close(); // Close the modal on success
+      } catch (error) {
+        if (error instanceof HttpErrorResponse) {
+          console.error('Error creating training plan:', error);
+        }
+      }
     } else {
       this.trainingForm.markAllAsTouched(); // Show validation errors
     }
   }
 
+  /**
+   * Handles image upload and updates the form control.
+   * @param event - The file input change event.
+   */
   handleImageUpload(event: any) {
     const file = event.target.files[0];
     if (file) {
