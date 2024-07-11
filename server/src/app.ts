@@ -3,12 +3,13 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import http from 'node:http';
 import dotenv from 'dotenv';
-import config from '../config.json' assert { type: 'json' };
 import startDB from './db.js';
 
 // Routers
 import userRouter from './routes/user.js';
 dotenv.config();
+
+const PORT = process.env.port ? parseInt(process.env.port, 10) : 3000;
 
 async function configureApp(app: Express) {
   app.use(express.urlencoded({ extended: true }));
@@ -32,7 +33,7 @@ export async function start() {
   const app = express();
   await configureApp(app);
   await startDB(app);
-  startHttpServer(app, config.server.port);
+  startHttpServer(app, PORT);
 }
 
 async function startHttpServer(app: Express, port: number) {
