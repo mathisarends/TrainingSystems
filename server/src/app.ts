@@ -7,6 +7,7 @@ import startDB from './db.js';
 
 // Routers
 import userRouter from './routes/user.js';
+import trainingRouter from './routes/training.js';
 dotenv.config();
 
 const PORT = process.env.port ? parseInt(process.env.port, 10) : 3000;
@@ -23,6 +24,7 @@ async function configureApp(app: Express) {
   );
 
   app.use('/user', userRouter);
+  app.use('/training', trainingRouter);
 
   app.get('/', (req, res) => {
     res.json({ message: 'Hallo ich bin die Welt' });

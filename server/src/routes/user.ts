@@ -5,6 +5,20 @@ import bcrypt from 'bcryptjs';
 import { authService } from '../service/authService.js';
 import { OAuth2Client } from 'google-auth-library';
 
+import {
+  placeHolderExercises,
+  squatExercises,
+  benchExercises,
+  deadliftExercises,
+  overheadpressExercises,
+  chestExercises,
+  backExercises,
+  shoulderExercises,
+  tricepExercises,
+  bicepsExercises,
+  legExercises
+} from '../ressources/exerciseCatalog.js';
+
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -41,7 +55,19 @@ router.post('/register', async (req, res) => {
     const userObj: Omit<User, 'id' | 'createdAt'> = {
       username: req.body.username!,
       email: req.body.email!,
-      password: await bcrypt.hash(req.body.password!, 10)
+      password: await bcrypt.hash(req.body.password!, 10),
+      trainingPlans: [],
+      placeholderExercises: placeHolderExercises,
+      squatExercises: squatExercises,
+      benchExercises: benchExercises,
+      deadliftExercises: deadliftExercises,
+      overheadpressExercises: overheadpressExercises,
+      chestExercises: chestExercises,
+      backExercises: backExercises,
+      shoulderExercises: shoulderExercises,
+      tricepsExercises: tricepExercises,
+      bicepsExercises: bicepsExercises,
+      legExercises: legExercises
     };
 
     const createdUser = await userDAO.create(userObj);
@@ -93,16 +119,30 @@ router.post('/login/oauth2', async (req, res) => {
       return res.status(401).json({ error: 'Invalid Google token' });
     }
     /* const { sub, email, name, picture } = payload; */ // maybe use sub and picture in the future
-    const { email, name } = payload;
+    const { email, name, picture } = payload;
 
     const filter: Partial<User> = { email: email };
     const user = await userDAO.findOne(filter);
+    console.log('🚀 ~ router.post ~ user:', user);
 
     if (!user && name && email) {
       // user ist nicht vorhanden hier dann neuen erstellen
       const userObj: Omit<User, 'id' | 'createdAt'> = {
         username: name,
-        email: email
+        email: email,
+        pictureUrl: picture,
+        trainingPlans: [],
+        placeholderExercises: placeHolderExercises,
+        squatExercises: squatExercises,
+        benchExercises: benchExercises,
+        deadliftExercises: deadliftExercises,
+        overheadpressExercises: overheadpressExercises,
+        chestExercises: chestExercises,
+        backExercises: backExercises,
+        shoulderExercises: shoulderExercises,
+        tricepsExercises: tricepExercises,
+        bicepsExercises: bicepsExercises,
+        legExercises: legExercises
       };
 
       const createdUser = await userDAO.create(userObj);
