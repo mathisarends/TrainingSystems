@@ -22,7 +22,7 @@ import { User } from '../../types/user';
 })
 export class HeaderComponent implements OnInit {
   @ViewChildren('navLink') navLinks!: QueryList<ElementRef>;
-  profile!: User;
+  profile: User | null = null;
 
   isAuthenticated: boolean = false;
 
@@ -50,7 +50,7 @@ export class HeaderComponent implements OnInit {
         this.profile = data.userDto;
       },
       error: (err) => {
-        console.error('Fehler beim Abrufen des Profils', err);
+        this.profile = null;
       },
       complete: () => {
         console.log('Profil erfolgreich geladen');
