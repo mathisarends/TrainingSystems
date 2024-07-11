@@ -1,4 +1,5 @@
 import { ExerciseCategory } from '../../models/exercise/exerciseCategory.js';
+import { Exercise } from '../../models/exercise/exercise.js';
 
 /**
  * Chest exercise category with default settings.
@@ -14,7 +15,7 @@ const Chest: ExerciseCategory = {
 /**
  * List of chest exercises.
  */
-const chestExercises = [
+const chestExercises: Exercise[] = [
   {
     name: 'Dips',
     category: Chest

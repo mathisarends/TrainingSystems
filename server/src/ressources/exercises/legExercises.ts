@@ -1,4 +1,5 @@
 import { ExerciseCategory } from '../../models/exercise/exerciseCategory.js';
+import { Exercise } from '../../models/exercise/exercise.js';
 
 /**
  * Legs exercise category with default settings.
@@ -14,7 +15,7 @@ const Legs: ExerciseCategory = {
 /**
  * List of leg exercises.
  */
-const legExercises = [
+const legExercises: Exercise[] = [
   {
     name: 'Hip Thrusts',
     category: Legs

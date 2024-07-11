@@ -1,4 +1,5 @@
 import { ExerciseCategory } from '../../models/exercise/exerciseCategory.js';
+import { Exercise } from '../../models/exercise/exercise.js';
 
 /**
  * Biceps exercise category with default settings.
@@ -14,7 +15,7 @@ const Biceps: ExerciseCategory = {
 /**
  * List of biceps exercises.
  */
-const bicepsExercises = [
+const bicepsExercises: Exercise[] = [
   {
     name: 'Biceps-Curls',
     category: Biceps

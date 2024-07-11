@@ -1,4 +1,5 @@
 import { ExerciseCategory } from '../../models/exercise/exerciseCategory.js';
+import { Exercise } from '../../models/exercise/exercise.js';
 
 /**
  * Bench press exercise category with default settings.
@@ -14,7 +15,7 @@ const Bench: ExerciseCategory = {
 /**
  * List of bench press exercises.
  */
-const benchExercises = [
+const benchExercises: Exercise[] = [
   {
     name: 'Comp. Bench',
     category: Bench

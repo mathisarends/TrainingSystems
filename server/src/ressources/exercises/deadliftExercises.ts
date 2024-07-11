@@ -1,4 +1,5 @@
 import { ExerciseCategory } from '../../models/exercise/exerciseCategory.js';
+import { Exercise } from '../../models/exercise/exercise.js';
 
 /**
  * Deadlift exercise category with default settings.
@@ -14,7 +15,7 @@ const Deadlift: ExerciseCategory = {
 /**
  * List of deadlift exercises.
  */
-const deadliftExercises = [
+const deadliftExercises: Exercise[] = [
   {
     name: 'Conventional',
     category: Deadlift

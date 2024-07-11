@@ -1,4 +1,5 @@
 import { ExerciseCategory } from '../../models/exercise/exerciseCategory.js';
+import { Exercise } from '../../models/exercise/exercise.js';
 
 /**
  * Shoulder exercise category with default settings.
@@ -14,7 +15,7 @@ const Shoulder: ExerciseCategory = {
 /**
  * List of shoulder exercises.
  */
-const shoulderExercises = [
+const shoulderExercises: Exercise[] = [
   {
     name: 'Reverse Flyes',
     category: Shoulder

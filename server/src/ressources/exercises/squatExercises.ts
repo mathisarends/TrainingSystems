@@ -1,4 +1,5 @@
 import { ExerciseCategory } from '../../models/exercise/exerciseCategory.js';
+import { Exercise } from '../../models/exercise/exercise.js';
 
 /**
  * Squat exercise category with default settings.
@@ -14,7 +15,7 @@ const Squat: ExerciseCategory = {
 /**
  * List of squat exercises.
  */
-const squatExercises = [
+const squatExercises: Exercise[] = [
   {
     name: 'Lowbar - Squat',
     category: Squat

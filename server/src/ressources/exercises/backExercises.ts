@@ -1,3 +1,4 @@
+import { Exercise } from '../../models/exercise/exercise.js';
 import { ExerciseCategory } from '../../models/exercise/exerciseCategory.js';
 
 /**
@@ -14,7 +15,7 @@ const Back: ExerciseCategory = {
 /**
  * List of back exercises.
  */
-const backExercises = [
+const backExercises: Exercise[] = [
   {
     name: 'Pull-Up',
     category: Back

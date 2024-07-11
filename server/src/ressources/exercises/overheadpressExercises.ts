@@ -1,4 +1,5 @@
 import { ExerciseCategory } from '../../models/exercise/exerciseCategory.js';
+import { Exercise } from '../../models/exercise/exercise.js';
 
 /**
  * Overhead press exercise category with default settings.
@@ -14,7 +15,7 @@ const Overheadpress: ExerciseCategory = {
 /**
  * List of overhead press exercises.
  */
-const overheadpressExercises = [
+const overheadpressExercises: Exercise[] = [
   {
     name: 'Overheadpress',
     category: Overheadpress
