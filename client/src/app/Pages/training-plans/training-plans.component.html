@@ -1,4 +1,3 @@
-<!-- training-plans.component.html -->
 @if (trainingPlans) {
 <!-- + Button with Label -->
 <div class="container mt-4 mb-3">
@@ -23,7 +22,6 @@
       </div>
       } @else { @for (trainingPlan of trainingPlans; track trainingPlan; let i =
       $index) {
-      <!-- Das hier irgendwann in eine eigene Komponente kriegen ^^ Das ist mit dem layout nur nicht so leicht -->
       <div class="col-lg-4 mb-4">
         <div class="card">
           <img
@@ -43,13 +41,35 @@
               Zuletzt angesehen:
               <span class="text-muted">{{ trainingPlan.lastUpdated }}</span>
             </p>
-            <a href="" class="btn btn-light btn-md m-1">Ansehen</a>
             <button
               type="button"
-              class="btn btn-light btn-md"
-              (click)="deleteTrainingPlan(i)"
+              class="btn btn-light btn-md m-1"
+              (click)="viewTrainingPlan(i)"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Ansehen"
             >
-              Löschen
+              <i class="bx bx-show"></i>
+            </button>
+            <button
+              type="button"
+              class="btn btn-light btn-md m-1"
+              (click)="editTrainingPlan(i)"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Bearbeiten"
+            >
+              <i class="bx bx-edit"></i>
+            </button>
+            <button
+              type="button"
+              class="btn btn-light btn-md m-1"
+              (click)="deleteTrainingPlan(i)"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Löschen"
+            >
+              <i class="bx bx-trash"></i>
             </button>
           </div>
         </div>

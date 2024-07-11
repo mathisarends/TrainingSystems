@@ -54,7 +54,7 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
         .request<any>(HttpMethods.POST, 'training/create', formData)
         .subscribe({
           next: (response: Response) => {
-            console.log('Login successful:', response);
+            console.log('Training plan sucessfully created:', response);
           },
           error: (error: HttpErrorResponse) => {
             console.error('Login error:', error);

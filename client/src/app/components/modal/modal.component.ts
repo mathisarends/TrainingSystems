@@ -1,42 +1,33 @@
 import {
   Component,
   Input,
-  OnInit,
   ViewChild,
   ViewContainerRef,
   AfterViewInit,
   EnvironmentInjector,
   createComponent,
   ComponentRef,
-  Output,
-  EventEmitter,
 } from '@angular/core';
 import { ModalService } from '../../../service/modalService';
-import { ModalEventsService } from '../../../service/modal-events.service';
 
 @Component({
   selector: 'app-modal',
-  standalone: true,
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
 })
-export class ModalComponent implements OnInit, AfterViewInit {
+export class ModalComponent implements AfterViewInit {
   @Input() title: string = 'Default Title';
   @Input() confirmButtonText: string = 'Submit';
-
   @Input() childComponentType!: any;
+  @Input() childComponentData: any; // Add input for child component data
   @ViewChild('modalContent', { read: ViewContainerRef })
   modalContent!: ViewContainerRef;
-
-  private childComponentRef!: ComponentRef<any>;
+  childComponentRef!: ComponentRef<any>;
 
   constructor(
-    private modalService: ModalService,
-    private modalEventsService: ModalEventsService,
-    private environmentInjector: EnvironmentInjector
+    private environmentInjector: EnvironmentInjector,
+    private modalService: ModalService
   ) {}
-
-  ngOnInit() {}
 
   ngAfterViewInit() {
     this.loadChildComponent();
@@ -49,6 +40,15 @@ export class ModalComponent implements OnInit, AfterViewInit {
         elementInjector: this.modalContent.injector,
       });
       this.modalContent.insert(this.childComponentRef.hostView);
+
+      // Pass data to the child component
+      if (this.childComponentData) {
+        Object.keys(this.childComponentData).forEach((key) => {
+          this.childComponentRef.instance[key] = this.childComponentData[key];
+        });
+      }
+
+      console.log('Child component created:', this.childComponentRef);
     }
   }
 
@@ -57,7 +57,9 @@ export class ModalComponent implements OnInit, AfterViewInit {
   }
 
   confirm() {
-    this.modalEventsService.emitConfirmClick();
-    this.close();
+    // Code to handle confirm action
+    if (this.childComponentRef.instance.onSubmit) {
+      this.childComponentRef.instance.onSubmit();
+    }
   }
 }

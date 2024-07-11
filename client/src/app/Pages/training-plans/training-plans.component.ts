@@ -1,30 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalService } from '../../../service/modalService';
 import { CreateTrainingFormComponent } from '../../create-training-form/create-training-form.component';
+import { EditTrainingPlanComponent } from '../../edit-training-plan/edit-training-plan.component';
 import { DeleteConfirmationComponent } from '../../delete-confirmation/delete-confirmation.component';
 import { HttpClientService } from '../../../service/http-client.service';
 import { HttpMethods } from '../../types/httpMethods';
-
 import { AlertComponent } from '../../components/alert/alert.component';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
-
 import { TrainingCardsComponent } from '../../components/training-card/training-card.component';
-
 import { BasicTrainingPlanView } from '../../../../../shared/models/dtos/training/trainingDto.types.js';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ModalEventsService } from '../../../service/modal-events.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-training-plans',
   standalone: true,
   imports: [AlertComponent, SpinnerComponent, TrainingCardsComponent],
   templateUrl: './training-plans.component.html',
-  styleUrl: './training-plans.component.scss',
+  styleUrls: ['./training-plans.component.scss'],
 })
 export class TrainingPlansComponent implements OnInit {
   protected trainingPlans!: BasicTrainingPlanView[];
   protected isLoading: boolean = true;
-
   private deleteIndex: number = -1;
 
   constructor(
@@ -33,17 +31,20 @@ export class TrainingPlansComponent implements OnInit {
     private modalEventsService: ModalEventsService
   ) {}
 
-  ngOnInit(): void {
-    this.httpClient
-      .request<any>(HttpMethods.GET, 'training/plans')
-      .subscribe((response) => {
-        this.trainingPlans = response.trainingPlanDtos;
-        this.isLoading = false;
-      });
+  async ngOnInit(): Promise<void> {
+    try {
+      const response: any = await firstValueFrom(
+        this.httpClient.request<any>(HttpMethods.GET, 'training/plans')
+      );
+      this.trainingPlans = response.trainingPlanDtos;
+    } catch (error) {
+      console.error('Error loading training plans:', error);
+    } finally {
+      this.isLoading = false;
+    }
 
     // Listen for confirm event
     this.modalEventsService.confirmClick$.subscribe(() => {
-      console.log('ist was passiert');
       this.handleDelete(this.deleteIndex);
     });
   }
@@ -57,10 +58,7 @@ export class TrainingPlansComponent implements OnInit {
   }
 
   deleteTrainingPlan(index: number) {
-    // Store the index of the training plan to be deleted
-
     this.deleteIndex = index;
-
     this.modalService.open(
       DeleteConfirmationComponent,
       'Trainingsplan wirklich löschen?',
@@ -68,20 +66,37 @@ export class TrainingPlansComponent implements OnInit {
     );
   }
 
-  private handleDelete(index: number) {
+  viewTrainingPlan(index: number) {}
+
+  editTrainingPlan(index: number) {
+    console.log(
+      '🚀 ~ TrainingPlansComponent ~ editTrainingPlan ~ index:',
+      index
+    );
+    this.modalService.open(
+      EditTrainingPlanComponent,
+      'Trainingsplan bearbeiten',
+      'Übernehmen',
+      { index }
+    );
+  }
+
+  private async handleDelete(index: number): Promise<void> {
     if (index >= 0) {
-      this.httpClient
-        .request<any>(HttpMethods.DELETE, `training/delete/${index}`)
-        .subscribe({
-          next: (response: any) => {
-            this.trainingPlans.splice(index, 1);
-          },
-          error: (error: HttpErrorResponse) => {
-            if (error.status === 404) {
-              console.log('Route oder Nutzer nicht gefunden');
-            }
-          },
-        });
+      try {
+        const response: any = await firstValueFrom(
+          this.httpClient.request<any>(
+            HttpMethods.DELETE,
+            `training/delete/${index}`
+          )
+        );
+        this.trainingPlans.splice(index, 1);
+      } catch (error) {
+        console.error('Error deleting training plan:', error);
+        if (error instanceof HttpErrorResponse && error.status === 404) {
+          console.log('Route oder Nutzer nicht gefunden');
+        }
+      }
     }
   }
 }

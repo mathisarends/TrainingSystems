@@ -97,6 +97,57 @@ router.delete('/delete/:index', authService.authenticationMiddleware, async (req
   }
 });
 
+router.get('/edit/:index', authService.authenticationMiddleware, async (req, res) => {
+  const trainingPlanIndex = Number(req.params.index);
+  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
+
+  const userClaimsSet = res.locals.user;
+
+  try {
+    const user: User | null = await userDAO.findOne({ id: userClaimsSet.id });
+    console.log('🚀 ~ router.get ~ user:', user);
+    if (!user) {
+      return res.status(404).json({ error: 'Benutzer nicht gefunden' });
+    }
+
+    const trainingPlan = user.trainingPlans[trainingPlanIndex];
+
+    const fields: Array<keyof TrainingPlan> = [
+      'title',
+      'trainingFrequency',
+      'weightRecommandationBase',
+      'trainingWeeks'
+    ];
+
+    const trainingPlanEditView = TrainingPlanDTO.getCustomView(trainingPlan, fields);
+    console.log('🚀 ~ router.get ~ trainingPlanEditView:', trainingPlanEditView);
+
+    res.status(200).json({ trainingPlanEditView });
+  } catch (error) {
+    const errMessage = 'Es ist ein Fehler beim Editieren des Trainingsplans aufgetreten ' + error;
+    console.error(errMessage);
+    res.status(500).json({ error: 'Es ist ein Fehler beim Löschen des Trainingsplans aufgetreten' });
+  }
+});
+
+router.patch('/edit/:index', authService.authenticationMiddleware, async (req, res) => {
+  const trainingPlanIndex = Number(req.params.index);
+  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
+
+  const userClaimsSet = res.locals.user;
+
+  try {
+    const user: User | null = await userDAO.findOne({ id: userClaimsSet.id });
+    if (!user) {
+      return res.status(404).json({ error: 'Benutzer nicht gefunden' });
+    }
+  } catch (error) {
+    const errMessage = 'Es ist ein Fehler beim Editieren des Trainingsplans aufgetreten ' + error;
+    console.error(errMessage);
+    res.status(500).json({ error: 'Es ist ein Fehler beim Löschen des Trainingsplans aufgetreten' });
+  }
+});
+
 function getAllPlansBasic(trainingPlans: TrainingPlan[]): BasicTrainingPlanView[] {
   const trainingPlanDtos: BasicTrainingPlanView[] = [];
 
