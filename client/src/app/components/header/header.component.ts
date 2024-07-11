@@ -21,17 +21,25 @@ import { User } from '../../types/user';
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent implements OnInit {
-  @ViewChildren('navLink') navLinks!: QueryList<ElementRef>;
-  profile: User | null = null;
+  @ViewChildren('navLink') navLinks!: QueryList<ElementRef>; // QueryList to hold references to navigation links
+  profile: User | null = null; // Holds user profile data
+  isAuthenticated: boolean = false; // Tracks authentication status
 
-  isAuthenticated: boolean = false;
-
+  /**
+   * Creates an instance of HeaderComponent.
+   * Subscribes to router events and initializes services.
+   * @param router - The router to navigate and listen to route changes.
+   * @param modalService - Service to handle modal operations.
+   * @param authService - Service to handle authentication operations.
+   * @param profileService - Service to fetch user profile data.
+   */
   constructor(
     private router: Router,
     private modalService: ModalService,
     private authService: AuthenticatorService,
     private profileService: ProfileService
   ) {
+    // Subscribe to router events to update active link on navigation end
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -39,12 +47,17 @@ export class HeaderComponent implements OnInit {
       });
   }
 
+  /**
+   * Angular lifecycle hook that initializes the component.
+   * Subscribes to authentication status and user profile data.
+   */
   ngOnInit(): void {
-    // Abonnieren des Anmeldestatus
+    // Subscribe to authentication status changes
     this.authService.isAuthenticated$.subscribe((status) => {
       this.isAuthenticated = status;
     });
 
+    // Fetch and subscribe to user profile data
     this.profileService.getProfile().subscribe({
       next: (data) => {
         this.profile = data.userDto;
@@ -53,12 +66,16 @@ export class HeaderComponent implements OnInit {
         this.profile = null;
       },
       complete: () => {
-        console.log('Profil erfolgreich geladen');
+        console.log('Profile successfully loaded');
       },
     });
   }
 
-  async navigateTo(event: Event) {
+  /**
+   * Handles navigation to a different route.
+   * @param event - The navigation event
+   */
+  async navigateTo(event: Event): Promise<void> {
     event.preventDefault();
 
     const linkElement = event.target as HTMLAnchorElement;
@@ -74,13 +91,19 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  removeActiveState() {
+  /**
+   * Removes the active state from all navigation links.
+   */
+  private removeActiveState(): void {
     this.navLinks.forEach((link) => {
       link.nativeElement.classList.remove('active');
     });
   }
 
-  updateActiveLink() {
+  /**
+   * Updates the active link based on the current router URL.
+   */
+  private updateActiveLink(): void {
     this.removeActiveState();
     const currentUrl = this.router.url;
 
@@ -92,20 +115,28 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  handleLogin(event: Event) {
+  /**
+   * Handles the login action.
+   * @param event - The login event
+   */
+  handleLogin(event: Event): void {
     event.preventDefault();
-
     this.router.navigate(['login']);
   }
 
-  handleLogout(event: Event) {
+  /**
+   * Handles the logout action.
+   * @param event - The logout event
+   */
+  handleLogout(event: Event): void {
     event.preventDefault();
-    // handle real logout here, if sucessful represent state in header
     this.authService.logout();
   }
 
-  // how to call modal Service
-  test() {
+  /**
+   * Example function to open a modal using the ModalService.
+   */
+  test(): void {
     this.modalService.open(LoginComponent, 'Login', 'Anmelden');
   }
 }

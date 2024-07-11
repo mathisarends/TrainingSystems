@@ -8,6 +8,7 @@ import { TrainingPlansComponent } from './Pages/training-plans/training-plans.co
 import { StatisticsComponent } from './Pages/statistics/statistics.component';
 import { ProfileComponent } from './Pages/profile/profile.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
+import { ExercisesComponent } from './exercises/exercises.component';
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
@@ -17,4 +18,5 @@ export const routes: Routes = [
   { path: 'statistics', component: StatisticsComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'spinner', component: SpinnerComponent },
+  { path: 'exercises', component: ExercisesComponent },
 ];

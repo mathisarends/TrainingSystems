@@ -77,7 +77,7 @@ export class TrainingPlansComponent implements OnInit {
       EditTrainingPlanComponent,
       'Trainingsplan bearbeiten',
       'Übernehmen',
-      { url: `training/delete/${index}` }
+      { index }
     );
   }
 
