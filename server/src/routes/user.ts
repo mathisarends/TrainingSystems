@@ -117,6 +117,25 @@ router.post('/login/oauth2', async (req, res) => {
   }
 });
 
+router.get('/profile', authService.authenticationMiddleware, async (req, res) => {
+  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
+  const userClaimsSet = res.locals.user;
+
+  const user = await userDAO.findOne({ id: userClaimsSet.id });
+  if (!user) {
+    return res.status(404).json({ error: 'Benutzer nicht gefunden' });
+  }
+
+  const userDto = {
+    username: user.username,
+    email: user.email,
+    createdAt: user.createdAt,
+    pictureUrl: user.pictureUrl
+  };
+
+  res.status(200).json({ userDto });
+});
+
 export default router;
 
 function validateUsername(username: string): boolean {
