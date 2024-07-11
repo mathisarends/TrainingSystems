@@ -126,10 +126,17 @@ router.get('/profile', authService.authenticationMiddleware, async (req, res) =>
     return res.status(404).json({ error: 'Benutzer nicht gefunden' });
   }
 
+  // Formatieren des createdAt-Felds
+  const formattedCreatedAt = new Date(user.createdAt).toLocaleDateString('de-DE', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+
   const userDto = {
     username: user.username,
     email: user.email,
-    createdAt: user.createdAt,
+    createdAt: formattedCreatedAt,
     pictureUrl: user.pictureUrl
   };
 

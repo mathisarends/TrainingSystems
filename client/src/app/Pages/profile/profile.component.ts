@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProfileService } from './profileService';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
+import { User } from '../../types/user';
 
 @Component({
   selector: 'app-profile',
@@ -10,7 +11,7 @@ import { SpinnerComponent } from '../../components/spinner/spinner.component';
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
-  profile: any;
+  profile!: User;
   isLoading = true;
 
   constructor(private profileService: ProfileService) {}
@@ -20,10 +21,6 @@ export class ProfileComponent implements OnInit {
       next: (data) => {
         this.profile = data.userDto;
         this.isLoading = false;
-        console.log(
-          '🚀 ~ ProfileComponent ~ ngOnInit ~ this.profile:',
-          this.profile
-        );
       },
       error: (err) => {
         console.error('Fehler beim Abrufen des Profils', err);
