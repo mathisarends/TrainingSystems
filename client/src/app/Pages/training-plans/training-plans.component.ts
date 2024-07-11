@@ -19,26 +19,8 @@ import { BasicTrainingPlanView } from '../../../../../shared/models/dtos/trainin
   styleUrl: './training-plans.component.scss',
 })
 export class TrainingPlansComponent implements OnInit {
-  /* protected trainingPlans!: BasicTrainingPlanView[]; */
+  protected trainingPlans!: BasicTrainingPlanView[];
   protected isLoading: boolean = true;
-
-  trainingPlans: BasicTrainingPlanView[] = [
-    {
-      title: 'Full Body Workout',
-      trainingFrequency: 3,
-      lastUpdated: new Date('2023-07-11'),
-    },
-    {
-      title: 'Cardio Blast',
-      trainingFrequency: 4,
-      lastUpdated: new Date('2023-06-20'),
-    },
-    {
-      title: 'Flexibility Routine',
-      trainingFrequency: 5,
-      lastUpdated: new Date('2023-05-15'),
-    },
-  ];
 
   constructor(
     private modalService: ModalService,
@@ -49,7 +31,7 @@ export class TrainingPlansComponent implements OnInit {
     this.httpClient
       .request<any>(HttpMethods.GET, 'training/plans')
       .subscribe((response) => {
-        /* this.trainingPlans = response.trainingPlanDtos; */
+        this.trainingPlans = response.trainingPlanDtos;
         this.isLoading = false;
         console.log(
           '🚀 ~ TrainingPlansComponent ~ .subscribe ~ this.trainingPlans:',

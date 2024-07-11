@@ -1,10 +1,10 @@
-import { TrainingPlan } from '../models/training/trainingPlan.js';
-
-// Utility Types for different views
-export type BasicTrainingPlanView = Pick<TrainingPlan, 'title' | 'trainingFrequency' | 'trainingPhase' | 'lastUpdated'>;
-export type DetailedTrainingPlanView = TrainingPlan;
-export type MinimalTrainingPlanView = Pick<TrainingPlan, 'title' | 'lastUpdated'>;
-export type CustomTrainingPlanView<T extends keyof TrainingPlan> = Pick<TrainingPlan, T>;
+import { TrainingPlan } from '../../../shared/models/training/trainingPlan.js';
+import {
+  BasicTrainingPlanView,
+  DetailedTrainingPlanView,
+  MinimalTrainingPlanView,
+  CustomTrainingPlanView
+} from '../../../shared/models/dtos/training/trainingDto.types.js';
 
 export class TrainingPlanDTO {
   /**
@@ -16,7 +16,6 @@ export class TrainingPlanDTO {
     return {
       title: plan.title,
       trainingFrequency: plan.trainingFrequency,
-      trainingPhase: plan.trainingPhase,
       lastUpdated: plan.lastUpdated
     };
   }

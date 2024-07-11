@@ -1,6 +1,6 @@
 import express from 'express';
 import { MongoGenericDAO } from '../models/mongo-generic.dao.js';
-import { User } from '../models/user.js';
+import { User } from '../../../shared/models/user.js';
 import bcrypt from 'bcryptjs';
 import { authService } from '../service/authService.js';
 import { OAuth2Client } from 'google-auth-library';
@@ -123,7 +123,6 @@ router.post('/login/oauth2', async (req, res) => {
 
     const filter: Partial<User> = { email: email };
     const user = await userDAO.findOne(filter);
-    console.log('🚀 ~ router.post ~ user:', user);
 
     if (!user && name && email) {
       // user ist nicht vorhanden hier dann neuen erstellen

@@ -9,3 +9,16 @@
 .card:hover {
   transform: scale(1.0125); /* Transform anstelle von scale verwenden */
 }
+
+/* Define the custom grid system */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  padding: 16px;
+}
+
+.grid-item {
+  display: flex;
+  flex-direction: column;
+}

@@ -1,4 +1,4 @@
-import { Exercise } from './exercise.js';
+import { Exercise } from "./exercise.js";
 
 /**
  * Represents a training day, which includes the date and a list of exercises performed.
@@ -7,7 +7,7 @@ export interface TrainingDay {
   /**
    * The date of the training day.
    */
-  date: Date;
+  date?: Date;
 
   /**
    * The list of exercises performed on the training day.
