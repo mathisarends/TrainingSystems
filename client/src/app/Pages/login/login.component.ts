@@ -21,10 +21,6 @@ export class LoginComponent implements OnInit {
     @Inject(DOCUMENT) private document: Document
   ) {}
 
-  /**
-   * Angular lifecycle method that gets called after the component has been initialized.
-   * It loads the Google Identity Services script and initializes the Google Sign-In.
-   */
   ngOnInit(): void {
     this.loadGoogleScript()
       .then(() => {
@@ -32,18 +28,14 @@ export class LoginComponent implements OnInit {
           client_id:
             '643508334542-dlp04afd8ha9mt3v7pfc5mfkmqea3rqj.apps.googleusercontent.com',
           callback: (response: any) => this.handleCredentialResponse(response),
-          ux_mode: 'popup', // Set the ux_mode to popup
+          ux_mode: 'redirect', // Set the ux_mode to redirect
+          login_uri: 'http://localhost:4200', // Change this to your redirect URI
         });
       })
       .catch((error) => {
         console.error('Error loading Google script:', error);
       });
   }
-
-  /**
-   * Dynamically loads the Google Identity Services script.
-   * @returns A Promise that resolves when the script is successfully loaded.
-   */
 
   private loadGoogleScript(): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -58,11 +50,6 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  /**
-   * Navigates to the specified URL when a link is clicked.
-   * @param event The click event.
-   * @returns A Promise that resolves when navigation is complete.
-   */
   async navigateTo(event: Event) {
     event.preventDefault();
 
@@ -78,10 +65,6 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  /**
-   * Toggles the visibility of the password field.
-   * @param event The click event.
-   */
   togglePasswordVisibility(event: Event): void {
     const eyeIcon = event.target as HTMLElement;
     const pwFields =
@@ -99,10 +82,6 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  /**
-   * Handles the form submission for user login.
-   * @param event The form submission event.
-   */
   async onSubmit(event: Event) {
     event.preventDefault();
 
@@ -137,23 +116,14 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  /**
-   * Handles the Google login button click and triggers the Google sign-in popup.
-   * @param event The click event.
-   */
   onGoogleLogin(event: Event): void {
     event.preventDefault();
-    google.accounts.id.prompt(); // Trigger the Google sign-in popup
+    google.accounts.id.prompt(); // Trigger the Google sign-in redirect
   }
 
-  /**
-   * Handles the response from Google after a successful login.
-   * @param response The response from Google containing the ID token.
-   */
   handleCredentialResponse(response: any): void {
     console.log('Encoded JWT ID token: ' + response.credential);
 
-    // Send the token to your server
     this.httpClient
       .request<any>(HttpMethods.POST, 'user/login/oauth2', {
         credential: response.credential,

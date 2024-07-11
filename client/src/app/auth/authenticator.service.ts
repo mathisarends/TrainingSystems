@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { ProfileService } from '../Pages/profile/profileService';
+import { User } from '../types/user';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +10,9 @@ export class AuthenticatorService {
   private isAuthenticatedSubject: BehaviorSubject<boolean>;
   public isAuthenticated$: Observable<boolean>;
 
-  constructor() {
+  private userDetails!: User;
+
+  constructor(private profileService: ProfileService) {
     // Initialisieren mit dem Anmeldestatus (hier als nicht angemeldet)
     this.isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
     this.isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
@@ -31,5 +35,23 @@ export class AuthenticatorService {
 
   logout(): void {
     this.setAuthenticated(false);
+  }
+
+  getUserDetails(): User {
+    return this.userDetails;
+  }
+
+  fetchUserDetails() {
+    this.profileService.getProfile().subscribe({
+      next: (data) => {
+        this.userDetails = data.userDto;
+      },
+      error: (err) => {
+        console.error('Fehler beim Abrufen des Profils', err);
+      },
+      complete: () => {
+        console.log('Profil erfolgreich geladen');
+      },
+    });
   }
 }

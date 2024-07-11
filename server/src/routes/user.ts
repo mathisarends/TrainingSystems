@@ -109,8 +109,8 @@ router.post('/login/oauth2', async (req, res) => {
       authService.createAndSetToken({ id: createdUser.id }, res);
     } else if (user) {
       authService.createAndSetToken({ id: user.id }, res);
-    }
-    res.redirect('http://localhost:4200');
+    } //#endregion
+    res.redirect('http://localhost:4200?login=success');
   } catch (error) {
     console.error('Error during Google login', error);
     res.status(500).json({ error: 'Internal Server Error' });

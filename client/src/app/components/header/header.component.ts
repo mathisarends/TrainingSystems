@@ -10,6 +10,8 @@ import { filter } from 'rxjs/operators';
 import { ModalService } from '../../../service/modalService';
 import { LoginComponent } from '../../Pages/login/login.component';
 import { AuthenticatorService } from '../../auth/authenticator.service';
+import { ProfileService } from '../../Pages/profile/profileService';
+import { User } from '../../types/user';
 
 @Component({
   selector: 'app-header',
@@ -20,13 +22,15 @@ import { AuthenticatorService } from '../../auth/authenticator.service';
 })
 export class HeaderComponent implements OnInit {
   @ViewChildren('navLink') navLinks!: QueryList<ElementRef>;
+  profile!: User;
 
   isAuthenticated: boolean = false;
 
   constructor(
     private router: Router,
     private modalService: ModalService,
-    private authService: AuthenticatorService
+    private authService: AuthenticatorService,
+    private profileService: ProfileService
   ) {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
@@ -39,6 +43,18 @@ export class HeaderComponent implements OnInit {
     // Abonnieren des Anmeldestatus
     this.authService.isAuthenticated$.subscribe((status) => {
       this.isAuthenticated = status;
+    });
+
+    this.profileService.getProfile().subscribe({
+      next: (data) => {
+        this.profile = data.userDto;
+      },
+      error: (err) => {
+        console.error('Fehler beim Abrufen des Profils', err);
+      },
+      complete: () => {
+        console.log('Profil erfolgreich geladen');
+      },
     });
   }
 
