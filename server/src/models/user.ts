@@ -1,8 +1,9 @@
 /* Autor: Mathis Kristoffer Arends */
 import { Entity } from './entity.js';
+import { Exercise } from './exercise/exercise.js';
+import { TrainingPlan } from './training/trainingPlan.js';
 
 /**
- * @interface User
  * Represents a user with authentication details.
  *
  * @extends Entity
@@ -18,10 +19,31 @@ export interface User extends Entity {
    */
   email: string;
 
+  /**
+   * The URL of the user's profile picture.
+   * This field is optional.
+   */
   pictureUrl?: string;
 
   /**
-   * The password of the user. If logged in with google its not required
+   * The password of the user.
+   * This field is optional and may not be required if logged in with Google.
    */
   password?: string;
+
+  /**
+   * The list of training plans associated with the user.
+   */
+  trainingPlans: TrainingPlan[];
+
+  squatExercises: Exercise[];
+  benchExercises: Exercise[];
+  deadliftExercises: Exercise[];
+  overheadpressExercises: Exercise[];
+  chestExercises: Exercise[];
+  backExercises: Exercise[];
+  shoulderExercises: Exercise[];
+  tricepsExercises: Exercise[];
+  bicepsExercises: Exercise[];
+  legExercises: Exercise[];
 }
