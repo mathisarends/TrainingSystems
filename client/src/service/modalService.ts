@@ -25,7 +25,7 @@ export class ModalService {
   open(component: any, title: string, buttonText: string) {
     console.log('🚀 ~ ModalService ~ open ~ component:', component);
 
-    // Erstelle die Overlay-Komponente
+    // Create the overlay component
     this.overlayComponentRef = createComponent(ModalOverlayComponent, {
       environmentInjector: this.environmentInjector,
       elementInjector: this.injector,
@@ -33,7 +33,7 @@ export class ModalService {
     this.appRef.attachView(this.overlayComponentRef.hostView);
     document.body.appendChild(this.overlayComponentRef.location.nativeElement);
 
-    // Erstelle die ModalComponent dynamisch
+    // Create the ModalComponent dynamically
     this.modalComponentRef = createComponent(ModalComponent, {
       environmentInjector: this.environmentInjector,
       elementInjector: this.injector,

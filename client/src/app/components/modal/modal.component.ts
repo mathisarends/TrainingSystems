@@ -7,8 +7,12 @@ import {
   AfterViewInit,
   EnvironmentInjector,
   createComponent,
+  ComponentRef,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { ModalService } from '../../../service/modalService';
+import { ModalEventsService } from '../../modal-events.service';
 
 @Component({
   selector: 'app-modal',
@@ -24,8 +28,11 @@ export class ModalComponent implements OnInit, AfterViewInit {
   @ViewChild('modalContent', { read: ViewContainerRef })
   modalContent!: ViewContainerRef;
 
+  private childComponentRef!: ComponentRef<any>;
+
   constructor(
     private modalService: ModalService,
+    private modalEventsService: ModalEventsService,
     private environmentInjector: EnvironmentInjector
   ) {}
 
@@ -37,15 +44,20 @@ export class ModalComponent implements OnInit, AfterViewInit {
 
   loadChildComponent() {
     if (this.childComponentType) {
-      const componentRef = createComponent(this.childComponentType, {
+      this.childComponentRef = createComponent(this.childComponentType, {
         environmentInjector: this.environmentInjector,
         elementInjector: this.modalContent.injector,
       });
-      this.modalContent.insert(componentRef.hostView);
+      this.modalContent.insert(this.childComponentRef.hostView);
     }
   }
 
   close() {
     this.modalService.close();
+  }
+
+  confirm() {
+    this.modalEventsService.emitConfirmClick();
+    this.close();
   }
 }

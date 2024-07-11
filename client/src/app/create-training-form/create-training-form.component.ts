@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { ModalEventsService } from '../modal-events.service';
 
 @Component({
   selector: 'app-create-training-form',
@@ -7,7 +9,19 @@ import { Component } from '@angular/core';
   templateUrl: './create-training-form.component.html',
   styleUrl: './create-training-form.component.scss',
 })
-export class CreateTrainingFormComponent {
+export class CreateTrainingFormComponent implements OnInit {
+  private subscription: Subscription = new Subscription();
+
+  constructor(private modalEventsService: ModalEventsService) {}
+
+  ngOnInit() {
+    this.subscription.add(
+      this.modalEventsService.confirmClick$.subscribe(() =>
+        console.log('got event')
+      )
+    );
+  }
+
   handleImageUpload(event: any) {
     const file = event.target.files[0];
     if (file) {
