@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { ModalEventsService } from '../modal-events.service';
+import { ModalEventsService } from '../../service/modal-events.service';
 
 @Component({
   selector: 'app-create-training-form',
@@ -17,6 +17,7 @@ export class CreateTrainingFormComponent implements OnInit {
   ngOnInit() {
     this.subscription.add(
       this.modalEventsService.confirmClick$.subscribe(() =>
+        //TODO: submit form here using http Client and newly created backend route
         console.log('got event')
       )
     );

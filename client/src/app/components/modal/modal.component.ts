@@ -12,7 +12,7 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { ModalService } from '../../../service/modalService';
-import { ModalEventsService } from '../../modal-events.service';
+import { ModalEventsService } from '../../../service/modal-events.service';
 
 @Component({
   selector: 'app-modal',
