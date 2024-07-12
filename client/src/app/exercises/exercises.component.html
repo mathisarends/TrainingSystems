@@ -3,7 +3,7 @@
 } @else {
 <div class="container pt-4">
   <form (submit)="onSubmit($event)">
-    @for (category of exerciseCategories; track category; let categoryIndex =
+    @for (category of filteredCategories; track category; let categoryIndex =
     $index) { @if (categoryIndex > 0) {
     <table class="table mb-5 table-hover">
       <thead>

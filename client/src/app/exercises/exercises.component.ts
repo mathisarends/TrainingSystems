@@ -1,11 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClientService } from '../../service/http-client.service';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { HttpMethods } from '../types/httpMethods';
 import { Exercise } from '../../../../shared/models/exercise/exercise';
 import { SpinnerComponent } from '../components/spinner/spinner.component';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
+import { SearchService } from '../search.service';
+import { ModalService } from '../../service/modalService';
+import { ExerciseService } from '../exercise.service';
+import { ConfirmExerciseResetComponent } from '../confirm-exercise-reset/confirm-exercise-reset.component';
 
 @Component({
   selector: 'app-exercises',
@@ -14,7 +18,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   templateUrl: './exercises.component.html',
   styleUrls: ['./exercises.component.scss'],
 })
-export class ExercisesComponent implements OnInit {
+export class ExercisesComponent implements OnInit, OnDestroy {
   protected isLoading = true;
   exerciseCategories: string[] = [];
   categorizedExercises: { [category: string]: Exercise[] } = {};
@@ -23,15 +27,59 @@ export class ExercisesComponent implements OnInit {
   defaultRepSchemeByCategory: { [category: string]: any } = {};
   maxExercises = 8;
 
+  filteredCategories: string[] = [];
+
+  private searchSubscription!: Subscription;
+  private preExerciseResetSubscription!: Subscription;
+  private resetSuccessfulSubscription!: Subscription;
   changedData: { [key: string]: any } = {};
 
-  constructor(private httpClient: HttpClientService) {}
+  constructor(
+    private httpClient: HttpClientService,
+    private searchService: SearchService,
+    private modalService: ModalService,
+    private exerciseService: ExerciseService
+  ) {}
 
   ngOnInit(): void {
     this.loadExercises();
+
+    // Subscribe to search input changes
+    this.searchSubscription = this.searchService.searchText$.subscribe(
+      (searchText) => {
+        // Filter categories based on search text
+      }
+    );
+
+    // Subscribe to preExerciseReset event
+    this.preExerciseResetSubscription =
+      this.exerciseService.preExerciseReset$.subscribe(() => {
+        this.modalService.close();
+        this.isLoading = true;
+      });
+
+    // Subscribe to resetSuccessful event
+    this.resetSuccessfulSubscription =
+      this.exerciseService.resetSuccessful$.subscribe(async () => {
+        await this.loadExercises();
+        this.isLoading = false;
+      });
+  }
+
+  ngOnDestroy(): void {
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
+    }
+    if (this.preExerciseResetSubscription) {
+      this.preExerciseResetSubscription.unsubscribe();
+    }
+    if (this.resetSuccessfulSubscription) {
+      this.resetSuccessfulSubscription.unsubscribe();
+    }
   }
 
   private async loadExercises(): Promise<void> {
+    this.isLoading = true;
     try {
       const response: any = await firstValueFrom(
         this.httpClient.request<any>(HttpMethods.GET, 'exercise')
@@ -43,6 +91,9 @@ export class ExercisesComponent implements OnInit {
       this.categoryPauseTimes = exercisesData.categoryPauseTimes;
       this.defaultRepSchemeByCategory =
         exercisesData.defaultRepSchemeByCategory;
+
+      // Initialize filteredCategories with all categories
+      this.filteredCategories = [...this.exerciseCategories];
     } catch (error) {
       console.error('Error loading exercises:', error);
     } finally {
@@ -62,11 +113,10 @@ export class ExercisesComponent implements OnInit {
           this.changedData
         )
       );
-      console.log('resonse', response);
+      console.log('response', response);
     } catch (error) {
       const httpError = error as HttpErrorResponse;
-
-      console.error('Error updating updating user exercises:', error);
+      console.error('Error updating user exercises:', error);
     }
   }
 
@@ -77,17 +127,10 @@ export class ExercisesComponent implements OnInit {
 
   async onReset(event: Event): Promise<void> {
     event.preventDefault();
-    this.isLoading = true;
-    try {
-      const response: any = await firstValueFrom(
-        this.httpClient.request<any>(HttpMethods.POST, 'exercise/reset')
-      );
-      console.log('Übungskatalog zurückgesetzt!');
-      await this.loadExercises();
-    } catch (error) {
-      console.error('Error resetting exercises:', error);
-    } finally {
-      this.isLoading = false;
-    }
+    this.modalService.open(
+      ConfirmExerciseResetComponent,
+      'Übungen zurücksetzen',
+      'Zurücksetzen'
+    );
   }
 }

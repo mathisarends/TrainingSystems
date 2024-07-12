@@ -83,7 +83,6 @@ export class HeaderComponent implements OnInit {
    */
   onSearchInput(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
-    console.log(inputElement.value);
 
     this.searchService.updateSearchText(inputElement.value);
   }
