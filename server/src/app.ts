@@ -6,9 +6,9 @@ import dotenv from 'dotenv';
 import startDB from './db.js';
 
 // Routers
-import userRouter from './routes/user.js';
-import trainingRouter from './routes/training.js';
-import exerciseRouter from './routes/exercises.js';
+import userRouter from './routes/userRoutes.js';
+import trainingRouter from './routes/trainingRoutes.js';
+import exerciseRouter from './routes/exerciseRoutes.js';
 dotenv.config();
 
 const PORT = process.env.port ? parseInt(process.env.port, 10) : 3000;
