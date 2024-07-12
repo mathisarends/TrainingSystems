@@ -28,7 +28,7 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
   protected allTrainingPlans!: BasicTrainingPlanView[];
   protected filteredTrainingPlans!: BasicTrainingPlanView[];
   protected isLoading: boolean = true;
-  private deleteIndex: number = -1;
+  private currentSelectedId: string = '';
   private searchSubscription!: Subscription;
 
   /**
@@ -54,7 +54,7 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
 
     // Subscribe to the confirmClick$ event to handle deletion confirmation
     this.modalEventsService.confirmClick$.subscribe(() => {
-      this.handleDelete(this.deleteIndex);
+      this.handleDelete(this.currentSelectedId);
     });
 
     // Subscribe to search input changes
@@ -86,6 +86,10 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
         this.httpClient.request<any>(HttpMethods.GET, 'training/plans')
       );
       this.allTrainingPlans = response.trainingPlanDtos;
+      console.log(
+        '🚀 ~ TrainingPlansComponent ~ loadTrainingPlans ~ this.allTrainingPlans:',
+        this.allTrainingPlans
+      );
       this.filteredTrainingPlans = this.allTrainingPlans;
     } catch (error) {
       console.error('Error loading training plans:', error);
@@ -109,8 +113,8 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
    * Opens the modal to delete a training plan.
    * @param index - The index of the training plan to delete.
    */
-  deleteTrainingPlan(index: number): void {
-    this.deleteIndex = index;
+  deleteTrainingPlan(id: string): void {
+    this.currentSelectedId = id;
     this.modalService.open(
       DeleteConfirmationComponent,
       'Trainingsplan wirklich löschen?',
@@ -122,7 +126,7 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
    * Opens the modal to view a training plan.
    * @param index - The index of the training plan to view.
    */
-  viewTrainingPlan(index: number): void {
+  viewTrainingPlan(id: string): void {
     // Implementation for viewing a training plan
   }
 
@@ -130,16 +134,13 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
    * Opens the modal to edit a training plan.
    * @param index - The index of the training plan to edit.
    */
-  editTrainingPlan(index: number): void {
-    console.log(
-      '🚀 ~ TrainingPlansComponent ~ editTrainingPlan ~ index:',
-      index
-    );
+  editTrainingPlan(id: string): void {
+    console.log('🚀 ~ TrainingPlansComponent ~ editTrainingPlan ~ id:', id);
     this.modalService.open(
       EditTrainingPlanComponent,
       'Trainingsplan bearbeiten',
       'Übernehmen',
-      { index }
+      { id }
     );
   }
 
@@ -147,16 +148,18 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
    * Handles the deletion of a training plan.
    * @param index - The index of the training plan to delete.
    */
-  private async handleDelete(index: number): Promise<void> {
-    if (index >= 0) {
+  private async handleDelete(id: string): Promise<void> {
+    if (id) {
       try {
         const response: any = await firstValueFrom(
           this.httpClient.request<any>(
             HttpMethods.DELETE,
-            `training/delete/${index}`
+            `training/delete/${id}`
           )
         );
-        this.allTrainingPlans.splice(index, 1);
+
+        // find the current plan  by id and splice it by the index?
+        /* this.allTrainingPlans.splice(, 1); */
         this.modalService.close();
       } catch (error) {
         console.error('Error deleting training plan:', error);

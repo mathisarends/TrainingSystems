@@ -23,7 +23,7 @@ import { ModalService } from '../../service/modalService';
   styleUrls: ['./edit-training-plan.component.scss'],
 })
 export class EditTrainingPlanComponent implements OnInit, OnDestroy {
-  @Input() index!: number;
+  @Input() id!: string;
   private subscription: Subscription = new Subscription();
   trainingForm: FormGroup;
 
@@ -43,11 +43,9 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    if (this.index !== undefined) {
-      this.fetchTrainingPlan(this.index);
+    if (this.id) {
+      this.fetchTrainingPlan(this.id);
     }
-
-    console.log('index', this.index);
 
     this.subscription.add(
       this.modalEventsService.confirmClick$.subscribe(() => this.onSubmit())
@@ -58,10 +56,10 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  async fetchTrainingPlan(index: number) {
+  async fetchTrainingPlan(id: string) {
     try {
       const response: any = await firstValueFrom(
-        this.httpClient.request<any>(HttpMethods.GET, `training/edit/${index}`)
+        this.httpClient.request<any>(HttpMethods.GET, `training/edit/${id}`)
       );
 
       console.log(
@@ -100,7 +98,7 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy {
         const response: any = await firstValueFrom(
           this.httpClient.request<any>(
             HttpMethods.PATCH,
-            `training/edit/${this.index}`,
+            `training/edit/${this.id}`,
             formData
           )
         );

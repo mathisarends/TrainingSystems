@@ -73,8 +73,8 @@ router.post('/create', authService.authenticationMiddleware, async (req, res) =>
   }
 });
 
-router.delete('/delete/:index', authService.authenticationMiddleware, async (req, res) => {
-  const trainingPlanIndex = Number(req.params.index);
+router.delete('/delete/:planId', authService.authenticationMiddleware, async (req, res) => {
+  const planId = req.params.planId;
   const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
 
   const userClaimsSet = res.locals.user;
@@ -85,8 +85,9 @@ router.delete('/delete/:index', authService.authenticationMiddleware, async (req
       return res.status(404).json({ error: 'Benutzer nicht gefunden' });
     }
 
-    if (trainingPlanIndex < 0 || trainingPlanIndex >= user.trainingPlans.length) {
-      return res.status(400).json({ error: 'Ungültiger Trainingsplanindex' });
+    const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, planId);
+    if (trainingPlanIndex === -1) {
+      return res.status(400).json({ error: 'Ungültige Trainingsplan-ID' });
     }
 
     user.trainingPlans.splice(trainingPlanIndex, 1);
@@ -100,8 +101,8 @@ router.delete('/delete/:index', authService.authenticationMiddleware, async (req
   }
 });
 
-router.get('/edit/:index', authService.authenticationMiddleware, async (req, res) => {
-  const trainingPlanIndex = Number(req.params.index);
+router.get('/edit/:id', authService.authenticationMiddleware, async (req, res) => {
+  const trainingPlanId = req.params.id;
   const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
 
   const userClaimsSet = res.locals.user;
@@ -111,6 +112,11 @@ router.get('/edit/:index', authService.authenticationMiddleware, async (req, res
     console.log('🚀 ~ router.get ~ user:', user);
     if (!user) {
       return res.status(404).json({ error: 'Benutzer nicht gefunden' });
+    }
+
+    const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
+    if (trainingPlanIndex === -1) {
+      return res.status(400).json({ error: 'Ungültige Trainingsplan-ID' });
     }
 
     const trainingPlan = user.trainingPlans[trainingPlanIndex];
@@ -124,7 +130,6 @@ router.get('/edit/:index', authService.authenticationMiddleware, async (req, res
     ];
 
     const trainingPlanEditView = TrainingPlanDTO.getCustomView(trainingPlan, fields);
-    console.log('🚀 ~ router.get ~ trainingPlanEditView:', trainingPlanEditView);
 
     res.status(200).json({ trainingPlanEditView });
   } catch (error) {
@@ -166,6 +171,10 @@ router.patch('/edit/:index', authService.authenticationMiddleware, async (req, r
     res.status(500).json({ error: 'Es ist ein Fehler beim Löschen des Trainingsplans aufgetreten' });
   }
 });
+
+function findTrainingPlanIndexById(trainingPlans: TrainingPlan[], planId: string): number {
+  return trainingPlans.findIndex(plan => plan.id === planId);
+}
 
 function getAllPlansBasic(trainingPlans: TrainingPlan[]): BasicTrainingPlanView[] {
   const trainingPlanDtos: BasicTrainingPlanView[] = [];

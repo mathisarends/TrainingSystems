@@ -44,7 +44,7 @@
             <button
               type="button"
               class="btn btn-light btn-md m-1"
-              (click)="viewTrainingPlan(i)"
+              (click)="viewTrainingPlan(trainingPlan.id)"
               data-bs-toggle="tooltip"
               data-placement="top"
               title="Ansehen"
@@ -54,7 +54,7 @@
             <button
               type="button"
               class="btn btn-light btn-md m-1"
-              (click)="editTrainingPlan(i)"
+              (click)="editTrainingPlan(trainingPlan.id)"
               data-bs-toggle="tooltip"
               data-bs-placement="top"
               title="Bearbeiten"
@@ -64,7 +64,7 @@
             <button
               type="button"
               class="btn btn-light btn-md m-1"
-              (click)="deleteTrainingPlan(i)"
+              (click)="deleteTrainingPlan(trainingPlan.id)"
               data-bs-toggle="tooltip"
               data-bs-placement="top"
               title="Löschen"
