@@ -15,8 +15,8 @@ import {
 import { ApiData } from '@shared/models/apiData.js';
 import { ExerciseCategory } from '@shared/models/exercise/exerciseCategory.js';
 import { Exercise } from '@shared/models/exercise/exercise.js';
-
 import { ExerciseCategories } from './ExerciseCategores.js';
+
 /**
  * Prepares exercise data for rendering on the client side.
  */

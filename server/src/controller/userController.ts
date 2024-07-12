@@ -4,6 +4,13 @@ import * as userService from '../service/userService.js';
 import { authService } from '../service/authService.js';
 import { User } from '@shared/models/user.js';
 
+/**
+ * Registers a new user.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} A promise that resolves when the user is registered.
+ */
 export async function register(req: Request, res: Response): Promise<void> {
   const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
 
@@ -16,6 +23,13 @@ export async function register(req: Request, res: Response): Promise<void> {
   }
 }
 
+/**
+ * Logs in an existing user.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} A promise that resolves when the user is logged in.
+ */
 export async function login(req: Request, res: Response) {
   const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
 
@@ -32,6 +46,13 @@ export async function login(req: Request, res: Response) {
   }
 }
 
+/**
+ * Logs in a user via OAuth2.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} A promise that resolves when the user is logged in via OAuth2.
+ */
 export async function loginOAuth2(req: Request, res: Response): Promise<void> {
   const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
 
@@ -44,6 +65,13 @@ export async function loginOAuth2(req: Request, res: Response): Promise<void> {
   }
 }
 
+/**
+ * Gets the profile of the currently logged-in user.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @returns {Promise<void>} A promise that resolves when the user profile is retrieved.
+ */
 export async function getProfile(req: Request, res: Response): Promise<void> {
   const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
   const userClaimsSet = res.locals.user;
