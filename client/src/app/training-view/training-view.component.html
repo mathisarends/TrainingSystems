@@ -1,0 +1,136 @@
+@if (isLoading) {
+<app-spinner></app-spinner>
+} @else {
+<!-- Training Day Table -->
+<!-- Training Day Table -->
+
+<!-- <div class="container my-4">
+  <div class="row align-items-center">
+    <div class="col text-left">
+      <h3 class="display-4 title">{{ title }}</h3>
+      <p class="lead week-day-info">
+        Week {{ trainingWeekIndex + 1 }} - Day {{ trainingDayIndex + 1 }}
+      </p>
+    </div>
+  </div>
+</div>
+
+<table
+  class="table table-hover training-table responsive-table caption-top mb-4"
+>
+  <caption class="text-center text-uppercase"></caption>
+  <thead>
+    <tr>
+      <th scope="col">Category</th>
+      <th scope="col">Exercise</th>
+      <th scope="col" class="text-center">Sets</th>
+      <th scope="col" class="text-center">Reps</th>
+      <th scope="col" class="text-center">Weight</th>
+      <th scope="col" class="text-center">RPE</th>
+      <th scope="col" class="text-center">at RPE</th>
+      <th scope="col" class="text-center">Est. Max</th>
+      <th scope="col">Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (k of [1, 2, 3, 4, 5, 6, 7, 8]; track k) {
+    <tr>
+      <td data-cell="Category">
+        <select
+          name="day1_exercise{{ k }}_category"
+          class="exercise-category-selector transparent-input w-100"
+        >
+          <option
+            *ngFor="let category of exerciseCategories"
+            [value]="category"
+            [selected]="trainingDay.exercises[k - 1]?.category === category"
+          >
+            {{ category }}
+          </option>
+        </select>
+      </td>
+      <td data-cell="Exercise">
+        <select
+          *ngFor="let category of exerciseCategories"
+          name="day1_exercise{{ k }}_exercise_name"
+          class="exercise-name-selector transparent-input"
+          [disabled]="trainingDay.exercises[k - 1]?.category !== category"
+          [style.display]="
+            trainingDay.exercises[k - 1]?.category === category
+              ? 'block'
+              : 'none'
+          "
+        >
+          <option
+            *ngFor="let exerciseName of categorizedExercises[category]"
+            [value]="exerciseName"
+            [selected]="trainingDay.exercises[k - 1]?.exercise === exerciseName"
+          >
+            {{ exerciseName }}
+          </option>
+        </select>
+      </td>
+      <td data-cell="Sets">
+        <input
+          type="number"
+          class="transparent-input sets"
+          name="day1_exercise{{ k }}_sets"
+          [value]="trainingDay.exercises[k - 1]?.sets || ''"
+        />
+      </td>
+      <td data-cell="Reps">
+        <input
+          type="number"
+          class="transparent-input reps"
+          name="day1_exercise{{ k }}_reps"
+          [value]="trainingDay.exercises[k - 1]?.reps || ''"
+        />
+      </td>
+      <td data-cell="Weight">
+        <input
+          type="number"
+          class="transparent-input weight"
+          name="day1_exercise{{ k }}_weight"
+          [value]="trainingDay.exercises[k - 1]?.weight || ''"
+        />
+      </td>
+      <td data-cell="RPE">
+        <input
+          type="number"
+          class="transparent-input targetRPE"
+          name="day1_exercise{{ k }}_targetRPE"
+          [value]="trainingDay.exercises[k - 1]?.targetRPE || ''"
+        />
+      </td>
+      <td data-cell="@RPE">
+        <input
+          type="number"
+          class="transparent-input actualRPE"
+          name="day1_exercise{{ k }}_actualRPE"
+          [value]="trainingDay.exercises[k - 1]?.actualRPE || ''"
+        />
+      </td>
+      <td data-cell="Est. Max">
+        <input
+          type="number"
+          class="transparent-input estMax"
+          readonly
+          name="day1_exercise{{ k }}_estMax"
+          [value]="trainingDay.exercises[k - 1]?.estMax || ''"
+        />
+      </td>
+      <td data-cell="Notes">
+        <input
+          type="text"
+          class="transparent-input workout-notes"
+          name="day1_exercise{{ k }}_workout-notes"
+          [value]="trainingDay.exercises[k - 1]?.notes || ''"
+        />
+      </td>
+    </tr>
+    }
+  </tbody>
+</table>
+
+<input type="submit" class="btn btn-dark" /> -->
+}

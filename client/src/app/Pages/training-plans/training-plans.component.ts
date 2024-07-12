@@ -93,6 +93,10 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
         this.httpClient.request<any>(HttpMethods.GET, 'training/plans')
       );
       this.allTrainingPlans = response.trainingPlanDtos;
+      console.log(
+        '🚀 ~ TrainingPlansComponent ~ loadTrainingPlans ~ this.allTrainingPlans :',
+        this.allTrainingPlans
+      );
       this.filteredTrainingPlans = this.allTrainingPlans;
     } catch (error) {
       console.error('Error loading training plans:', error);
@@ -161,8 +165,14 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
           )
         );
 
-        // find the current plan  by id and splice it by the index?
-        /* this.allTrainingPlans.splice(, 1); */
+        // Find the index of the plan by id and splice it
+        const planIndex = this.allTrainingPlans.findIndex(
+          (plan) => plan.id === id
+        );
+        if (planIndex > -1) {
+          this.allTrainingPlans.splice(planIndex, 1);
+        }
+
         this.modalService.close();
       } catch (error) {
         console.error('Error deleting training plan:', error);

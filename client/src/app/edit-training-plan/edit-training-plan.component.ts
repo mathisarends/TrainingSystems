@@ -28,6 +28,8 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
   trainingForm: FormGroup;
 
+  protected loading: boolean = true;
+
   constructor(
     private fb: FormBuilder,
     private modalEventsService: ModalEventsService,
@@ -68,6 +70,8 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy {
         '🚀 ~ EditTrainingPlanComponent ~ fetchTrainingPlan ~ response:',
         response
       );
+
+      this.loading = false;
 
       this.trainingForm.patchValue({
         title: response.trainingPlanEditView.title,

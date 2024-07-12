@@ -12,6 +12,8 @@ import { TrainingWeek } from '@shared/models/training/trainingWeek.js';
 import { TrainingDay } from '@shared/models/training/trainingDay.js';
 import { User } from '@shared/models/user.js';
 import { BasicTrainingPlanView } from '@shared/models/dtos/training/trainingDto.types.js';
+
+import { prepareExercisesData } from './exercises.js';
 dotenv.config();
 
 const router = express.Router();
@@ -171,6 +173,62 @@ router.patch('/edit/:id', authService.authenticationMiddleware, async (req, res)
     const errMessage = 'Es ist ein Fehler beim Editieren des Trainingsplans aufgetreten ' + error;
     console.error(errMessage);
     res.status(500).json({ error: 'Es ist ein Fehler beim Löschen des Trainingsplans aufgetreten' });
+  }
+});
+
+router.get('/plan/:id/:week/:day', authService.authenticationMiddleware, async (req, res) => {
+  const trainingPlanId = req.params.id;
+  const trainingWeekIndex = Number(req.params.week);
+  const trainingDayIndex = Number(req.params.day);
+
+  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
+
+  const userClaimsSet = res.locals.user;
+
+  try {
+    const user: User | null = await userDAO.findOne({ id: userClaimsSet.id });
+    if (!user) {
+      return res.status(404).json({ error: 'Benutzer nicht gefunden' });
+    }
+
+    const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
+
+    const trainingPlan = user.trainingPlans[trainingPlanIndex];
+
+    const title = trainingPlan.title;
+
+    if (trainingWeekIndex > trainingPlan.trainingWeeks.length) {
+      return res
+        .status(400)
+        .json({ error: 'Die angefragte Woche gibt es nicht im Trainingsplan bitte erhöhe die Blocklänge ' });
+    }
+
+    const trainingWeek = trainingPlan.trainingWeeks[trainingWeekIndex];
+
+    if (trainingDayIndex > trainingWeek.trainingDays.length) {
+      return res.status(400).json({ error: 'Der angefragte Tag ist zu hoch für die angegebene Trainingsfrequenz ' });
+    }
+
+    const trainingDay = trainingWeek.trainingDays[trainingDayIndex];
+
+    const { exerciseCategories, categoryPauseTimes, categorizedExercises, defaultRepSchemeByCategory, maxFactors } =
+      prepareExercisesData(user);
+
+    res.status(200).json({
+      title,
+      trainingWeekIndex,
+      trainingDayIndex,
+      trainingDay,
+
+      exerciseCategories,
+      categoryPauseTimes,
+      categorizedExercises,
+      defaultRepSchemeByCategory,
+      maxFactors
+    });
+  } catch (error) {
+    console.log('Es ist ein Fehler beim Aufrufen des Trainingsplans aufgetreten!', error);
+    res.status(500).json({ error: 'Es ist ein Fehler beim Laden des Trainingplans aufgetreten ' });
   }
 });
 

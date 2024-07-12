@@ -1,0 +1,63 @@
+.col {
+  transition: transform 0.3s ease-in-out; /* Übergangseigenschaft hinzufügen */
+}
+
+.col:hover {
+  transform: scale(0.9875);
+}
+
+/* for activation styling */
+
+.active {
+  transition: transform 0.3s ease-in-out; /* Übergangseigenschaft für Aktivierung hinzufügen */
+  transform: scale(0.975);
+}
+
+.small-white-border {
+  border-color: #e1e1e1; /* Ersetze dies mit der gewünschten Hover-Farbe */
+}
+
+/* stacking table if there are two many td elements*/
+.training-table tr td input[type="number"] {
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  /* responsive tabe is most generic */
+  .responsive-table td {
+    display: grid;
+    grid-template-columns: 20ch auto;
+    padding-top: 1em;
+    padding-bottom: 1em;
+  }
+
+  .responsive-table th {
+    display: none;
+  }
+
+  .responsive-table td::before {
+    content: attr(data-cell) ": ";
+  }
+
+  .volume-table tr td:nth-of-type(1),
+  .volume-table tr td:nth-of-type(3) {
+    display: none;
+  }
+
+  .volume-table tfoot tr td:nth-of-type(2) {
+    display: none;
+  }
+
+  .volume-table tfoot tr td:nth-of-type(3) {
+    display: grid;
+    grid-template-columns: 20ch auto;
+  }
+
+  .training-table tr {
+    border-top: 2px solid black;
+  }
+
+  .training-table tr td input[type="number"] {
+    text-align: left;
+  }
+}
