@@ -1,5 +1,5 @@
-import { ExerciseCategory } from '../../models/exercise/exerciseCategory.js';
-import { Exercise } from '../../models/exercise/exercise.js';
+import { Exercise } from '@shared/models/exercise/exercise.js';
+import { ExerciseCategory } from '@shared/models/exercise/exerciseCategory.js';
 
 /**
  * Bench press exercise category with default settings.
