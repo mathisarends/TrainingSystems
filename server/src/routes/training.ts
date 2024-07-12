@@ -13,7 +13,7 @@ import { TrainingDay } from '@shared/models/training/trainingDay.js';
 import { User } from '@shared/models/user.js';
 import { BasicTrainingPlanView } from '@shared/models/dtos/training/trainingDto.types.js';
 
-import { prepareExercisesData } from './exercises.js';
+import { prepareExercisesData } from '../utils/exerciseUtils.js';
 dotenv.config();
 
 const router = express.Router();
