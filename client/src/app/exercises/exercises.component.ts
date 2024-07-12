@@ -74,4 +74,20 @@ export class ExercisesComponent implements OnInit {
     const target = event.target as HTMLInputElement | HTMLSelectElement;
     this.changedData[target.name] = target.value;
   }
+
+  async onReset(event: Event): Promise<void> {
+    event.preventDefault();
+    this.isLoading = true;
+    try {
+      const response: any = await firstValueFrom(
+        this.httpClient.request<any>(HttpMethods.POST, 'exercise/reset')
+      );
+      console.log('Übungskatalog zurückgesetzt!');
+      await this.loadExercises();
+    } catch (error) {
+      console.error('Error resetting exercises:', error);
+    } finally {
+      this.isLoading = false;
+    }
+  }
 }

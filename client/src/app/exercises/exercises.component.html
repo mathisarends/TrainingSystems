@@ -119,7 +119,12 @@
     </table>
     } }
     <input type="submit" class="btn btn-dark" value="Submit" />
-    <button class="btn btn-outline-dark m-1" id="reset-btn" type="button">
+    <button
+      class="btn btn-outline-dark m-1"
+      id="reset-btn"
+      type="button"
+      (click)="onReset($event)"
+    >
       Reset
     </button>
   </form>

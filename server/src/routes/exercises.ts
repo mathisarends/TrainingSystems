@@ -6,6 +6,19 @@ import { authService } from '../service/authService.js';
 import { Exercise } from '../../../shared/models/exercise/exercise.js';
 import { ApiData } from '../../../shared/models/apiData.js';
 import { ExerciseCategory } from '@shared/models/exercise/exerciseCategory.js';
+import {
+  backExercises,
+  benchExercises,
+  bicepsExercises,
+  chestExercises,
+  deadliftExercises,
+  legExercises,
+  overheadpressExercises,
+  placeHolderExercises,
+  shoulderExercises,
+  squatExercises,
+  tricepExercises
+} from '../ressources/exerciseCatalog.js';
 const router = express.Router();
 
 // kann man nicht importieren aus shared warum auch immer
@@ -65,7 +78,38 @@ router.patch('/', authService.authenticationMiddleware, async (req, res) => {
   }
 });
 
-/* router.post('/reset', authService.authenticationMiddleware, async (req, res) => {}); */
+router.post('/reset', authService.authenticationMiddleware, async (req, res) => {
+  try {
+    const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
+    const userClaimsSet = res.locals.user;
+
+    const user = await userDAO.findOne({ id: userClaimsSet.id });
+    console.log('🚀 ~ router.post ~ user:', user);
+    if (!user) {
+      return res.status(404).json({ error: 'Benutzer nicht gefunden' });
+    }
+
+    // reset all exercises per category
+    (user.placeholderExercises = placeHolderExercises),
+      (user.squatExercises = squatExercises),
+      (user.benchExercises = benchExercises),
+      (user.deadliftExercises = deadliftExercises),
+      (user.overheadpressExercises = overheadpressExercises),
+      (user.backExercises = backExercises),
+      (user.chestExercises = chestExercises),
+      (user.shoulderExercises = shoulderExercises),
+      (user.bicepsExercises = bicepsExercises),
+      (user.tricepsExercises = tricepExercises),
+      (user.legExercises = legExercises),
+      await userDAO.update(user);
+
+    console.log('Übungskatalog zurückgesetzt!');
+    res.status(200).json({ message: 'Übungskatalog zurückgesetzt!' });
+  } catch (error) {
+    console.error('An error occurred while resetting user exercises ', error);
+    res.status(500).json({ message: 'Interner Serverfehler beim Zurücksetzen der Benutzerübungen.' });
+  }
+});
 
 /**
  * Prepares exercise data for rendering on the client side.
