@@ -8,6 +8,7 @@ import { HttpClientService } from '../../service/http-client.service';
 import { HttpMethods } from '../types/httpMethods';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ModalService } from '../../service/modalService';
+import { TrainingPlanService } from '../training-plan.service';
 
 /**
  * Component for creating a training form.
@@ -33,6 +34,7 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private modalService: ModalService,
     private modalEventsService: ModalEventsService,
+    private trainingPlanService: TrainingPlanService,
     private httpClient: HttpClientService
   ) {
     this.trainingForm = this.fb.group({
@@ -75,6 +77,8 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
             formData
           )
         );
+
+        this.trainingPlanService.trainingPlanChanged();
 
         this.modalService.close(); // Close the modal on success
       } catch (error) {

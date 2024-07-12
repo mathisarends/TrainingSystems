@@ -13,6 +13,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ModalEventsService } from '../../../service/modal-events.service';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { SearchService } from '../../search.service';
+import { TrainingPlanService } from '../../training-plan.service';
 
 /**
  * Component to manage and display training plans.
@@ -42,6 +43,7 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
     private modalService: ModalService,
     private httpClient: HttpClientService,
     private modalEventsService: ModalEventsService,
+    private trainingPlansService: TrainingPlanService,
     private searchService: SearchService
   ) {}
 
@@ -55,6 +57,11 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
     // Subscribe to the confirmClick$ event to handle deletion confirmation
     this.modalEventsService.confirmClick$.subscribe(() => {
       this.handleDelete(this.currentSelectedId);
+    });
+
+    this.trainingPlansService.trainingPlansChanged$.subscribe(() => {
+      console.log('received change');
+      this.loadTrainingPlans();
     });
 
     // Subscribe to search input changes
@@ -86,10 +93,6 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
         this.httpClient.request<any>(HttpMethods.GET, 'training/plans')
       );
       this.allTrainingPlans = response.trainingPlanDtos;
-      console.log(
-        '🚀 ~ TrainingPlansComponent ~ loadTrainingPlans ~ this.allTrainingPlans:',
-        this.allTrainingPlans
-      );
       this.filteredTrainingPlans = this.allTrainingPlans;
     } catch (error) {
       console.error('Error loading training plans:', error);
@@ -175,7 +178,7 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
    * @param searchText - The search input text.
    */
   private filterTrainingPlans(searchText: string): void {
-    this.filteredTrainingPlans = this.allTrainingPlans.filter(
+    this.filteredTrainingPlans = this.allTrainingPlans?.filter(
       (trainingPlan) => {
         return trainingPlan.title
           .toLowerCase()

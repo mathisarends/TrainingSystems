@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
 
 import { SpinnerComponent } from '../components/spinner/spinner.component';
 import { ModalService } from '../../service/modalService';
+import { TrainingPlanService } from '../training-plan.service';
 
 @Component({
   selector: 'app-edit-training-plan',
@@ -31,6 +32,7 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private modalEventsService: ModalEventsService,
     private modalService: ModalService,
+    private trainingPlanService: TrainingPlanService,
     private httpClient: HttpClientService
   ) {
     this.trainingForm = this.fb.group({
@@ -103,7 +105,7 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy {
           )
         );
 
-        console.log('Training plan successfully updated:', response);
+        this.trainingPlanService.trainingPlanChanged();
         this.modalService.close();
       } catch (error) {
         const httpError = error as HttpErrorResponse;

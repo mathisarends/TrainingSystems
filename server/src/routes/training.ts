@@ -109,12 +109,12 @@ router.get('/edit/:id', authService.authenticationMiddleware, async (req, res) =
 
   try {
     const user: User | null = await userDAO.findOne({ id: userClaimsSet.id });
-    console.log('🚀 ~ router.get ~ user:', user);
     if (!user) {
       return res.status(404).json({ error: 'Benutzer nicht gefunden' });
     }
 
     const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
+
     if (trainingPlanIndex === -1) {
       return res.status(400).json({ error: 'Ungültige Trainingsplan-ID' });
     }
@@ -139,8 +139,8 @@ router.get('/edit/:id', authService.authenticationMiddleware, async (req, res) =
   }
 });
 
-router.patch('/edit/:index', authService.authenticationMiddleware, async (req, res) => {
-  const trainingPlanIndex = Number(req.params.index);
+router.patch('/edit/:id', authService.authenticationMiddleware, async (req, res) => {
+  const trainingPlanId = req.params.id;
   const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
 
   const userClaimsSet = res.locals.user;
@@ -150,6 +150,8 @@ router.patch('/edit/:index', authService.authenticationMiddleware, async (req, r
     if (!user) {
       return res.status(404).json({ error: 'Benutzer nicht gefunden' });
     }
+
+    const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
 
     const trainingPlan = user.trainingPlans[trainingPlanIndex];
 
