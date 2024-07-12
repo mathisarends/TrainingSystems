@@ -56,8 +56,6 @@ export class ModalService {
     if (componentData) {
       this.modalComponentRef.instance.childComponentData = componentData;
       console.log('Component Data:', componentData);
-    } else {
-      console.error('Child component data is not available.');
     }
   }
 
