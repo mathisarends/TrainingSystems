@@ -5,6 +5,7 @@ import { HttpMethods } from '../types/httpMethods';
 import { Exercise } from '../../../../shared/models/exercise/exercise';
 import { SpinnerComponent } from '../components/spinner/spinner.component';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-exercises',
@@ -14,9 +15,6 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./exercises.component.scss'],
 })
 export class ExercisesComponent implements OnInit {
-  onSubmit() {
-    throw new Error('Method not implemented.');
-  }
   protected isLoading = true;
   exerciseCategories: string[] = [];
   categorizedExercises: { [category: string]: Exercise[] } = {};
@@ -24,6 +22,8 @@ export class ExercisesComponent implements OnInit {
   categoryPauseTimes: { [category: string]: number } = {};
   defaultRepSchemeByCategory: { [category: string]: any } = {};
   maxExercises = 8;
+
+  changedData: { [key: string]: any } = {};
 
   constructor(private httpClient: HttpClientService) {}
 
@@ -38,27 +38,40 @@ export class ExercisesComponent implements OnInit {
       );
       const exercisesData = response.exercisesData;
       this.exerciseCategories = exercisesData.exerciseCategories;
-      console.log(
-        '🚀 ~ ExercisesComponent ~ loadExercises ~ this.exerciseCategories:',
-        this.exerciseCategories
-      );
       this.categorizedExercises = exercisesData.categorizedExercises;
       this.maxFactors = exercisesData.maxFactors;
       this.categoryPauseTimes = exercisesData.categoryPauseTimes;
-      console.log(
-        '🚀 ~ ExercisesComponent ~ loadExercises ~ this.categoryPauseTimes:',
-        this.categoryPauseTimes
-      );
       this.defaultRepSchemeByCategory =
         exercisesData.defaultRepSchemeByCategory;
-      console.log(
-        '🚀 ~ ExercisesComponent ~ loadExercises ~ this.defaultRepSchemeByCategory:',
-        this.defaultRepSchemeByCategory
-      );
     } catch (error) {
       console.error('Error loading exercises:', error);
     } finally {
       this.isLoading = false;
     }
+  }
+
+  async onSubmit(event: Event): Promise<void> {
+    event.preventDefault();
+    console.log('🚀 ~ ExercisesComponent ~ changedData:', this.changedData);
+
+    try {
+      const response: any = await firstValueFrom(
+        this.httpClient.request<any>(
+          HttpMethods.PATCH,
+          'exercise',
+          this.changedData
+        )
+      );
+      console.log('resonse', response);
+    } catch (error) {
+      const httpError = error as HttpErrorResponse;
+
+      console.error('Error updating updating user exercises:', error);
+    }
+  }
+
+  onInputChange(event: Event): void {
+    const target = event.target as HTMLInputElement | HTMLSelectElement;
+    this.changedData[target.name] = target.value;
   }
 }

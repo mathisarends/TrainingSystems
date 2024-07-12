@@ -2,7 +2,7 @@
 <app-spinner></app-spinner>
 } @else {
 <div class="container pt-4">
-  <form (ngSubmit)="onSubmit()">
+  <form (submit)="onSubmit($event)">
     @for (category of exerciseCategories; track category; let categoryIndex =
     $index) { @if (categoryIndex > 0) {
     <table class="table mb-5 table-hover">
@@ -22,6 +22,7 @@
               [name]="categoryIndex + '_' + exerciseIndex + '_exercise'"
               [value]="exercise || ''"
               style="text-align: left; padding: 0"
+              (input)="onInputChange($event)"
             />
           </td>
         </tr>
@@ -33,6 +34,7 @@
               <select
                 [name]="categoryIndex + '_categoryPauseTimeSelect'"
                 class="transparent-input"
+                (change)="onInputChange($event)"
               >
                 @for (time of [60, 90, 120, 150, 180, 210, 240, 270, 300]; track
                 time) {
@@ -53,6 +55,7 @@
               <select
                 [name]="categoryIndex + '_categoryDefaultSetSelect'"
                 class="transparent-input"
+                (change)="onInputChange($event)"
               >
                 @for (sets of [2, 3, 4, 5, 6]; track sets) {
                 <option
@@ -74,6 +77,7 @@
               <select
                 [name]="categoryIndex + '_categoryDefaultRepSelect'"
                 class="transparent-input"
+                (change)="onInputChange($event)"
               >
                 @for (reps of [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]; track reps) {
                 <option
@@ -95,6 +99,7 @@
               <select
                 [name]="categoryIndex + '_categoryDefaultRPESelect'"
                 class="transparent-input"
+                (change)="onInputChange($event)"
               >
                 @for (rpe of [6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10]; track rpe) {
                 <option
@@ -113,7 +118,6 @@
       </tbody>
     </table>
     } }
-
     <input type="submit" class="btn btn-dark" value="Submit" />
     <button class="btn btn-outline-dark m-1" id="reset-btn" type="button">
       Reset
