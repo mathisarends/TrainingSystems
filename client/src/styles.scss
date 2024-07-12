@@ -13,3 +13,14 @@ body {
 .blur-background > *:not(app-modal) {
   filter: blur(2px);
 }
+
+.transparent-input {
+  border: none;
+  background-color: transparent;
+  width: 100%;
+}
+
+.transparent-input:focus {
+  border: none;
+  outline: none;
+}

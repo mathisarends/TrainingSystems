@@ -1,4 +1,5 @@
-import { Exercise } from '../../models/exercise/exercise.js';
+import { Exercise } from '@shared/models/exercise/exercise';
+
 /**
  * Placeholder exercise category to be used when no selection is made.
  */

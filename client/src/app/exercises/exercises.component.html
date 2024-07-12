@@ -1,1 +1,136 @@
-<p>Exercise works!</p>
+@if (isLoading) {
+<app-spinner></app-spinner>
+} @else {
+<div class="container pt-4" *ngIf="!isLoading">
+  <form (ngSubmit)="onSubmit()">
+    <ng-container
+      *ngFor="let category of exerciseCategories; let categoryIndex = index"
+    >
+      <ng-container *ngIf="categoryIndex > 0">
+        <table class="table mb-5 table-hover">
+          <thead>
+            <tr>
+              <th scope="col">{{ category }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container
+              *ngFor="
+                let exercise of categorizedExercises[category];
+                let exerciseIndex = index;
+                let last = last
+              "
+            >
+              <tr>
+                <td [attr.data-cell]="category">
+                  <input
+                    type="text"
+                    class="transparent-input"
+                    [name]="categoryIndex + '_' + exerciseIndex + '_exercise'"
+                    [value]="exercise || ''"
+                    style="text-align: left; padding: 0"
+                  />
+                </td>
+              </tr>
+              <ng-container *ngIf="last && exerciseIndex === maxExercises - 1">
+                <tr class="top-border">
+                  <td data-cell="Rest-time">
+                    <div>
+                      <select
+                        [name]="categoryIndex + '_categoryPauseTimeSelect'"
+                        class="transparent-input"
+                      >
+                        <option
+                          *ngFor="
+                            let time of [
+                              60, 90, 120, 150, 180, 210, 240, 270, 300
+                            ]
+                          "
+                          [value]="time"
+                          [selected]="categoryPauseTimes[category] === time"
+                        >
+                          {{ time / 60 }} Minuten
+                        </option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td data-cell="sets">
+                    <div>
+                      <select
+                        [name]="categoryIndex + '_categoryDefaultSetSelect'"
+                        class="transparent-input"
+                      >
+                        <option
+                          *ngFor="let sets of [2, 3, 4, 5, 6]"
+                          [value]="sets"
+                          [selected]="
+                            defaultRepSchemeByCategory[category]
+                              ?.defaultSets === sets
+                          "
+                        >
+                          {{ sets }} Sets
+                        </option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td data-cell="reps">
+                    <div>
+                      <select
+                        [name]="categoryIndex + '_categoryDefaultRepSelect'"
+                        class="transparent-input"
+                      >
+                        <option
+                          *ngFor="let reps of [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]"
+                          [value]="reps"
+                          [selected]="
+                            defaultRepSchemeByCategory[category]
+                              ?.defaultReps === reps
+                          "
+                        >
+                          {{ reps }} Reps
+                        </option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td data-cell="RPE">
+                    <div>
+                      <select
+                        [name]="categoryIndex + '_categoryDefaultRPESelect'"
+                        class="transparent-input"
+                      >
+                        <option
+                          *ngFor="
+                            let rpe of [6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10]
+                          "
+                          [value]="rpe"
+                          [selected]="
+                            defaultRepSchemeByCategory[category]?.defaultRPE ===
+                            rpe
+                          "
+                        >
+                          RPE {{ rpe }}
+                        </option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
+            </ng-container>
+          </tbody>
+        </table>
+      </ng-container>
+    </ng-container>
+
+    <input type="submit" class="btn btn-dark" value="Submit" />
+    <button class="btn btn-outline-dark" id="reset-btn" type="button">
+      Reset
+    </button>
+  </form>
+</div>
+}

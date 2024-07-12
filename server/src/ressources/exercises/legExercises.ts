@@ -1,5 +1,5 @@
-import { ExerciseCategory } from '../../models/exercise/exerciseCategory.js';
-import { Exercise } from '../../models/exercise/exercise.js';
+import { Exercise } from '@shared/models/exercise/exercise';
+import { ExerciseCategory } from '@shared/models/exercise/exerciseCategory.js';
 
 /**
  * Legs exercise category with default settings.
