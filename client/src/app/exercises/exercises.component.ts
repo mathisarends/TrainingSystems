@@ -38,6 +38,10 @@ export class ExercisesComponent implements OnInit {
       );
       const exercisesData = response.exercisesData;
       this.exerciseCategories = exercisesData.exerciseCategories;
+      console.log(
+        '🚀 ~ ExercisesComponent ~ loadExercises ~ this.exerciseCategories:',
+        this.exerciseCategories
+      );
       this.categorizedExercises = exercisesData.categorizedExercises;
       this.maxFactors = exercisesData.maxFactors;
       this.categoryPauseTimes = exercisesData.categoryPauseTimes;
