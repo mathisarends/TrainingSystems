@@ -4,6 +4,8 @@ import { MongoGenericDAO } from '../models/mongo-generic.dao.js';
 import { authService } from '../service/authService.js';
 import { TrainingPlanDTO } from '../dto/trainingDto.js';
 
+import { v4 as uuidv4 } from 'uuid';
+
 import dotenv from 'dotenv';
 import { TrainingPlan } from '@shared/models/training/trainingPlan.js';
 import { TrainingWeek } from '@shared/models/training/trainingWeek.js';
@@ -49,6 +51,7 @@ router.post('/create', authService.authenticationMiddleware, async (req, res) =>
     const trainingWeeks = createNewTrainingPlanWithPlaceholders(Number(trainingPlanWeeks), Number(trainingFrequency));
 
     const newTrainingPlan: TrainingPlan = {
+      id: uuidv4(),
       title: title,
       trainingFrequency: trainingFrequency,
       weightRecommandationBase: weightRecommandation,
@@ -113,6 +116,7 @@ router.get('/edit/:index', authService.authenticationMiddleware, async (req, res
     const trainingPlan = user.trainingPlans[trainingPlanIndex];
 
     const fields: Array<keyof TrainingPlan> = [
+      'id',
       'title',
       'trainingFrequency',
       'weightRecommandationBase',

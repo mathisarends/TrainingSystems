@@ -1,11 +1,15 @@
 import { TrainingWeek } from "./trainingWeek.js";
-import { TrainingPhase } from "./enum/trainingPhase.js";
 import { WeightRecommendationBase } from "./enum/weightRecommandationBase.js";
 
 /**
  * Interface representing a training plan.
  */
 export interface TrainingPlan {
+  /**
+   * The unique id for the training plan.
+   */
+  id: string;
+
   /**
    * The title of the training plan.
    */

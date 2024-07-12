@@ -2,7 +2,6 @@ import { TrainingPlan } from '../../../shared/models/training/trainingPlan.js';
 import {
   BasicTrainingPlanView,
   DetailedTrainingPlanView,
-  MinimalTrainingPlanView,
   CustomTrainingPlanView
 } from '../../../shared/models/dtos/training/trainingDto.types.js';
 
@@ -14,6 +13,7 @@ export class TrainingPlanDTO {
    */
   static getBasicView(plan: TrainingPlan): BasicTrainingPlanView {
     return {
+      id: plan.id,
       title: plan.title,
       trainingFrequency: plan.trainingFrequency,
       lastUpdated: plan.lastUpdated
@@ -27,18 +27,6 @@ export class TrainingPlanDTO {
    */
   static getDetailedView(plan: TrainingPlan): DetailedTrainingPlanView {
     return plan;
-  }
-
-  /**
-   * Returns a minimal view of the training plan.
-   * @param plan The full training plan.
-   * @returns A minimal view of the training plan.
-   */
-  static getMinimalView(plan: TrainingPlan): MinimalTrainingPlanView {
-    return {
-      title: plan.title,
-      lastUpdated: plan.lastUpdated
-    };
   }
 
   /**
