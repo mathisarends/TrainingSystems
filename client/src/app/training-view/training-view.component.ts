@@ -4,7 +4,6 @@ import {
   AfterViewInit,
   AfterViewChecked,
   Renderer2,
-  ElementRef,
   Inject,
   PLATFORM_ID,
 } from '@angular/core';
@@ -22,6 +21,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoryPlaceholderService } from '../category-placeholder.service';
 import { TrainingPlanResponse } from '../types/TrainingPlanResponse';
+import { ToastService } from '../toast/toast.service';
 
 @Component({
   selector: 'app-training-view',
@@ -63,7 +63,8 @@ export class TrainingViewComponent
     private rpeService: RpeService,
     private estMaxService: EstMaxService,
     private renderer: Renderer2,
-    private el: ElementRef,
+    private toastService: ToastService,
+
     private categoryPlaceholderService: CategoryPlaceholderService
   ) {}
 
@@ -114,6 +115,10 @@ export class TrainingViewComponent
       );
 
       console.log('response', response);
+      this.toastService.show('Success', 'Operation completed successfully!', {
+        classname: 'success',
+        delay: 5000,
+      });
 
       this.title = response.title;
       this.trainingWeekIndex = response.trainingWeekIndex;
