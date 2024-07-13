@@ -11,6 +11,7 @@ import { HttpMethods } from '../types/httpMethods';
 import { SpinnerComponent } from '../components/spinner/spinner.component';
 import { FormService } from '../form.service';
 import { RpeService } from '../rpe.service';
+import { EstMaxService } from '../estmax.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -63,7 +64,8 @@ export class TrainingViewComponent
   constructor(
     private httpClient: HttpClientService,
     private formService: FormService,
-    private rpeService: RpeService
+    private rpeService: RpeService,
+    private estMaxService: EstMaxService
   ) {}
 
   async ngOnInit() {
@@ -77,6 +79,7 @@ export class TrainingViewComponent
   ngAfterViewInit(): void {
     console.log('ngAfterViewInit called');
     this.rpeService.initializeRPEValidation();
+    this.estMaxService.initializeEstMaxCalculation();
   }
 
   ngAfterViewChecked(): void {

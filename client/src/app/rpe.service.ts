@@ -22,7 +22,6 @@ export class RpeService {
     } else {
       rpeInput.value = rpe.toString();
     }
-    rpeInput.dispatchEvent(this.changeEvent);
   }
 
   /**
