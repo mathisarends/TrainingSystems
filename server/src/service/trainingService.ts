@@ -171,7 +171,7 @@ export async function getTrainingPlanForDay(
   };
 }
 
-function findTrainingPlanIndexById(trainingPlans: TrainingPlan[], planId: string): number {
+export function findTrainingPlanIndexById(trainingPlans: TrainingPlan[], planId: string): number {
   return trainingPlans.findIndex(plan => plan.id === planId);
 }
 

@@ -41,9 +41,4 @@ export interface Exercise {
    * The estimated maximum weight that can be lifted for one repetition (1RM).
    */
   estMax: number;
-
-  /**
-   * Any additional notes or comments about the exercise.
-   */
-  notes: string;
 }

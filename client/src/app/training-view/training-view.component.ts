@@ -6,6 +6,7 @@ import {
   Renderer2,
   ElementRef,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { TrainingDay } from '../../../../shared/models/training/trainingDay';
 import { HttpClientService } from '../../service/http-client.service';
 import { firstValueFrom } from 'rxjs';
@@ -16,8 +17,7 @@ import { RpeService } from '../rpe.service';
 import { EstMaxService } from '../estmax.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { CategoryPlaceholderService } from './category-placeholder.service'; // Import the new service
+import { CategoryPlaceholderService } from '../category-placeholder.service';
 
 interface TrainingPlanResponse {
   title: string;
@@ -65,6 +65,10 @@ export class TrainingViewComponent
   isLoading = true;
   isPlaceholderHandled = false;
 
+  protected planId!: string;
+  protected week!: number;
+  protected day!: number;
+
   constructor(
     private route: ActivatedRoute,
     private httpClient: HttpClientService,
@@ -73,15 +77,15 @@ export class TrainingViewComponent
     private estMaxService: EstMaxService,
     private renderer: Renderer2,
     private el: ElementRef,
-    private categoryPlaceholderService: CategoryPlaceholderService // Inject the service
+    private categoryPlaceholderService: CategoryPlaceholderService
   ) {}
 
   async ngOnInit() {
     this.route.queryParams.subscribe(async (params) => {
-      const planId = params['planId'];
-      const week = params['week'];
-      const day = params['day'];
-      await this.loadTrainingPlan(planId, week, day);
+      this.planId = params['planId'];
+      this.week = params['week'];
+      this.day = params['day'];
+      await this.loadTrainingPlan(this.planId, this.week, this.day);
       this.isLoading = false;
     });
   }
@@ -98,7 +102,8 @@ export class TrainingViewComponent
         '.exercise-category-selector'
       ) as NodeListOf<HTMLSelectElement>;
       this.categoryPlaceholderService.handlePlaceholderCategory(
-        exerciseCategorySelectors
+        exerciseCategorySelectors,
+        this.renderer
       );
       this.isPlaceholderHandled = true;
     }
@@ -140,15 +145,24 @@ export class TrainingViewComponent
     const changedData = this.formService.getChanges();
     console.log('Changed Data:', changedData);
 
-    const planId = '65544090-343a-49a4-9176-17e19a177842'; // Replace with actual plan ID
-    const week = 1; // Replace with actual week number
-    const day = 1; // Replace with actual day number
-
     try {
       await firstValueFrom(
         this.httpClient.request<any>(
           HttpMethods.PATCH,
-          `training/plan/${planId}/${week}/${day}`,
+          `training/plan/${this.planId}/${this.week}/${this.day}`,
+          { body: changedData }
+        )
+      );
+      console.log('Plan successfully updated');
+      this.formService.clearChanges(); // Clear changes after submission
+    } catch (error) {
+      console.error('Error updating training plan:', error);
+    }
+    try {
+      await firstValueFrom(
+        this.httpClient.request<any>(
+          HttpMethods.PATCH,
+          `training/plan/${this.planId}/${this.week}/${this.day}`,
           { body: changedData }
         )
       );
@@ -162,7 +176,8 @@ export class TrainingViewComponent
   onInputChange(event: Event): void {
     this.formService.trackChange(event);
     this.categoryPlaceholderService.updatePlaceholderVisibility(
-      event.target as HTMLSelectElement
+      event.target as HTMLSelectElement,
+      this.renderer
     );
   }
 
@@ -171,7 +186,7 @@ export class TrainingViewComponent
       event,
       this.exerciseCategories,
       this.defaultRepSchemeByCategory,
-      this.formService
+      this.renderer
     );
   }
 }
