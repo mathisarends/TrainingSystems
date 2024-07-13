@@ -10,6 +10,7 @@ import { firstValueFrom } from 'rxjs';
 import { HttpMethods } from '../types/httpMethods';
 import { SpinnerComponent } from '../components/spinner/spinner.component';
 import { FormService } from '../form.service';
+import { RpeService } from '../rpe.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -61,7 +62,8 @@ export class TrainingViewComponent
 
   constructor(
     private httpClient: HttpClientService,
-    private formService: FormService
+    private formService: FormService,
+    private rpeService: RpeService
   ) {}
 
   async ngOnInit() {
@@ -74,7 +76,7 @@ export class TrainingViewComponent
 
   ngAfterViewInit(): void {
     console.log('ngAfterViewInit called');
-    this.initializeRPEValidation();
+    this.rpeService.initializeRPEValidation();
   }
 
   ngAfterViewChecked(): void {
@@ -215,99 +217,5 @@ export class TrainingViewComponent
 
   getIndexByCategory(category: string): number {
     return this.exerciseCategories.indexOf(category);
-  }
-
-  initializeRPEValidation(): void {
-    const MIN_RPE = 5;
-    const MAX_RPE = 10;
-
-    const changeEvent = new Event('change', { bubbles: true });
-
-    const validateRPE = (rpe: number, rpeInput: HTMLInputElement) => {
-      switch (true) {
-        case rpe < MIN_RPE:
-          rpeInput.value = MIN_RPE.toString();
-          break;
-        case rpe > MAX_RPE:
-          rpeInput.value = MAX_RPE.toString();
-          break;
-        default:
-          rpeInput.value = rpe.toString();
-      }
-      rpeInput.dispatchEvent(changeEvent);
-    };
-
-    const targetRPEInputs = document.querySelectorAll(
-      '.targetRPE'
-    ) as NodeListOf<HTMLInputElement>;
-    targetRPEInputs.forEach((input) => {
-      input.addEventListener('change', (e) => {
-        const targetRPEInput = e.target as HTMLInputElement;
-        const targetRPE: number = parseInt(targetRPEInput.value);
-        validateRPE(targetRPE, targetRPEInput);
-      });
-    });
-
-    const actualRPEInputs = document.querySelectorAll(
-      '.actualRPE'
-    ) as NodeListOf<HTMLInputElement>;
-    actualRPEInputs.forEach((input) => {
-      input.addEventListener('change', (e) => {
-        const target = e.target as HTMLInputElement;
-        let rpe = target.value;
-
-        if (rpe === '') {
-          target.value = '';
-          target.dispatchEvent(changeEvent);
-          return;
-        }
-
-        rpe = rpe.replace(/,/g, '.'); //replace commas with dots
-        let numbers = rpe.split(';').map(Number);
-
-        if (numbers.length === 1 && !isNaN(numbers[0])) {
-          //rpe is valid (number) and inputted without further values separated by ;
-          validateRPE(numbers[0], target);
-
-          // finde das zugehörige planedRPE und workoutNotes element
-          const parentRow = target.closest('tr')!;
-          const planedRPE = parentRow.querySelector(
-            '.targetRPE'
-          )! as HTMLInputElement;
-          const workoutNotes = parentRow.querySelector(
-            '.workout-notes'
-          ) as HTMLInputElement;
-
-          const rpeDiff = parseFloat(planedRPE.value) - numbers[0];
-          return;
-        }
-
-        if (numbers.some(isNaN)) {
-          //if one of the values is not a number
-          target.value = '';
-          target.dispatchEvent(changeEvent);
-          return;
-        }
-
-        const parentRow = target.closest('tr')!;
-        const setInputs = parentRow.querySelector('.sets') as HTMLInputElement;
-
-        if (numbers.length == parseInt(setInputs.value)) {
-          const sum = numbers.reduce((acc, num) => acc + num, 0);
-          const average = sum / numbers.length;
-
-          const roundedAverage = Math.ceil(average / 0.5) * 0.5;
-          const planedRPE = parentRow.querySelector(
-            '.targetRPE'
-          ) as HTMLInputElement;
-          const workoutNotes = parentRow.querySelector(
-            '.workout-notes'
-          ) as HTMLInputElement;
-
-          const rpeDiff = parseFloat(planedRPE.value) - roundedAverage;
-          validateRPE(roundedAverage, target);
-        }
-      });
-    });
   }
 }
