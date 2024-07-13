@@ -6,6 +6,7 @@ import {
   Renderer2,
   ElementRef,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { TrainingDay } from '../../../../shared/models/training/trainingDay';
 import { HttpClientService } from '../../service/http-client.service';
 import { firstValueFrom } from 'rxjs';
@@ -64,6 +65,7 @@ export class TrainingViewComponent
   isPlaceholderHandled = false;
 
   constructor(
+    private route: ActivatedRoute,
     private httpClient: HttpClientService,
     private formService: FormService,
     private rpeService: RpeService,
@@ -73,11 +75,13 @@ export class TrainingViewComponent
   ) {}
 
   async ngOnInit() {
-    const planId = '65544090-343a-49a4-9176-17e19a177842';
-    const week = 1;
-    const day = 1;
-    await this.loadTrainingPlan(planId, week, day);
-    this.isLoading = false;
+    this.route.params.subscribe(async (params) => {
+      const planId = params['planId'];
+      const week = params['week'];
+      const day = params['day'];
+      await this.loadTrainingPlan(planId, week, day);
+      this.isLoading = false;
+    });
   }
 
   ngAfterViewInit(): void {
@@ -124,12 +128,28 @@ export class TrainingViewComponent
     }
   }
 
-  onSubmit(event: Event): void {
+  async onSubmit(event: Event): Promise<void> {
     event.preventDefault();
     const changedData = this.formService.getChanges();
     console.log('Changed Data:', changedData);
-    // Handle form submission logic here
-    this.formService.clearChanges(); // Clear changes after submission
+
+    const planId = this.route.snapshot.paramMap.get('planId');
+    const week = +this.route.snapshot.paramMap.get('week')!;
+    const day = +this.route.snapshot.paramMap.get('day')!;
+
+    try {
+      await firstValueFrom(
+        this.httpClient.request<any>(
+          HttpMethods.PATCH,
+          `training/plan/${planId}/${week}/${day}`,
+          { body: changedData }
+        )
+      );
+      console.log('Plan successfully updated');
+      this.formService.clearChanges(); // Clear changes after submission
+    } catch (error) {
+      console.error('Error updating training plan:', error);
+    }
   }
 
   onInputChange(event: Event): void {
@@ -138,68 +158,7 @@ export class TrainingViewComponent
   }
 
   onCategoryChange(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const category = target.value;
-    console.log('🚀 ~ onCategoryChange ~ category:', category);
-    const tableRow = target.closest('tr');
-
-    if (tableRow) {
-      const exerciseNameSelectors = tableRow.querySelectorAll(
-        '.exercise-name-selector'
-      ) as NodeListOf<HTMLSelectElement>;
-
-      if (category === '- Bitte Auswählen -') {
-        this.renderer.setStyle(target, 'opacity', '0');
-        exerciseNameSelectors.forEach((selector) => {
-          this.renderer.setStyle(selector, 'display', 'none');
-          selector.disabled = false;
-        });
-      } else {
-        this.renderer.setStyle(target, 'opacity', '1');
-        const index = this.getIndexByCategory(category);
-        exerciseNameSelectors.forEach((selector, i) => {
-          this.renderer.setStyle(
-            selector,
-            'display',
-            i === index ? 'block' : 'none'
-          );
-          this.renderer.setStyle(selector, 'opacity', i === index ? '1' : '0');
-          selector.disabled = i !== index;
-        });
-      }
-
-      const displaySelector = tableRow.querySelector(
-        '.exercise-name-selector:not([style*="display: none"])'
-      ) as HTMLSelectElement;
-      if (displaySelector) {
-        displaySelector.dispatchEvent(new Event('change', { bubbles: true }));
-      }
-
-      // Set default values based on category
-      const setsInput = tableRow.querySelector('.sets') as HTMLInputElement;
-      const repsInput = tableRow.querySelector('.reps') as HTMLInputElement;
-      const targetRPEInput = tableRow.querySelector(
-        '.targetRPE'
-      ) as HTMLInputElement;
-
-      if (category !== '- Bitte Auswählen -') {
-        const defaultValues = this.defaultRepSchemeByCategory[category];
-        if (defaultValues) {
-          setsInput.value = defaultValues.defaultSets.toString();
-          repsInput.value = defaultValues.defaultReps.toString();
-          targetRPEInput.value = defaultValues.defaultRPE.toString();
-        }
-      } else {
-        setsInput.value = '';
-        repsInput.value = '';
-        targetRPEInput.value = '';
-      }
-
-      // Track changes in FormService
-      this.formService.addChange(setsInput.name, setsInput.value);
-      this.formService.addChange(repsInput.name, repsInput.value);
-      this.formService.addChange(targetRPEInput.name, targetRPEInput.value);
-    }
+    // ...existing code...
   }
 
   handlePlaceholderCategory(): void {

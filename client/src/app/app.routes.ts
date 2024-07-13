@@ -20,5 +20,5 @@ export const routes: Routes = [
   { path: 'profile', component: ProfileComponent },
   { path: 'spinner', component: SpinnerComponent },
   { path: 'exercises', component: ExercisesComponent },
-  { path: 'test', component: TrainingViewComponent },
+  { path: 'training/:planId/:week/:day', component: TrainingViewComponent },
 ];
