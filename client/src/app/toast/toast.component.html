@@ -1,6 +1,7 @@
 <div class="toast-container">
   @for (toast of toastService.toasts; track toast) {
-  <div class="toast {{ toast.classname }}" [class.active]="true" role="alert">
+
+  <div class="toast {{ toast.type }}" [class.active]="true" role="alert">
     <div class="toast-content">
       <div class="message">
         <span id="toast-headline">{{ toast.title }}</span>

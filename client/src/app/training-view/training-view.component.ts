@@ -11,7 +11,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { TrainingDay } from '../../../../shared/models/training/trainingDay';
 import { HttpClientService } from '../../service/http-client.service';
-import { firstValueFrom } from 'rxjs';
+import { delay, firstValueFrom } from 'rxjs';
 import { HttpMethods } from '../types/httpMethods';
 import { SpinnerComponent } from '../components/spinner/spinner.component';
 import { FormService } from '../form.service';
@@ -22,6 +22,7 @@ import { FormsModule } from '@angular/forms';
 import { CategoryPlaceholderService } from '../category-placeholder.service';
 import { TrainingPlanResponse } from '../types/TrainingPlanResponse';
 import { ToastService } from '../toast/toast.service';
+import { ToastType } from '../toast/toastType';
 
 @Component({
   selector: 'app-training-view',
@@ -115,10 +116,6 @@ export class TrainingViewComponent
       );
 
       console.log('response', response);
-      this.toastService.show('Success', 'Operation completed successfully!', {
-        classname: 'success',
-        delay: 5000,
-      });
 
       this.title = response.title;
       this.trainingWeekIndex = response.trainingWeekIndex;
@@ -150,7 +147,12 @@ export class TrainingViewComponent
           { body: changedData }
         )
       );
-      console.log('Plan successfully updated');
+      this.toastService.show(
+        'Speichern erfolgreich',
+        'Deine Änderungen wurden erfolgreich gespeichert',
+        ToastType.INFO,
+        { delay: 5000 }
+      );
       this.formService.clearChanges(); // Clear changes after submission
     } catch (error) {
       console.error('Error updating training plan:', error);
