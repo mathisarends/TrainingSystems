@@ -14,6 +14,7 @@ import { ModalEventsService } from '../../../service/modal-events.service';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { SearchService } from '../../search.service';
 import { TrainingPlanService } from '../../training-plan.service';
+import { Router } from '@angular/router';
 
 /**
  * Component to manage and display training plans.
@@ -42,6 +43,7 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: ModalService,
     private httpClient: HttpClientService,
+    private router: Router,
     private modalEventsService: ModalEventsService,
     private trainingPlansService: TrainingPlanService,
     private searchService: SearchService
@@ -134,7 +136,15 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
    * @param index - The index of the training plan to view.
    */
   viewTrainingPlan(id: string): void {
-    // Implementation for viewing a training plan
+    const week = 1; // Annahme: Woche ist 1
+    const day = 1; // Annahme: Tag ist 1
+    this.router.navigate(['/training/view'], {
+      queryParams: {
+        planId: id,
+        week: week,
+        day: day,
+      },
+    });
   }
 
   /**

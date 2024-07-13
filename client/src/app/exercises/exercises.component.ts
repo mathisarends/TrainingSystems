@@ -10,6 +10,8 @@ import { SearchService } from '../search.service';
 import { ModalService } from '../../service/modalService';
 import { ExerciseService } from '../exercise.service';
 import { ConfirmExerciseResetComponent } from '../confirm-exercise-reset/confirm-exercise-reset.component';
+import { ToastService } from '../toast/toast.service';
+import { ToastType } from '../toast/toastType';
 
 @Component({
   selector: 'app-exercises',
@@ -36,6 +38,7 @@ export class ExercisesComponent implements OnInit, OnDestroy {
 
   constructor(
     private httpClient: HttpClientService,
+    private toastService: ToastService,
     private searchService: SearchService,
     private modalService: ModalService,
     private exerciseService: ExerciseService
@@ -113,6 +116,14 @@ export class ExercisesComponent implements OnInit, OnDestroy {
           this.changedData
         )
       );
+
+      this.toastService.show(
+        'Speichern erfolgreich',
+        'Deine Änderungen wurden erfolgreich gespeichert',
+        ToastType.INFO,
+        { delay: 5000 }
+      );
+
       console.log('response', response);
     } catch (error) {
       const httpError = error as HttpErrorResponse;
