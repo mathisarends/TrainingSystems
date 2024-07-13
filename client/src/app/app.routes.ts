@@ -24,4 +24,4 @@ export const routes: Routes = [
   { path: 'training/:planId/:week/:day', component: TrainingViewComponent },
 ];
 
-// http://localhost:4200/training/view?planId=65544090-343a-49a4-9176-17e19a177842&week=1&day=1
+// http://localhost:4200/training/view?planId=3b05896f-2aed-47af-b82e-e4548cf8fedf&week=1&day=1

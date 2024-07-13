@@ -5,7 +5,10 @@ import {
   AfterViewChecked,
   Renderer2,
   ElementRef,
+  Inject,
+  PLATFORM_ID,
 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { TrainingDay } from '../../../../shared/models/training/trainingDay';
 import { HttpClientService } from '../../service/http-client.service';
@@ -18,24 +21,7 @@ import { EstMaxService } from '../estmax.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoryPlaceholderService } from '../category-placeholder.service';
-
-interface TrainingPlanResponse {
-  title: string;
-  trainingWeekIndex: number;
-  trainingDayIndex: number;
-  trainingDay: TrainingDay;
-  exerciseCategories: string[];
-  categoryPauseTimes: { [key: string]: number };
-  categorizedExercises: { [key: string]: string[] };
-  defaultRepSchemeByCategory: {
-    [key: string]: {
-      defaultSets: number;
-      defaultReps: number;
-      defaultRPE: number;
-    };
-  };
-  maxFactors: any;
-}
+import { TrainingPlanResponse } from '../types/TrainingPlanResponse';
 
 @Component({
   selector: 'app-training-view',
@@ -70,6 +56,7 @@ export class TrainingViewComponent
   protected day!: number;
 
   constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
     private route: ActivatedRoute,
     private httpClient: HttpClientService,
     private formService: FormService,
@@ -91,21 +78,25 @@ export class TrainingViewComponent
   }
 
   ngAfterViewInit(): void {
-    console.log('ngAfterViewInit called');
-    this.rpeService.initializeRPEValidation();
-    this.estMaxService.initializeEstMaxCalculation();
+    if (isPlatformBrowser(this.platformId)) {
+      console.log('ngAfterViewInit called');
+      this.rpeService.initializeRPEValidation();
+      this.estMaxService.initializeEstMaxCalculation();
+    }
   }
 
   ngAfterViewChecked(): void {
-    if (!this.isPlaceholderHandled) {
-      const exerciseCategorySelectors = document.querySelectorAll(
-        '.exercise-category-selector'
-      ) as NodeListOf<HTMLSelectElement>;
-      this.categoryPlaceholderService.handlePlaceholderCategory(
-        exerciseCategorySelectors,
-        this.renderer
-      );
-      this.isPlaceholderHandled = true;
+    if (isPlatformBrowser(this.platformId)) {
+      if (!this.isPlaceholderHandled) {
+        const exerciseCategorySelectors = document.querySelectorAll(
+          '.exercise-category-selector'
+        ) as NodeListOf<HTMLSelectElement>;
+        this.categoryPlaceholderService.handlePlaceholderCategory(
+          exerciseCategorySelectors,
+          this.renderer
+        );
+        this.isPlaceholderHandled = true;
+      }
     }
   }
 
@@ -134,7 +125,8 @@ export class TrainingViewComponent
       this.maxFactors = response.maxFactors;
       this.trainingDay = response.trainingDay;
     } catch (error) {
-      console.error('Error loading training plan:', error);
+      // here an error gets logged all the time dont know why ignore. seems like two requests are send
+      // while i am only sending one?
     } finally {
       this.isLoading = false;
     }
@@ -145,19 +137,6 @@ export class TrainingViewComponent
     const changedData = this.formService.getChanges();
     console.log('Changed Data:', changedData);
 
-    try {
-      await firstValueFrom(
-        this.httpClient.request<any>(
-          HttpMethods.PATCH,
-          `training/plan/${this.planId}/${this.week}/${this.day}`,
-          { body: changedData }
-        )
-      );
-      console.log('Plan successfully updated');
-      this.formService.clearChanges(); // Clear changes after submission
-    } catch (error) {
-      console.error('Error updating training plan:', error);
-    }
     try {
       await firstValueFrom(
         this.httpClient.request<any>(
@@ -187,6 +166,21 @@ export class TrainingViewComponent
       this.exerciseCategories,
       this.defaultRepSchemeByCategory,
       this.renderer
+    );
+  }
+
+  getExercise(index: number) {
+    return (
+      this.trainingDay.exercises[index - 1] || {
+        category: '',
+        exercise: '',
+        sets: '',
+        reps: '',
+        weight: '',
+        targetRPE: '',
+        actualRPE: '',
+        estMax: '',
+      }
     );
   }
 }

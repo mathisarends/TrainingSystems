@@ -44,6 +44,10 @@ export class AuthenticatorService {
   fetchUserDetails() {
     this.profileService.getProfile().subscribe({
       next: (data) => {
+        console.log(
+          '🚀 ~ AuthenticatorService ~ this.profileService.getProfile ~ data:',
+          data
+        );
         this.userDetails = data.userDto;
       },
       error: (err) => {

@@ -38,9 +38,8 @@
             (change)="onCategoryChange($event)"
             [ngStyle]="{
               opacity:
-                trainingDay.exercises[k - 1]?.category ===
-                  '- Bitte Auswählen -' ||
-                !trainingDay.exercises[k - 1]?.category
+                getExercise(k).category === '- Bitte Auswählen -' ||
+                !getExercise(k).category
                   ? 0
                   : 1
             }"
@@ -48,7 +47,7 @@
             @for (category of exerciseCategories; track category) {
             <option
               [value]="category"
-              [selected]="trainingDay.exercises[k - 1]?.category === category"
+              [selected]="getExercise(k).category === category"
             >
               {{ category }}
             </option>
@@ -60,11 +59,9 @@
           <select
             name="day{{ day }}_exercise{{ k }}_exercise_name"
             class="exercise-name-selector transparent-input"
-            [disabled]="trainingDay.exercises[k - 1]?.category !== category"
+            [disabled]="getExercise(k).category !== category"
             [style.display]="
-              trainingDay.exercises[k - 1]?.category === category
-                ? 'block'
-                : 'none'
+              getExercise(k).category === category ? 'block' : 'none'
             "
             (change)="onInputChange($event)"
           >
@@ -72,9 +69,7 @@
             exerciseName) {
             <option
               [value]="exerciseName"
-              [selected]="
-                trainingDay.exercises[k - 1]?.exercise === exerciseName
-              "
+              [selected]="getExercise(k).exercise === exerciseName"
             >
               {{ exerciseName }}
             </option>
@@ -87,7 +82,7 @@
             type="number"
             class="transparent-input sets"
             name="day{{ day }}_exercise{{ k }}_sets"
-            [value]="trainingDay.exercises[k - 1]?.sets || ''"
+            [value]="getExercise(k).sets || ''"
             (input)="onInputChange($event)"
           />
         </td>
@@ -96,7 +91,7 @@
             type="number"
             class="transparent-input reps"
             name="day{{ day }}_exercise{{ k }}_reps"
-            [value]="trainingDay.exercises[k - 1]?.reps || ''"
+            [value]="getExercise(k).reps || ''"
             (input)="onInputChange($event)"
           />
         </td>
@@ -105,7 +100,7 @@
             type="number"
             class="transparent-input weight"
             name="day{{ day }}_exercise{{ k }}_weight"
-            [value]="trainingDay.exercises[k - 1]?.weight || ''"
+            [value]="getExercise(k).weight || ''"
             (input)="onInputChange($event)"
           />
         </td>
@@ -114,7 +109,7 @@
             type="number"
             class="transparent-input targetRPE"
             name="day{{ day }}_exercise{{ k }}_targetRPE"
-            [value]="trainingDay.exercises[k - 1]?.targetRPE || ''"
+            [value]="getExercise(k).targetRPE || ''"
             (input)="onInputChange($event)"
           />
         </td>
@@ -123,7 +118,7 @@
             type="string"
             class="transparent-input actualRPE"
             name="day{{ day }}_exercise{{ k }}_actualRPE"
-            [value]="trainingDay.exercises[k - 1]?.actualRPE || ''"
+            [value]="getExercise(k).actualRPE || ''"
             (input)="onInputChange($event)"
           />
         </td>
@@ -133,7 +128,7 @@
             class="transparent-input estMax"
             readonly
             name="day{{ day }}_exercise{{ k }}_estMax"
-            [value]="trainingDay.exercises[k - 1]?.estMax || ''"
+            [value]="getExercise(k).estMax || ''"
             (input)="onInputChange($event)"
           />
         </td>

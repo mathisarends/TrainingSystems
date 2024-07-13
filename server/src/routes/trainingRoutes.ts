@@ -4,7 +4,6 @@ import { authService } from '../service/authService.js';
 import { User } from '@shared/models/user.js';
 import { findTrainingPlanIndexById } from '../service/trainingService.js';
 import { Exercise } from '@shared/models/training/exercise.js';
-import { updateExercises } from 'controller/exerciseController.js';
 import { TrainingDay } from '@shared/models/training/trainingDay.js';
 
 const router = express.Router();
