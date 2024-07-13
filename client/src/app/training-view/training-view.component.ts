@@ -6,7 +6,6 @@ import {
   Renderer2,
   ElementRef,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { TrainingDay } from '../../../../shared/models/training/trainingDay';
 import { HttpClientService } from '../../service/http-client.service';
 import { firstValueFrom } from 'rxjs';
@@ -17,6 +16,8 @@ import { RpeService } from '../rpe.service';
 import { EstMaxService } from '../estmax.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { CategoryPlaceholderService } from './category-placeholder.service'; // Import the new service
 
 interface TrainingPlanResponse {
   title: string;
@@ -71,11 +72,12 @@ export class TrainingViewComponent
     private rpeService: RpeService,
     private estMaxService: EstMaxService,
     private renderer: Renderer2,
-    private el: ElementRef
+    private el: ElementRef,
+    private categoryPlaceholderService: CategoryPlaceholderService // Inject the service
   ) {}
 
   async ngOnInit() {
-    this.route.params.subscribe(async (params) => {
+    this.route.queryParams.subscribe(async (params) => {
       const planId = params['planId'];
       const week = params['week'];
       const day = params['day'];
@@ -92,7 +94,12 @@ export class TrainingViewComponent
 
   ngAfterViewChecked(): void {
     if (!this.isPlaceholderHandled) {
-      this.handlePlaceholderCategory();
+      const exerciseCategorySelectors = document.querySelectorAll(
+        '.exercise-category-selector'
+      ) as NodeListOf<HTMLSelectElement>;
+      this.categoryPlaceholderService.handlePlaceholderCategory(
+        exerciseCategorySelectors
+      );
       this.isPlaceholderHandled = true;
     }
   }
@@ -133,9 +140,9 @@ export class TrainingViewComponent
     const changedData = this.formService.getChanges();
     console.log('Changed Data:', changedData);
 
-    const planId = this.route.snapshot.paramMap.get('planId');
-    const week = +this.route.snapshot.paramMap.get('week')!;
-    const day = +this.route.snapshot.paramMap.get('day')!;
+    const planId = '65544090-343a-49a4-9176-17e19a177842'; // Replace with actual plan ID
+    const week = 1; // Replace with actual week number
+    const day = 1; // Replace with actual day number
 
     try {
       await firstValueFrom(
@@ -154,42 +161,17 @@ export class TrainingViewComponent
 
   onInputChange(event: Event): void {
     this.formService.trackChange(event);
-    this.updatePlaceholderVisibility(event.target as HTMLSelectElement);
+    this.categoryPlaceholderService.updatePlaceholderVisibility(
+      event.target as HTMLSelectElement
+    );
   }
 
   onCategoryChange(event: Event): void {
-    // ...existing code...
-  }
-
-  handlePlaceholderCategory(): void {
-    console.log('handlePlaceholderCategory called');
-    const exerciseCategorySelectors = document.querySelectorAll(
-      '.exercise-category-selector'
-    ) as NodeListOf<HTMLSelectElement>;
-    console.log(
-      '🚀 ~ TrainingViewComponent ~ handlePlaceholderCategory ~ exerciseCategorySelectors:',
-      exerciseCategorySelectors
+    this.categoryPlaceholderService.onCategoryChange(
+      event,
+      this.exerciseCategories,
+      this.defaultRepSchemeByCategory,
+      this.formService
     );
-
-    // Remove all Placeholder categories at the beginning
-    exerciseCategorySelectors.forEach((categorySelector) => {
-      const category = categorySelector.value;
-
-      if (category === '- Bitte Auswählen -' || category === undefined) {
-        this.renderer.setStyle(categorySelector, 'opacity', '0');
-      }
-    });
-  }
-
-  updatePlaceholderVisibility(target: HTMLSelectElement): void {
-    if (target.value !== '- Bitte Auswählen -') {
-      this.renderer.setStyle(target, 'opacity', '1');
-    } else {
-      this.renderer.setStyle(target, 'opacity', '0');
-    }
-  }
-
-  getIndexByCategory(category: string): number {
-    return this.exerciseCategories.indexOf(category);
   }
 }

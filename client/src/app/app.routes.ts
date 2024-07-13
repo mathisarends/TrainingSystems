@@ -16,9 +16,12 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'training', component: TrainingPlansComponent },
+  { path: 'training/view', component: TrainingViewComponent },
   { path: 'statistics', component: StatisticsComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'spinner', component: SpinnerComponent },
   { path: 'exercises', component: ExercisesComponent },
   { path: 'training/:planId/:week/:day', component: TrainingViewComponent },
 ];
+
+// http://localhost:4200/training/view?planId=65544090-343a-49a4-9176-17e19a177842&week=1&day=1
