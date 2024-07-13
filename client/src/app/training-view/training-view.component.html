@@ -38,7 +38,9 @@
             (change)="onCategoryChange($event)"
             [ngStyle]="{
               opacity:
-                trainingDay.exercises[k - 1]?.category === '- Bitte Auswählen -'
+                trainingDay.exercises[k - 1]?.category ===
+                  '- Bitte Auswählen -' ||
+                !trainingDay.exercises[k - 1]?.category
                   ? 0
                   : 1
             }"

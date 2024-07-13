@@ -3,6 +3,8 @@ import {
   OnInit,
   AfterViewInit,
   AfterViewChecked,
+  Renderer2,
+  ElementRef,
 } from '@angular/core';
 import { TrainingDay } from '../../../../shared/models/training/trainingDay';
 import { HttpClientService } from '../../service/http-client.service';
@@ -65,7 +67,9 @@ export class TrainingViewComponent
     private httpClient: HttpClientService,
     private formService: FormService,
     private rpeService: RpeService,
-    private estMaxService: EstMaxService
+    private estMaxService: EstMaxService,
+    private renderer: Renderer2,
+    private el: ElementRef
   ) {}
 
   async ngOnInit() {
@@ -136,6 +140,7 @@ export class TrainingViewComponent
   onCategoryChange(event: Event): void {
     const target = event.target as HTMLSelectElement;
     const category = target.value;
+    console.log('🚀 ~ onCategoryChange ~ category:', category);
     const tableRow = target.closest('tr');
 
     if (tableRow) {
@@ -144,15 +149,21 @@ export class TrainingViewComponent
       ) as NodeListOf<HTMLSelectElement>;
 
       if (category === '- Bitte Auswählen -') {
+        this.renderer.setStyle(target, 'opacity', '0');
         exerciseNameSelectors.forEach((selector) => {
-          selector.style.display = 'none';
+          this.renderer.setStyle(selector, 'display', 'none');
           selector.disabled = false;
         });
       } else {
+        this.renderer.setStyle(target, 'opacity', '1');
         const index = this.getIndexByCategory(category);
         exerciseNameSelectors.forEach((selector, i) => {
-          selector.style.display = i === index ? 'block' : 'none';
-          selector.style.opacity = i === index ? '1' : '0';
+          this.renderer.setStyle(
+            selector,
+            'display',
+            i === index ? 'block' : 'none'
+          );
+          this.renderer.setStyle(selector, 'opacity', i === index ? '1' : '0');
           selector.disabled = i !== index;
         });
       }
@@ -184,9 +195,10 @@ export class TrainingViewComponent
         targetRPEInput.value = '';
       }
 
-      setsInput.dispatchEvent(new Event('change', { bubbles: true }));
-      repsInput.dispatchEvent(new Event('change', { bubbles: true }));
-      targetRPEInput.dispatchEvent(new Event('change', { bubbles: true }));
+      // Track changes in FormService
+      this.formService.addChange(setsInput.name, setsInput.value);
+      this.formService.addChange(repsInput.name, repsInput.value);
+      this.formService.addChange(targetRPEInput.name, targetRPEInput.value);
     }
   }
 
@@ -205,16 +217,16 @@ export class TrainingViewComponent
       const category = categorySelector.value;
 
       if (category === '- Bitte Auswählen -' || category === undefined) {
-        categorySelector.style.opacity = '0';
+        this.renderer.setStyle(categorySelector, 'opacity', '0');
       }
     });
   }
 
   updatePlaceholderVisibility(target: HTMLSelectElement): void {
     if (target.value !== '- Bitte Auswählen -') {
-      target.style.opacity = '1';
+      this.renderer.setStyle(target, 'opacity', '1');
     } else {
-      target.style.opacity = '0';
+      this.renderer.setStyle(target, 'opacity', '0');
     }
   }
 
