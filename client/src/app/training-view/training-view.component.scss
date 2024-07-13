@@ -1,29 +1,34 @@
+/* Custom CSS goes here */
 .col {
-  transition: transform 0.3s ease-in-out; /* Übergangseigenschaft hinzufügen */
+  transition: transform 0.3s ease-in-out;
 }
 
 .col:hover {
   transform: scale(0.9875);
 }
 
-/* for activation styling */
-
 .active {
-  transition: transform 0.3s ease-in-out; /* Übergangseigenschaft für Aktivierung hinzufügen */
+  transition: transform 0.3s ease-in-out;
   transform: scale(0.975);
 }
 
 .small-white-border {
-  border-color: #e1e1e1; /* Ersetze dies mit der gewünschten Hover-Farbe */
+  border-color: #e1e1e1;
 }
 
-/* stacking table if there are two many td elements*/
 .training-table tr td input[type="number"] {
   text-align: center;
 }
 
+.training-table td:nth-of-type(1) {
+  min-width: 140px;
+}
+
+.training-table td:nth-of-type(2) {
+  min-width: 140px;
+}
+
 @media (max-width: 768px) {
-  /* responsive tabe is most generic */
   .responsive-table td {
     display: grid;
     grid-template-columns: 20ch auto;
@@ -54,10 +59,28 @@
   }
 
   .training-table tr {
-    border-top: 2px solid black;
+    border-top: 4px solid black;
+  }
+
+  .training-table td {
+    border: none;
+  }
+
+  .training-table tr:first-of-type {
+    border: none;
   }
 
   .training-table tr td input[type="number"] {
     text-align: left;
   }
+}
+
+/* Make the first two rows larger */
+.training-table tr:nth-of-type(1),
+.training-table tr:nth-of-type(2) {
+  height: 50px;
+}
+
+.notes-textarea {
+  margin-bottom: 20px;
 }
