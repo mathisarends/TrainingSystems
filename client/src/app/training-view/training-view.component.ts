@@ -157,6 +157,30 @@ export class TrainingViewComponent
       if (displaySelector) {
         displaySelector.dispatchEvent(new Event('change', { bubbles: true }));
       }
+
+      // Set default values based on category
+      const setsInput = tableRow.querySelector('.sets') as HTMLInputElement;
+      const repsInput = tableRow.querySelector('.reps') as HTMLInputElement;
+      const targetRPEInput = tableRow.querySelector(
+        '.targetRPE'
+      ) as HTMLInputElement;
+
+      if (category !== '- Bitte Auswählen -') {
+        const defaultValues = this.defaultRepSchemeByCategory[category];
+        if (defaultValues) {
+          setsInput.value = defaultValues.defaultSets.toString();
+          repsInput.value = defaultValues.defaultReps.toString();
+          targetRPEInput.value = defaultValues.defaultRPE.toString();
+        }
+      } else {
+        setsInput.value = '';
+        repsInput.value = '';
+        targetRPEInput.value = '';
+      }
+
+      setsInput.dispatchEvent(new Event('change', { bubbles: true }));
+      repsInput.dispatchEvent(new Event('change', { bubbles: true }));
+      targetRPEInput.dispatchEvent(new Event('change', { bubbles: true }));
     }
   }
 
