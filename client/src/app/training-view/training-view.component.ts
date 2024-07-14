@@ -11,7 +11,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TrainingDay } from '../../../../shared/models/training/trainingDay';
 import { HttpClientService } from '../../service/http-client.service';
-import { delay, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { HttpMethods } from '../types/httpMethods';
 import { SpinnerComponent } from '../components/spinner/spinner.component';
 import { FormService } from '../form.service';
@@ -23,11 +23,12 @@ import { CategoryPlaceholderService } from '../category-placeholder.service';
 import { TrainingPlanResponse } from '../types/TrainingPlanResponse';
 import { ToastService } from '../toast/toast.service';
 import { ToastType } from '../toast/toastType';
+import { PaginationComponent } from '../pagination/pagination.component';
 
 @Component({
   selector: 'app-training-view',
   standalone: true,
-  imports: [SpinnerComponent, CommonModule, FormsModule],
+  imports: [SpinnerComponent, CommonModule, FormsModule, PaginationComponent],
   templateUrl: './training-view.component.html',
   styleUrls: ['./training-view.component.scss'],
 })
@@ -48,7 +49,7 @@ export class TrainingViewComponent
     };
   } = {};
   trainingFrequency!: number;
-  trainingBlockLengtH!: number;
+  trainingBlockLength!: number;
   maxFactors: any;
   trainingDay: TrainingDay = { exercises: [] };
   isLoading = true;
@@ -61,13 +62,13 @@ export class TrainingViewComponent
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private route: ActivatedRoute,
+    private router: Router,
     private httpClient: HttpClientService,
     private formService: FormService,
     private rpeService: RpeService,
     private estMaxService: EstMaxService,
     private renderer: Renderer2,
     private toastService: ToastService,
-    private router: Router,
     private categoryPlaceholderService: CategoryPlaceholderService
   ) {}
 
@@ -79,8 +80,6 @@ export class TrainingViewComponent
       await this.loadTrainingPlan(this.planId, this.week, this.day);
       this.isLoading = false;
     });
-
-    console.log('test', this.trainingDayIndex);
   }
 
   ngAfterViewInit(): void {
@@ -118,9 +117,7 @@ export class TrainingViewComponent
           `training/plan/${planId}/${week}/${day}`
         )
       );
-
       console.log('response', response);
-
       this.title = response.title;
       this.trainingWeekIndex = response.trainingWeekIndex;
       this.trainingDayIndex = response.trainingDayIndex;
@@ -131,10 +128,9 @@ export class TrainingViewComponent
       this.maxFactors = response.maxFactors;
       this.trainingDay = response.trainingDay;
       this.trainingFrequency = response.trainingFrequency;
-      this.trainingBlockLengtH = response.trainingBlockLength;
+      this.trainingBlockLength = response.trainingBlockLength;
     } catch (error) {
-      // here an error gets logged all the time dont know why ignore. seems like two requests are send
-      // while i am only sending one?
+      console.error('Error loading training plan:', error);
     } finally {
       this.isLoading = false;
     }
@@ -182,9 +178,29 @@ export class TrainingViewComponent
     );
   }
 
+  onPageChanged(page: number): void {
+    this.navigateDay(page, new Event(''));
+  }
+
+  navigateDay(day: number, event: Event): void {
+    event.preventDefault();
+
+    if (day >= 1 && day <= this.trainingFrequency) {
+      this.trainingDayIndex = day;
+
+      this.router.navigate([], {
+        queryParams: {
+          week: this.trainingWeekIndex,
+          day: this.trainingDayIndex,
+        },
+        queryParamsHandling: 'merge',
+      });
+    }
+  }
+
   getExercise(index: number) {
     return (
-      this.trainingDay?.exercises[index - 1] || {
+      this.trainingDay.exercises[index - 1] || {
         category: '',
         exercise: '',
         sets: '',
@@ -195,42 +211,5 @@ export class TrainingViewComponent
         estMax: '',
       }
     );
-  }
-
-  // Hilfsfunktion, um ein Array der Länge `trainingFrequency` zu erzeugen TODO: in utils auslagern
-  createRange(length: number): number[] {
-    return Array.from({ length }, (_, i) => i + 1);
-  }
-
-  navigateWeek(direction: number): void {
-    const newWeek = this.trainingWeekIndex + direction;
-    if (newWeek >= 1 && newWeek <= this.trainingBlockLengtH) {
-      this.router.navigate([], {
-        queryParams: {
-          week: newWeek,
-          day: this.day,
-        },
-        queryParamsHandling: 'merge',
-      });
-    }
-  }
-
-  navigateDay(day: number, event: Event): void {
-    event.preventDefault();
-    if (day >= 1 && day <= this.trainingFrequency) {
-      console.log('navitgate');
-      this.router.navigate([], {
-        queryParams: {
-          week: this.week,
-          day: day,
-        },
-        queryParamsHandling: 'merge',
-      });
-    }
-  }
-
-  isSelected(day: number) {
-    console.log('test expect true once', day === this.trainingDayIndex);
-    return day === this.trainingDayIndex;
   }
 }

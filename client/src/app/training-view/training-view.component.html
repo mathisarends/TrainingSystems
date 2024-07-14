@@ -1,7 +1,6 @@
 @if (isLoading) {
 <app-spinner></app-spinner>
 } @else {
-
 <div class="row align-items-center">
   <div class="col mt-4 mb-5">
     <h3 class="display-4 title d-inline">{{ title }}</h3>
@@ -135,32 +134,16 @@
       }
     </tbody>
   </table>
-
-  <!-- <input type="submit" class="btn btn-dark" /> -->
 </form>
 }
 
-<div class="pagination p1 w-100 d-flex justify-content-center">
-  <ul>
-    <a href="#" (click)="navigateDay(trainingDayIndex - 1, $event)"
-      ><li><</li></a
-    >
-    @for (day of createRange(trainingFrequency); track day) {
-    <a
-      [class.is-active]="isSelected(day)"
-      href="#"
-      (click)="navigateDay(day, $event)"
-    >
-      <li>{{ day }}</li>
-    </a>
-    }
-    <a href="#" (click)="navigateDay(trainingDayIndex + 1, $event)"
-      ><li>></li></a
-    >
-  </ul>
-</div>
+<app-pagination
+  [currentPage]="trainingDayIndex"
+  [totalPages]="trainingFrequency"
+  (pageChanged)="onPageChanged($event)"
+></app-pagination>
 
 <div class="fixed-bottom-bar">
-  <i class="bx bx-left-arrow-alt icon" (click)="navigateWeek(-1)"></i>
-  <i class="bx bx-right-arrow-alt icon" (click)="navigateWeek(1)"></i>
+  <i class="bx bx-left-arrow-alt icon"></i>
+  <i class="bx bx-right-arrow-alt icon"></i>
 </div>
