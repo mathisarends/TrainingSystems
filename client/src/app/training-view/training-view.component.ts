@@ -181,7 +181,7 @@ export class TrainingViewComponent
   navigateDay(day: number, event: Event): void {
     event.preventDefault();
 
-    if (day >= 1 && day <= this.trainingFrequency) {
+    if (day >= 0 && day <= this.trainingFrequency - 1) {
       this.trainingDayIndex = day;
 
       this.router.navigate([], {
@@ -192,6 +192,29 @@ export class TrainingViewComponent
         queryParamsHandling: 'merge',
       });
     }
+  }
+
+  navigateWeek(direction: number) {
+    let week = 0;
+
+    if (this.trainingWeekIndex === 0 && direction === -1) {
+      week = this.trainingBlockLength - 1;
+    } else if (
+      this.trainingWeekIndex === this.trainingBlockLength - 1 &&
+      direction === 1
+    ) {
+      week = 0;
+    } else {
+      week = this.trainingWeekIndex + direction;
+    }
+
+    this.router.navigate([], {
+      queryParams: {
+        week: week,
+        day: this.trainingDayIndex,
+      },
+      queryParamsHandling: 'merge',
+    });
   }
 
   getExercise(index: number) {

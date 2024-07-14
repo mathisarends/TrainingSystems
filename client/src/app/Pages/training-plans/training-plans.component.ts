@@ -101,7 +101,7 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
       );
       this.filteredTrainingPlans = this.allTrainingPlans;
     } catch (error) {
-      console.error('Error loading training plans:', error);
+      // do nothing here again
     } finally {
       this.isLoading = false;
     }
@@ -136,8 +136,8 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
    * @param index - The index of the training plan to view.
    */
   viewTrainingPlan(id: string): void {
-    const week = 1; // Annahme: Woche ist 1
-    const day = 1; // Annahme: Tag ist 1
+    const week = 0;
+    const day = 0;
     this.router.navigate(['/training/view'], {
       queryParams: {
         planId: id,

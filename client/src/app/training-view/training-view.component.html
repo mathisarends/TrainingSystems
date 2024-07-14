@@ -8,7 +8,7 @@
   >
     <caption>
       <span class="context-headline">
-        W{{ trainingWeekIndex }}D{{ trainingDayIndex }}</span
+        W{{ trainingWeekIndex + 1 }}D{{ trainingDayIndex + 1 }}</span
       >
       <span class="headline">{{ title }} </span>
     </caption>
@@ -146,6 +146,6 @@
 }
 
 <div class="fixed-bottom-bar">
-  <i class="bx bx-left-arrow-alt icon"></i>
-  <i class="bx bx-right-arrow-alt icon"></i>
+  <i class="bx bx-left-arrow-alt icon" (click)="navigateWeek(-1)"></i>
+  <i class="bx bx-right-arrow-alt icon" (click)="navigateWeek(1)"></i>
 </div>

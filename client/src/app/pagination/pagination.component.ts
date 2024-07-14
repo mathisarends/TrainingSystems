@@ -5,7 +5,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './pagination.component.html',
-  styleUrl: './pagination.component.scss',
+  styleUrls: ['./pagination.component.scss'],
 })
 export class PaginationComponent {
   @Input() currentPage!: number;
@@ -14,12 +14,12 @@ export class PaginationComponent {
   @Output() pageChanged = new EventEmitter<number>();
 
   createRange(length: number): number[] {
-    return Array.from({ length }, (_, i) => i + 1);
+    return Array.from({ length }, (_, i) => i); // Zero-based
   }
 
   navigatePage(page: number, event: Event): void {
     event.preventDefault();
-    if (page >= 1 && page <= this.totalPages) {
+    if (page >= 0 && page < this.totalPages) {
       this.pageChanged.emit(page);
     }
   }
