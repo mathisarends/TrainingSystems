@@ -15,6 +15,7 @@ import { firstValueFrom, Subscription } from 'rxjs';
 import { SearchService } from '../../search.service';
 import { TrainingPlanService } from '../../training-plan.service';
 import { Router } from '@angular/router';
+import { ModalSize } from '../../../service/modalSize';
 
 /**
  * Component to manage and display training plans.
@@ -114,7 +115,8 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
     this.modalService.open(
       CreateTrainingFormComponent,
       'Trainingsplan erstellen',
-      'Erstellen'
+      'Erstellen',
+      ModalSize.LARGE
     );
   }
 
@@ -135,14 +137,21 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
    * Opens the modal to view a training plan.
    * @param index - The index of the training plan to view.
    */
-  viewTrainingPlan(id: string): void {
-    const week = 0;
-    const day = 0;
+  async viewTrainingPlan(id: string): Promise<void> {
+    const response = await firstValueFrom(
+      this.httpClient.request<any>(
+        HttpMethods.GET,
+        `training/plan/${id}/latest`
+      )
+    );
+    const latestWeek = response.weekIndex;
+    const latestDay = response.dayIndex;
+
     this.router.navigate(['/training/view'], {
       queryParams: {
         planId: id,
-        week: week,
-        day: day,
+        week: latestWeek,
+        day: latestDay,
       },
     });
   }
@@ -157,6 +166,7 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
       EditTrainingPlanComponent,
       'Trainingsplan bearbeiten',
       'Übernehmen',
+      ModalSize.LARGE,
       { id }
     );
   }
@@ -175,13 +185,7 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
           )
         );
 
-        // Find the index of the plan by id and splice it
-        const planIndex = this.allTrainingPlans.findIndex(
-          (plan) => plan.id === id
-        );
-        if (planIndex > -1) {
-          this.allTrainingPlans.splice(planIndex, 1);
-        }
+        await this.loadTrainingPlans();
 
         this.modalService.close();
       } catch (error) {

@@ -9,6 +9,7 @@ import {
   ComponentRef,
 } from '@angular/core';
 import { ModalService } from '../../../service/modalService';
+import { ModalSize } from '../../../service/modalSize';
 
 @Component({
   selector: 'app-modal',
@@ -20,6 +21,7 @@ export class ModalComponent implements AfterViewInit {
   @Input() confirmButtonText: string = 'Submit';
   @Input() childComponentType!: any;
   @Input() childComponentData: any; // Add input for child component data
+  @Input() size: ModalSize = ModalSize.MEDIUM; // add size input
   @ViewChild('modalContent', { read: ViewContainerRef })
   modalContent!: ViewContainerRef;
   childComponentRef!: ComponentRef<any>;

@@ -138,7 +138,6 @@ export class TrainingViewComponent
           'exercise/training'
         )
       );
-      console.log('Exercise Data:', response);
       this.exerciseData = new ExerciseDataDTO(response);
     } catch (error) {
       console.error('Error loading exercise data:', error);

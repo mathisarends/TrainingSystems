@@ -21,14 +21,6 @@ async function configureApp(app: Express) {
 
   app.use(corsHeaders);
   app.use(securityHeaders);
-  /* app.options('*', cors());
-  app.use(
-    cors({
-      origin: 'http://localhost:4200',
-      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-      credentials: true
-    })
-  ); */
 
   app.use('/user', userRouter);
   app.use('/training', trainingRouter);

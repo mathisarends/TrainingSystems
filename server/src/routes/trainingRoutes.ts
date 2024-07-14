@@ -5,6 +5,7 @@ import { User } from '@shared/models/user.js';
 import { findTrainingPlanIndexById } from '../service/trainingService.js';
 import { Exercise } from '@shared/models/training/exercise.js';
 import { TrainingDay } from '@shared/models/training/trainingDay.js';
+import { TrainingPlan } from '@shared/models/training/trainingPlan.js';
 
 const router = express.Router();
 
@@ -15,13 +16,68 @@ router.get('/edit/:id', authService.authenticationMiddleware, trainingController
 router.patch('/edit/:id', authService.authenticationMiddleware, trainingController.updatePlan);
 router.get('/plan/:id/:week/:day', authService.authenticationMiddleware, trainingController.getPlanForDay);
 
+router.get('/plan/:id/latest', authService.authenticationMiddleware, async (req, res) => {
+  try {
+    const userClaimsSet = res.locals.user;
+    const trainingPlanId = req.params.id;
+
+    const userDAO = req.app.locals.userDAO;
+    const user = await userDAO.findOne({ id: userClaimsSet.id });
+    if (!user) {
+      return res.status(404).json({ error: 'Benutzer nicht gefunden' });
+    }
+
+    const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
+    if (trainingPlanIndex === -1) {
+      return res.status(404).json({ message: 'No training plan was found for the given URL' });
+    }
+
+    const trainingPlan = user.trainingPlans[trainingPlanIndex];
+
+    const { weekIndex, dayIndex } = findLatestTrainingDayWithWeight(trainingPlan);
+    return res.status(200).json({ weekIndex, dayIndex });
+  } catch (error) {
+    console.error('Error fetching latest training day:', error);
+    return res.status(500).json({ error: 'Interner Serverfehler' });
+  }
+});
+
+// Function to find the latest training day with weight entry
+function findLatestTrainingDayWithWeight(trainingPlan: TrainingPlan) {
+  for (let wIndex = trainingPlan.trainingWeeks.length - 1; wIndex >= 0; wIndex--) {
+    const trainingWeek = trainingPlan.trainingWeeks[wIndex];
+    for (let dIndex = trainingWeek.trainingDays.length - 1; dIndex >= 0; dIndex--) {
+      const trainingDay = trainingWeek.trainingDays[dIndex];
+
+      if (trainingDay.exercises?.some(exercise => exercise.weight)) {
+        if (dIndex + 1 < trainingWeek.trainingDays.length) {
+          const nextDay = trainingWeek.trainingDays[dIndex + 1];
+          if (!nextDay.exercises?.some(exercise => exercise.weight)) {
+            return { weekIndex: wIndex, dayIndex: dIndex };
+          }
+        } else if (wIndex + 1 < trainingPlan.trainingWeeks.length) {
+          const nextWeek = trainingPlan.trainingWeeks[wIndex + 1];
+          if (
+            nextWeek.trainingDays.length > 0 &&
+            !nextWeek.trainingDays[0].exercises?.some(exercise => exercise.weight)
+          ) {
+            return { weekIndex: wIndex, dayIndex: dIndex };
+          }
+        } else {
+          return { weekIndex: wIndex, dayIndex: dIndex };
+        }
+      }
+    }
+  }
+  return { weekIndex: 0, dayIndex: 0 };
+}
+
 router.patch('/plan/:id/:week/:day', authService.authenticationMiddleware, async (req, res) => {
   const userClaimsSet = res.locals.user;
 
   const trainingPlanId = req.params.id;
   const trainingWeekIndex = Number(req.params.week);
   const trainingDayIndex = Number(req.params.day);
-  console.log('🚀 ~ router.patch ~ trainingDayIndex:', trainingDayIndex);
 
   const userDAO = req.app.locals.userDAO;
 
@@ -44,11 +100,8 @@ router.patch('/plan/:id/:week/:day', authService.authenticationMiddleware, async
     // Iterate over the keys and values in changedData
     for (const [fieldName, fieldValue] of Object.entries(changedData)) {
       const dayIndex = parseInt(fieldName.charAt(3));
-      console.log('🚀 ~ router.patch ~ dayIndex:', dayIndex);
-      console.log('trainingDayIndex', trainingDayIndex);
 
       if (dayIndex !== trainingDayIndex) {
-        console.log('hier warunm');
         return res
           .status(400)
           .json({ error: 'Die gesendeten Daten passen logisch nicht auf die angegebene Trainingswoche' });
@@ -143,5 +196,3 @@ function updateExercise(
       break;
   }
 }
-
-// TODO: notes rauswerfen aus der exercise und in einem trainingstag einabeun + frontend hierfür
