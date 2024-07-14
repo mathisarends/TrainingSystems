@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TrainingDay } from '../../../../shared/models/training/trainingDay';
 import { HttpClientService } from '../../service/http-client.service';
 import { firstValueFrom } from 'rxjs';
 import { HttpMethods } from '../types/httpMethods';
@@ -24,6 +23,8 @@ import { TrainingPlanResponse } from '../types/TrainingPlanResponse';
 import { ToastService } from '../toast/toast.service';
 import { ToastType } from '../toast/toastType';
 import { PaginationComponent } from '../pagination/pagination.component';
+import { TrainingDay } from '../../../../shared/models/training/trainingDay';
+import { ExerciseDataDTO } from './exerciseDataDto';
 
 @Component({
   selector: 'app-training-view',
@@ -38,23 +39,13 @@ export class TrainingViewComponent
   title: string = '';
   trainingWeekIndex: number = 0;
   trainingDayIndex: number = 0;
-  exerciseCategories: string[] = [];
-  categoryPauseTimes: { [key: string]: number } = {};
-  categorizedExercises: { [key: string]: string[] } = {};
-  defaultRepSchemeByCategory: {
-    [key: string]: {
-      defaultSets: number;
-      defaultReps: number;
-      defaultRPE: number;
-    };
-  } = {};
-  trainingFrequency!: number;
-  trainingBlockLength!: number;
-  maxFactors: any;
-  trainingDay: TrainingDay = { exercises: [] };
-  isLoading = true;
 
   protected planId!: string;
+  exerciseData: ExerciseDataDTO = new ExerciseDataDTO();
+  trainingFrequency!: number;
+  trainingBlockLength!: number;
+  trainingDay: TrainingDay = { exercises: [] };
+  isLoading = true;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -72,15 +63,15 @@ export class TrainingViewComponent
   async ngOnInit() {
     this.route.queryParams.subscribe(async (params) => {
       this.planId = params['planId'];
-
       this.trainingWeekIndex = parseInt(params['week']);
       this.trainingDayIndex = parseInt(params['day']);
-      await this.loadTrainingPlan(
+
+      // Fetch both training plan and exercise data in parallel
+      await this.loadData(
         this.planId,
         this.trainingWeekIndex,
         this.trainingDayIndex
       );
-      this.isLoading = false;
     });
   }
 
@@ -104,6 +95,19 @@ export class TrainingViewComponent
     }
   }
 
+  async loadData(planId: string, week: number, day: number): Promise<void> {
+    try {
+      await Promise.all([
+        this.loadTrainingPlan(planId, week, day),
+        this.loadExerciseData(),
+      ]);
+    } catch (error) {
+      console.error('Error loading training data:', error);
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
   async loadTrainingPlan(
     planId: string,
     week: number,
@@ -118,18 +122,26 @@ export class TrainingViewComponent
       );
       console.log('response', response);
       this.title = response.title;
-      this.exerciseCategories = response.exerciseCategories;
-      this.categoryPauseTimes = response.categoryPauseTimes;
-      this.categorizedExercises = response.categorizedExercises;
-      this.defaultRepSchemeByCategory = response.defaultRepSchemeByCategory;
-      this.maxFactors = response.maxFactors;
       this.trainingDay = response.trainingDay;
       this.trainingFrequency = response.trainingFrequency;
       this.trainingBlockLength = response.trainingBlockLength;
     } catch (error) {
       console.error('Error loading training plan:', error);
-    } finally {
-      this.isLoading = false;
+    }
+  }
+
+  async loadExerciseData(): Promise<void> {
+    try {
+      const response = await firstValueFrom(
+        this.httpClient.request<ExerciseDataDTO>(
+          HttpMethods.GET,
+          'exercise/training'
+        )
+      );
+      console.log('Exercise Data:', response);
+      this.exerciseData = new ExerciseDataDTO(response);
+    } catch (error) {
+      console.error('Error loading exercise data:', error);
     }
   }
 
@@ -168,8 +180,8 @@ export class TrainingViewComponent
   onCategoryChange(event: Event): void {
     this.categoryPlaceholderService.onCategoryChange(
       event,
-      this.exerciseCategories,
-      this.defaultRepSchemeByCategory,
+      this.exerciseData.exerciseCategories,
+      this.exerciseData.defaultRepSchemeByCategory,
       this.renderer
     );
   }

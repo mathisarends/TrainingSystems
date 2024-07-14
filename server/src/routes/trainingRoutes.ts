@@ -44,6 +44,8 @@ router.patch('/plan/:id/:week/:day', authService.authenticationMiddleware, async
     // Iterate over the keys and values in changedData
     for (const [fieldName, fieldValue] of Object.entries(changedData)) {
       const dayIndex = parseInt(fieldName.charAt(3));
+      console.log('🚀 ~ router.patch ~ dayIndex:', dayIndex);
+      console.log('trainingDayIndex', trainingDayIndex);
 
       if (dayIndex !== trainingDayIndex) {
         console.log('hier warunm');

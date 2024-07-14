@@ -5,7 +5,6 @@ import { User } from '@shared/models/user.js';
 import { v4 as uuidv4 } from 'uuid';
 import { TrainingPlanDTO } from '../dto/trainingDto.js';
 import { BasicTrainingPlanView } from '@shared/models/dtos/training/trainingDto.types.js';
-import { prepareExercisesData } from '../utils/exerciseUtils.js';
 import { UserClaimsSet } from './exerciseService.js';
 import { WeightRecommendationBase } from '@shared/models/training/enum/weightRecommandationBase.js';
 
@@ -155,21 +154,12 @@ export async function getTrainingPlanForDay(
   }
 
   const trainingDay = trainingWeek.trainingDays[trainingDayIndex];
-  const { exerciseCategories, categoryPauseTimes, categorizedExercises, defaultRepSchemeByCategory, maxFactors } =
-    prepareExercisesData(user);
 
   return {
     title: trainingPlan.title,
     trainingFrequency: trainingPlan.trainingFrequency,
     trainingBlockLengtH: trainingPlan.trainingWeeks.length,
-    trainingWeekIndex,
-    trainingDayIndex,
-    trainingDay,
-    exerciseCategories,
-    categoryPauseTimes,
-    categorizedExercises,
-    defaultRepSchemeByCategory,
-    maxFactors
+    trainingDay
   };
 }
 

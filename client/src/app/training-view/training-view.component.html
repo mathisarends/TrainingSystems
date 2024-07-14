@@ -40,7 +40,7 @@
                   : 1
             }"
           >
-            @for (category of exerciseCategories; track category) {
+            @for (category of exerciseData.exerciseCategories; track category) {
             <option
               [value]="category"
               [selected]="getExercise(k).category === category"
@@ -51,7 +51,7 @@
           </select>
         </td>
         <td data-cell="Exercise">
-          @for (category of exerciseCategories; track category) {
+          @for (category of exerciseData.exerciseCategories; track category) {
           <select
             name="day{{ trainingDayIndex }}_exercise{{ k }}_exercise_name"
             class="exercise-name-selector transparent-input"
@@ -61,8 +61,8 @@
             "
             (change)="onInputChange($event)"
           >
-            @for (exerciseName of categorizedExercises[category]; track
-            exerciseName) {
+            @for (exerciseName of exerciseData.categorizedExercises[category];
+            track exerciseName) {
             <option
               [value]="exerciseName"
               [selected]="getExercise(k).exercise === exerciseName"
