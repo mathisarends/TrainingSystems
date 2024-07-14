@@ -174,13 +174,11 @@ export class TrainingViewComponent
     );
   }
 
-  onPageChanged(page: number): void {
-    this.navigateDay(page, new Event(''));
+  onPageChanged(day: number): void {
+    this.navigateDay(day);
   }
 
-  navigateDay(day: number, event: Event): void {
-    event.preventDefault();
-
+  navigateDay(day: number): void {
     if (day >= 0 && day <= this.trainingFrequency - 1) {
       this.trainingDayIndex = day;
 
