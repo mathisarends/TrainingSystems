@@ -13,6 +13,7 @@ import { ModalEventsService } from '../../service/modal-events.service';
 export class DeleteConfirmationComponent {
   constructor(private modalEventsService: ModalEventsService) {}
 
+  @Input()
   onSubmit(): void {
     this.modalEventsService.emitConfirmClick();
   }

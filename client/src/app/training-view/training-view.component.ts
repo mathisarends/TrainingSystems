@@ -6,6 +6,9 @@ import {
   Renderer2,
   Inject,
   PLATFORM_ID,
+  ViewChildren,
+  ElementRef,
+  QueryList,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -19,12 +22,14 @@ import { EstMaxService } from '../estmax.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoryPlaceholderService } from '../category-placeholder.service';
-import { TrainingPlanResponse } from '../types/TrainingPlanResponse';
 import { ToastService } from '../toast/toast.service';
 import { ToastType } from '../toast/toastType';
 import { PaginationComponent } from '../pagination/pagination.component';
-import { TrainingDay } from '../../../../shared/models/training/trainingDay';
+import { TrainingPlanResponse } from '../types/TrainingPlanResponse';
+
 import { ExerciseDataDTO } from './exerciseDataDto';
+import { AutoSaveService } from '../auto-save.service';
+import { TrainingPlanDto } from './trainingPlanDto';
 
 @Component({
   selector: 'app-training-view',
@@ -36,16 +41,16 @@ import { ExerciseDataDTO } from './exerciseDataDto';
 export class TrainingViewComponent
   implements OnInit, AfterViewInit, AfterViewChecked
 {
-  title: string = '';
+  title = '';
   trainingWeekIndex: number = 0;
   trainingDayIndex: number = 0;
 
   protected planId!: string;
   exerciseData: ExerciseDataDTO = new ExerciseDataDTO();
-  trainingFrequency!: number;
-  trainingBlockLength!: number;
-  trainingDay: TrainingDay = { exercises: [] };
+  trainingPlanData: TrainingPlanDto = new TrainingPlanDto();
   isLoading = true;
+
+  @ViewChildren('weightInput') weightInputs!: QueryList<ElementRef>;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -57,7 +62,8 @@ export class TrainingViewComponent
     private estMaxService: EstMaxService,
     private renderer: Renderer2,
     private toastService: ToastService,
-    private categoryPlaceholderService: CategoryPlaceholderService
+    private categoryPlaceholderService: CategoryPlaceholderService,
+    private autoSaveService: AutoSaveService
   ) {}
 
   async ngOnInit() {
@@ -80,6 +86,7 @@ export class TrainingViewComponent
       console.log('ngAfterViewInit called');
       this.rpeService.initializeRPEValidation();
       this.estMaxService.initializeEstMaxCalculation();
+      this.autoSaveService.initializeAutoSave();
     }
   }
 
@@ -114,20 +121,15 @@ export class TrainingViewComponent
     day: number
   ): Promise<void> {
     try {
-      const response: TrainingPlanResponse = await firstValueFrom(
-        this.httpClient.request<TrainingPlanResponse>(
+      const response: TrainingPlanDto = await firstValueFrom(
+        this.httpClient.request<TrainingPlanDto>(
           HttpMethods.GET,
           `training/plan/${planId}/${week}/${day}`
         )
       );
-      console.log('response', response);
       this.title = response.title;
-      this.trainingDay = response.trainingDay;
-      this.trainingFrequency = response.trainingFrequency;
-      this.trainingBlockLength = response.trainingBlockLength;
-    } catch (error) {
-      console.error('Error loading training plan:', error);
-    }
+      this.trainingPlanData.setData(response);
+    } catch (error) {}
   }
 
   async loadExerciseData(): Promise<void> {
@@ -139,9 +141,7 @@ export class TrainingViewComponent
         )
       );
       this.exerciseData = new ExerciseDataDTO(response);
-    } catch (error) {
-      console.error('Error loading exercise data:', error);
-    }
+    } catch (error) {}
   }
 
   async onSubmit(event: Event): Promise<void> {
@@ -168,6 +168,10 @@ export class TrainingViewComponent
     }
   }
 
+  onWeightInputChange() {
+    console.log('changed weight value');
+  }
+
   onInputChange(event: Event): void {
     this.formService.trackChange(event);
     this.categoryPlaceholderService.updatePlaceholderVisibility(
@@ -190,7 +194,8 @@ export class TrainingViewComponent
   }
 
   navigateDay(day: number): void {
-    if (day >= 0 && day <= this.trainingFrequency - 1) {
+    if (day >= 0 && day <= this.trainingPlanData!.trainingFrequency - 1) {
+      // use trainingPlanData
       this.trainingDayIndex = day;
 
       this.router.navigate([], {
@@ -207,9 +212,10 @@ export class TrainingViewComponent
     let week = 0;
 
     if (this.trainingWeekIndex === 0 && direction === -1) {
-      week = this.trainingBlockLength - 1;
+      week = this.trainingPlanData!.trainingBlockLength - 1; // use trainingPlanData
     } else if (
-      this.trainingWeekIndex === this.trainingBlockLength - 1 &&
+      this.trainingWeekIndex ===
+        this.trainingPlanData!.trainingBlockLength - 1 && // use trainingPlanData
       direction === 1
     ) {
       week = 0;
@@ -228,7 +234,8 @@ export class TrainingViewComponent
 
   getExercise(index: number) {
     return (
-      this.trainingDay.exercises[index - 1] || {
+      this.trainingPlanData!.trainingDay?.exercises[index - 1] || {
+        // use trainingPlanData
         category: '',
         exercise: '',
         sets: '',

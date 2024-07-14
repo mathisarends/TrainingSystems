@@ -2,7 +2,7 @@
 <app-spinner></app-spinner>
 } @else {
 
-<form (submit)="onSubmit($event)" class="mt-4">
+<form (submit)="onSubmit($event)" class="mt-4" id="form">
   <table
     class="table table-striped training-table responsive-table caption-top mb-4"
   >
@@ -10,7 +10,7 @@
       <span class="context-headline">
         W{{ trainingWeekIndex + 1 }}D{{ trainingDayIndex + 1 }}</span
       >
-      <span class="headline">{{ title }} </span>
+      <span class="headline">{{ trainingPlanData.title }} </span>
     </caption>
     <thead>
       <tr>
@@ -93,6 +93,7 @@
         </td>
         <td data-cell="Weight">
           <input
+            #weightInput
             type="number"
             class="transparent-input weight"
             name="day{{ trainingDayIndex }}_exercise{{ k }}_weight"
@@ -136,7 +137,7 @@
   <div class="mb-4">
     <app-pagination
       [currentPage]="trainingDayIndex"
-      [totalPages]="trainingFrequency"
+      [totalPages]="trainingPlanData.trainingFrequency"
       (pageChanged)="onPageChanged($event)"
     ></app-pagination>
   </div>
