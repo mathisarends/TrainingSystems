@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { FormService } from './form.service';
+import { table } from 'console';
 
 @Injectable({
   providedIn: 'root',
@@ -56,14 +57,12 @@ export class CategoryPlaceholderService {
         renderer
       );
 
-      const displaySelector = tableRow.querySelector(
-        '.exercise-name-selector:not([style*="display: none"])'
-      ) as HTMLSelectElement;
-      if (displaySelector) {
-        displaySelector.dispatchEvent(new Event('change', { bubbles: true })); // this might be necessary depending on your logic
-      }
-
       this.updateInputValues(tableRow, category, defaultRepSchemeByCategory);
+
+      // Neue Logik: Überprüfen und Nach-Oben-Kopieren
+      if (category === '- Bitte Auswählen -') {
+        this.fillCategoryGaps(tableRow, renderer);
+      }
     }
   }
 
@@ -96,6 +95,9 @@ export class CategoryPlaceholderService {
     category: string,
     defaultRepSchemeByCategory: { [key: string]: any }
   ): void {
+    const exerciseSelect = tableRow.querySelector(
+      '.exercise-name-selector'
+    ) as HTMLSelectElement;
     const setsInput = tableRow.querySelector('.sets') as HTMLInputElement;
     const repsInput = tableRow.querySelector('.reps') as HTMLInputElement;
     const targetRPEInput = tableRow.querySelector(
@@ -110,13 +112,123 @@ export class CategoryPlaceholderService {
         targetRPEInput.value = defaultValues.defaultRPE.toString();
       }
     } else {
+      exerciseSelect.value = '';
       setsInput.value = '';
       repsInput.value = '';
       targetRPEInput.value = '';
     }
 
+    this.formService.addChange(exerciseSelect.name, exerciseSelect.value);
     this.formService.addChange(setsInput.name, setsInput.value);
     this.formService.addChange(repsInput.name, repsInput.value);
     this.formService.addChange(targetRPEInput.name, targetRPEInput.value);
+  }
+
+  /**
+   * Fills the category gaps by copying valid values from subsequent rows.
+   * @param tableRow The current table row element.
+   * @param renderer The Angular renderer to manipulate DOM elements.
+   */
+  private fillCategoryGaps(tableRow: Element, renderer: Renderer2): void {
+    let nextRow = tableRow.nextElementSibling;
+
+    while (nextRow) {
+      const nextCategorySelector = nextRow.querySelector(
+        '.exercise-category-selector'
+      ) as HTMLSelectElement;
+
+      if (
+        nextCategorySelector &&
+        nextCategorySelector.value !== '- Bitte Auswählen -' &&
+        nextCategorySelector.value !== ''
+      ) {
+        const exerciseCategorySelector = tableRow.querySelector(
+          '.exercise-category-selector'
+        ) as HTMLSelectElement;
+
+        if (exerciseCategorySelector) {
+          // current row (to be deleted)
+          const exerciseNameSelect = tableRow.querySelector(
+            '.exercise-name-selector'
+          ) as HTMLSelectElement;
+          const setsInput = tableRow.querySelector('.sets') as HTMLInputElement;
+          const repsInput = tableRow.querySelector('.reps') as HTMLInputElement;
+          const targetRPEInput = tableRow.querySelector(
+            '.targetRPE'
+          ) as HTMLInputElement;
+          const weightInput = tableRow.querySelector(
+            '.weight'
+          ) as HTMLInputElement;
+          const actualRPEInput = tableRow.querySelector(
+            '.actualRPE'
+          ) as HTMLInputElement;
+          const estMaxInput = tableRow.querySelector(
+            '.estMax'
+          ) as HTMLInputElement;
+
+          // next row (copy values)
+          const nextExerciseNameSelect = tableRow.querySelector(
+            '.exercise-name-selector'
+          ) as HTMLSelectElement;
+          const nextSetsInput = tableRow.querySelector(
+            '.sets'
+          ) as HTMLInputElement;
+          const nextRepsInput = tableRow.querySelector(
+            '.reps'
+          ) as HTMLInputElement;
+          const nextTargetRPEInput = tableRow.querySelector(
+            '.targetRPE'
+          ) as HTMLInputElement;
+          const nextWeightInput = tableRow.querySelector(
+            '.weight'
+          ) as HTMLInputElement;
+          const nextActualRPEInput = tableRow.querySelector(
+            '.actualRPE'
+          ) as HTMLInputElement;
+          const nextEstMaxInput = tableRow.querySelector(
+            '.estMax'
+          ) as HTMLInputElement;
+
+          // copy values to row above
+          exerciseCategorySelector.value = nextCategorySelector.value;
+          exerciseNameSelect.value = nextExerciseNameSelect.value;
+          setsInput.value = nextSetsInput.value;
+          repsInput.value = nextRepsInput.value;
+          targetRPEInput.value = nextTargetRPEInput.value;
+          weightInput.value = nextWeightInput.value;
+          actualRPEInput.value = nextActualRPEInput.value;
+          estMaxInput.value = nextEstMaxInput.value;
+
+          // dispatch events to update display
+          exerciseCategorySelector.dispatchEvent(new Event('change'));
+          exerciseNameSelect.dispatchEvent(new Event('change'));
+
+          this.formService.addChange(
+            exerciseCategorySelector.name,
+            exerciseCategorySelector.value
+          );
+
+          this.formService.addChange(
+            exerciseNameSelect.name,
+            exerciseNameSelect.value
+          );
+
+          this.formService.addChange(setsInput.name, setsInput.value);
+          this.formService.addChange(repsInput.name, repsInput.value);
+          this.formService.addChange(targetRPEInput.name, targetRPEInput.value);
+          this.formService.addChange(weightInput.name, weightInput.value);
+          this.formService.addChange(actualRPEInput.name, actualRPEInput.value);
+          this.formService.addChange(estMaxInput.name, estMaxInput.value);
+
+          // reset values in next row (das dispatchen vom event reicht weil sich ein anderer service dann um das Ändern der werte kümmet)
+          nextCategorySelector.value = '- Bitte Auswählen -';
+          nextCategorySelector.dispatchEvent(new Event('change'));
+
+          break; // Bricht die Schleife ab, sobald eine gültige Kategorie gefunden und kopiert wurde
+        }
+      }
+
+      nextRow = nextRow.nextElementSibling;
+    }
   }
 }

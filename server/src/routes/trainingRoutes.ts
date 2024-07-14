@@ -42,8 +42,6 @@ router.patch('/plan/:id/:week/:day', authService.authenticationMiddleware, async
 
     // Iterate over the keys and values in changedData
     for (const [fieldName, fieldValue] of Object.entries(changedData)) {
-      console.log('🚀 ~ router.patch ~ fieldValue:', fieldValue);
-      console.log('🚀 ~ router.patch ~ fieldName:', fieldName);
       const dayIndex = parseInt(fieldName.charAt(3));
 
       if (dayIndex !== trainingDayIndex) {
@@ -53,16 +51,20 @@ router.patch('/plan/:id/:week/:day', authService.authenticationMiddleware, async
       }
 
       const exerciseIndex = parseInt(fieldName.charAt(13));
-      let exercise = trainingDay.exercises[exerciseIndex - 1];
+      const exercise = trainingDay.exercises[exerciseIndex - 1];
 
-      if (!exercise) {
+      console.log('fieldname', fieldName);
+      console.log('🚀 ~ router.patch ~ exercise:', exercise);
+
+      // neue exercises nur erstellen, wenn es auch eine neue category ist
+      if (!exercise && fieldName.endsWith('category')) {
         const newExercise = createExerciseObject(fieldName, fieldValue) as Exercise;
         trainingDay.exercises.push(newExercise);
-
-        exercise = newExercise;
       }
 
-      updateExercise(fieldName, fieldValue, exercise, trainingDay, exerciseIndex);
+      if (exercise) {
+        updateExercise(fieldName, fieldValue, exercise, trainingDay, exerciseIndex);
+      }
     }
 
     await userDAO.update(user);
@@ -81,9 +83,8 @@ export default router;
  * @param fieldValue - The value to be assigned to the field.
  * @returns A complete Exercise object with default values.
  */
-function createExerciseObject(fieldName: string, fieldValue: string): Exercise {
+function createExerciseObject(fieldName: string, fieldValue: string): Exercise | null {
   console.log('🚀 ~ createExerciseObject ~ fieldName:', fieldName);
-
   return {
     category: fieldName.endsWith('category') ? fieldValue : '',
     exercise: '',
@@ -104,10 +105,10 @@ function updateExercise(
   exerciseIndex: number
 ) {
   // zum löschen nachdem sie gelöscht wurde wird sie aber wieder neue erstellt!!! also funktioniert noch nicht
-  if (fieldName.endsWith('category') && fieldValue === '- Bitte Auswählen -') {
-    trainingDay.exercises.splice(exerciseIndex, 1);
-    console.log('exercises', trainingDay.exercises);
+  if (fieldName.endsWith('category') && (fieldValue === '- Bitte Auswählen -' || fieldValue === '')) {
+    trainingDay.exercises.splice(exerciseIndex - 1, 1);
     console.log('gelöscht');
+    console.log('exercises', trainingDay.exercises);
     return;
   }
 
@@ -135,9 +136,6 @@ function updateExercise(
       break;
     case fieldName.endsWith('estMax'):
       exercise.estMax = Number(fieldValue);
-      break;
-    case fieldName.endsWith('workout-notes'):
-      exercise.notes = fieldValue;
       break;
     default:
       console.log('Dieses Feld gibt es leider nicht!');
