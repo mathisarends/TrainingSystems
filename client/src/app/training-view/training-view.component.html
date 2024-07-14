@@ -1,19 +1,17 @@
 @if (isLoading) {
 <app-spinner></app-spinner>
 } @else {
-<div class="row align-items-center">
-  <div class="col mt-4 mb-5">
-    <h3 class="display-4 title d-inline">{{ title }}</h3>
-    <p class="lead week-day-info d-inline ms-3">
-      Week {{ trainingWeekIndex }} - Day {{ trainingDayIndex }}
-    </p>
-  </div>
-</div>
 
-<form (submit)="onSubmit($event)">
+<form (submit)="onSubmit($event)" class="mt-4">
   <table
     class="table table-striped training-table responsive-table caption-top mb-4"
   >
+    <caption>
+      <span class="context-headline">
+        W{{ trainingWeekIndex }}D{{ trainingDayIndex }}</span
+      >
+      <span class="headline">{{ title }} </span>
+    </caption>
     <thead>
       <tr>
         <th scope="col">Category</th>
@@ -134,14 +132,18 @@
       }
     </tbody>
   </table>
+
+  <div class="mb-4">
+    <app-pagination
+      [currentPage]="trainingDayIndex"
+      [totalPages]="trainingFrequency"
+      (pageChanged)="onPageChanged($event)"
+    ></app-pagination>
+  </div>
+
+  <input type="submit" class="btn btn-dark" />
 </form>
 }
-
-<app-pagination
-  [currentPage]="trainingDayIndex"
-  [totalPages]="trainingFrequency"
-  (pageChanged)="onPageChanged($event)"
-></app-pagination>
 
 <div class="fixed-bottom-bar">
   <i class="bx bx-left-arrow-alt icon"></i>

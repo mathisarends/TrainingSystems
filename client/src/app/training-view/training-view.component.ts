@@ -53,7 +53,6 @@ export class TrainingViewComponent
   maxFactors: any;
   trainingDay: TrainingDay = { exercises: [] };
   isLoading = true;
-  isPlaceholderHandled = false;
 
   protected planId!: string;
   protected week!: number;
@@ -92,16 +91,13 @@ export class TrainingViewComponent
 
   ngAfterViewChecked(): void {
     if (isPlatformBrowser(this.platformId)) {
-      if (!this.isPlaceholderHandled) {
-        const exerciseCategorySelectors = document.querySelectorAll(
-          '.exercise-category-selector'
-        ) as NodeListOf<HTMLSelectElement>;
-        this.categoryPlaceholderService.handlePlaceholderCategory(
-          exerciseCategorySelectors,
-          this.renderer
-        );
-        this.isPlaceholderHandled = true;
-      }
+      const exerciseCategorySelectors = document.querySelectorAll(
+        '.exercise-category-selector'
+      ) as NodeListOf<HTMLSelectElement>;
+      this.categoryPlaceholderService.handlePlaceholderCategory(
+        exerciseCategorySelectors,
+        this.renderer
+      );
     }
   }
 

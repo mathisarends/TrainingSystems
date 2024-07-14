@@ -1,6 +1,6 @@
-<div class="pagination p1 w-100 d-flex justify-content-center">
+<div class="pagination p1 w-100 d-flex">
   <ul>
-    <a href="#" (click)="navigatePage(currentPage - 1, $event)"><li><</li></a>
+    <!-- <a href="#" (click)="navigatePage(currentPage - 1, $event)"><li><</li></a> -->
     @for (page of createRange(totalPages); track page) {
     <a
       [class.is-active]="isSelected(page)"
@@ -10,6 +10,6 @@
       <li>{{ page }}</li>
     </a>
     }
-    <a href="#" (click)="navigatePage(currentPage + 1, $event)"><li>></li></a>
+    <!--  <a href="#" (click)="navigatePage(currentPage + 1, $event)"><li>></li></a> -->
   </ul>
 </div>
