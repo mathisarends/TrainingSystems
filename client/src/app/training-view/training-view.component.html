@@ -29,7 +29,7 @@
       <tr>
         <td data-cell="Category">
           <select
-            name="day{{ day }}_exercise{{ k }}_category"
+            name="day{{ trainingDayIndex }}_exercise{{ k }}_category"
             class="exercise-category-selector transparent-input w-100"
             (change)="onCategoryChange($event)"
             [ngStyle]="{
@@ -53,7 +53,7 @@
         <td data-cell="Exercise">
           @for (category of exerciseCategories; track category) {
           <select
-            name="day{{ day }}_exercise{{ k }}_exercise_name"
+            name="day{{ trainingDayIndex }}_exercise{{ k }}_exercise_name"
             class="exercise-name-selector transparent-input"
             [disabled]="getExercise(k).category !== category"
             [style.display]="
@@ -77,7 +77,7 @@
           <input
             type="number"
             class="transparent-input sets"
-            name="day{{ day }}_exercise{{ k }}_sets"
+            name="day{{ trainingDayIndex }}_exercise{{ k }}_sets"
             [value]="getExercise(k).sets || ''"
             (input)="onInputChange($event)"
           />
@@ -86,7 +86,7 @@
           <input
             type="number"
             class="transparent-input reps"
-            name="day{{ day }}_exercise{{ k }}_reps"
+            name="day{{ trainingDayIndex }}_exercise{{ k }}_reps"
             [value]="getExercise(k).reps || ''"
             (input)="onInputChange($event)"
           />
@@ -95,7 +95,7 @@
           <input
             type="number"
             class="transparent-input weight"
-            name="day{{ day }}_exercise{{ k }}_weight"
+            name="day{{ trainingDayIndex }}_exercise{{ k }}_weight"
             [value]="getExercise(k).weight || ''"
             (input)="onInputChange($event)"
           />
@@ -104,7 +104,7 @@
           <input
             type="number"
             class="transparent-input targetRPE"
-            name="day{{ day }}_exercise{{ k }}_targetRPE"
+            name="day{{ trainingDayIndex }}_exercise{{ k }}_targetRPE"
             [value]="getExercise(k).targetRPE || ''"
             (input)="onInputChange($event)"
           />
@@ -113,7 +113,7 @@
           <input
             type="string"
             class="transparent-input actualRPE"
-            name="day{{ day }}_exercise{{ k }}_actualRPE"
+            name="day{{ trainingDayIndex }}_exercise{{ k }}_actualRPE"
             [value]="getExercise(k).actualRPE || ''"
             (input)="onInputChange($event)"
           />
@@ -123,7 +123,7 @@
             type="number"
             class="transparent-input estMax"
             readonly
-            name="day{{ day }}_exercise{{ k }}_estMax"
+            name="day{{ trainingDayIndex }}_exercise{{ k }}_estMax"
             [value]="getExercise(k).estMax || ''"
             (input)="onInputChange($event)"
           />

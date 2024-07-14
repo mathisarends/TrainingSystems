@@ -21,6 +21,7 @@ router.patch('/plan/:id/:week/:day', authService.authenticationMiddleware, async
   const trainingPlanId = req.params.id;
   const trainingWeekIndex = Number(req.params.week);
   const trainingDayIndex = Number(req.params.day);
+  console.log('🚀 ~ router.patch ~ trainingDayIndex:', trainingDayIndex);
 
   const userDAO = req.app.locals.userDAO;
 
@@ -45,6 +46,7 @@ router.patch('/plan/:id/:week/:day', authService.authenticationMiddleware, async
       const dayIndex = parseInt(fieldName.charAt(3));
 
       if (dayIndex !== trainingDayIndex) {
+        console.log('hier warunm');
         return res
           .status(400)
           .json({ error: 'Die gesendeten Daten passen logisch nicht auf die angegebene Trainingswoche' });
@@ -52,9 +54,6 @@ router.patch('/plan/:id/:week/:day', authService.authenticationMiddleware, async
 
       const exerciseIndex = parseInt(fieldName.charAt(13));
       const exercise = trainingDay.exercises[exerciseIndex - 1];
-
-      console.log('fieldname', fieldName);
-      console.log('🚀 ~ router.patch ~ exercise:', exercise);
 
       // neue exercises nur erstellen, wenn es auch eine neue category ist
       if (!exercise && fieldName.endsWith('category')) {

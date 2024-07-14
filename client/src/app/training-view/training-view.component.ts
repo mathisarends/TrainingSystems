@@ -55,8 +55,6 @@ export class TrainingViewComponent
   isLoading = true;
 
   protected planId!: string;
-  protected week!: number;
-  protected day!: number;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -74,9 +72,14 @@ export class TrainingViewComponent
   async ngOnInit() {
     this.route.queryParams.subscribe(async (params) => {
       this.planId = params['planId'];
-      this.week = params['week'];
-      this.day = params['day'];
-      await this.loadTrainingPlan(this.planId, this.week, this.day);
+
+      this.trainingWeekIndex = parseInt(params['week']);
+      this.trainingDayIndex = parseInt(params['day']);
+      await this.loadTrainingPlan(
+        this.planId,
+        this.trainingWeekIndex,
+        this.trainingDayIndex
+      );
       this.isLoading = false;
     });
   }
@@ -115,8 +118,6 @@ export class TrainingViewComponent
       );
       console.log('response', response);
       this.title = response.title;
-      this.trainingWeekIndex = response.trainingWeekIndex;
-      this.trainingDayIndex = response.trainingDayIndex;
       this.exerciseCategories = response.exerciseCategories;
       this.categoryPauseTimes = response.categoryPauseTimes;
       this.categorizedExercises = response.categorizedExercises;
@@ -135,13 +136,12 @@ export class TrainingViewComponent
   async onSubmit(event: Event): Promise<void> {
     event.preventDefault();
     const changedData = this.formService.getChanges();
-    console.log('Changed Data:', changedData);
 
     try {
       await firstValueFrom(
         this.httpClient.request<any>(
           HttpMethods.PATCH,
-          `training/plan/${this.planId}/${this.week}/${this.day}`,
+          `training/plan/${this.planId}/${this.trainingWeekIndex}/${this.trainingDayIndex}`,
           { body: changedData }
         )
       );
