@@ -15,6 +15,14 @@ export type BasicTrainingPlanView = Pick<
   "id" | "title" | "trainingFrequency" | "lastUpdated"
 >;
 
+export interface TrainingPlanCardView {
+  id: string;
+  title: string;
+  trainingFrequency: number;
+  lastUpdated: Date;
+  pictureUrl?: string;
+}
+
 /**
  * Represents a detailed view of a training plan.
  * Includes all properties of a training plan.

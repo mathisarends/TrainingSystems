@@ -23,7 +23,7 @@
       } @else { @for (trainingPlan of filteredTrainingPlans; track trainingPlan;
       let i = $index) {
       <div class="col-lg-4 mb-4">
-        <div class="card">
+        <!-- <div class="card">
           <img
             src="https://images.unsplash.com/photo-1477862096227-3a1bb3b08330?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60"
             alt="Training Image"
@@ -72,8 +72,69 @@
               <i class="bx bx-trash"></i>
             </button>
           </div>
+        </div> -->
+        <!-- Copy the content below until next comment -->
+        <div class="card card-custom bg-white border-white border-0">
+          <div
+            class="card-custom-img"
+            style="
+              background-image: url(https://images.unsplash.com/photo-1477862096227-3a1bb3b08330?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60);
+            "
+          ></div>
+          <div class="card-custom-avatar">
+            <img
+              class="img-fluid"
+              [src]="trainingPlan.pictureUrl"
+              alt="Avatar"
+            />
+          </div>
+          <div class="card-body" style="overflow-y: auto">
+            <h4 class="card-title">{{ trainingPlan.title }}</h4>
+            <p class="card-text">
+              {{ trainingPlan.trainingFrequency }} Trainings / Woche
+            </p>
+            <p class="card-text">
+              Zuletzt angesehen{{ trainingPlan.lastUpdated }}
+            </p>
+          </div>
+          <div
+            class="card-footer"
+            style="background: inherit; border-color: inherit"
+          >
+            <button
+              type="button"
+              class="btn btn-light btn-md m-1"
+              (click)="viewTrainingPlan(trainingPlan.id)"
+              data-bs-toggle="tooltip"
+              data-placement="top"
+              title="Ansehen"
+            >
+              <i class="bx bx-show"></i>
+            </button>
+            <button
+              type="button"
+              class="btn btn-light btn-md m-1"
+              (click)="editTrainingPlan(trainingPlan.id)"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Bearbeiten"
+            >
+              <i class="bx bx-edit"></i>
+            </button>
+            <button
+              type="button"
+              class="btn btn-light btn-md m-1"
+              (click)="deleteTrainingPlan(trainingPlan.id)"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Löschen"
+            >
+              <i class="bx bx-trash"></i>
+            </button>
+          </div>
         </div>
       </div>
+
       } }
     </div>
   </div>

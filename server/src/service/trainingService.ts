@@ -16,7 +16,7 @@ export async function getTrainingPlans(
   if (!user) {
     throw new Error('Benutzer nicht gefunden');
   }
-  return getAllPlansBasic(user.trainingPlans);
+  return getAllPlansBasic(user.trainingPlans, user.pictureUrl);
 }
 
 export async function createTrainingPlan(
@@ -167,8 +167,11 @@ export function findTrainingPlanIndexById(trainingPlans: TrainingPlan[], planId:
   return trainingPlans.findIndex(plan => plan.id === planId);
 }
 
-function getAllPlansBasic(trainingPlans: TrainingPlan[]): BasicTrainingPlanView[] {
-  return trainingPlans.map(plan => TrainingPlanDTO.getBasicView(plan));
+function getAllPlansBasic(trainingPlans: TrainingPlan[], pictureUrl?: string): BasicTrainingPlanView[] {
+  return trainingPlans.map(plan => ({
+    ...TrainingPlanDTO.getBasicView(plan),
+    pictureUrl
+  }));
 }
 
 function createNewTrainingPlanWithPlaceholders(weeks: number, daysPerWeek: number): TrainingWeek[] {

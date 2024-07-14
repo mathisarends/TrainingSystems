@@ -8,7 +8,10 @@ import { HttpMethods } from '../../types/httpMethods';
 import { AlertComponent } from '../../components/alert/alert.component';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { TrainingCardsComponent } from '../../components/training-card/training-card.component';
-import { BasicTrainingPlanView } from '../../../../../shared/models/dtos/training/trainingDto.types.js';
+import {
+  BasicTrainingPlanView,
+  TrainingPlanCardView,
+} from '../../../../../shared/models/dtos/training/trainingDto.types.js';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ModalEventsService } from '../../../service/modal-events.service';
 import { firstValueFrom, Subscription } from 'rxjs';
@@ -28,8 +31,9 @@ import { ModalSize } from '../../../service/modalSize';
   styleUrls: ['./training-plans.component.scss'],
 })
 export class TrainingPlansComponent implements OnInit, OnDestroy {
-  protected allTrainingPlans!: BasicTrainingPlanView[];
-  protected filteredTrainingPlans!: BasicTrainingPlanView[];
+  protected allTrainingPlans!: TrainingPlanCardView[];
+
+  protected filteredTrainingPlans!: TrainingPlanCardView[];
   protected isLoading: boolean = true;
   private currentSelectedId: string = '';
   private searchSubscription!: Subscription;
@@ -70,10 +74,6 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
     // Subscribe to search input changes
     this.searchSubscription = this.searchService.searchText$.subscribe(
       (searchText) => {
-        console.log(
-          '🚀 ~ TrainingPlansComponent ~ ngOnInit ~ searchText:',
-          searchText
-        );
         this.filterTrainingPlans(searchText);
       }
     );
@@ -96,10 +96,7 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
         this.httpClient.request<any>(HttpMethods.GET, 'training/plans')
       );
       this.allTrainingPlans = response.trainingPlanDtos;
-      console.log(
-        '🚀 ~ TrainingPlansComponent ~ loadTrainingPlans ~ this.allTrainingPlans :',
-        this.allTrainingPlans
-      );
+
       this.filteredTrainingPlans = this.allTrainingPlans;
     } catch (error) {
       // do nothing here again
