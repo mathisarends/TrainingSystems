@@ -8,7 +8,7 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TrainingDay } from '../../../../shared/models/training/trainingDay';
 import { HttpClientService } from '../../service/http-client.service';
 import { delay, firstValueFrom } from 'rxjs';
@@ -47,6 +47,8 @@ export class TrainingViewComponent
       defaultRPE: number;
     };
   } = {};
+  trainingFrequency!: number;
+  trainingBlockLengtH!: number;
   maxFactors: any;
   trainingDay: TrainingDay = { exercises: [] };
   isLoading = true;
@@ -65,7 +67,7 @@ export class TrainingViewComponent
     private estMaxService: EstMaxService,
     private renderer: Renderer2,
     private toastService: ToastService,
-
+    private router: Router,
     private categoryPlaceholderService: CategoryPlaceholderService
   ) {}
 
@@ -77,6 +79,8 @@ export class TrainingViewComponent
       await this.loadTrainingPlan(this.planId, this.week, this.day);
       this.isLoading = false;
     });
+
+    console.log('test', this.trainingDayIndex);
   }
 
   ngAfterViewInit(): void {
@@ -126,6 +130,8 @@ export class TrainingViewComponent
       this.defaultRepSchemeByCategory = response.defaultRepSchemeByCategory;
       this.maxFactors = response.maxFactors;
       this.trainingDay = response.trainingDay;
+      this.trainingFrequency = response.trainingFrequency;
+      this.trainingBlockLengtH = response.trainingBlockLength;
     } catch (error) {
       // here an error gets logged all the time dont know why ignore. seems like two requests are send
       // while i am only sending one?
@@ -178,7 +184,7 @@ export class TrainingViewComponent
 
   getExercise(index: number) {
     return (
-      this.trainingDay.exercises[index - 1] || {
+      this.trainingDay?.exercises[index - 1] || {
         category: '',
         exercise: '',
         sets: '',
@@ -189,5 +195,42 @@ export class TrainingViewComponent
         estMax: '',
       }
     );
+  }
+
+  // Hilfsfunktion, um ein Array der Länge `trainingFrequency` zu erzeugen TODO: in utils auslagern
+  createRange(length: number): number[] {
+    return Array.from({ length }, (_, i) => i + 1);
+  }
+
+  navigateWeek(direction: number): void {
+    const newWeek = this.trainingWeekIndex + direction;
+    if (newWeek >= 1 && newWeek <= this.trainingBlockLengtH) {
+      this.router.navigate([], {
+        queryParams: {
+          week: newWeek,
+          day: this.day,
+        },
+        queryParamsHandling: 'merge',
+      });
+    }
+  }
+
+  navigateDay(day: number, event: Event): void {
+    event.preventDefault();
+    if (day >= 1 && day <= this.trainingFrequency) {
+      console.log('navitgate');
+      this.router.navigate([], {
+        queryParams: {
+          week: this.week,
+          day: day,
+        },
+        queryParamsHandling: 'merge',
+      });
+    }
+  }
+
+  isSelected(day: number) {
+    console.log('test expect true once', day === this.trainingDayIndex);
+    return day === this.trainingDayIndex;
   }
 }

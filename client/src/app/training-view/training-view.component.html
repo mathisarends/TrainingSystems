@@ -136,6 +136,31 @@
     </tbody>
   </table>
 
-  <input type="submit" class="btn btn-dark" />
+  <!-- <input type="submit" class="btn btn-dark" /> -->
 </form>
 }
+
+<div class="pagination p1 w-100 d-flex justify-content-center">
+  <ul>
+    <a href="#" (click)="navigateDay(trainingDayIndex - 1, $event)"
+      ><li><</li></a
+    >
+    @for (day of createRange(trainingFrequency); track day) {
+    <a
+      [class.is-active]="isSelected(day)"
+      href="#"
+      (click)="navigateDay(day, $event)"
+    >
+      <li>{{ day }}</li>
+    </a>
+    }
+    <a href="#" (click)="navigateDay(trainingDayIndex + 1, $event)"
+      ><li>></li></a
+    >
+  </ul>
+</div>
+
+<div class="fixed-bottom-bar">
+  <i class="bx bx-left-arrow-alt icon" (click)="navigateWeek(-1)"></i>
+  <i class="bx bx-right-arrow-alt icon" (click)="navigateWeek(1)"></i>
+</div>

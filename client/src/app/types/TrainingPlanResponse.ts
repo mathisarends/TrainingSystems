@@ -2,6 +2,8 @@ import { TrainingDay } from '../../../../shared/models/training/trainingDay';
 
 export interface TrainingPlanResponse {
   title: string;
+  trainingFrequency: number;
+  trainingBlockLength: number;
   trainingWeekIndex: number;
   trainingDayIndex: number;
   trainingDay: TrainingDay;

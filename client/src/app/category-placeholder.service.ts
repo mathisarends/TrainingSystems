@@ -167,41 +167,42 @@ export class CategoryPlaceholderService {
           ) as HTMLInputElement;
 
           // next row (copy values)
-          const nextExerciseNameSelect = tableRow.querySelector(
+          const nextExerciseNameSelect = nextRow.querySelector(
             '.exercise-name-selector'
           ) as HTMLSelectElement;
-          const nextSetsInput = tableRow.querySelector(
+          const nextSetsInput = nextRow.querySelector(
             '.sets'
           ) as HTMLInputElement;
-          const nextRepsInput = tableRow.querySelector(
+          const nextRepsInput = nextRow.querySelector(
             '.reps'
           ) as HTMLInputElement;
-          const nextTargetRPEInput = tableRow.querySelector(
+          const nextTargetRPEInput = nextRow.querySelector(
             '.targetRPE'
           ) as HTMLInputElement;
-          const nextWeightInput = tableRow.querySelector(
+          const nextWeightInput = nextRow.querySelector(
             '.weight'
           ) as HTMLInputElement;
-          const nextActualRPEInput = tableRow.querySelector(
+          const nextActualRPEInput = nextRow.querySelector(
             '.actualRPE'
           ) as HTMLInputElement;
-          const nextEstMaxInput = tableRow.querySelector(
+          const nextEstMaxInput = nextRow.querySelector(
             '.estMax'
           ) as HTMLInputElement;
 
           // copy values to row above
           exerciseCategorySelector.value = nextCategorySelector.value;
           exerciseNameSelect.value = nextExerciseNameSelect.value;
+
+          // dispatch events to update display before updating specific values
+          exerciseCategorySelector.dispatchEvent(new Event('change'));
+          exerciseNameSelect.dispatchEvent(new Event('change'));
+
           setsInput.value = nextSetsInput.value;
           repsInput.value = nextRepsInput.value;
           targetRPEInput.value = nextTargetRPEInput.value;
           weightInput.value = nextWeightInput.value;
           actualRPEInput.value = nextActualRPEInput.value;
           estMaxInput.value = nextEstMaxInput.value;
-
-          // dispatch events to update display
-          exerciseCategorySelector.dispatchEvent(new Event('change'));
-          exerciseNameSelect.dispatchEvent(new Event('change'));
 
           this.formService.addChange(
             exerciseCategorySelector.name,
@@ -223,12 +224,32 @@ export class CategoryPlaceholderService {
           // reset values in next row (das dispatchen vom event reicht weil sich ein anderer service dann um das Ändern der werte kümmet)
           nextCategorySelector.value = '- Bitte Auswählen -';
           nextCategorySelector.dispatchEvent(new Event('change'));
+          nextWeightInput.value = '';
+          nextActualRPEInput.value = '';
+          nextEstMaxInput.value = '';
+
+          this.formService.addChange(
+            nextWeightInput.name,
+            nextWeightInput.value
+          );
+          this.formService.addChange(
+            nextActualRPEInput.name,
+            nextActualRPEInput.value
+          );
+          this.formService.addChange(
+            nextActualRPEInput.name,
+            nextActualRPEInput.value
+          );
+          this.formService.addChange(
+            nextEstMaxInput.name,
+            nextEstMaxInput.value
+          );
 
           break; // Bricht die Schleife ab, sobald eine gültige Kategorie gefunden und kopiert wurde
         }
       }
 
-      nextRow = nextRow.nextElementSibling;
+      nextRow = nextRow.nextElementSibling; // check ob das auch mehrfach zeilen hochkopiert TODO:
     }
   }
 }
