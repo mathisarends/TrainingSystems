@@ -93,9 +93,10 @@ router.patch('/plan/:id/:week/:day', authService.authenticationMiddleware, async
     throw new Error('Ungültige Trainingsplan-ID');
   }
 
+  const trainingPlan = user.trainingPlans[trainingPlanIndex];
+
   try {
-    const trainingDay =
-      user.trainingPlans[trainingPlanIndex].trainingWeeks[trainingWeekIndex].trainingDays[trainingDayIndex];
+    const trainingDay = trainingPlan.trainingWeeks[trainingWeekIndex].trainingDays[trainingDayIndex];
 
     // Iterate over the keys and values in changedData
     for (const [fieldName, fieldValue] of Object.entries(changedData)) {
@@ -118,6 +119,27 @@ router.patch('/plan/:id/:week/:day', authService.authenticationMiddleware, async
 
       if (exercise) {
         updateExercise(fieldName, fieldValue, exercise, trainingDay, exerciseIndex);
+      }
+
+      let tempWeekIndex = trainingWeekIndex + 1;
+
+      // updateComingWeeksIfNotPresent (own method)
+      while (tempWeekIndex < trainingPlan.trainingWeeks.length) {
+        const trainingDayInLaterWeek = trainingPlan.trainingWeeks[tempWeekIndex].trainingDays[
+          trainingDayIndex
+        ] as TrainingDay;
+        const exerciseInLaterWeek = trainingDayInLaterWeek.exercises[exerciseIndex - 1] as Exercise;
+
+        if (!exercise) {
+          const newExercise = createExerciseObject(fieldName, fieldValue) as Exercise;
+          trainingDayInLaterWeek.exercises.push(newExercise);
+        }
+
+        if (exercise) {
+          updateExercise(fieldName, fieldValue, exerciseInLaterWeek, trainingDayInLaterWeek, exerciseIndex);
+        }
+
+        tempWeekIndex++;
       }
     }
 
@@ -161,8 +183,6 @@ function updateExercise(
   // zum löschen nachdem sie gelöscht wurde wird sie aber wieder neue erstellt!!! also funktioniert noch nicht
   if (fieldName.endsWith('category') && (fieldValue === '- Bitte Auswählen -' || fieldValue === '')) {
     trainingDay.exercises.splice(exerciseIndex - 1, 1);
-    console.log('gelöscht');
-    console.log('exercises', trainingDay.exercises);
     return;
   }
 

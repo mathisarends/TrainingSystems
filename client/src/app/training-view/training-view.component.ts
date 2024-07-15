@@ -127,6 +127,7 @@ export class TrainingViewComponent
           `training/plan/${planId}/${week}/${day}`
         )
       );
+      console.log('🚀 ~ response:', response);
       this.title = response.title;
       this.trainingPlanData.setData(response);
     } catch (error) {}
@@ -140,6 +141,7 @@ export class TrainingViewComponent
           'exercise/training'
         )
       );
+      console.log('🚀 ~ loadExerciseData ~ response:', response);
       this.exerciseData = new ExerciseDataDTO(response);
     } catch (error) {}
   }
