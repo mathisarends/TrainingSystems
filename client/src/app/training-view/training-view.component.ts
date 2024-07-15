@@ -30,6 +30,7 @@ import { TrainingPlanResponse } from '../types/TrainingPlanResponse';
 import { ExerciseDataDTO } from './exerciseDataDto';
 import { AutoSaveService } from '../auto-save.service';
 import { TrainingPlanDto } from './trainingPlanDto';
+import { PauseTimeService } from '../pause-time.service';
 
 @Component({
   selector: 'app-training-view',
@@ -63,7 +64,8 @@ export class TrainingViewComponent
     private renderer: Renderer2,
     private toastService: ToastService,
     private categoryPlaceholderService: CategoryPlaceholderService,
-    private autoSaveService: AutoSaveService
+    private autoSaveService: AutoSaveService,
+    private pauseTimeService: PauseTimeService
   ) {}
 
   async ngOnInit() {
@@ -111,6 +113,14 @@ export class TrainingViewComponent
     } catch (error) {
       console.error('Error loading training data:', error);
     } finally {
+      // wilde code anordnung hier
+
+      if (isPlatformBrowser(this.platformId)) {
+        this.pauseTimeService.initializePauseTimers(
+          this.exerciseData.categoryPauseTimes
+        );
+      }
+
       this.isLoading = false;
     }
   }
@@ -237,6 +247,9 @@ export class TrainingViewComponent
       },
       queryParamsHandling: 'merge',
     });
+
+    this.loadTrainingPlan(this.planId, week, this.trainingDayIndex);
+    //TODO: hier müssen alle inputs gecleared werden die nur temporär sind
   }
 
   getExercise(index: number) {

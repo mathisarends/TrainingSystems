@@ -160,7 +160,6 @@ export default router;
  * @returns A complete Exercise object with default values.
  */
 function createExerciseObject(fieldName: string, fieldValue: string): Exercise | null {
-  console.log('🚀 ~ createExerciseObject ~ fieldName:', fieldName);
   return {
     category: fieldName.endsWith('category') ? fieldValue : '',
     exercise: '',
