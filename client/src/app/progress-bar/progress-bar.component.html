@@ -1,0 +1,15 @@
+<div class="progress-bar-container">
+  <div class="progress">
+    <div
+      class="progress-bar bg-info"
+      role="progressbar"
+      [style.width.%]="progress"
+      aria-valuenow="progress"
+      aria-valuemin="0"
+      aria-valuemax="100"
+    ></div>
+  </div>
+  <p class="text-muted mt-2 text-align-left">
+    {{ category }}: {{ remainingTime }} seconds left
+  </p>
+</div>

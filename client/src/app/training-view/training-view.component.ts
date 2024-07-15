@@ -25,17 +25,23 @@ import { CategoryPlaceholderService } from '../category-placeholder.service';
 import { ToastService } from '../toast/toast.service';
 import { ToastType } from '../toast/toastType';
 import { PaginationComponent } from '../pagination/pagination.component';
-import { TrainingPlanResponse } from '../types/TrainingPlanResponse';
 
 import { ExerciseDataDTO } from './exerciseDataDto';
 import { AutoSaveService } from '../auto-save.service';
 import { TrainingPlanDto } from './trainingPlanDto';
 import { PauseTimeService } from '../pause-time.service';
+import { ProgressBarComponent } from '../progress-bar/progress-bar.component';
 
 @Component({
   selector: 'app-training-view',
   standalone: true,
-  imports: [SpinnerComponent, CommonModule, FormsModule, PaginationComponent],
+  imports: [
+    SpinnerComponent,
+    CommonModule,
+    FormsModule,
+    PaginationComponent,
+    ProgressBarComponent,
+  ],
   templateUrl: './training-view.component.html',
   styleUrls: ['./training-view.component.scss'],
 })
