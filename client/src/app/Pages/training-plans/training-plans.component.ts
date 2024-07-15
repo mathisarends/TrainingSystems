@@ -99,7 +99,7 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
 
       this.filteredTrainingPlans = this.allTrainingPlans;
     } catch (error) {
-      // do nothing here again
+      console.error('Fehler beim Laden');
     } finally {
       this.isLoading = false;
     }

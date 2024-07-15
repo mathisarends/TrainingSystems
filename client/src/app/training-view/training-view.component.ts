@@ -213,6 +213,11 @@ export class TrainingViewComponent
 
     if (this.trainingWeekIndex === 0 && direction === -1) {
       week = this.trainingPlanData!.trainingBlockLength - 1; // use trainingPlanData
+      console.log(
+        '🚀 ~ navigateWeek ~ this.trainingPlanData!.trainingBlockLength :',
+        this.trainingPlanData!.trainingBlockLength
+      );
+      console.log('🚀 ~ navigateWeek ~ week:', week);
     } else if (
       this.trainingWeekIndex ===
         this.trainingPlanData!.trainingBlockLength - 1 && // use trainingPlanData

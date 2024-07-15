@@ -158,7 +158,7 @@ export async function getTrainingPlanForDay(
   return {
     title: trainingPlan.title,
     trainingFrequency: trainingPlan.trainingFrequency,
-    trainingBlockLengtH: trainingPlan.trainingWeeks.length,
+    trainingBlockLength: trainingPlan.trainingWeeks.length,
     trainingDay
   };
 }
