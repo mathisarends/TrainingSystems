@@ -9,14 +9,6 @@ console.log('🚀 ~ SECRET:', SECRET);
 
 class AuthService {
   authenticationMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    // Spezifischere Logs hinzufügen
-    console.log('Incoming request:');
-    console.log(`- URL: ${req.url}`);
-    console.log(`- IP: ${req.ip}`);
-
-    console.log(`- Headers: ${JSON.stringify(req.headers, null, 2)}`);
-    console.log(`- Cookies: ${JSON.stringify(req.cookies, null, 2)}`);
-
     if (res.locals.user) {
       next();
     } else {
@@ -26,9 +18,7 @@ class AuthService {
         res.locals.user = this.verifyToken(token);
         next();
       } catch {
-        console.log('Fehler beim token');
         res.status(401).json({ error: 'Invalid jwt ' });
-        res.redirect('/users/sign-in');
       }
     }
   };
