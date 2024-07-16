@@ -22,19 +22,28 @@ class AuthService {
   }
 
   authenticationMiddleware = (req: Request, res: Response, next: NextFunction) => {
+    console.log(`Incoming request URL: ${req.url}`);
+    console.log(`Request method: ${req.method}`);
+
     if (res.locals.user) {
+      console.log('User found in res.locals');
       next();
     } else {
       const token = req.cookies['jwt-token'] || '';
+      console.log(`Token from cookies: ${token}`);
+
       try {
         const user = this.verifyToken(token);
         if (user) {
+          console.log('Token is valid, user authenticated');
           res.locals.user = user;
           next();
         } else {
+          console.log('Token is invalid, sending Unauthorized response');
           res.status(401).json({ error: 'Unauthorized' });
         }
       } catch (error: unknown) {
+        console.error('Error verifying token:', (error as Error).message);
         res.status(401).json({ error: 'Unauthorized', message: (error as Error).message });
       }
     }

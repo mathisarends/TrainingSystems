@@ -15,21 +15,8 @@ import { AuthenticatorService } from '../../auth/authenticator.service';
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.scss',
 })
-export class LandingComponent implements OnInit {
-  constructor(private httpClient: HttpClientService) {}
-
-  userDetails: any;
-
-  ngOnInit(): void {
-    this.getData();
-  }
-
-  getData() {
-    this.httpClient.request<any>(HttpMethods.GET, '').subscribe((response) => {
-      console.log('GET response', response);
-    });
-  }
-
+export class LandingComponent {
+  constructor() {}
   carouselSlides: Slide[] = [
     {
       image: '/images/carousel/evo-gym-2.webp',
