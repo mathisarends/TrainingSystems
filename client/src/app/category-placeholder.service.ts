@@ -249,7 +249,7 @@ export class CategoryPlaceholderService {
         }
       }
 
-      nextRow = nextRow.nextElementSibling; // check ob das auch mehrfach zeilen hochkopiert TODO:
+      nextRow = nextRow.nextElementSibling;
     }
   }
 }

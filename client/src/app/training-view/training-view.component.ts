@@ -9,6 +9,7 @@ import {
   ViewChildren,
   ElementRef,
   QueryList,
+  input,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -31,6 +32,7 @@ import { AutoSaveService } from '../auto-save.service';
 import { TrainingPlanDto } from './trainingPlanDto';
 import { PauseTimeService } from '../pause-time.service';
 import { ProgressBarComponent } from '../progress-bar/progress-bar.component';
+import { TrainingDataService } from './training-data-service';
 
 @Component({
   selector: 'app-training-view',
@@ -71,7 +73,8 @@ export class TrainingViewComponent
     private toastService: ToastService,
     private categoryPlaceholderService: CategoryPlaceholderService,
     private autoSaveService: AutoSaveService,
-    private pauseTimeService: PauseTimeService
+    private pauseTimeService: PauseTimeService,
+    private trainingDataService: TrainingDataService
   ) {}
 
   async ngOnInit() {
@@ -143,7 +146,7 @@ export class TrainingViewComponent
           `training/plan/${planId}/${week}/${day}`
         )
       );
-      console.log('🚀 ~ response:', response);
+
       this.title = response.title;
       this.trainingPlanData.setData(response);
     } catch (error) {}
@@ -224,6 +227,8 @@ export class TrainingViewComponent
         queryParamsHandling: 'merge',
       });
     }
+
+    this.clearInputValues();
   }
 
   navigateWeek(direction: number) {
@@ -254,10 +259,56 @@ export class TrainingViewComponent
       queryParamsHandling: 'merge',
     });
 
+    this.clearInputValues();
+
     this.loadTrainingPlan(this.planId, week, this.trainingDayIndex);
-    //TODO: hier müssen alle inputs gecleared werden die nur temporär sind
   }
 
+  async submitUnchangedData() {
+    const changedData = this.formService.getChanges();
+
+    await firstValueFrom(
+      this.httpClient.request<any>(
+        HttpMethods.PATCH,
+        `training/plan/${this.planId}/${this.trainingWeekIndex}/${this.trainingDayIndex}`,
+        { body: changedData }
+      )
+    );
+    this.toastService.show(
+      'Speichern erfolgreich',
+      'Deine Änderungen wurden erfolgreich gespeichert',
+      ToastType.INFO,
+      { delay: 5000 }
+    );
+
+    this.clearInputValues();
+  }
+
+  clearInputValues() {
+    const changedData = this.formService.getChanges();
+    console.log('🚀 ~ clearInputValues ~ changedData:', changedData);
+
+    for (const name in changedData) {
+      if (changedData.hasOwnProperty(name)) {
+        const inputElement = document.querySelector(`[name="${name}"]`) as
+          | HTMLInputElement
+          | HTMLSelectElement;
+        if (
+          inputElement &&
+          inputElement.classList.contains('exercise-category-selector')
+        ) {
+          // its a category selector
+          inputElement.value = '- Bitte Auswählen -';
+          inputElement.dispatchEvent(new Event('change'));
+        } else if (inputElement) {
+          inputElement.value = '';
+        }
+      }
+    }
+
+    // Clear the changes in the service
+    this.formService.clearChanges();
+  }
   getExercise(index: number) {
     return (
       this.trainingPlanData!.trainingDay?.exercises[index - 1] || {
