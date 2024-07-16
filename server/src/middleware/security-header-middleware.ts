@@ -6,9 +6,15 @@ import { Request, Response, NextFunction } from 'express';
  * @param res - The HTTP response object.
  * @param next - The next middleware function.
  */
+
+let count = 0;
+
 export function securityHeaders(req: Request, res: Response, next: NextFunction) {
   // Uncomment the following line when ready for HTTPS certificates
   // res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload'); // HSTS-HEADER
+
+  console.log('🚀 ~ count:', count);
+  count++;
 
   res.set('Content-Security-Policy', "frame-ancestors 'none'");
   res.setHeader('X-Frame-Options', 'DENY');

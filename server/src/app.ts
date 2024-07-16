@@ -4,13 +4,13 @@ import http from 'node:http';
 import dotenv from 'dotenv';
 import startDB from './db.js';
 
+import cors from 'cors';
+
 // Routers
 import userRouter from './routes/userRoutes.js';
 import trainingRouter from './routes/trainingRoutes.js';
 import exerciseRouter from './routes/exerciseRoutes.js';
 dotenv.config();
-
-import { corsHeaders, securityHeaders } from './middleware/security-header-middleware.js';
 
 const PORT = process.env.port ? parseInt(process.env.port, 10) : 3000;
 
@@ -19,16 +19,16 @@ async function configureApp(app: Express) {
   app.use(express.json());
   app.use(cookieParser());
 
-  app.use(corsHeaders);
-  app.use(securityHeaders);
+  app.use(
+    cors({
+      origin: 'http://localhost:4200',
+      credentials: true
+    })
+  );
 
   app.use('/user', userRouter);
   app.use('/training', trainingRouter);
   app.use('/exercise', exerciseRouter);
-
-  app.get('/', (req, res) => {
-    res.json({ message: 'Hallo ich bin die Welt' });
-  });
 }
 
 export async function start() {

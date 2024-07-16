@@ -2,11 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Slide } from '../../types/slide';
 import { CarouselComponent } from '../../components/carousel/carousel.component';
 import { HeroComponent } from '../../hero/hero.component';
-import { HttpClientService } from '../../../service/http-client.service';
-import { HttpMethods } from '../../types/httpMethods';
-import { ActivatedRoute } from '@angular/router';
-import { ProfileService } from '../profile/profileService';
-import { AuthenticatorService } from '../../auth/authenticator.service';
 
 @Component({
   selector: 'app-landing',

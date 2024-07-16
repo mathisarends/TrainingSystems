@@ -1,86 +1,45 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
 import dotenv from 'dotenv';
 dotenv.config();
 
-export interface UserClaims extends JwtPayload {
-  [key: string]: unknown;
-}
+const SECRET: string = process.env.jwt_secret!;
+console.log('🚀 ~ SECRET:', SECRET);
 
 class AuthService {
-  private static instance: AuthService;
-  private SECRET: string = process.env.jwt_secret!;
-
-  private constructor() {}
-
-  static getInstance(): AuthService {
-    if (!AuthService.instance) {
-      AuthService.instance = new AuthService();
-    }
-    return AuthService.instance;
-  }
-
   authenticationMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    console.log(`Incoming request URL: ${req.url}`);
-    console.log(`Request method: ${req.method}`);
+    // Spezifischere Logs hinzufügen
+    console.log('Incoming request:');
+    console.log(`- URL: ${req.url}`);
+    console.log(`- IP: ${req.ip}`);
+
+    console.log(`- Headers: ${JSON.stringify(req.headers, null, 2)}`);
+    console.log(`- Cookies: ${JSON.stringify(req.cookies, null, 2)}`);
 
     if (res.locals.user) {
-      console.log('User found in res.locals');
       next();
     } else {
       const token = req.cookies['jwt-token'] || '';
-      console.log(`Token from cookies: ${token}`);
-
+      console.log('🚀 ~ AuthService ~ token:', token);
       try {
-        const user = this.verifyToken(token);
-        if (user) {
-          console.log('Token is valid, user authenticated');
-          res.locals.user = user;
-          next();
-        } else {
-          console.log('Token is invalid, sending Unauthorized response');
-          res.status(401).json({ error: 'Unauthorized' });
-        }
-      } catch (error: unknown) {
-        console.error('Error verifying token:', (error as Error).message);
-        res.status(401).json({ error: 'Unauthorized', message: (error as Error).message });
+        res.locals.user = this.verifyToken(token);
+        next();
+      } catch {
+        console.log('Fehler beim token');
+        res.status(401).json({ error: 'Invalid jwt ' });
+        res.redirect('/users/sign-in');
       }
     }
   };
 
-  createAndSetToken(userClaimSet: UserClaims, res: Response) {
-    const token = this.createToken(userClaimSet);
-    res.cookie('jwt-token', token, {
-      httpOnly: true,
-      path: '/',
-      sameSite: 'lax' // due to a missing certificate chain, the secure option cannot be used
-    });
+  createAndSetToken(userClaimSet: Record<string, unknown>, res: Response) {
+    const token = jwt.sign(userClaimSet, SECRET, { algorithm: 'HS256', expiresIn: '1h' });
+    res.cookie('jwt-token', token);
   }
 
-  createToken(userClaims: UserClaims): string {
-    const claims: UserClaims = {
-      ...userClaims,
-      timestamp: Date.now()
-    };
-    return jwt.sign(claims, this.SECRET, { algorithm: 'HS256' });
-  }
-
-  verifyToken(token: string): UserClaims | null {
-    try {
-      return jwt.verify(token, this.SECRET) as UserClaims;
-    } catch (error) {
-      return null;
-    }
-  }
-
-  refreshToken(token: string, req: Request, res: Response) {
-    const userClaims = this.verifyToken(token);
-    if (userClaims) {
-      this.createAndSetToken(userClaims, res);
-    } else {
-      throw new Error('Invalid token');
-    }
+  verifyToken(token: string) {
+    return jwt.verify(token, SECRET);
   }
 
   removeToken(res: Response) {
@@ -88,4 +47,4 @@ class AuthService {
   }
 }
 
-export const authService = AuthService.getInstance();
+export const authService = new AuthService();
