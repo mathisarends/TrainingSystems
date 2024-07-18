@@ -9,25 +9,30 @@ import {
   ViewChildren,
   ElementRef,
   QueryList,
+  input,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TrainingService } from './training-view-service';
+import { HttpClientService } from '../../service/http-client.service';
+import { catchError, firstValueFrom } from 'rxjs';
+import { HttpMethods } from '../types/httpMethods';
+import { SpinnerComponent } from '../components/spinner/spinner.component';
 import { FormService } from '../form.service';
 import { RpeService } from '../rpe.service';
 import { EstMaxService } from '../estmax.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { CategoryPlaceholderService } from '../category-placeholder.service';
 import { ToastService } from '../toast/toast.service';
 import { ToastType } from '../toast/toastType';
-import { AutoSaveService } from '../auto-save.service';
-import { PauseTimeService } from '../pause-time.service';
-import { ExerciseDataDTO } from './exerciseDataDto';
-import { TrainingPlanDto } from './trainingPlanDto';
-import { SpinnerComponent } from '../components/spinner/spinner.component';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { PaginationComponent } from '../pagination/pagination.component';
+
+import { ExerciseDataDTO } from './exerciseDataDto';
+import { AutoSaveService } from '../auto-save.service';
+import { TrainingPlanDto } from './trainingPlanDto';
+import { PauseTimeService } from '../pause-time.service';
 import { ProgressBarComponent } from '../progress-bar/progress-bar.component';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-training-view',
@@ -60,7 +65,7 @@ export class TrainingViewComponent
     @Inject(PLATFORM_ID) private platformId: Object,
     private route: ActivatedRoute,
     private router: Router,
-    private trainingService: TrainingService,
+    private httpClient: HttpClientService,
     private formService: FormService,
     private rpeService: RpeService,
     private estMaxService: EstMaxService,
@@ -109,46 +114,70 @@ export class TrainingViewComponent
 
   async loadData(planId: string, week: number, day: number): Promise<void> {
     try {
-      await Promise.all([
-        this.loadTrainingPlan(planId, week, day),
-        this.loadExerciseData(),
-      ]);
+      await this.loadTrainingPlan(planId, week, day);
+      await this.loadExerciseData();
     } catch (error) {
-      console.error('Error loading data:', (error as unknown as Error).message);
+      console.error('Error loading training data:', error);
     } finally {
+      // wilde code anordnung hier
+
       if (isPlatformBrowser(this.platformId)) {
         this.pauseTimeService.initializePauseTimers(
           this.exerciseData.categoryPauseTimes
         );
       }
+
       this.isLoading = false;
     }
   }
 
+  // TODO: generischen interceptor für eingehende http-responses damit ich das hier global handhaben kann das mit dem 499 fehler
   async loadTrainingPlan(
     planId: string,
     week: number,
     day: number
   ): Promise<void> {
     try {
-      const response = await this.trainingService.loadTrainingPlan(
-        planId,
-        week,
-        day
+      const response: TrainingPlanDto = await firstValueFrom(
+        this.httpClient
+          .request<TrainingPlanDto>(
+            HttpMethods.GET,
+            `training/plan/${planId}/${week}/${day}`
+          )
+          .pipe(
+            catchError((error: HttpErrorResponse) => {
+              if (error.status === 499) {
+                // Handle specific status code 499
+                console.error('Received status code 499, ignoring request');
+              } else {
+                // Handle other errors
+                console.error('Error while loading training plan', error);
+              }
+              throw error;
+            })
+          )
       );
+
       this.title = response.title;
       this.trainingPlanData.setData(response);
     } catch (error) {
-      console.error('Error loading training plan:', error);
+      if ((error as HttpErrorResponse).status !== 499) {
+        console.error('Error while loading training plan', error);
+      }
     }
   }
 
   async loadExerciseData(): Promise<void> {
     try {
-      this.exerciseData = await this.trainingService.loadExerciseData();
-    } catch (error) {
-      console.error('Error loading exercise data:', error);
-    }
+      const response = await firstValueFrom(
+        this.httpClient.request<ExerciseDataDTO>(
+          HttpMethods.GET,
+          'exercise/training'
+        )
+      );
+      console.log('🚀 ~ loadExerciseData ~ response:', response);
+      this.exerciseData = new ExerciseDataDTO(response);
+    } catch (error) {}
   }
 
   async onSubmit(event: Event): Promise<void> {
@@ -156,11 +185,12 @@ export class TrainingViewComponent
     const changedData = this.formService.getChanges();
 
     try {
-      await this.trainingService.submitTrainingPlan(
-        this.planId,
-        this.trainingWeekIndex,
-        this.trainingDayIndex,
-        changedData
+      await firstValueFrom(
+        this.httpClient.request<any>(
+          HttpMethods.PATCH,
+          `training/plan/${this.planId}/${this.trainingWeekIndex}/${this.trainingDayIndex}`,
+          { body: changedData }
+        )
       );
       this.toastService.show(
         'Speichern erfolgreich',
@@ -201,6 +231,7 @@ export class TrainingViewComponent
 
   navigateDay(day: number): void {
     if (day >= 0 && day <= this.trainingPlanData!.trainingFrequency - 1) {
+      // use trainingPlanData
       this.trainingDayIndex = day;
 
       this.router.navigate([], {
@@ -219,10 +250,15 @@ export class TrainingViewComponent
     let week = 0;
 
     if (this.trainingWeekIndex === 0 && direction === -1) {
-      week = this.trainingPlanData!.trainingBlockLength - 1;
+      week = this.trainingPlanData!.trainingBlockLength - 1; // use trainingPlanData
+      console.log(
+        '🚀 ~ navigateWeek ~ this.trainingPlanData!.trainingBlockLength :',
+        this.trainingPlanData!.trainingBlockLength
+      );
+      console.log('🚀 ~ navigateWeek ~ week:', week);
     } else if (
       this.trainingWeekIndex ===
-        this.trainingPlanData!.trainingBlockLength - 1 &&
+        this.trainingPlanData!.trainingBlockLength - 1 && // use trainingPlanData
       direction === 1
     ) {
       week = 0;
@@ -246,11 +282,12 @@ export class TrainingViewComponent
   async submitUnchangedData() {
     const changedData = this.formService.getChanges();
 
-    await this.trainingService.submitTrainingPlan(
-      this.planId,
-      this.trainingWeekIndex,
-      this.trainingDayIndex,
-      changedData
+    await firstValueFrom(
+      this.httpClient.request<any>(
+        HttpMethods.PATCH,
+        `training/plan/${this.planId}/${this.trainingWeekIndex}/${this.trainingDayIndex}`,
+        { body: changedData }
+      )
     );
     this.toastService.show(
       'Speichern erfolgreich',
@@ -264,6 +301,7 @@ export class TrainingViewComponent
 
   clearInputValues() {
     const changedData = this.formService.getChanges();
+    console.log('🚀 ~ clearInputValues ~ changedData:', changedData);
 
     for (const name in changedData) {
       if (changedData.hasOwnProperty(name)) {
@@ -274,6 +312,7 @@ export class TrainingViewComponent
           inputElement &&
           inputElement.classList.contains('exercise-category-selector')
         ) {
+          // its a category selector
           inputElement.value = '- Bitte Auswählen -';
           inputElement.dispatchEvent(new Event('change'));
         } else if (inputElement) {
@@ -282,12 +321,13 @@ export class TrainingViewComponent
       }
     }
 
+    // Clear the changes in the service
     this.formService.clearChanges();
   }
-
   getExercise(index: number) {
     return (
       this.trainingPlanData!.trainingDay?.exercises[index - 1] || {
+        // use trainingPlanData
         category: '',
         exercise: '',
         sets: '',

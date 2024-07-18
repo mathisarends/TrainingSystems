@@ -29,7 +29,8 @@ export class TrainingService {
     }
   }
 
-  async loadExerciseData(): Promise<ExerciseDataDTO> {
+  // for now errors are expected because headers are not send everytime a request ist made
+  async loadExerciseData(): Promise<ExerciseDataDTO | null> {
     try {
       return await firstValueFrom(
         this.httpClient.request<ExerciseDataDTO>(
@@ -38,8 +39,7 @@ export class TrainingService {
         )
       );
     } catch (error) {
-      console.error('Error loading exercise data:', error);
-      throw new Error('Error loading exercise data');
+      return null;
     }
   }
 
