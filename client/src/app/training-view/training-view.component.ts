@@ -131,7 +131,6 @@ export class TrainingViewComponent
     }
   }
 
-  // TODO: generischen interceptor für eingehende http-responses damit ich das hier global handhaben kann das mit dem 499 fehler
   async loadTrainingPlan(
     planId: string,
     week: number,
@@ -139,23 +138,10 @@ export class TrainingViewComponent
   ): Promise<void> {
     try {
       const response: TrainingPlanDto = await firstValueFrom(
-        this.httpClient
-          .request<TrainingPlanDto>(
-            HttpMethods.GET,
-            `training/plan/${planId}/${week}/${day}`
-          )
-          .pipe(
-            catchError((error: HttpErrorResponse) => {
-              if (error.status === 499) {
-                // Handle specific status code 499
-                console.error('Received status code 499, ignoring request');
-              } else {
-                // Handle other errors
-                console.error('Error while loading training plan', error);
-              }
-              throw error;
-            })
-          )
+        this.httpClient.request<TrainingPlanDto>(
+          HttpMethods.GET,
+          `training/plan/${planId}/${week}/${day}`
+        )
       );
 
       this.title = response.title;
@@ -166,7 +152,6 @@ export class TrainingViewComponent
       }
     }
   }
-
   async loadExerciseData(): Promise<void> {
     try {
       const response = await firstValueFrom(
@@ -175,7 +160,6 @@ export class TrainingViewComponent
           'exercise/training'
         )
       );
-      console.log('🚀 ~ loadExerciseData ~ response:', response);
       this.exerciseData = new ExerciseDataDTO(response);
     } catch (error) {}
   }
@@ -202,10 +186,6 @@ export class TrainingViewComponent
     } catch (error) {
       console.error('Error updating training plan:', error);
     }
-  }
-
-  onWeightInputChange() {
-    console.log('changed weight value');
   }
 
   onInputChange(event: Event): void {
@@ -251,11 +231,6 @@ export class TrainingViewComponent
 
     if (this.trainingWeekIndex === 0 && direction === -1) {
       week = this.trainingPlanData!.trainingBlockLength - 1; // use trainingPlanData
-      console.log(
-        '🚀 ~ navigateWeek ~ this.trainingPlanData!.trainingBlockLength :',
-        this.trainingPlanData!.trainingBlockLength
-      );
-      console.log('🚀 ~ navigateWeek ~ week:', week);
     } else if (
       this.trainingWeekIndex ===
         this.trainingPlanData!.trainingBlockLength - 1 && // use trainingPlanData
@@ -301,7 +276,6 @@ export class TrainingViewComponent
 
   clearInputValues() {
     const changedData = this.formService.getChanges();
-    console.log('🚀 ~ clearInputValues ~ changedData:', changedData);
 
     for (const name in changedData) {
       if (changedData.hasOwnProperty(name)) {
