@@ -9,14 +9,10 @@ import {
   ViewChildren,
   ElementRef,
   QueryList,
-  input,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClientService } from '../../service/http-client.service';
-import { catchError, firstValueFrom } from 'rxjs';
-import { HttpMethods } from '../types/httpMethods';
-import { SpinnerComponent } from '../components/spinner/spinner.component';
+import { TrainingViewService } from './training-view-service';
 import { FormService } from '../form.service';
 import { RpeService } from '../rpe.service';
 import { EstMaxService } from '../estmax.service';
@@ -25,14 +21,15 @@ import { FormsModule } from '@angular/forms';
 import { CategoryPlaceholderService } from '../category-placeholder.service';
 import { ToastService } from '../toast/toast.service';
 import { ToastType } from '../toast/toastType';
+import { SpinnerComponent } from '../components/spinner/spinner.component';
 import { PaginationComponent } from '../pagination/pagination.component';
-
+import { ProgressBarComponent } from '../progress-bar/progress-bar.component';
 import { ExerciseDataDTO } from './exerciseDataDto';
-import { AutoSaveService } from '../auto-save.service';
 import { TrainingPlanDto } from './trainingPlanDto';
 import { PauseTimeService } from '../pause-time.service';
-import { ProgressBarComponent } from '../progress-bar/progress-bar.component';
 import { HttpErrorResponse } from '@angular/common/http';
+import { AutoSaveService } from '../auto-save.service';
+import { TrainingViewNavigationService } from './training-view-navigation.service';
 
 @Component({
   selector: 'app-training-view',
@@ -65,7 +62,7 @@ export class TrainingViewComponent
     @Inject(PLATFORM_ID) private platformId: Object,
     private route: ActivatedRoute,
     private router: Router,
-    private httpClient: HttpClientService,
+    private trainingViewService: TrainingViewService,
     private formService: FormService,
     private rpeService: RpeService,
     private estMaxService: EstMaxService,
@@ -73,7 +70,8 @@ export class TrainingViewComponent
     private toastService: ToastService,
     private categoryPlaceholderService: CategoryPlaceholderService,
     private autoSaveService: AutoSaveService,
-    private pauseTimeService: PauseTimeService
+    private pauseTimeService: PauseTimeService,
+    private navigationService: TrainingViewNavigationService
   ) {}
 
   async ngOnInit() {
@@ -82,7 +80,6 @@ export class TrainingViewComponent
       this.trainingWeekIndex = parseInt(params['week']);
       this.trainingDayIndex = parseInt(params['day']);
 
-      // Fetch both training plan and exercise data in parallel
       await this.loadData(
         this.planId,
         this.trainingWeekIndex,
@@ -119,8 +116,6 @@ export class TrainingViewComponent
     } catch (error) {
       console.error('Error loading training data:', error);
     } finally {
-      // wilde code anordnung hier
-
       if (isPlatformBrowser(this.platformId)) {
         this.pauseTimeService.initializePauseTimers(
           this.exerciseData.categoryPauseTimes
@@ -137,13 +132,8 @@ export class TrainingViewComponent
     day: number
   ): Promise<void> {
     try {
-      const response: TrainingPlanDto = await firstValueFrom(
-        this.httpClient.request<TrainingPlanDto>(
-          HttpMethods.GET,
-          `training/plan/${planId}/${week}/${day}`
-        )
-      );
-
+      const response: TrainingPlanDto =
+        await this.trainingViewService.loadTrainingPlan(planId, week, day);
       this.title = response.title;
       this.trainingPlanData.setData(response);
     } catch (error) {
@@ -152,14 +142,10 @@ export class TrainingViewComponent
       }
     }
   }
+
   async loadExerciseData(): Promise<void> {
     try {
-      const response = await firstValueFrom(
-        this.httpClient.request<ExerciseDataDTO>(
-          HttpMethods.GET,
-          'exercise/training'
-        )
-      );
+      const response = await this.trainingViewService.loadExerciseData();
       this.exerciseData = new ExerciseDataDTO(response);
     } catch (error) {}
   }
@@ -169,12 +155,11 @@ export class TrainingViewComponent
     const changedData = this.formService.getChanges();
 
     try {
-      await firstValueFrom(
-        this.httpClient.request<any>(
-          HttpMethods.PATCH,
-          `training/plan/${this.planId}/${this.trainingWeekIndex}/${this.trainingDayIndex}`,
-          { body: changedData }
-        )
+      await this.trainingViewService.submitTrainingPlan(
+        this.planId,
+        this.trainingWeekIndex,
+        this.trainingDayIndex,
+        changedData
       );
       this.toastService.show(
         'Speichern erfolgreich',
@@ -206,102 +191,30 @@ export class TrainingViewComponent
   }
 
   onPageChanged(day: number): void {
-    this.navigateDay(day);
-  }
-
-  navigateDay(day: number): void {
-    if (day >= 0 && day <= this.trainingPlanData!.trainingFrequency - 1) {
-      // use trainingPlanData
-      this.trainingDayIndex = day;
-
-      this.router.navigate([], {
-        queryParams: {
-          week: this.trainingWeekIndex,
-          day: this.trainingDayIndex,
-        },
-        queryParamsHandling: 'merge',
-      });
-    }
-
-    this.clearInputValues();
+    this.trainingDayIndex = this.navigationService.navigateDay(
+      day,
+      this.trainingPlanData.trainingFrequency,
+      this.trainingWeekIndex
+    );
   }
 
   navigateWeek(direction: number) {
-    let week = 0;
-
-    if (this.trainingWeekIndex === 0 && direction === -1) {
-      week = this.trainingPlanData!.trainingBlockLength - 1; // use trainingPlanData
-    } else if (
-      this.trainingWeekIndex ===
-        this.trainingPlanData!.trainingBlockLength - 1 && // use trainingPlanData
-      direction === 1
-    ) {
-      week = 0;
-    } else {
-      week = this.trainingWeekIndex + direction;
-    }
-
-    this.router.navigate([], {
-      queryParams: {
-        week: week,
-        day: this.trainingDayIndex,
-      },
-      queryParamsHandling: 'merge',
-    });
-
-    this.clearInputValues();
-
-    this.loadTrainingPlan(this.planId, week, this.trainingDayIndex);
-  }
-
-  async submitUnchangedData() {
-    const changedData = this.formService.getChanges();
-
-    await firstValueFrom(
-      this.httpClient.request<any>(
-        HttpMethods.PATCH,
-        `training/plan/${this.planId}/${this.trainingWeekIndex}/${this.trainingDayIndex}`,
-        { body: changedData }
-      )
-    );
-    this.toastService.show(
-      'Speichern erfolgreich',
-      'Deine Änderungen wurden erfolgreich gespeichert',
-      ToastType.INFO,
-      { delay: 5000 }
+    this.trainingWeekIndex = this.navigationService.navigateWeek(
+      this.trainingWeekIndex,
+      direction,
+      this.trainingPlanData
     );
 
-    this.clearInputValues();
+    this.loadTrainingPlan(
+      this.planId,
+      this.trainingWeekIndex,
+      this.trainingDayIndex
+    );
   }
 
-  clearInputValues() {
-    const changedData = this.formService.getChanges();
-
-    for (const name in changedData) {
-      if (changedData.hasOwnProperty(name)) {
-        const inputElement = document.querySelector(`[name="${name}"]`) as
-          | HTMLInputElement
-          | HTMLSelectElement;
-        if (
-          inputElement &&
-          inputElement.classList.contains('exercise-category-selector')
-        ) {
-          // its a category selector
-          inputElement.value = '- Bitte Auswählen -';
-          inputElement.dispatchEvent(new Event('change'));
-        } else if (inputElement) {
-          inputElement.value = '';
-        }
-      }
-    }
-
-    // Clear the changes in the service
-    this.formService.clearChanges();
-  }
   getExercise(index: number) {
     return (
       this.trainingPlanData!.trainingDay?.exercises[index - 1] || {
-        // use trainingPlanData
         category: '',
         exercise: '',
         sets: '',

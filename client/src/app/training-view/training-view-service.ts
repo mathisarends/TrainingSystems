@@ -8,7 +8,7 @@ import { TrainingPlanDto } from './trainingPlanDto';
 @Injectable({
   providedIn: 'root',
 })
-export class TrainingService {
+export class TrainingViewService {
   constructor(private httpClient: HttpClientService) {}
 
   async loadTrainingPlan(
@@ -16,50 +16,35 @@ export class TrainingService {
     week: number,
     day: number
   ): Promise<TrainingPlanDto> {
-    try {
-      return await firstValueFrom(
-        this.httpClient.request<TrainingPlanDto>(
-          HttpMethods.GET,
-          `training/plan/${planId}/${week}/${day}`
-        )
-      );
-    } catch (error) {
-      console.error('Error loading training plan:', error);
-      throw new Error('Error loading training plan');
-    }
+    return await firstValueFrom(
+      this.httpClient.request<TrainingPlanDto>(
+        HttpMethods.GET,
+        `training/plan/${planId}/${week}/${day}`
+      )
+    );
   }
 
-  // for now errors are expected because headers are not send everytime a request ist made
-  async loadExerciseData(): Promise<ExerciseDataDTO | null> {
-    try {
-      return await firstValueFrom(
-        this.httpClient.request<ExerciseDataDTO>(
-          HttpMethods.GET,
-          'exercise/training'
-        )
-      );
-    } catch (error) {
-      return null;
-    }
+  async loadExerciseData(): Promise<ExerciseDataDTO> {
+    return await firstValueFrom(
+      this.httpClient.request<ExerciseDataDTO>(
+        HttpMethods.GET,
+        'exercise/training'
+      )
+    );
   }
 
   async submitTrainingPlan(
     planId: string,
     week: number,
     day: number,
-    data: any
-  ): Promise<void> {
-    try {
-      await firstValueFrom(
-        this.httpClient.request<any>(
-          HttpMethods.PATCH,
-          `training/plan/${planId}/${week}/${day}`,
-          { body: data }
-        )
-      );
-    } catch (error) {
-      console.error('Error submitting training plan:', error);
-      throw new Error('Error submitting training plan');
-    }
+    changedData: any
+  ): Promise<any> {
+    return await firstValueFrom(
+      this.httpClient.request<any>(
+        HttpMethods.PATCH,
+        `training/plan/${planId}/${week}/${day}`,
+        { body: changedData }
+      )
+    );
   }
 }
