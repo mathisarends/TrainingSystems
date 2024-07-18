@@ -7,18 +7,12 @@ import { ToastType } from './toastType';
 export class ToastService {
   toasts: any[] = [];
 
-  show(
-    title: string,
-    text: string,
-    type: ToastType = ToastType.INFO,
-    options: any = {}
-  ) {
-    const toast = { title, text, type, ...options };
+  show(title: string, text: string, type: ToastType = ToastType.INFO) {
+    const delay = 3500;
+    const toast = { title, text, type };
     this.toasts.push(toast);
 
-    if (options.delay) {
-      setTimeout(() => this.remove(toast), options.delay);
-    }
+    setTimeout(() => this.remove(toast), delay);
   }
 
   remove(toast: any) {

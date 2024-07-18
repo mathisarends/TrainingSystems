@@ -119,9 +119,7 @@ export class ExercisesComponent implements OnInit, OnDestroy {
 
       this.toastService.show(
         'Speichern erfolgreich',
-        'Deine Änderungen wurden erfolgreich gespeichert',
-        ToastType.INFO,
-        { delay: 3500 }
+        'Deine Änderungen wurden erfolgreich gespeichert'
       );
 
       console.log('response', response);

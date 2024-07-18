@@ -1,15 +1,15 @@
 <div class="toast-container">
   @for (toast of toastService.toasts; track toast) {
-
   <div class="toast {{ toast.type }}" [class.active]="true" role="alert">
     <div class="toast-content">
       <div class="message">
         <span id="toast-headline">{{ toast.title }}</span>
         <span class="text">{{ toast.text }}</span>
       </div>
-      @if (toast.delay) {
-      <div class="progress"></div>
-      }
+      <div
+        class="progress"
+        [style.animation-duration]="toast.delay + 'ms'"
+      ></div>
     </div>
     <div class="close-icon-container" (click)="remove(toast)">✖</div>
   </div>

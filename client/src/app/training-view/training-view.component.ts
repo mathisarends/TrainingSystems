@@ -163,9 +163,7 @@ export class TrainingViewComponent
       );
       this.toastService.show(
         'Speichern erfolgreich',
-        'Deine Änderungen wurden erfolgreich gespeichert',
-        ToastType.INFO,
-        { delay: 5000 }
+        'Deine Änderungen wurden erfolgreich gespeichert'
       );
       this.formService.clearChanges(); // Clear changes after submission
     } catch (error) {
