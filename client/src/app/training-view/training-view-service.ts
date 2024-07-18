@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClientService } from '../../service/http-client.service';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { HttpMethods } from '../types/httpMethods';
 import { ExerciseDataDTO } from './exerciseDataDto';
 import { TrainingPlanDto } from './trainingPlanDto';
@@ -11,40 +11,34 @@ import { TrainingPlanDto } from './trainingPlanDto';
 export class TrainingViewService {
   constructor(private httpClient: HttpClientService) {}
 
-  async loadTrainingPlan(
+  loadTrainingPlan(
     planId: string,
     week: number,
     day: number
-  ): Promise<TrainingPlanDto> {
-    return await firstValueFrom(
-      this.httpClient.request<TrainingPlanDto>(
-        HttpMethods.GET,
-        `training/plan/${planId}/${week}/${day}`
-      )
+  ): Observable<TrainingPlanDto> {
+    return this.httpClient.request<TrainingPlanDto>(
+      HttpMethods.GET,
+      `training/plan/${planId}/${week}/${day}`
     );
   }
 
-  async loadExerciseData(): Promise<ExerciseDataDTO> {
-    return await firstValueFrom(
-      this.httpClient.request<ExerciseDataDTO>(
-        HttpMethods.GET,
-        'exercise/training'
-      )
+  loadExerciseData(): Observable<ExerciseDataDTO> {
+    return this.httpClient.request<ExerciseDataDTO>(
+      HttpMethods.GET,
+      'exercise/training'
     );
   }
 
-  async submitTrainingPlan(
+  submitTrainingPlan(
     planId: string,
     week: number,
     day: number,
     changedData: any
-  ): Promise<any> {
-    return await firstValueFrom(
-      this.httpClient.request<any>(
-        HttpMethods.PATCH,
-        `training/plan/${planId}/${week}/${day}`,
-        { body: changedData }
-      )
+  ): Observable<any> {
+    return this.httpClient.request<any>(
+      HttpMethods.PATCH,
+      `training/plan/${planId}/${week}/${day}`,
+      { body: changedData }
     );
   }
 }

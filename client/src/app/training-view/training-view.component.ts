@@ -20,16 +20,16 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoryPlaceholderService } from '../category-placeholder.service';
 import { ToastService } from '../toast/toast.service';
-import { ToastType } from '../toast/toastType';
 import { SpinnerComponent } from '../components/spinner/spinner.component';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { ProgressBarComponent } from '../progress-bar/progress-bar.component';
 import { ExerciseDataDTO } from './exerciseDataDto';
 import { TrainingPlanDto } from './trainingPlanDto';
-import { PauseTimeService } from '../pause-time.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { AutoSaveService } from '../auto-save.service';
 import { TrainingViewNavigationService } from './training-view-navigation.service';
+import { forkJoin, BehaviorSubject, EMPTY } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-training-view',
@@ -54,14 +54,14 @@ export class TrainingViewComponent
   protected planId!: string;
   exerciseData: ExerciseDataDTO = new ExerciseDataDTO();
   trainingPlanData: TrainingPlanDto = new TrainingPlanDto();
-  isLoading = true;
+  private dataViewLoaded = new BehaviorSubject<boolean>(false);
+  dataViewLoaded$ = this.dataViewLoaded.asObservable();
 
   @ViewChildren('weightInput') weightInputs!: QueryList<ElementRef>;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private route: ActivatedRoute,
-    private router: Router,
     private trainingViewService: TrainingViewService,
     private formService: FormService,
     private rpeService: RpeService,
@@ -70,27 +70,21 @@ export class TrainingViewComponent
     private toastService: ToastService,
     private categoryPlaceholderService: CategoryPlaceholderService,
     private autoSaveService: AutoSaveService,
-    private pauseTimeService: PauseTimeService,
     private navigationService: TrainingViewNavigationService
   ) {}
 
-  async ngOnInit() {
-    this.route.queryParams.subscribe(async (params) => {
+  ngOnInit() {
+    this.route.queryParams.subscribe((params) => {
       this.planId = params['planId'];
       this.trainingWeekIndex = parseInt(params['week']);
       this.trainingDayIndex = parseInt(params['day']);
 
-      await this.loadData(
-        this.planId,
-        this.trainingWeekIndex,
-        this.trainingDayIndex
-      );
+      this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
     });
   }
 
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      console.log('ngAfterViewInit called');
       this.rpeService.initializeRPEValidation();
       this.estMaxService.initializeEstMaxCalculation();
       this.autoSaveService.initializeAutoSave();
@@ -109,66 +103,59 @@ export class TrainingViewComponent
     }
   }
 
-  async loadData(planId: string, week: number, day: number): Promise<void> {
-    try {
-      await this.loadTrainingPlan(planId, week, day);
-      await this.loadExerciseData();
-    } catch (error) {
-      console.error('Error loading training data:', error);
-    } finally {
-      if (isPlatformBrowser(this.platformId)) {
-        this.pauseTimeService.initializePauseTimers(
-          this.exerciseData.categoryPauseTimes
-        );
-      }
-
-      this.isLoading = false;
-    }
+  loadData(planId: string, week: number, day: number): void {
+    this.dataViewLoaded.next(false);
+    forkJoin({
+      trainingPlan: this.trainingViewService.loadTrainingPlan(
+        planId,
+        week,
+        day
+      ),
+      exerciseData: this.trainingViewService.loadExerciseData(),
+    })
+      .pipe(
+        tap(({ trainingPlan, exerciseData }) => {
+          this.trainingPlanData = trainingPlan;
+          this.exerciseData = exerciseData;
+          this.title = trainingPlan.title;
+        }),
+        catchError((error: unknown) => {
+          if ((error as HttpErrorResponse).status !== 499) {
+            console.error('Error loading training data:', error);
+            return EMPTY;
+          }
+          return EMPTY;
+        }),
+        tap(() => this.dataViewLoaded.next(true))
+      )
+      .subscribe();
   }
 
-  async loadTrainingPlan(
-    planId: string,
-    week: number,
-    day: number
-  ): Promise<void> {
-    try {
-      const response: TrainingPlanDto =
-        await this.trainingViewService.loadTrainingPlan(planId, week, day);
-      this.title = response.title;
-      this.trainingPlanData.setData(response);
-    } catch (error) {
-      if ((error as HttpErrorResponse).status !== 499) {
-        console.error('Error while loading training plan', error);
-      }
-    }
-  }
-
-  async loadExerciseData(): Promise<void> {
-    try {
-      const response = await this.trainingViewService.loadExerciseData();
-      this.exerciseData = new ExerciseDataDTO(response);
-    } catch (error) {}
-  }
-
-  async onSubmit(event: Event): Promise<void> {
+  onSubmit(event: Event): void {
     event.preventDefault();
     const changedData = this.formService.getChanges();
 
-    try {
-      await this.trainingViewService.submitTrainingPlan(
+    this.trainingViewService
+      .submitTrainingPlan(
         this.planId,
         this.trainingWeekIndex,
         this.trainingDayIndex,
         changedData
-      );
-      this.toastService.show(
-        'Speichern erfolgreich',
-        'Deine Änderungen wurden erfolgreich gespeichert'
-      );
-      this.formService.clearChanges(); // Clear changes after submission
-    } catch (error) {
-      console.error('Error updating training plan:', error);
-    }
+      )
+      .pipe(
+        tap(() => {
+          this.toastService.show(
+            'Speichern erfolgreich',
+            'Deine Änderungen wurden erfolgreich gespeichert'
+          );
+          this.formService.clearChanges(); // Clear changes after submission
+        }),
+        catchError((error) => {
+          console.error('Error updating training plan:', error);
+          return [];
+        })
+      )
+      .subscribe();
   }
 
   onInputChange(event: Event): void {
@@ -203,7 +190,7 @@ export class TrainingViewComponent
       this.trainingPlanData
     );
 
-    this.loadTrainingPlan(
+    this.trainingViewService.loadTrainingPlan(
       this.planId,
       this.trainingWeekIndex,
       this.trainingDayIndex

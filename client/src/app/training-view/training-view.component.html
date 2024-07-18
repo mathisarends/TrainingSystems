@@ -1,16 +1,15 @@
-@if (isLoading) {
+@if (!(dataViewLoaded$ | async)) {
 <app-spinner></app-spinner>
 } @else {
-
 <form (submit)="onSubmit($event)" class="mt-4" id="form">
   <table
     class="table table-striped training-table responsive-table caption-top mb-4"
   >
     <caption>
-      <span class="context-headline">
-        W{{ trainingWeekIndex + 1 }}D{{ trainingDayIndex + 1 }}</span
+      <span class="context-headline"
+        >W{{ trainingWeekIndex + 1 }}D{{ trainingDayIndex + 1 }}</span
       >
-      <span class="headline">{{ trainingPlanData.title }} </span>
+      <span class="headline">{{ trainingPlanData.title }}</span>
     </caption>
 
     <thead>
@@ -26,112 +25,114 @@
       </tr>
     </thead>
     <tbody>
-      @for (k of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track k) {
-      <tr>
-        <td data-cell="Category">
-          <select
-            name="day{{ trainingDayIndex }}_exercise{{ k }}_category"
-            class="exercise-category-selector transparent-input w-100"
-            (change)="onCategoryChange($event)"
-            [ngStyle]="{
-              opacity:
-                getExercise(k).category === '- Bitte Auswählen -' ||
-                !getExercise(k).category
-                  ? 0
-                  : 1
-            }"
-          >
-            @for (category of exerciseData.exerciseCategories; track category) {
-            <option
-              [value]="category"
-              [selected]="getExercise(k).category === category"
+      <ng-container
+        *ngFor="let k of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; let i = index"
+      >
+        <tr>
+          <td data-cell="Category">
+            <select
+              name="day{{ trainingDayIndex }}_exercise{{ k }}_category"
+              class="exercise-category-selector transparent-input w-100"
+              (change)="onCategoryChange($event)"
+              [ngStyle]="{
+                opacity:
+                  getExercise(k).category === '- Bitte Auswählen -' ||
+                  !getExercise(k).category
+                    ? 0
+                    : 1
+              }"
             >
-              {{ category }}
-            </option>
-            }
-          </select>
-        </td>
-        <td data-cell="Exercise">
-          @for (category of exerciseData.exerciseCategories; track category) {
-          <select
-            name="day{{ trainingDayIndex }}_exercise{{ k }}_exercise_name"
-            class="exercise-name-selector transparent-input"
-            [disabled]="getExercise(k).category !== category"
-            [style.display]="
-              getExercise(k).category === category ? 'block' : 'none'
-            "
-            (change)="onInputChange($event)"
-          >
-            @for (exerciseName of exerciseData.categorizedExercises[category];
-            track exerciseName) {
-            <option
-              [value]="exerciseName"
-              [selected]="getExercise(k).exercise === exerciseName"
+              <option
+                *ngFor="let category of exerciseData.exerciseCategories"
+                [value]="category"
+                [selected]="getExercise(k).category === category"
+              >
+                {{ category }}
+              </option>
+            </select>
+          </td>
+          <td data-cell="Exercise">
+            <select
+              *ngFor="let category of exerciseData.exerciseCategories"
+              name="day{{ trainingDayIndex }}_exercise{{ k }}_exercise_name"
+              class="exercise-name-selector transparent-input"
+              [disabled]="getExercise(k).category !== category"
+              [style.display]="
+                getExercise(k).category === category ? 'block' : 'none'
+              "
+              (change)="onInputChange($event)"
             >
-              {{ exerciseName }}
-            </option>
-            }
-          </select>
-          }
-        </td>
-        <td data-cell="Sets">
-          <input
-            type="number"
-            class="transparent-input sets"
-            name="day{{ trainingDayIndex }}_exercise{{ k }}_sets"
-            [value]="getExercise(k).sets || ''"
-            (input)="onInputChange($event)"
-          />
-        </td>
-        <td data-cell="Reps">
-          <input
-            type="number"
-            class="transparent-input reps"
-            name="day{{ trainingDayIndex }}_exercise{{ k }}_reps"
-            [value]="getExercise(k).reps || ''"
-            (input)="onInputChange($event)"
-          />
-        </td>
-        <td data-cell="Weight">
-          <input
-            #weightInput
-            type="number"
-            class="transparent-input weight"
-            name="day{{ trainingDayIndex }}_exercise{{ k }}_weight"
-            [value]="getExercise(k).weight || ''"
-            (input)="onInputChange($event)"
-          />
-        </td>
-        <td data-cell="RPE">
-          <input
-            type="number"
-            class="transparent-input targetRPE"
-            name="day{{ trainingDayIndex }}_exercise{{ k }}_targetRPE"
-            [value]="getExercise(k).targetRPE || ''"
-            (input)="onInputChange($event)"
-          />
-        </td>
-        <td data-cell="@RPE">
-          <input
-            type="string"
-            class="transparent-input actualRPE"
-            name="day{{ trainingDayIndex }}_exercise{{ k }}_actualRPE"
-            [value]="getExercise(k).actualRPE || ''"
-            (input)="onInputChange($event)"
-          />
-        </td>
-        <td data-cell="Est. Max">
-          <input
-            type="number"
-            class="transparent-input estMax"
-            readonly
-            name="day{{ trainingDayIndex }}_exercise{{ k }}_estMax"
-            [value]="getExercise(k).estMax || ''"
-            (input)="onInputChange($event)"
-          />
-        </td>
-      </tr>
-      }
+              <option
+                *ngFor="
+                  let exerciseName of exerciseData.categorizedExercises[
+                    category
+                  ]
+                "
+                [value]="exerciseName"
+                [selected]="getExercise(k).exercise === exerciseName"
+              >
+                {{ exerciseName }}
+              </option>
+            </select>
+          </td>
+          <td data-cell="Sets">
+            <input
+              type="number"
+              class="transparent-input sets"
+              name="day{{ trainingDayIndex }}_exercise{{ k }}_sets"
+              [value]="getExercise(k).sets || ''"
+              (input)="onInputChange($event)"
+            />
+          </td>
+          <td data-cell="Reps">
+            <input
+              type="number"
+              class="transparent-input reps"
+              name="day{{ trainingDayIndex }}_exercise{{ k }}_reps"
+              [value]="getExercise(k).reps || ''"
+              (input)="onInputChange($event)"
+            />
+          </td>
+          <td data-cell="Weight">
+            <input
+              #weightInput
+              type="number"
+              class="transparent-input weight"
+              name="day{{ trainingDayIndex }}_exercise{{ k }}_weight"
+              [value]="getExercise(k).weight || ''"
+              (input)="onInputChange($event)"
+            />
+          </td>
+          <td data-cell="RPE">
+            <input
+              type="number"
+              class="transparent-input targetRPE"
+              name="day{{ trainingDayIndex }}_exercise{{ k }}_targetRPE"
+              [value]="getExercise(k).targetRPE || ''"
+              (input)="onInputChange($event)"
+            />
+          </td>
+          <td data-cell="@RPE">
+            <input
+              type="string"
+              class="transparent-input actualRPE"
+              name="day{{ trainingDayIndex }}_exercise{{ k }}_actualRPE"
+              [value]="getExercise(k).actualRPE || ''"
+              (input)="onInputChange($event)"
+            />
+          </td>
+          <td data-cell="Est. Max">
+            <input
+              type="number"
+              class="transparent-input estMax"
+              readonly
+              name="day{{ trainingDayIndex }}_exercise{{ k }}_estMax"
+              [value]="getExercise(k).estMax || ''"
+              (input)="onInputChange($event)"
+            />
+          </td>
+        </tr>
+      </ng-container>
     </tbody>
   </table>
 
