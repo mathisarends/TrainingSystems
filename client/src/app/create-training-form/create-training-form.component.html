@@ -2,7 +2,10 @@
   <div class="col-md-12">
     <div class="card-body">
       <form [formGroup]="trainingForm" (ngSubmit)="onSubmit()">
-        <div class="form-group text-center mb-4 position-relative">
+        <div
+          class="form-group text-center mb-4 position-relative"
+          style="position: relative"
+        >
           <img
             src="https://via.placeholder.com/150"
             alt="Cover Bild Platzhalter"
@@ -16,8 +19,8 @@
             class="form-control-file position-absolute"
             style="
               opacity: 0;
-              width: 150px;
-              height: 150px;
+              width: 100%;
+              height: 100%;
               top: 0;
               left: 0;
               cursor: pointer;
@@ -25,6 +28,8 @@
             (change)="handleImageUpload($event)"
           />
         </div>
+
+        <!-- Rest of the form remains unchanged -->
 
         <div class="form-floating mb-4">
           <input

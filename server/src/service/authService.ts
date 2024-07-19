@@ -5,7 +5,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const SECRET: string = process.env.jwt_secret!;
-console.log('🚀 ~ SECRET:', SECRET);
 
 class AuthService {
   authenticationMiddleware = (req: Request, res: Response, next: NextFunction) => {

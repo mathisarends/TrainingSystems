@@ -68,6 +68,7 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
   async onSubmit() {
     if (this.trainingForm.valid) {
       const formData = this.trainingForm.value;
+      console.log("🚀 ~ CreateTrainingFormComponent ~ onSubmit ~ formData:", formData)
 
       try {
         const response = await firstValueFrom(

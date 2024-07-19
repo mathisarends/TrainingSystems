@@ -16,8 +16,8 @@ const PORT = process.env.port ? parseInt(process.env.port, 10) : 3000;
 
 async function configureApp(app: Express) {
   app.use(session({ secret: process.env.jwt_secret!, resave: false, saveUninitialized: true }));
-  app.use(express.urlencoded({ extended: true }));
-  app.use(express.json());
+  app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+  app.use(express.json({ limit: '10mb' }));
   app.use(cookieParser());
 
   app.use(
