@@ -7,7 +7,6 @@ import { TrainingPlanDTO } from '../dto/trainingDto.js';
 import { BasicTrainingPlanView } from '@shared/models/dtos/training/trainingDto.types.js';
 import { UserClaimsSet } from './exerciseService.js';
 import { WeightRecommendationBase } from '@shared/models/training/enum/weightRecommandationBase.js';
-import sharp from 'sharp';
 
 export async function getTrainingPlans(
   userDAO: MongoGenericDAO<User>,
@@ -35,11 +34,7 @@ export async function createTrainingPlan(
   const trainingWeeks = Number(planDetails.trainingWeeks);
   const weightRecommandation = planDetails.weightPlaceholders as WeightRecommendationBase;
   const coverImage = planDetails.coverImage;
-
-  if (coverImage) {
-    const resizedImageDataUri = await rescaleCoverImage(coverImage);
-    planDetails.coverImage = resizedImageDataUri; // Optional: Speichern des skalierten Bildes in planDetails
-  }
+  console.log('🚀 ~ coverImage:', coverImage);
 
   const trainingWeeksArr = createNewTrainingPlanWithPlaceholders(trainingWeeks, trainingFrequency);
 
@@ -56,19 +51,6 @@ export async function createTrainingPlan(
   await userDAO.update(user);
 
   return getAllPlansBasic(user.trainingPlans);
-}
-
-async function rescaleCoverImage(coverImage: string): Promise<string> {
-  // Entferne den Daten-URI-Präfix und konvertiere Base64 zu Buffer
-  const base64Data = coverImage.replace(/^data:image\/\w+;base64,/, '');
-  const buffer = Buffer.from(base64Data, 'base64');
-
-  // Skaliere das Bild auf eine Breite von 300 Pixeln
-  const resizedImageBuffer = await sharp(buffer).resize(300).toBuffer();
-
-  // Konvertiere das skalierte Bild zurück zu Base64
-  const resizedImageBase64 = resizedImageBuffer.toString('base64');
-  return `data:image/jpeg;base64,${resizedImageBase64}`;
 }
 
 export async function deleteTrainingPlan(
