@@ -10,9 +10,11 @@ import { EditTrainingPlanComponent } from '../edit-training-plan/edit-training-p
 import { ModalSize } from '../../service/modalSize';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ModalEventsService } from '../../service/modal-events.service';
-import { TrainingPlanService } from '../training-plan.service';
 import { DeleteConfirmationComponent } from '../delete-confirmation/delete-confirmation.component';
 
+/**
+ * Component for displaying and managing a single training plan card.
+ */
 @Component({
   selector: 'app-training-plan-card',
   standalone: true,
@@ -29,19 +31,29 @@ export class TrainingPlanCardComponent {
     private httpClient: HttpClientService,
     private router: Router,
     private modalService: ModalService,
-    private modalEventsService: ModalEventsService,
-    private trainingPlanService: TrainingPlanService
+    private modalEventsService: ModalEventsService
   ) {}
 
-  async ngOnInit() {
-    // Subscribe to the confirmClick$ event to handle deletion confirmation
-    this.modalEventsService.confirmClick$.subscribe((id) => {
+  /**
+   * This method subscribes to the confirmClick$ observable from the ModalEventsService.
+   * When a confirm click event is emitted, it checks if the emitted id matches the id
+   * of the current training plan. If they match, it calls the handleDelete method
+   * to delete the training plan.
+   *
+   * @returns {Promise<void>}
+   */
+  async ngOnInit(): Promise<void> {
+    this.modalEventsService.confirmClick$.subscribe(async (id) => {
       if (id === this.trainingPlan.id) {
-        this.deleteTrainingPlan(this.trainingPlan.id);
+        await this.handleDelete(this.trainingPlan.id);
       }
     });
   }
 
+  /**
+   * Navigates to the view page of the training plan.
+   * @param id - The ID of the training plan to view.
+   */
   async viewTrainingPlan(id: string): Promise<void> {
     const response = await firstValueFrom(
       this.httpClient.request<any>(
@@ -89,7 +101,11 @@ export class TrainingPlanCardComponent {
     );
   }
 
-  async deleteTrainingPlan(id: string): Promise<void> {
+  /**
+   * Deletes the training plan.
+   * @param id - The ID of the training plan to delete.
+   */
+  async handleDelete(id: string): Promise<void> {
     if (id) {
       try {
         const response: any = await firstValueFrom(
