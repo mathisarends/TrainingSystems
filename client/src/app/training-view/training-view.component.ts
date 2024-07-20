@@ -9,9 +9,10 @@ import {
   ViewChildren,
   ElementRef,
   QueryList,
+  ViewChild,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { TrainingViewService } from './training-view-service';
 import { FormService } from '../form.service';
 import { RpeService } from '../rpe.service';
@@ -28,8 +29,9 @@ import { TrainingPlanDto } from './trainingPlanDto';
 import { AutoSaveService } from '../auto-save.service';
 import { TrainingViewNavigationService } from './training-view-navigation.service';
 import { forkJoin, BehaviorSubject, EMPTY } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, take, tap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
+import { SwipeService } from '../../service/swipe/swipe.service';
 
 @Component({
   selector: 'app-training-view',
@@ -58,6 +60,9 @@ export class TrainingViewComponent
   dataViewLoaded$ = this.dataViewLoaded.asObservable();
 
   @ViewChildren('weightInput') weightInputs!: QueryList<ElementRef>;
+  @ViewChild('trainingTable', { static: false }) trainingTable!: ElementRef;
+
+  private swipeListenerInitialized = false;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -70,7 +75,8 @@ export class TrainingViewComponent
     private toastService: ToastService,
     private categoryPlaceholderService: CategoryPlaceholderService,
     private autoSaveService: AutoSaveService,
-    private navigationService: TrainingViewNavigationService
+    private navigationService: TrainingViewNavigationService,
+    private swipeService: SwipeService
   ) {}
 
   ngOnInit() {
@@ -89,10 +95,14 @@ export class TrainingViewComponent
       this.estMaxService.initializeEstMaxCalculation();
       this.autoSaveService.initializeAutoSave();
     }
+
+    /*     this.dataViewLoaded$.pipe(take(1)).subscribe(() => {
+      this.initializeSwipeListener();
+    }); */
   }
 
   ngAfterViewChecked(): void {
-    if (isPlatformBrowser(this.platformId)) {
+    if (isPlatformBrowser(this.platformId) && !this.swipeListenerInitialized) {
       const exerciseCategorySelectors = document.querySelectorAll(
         '.exercise-category-selector'
       ) as NodeListOf<HTMLSelectElement>;
@@ -100,6 +110,22 @@ export class TrainingViewComponent
         exerciseCategorySelectors,
         this.renderer
       );
+
+      if (this.dataViewLoaded.getValue() && this.trainingTable) {
+        this.initializeSwipeListener();
+        this.swipeListenerInitialized = true;
+      }
+    }
+  }
+
+  initializeSwipeListener(): void {
+    if (this.trainingTable) {
+      this.swipeService.addSwipeListener(
+        this.trainingTable.nativeElement,
+        () => this.onPageChanged(this.trainingDayIndex + 1),
+        () => this.onPageChanged(this.trainingDayIndex - 1)
+      );
+      console.log('Swipe listener initialized');
     }
   }
 
@@ -183,7 +209,7 @@ export class TrainingViewComponent
     );
   }
 
-  navigateWeek(direction: number) {
+  navigateWeek(direction: number): void {
     this.trainingWeekIndex = this.navigationService.navigateWeek(
       this.trainingWeekIndex,
       direction,
@@ -197,7 +223,7 @@ export class TrainingViewComponent
     );
   }
 
-  getExercise(index: number) {
+  getExercise(index: number): any {
     return (
       this.trainingPlanData!.trainingDay?.exercises[index - 1] || {
         category: '',

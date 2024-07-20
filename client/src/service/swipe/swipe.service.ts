@@ -1,77 +1,50 @@
-import { Injectable } from '@angular/core';
-import {
-  fromEvent,
-  map,
-  Observable,
-  pairwise,
-  switchMap,
-  takeUntil,
-} from 'rxjs';
-
-/**
- * Represents a swipe event with direction.
- */
-interface SwipeEvent {
-  direction: 'left' | 'right' | 'up' | 'down';
-}
+import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SwipeService {
-  private startX = 0;
-  private startY = 0;
+  private renderer: Renderer2;
 
-  /**
-   * Detects swipe gestures on the specified HTML element.
-   * @param element The HTML element to attach the swipe detection to.
-   * @returns An observable that emits swipe events.
-   */
-  detectSwipe(element: HTMLElement): Observable<SwipeEvent> {
-    return fromEvent<TouchEvent>(element, 'touchstart').pipe(
-      switchMap((startEvent: TouchEvent) => {
-        this.startX = startEvent.touches[0].clientX;
-        this.startY = startEvent.touches[0].clientY;
-
-        return fromEvent<TouchEvent>(element, 'touchmove').pipe(
-          map((moveEvent: TouchEvent) => {
-            const deltaX = moveEvent.touches[0].clientX - this.startX;
-            const deltaY = moveEvent.touches[0].clientY - this.startY;
-            return { deltaX, deltaY };
-          }),
-          pairwise(),
-          map(([prev, curr]) => this.getSwipeDirection(prev, curr)),
-          takeUntil(fromEvent(element, 'touchend'))
-        );
-      })
-    );
+  constructor(rendererFactory: RendererFactory2) {
+    this.renderer = rendererFactory.createRenderer(null, null);
   }
 
-  /**
-   * Determines the swipe direction based on the delta values of two consecutive touch events.
-   * @param prev The previous touch event deltas.
-   * @param curr The current touch event deltas.
-   * @returns A swipe event indicating the direction of the swipe.
-   */
-  private getSwipeDirection(
-    prev: { deltaX: number; deltaY: number },
-    curr: { deltaX: number; deltaY: number }
-  ): SwipeEvent {
-    const absX = Math.abs(curr.deltaX - prev.deltaX);
-    const absY = Math.abs(curr.deltaY - prev.deltaY);
+  addSwipeListener(
+    element: HTMLElement,
+    swipeLeftCallback: () => void,
+    swipeRightCallback: () => void
+  ) {
+    console.log('🚀 ~ SwipeService ~ element:', element);
+    let touchStartX = 0;
+    let touchEndX = 0;
 
-    if (absX > absY) {
-      if (curr.deltaX > prev.deltaX) {
-        return { direction: 'right' };
-      } else {
-        return { direction: 'left' };
+    const swipeThreshold = 100;
+
+    const handleTouchStart = (event: TouchEvent) => {
+      touchStartX = event.changedTouches[0].screenX;
+    };
+
+    const handleTouchMove = (event: TouchEvent) => {
+      touchEndX = event.changedTouches[0].screenX;
+    };
+
+    const handleTouchEnd = () => {
+      if (
+        touchEndX < touchStartX &&
+        Math.abs(touchStartX - touchEndX) > swipeThreshold
+      ) {
+        swipeLeftCallback();
+      } else if (
+        touchEndX > touchStartX &&
+        Math.abs(touchEndX - touchStartX) > swipeThreshold
+      ) {
+        swipeRightCallback();
       }
-    } else {
-      if (curr.deltaY > prev.deltaY) {
-        return { direction: 'down' };
-      } else {
-        return { direction: 'up' };
-      }
-    }
+    };
+
+    this.renderer.listen(element, 'touchstart', handleTouchStart);
+    this.renderer.listen(element, 'touchmove', handleTouchMove);
+    this.renderer.listen(element, 'touchend', handleTouchEnd);
   }
 }

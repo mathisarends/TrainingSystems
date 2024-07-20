@@ -51,8 +51,6 @@ export class ModalComponent implements AfterViewInit {
           this.childComponentRef.instance[key] = this.childComponentData[key];
         });
       }
-
-      console.log('Child component created:', this.childComponentRef);
     }
   }
 
