@@ -17,6 +17,7 @@ import { Router } from '@angular/router';
 import { ModalSize } from '../../../service/modalSize';
 import { CommonModule } from '@angular/common';
 import { TooltipDirective } from '../../tooltip/tooltip.directive';
+import { TrainingPlanCardComponent } from '../../training-plan-card/training-plan-card.component';
 
 /**
  * Component to manage and display training plans.
@@ -24,7 +25,13 @@ import { TooltipDirective } from '../../tooltip/tooltip.directive';
 @Component({
   selector: 'app-training-plans',
   standalone: true,
-  imports: [AlertComponent, SpinnerComponent, CommonModule, TooltipDirective],
+  imports: [
+    AlertComponent,
+    SpinnerComponent,
+    CommonModule,
+    TooltipDirective,
+    TrainingPlanCardComponent,
+  ],
   templateUrl: './training-plans.component.html',
   styleUrls: ['./training-plans.component.scss'],
 })

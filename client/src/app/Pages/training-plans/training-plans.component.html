@@ -23,7 +23,11 @@
       } @else { @for (trainingPlan of filteredTrainingPlans; track trainingPlan;
       let i = $index) {
       <div [ngClass]="getColumnClass(i)">
-        <div class="card card-custom bg-white border-white border-0">
+        <app-training-plan-card
+          [trainingPlan]="trainingPlan"
+          [columnClass]="getColumnClass(i)"
+        ></app-training-plan-card>
+        <!-- <div class="card card-custom bg-white border-white border-0">
           <div
             class="card-custom-img"
             [ngStyle]="{
@@ -79,7 +83,7 @@
               <i class="bx bx-trash"></i>
             </button>
           </div>
-        </div>
+        </div> -->
       </div>
       } }
     </div>
