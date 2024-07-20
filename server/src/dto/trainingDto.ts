@@ -1,8 +1,8 @@
 import { TrainingPlan } from '../../../shared/models/training/trainingPlan.js';
 import {
-  BasicTrainingPlanView,
   DetailedTrainingPlanView,
-  CustomTrainingPlanView
+  CustomTrainingPlanView,
+  TrainingPlanCardView
 } from '../../../shared/models/dtos/training/trainingDto.types.js';
 
 export class TrainingPlanDTO {
@@ -11,12 +11,12 @@ export class TrainingPlanDTO {
    * @param plan The full training plan.
    * @returns A basic view of the training plan.
    */
-  static getBasicView(plan: TrainingPlan): BasicTrainingPlanView {
+  static getBasicView(plan: TrainingPlan): TrainingPlanCardView {
     return {
       id: plan.id,
       title: plan.title,
       trainingFrequency: plan.trainingFrequency,
-      lastUpdated: plan.lastUpdated,
+      lastUpdated: this.formatDate(new Date(plan.lastUpdated)),
       coverImageBase64: plan.coverImageBase64 ?? ''
     };
   }
@@ -42,5 +42,22 @@ export class TrainingPlanDTO {
       customView[field] = plan[field];
     });
     return customView as CustomTrainingPlanView<T>;
+  }
+
+  /**
+   * Formats a date to 'dd.mm.yyyy, hh:mm' format.
+   * @param date The date to format.
+   * @returns The formatted date string.
+   */
+  static formatDate(date: Date): string {
+    const options: Intl.DateTimeFormatOptions = {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    };
+    return new Intl.DateTimeFormat('de-DE', options).format(date);
   }
 }

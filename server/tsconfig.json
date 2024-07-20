@@ -16,6 +16,8 @@
       "@shared/*": ["../../shared/*"]
     }
   },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"],
   "ts-node": {
     "transpileOnly": true
   }

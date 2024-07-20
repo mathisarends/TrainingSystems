@@ -19,7 +19,7 @@ export interface TrainingPlanCardView {
   id: string;
   title: string;
   trainingFrequency: number;
-  lastUpdated: Date;
+  lastUpdated: String;
   pictureUrl?: string; // profile picture
   coverImageBase64?: string;
 }

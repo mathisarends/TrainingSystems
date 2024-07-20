@@ -9,6 +9,7 @@ import cors from 'cors';
 import userRouter from './routes/userRoutes.js';
 import trainingRouter from './routes/trainingRoutes.js';
 import exerciseRouter from './routes/exerciseRoutes.js';
+import friendShipRouter from './routes/friendshipRoutes.js';
 import session from 'express-session';
 dotenv.config();
 
@@ -30,6 +31,7 @@ async function configureApp(app: Express) {
   app.use('/user', userRouter);
   app.use('/training', trainingRouter);
   app.use('/exercise', exerciseRouter);
+  app.use('friendship', friendShipRouter);
 }
 
 export async function start() {
