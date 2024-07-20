@@ -6,6 +6,9 @@ import {
   Renderer2,
 } from '@angular/core';
 
+/**
+ * Directive to display a tooltip with a message when an element is hovered over.
+ */
 @Directive({
   selector: '[appTooltip]',
   standalone: true,
@@ -14,8 +17,17 @@ export class TooltipDirective {
   @Input('appTooltip') tooltipMessage: string = '';
   tooltipElement!: HTMLElement;
 
+  /**
+   * Constructor to create an instance of TooltipDirective.
+   * @param el - Reference to the element this directive is applied to.
+   * @param renderer - Renderer2 instance to manipulate DOM elements.
+   */
   constructor(private el: ElementRef, private renderer: Renderer2) {}
 
+  /**
+   * Event listener for mouseenter event.
+   * Creates and displays the tooltip element.
+   */
   @HostListener('mouseenter') onMouseEnter() {
     if (!this.tooltipElement) {
       this.tooltipElement = this.renderer.createElement('div');
@@ -55,6 +67,10 @@ export class TooltipDirective {
     this.renderer.setStyle(this.tooltipElement, 'opacity', '1');
   }
 
+  /**
+   * Event listener for mouseleave event.
+   * Hides the tooltip element.
+   */
   @HostListener('mouseleave') onMouseLeave() {
     if (this.tooltipElement) {
       this.renderer.setStyle(this.tooltipElement, 'visibility', 'hidden');
