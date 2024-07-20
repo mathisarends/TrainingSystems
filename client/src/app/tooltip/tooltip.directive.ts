@@ -4,7 +4,11 @@ import {
   HostListener,
   Input,
   Renderer2,
+  OnDestroy,
 } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 /**
  * Directive to display a tooltip with a message when an element is hovered over.
@@ -13,16 +17,28 @@ import {
   selector: '[appTooltip]',
   standalone: true,
 })
-export class TooltipDirective {
+export class TooltipDirective implements OnDestroy {
   @Input('appTooltip') tooltipMessage: string = '';
   tooltipElement!: HTMLElement;
+  private routerSubscription: Subscription;
 
   /**
    * Constructor to create an instance of TooltipDirective.
    * @param el - Reference to the element this directive is applied to.
    * @param renderer - Renderer2 instance to manipulate DOM elements.
+   * @param router - Router instance to listen for route changes.
    */
-  constructor(private el: ElementRef, private renderer: Renderer2) {}
+  constructor(
+    private el: ElementRef,
+    private renderer: Renderer2,
+    private router: Router
+  ) {
+    this.routerSubscription = this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.hideTooltip();
+      });
+  }
 
   /**
    * Event listener for mouseenter event.
@@ -72,9 +88,27 @@ export class TooltipDirective {
    * Hides the tooltip element.
    */
   @HostListener('mouseleave') onMouseLeave() {
+    this.hideTooltip();
+  }
+
+  /**
+   * Hides the tooltip element.
+   */
+  private hideTooltip() {
     if (this.tooltipElement) {
       this.renderer.setStyle(this.tooltipElement, 'visibility', 'hidden');
       this.renderer.setStyle(this.tooltipElement, 'opacity', '0');
+    }
+  }
+
+  /**
+   * Lifecycle hook that runs when the directive is destroyed.
+   * Unsubscribes from the router events to avoid memory leaks.
+   */
+  ngOnDestroy() {
+    this.routerSubscription.unsubscribe();
+    if (this.tooltipElement) {
+      this.renderer.removeChild(document.body, this.tooltipElement);
     }
   }
 }
