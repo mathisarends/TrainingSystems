@@ -1,23 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ModalService } from '../../../service/modalService';
 import { CreateTrainingFormComponent } from '../../create-training-form/create-training-form.component';
-import { EditTrainingPlanComponent } from '../../edit-training-plan/edit-training-plan.component';
-import { DeleteConfirmationComponent } from '../../delete-confirmation/delete-confirmation.component';
 import { HttpClientService } from '../../../service/http-client.service';
 import { HttpMethods } from '../../types/httpMethods';
 import { AlertComponent } from '../../components/alert/alert.component';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { TrainingPlanCardView } from '../../../../../shared/models/dtos/training/trainingDto.types.js';
-import { HttpErrorResponse } from '@angular/common/http';
-import { ModalEventsService } from '../../../service/modal-events.service';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { SearchService } from '../../search.service';
 import { TrainingPlanService } from '../../training-plan.service';
-import { Router } from '@angular/router';
-import { ModalSize } from '../../../service/modalSize';
 import { CommonModule } from '@angular/common';
 import { TooltipDirective } from '../../tooltip/tooltip.directive';
 import { TrainingPlanCardComponent } from '../../training-plan-card/training-plan-card.component';
+import { ModalSize } from '../../../service/modalSize';
 
 /**
  * Component to manage and display training plans.
@@ -37,19 +32,10 @@ import { TrainingPlanCardComponent } from '../../training-plan-card/training-pla
 })
 export class TrainingPlansComponent implements OnInit, OnDestroy {
   protected allTrainingPlans!: TrainingPlanCardView[];
-
   protected filteredTrainingPlans!: TrainingPlanCardView[];
   protected isLoading: boolean = true;
-  private currentSelectedId: string = '';
   private searchSubscription!: Subscription;
 
-  /**
-   * Constructor to initialize dependencies.
-   * @param modalService - Service to handle modal operations.
-   * @param httpClient - Service to handle HTTP requests.
-   * @param modalEventsService - Service to handle modal events.
-   * @param searchService - Service to handle search input.
-   */
   constructor(
     private modalService: ModalService,
     private httpClient: HttpClientService,
@@ -63,16 +49,8 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
    */
   async ngOnInit(): Promise<void> {
     await this.loadTrainingPlans();
-    // Subscribe to search input changes
-    this.searchSubscription = this.searchService.searchText$.subscribe(
-      (searchText) => {
-        this.filterTrainingPlans(searchText);
-      }
-    );
-
-    this.trainingPlanService.trainingPlansChanged$.subscribe(() => {
-      this.loadTrainingPlans();
-    });
+    this.subscribeToSearch();
+    this.subscribeToTrainingPlanChanges();
   }
 
   /**
@@ -80,22 +58,22 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
    * Unsubscribes from subscriptions to avoid memory leaks.
    */
   ngOnDestroy(): void {
-    this.searchSubscription.unsubscribe();
+    this.unsubscribeFromAll();
   }
 
   /**
    * Loads training plans from the server.
    */
   private async loadTrainingPlans(): Promise<void> {
+    this.isLoading = true;
     try {
       const response: any = await firstValueFrom(
         this.httpClient.request<any>(HttpMethods.GET, 'training/plans')
       );
       this.allTrainingPlans = response.trainingPlanDtos;
-
       this.filteredTrainingPlans = this.allTrainingPlans;
     } catch (error) {
-      console.error('Fehler beim Laden');
+      console.error('Fehler beim Laden:', error);
     } finally {
       this.isLoading = false;
     }
@@ -120,20 +98,6 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
     this.loadTrainingPlans();
   }
 
-  getColumnClass(index: number) {
-    const totalItems = this.filteredTrainingPlans.length;
-    if (totalItems % 3 === 0) {
-      return 'col-lg-4 col-md-6 col-sm-12';
-    } else if (totalItems % 2 === 0) {
-      return 'col-lg-6 col-md-6 col-sm-12';
-    } else if (totalItems === 1) {
-      return 'col-lg-12 col-md-12 col-sm-12';
-    } else {
-      // Default to 3-column layout if not perfectly divisible
-      return 'col-lg-4 col-md-6 col-sm-12';
-    }
-  }
-
   /**
    * Filters the training plans based on the search text.
    * @param searchText - The search input text.
@@ -146,5 +110,53 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
           .includes(searchText.toLowerCase());
       }
     );
+  }
+
+  /**
+   * Subscribes to the search input changes.
+   */
+  private subscribeToSearch(): void {
+    this.searchSubscription = this.searchService.searchText$.subscribe(
+      (searchText) => {
+        this.filterTrainingPlans(searchText);
+      }
+    );
+  }
+
+  /**
+   * Subscribes to training plan changes.
+   */
+  private subscribeToTrainingPlanChanges(): void {
+    this.trainingPlanService.trainingPlansChanged$.subscribe(() => {
+      this.loadTrainingPlans();
+    });
+  }
+
+  /**
+   * Unsubscribes from all subscriptions to avoid memory leaks.
+   */
+  private unsubscribeFromAll(): void {
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
+    }
+  }
+
+  /**
+   * Determines the column class based on the index.
+   * @param index - The index of the training plan.
+   * @returns {string} - The column class.
+   */
+  getColumnClass(index: number): string {
+    const totalItems = this.filteredTrainingPlans.length;
+    if (totalItems % 3 === 0) {
+      return 'col-lg-4 col-md-6 col-sm-12';
+    } else if (totalItems % 2 === 0) {
+      return 'col-lg-6 col-md-6 col-sm-12';
+    } else if (totalItems === 1) {
+      return 'col-lg-12 col-md-12 col-sm-12';
+    } else {
+      // Default to 3-column layout if not perfectly divisible
+      return 'col-lg-4 col-md-6 col-sm-12';
+    }
   }
 }

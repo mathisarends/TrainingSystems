@@ -23,5 +23,3 @@ export const routes: Routes = [
   { path: 'exercises', component: ExercisesComponent },
   { path: 'training/:planId/:week/:day', component: TrainingViewComponent },
 ];
-
-// http://localhost:4200/training/view?planId=3b05896f-2aed-47af-b82e-e4548cf8fedf&week=1&day=1

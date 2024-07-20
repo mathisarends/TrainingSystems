@@ -1,4 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { ModalEventsService } from '../../service/modal-events.service';
@@ -7,10 +13,9 @@ import { CommonModule } from '@angular/common';
 import { HttpClientService } from '../../service/http-client.service';
 import { HttpMethods } from '../types/httpMethods';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ModalService } from '../../service/modalService';
 import { TrainingPlanService } from '../training-plan.service';
-import { log } from 'node:console';
 import { ImageUploadService } from '../image-upload.service';
+import { ModalService } from '../../service/modalService';
 
 /**
  * Component for creating a training form.
@@ -23,6 +28,7 @@ import { ImageUploadService } from '../image-upload.service';
   styleUrls: ['./create-training-form.component.scss'],
 })
 export class CreateTrainingFormComponent implements OnInit, OnDestroy {
+  @ViewChild('coverImage') coverImage!: ElementRef<HTMLImageElement>;
   private subscription: Subscription = new Subscription();
   trainingForm: FormGroup;
 
@@ -31,13 +37,16 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
    * @param fb - FormBuilder to create the form group.
    * @param modalEventsService - Service to handle modal events.
    * @param httpClient - Service to handle HTTP requests.
+   * @param trainingPlanService - Service to manage training plans.
+   * @param imageUploadService - Service to handle image uploads.
    */
   constructor(
     private fb: FormBuilder,
     private modalEventsService: ModalEventsService,
     private trainingPlanService: TrainingPlanService,
     private httpClient: HttpClientService,
-    private imageUploadService: ImageUploadService
+    private imageUploadService: ImageUploadService,
+    private modalService: ModalService
   ) {
     this.trainingForm = this.fb.group({
       title: ['', Validators.required],
@@ -70,10 +79,6 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
   async onSubmit() {
     if (this.trainingForm.valid) {
       const formData = this.trainingForm.value;
-      console.log(
-        '🚀 ~ CreateTrainingFormComponent ~ onSubmit ~ formData:',
-        formData
-      );
 
       try {
         const response = await firstValueFrom(
@@ -85,13 +90,14 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
         );
 
         this.trainingPlanService.trainingPlanChanged();
+        this.modalService.close(); // Close modal on successful submission
       } catch (error) {
         if (error instanceof HttpErrorResponse) {
-          console.error('Error creating training plan:', error);
+          // Handle error (show user feedback)
         }
       }
     } else {
-      this.trainingForm.markAllAsTouched(); // Show validation errors
+      this.trainingForm.markAllAsTouched();
     }
   }
 
@@ -101,10 +107,9 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
    */
   handleImageUpload(event: any) {
     this.imageUploadService.handleImageUpload(event, (result: string) => {
-      const coverImage = document.getElementById(
-        'cover-image'
-      ) as HTMLImageElement;
-      coverImage.src = result;
+      if (this.coverImage) {
+        this.coverImage.nativeElement.src = result;
+      }
       this.trainingForm.patchValue({ coverImage: result });
     });
   }

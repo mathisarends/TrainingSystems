@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TrainingPlanCardView } from '../../../../shared/models/dtos/training/trainingDto.types';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { HttpClientService } from '../../service/http-client.service';
 import { HttpMethods } from '../types/httpMethods';
 import { Router } from '@angular/router';
@@ -11,6 +11,7 @@ import { ModalSize } from '../../service/modalSize';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ModalEventsService } from '../../service/modal-events.service';
 import { DeleteConfirmationComponent } from '../delete-confirmation/delete-confirmation.component';
+import { TooltipDirective } from '../tooltip/tooltip.directive';
 
 /**
  * Component for displaying and managing a single training plan card.
@@ -18,7 +19,7 @@ import { DeleteConfirmationComponent } from '../delete-confirmation/delete-confi
 @Component({
   selector: 'app-training-plan-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TooltipDirective],
   templateUrl: './training-plan-card.component.html',
   styleUrls: ['./training-plan-card.component.scss'],
 })
@@ -26,6 +27,8 @@ export class TrainingPlanCardComponent {
   @Input() trainingPlan!: TrainingPlanCardView;
   @Input() columnClass!: string;
   @Output() changedPlanConstellation = new EventEmitter<void>();
+
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private httpClient: HttpClientService,
@@ -43,11 +46,21 @@ export class TrainingPlanCardComponent {
    * @returns {Promise<void>}
    */
   async ngOnInit(): Promise<void> {
-    this.modalEventsService.confirmClick$.subscribe(async (id) => {
-      if (id === this.trainingPlan.id) {
-        await this.handleDelete(this.trainingPlan.id);
-      }
-    });
+    const confirmClickSubscription =
+      this.modalEventsService.confirmClick$.subscribe(async (id) => {
+        if (id === this.trainingPlan.id) {
+          await this.handleDelete(this.trainingPlan.id);
+        }
+      });
+    this.subscriptions.push(confirmClickSubscription);
+  }
+
+  /**
+   * Lifecycle hook that runs when the component is destroyed.
+   * Unsubscribes from all subscriptions to avoid memory leaks.
+   */
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
   /**
@@ -105,15 +118,17 @@ export class TrainingPlanCardComponent {
    * Deletes the training plan.
    * @param id - The ID of the training plan to delete.
    */
-  async handleDelete(id: string): Promise<void> {
+  private async handleDelete(id: string): Promise<void> {
     if (id) {
       try {
-        const response: any = await firstValueFrom(
+        await firstValueFrom(
           this.httpClient.request<any>(
             HttpMethods.DELETE,
             `training/delete/${id}`
           )
         );
+
+        this.modalService.close();
 
         this.changedPlanConstellation.emit();
       } catch (error) {

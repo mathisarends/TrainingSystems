@@ -21,8 +21,8 @@ export class ModalComponent implements AfterViewInit {
   @Input() title: string = 'Default Title';
   @Input() confirmButtonText: string = 'Submit';
   @Input() childComponentType!: any;
-  @Input() childComponentData: any; // Add input for child component data
-  @Input() size: ModalSize = ModalSize.MEDIUM; // add size input
+  @Input() childComponentData: any;
+  @Input() size: ModalSize = ModalSize.MEDIUM;
   @ViewChild('modalContent', { read: ViewContainerRef })
   modalContent!: ViewContainerRef;
   childComponentRef!: ComponentRef<any>;
@@ -56,15 +56,12 @@ export class ModalComponent implements AfterViewInit {
 
   close() {
     this.modalEventService.emitAbortClick();
-
     this.modalService.close();
   }
 
   confirm() {
-    // Code to handle confirm action
     if (this.childComponentRef.instance.onSubmit) {
       this.childComponentRef.instance.onSubmit();
     }
-    this.modalService.close();
   }
 }
