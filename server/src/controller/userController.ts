@@ -96,3 +96,23 @@ export async function getProfile(req: Request, res: Response): Promise<void> {
     res.status(404).json({ error: (error as unknown as Error).message });
   }
 }
+
+export async function updateProfilePicture(req: Request, res: Response): Promise<void> {
+  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
+  const userClaimsSet = res.locals.user;
+
+  try {
+    const user = await userService.getUserProfile(userDAO, userClaimsSet);
+    const profilePicture = req.body.profilePicture;
+    if (!profilePicture) {
+      throw new Error('Profilbild nicht gefunden');
+    }
+
+    user.pictureUrl = profilePicture;
+    await userDAO.update(user);
+
+    res.status(200).json({ message: 'Dein Profilbild wurde erfolgreich geupdated' });
+  } catch (error) {
+    res.status(404).json({ error: (error as unknown as Error).message });
+  }
+}

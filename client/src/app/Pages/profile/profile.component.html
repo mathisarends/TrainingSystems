@@ -7,10 +7,19 @@
       <div class="media align-items-end profile-head">
         <div class="profile mr-3">
           <img
+            #profileImage
             [src]="profile.pictureUrl || '/images/profile-placeholder.webp'"
             alt="Profilbild"
             width="130"
+            id="profile-image"
             class="rounded mb-2 img-thumbnail"
+          />
+          <input
+            #fileInput
+            type="file"
+            id="file-input"
+            class="file-input"
+            (change)="handleImageUpload($event)"
           />
         </div>
         <div class="media-body mb-3 text-dark">
