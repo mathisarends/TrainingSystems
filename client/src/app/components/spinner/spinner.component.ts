@@ -7,6 +7,4 @@ import { Component, Input } from '@angular/core';
   templateUrl: './spinner.component.html',
   styleUrl: './spinner.component.scss',
 })
-export class SpinnerComponent {
-  @Input() isLoading: boolean = true;
-}
+export class SpinnerComponent {}

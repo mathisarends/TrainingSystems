@@ -33,6 +33,10 @@ import { catchError, take, tap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SwipeService } from '../../service/swipe/swipe.service';
 
+/**
+ * Component to manage and display the training view.
+ * Handles loading of training data, swipe gestures, and form submissions.
+ */
 @Component({
   selector: 'app-training-view',
   standalone: true,
@@ -79,6 +83,10 @@ export class TrainingViewComponent
     private swipeService: SwipeService
   ) {}
 
+  /**
+   * Initializes the component.
+   * Subscribes to route parameters and loads the initial data.
+   */
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
       this.planId = params['planId'];
@@ -89,6 +97,10 @@ export class TrainingViewComponent
     });
   }
 
+  /**
+   * Lifecycle hook that is called after the component's view has been initialized.
+   * Initializes RPE validation, estimated max calculation, and auto-save functionality.
+   */
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.rpeService.initializeRPEValidation();
@@ -97,6 +109,10 @@ export class TrainingViewComponent
     }
   }
 
+  /**
+   * Lifecycle hook that is called after the component's view has been checked.
+   * Initializes the swipe listener once the data view has loaded.
+   */
   ngAfterViewChecked(): void {
     if (isPlatformBrowser(this.platformId) && !this.swipeListenerInitialized) {
       const exerciseCategorySelectors = document.querySelectorAll(
@@ -114,6 +130,10 @@ export class TrainingViewComponent
     }
   }
 
+  /**
+   * Initializes the swipe listener on the training table element.
+   * Registers callbacks for left and right swipe gestures.
+   */
   initializeSwipeListener(): void {
     if (this.trainingTable) {
       this.swipeService.addSwipeListener(
@@ -121,14 +141,24 @@ export class TrainingViewComponent
         () => this.onPageChanged(this.trainingDayIndex + 1),
         () => this.onPageChanged(this.trainingDayIndex - 1)
       );
-      console.log('Swipe listener initialized');
     }
   }
 
+  /**
+   * Removes the swipe listener.
+   * Calls the swipe service to remove the registered listeners.
+   */
   removeSwipeListener(): void {
     this.swipeService.removeSwipeListener();
   }
 
+  /**
+   * Loads training data and exercise data for the specified plan, week, and day.
+   * Updates the component state with the loaded data.
+   * @param planId - ID of the training plan.
+   * @param week - Index of the training week.
+   * @param day - Index of the training day.
+   */
   loadData(planId: string, week: number, day: number): void {
     this.dataViewLoaded.next(false);
     forkJoin({
@@ -161,6 +191,11 @@ export class TrainingViewComponent
       .subscribe();
   }
 
+  /**
+   * Handles form submission.
+   * Prevents default form submission, collects changed data, and submits the training plan.
+   * @param event - The form submission event.
+   */
   onSubmit(event: Event): void {
     event.preventDefault();
     const changedData = this.formService.getChanges();
@@ -188,6 +223,11 @@ export class TrainingViewComponent
       .subscribe();
   }
 
+  /**
+   * Handles input change events.
+   * Tracks changes in the form service and updates the visibility of exercise category placeholders.
+   * @param event - The input change event.
+   */
   onInputChange(event: Event): void {
     this.formService.trackChange(event);
     this.categoryPlaceholderService.updatePlaceholderVisibility(
@@ -196,6 +236,11 @@ export class TrainingViewComponent
     );
   }
 
+  /**
+   * Handles category change events.
+   * Updates exercise categories and rep schemes based on the selected category.
+   * @param event - The category change event.
+   */
   onCategoryChange(event: Event): void {
     this.categoryPlaceholderService.onCategoryChange(
       event,
@@ -204,6 +249,12 @@ export class TrainingViewComponent
       this.renderer
     );
   }
+
+  /**
+   * Handles page change events.
+   * Navigates to the specified training day and reloads the data.
+   * @param day - Index of the training day to navigate to.
+   */
 
   onPageChanged(day: number): void {
     if (day >= this.trainingPlanData.trainingBlockLength) {
@@ -220,6 +271,11 @@ export class TrainingViewComponent
     this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
   }
 
+  /**
+   * Navigates to the specified training week.
+   * Reloads the training data for the new week.
+   * @param direction - Direction to navigate (1 for next week, -1 for previous week).
+   */
   navigateWeek(direction: number): void {
     this.trainingWeekIndex = this.navigationService.navigateWeek(
       this.trainingWeekIndex,
@@ -229,6 +285,11 @@ export class TrainingViewComponent
     this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
   }
 
+  /**
+   * Retrieves the exercise data for the specified index.
+   * @param index - Index of the exercise.
+   * @returns The exercise data object.
+   */
   getExercise(index: number): any {
     return (
       this.trainingPlanData!.trainingDay?.exercises[index - 1] || {
