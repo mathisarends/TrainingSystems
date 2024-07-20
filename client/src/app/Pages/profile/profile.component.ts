@@ -17,6 +17,7 @@ import { Subscription } from 'rxjs';
 import { HttpClientService } from '../../../service/http-client.service';
 import { HttpMethods } from '../../types/httpMethods';
 import { TabStripComponent } from '../../tab-strip/tab-strip.component';
+import { HttpErrorHandlerService } from '../../http-error-handler.service';
 
 @Component({
   selector: 'app-profile',
@@ -36,13 +37,9 @@ export class ProfileComponent implements OnInit {
   private subscription: Subscription = new Subscription();
 
   tabs = [
-    { title: 'Freundesliste', active: true },
-    { title: 'Shorts' },
-    { title: 'Livestreams' },
-    { title: 'Beiträge' },
-    { title: 'Playlists' },
-    { title: 'Podcasts' },
-    { title: 'Werbung' },
+    { title: 'Freunde', active: true },
+    { title: 'Anfragen' },
+    { title: 'Ausstehend' },
   ];
 
   constructor(
@@ -51,27 +48,25 @@ export class ProfileComponent implements OnInit {
     private renderer: Renderer2,
     private modalService: ModalService,
     private modalEventsService: ModalEventsService,
-    private httpService: HttpClientService
+    private httpService: HttpClientService,
+    private httpErrorHandler: HttpErrorHandlerService
   ) {}
 
   ngOnInit(): void {
-    this.profileService.getProfile().subscribe({
-      next: (data) => {
-        console.log(
-          '🚀 ~ ProfileComponent ~ this.profileService.getProfile ~ data:',
-          data
-        );
-        this.profile = data.userDto;
-        this.isLoading = false;
-      },
-      error: (err) => {
-        console.error('Fehler beim Abrufen des Profils', err);
-        this.isLoading = false;
-      },
-      complete: () => {
-        console.log('Profil erfolgreich geladen');
-      },
-    });
+    this.httpErrorHandler
+      .handleResponse(this.profileService.getProfile())
+      .subscribe({
+        next: (data) => {
+          this.profile = data.userDto;
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Fehler beim Abrufen des Profils', err);
+        },
+        complete: () => {
+          console.log('Profil erfolgreich geladen');
+        },
+      });
 
     this.subscription.add(
       this.modalEventsService.confirmClick$.subscribe(() =>
@@ -79,7 +74,6 @@ export class ProfileComponent implements OnInit {
       )
     );
   }
-
   uploadProfilePicture() {
     const currentProfileImageUrl = this.profileImageElement.nativeElement.src;
 
