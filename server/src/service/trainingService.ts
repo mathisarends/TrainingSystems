@@ -120,6 +120,9 @@ export async function updateTrainingPlan(
   trainingPlan.title = planDetails.title;
   trainingPlan.trainingFrequency = Number(planDetails.trainingFrequency);
   trainingPlan.weightRecommandationBase = planDetails.weightPlaceholders as WeightRecommendationBase;
+  if (planDetails.coverImage) {
+    trainingPlan.coverImageBase64 = planDetails.coverImage;
+  }
 
   if (trainingPlan.trainingWeeks.length !== Number(planDetails.trainingWeeks)) {
     const difference = trainingPlan.trainingWeeks.length - parseInt(planDetails.trainingWeeks);
