@@ -34,7 +34,6 @@ export async function createTrainingPlan(
   const trainingWeeks = Number(planDetails.trainingWeeks);
   const weightRecommandation = planDetails.weightPlaceholders as WeightRecommendationBase;
   const coverImage = planDetails.coverImage;
-  console.log('🚀 ~ coverImage:', coverImage);
 
   const trainingWeeksArr = createNewTrainingPlanWithPlaceholders(trainingWeeks, trainingFrequency);
 
@@ -44,7 +43,8 @@ export async function createTrainingPlan(
     trainingFrequency,
     weightRecommandationBase: weightRecommandation,
     lastUpdated: new Date(),
-    trainingWeeks: trainingWeeksArr
+    trainingWeeks: trainingWeeksArr,
+    coverImageBase64: coverImage
   };
 
   user.trainingPlans.push(newTrainingPlan);
@@ -93,7 +93,8 @@ export async function getTrainingPlanForEdit(
     'title',
     'trainingFrequency',
     'weightRecommandationBase',
-    'trainingWeeks'
+    'trainingWeeks',
+    'coverImageBase64'
   ];
 
   return TrainingPlanDTO.getCustomView(trainingPlan, fields);

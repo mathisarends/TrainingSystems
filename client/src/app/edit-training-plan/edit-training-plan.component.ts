@@ -1,4 +1,13 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Input,
+  Renderer2,
+  ElementRef,
+  ViewChild,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { HttpMethods } from '../types/httpMethods';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ModalEventsService } from '../../service/modal-events.service';
@@ -30,12 +39,17 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy {
 
   protected loading: boolean = true;
 
+  @ViewChild('coverImage') coverImageElement!: ElementRef<HTMLImageElement>;
+
   constructor(
     private fb: FormBuilder,
     private modalEventsService: ModalEventsService,
     private modalService: ModalService,
     private trainingPlanService: TrainingPlanService,
-    private httpClient: HttpClientService
+    private httpClient: HttpClientService,
+    private renderer: Renderer2,
+    private el: ElementRef,
+    private cdRef: ChangeDetectorRef
   ) {
     this.trainingForm = this.fb.group({
       title: ['', Validators.required],
@@ -54,6 +68,16 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.modalEventsService.confirmClick$.subscribe(() => this.onSubmit())
     );
+  }
+
+  ngAfterViewChecked() {
+    console.log(
+      '🚀 ~ EditTrainingPlanComponent ~ ngAfterViewChecked ~ this.coverImageElement:',
+      this.coverImageElement
+    );
+    if (this.coverImageElement) {
+      this.setCoverImage(this.trainingForm.get('coverImage')?.value || '');
+    }
   }
 
   ngOnDestroy() {
@@ -79,20 +103,35 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy {
         trainingWeeks: response.trainingPlanEditView.trainingWeeks.length,
         weightPlaceholders:
           response.trainingPlanEditView.weightRecommandationBase,
-        coverImage: response.trainingPlanEditView.coverImage || '',
+        coverImage: response.trainingPlanEditView.coverImageBase64 || '',
       });
+      console.log(
+        '🚀 ~ EditTrainingPlanComponent ~ fetchTrainingPlan ~  response.trainingPlanEditView.coverImageBase64:',
+        response.trainingPlanEditView.coverImageBase64
+      );
 
-      const coverImageElement = document.getElementById(
-        'cover-image'
-      ) as HTMLImageElement;
-      coverImageElement.src =
-        response.trainingPlanEditView.coverImage ||
-        'https://via.placeholder.com/150';
+      this.setCoverImage(response.trainingPlanEditView.coverImageBase64 || '');
     } catch (error) {
       console.error('Error fetching training plan:', error);
       if (error instanceof HttpErrorResponse && error.status === 404) {
         console.log('Training plan not found');
       }
+    }
+  }
+
+  setCoverImage(imageUrl: string) {
+    const coverImageElement =
+      this.el.nativeElement.querySelector('#cover-image');
+    console.log(
+      '🚀 ~ EditTrainingPlanComponent ~ setCoverImage ~ coverImageElement:',
+      coverImageElement
+    );
+    if (coverImageElement) {
+      this.renderer.setAttribute(
+        coverImageElement,
+        'src',
+        imageUrl || 'https://via.placeholder.com/150'
+      );
     }
   }
 

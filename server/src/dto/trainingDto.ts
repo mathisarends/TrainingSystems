@@ -16,7 +16,8 @@ export class TrainingPlanDTO {
       id: plan.id,
       title: plan.title,
       trainingFrequency: plan.trainingFrequency,
-      lastUpdated: plan.lastUpdated
+      lastUpdated: plan.lastUpdated,
+      coverImageBase64: plan.coverImageBase64 ?? ''
     };
   }
 

@@ -19,6 +19,7 @@ import { SearchService } from '../../search.service';
 import { TrainingPlanService } from '../../training-plan.service';
 import { Router } from '@angular/router';
 import { ModalSize } from '../../../service/modalSize';
+import { CommonModule } from '@angular/common';
 
 /**
  * Component to manage and display training plans.
@@ -26,7 +27,12 @@ import { ModalSize } from '../../../service/modalSize';
 @Component({
   selector: 'app-training-plans',
   standalone: true,
-  imports: [AlertComponent, SpinnerComponent, TrainingCardsComponent],
+  imports: [
+    AlertComponent,
+    SpinnerComponent,
+    TrainingCardsComponent,
+    CommonModule,
+  ],
   templateUrl: './training-plans.component.html',
   styleUrls: ['./training-plans.component.scss'],
 })
@@ -94,6 +100,11 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
     try {
       const response: any = await firstValueFrom(
         this.httpClient.request<any>(HttpMethods.GET, 'training/plans')
+      );
+
+      console.log(
+        '🚀 ~ TrainingPlansComponent ~ loadTrainingPlans ~ response:',
+        response
       );
       this.allTrainingPlans = response.trainingPlanDtos;
 

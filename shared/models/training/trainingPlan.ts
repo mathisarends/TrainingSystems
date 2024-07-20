@@ -44,4 +44,9 @@ export interface TrainingPlan {
    * An array of training weeks included in the training plan.
    */
   trainingWeeks: TrainingWeek[];
+
+  /**
+   * The BASE-64 encoded coverImage of the training plan.
+   */
+  coverImageBase64: string;
 }

@@ -9,6 +9,7 @@ import { HttpMethods } from '../types/httpMethods';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ModalService } from '../../service/modalService';
 import { TrainingPlanService } from '../training-plan.service';
+import { log } from 'node:console';
 
 /**
  * Component for creating a training form.
@@ -68,7 +69,10 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
   async onSubmit() {
     if (this.trainingForm.valid) {
       const formData = this.trainingForm.value;
-      console.log("🚀 ~ CreateTrainingFormComponent ~ onSubmit ~ formData:", formData)
+      console.log(
+        '🚀 ~ CreateTrainingFormComponent ~ onSubmit ~ formData:',
+        formData
+      );
 
       try {
         const response = await firstValueFrom(

@@ -12,7 +12,7 @@ import { TrainingPlan } from "../../training/trainingPlan.js";
  */
 export type BasicTrainingPlanView = Pick<
   TrainingPlan,
-  "id" | "title" | "trainingFrequency" | "lastUpdated"
+  "id" | "title" | "trainingFrequency" | "lastUpdated" | "coverImageBase64"
 >;
 
 export interface TrainingPlanCardView {
@@ -20,7 +20,8 @@ export interface TrainingPlanCardView {
   title: string;
   trainingFrequency: number;
   lastUpdated: Date;
-  pictureUrl?: string;
+  pictureUrl?: string; // profile picture
+  coverImageBase64?: string;
 }
 
 /**
