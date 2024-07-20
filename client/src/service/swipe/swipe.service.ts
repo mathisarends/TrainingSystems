@@ -5,6 +5,7 @@ import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 })
 export class SwipeService {
   private renderer: Renderer2;
+  private listeners: (() => void)[] = [];
 
   constructor(rendererFactory: RendererFactory2) {
     this.renderer = rendererFactory.createRenderer(null, null);
@@ -19,7 +20,7 @@ export class SwipeService {
     let touchStartX = 0;
     let touchEndX = 0;
 
-    const swipeThreshold = 100;
+    const swipeThreshold = 125;
 
     const handleTouchStart = (event: TouchEvent) => {
       touchStartX = event.changedTouches[0].screenX;
@@ -43,8 +44,28 @@ export class SwipeService {
       }
     };
 
-    this.renderer.listen(element, 'touchstart', handleTouchStart);
-    this.renderer.listen(element, 'touchmove', handleTouchMove);
-    this.renderer.listen(element, 'touchend', handleTouchEnd);
+    const listenerStart = this.renderer.listen(
+      element,
+      'touchstart',
+      handleTouchStart
+    );
+    const listenerMove = this.renderer.listen(
+      element,
+      'touchmove',
+      handleTouchMove
+    );
+    const listenerEnd = this.renderer.listen(
+      element,
+      'touchend',
+      handleTouchEnd
+    );
+
+    this.listeners.push(listenerStart, listenerMove, listenerEnd);
+  }
+
+  removeSwipeListener() {
+    this.listeners.forEach((unlisten) => unlisten());
+    this.listeners = [];
+    console.log('Swipe listener removed');
   }
 }

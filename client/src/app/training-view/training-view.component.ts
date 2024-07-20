@@ -95,10 +95,6 @@ export class TrainingViewComponent
       this.estMaxService.initializeEstMaxCalculation();
       this.autoSaveService.initializeAutoSave();
     }
-
-    /*     this.dataViewLoaded$.pipe(take(1)).subscribe(() => {
-      this.initializeSwipeListener();
-    }); */
   }
 
   ngAfterViewChecked(): void {
@@ -129,6 +125,10 @@ export class TrainingViewComponent
     }
   }
 
+  removeSwipeListener(): void {
+    this.swipeService.removeSwipeListener();
+  }
+
   loadData(planId: string, week: number, day: number): void {
     this.dataViewLoaded.next(false);
     forkJoin({
@@ -152,7 +152,11 @@ export class TrainingViewComponent
           }
           return EMPTY;
         }),
-        tap(() => this.dataViewLoaded.next(true))
+        tap(() => {
+          this.dataViewLoaded.next(true);
+          this.removeSwipeListener();
+          this.initializeSwipeListener();
+        })
       )
       .subscribe();
   }
@@ -202,11 +206,18 @@ export class TrainingViewComponent
   }
 
   onPageChanged(day: number): void {
+    if (day >= this.trainingPlanData.trainingBlockLength) {
+      day = 0;
+    } else if (day < 0) {
+      day = this.trainingPlanData.trainingBlockLength - 1;
+    }
+
     this.trainingDayIndex = this.navigationService.navigateDay(
       day,
       this.trainingPlanData.trainingFrequency,
       this.trainingWeekIndex
     );
+    this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
   }
 
   navigateWeek(direction: number): void {
@@ -215,12 +226,7 @@ export class TrainingViewComponent
       direction,
       this.trainingPlanData
     );
-
-    this.trainingViewService.loadTrainingPlan(
-      this.planId,
-      this.trainingWeekIndex,
-      this.trainingDayIndex
-    );
+    this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
   }
 
   getExercise(index: number): any {
