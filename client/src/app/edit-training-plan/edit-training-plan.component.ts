@@ -6,7 +6,7 @@ import {
   Renderer2,
   ElementRef,
   ViewChild,
-  ChangeDetectorRef,
+  AfterViewChecked,
 } from '@angular/core';
 import { HttpMethods } from '../types/httpMethods';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -20,12 +20,14 @@ import {
 import { firstValueFrom, Subscription } from 'rxjs';
 import { HttpClientService } from '../../service/http-client.service';
 import { CommonModule } from '@angular/common';
-
 import { SpinnerComponent } from '../components/spinner/spinner.component';
 import { ModalService } from '../../service/modalService';
 import { TrainingPlanService } from '../training-plan.service';
 import { ImageUploadService } from '../image-upload.service';
 
+/**
+ * Component for editing a training plan.
+ */
 @Component({
   selector: 'app-edit-training-plan',
   standalone: true,
@@ -33,15 +35,28 @@ import { ImageUploadService } from '../image-upload.service';
   templateUrl: './edit-training-plan.component.html',
   styleUrls: ['./edit-training-plan.component.scss'],
 })
-export class EditTrainingPlanComponent implements OnInit, OnDestroy {
+export class EditTrainingPlanComponent
+  implements OnInit, OnDestroy, AfterViewChecked
+{
   @Input() id!: string;
-  private subscription: Subscription = new Subscription();
-  trainingForm: FormGroup;
-
-  protected loading: boolean = true;
-
   @ViewChild('coverImage') coverImageElement!: ElementRef<HTMLImageElement>;
 
+  protected trainingForm: FormGroup;
+  protected loading: boolean = true;
+
+  private subscription: Subscription = new Subscription();
+
+  /**
+   * Constructor to initialize the form and inject dependencies.
+   * @param fb - FormBuilder to create the form group.
+   * @param modalEventsService - Service to handle modal events.
+   * @param modalService - Service to handle modal operations.
+   * @param trainingPlanService - Service to manage training plans.
+   * @param httpClient - Service to handle HTTP requests.
+   * @param renderer - Renderer2 instance to manipulate DOM elements.
+   * @param el - ElementRef instance to reference DOM elements.
+   * @param imageUploadService - Service to handle image uploads.
+   */
   constructor(
     private fb: FormBuilder,
     private modalEventsService: ModalEventsService,
@@ -61,9 +76,12 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit() {
+  /**
+   * Lifecycle hook to handle initialization tasks.
+   */
+  async ngOnInit(): Promise<void> {
     if (this.id) {
-      this.fetchTrainingPlan(this.id);
+      await this.fetchTrainingPlan(this.id);
     }
 
     this.subscription.add(
@@ -71,29 +89,28 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngAfterViewChecked() {
-    console.log(
-      '🚀 ~ EditTrainingPlanComponent ~ ngAfterViewChecked ~ this.coverImageElement:',
-      this.coverImageElement
-    );
-    if (this.coverImageElement) {
-      this.setCoverImage(this.trainingForm.get('coverImage')?.value || '');
-    }
+  /**
+   * Lifecycle hook to handle view checks.
+   */
+  ngAfterViewChecked(): void {
+    this.setCoverImage(this.trainingForm.get('coverImage')?.value || '');
   }
 
-  ngOnDestroy() {
+  /**
+   * Lifecycle hook to handle cleanup tasks.
+   */
+  ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
-  async fetchTrainingPlan(id: string) {
+  /**
+   * Fetches the training plan details to edit.
+   * @param id - The ID of the training plan to fetch.
+   */
+  private async fetchTrainingPlan(id: string): Promise<void> {
     try {
       const response: any = await firstValueFrom(
         this.httpClient.request<any>(HttpMethods.GET, `training/edit/${id}`)
-      );
-
-      console.log(
-        '🚀 ~ EditTrainingPlanComponent ~ fetchTrainingPlan ~ response:',
-        response
       );
 
       this.loading = false;
@@ -106,10 +123,6 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy {
           response.trainingPlanEditView.weightRecommandationBase,
         coverImage: response.trainingPlanEditView.coverImageBase64 || '',
       });
-      console.log(
-        '🚀 ~ EditTrainingPlanComponent ~ fetchTrainingPlan ~  response.trainingPlanEditView.coverImageBase64:',
-        response.trainingPlanEditView.coverImageBase64
-      );
 
       this.setCoverImage(response.trainingPlanEditView.coverImageBase64 || '');
     } catch (error) {
@@ -120,28 +133,29 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy {
     }
   }
 
-  setCoverImage(imageUrl: string) {
-    const coverImageElement =
-      this.el.nativeElement.querySelector('#cover-image');
-    console.log(
-      '🚀 ~ EditTrainingPlanComponent ~ setCoverImage ~ coverImageElement:',
-      coverImageElement
-    );
-    if (coverImageElement) {
+  /**
+   * Sets the cover image for the training plan.
+   * @param imageUrl - The URL of the cover image.
+   */
+  private setCoverImage(imageUrl: string): void {
+    if (this.coverImageElement) {
       this.renderer.setAttribute(
-        coverImageElement,
+        this.coverImageElement.nativeElement,
         'src',
         imageUrl || 'https://via.placeholder.com/150'
       );
     }
   }
 
-  async onSubmit() {
+  /**
+   * Handles form submission.
+   */
+  protected async onSubmit(): Promise<void> {
     if (this.trainingForm.valid) {
       const formData = this.trainingForm.value;
 
       try {
-        const response: any = await firstValueFrom(
+        await firstValueFrom(
           this.httpClient.request<any>(
             HttpMethods.PATCH,
             `training/edit/${this.id}`,
@@ -167,12 +181,19 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy {
     }
   }
 
-  handleImageUpload(event: any) {
+  /**
+   * Handles image upload and updates the form control.
+   * @param event - The file input change event.
+   */
+  protected handleImageUpload(event: any): void {
     this.imageUploadService.handleImageUpload(event, (result: string) => {
-      const coverImage = document.getElementById(
-        'cover-image'
-      ) as HTMLImageElement;
-      coverImage.src = result;
+      if (this.coverImageElement) {
+        this.renderer.setAttribute(
+          this.coverImageElement.nativeElement,
+          'src',
+          result
+        );
+      }
       this.trainingForm.patchValue({ coverImage: result });
     });
   }
