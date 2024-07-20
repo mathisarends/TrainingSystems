@@ -24,6 +24,7 @@ import { CommonModule } from '@angular/common';
 import { SpinnerComponent } from '../components/spinner/spinner.component';
 import { ModalService } from '../../service/modalService';
 import { TrainingPlanService } from '../training-plan.service';
+import { ImageUploadService } from '../image-upload.service';
 
 @Component({
   selector: 'app-edit-training-plan',
@@ -49,7 +50,7 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy {
     private httpClient: HttpClientService,
     private renderer: Renderer2,
     private el: ElementRef,
-    private cdRef: ChangeDetectorRef
+    private imageUploadService: ImageUploadService
   ) {
     this.trainingForm = this.fb.group({
       title: ['', Validators.required],
@@ -167,17 +168,12 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy {
   }
 
   handleImageUpload(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        const coverImage = document.getElementById(
-          'cover-image'
-        ) as HTMLImageElement;
-        coverImage.src = e.target.result;
-        this.trainingForm.patchValue({ coverImage: e.target.result });
-      };
-      reader.readAsDataURL(file);
-    }
+    this.imageUploadService.handleImageUpload(event, (result: string) => {
+      const coverImage = document.getElementById(
+        'cover-image'
+      ) as HTMLImageElement;
+      coverImage.src = result;
+      this.trainingForm.patchValue({ coverImage: result });
+    });
   }
 }

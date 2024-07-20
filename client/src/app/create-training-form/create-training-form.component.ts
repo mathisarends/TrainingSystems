@@ -10,6 +10,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ModalService } from '../../service/modalService';
 import { TrainingPlanService } from '../training-plan.service';
 import { log } from 'node:console';
+import { ImageUploadService } from '../image-upload.service';
 
 /**
  * Component for creating a training form.
@@ -36,7 +37,8 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
     private modalService: ModalService,
     private modalEventsService: ModalEventsService,
     private trainingPlanService: TrainingPlanService,
-    private httpClient: HttpClientService
+    private httpClient: HttpClientService,
+    private imageUploadService: ImageUploadService
   ) {
     this.trainingForm = this.fb.group({
       title: ['', Validators.required],
@@ -101,17 +103,12 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
    * @param event - The file input change event.
    */
   handleImageUpload(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        const coverImage = document.getElementById(
-          'cover-image'
-        ) as HTMLImageElement;
-        coverImage.src = e.target.result;
-        this.trainingForm.patchValue({ coverImage: e.target.result });
-      };
-      reader.readAsDataURL(file);
-    }
+    this.imageUploadService.handleImageUpload(event, (result: string) => {
+      const coverImage = document.getElementById(
+        'cover-image'
+      ) as HTMLImageElement;
+      coverImage.src = result;
+      this.trainingForm.patchValue({ coverImage: result });
+    });
   }
 }
