@@ -22,7 +22,7 @@
       </div>
       } @else { @for (trainingPlan of filteredTrainingPlans; track trainingPlan;
       let i = $index) {
-      <div class="col-lg-4 mb-4">
+      <div [ngClass]="getColumnClass(i)">
         <div class="card card-custom bg-white border-white border-0">
           <div
             class="card-custom-img"
@@ -81,11 +81,11 @@
           </div>
         </div>
       </div>
-
       } }
     </div>
   </div>
 </section>
+
 } @else {
 <app-spinner></app-spinner>
 }

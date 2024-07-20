@@ -7,7 +7,6 @@ import { HttpClientService } from '../../../service/http-client.service';
 import { HttpMethods } from '../../types/httpMethods';
 import { AlertComponent } from '../../components/alert/alert.component';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
-import { TrainingCardsComponent } from '../../components/training-card/training-card.component';
 import { TrainingPlanCardView } from '../../../../../shared/models/dtos/training/trainingDto.types.js';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ModalEventsService } from '../../../service/modal-events.service';
@@ -25,13 +24,7 @@ import { TooltipDirective } from '../../tooltip/tooltip.directive';
 @Component({
   selector: 'app-training-plans',
   standalone: true,
-  imports: [
-    AlertComponent,
-    SpinnerComponent,
-    TrainingCardsComponent,
-    CommonModule,
-    TooltipDirective,
-  ],
+  imports: [AlertComponent, SpinnerComponent, CommonModule, TooltipDirective],
   templateUrl: './training-plans.component.html',
   styleUrls: ['./training-plans.component.scss'],
 })
@@ -74,6 +67,8 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
     this.trainingPlansService.trainingPlansChanged$.subscribe(() => {
       console.log('received change');
       this.loadTrainingPlans();
+
+      this.modalService.close();
     });
 
     // Subscribe to search input changes
@@ -176,6 +171,20 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
       ModalSize.LARGE,
       { id }
     );
+  }
+
+  getColumnClass(index: number) {
+    const totalItems = this.filteredTrainingPlans.length;
+    if (totalItems % 3 === 0) {
+      return 'col-lg-4 col-md-6 col-sm-12';
+    } else if (totalItems % 2 === 0) {
+      return 'col-lg-6 col-md-6 col-sm-12';
+    } else if (totalItems === 1) {
+      return 'col-lg-12 col-md-12 col-sm-12';
+    } else {
+      // Default to 3-column layout if not perfectly divisible
+      return 'col-lg-4 col-md-6 col-sm-12';
+    }
   }
 
   /**
