@@ -40,3 +40,17 @@ input[type="number"]::-webkit-inner-spin-button {
 input[type="number"] {
   -ms-appearance: textfield;
 }
+
+.tooltip {
+  position: absolute;
+  background: #333;
+  color: #fff;
+  padding: 5px;
+  border-radius: 3px;
+  font-size: 12px;
+  pointer-events: none;
+  z-index: 1000;
+  transition: opacity 0.2s, visibility 0.2s;
+  visibility: hidden;
+  opacity: 0;
+}

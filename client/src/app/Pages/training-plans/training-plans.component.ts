@@ -8,10 +8,7 @@ import { HttpMethods } from '../../types/httpMethods';
 import { AlertComponent } from '../../components/alert/alert.component';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { TrainingCardsComponent } from '../../components/training-card/training-card.component';
-import {
-  BasicTrainingPlanView,
-  TrainingPlanCardView,
-} from '../../../../../shared/models/dtos/training/trainingDto.types.js';
+import { TrainingPlanCardView } from '../../../../../shared/models/dtos/training/trainingDto.types.js';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ModalEventsService } from '../../../service/modal-events.service';
 import { firstValueFrom, Subscription } from 'rxjs';
@@ -20,6 +17,7 @@ import { TrainingPlanService } from '../../training-plan.service';
 import { Router } from '@angular/router';
 import { ModalSize } from '../../../service/modalSize';
 import { CommonModule } from '@angular/common';
+import { TooltipDirective } from '../../tooltip/tooltip.directive';
 
 /**
  * Component to manage and display training plans.
@@ -32,6 +30,7 @@ import { CommonModule } from '@angular/common';
     SpinnerComponent,
     TrainingCardsComponent,
     CommonModule,
+    TooltipDirective,
   ],
   templateUrl: './training-plans.component.html',
   styleUrls: ['./training-plans.component.scss'],
