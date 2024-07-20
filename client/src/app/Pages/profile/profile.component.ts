@@ -10,21 +10,19 @@ import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { User } from '../../types/user';
 import { ImageUploadService } from '../../image-upload.service';
 import { ModalService } from '../../../service/modalService';
-import { ConfirmExerciseResetComponent } from '../../confirm-exercise-reset/confirm-exercise-reset.component';
 import { ChangeProfilePictureConfirmationComponent } from '../../change-profile-picture-confirmation/change-profile-picture-confirmation.component';
 import { ModalSize } from '../../../service/modalSize';
 import { ModalEventsService } from '../../../service/modal-events.service';
-import { Subject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { HttpClientService } from '../../../service/http-client.service';
 import { HttpMethods } from '../../types/httpMethods';
-import { ToastService } from '../../toast/toast.service';
-import { ToastType } from '../../toast/toastType';
+import { TabStripComponent } from '../../tab-strip/tab-strip.component';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   standalone: true,
-  imports: [SpinnerComponent],
+  imports: [SpinnerComponent, TabStripComponent],
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
@@ -37,14 +35,23 @@ export class ProfileComponent implements OnInit {
 
   private subscription: Subscription = new Subscription();
 
+  tabs = [
+    { title: 'Freundesliste', active: true },
+    { title: 'Shorts' },
+    { title: 'Livestreams' },
+    { title: 'Beiträge' },
+    { title: 'Playlists' },
+    { title: 'Podcasts' },
+    { title: 'Werbung' },
+  ];
+
   constructor(
     private profileService: ProfileService,
     private imageUploadService: ImageUploadService,
     private renderer: Renderer2,
     private modalService: ModalService,
     private modalEventsService: ModalEventsService,
-    private httpService: HttpClientService,
-    private toastService: ToastService
+    private httpService: HttpClientService
   ) {}
 
   ngOnInit(): void {

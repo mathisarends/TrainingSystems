@@ -1,0 +1,7 @@
+<div class="tab-strip">
+  @for (tab of tabs; track tab; let index = $index) {
+  <div (click)="setActiveTab(index)" [class.active]="tab.active" class="tab">
+    {{ tab.title }}
+  </div>
+  }
+</div>

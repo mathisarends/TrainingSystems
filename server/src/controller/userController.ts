@@ -9,7 +9,6 @@ import { User } from '@shared/models/user.js';
  *
  * @param {Request} req - The request object.
  * @param {Response} res - The response object.
- * @returns {Promise<void>} A promise that resolves when the user is registered.
  */
 export async function register(req: Request, res: Response): Promise<void> {
   const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
@@ -28,7 +27,6 @@ export async function register(req: Request, res: Response): Promise<void> {
  *
  * @param {Request} req - The request object.
  * @param {Response} res - The response object.
- * @returns {Promise<void>} A promise that resolves when the user is logged in.
  */
 export async function login(req: Request, res: Response) {
   const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;

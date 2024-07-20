@@ -1,0 +1,21 @@
+.tab-strip {
+  display: flex;
+
+  .tab {
+    padding: 10px 20px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.3s, color 0.3s;
+    color: #888; // Ausgegrauter Text für nicht aktive Tabs
+
+    &.active {
+      border-bottom: 2px solid #000;
+      font-weight: bold;
+      color: #000; // Schwarzer Text für aktiven Tab
+    }
+
+    &:hover {
+      color: #000; // Schwarzer Text bei Hover
+    }
+  }
+}
