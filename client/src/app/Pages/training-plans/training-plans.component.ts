@@ -53,10 +53,8 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: ModalService,
     private httpClient: HttpClientService,
-    private router: Router,
-    private modalEventsService: ModalEventsService,
-    private trainingPlansService: TrainingPlanService,
-    private searchService: SearchService
+    private searchService: SearchService,
+    private trainingPlanService: TrainingPlanService
   ) {}
 
   /**
@@ -65,25 +63,16 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
    */
   async ngOnInit(): Promise<void> {
     await this.loadTrainingPlans();
-
-    // Subscribe to the confirmClick$ event to handle deletion confirmation
-    this.modalEventsService.confirmClick$.subscribe(() => {
-      this.handleDelete(this.currentSelectedId);
-    });
-
-    this.trainingPlansService.trainingPlansChanged$.subscribe(() => {
-      console.log('received change');
-      this.loadTrainingPlans();
-
-      this.modalService.close();
-    });
-
     // Subscribe to search input changes
     this.searchSubscription = this.searchService.searchText$.subscribe(
       (searchText) => {
         this.filterTrainingPlans(searchText);
       }
     );
+
+    this.trainingPlanService.trainingPlansChanged$.subscribe(() => {
+      this.loadTrainingPlans();
+    });
   }
 
   /**
@@ -101,11 +90,6 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
     try {
       const response: any = await firstValueFrom(
         this.httpClient.request<any>(HttpMethods.GET, 'training/plans')
-      );
-
-      console.log(
-        '🚀 ~ TrainingPlansComponent ~ loadTrainingPlans ~ response:',
-        response
       );
       this.allTrainingPlans = response.trainingPlanDtos;
 
@@ -130,54 +114,10 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Opens the modal to delete a training plan.
-   * @param index - The index of the training plan to delete.
+   * Handles the event when the training plan constellation has changed (e.g., a plan was deleted).
    */
-  deleteTrainingPlan(id: string): void {
-    this.currentSelectedId = id;
-    this.modalService.open(
-      DeleteConfirmationComponent,
-      'Trainingsplan wirklich löschen?',
-      'Löschen'
-    );
-  }
-
-  /**
-   * Opens the modal to view a training plan.
-   * @param index - The index of the training plan to view.
-   */
-  async viewTrainingPlan(id: string): Promise<void> {
-    const response = await firstValueFrom(
-      this.httpClient.request<any>(
-        HttpMethods.GET,
-        `training/plan/${id}/latest`
-      )
-    );
-    const latestWeek = response.weekIndex;
-    const latestDay = response.dayIndex;
-
-    this.router.navigate(['/training/view'], {
-      queryParams: {
-        planId: id,
-        week: latestWeek,
-        day: latestDay,
-      },
-    });
-  }
-
-  /**
-   * Opens the modal to edit a training plan.
-   * @param index - The index of the training plan to edit.
-   */
-  editTrainingPlan(id: string): void {
-    console.log('🚀 ~ TrainingPlansComponent ~ editTrainingPlan ~ id:', id);
-    this.modalService.open(
-      EditTrainingPlanComponent,
-      'Trainingsplan bearbeiten',
-      'Übernehmen',
-      ModalSize.LARGE,
-      { id }
-    );
+  onChangedPlanConstellation(): void {
+    this.loadTrainingPlans();
   }
 
   getColumnClass(index: number) {
@@ -191,32 +131,6 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
     } else {
       // Default to 3-column layout if not perfectly divisible
       return 'col-lg-4 col-md-6 col-sm-12';
-    }
-  }
-
-  /**
-   * Handles the deletion of a training plan.
-   * @param index - The index of the training plan to delete.
-   */
-  private async handleDelete(id: string): Promise<void> {
-    if (id) {
-      try {
-        const response: any = await firstValueFrom(
-          this.httpClient.request<any>(
-            HttpMethods.DELETE,
-            `training/delete/${id}`
-          )
-        );
-
-        await this.loadTrainingPlans();
-
-        this.modalService.close();
-      } catch (error) {
-        console.error('Error deleting training plan:', error);
-        if (error instanceof HttpErrorResponse && error.status === 404) {
-          console.log('Route oder Nutzer nicht gefunden');
-        }
-      }
     }
   }
 

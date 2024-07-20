@@ -1,4 +1,4 @@
-<div class="card card-custom bg-white border-white border-0">
+<div class="card card-custom bg-white border-white border-0 mb-3">
   <div
     class="card-custom-img"
     [ngStyle]="{
@@ -31,7 +31,7 @@
     <button
       type="button"
       class="btn btn-light btn-md m-1"
-      (click)="editTrainingPlan(trainingPlan.id)"
+      (click)="showEditTrainingPlanModal(trainingPlan.id)"
       appTooltip="Bearbeiten"
     >
       <i class="bx bx-edit"></i>
@@ -39,7 +39,7 @@
     <button
       type="button"
       class="btn btn-light btn-md m-1"
-      (click)="deleteTrainingPlan(trainingPlan.id)"
+      (click)="showDeleteTrainingPlanModal()"
       appTooltip="Löschen"
     >
       <i class="bx bx-trash"></i>

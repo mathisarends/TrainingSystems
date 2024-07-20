@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class ModalEventsService {
-  private confirmClickSubject = new Subject<void>();
+  private confirmClickSubject = new Subject<string | void>();
   private abortClickSubject = new Subject<void>();
 
   /**
@@ -30,8 +30,8 @@ export class ModalEventsService {
    * has been clicked, allowing them to perform specific actions related to the
    * modal content, such as form submission.
    */
-  emitConfirmClick() {
-    this.confirmClickSubject.next();
+  emitConfirmClick(id?: string) {
+    this.confirmClickSubject.next(id);
   }
 
   /**

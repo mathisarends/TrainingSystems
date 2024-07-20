@@ -65,5 +65,6 @@ export class ModalComponent implements AfterViewInit {
     if (this.childComponentRef.instance.onSubmit) {
       this.childComponentRef.instance.onSubmit();
     }
+    this.modalService.close();
   }
 }

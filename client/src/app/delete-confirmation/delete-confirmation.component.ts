@@ -11,9 +11,17 @@ import { ModalEventsService } from '../../service/modal-events.service';
   styleUrl: './delete-confirmation.component.scss',
 })
 export class DeleteConfirmationComponent {
+  @Input() id?: string;
+
   constructor(private modalEventsService: ModalEventsService) {}
 
   onSubmit(): void {
-    this.modalEventsService.emitConfirmClick();
+    if (!this.id) {
+      throw new Error(
+        'There has to be an id to uniquely identify the resource to delete'
+      );
+    }
+
+    this.modalEventsService.emitConfirmClick(this.id);
   }
 }

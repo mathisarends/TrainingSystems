@@ -26,64 +26,8 @@
         <app-training-plan-card
           [trainingPlan]="trainingPlan"
           [columnClass]="getColumnClass(i)"
+          (changedPlanConstellation)="onChangedPlanConstellation()"
         ></app-training-plan-card>
-        <!-- <div class="card card-custom bg-white border-white border-0">
-          <div
-            class="card-custom-img"
-            [ngStyle]="{
-              'background-image':
-                'url(' +
-                (trainingPlan.coverImageBase64 ||
-                  'https://images.unsplash.com/photo-1477862096227-3a1bb3b08330?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=60') +
-                ')'
-            }"
-          ></div>
-          <div class="card-custom-avatar">
-            <img
-              class="img-fluid"
-              [src]="trainingPlan.pictureUrl"
-              alt="Avatar"
-            />
-          </div>
-          <div class="card-body" style="overflow-y: auto">
-            <h4 class="card-title">{{ trainingPlan.title }}</h4>
-            <p class="card-text">
-              {{ trainingPlan.trainingFrequency }} Trainings / Woche
-            </p>
-            <p class="card-text">
-              Zuletzt angesehen{{ trainingPlan.lastUpdated }}
-            </p>
-          </div>
-          <div
-            class="card-footer"
-            style="background: inherit; border-color: inherit"
-          >
-            <button
-              type="button"
-              class="btn btn-light btn-md m-1"
-              (click)="viewTrainingPlan(trainingPlan.id)"
-              appTooltip="Ansehen"
-            >
-              <i class="bx bx-show"></i>
-            </button>
-            <button
-              type="button"
-              class="btn btn-light btn-md m-1"
-              (click)="editTrainingPlan(trainingPlan.id)"
-              appTooltip="Bearbeiten"
-            >
-              <i class="bx bx-edit"></i>
-            </button>
-            <button
-              type="button"
-              class="btn btn-light btn-md m-1"
-              (click)="deleteTrainingPlan(trainingPlan.id)"
-              appTooltip="Löschen"
-            >
-              <i class="bx bx-trash"></i>
-            </button>
-          </div>
-        </div> -->
       </div>
       } }
     </div>
