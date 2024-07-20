@@ -34,6 +34,8 @@ export class ProfileComponent implements OnInit {
   profileImageElement!: ElementRef;
   @ViewChild('fileInput', { static: false }) fileInputElement!: ElementRef;
 
+  activeTab: string = 'Freunde';
+
   private subscription: Subscription = new Subscription();
 
   tabs = [
@@ -122,5 +124,9 @@ export class ProfileComponent implements OnInit {
         newProfilePicture: newProfilePicture,
       }
     );
+  }
+
+  onTabSelected(tabTitle: string) {
+    this.activeTab = tabTitle;
   }
 }

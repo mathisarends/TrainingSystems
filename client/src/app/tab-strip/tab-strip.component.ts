@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-tab-strip',
@@ -9,8 +9,10 @@ import { Component, Input } from '@angular/core';
 })
 export class TabStripComponent {
   @Input() tabs: { title: string; active?: boolean }[] = [];
+  @Output() tabSelected = new EventEmitter<string>();
 
-  setActiveTab(index: number) {
-    this.tabs.forEach((tab, i) => (tab.active = i === index));
+  selectTab(selectedTab: { title: string }) {
+    this.tabs.forEach((tab) => (tab.active = tab.title === selectedTab.title));
+    this.tabSelected.emit(selectedTab.title);
   }
 }

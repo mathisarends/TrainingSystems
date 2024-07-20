@@ -34,7 +34,6 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private modalService: ModalService,
     private modalEventsService: ModalEventsService,
     private trainingPlanService: TrainingPlanService,
     private httpClient: HttpClientService,
@@ -86,8 +85,6 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
         );
 
         this.trainingPlanService.trainingPlanChanged();
-
-        this.modalService.close(); // Close the modal on success
       } catch (error) {
         if (error instanceof HttpErrorResponse) {
           console.error('Error creating training plan:', error);
