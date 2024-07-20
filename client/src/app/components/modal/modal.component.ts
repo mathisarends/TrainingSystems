@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { ModalService } from '../../../service/modalService';
 import { ModalSize } from '../../../service/modalSize';
+import { ModalEventsService } from '../../../service/modal-events.service';
 
 @Component({
   selector: 'app-modal',
@@ -28,7 +29,8 @@ export class ModalComponent implements AfterViewInit {
 
   constructor(
     private environmentInjector: EnvironmentInjector,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private modalEventService: ModalEventsService
   ) {}
 
   ngAfterViewInit() {
@@ -55,6 +57,8 @@ export class ModalComponent implements AfterViewInit {
   }
 
   close() {
+    this.modalEventService.emitAbortClick();
+
     this.modalService.close();
   }
 

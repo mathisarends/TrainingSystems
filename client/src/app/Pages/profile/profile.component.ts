@@ -75,7 +75,22 @@ export class ProfileComponent implements OnInit {
         this.uploadProfilePicture()
       )
     );
+
+    this.subscription.add(
+      this.modalEventsService.abortClick$.subscribe(() =>
+        this.restoreOriginalProfilePicture()
+      )
+    );
   }
+
+  restoreOriginalProfilePicture() {
+    this.renderer.setAttribute(
+      this.profileImageElement.nativeElement,
+      'src',
+      this.profile.pictureUrl ?? '/images/profile-placeholder.webp'
+    );
+  }
+
   uploadProfilePicture() {
     const currentProfileImageUrl = this.profileImageElement.nativeElement.src;
 
