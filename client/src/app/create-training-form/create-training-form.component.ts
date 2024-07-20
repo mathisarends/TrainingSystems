@@ -106,7 +106,15 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
    * @param event - The file input change event.
    */
   handleImageUpload(event: any) {
+    console.log(
+      '🚀 ~ CreateTrainingFormComponent ~ handleImageUpload ~ event:',
+      event
+    );
     this.imageUploadService.handleImageUpload(event, (result: string) => {
+      console.log(
+        '🚀 ~ CreateTrainingFormComponent ~ this.imageUploadService.handleImageUpload ~ this.coverImage:',
+        this.coverImage
+      );
       if (this.coverImage) {
         this.coverImage.nativeElement.src = result;
       }
