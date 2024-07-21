@@ -1,55 +1,59 @@
+<!-- Signup Form -->
 <section class="container forms">
-  <div class="form login">
+  <div class="form signup">
     <div class="form-content">
-      <header>Login</header>
+      <header>Signup</header>
       <form (submit)="onSubmit($event)">
         <div class="field input-field">
           <input
-            type="email"
-            placeholder="Email"
+            type="text"
+            placeholder="Username"
+            name="username"
             class="input"
-            name="email"
-            autocomplete="off"
           />
         </div>
         <div class="field input-field">
+          <input type="email" placeholder="Email" name="email" class="input" />
+        </div>
+        <div class="field input-field">
           <input
-            autocomplete="off"
             type="password"
-            placeholder="Password"
-            class="password"
+            placeholder="Create password"
             name="password"
+            class="password"
           />
           <i
             class="bx bx-hide eye-icon"
             (click)="togglePasswordVisibility($event)"
           ></i>
         </div>
-
+        <div class="field input-field">
+          <input
+            type="password"
+            placeholder="Confirm password"
+            name="confirmPassword"
+            class="password"
+          />
+          <i
+            class="bx bx-hide eye-icon"
+            (click)="togglePasswordVisibility($event)"
+          ></i>
+        </div>
         <div class="field button-field">
-          <button>Login</button>
+          <button>Signup</button>
         </div>
       </form>
       <div class="form-link">
-        <span>
-          Don't have an account?
-          <a
-            href="/register"
-            class="link signup-link"
-            (click)="navigateTo($event)"
-          >
-            Signup
-          </a>
-        </span>
-      </div>
-      <div class="form-link">
         <span
-          >Forgot Password?
-          <a href="#" class="forgot-pass">Click here </a></span
+          >Already have an account?
+          <a href="/login" class="link login-link" (click)="navigateTo($event)"
+            >Login</a
+          ></span
         >
       </div>
     </div>
     <div class="line"></div>
+
     <div class="media-options">
       <div
         id="g_id_onload"

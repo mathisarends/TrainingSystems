@@ -4,17 +4,10 @@
       <header>Login</header>
       <form (submit)="onSubmit($event)">
         <div class="field input-field">
-          <input
-            type="email"
-            placeholder="Email"
-            class="input"
-            name="email"
-            autocomplete="off"
-          />
+          <input type="email" placeholder="Email" class="input" name="email" />
         </div>
         <div class="field input-field">
           <input
-            autocomplete="off"
             type="password"
             placeholder="Password"
             class="password"
@@ -25,7 +18,9 @@
             (click)="togglePasswordVisibility($event)"
           ></i>
         </div>
-
+        <div class="form-link">
+          <a href="#" class="forgot-pass">Forgot password?</a>
+        </div>
         <div class="field button-field">
           <button>Login</button>
         </div>
@@ -41,12 +36,6 @@
             Signup
           </a>
         </span>
-      </div>
-      <div class="form-link">
-        <span
-          >Forgot Password?
-          <a href="#" class="forgot-pass">Click here </a></span
-        >
       </div>
     </div>
     <div class="line"></div>
