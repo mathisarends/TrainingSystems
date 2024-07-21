@@ -7,7 +7,7 @@ import {
   acceptFriendRequest,
   getAllFriendRequests,
   getFriendSuggestions
-} from 'controller/friendShipController.js';
+} from '../controller/friendShipController.js';
 
 const router = express.Router();
 

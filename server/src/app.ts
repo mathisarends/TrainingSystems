@@ -31,9 +31,8 @@ async function configureApp(app: Express) {
   app.use('/user', userRouter);
   app.use('/training', trainingRouter);
   app.use('/exercise', exerciseRouter);
-  app.use('friendship', friendShipRouter);
+  app.use('/friendship', friendShipRouter);
 }
-
 export async function start() {
   const app = express();
   await configureApp(app);

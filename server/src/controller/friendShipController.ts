@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { MongoGenericDAO } from 'models/mongo-generic.dao.js';
 import { User } from '../../../shared/models/user.js';
 import { Friendship } from '../../../shared/models/friendShip.js';
-import { InviteStatus } from 'routes/inviteStatus.js';
+import { InviteStatus } from '../routes/inviteStatus.js';
 
 export async function getAllFriends(req: Request, res: Response) {
   const user = await getUserObj(req, res);
