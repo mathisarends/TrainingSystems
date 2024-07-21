@@ -13,11 +13,11 @@ import { ModalService } from '../../../service/modalService';
 import { ChangeProfilePictureConfirmationComponent } from '../../change-profile-picture-confirmation/change-profile-picture-confirmation.component';
 import { ModalSize } from '../../../service/modalSize';
 import { ModalEventsService } from '../../../service/modal-events.service';
-import { first, firstValueFrom, Subscription } from 'rxjs';
-import { HttpClientService } from '../../../service/http-client.service';
+import { firstValueFrom, Subscription } from 'rxjs';
+import { HttpClientService } from '../../../service/http/http-client.service';
 import { HttpMethods } from '../../types/httpMethods';
-import { TabStripComponent } from '../../tab-strip/tab-strip.component';
-import { HttpErrorHandlerService } from '../../http-error-handler.service';
+
+import { HttpErrorHandlerService } from '../../../service/http/http-error-handler.service';
 import { FriendCardComponent } from '../../components/friend-card/friend-card.component';
 import { TooltipDirective } from '../../tooltip/tooltip.directive';
 import { Friend } from '../../components/friend-card/friend';
@@ -30,7 +30,6 @@ import { AlertComponent } from '../../components/alert/alert.component';
   standalone: true,
   imports: [
     SpinnerComponent,
-    TabStripComponent,
     FriendCardComponent,
     TooltipDirective,
     AlertComponent,

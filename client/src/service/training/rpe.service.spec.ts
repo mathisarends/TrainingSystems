@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { RpeService } from './rpe.service';
+import { RpeService } from '../service/training/rpe.service';
 
 describe('RpeService', () => {
   let service: RpeService;

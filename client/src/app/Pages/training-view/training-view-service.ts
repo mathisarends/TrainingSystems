@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClientService } from '../../service/http-client.service';
+import { HttpClientService } from '../../../service/http/http-client.service';
 import { firstValueFrom, Observable } from 'rxjs';
-import { HttpMethods } from '../types/httpMethods';
+import { HttpMethods } from '../../types/httpMethods';
 import { ExerciseDataDTO } from './exerciseDataDto';
 import { TrainingPlanDto } from './trainingPlanDto';
 

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Friend } from './friend';
-import { HttpClientService } from '../../../service/http-client.service';
+import { HttpClientService } from '../../../service/http/http-client.service';
 import { HttpMethods } from '../../types/httpMethods';
 import { firstValueFrom } from 'rxjs';
 

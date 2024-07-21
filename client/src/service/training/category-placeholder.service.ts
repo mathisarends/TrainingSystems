@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Renderer2 } from '@angular/core';
-import { FormService } from './form.service';
+import { FormService } from '../form/form.service';
 import { table } from 'console';
 
 @Injectable({

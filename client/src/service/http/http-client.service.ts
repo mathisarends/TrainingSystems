@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { HttpMethods } from '../app/types/httpMethods';
-import { environment } from '../app/config/environment';
+import { HttpMethods } from '../../app/types/httpMethods';
+import { environment } from '../../app/config/environment';
 
 /**
  * @description

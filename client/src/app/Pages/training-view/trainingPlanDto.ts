@@ -1,4 +1,4 @@
-import { TrainingDay } from '../../../../shared/models/training/trainingDay';
+import { TrainingDay } from '../../../../../shared/models/training/trainingDay';
 
 export class TrainingPlanDto {
   title!: string;

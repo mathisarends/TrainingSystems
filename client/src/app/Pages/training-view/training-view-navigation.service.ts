@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { TrainingPlanDto } from './trainingPlanDto';
-import { FormService } from '../form.service';
+import { FormService } from '../../../service/form/form.service';
 
 @Injectable({
   providedIn: 'root',

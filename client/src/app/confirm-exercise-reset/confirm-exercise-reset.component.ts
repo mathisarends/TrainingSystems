@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { HttpMethods } from '../types/httpMethods';
-import { HttpClientService } from '../../service/http-client.service';
-import { ExerciseService } from '../exercise.service';
+import { HttpClientService } from '../../service/http/http-client.service';
+import { ExerciseService } from '../../service/exercise/exercise.service';
 
 @Component({
   selector: 'app-confirm-exercise-reset',

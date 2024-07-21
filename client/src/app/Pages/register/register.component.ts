@@ -1,8 +1,8 @@
 import { Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { HttpClientService } from '../../service/http-client.service.js';
-import { HttpMethods } from '../types/httpMethods';
+import { HttpClientService } from '../../../service/http/http-client.service.js';
+import { HttpMethods } from '../../types/httpMethods.js';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DOCUMENT } from '@angular/common';
 

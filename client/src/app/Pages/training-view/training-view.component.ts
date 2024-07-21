@@ -14,24 +14,23 @@ import {
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { TrainingViewService } from './training-view-service';
-import { FormService } from '../form.service';
-import { RpeService } from '../rpe.service';
-import { EstMaxService } from '../estmax.service';
+import { FormService } from '../../../service/form/form.service';
+import { RpeService } from '../../../service/training/rpe.service';
+import { EstMaxService } from '../../estmax.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CategoryPlaceholderService } from '../category-placeholder.service';
-import { ToastService } from '../toast/toast.service';
-import { SpinnerComponent } from '../components/spinner/spinner.component';
-import { PaginationComponent } from '../components/pagination/pagination.component';
-import { ProgressBarComponent } from '../progress-bar/progress-bar.component';
+import { CategoryPlaceholderService } from '../../../service/training/category-placeholder.service';
+import { ToastService } from '../../components/toast/toast.service';
+import { SpinnerComponent } from '../../components/spinner/spinner.component';
+import { PaginationComponent } from '../../components/pagination/pagination.component';
 import { ExerciseDataDTO } from './exerciseDataDto';
 import { TrainingPlanDto } from './trainingPlanDto';
-import { AutoSaveService } from '../auto-save.service';
+import { AutoSaveService } from '../../auto-save.service';
 import { TrainingViewNavigationService } from './training-view-navigation.service';
 import { forkJoin, BehaviorSubject, EMPTY } from 'rxjs';
 import { catchError, take, tap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
-import { SwipeService } from '../../service/swipe/swipe.service';
+import { SwipeService } from '../../../service/swipe/swipe.service';
 
 /**
  * Component to manage and display the training view.
@@ -40,13 +39,7 @@ import { SwipeService } from '../../service/swipe/swipe.service';
 @Component({
   selector: 'app-training-view',
   standalone: true,
-  imports: [
-    SpinnerComponent,
-    CommonModule,
-    FormsModule,
-    PaginationComponent,
-    ProgressBarComponent,
-  ],
+  imports: [SpinnerComponent, CommonModule, FormsModule, PaginationComponent],
   templateUrl: './training-view.component.html',
   styleUrls: ['./training-view.component.scss'],
 })

@@ -18,11 +18,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { firstValueFrom, Subscription } from 'rxjs';
-import { HttpClientService } from '../../service/http-client.service';
+import { HttpClientService } from '../../service/http/http-client.service';
 import { CommonModule } from '@angular/common';
 import { SpinnerComponent } from '../components/spinner/spinner.component';
 import { ModalService } from '../../service/modalService';
-import { TrainingPlanService } from '../training-plan.service';
+import { TrainingPlanService } from '../../service/training/training-plan.service';
 import { ImageUploadService } from '../image-upload.service';
 
 /**

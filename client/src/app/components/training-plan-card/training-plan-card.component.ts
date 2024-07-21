@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TrainingPlanCardView } from '../../../../../shared/models/dtos/training/trainingDto.types';
 import { firstValueFrom, Subscription } from 'rxjs';
-import { HttpClientService } from '../../../service/http-client.service';
+import { HttpClientService } from '../../../service/http/http-client.service';
 import { HttpMethods } from '../../types/httpMethods';
 import { Router } from '@angular/router';
 import { ModalService } from '../../../service/modalService';

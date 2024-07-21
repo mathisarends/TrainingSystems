@@ -10,10 +10,10 @@ import { firstValueFrom, Subscription } from 'rxjs';
 import { ModalEventsService } from '../../service/modal-events.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpClientService } from '../../service/http-client.service';
+import { HttpClientService } from '../../service/http/http-client.service';
 import { HttpMethods } from '../types/httpMethods';
 import { HttpErrorResponse } from '@angular/common/http';
-import { TrainingPlanService } from '../training-plan.service';
+import { TrainingPlanService } from '../../service/training/training-plan.service';
 import { ImageUploadService } from '../image-upload.service';
 import { ModalService } from '../../service/modalService';
 
