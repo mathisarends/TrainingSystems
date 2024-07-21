@@ -119,10 +119,23 @@ export async function getFriendSuggestions(req: Request, res: Response) {
   }
 
   const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
+  const friendshipDAO: MongoGenericDAO<Friendship> = req.app.locals.friendshipDAO;
 
   try {
+    // Get all users
     const users = await userDAO.findAll({});
-    const suggestions = users.filter(u => u.id !== user.id);
+
+    const friendships = await friendshipDAO.findAll({ userId: user.id, inviteStatus: InviteStatus.ACCEPTED });
+    const friendIds = friendships.map(f => f.friendId);
+
+    const suggestions = users
+      .filter((u: User) => u.id !== user.id && !friendIds.includes(u.id))
+      .map(u => ({
+        name: u.username,
+        email: u.email,
+        pictureUrl: u.pictureUrl
+      }));
+
     res.status(200).json({ suggestions });
   } catch (error) {
     const err = error as Error;

@@ -12,7 +12,7 @@ import {
 const router = express.Router();
 
 // Get all friends for a user
-router.get('/:userId', authService.authenticationMiddleware, getAllFriends);
+router.get('/', authService.authenticationMiddleware, getAllFriends);
 
 // Send a friend request
 router.post('/request/:userId/:friendId', authService.authenticationMiddleware, sendFriendRequest);
@@ -27,6 +27,6 @@ router.post('/accept/:userId/:friendId', authService.authenticationMiddleware, a
 router.get('/requests/:userId', authService.authenticationMiddleware, getAllFriendRequests);
 
 // Get friend suggestions for a user
-router.get('/suggestions/:userId', authService.authenticationMiddleware, getFriendSuggestions);
+router.get('/suggestions', authService.authenticationMiddleware, getFriendSuggestions);
 
 export default router;

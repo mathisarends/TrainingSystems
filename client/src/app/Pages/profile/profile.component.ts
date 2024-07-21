@@ -13,7 +13,7 @@ import { ModalService } from '../../../service/modalService';
 import { ChangeProfilePictureConfirmationComponent } from '../../change-profile-picture-confirmation/change-profile-picture-confirmation.component';
 import { ModalSize } from '../../../service/modalSize';
 import { ModalEventsService } from '../../../service/modal-events.service';
-import { Subscription } from 'rxjs';
+import { first, firstValueFrom, Subscription } from 'rxjs';
 import { HttpClientService } from '../../../service/http-client.service';
 import { HttpMethods } from '../../types/httpMethods';
 import { TabStripComponent } from '../../tab-strip/tab-strip.component';
@@ -54,91 +54,8 @@ export class ProfileComponent implements OnInit {
     { title: 'Ausstehend' },
   ];
 
-  filteredFriends: Friend[];
-
-  friends = [
-    {
-      name: 'Nick FH',
-      username: 'nick.fh@example.com',
-      pictureUrl: '',
-    },
-    {
-      name: 'Symi',
-      username: 'symi.wy@example.com',
-      pictureUrl: '',
-    },
-    {
-      name: 'Adam',
-      username: 'adam.toufaili@example.com',
-      pictureUrl: '',
-    },
-    {
-      name: 'Lorenz',
-      username: 'lorenz.98@example.com',
-      pictureUrl: '',
-    },
-    {
-      name: 'Marie Wienroth',
-      username: 'marie.wienroth@example.com',
-      pictureUrl: '',
-    },
-    {
-      name: 'Mika',
-      username: 'mika.lanczek@example.com',
-      pictureUrl: '',
-    },
-    {
-      name: 'Mary',
-      username: 'mary.k12@example.com',
-      pictureUrl: '',
-    },
-    {
-      name: 'Ines',
-      username: 'ines.263@example.com',
-      pictureUrl: '',
-    },
-    {
-      name: 'Nick FH',
-      username: 'nick.fh@example.com',
-      pictureUrl: '',
-    },
-    {
-      name: 'Symi',
-      username: 'symi.wy@example.com',
-      pictureUrl: '',
-    },
-    {
-      name: 'Adam',
-      username: 'adam.toufaili@example.com',
-      pictureUrl: '',
-    },
-    {
-      name: 'Lorenz',
-      username: 'lorenz.98@example.com',
-      pictureUrl: '',
-    },
-    {
-      name: 'Marie Wienroth',
-      username: 'marie.wienroth@example.com',
-      pictureUrl: '',
-    },
-    {
-      name: 'Mika',
-      username: 'mika.lanczek@example.com',
-      pictureUrl: '',
-    },
-    {
-      name: 'Mary',
-      username: 'mary.k12@example.com',
-      pictureUrl: '',
-    },
-    {
-      name: 'Ines',
-      username: 'ines.263@example.com',
-      pictureUrl: '',
-    },
-  ];
-
+  filteredFriends: Friend[] = [];
+  friends: Friend[] = [];
   constructor(
     private profileService: ProfileService,
     private imageUploadService: ImageUploadService,
@@ -147,11 +64,9 @@ export class ProfileComponent implements OnInit {
     private modalEventsService: ModalEventsService,
     private httpService: HttpClientService,
     private httpErrorHandler: HttpErrorHandlerService
-  ) {
-    this.filteredFriends = this.friends;
-  }
+  ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.httpErrorHandler
       .handleResponse(this.profileService.getProfile())
       .subscribe({
@@ -178,6 +93,13 @@ export class ProfileComponent implements OnInit {
         this.restoreOriginalProfilePicture()
       )
     );
+
+    const response = await firstValueFrom(
+      this.httpService.request<any>(HttpMethods.GET, 'friendship')
+    );
+
+    this.friends = response.friends;
+    this.filteredFriends = this.friends;
   }
 
   restoreOriginalProfilePicture() {
@@ -247,20 +169,20 @@ export class ProfileComponent implements OnInit {
     this.filteredFriends = this.friends.filter(
       (friend) =>
         friend.name.toLowerCase().includes(searchTerm) ||
-        friend.username.toLowerCase().includes(searchTerm)
+        friend.email.toLowerCase().includes(searchTerm)
     );
   }
 
   openFriendRequestsModal() {
     throw new Error('Method not implemented.');
   }
+
   openAddFriendModal() {
     this.modalService.open(
       FriendModalComponent,
       'Freunde hinzufügen',
       'Fertig',
-      ModalSize.LARGE,
-      { friends: this.friends }
+      ModalSize.LARGE
     );
   }
 }

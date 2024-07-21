@@ -3,6 +3,9 @@ import { Friend } from '../friend-card/friend';
 
 import { FriendCardComponent } from '../friend-card/friend-card.component';
 import { AlertComponent } from '../components/alert/alert.component';
+import { HttpClientService } from '../../service/http-client.service';
+import { HttpMethods } from '../types/httpMethods';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-friend-modal',
@@ -12,23 +15,27 @@ import { AlertComponent } from '../components/alert/alert.component';
   styleUrl: './friend-modal.component.scss',
 })
 export class FriendModalComponent {
-  @Input() friends?: Friend[];
-  filteredFriends?: Friend[];
+  friends: Friend[] = [];
+  filteredFriends: Friend[] = [];
 
-  constructor() {}
+  constructor(private httpService: HttpClientService) {}
 
-  ngOnInit() {
-    if (this.friends) {
-      this.filteredFriends = this.friends;
-    }
+  async ngOnInit() {
+    const response = await firstValueFrom(
+      this.httpService.request<any>(HttpMethods.GET, 'friendship/suggestions')
+    );
+
+    this.friends = response.suggestions;
+    this.filteredFriends = response.suggestions;
   }
 
   filterFriends(event: Event) {
     const searchTerm = (event.target as HTMLInputElement).value.toLowerCase();
+
     this.filteredFriends = this.friends?.filter(
       (friend) =>
         friend.name.toLowerCase().includes(searchTerm) ||
-        friend.username.toLowerCase().includes(searchTerm)
+        friend.email.toLowerCase().includes(searchTerm)
     );
   }
 }
