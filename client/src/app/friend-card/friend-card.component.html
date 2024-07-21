@@ -1,0 +1,16 @@
+<div class="card">
+  <div class="card-body d-flex align-items-center">
+    <img
+      [src]="friend.pictureUrl || '/images/profile-placeholder.webp'"
+      alt="Friend picture"
+      class="rounded-circle me-3"
+      width="50"
+      height="50"
+    />
+    <div class="flex-grow-1">
+      <h5 class="card-title mb-0">{{ friend.name }}</h5>
+      <p class="card-text text-muted">{{ friend.username }}</p>
+    </div>
+    <!-- <button class="custom-button"><i class="fas fa-user-plus"></i>Adden</button> -->
+  </div>
+</div>

@@ -53,40 +53,39 @@
         </li>
       </ul>
     </div>
+
     <div class="px-4 py-3">
-      <h5 class="mb-0">About</h5>
-      <div class="p-4 rounded shadow-sm bg-light">
-        <p class="font-italic mb-0">{{ profile.username }}</p>
-        <p class="font-italic mb-0">{{ profile.email }}</p>
+      <h5 class="mb-0">Freunde</h5>
+      <div class="d-flex justify-content-end mb-3 mt-3">
+        <input
+          class="form-control me-2"
+          type="search"
+          placeholder="Freunde suchen"
+          aria-label="Search"
+          (input)="filterFriends($event)"
+        />
+        <button
+          type="button"
+          class="btn btn-light btn-md me-1"
+          appTooltip="Freunde hinzufügen"
+          (click)="openAddFriendModal()"
+        >
+          <i class="bx bx-user-plus"></i>
+        </button>
+        <button
+          type="button"
+          class="btn btn-light btn-md"
+          appTooltip="Friend Requests"
+          (click)="openFriendRequestsModal()"
+        >
+          <i class="bx bx-envelope"></i>
+        </button>
       </div>
-    </div>
-    <div class="px-4 py-3">
-      <h5 class="mb-0">Friends</h5>
-      <div class="d-flex justify-content-end mb-3">
-        <button class="btn btn-primary mr-2">+</button>
-        <button class="btn btn-secondary">Pending Friend Requests</button>
-      </div>
+
       <div class="row">
-        @for (friend of friends; track friend) {
+        @for (friend of filteredFriends; track friend) {
         <div class="col-12 mb-3">
-          <div class="card">
-            <div class="card-body d-flex align-items-center">
-              <img
-                [src]="friend.pictureUrl || '/images/profile-placeholder.webp'"
-                alt="Friend picture"
-                class="rounded-circle me-2"
-                width="50"
-                height="50"
-              />
-              <div class="flex-grow-1">
-                <h5 class="card-title mb-0">{{ friend.name }}</h5>
-                <p class="card-text text-muted">{{ friend.username }}</p>
-              </div>
-              <button class="btn btn-outline-primary btn-sm ml-auto">
-                <i class="fas fa-user-plus mr-1"></i>Adden
-              </button>
-            </div>
-          </div>
+          <app-friend-card [friend]="friend"></app-friend-card>
         </div>
         }
       </div>

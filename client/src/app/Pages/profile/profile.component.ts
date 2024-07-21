@@ -18,12 +18,20 @@ import { HttpClientService } from '../../../service/http-client.service';
 import { HttpMethods } from '../../types/httpMethods';
 import { TabStripComponent } from '../../tab-strip/tab-strip.component';
 import { HttpErrorHandlerService } from '../../http-error-handler.service';
+import { FriendCardComponent } from '../../friend-card/friend-card.component';
+import { TooltipDirective } from '../../tooltip/tooltip.directive';
+import { Friend } from '../../friend-card/friend';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   standalone: true,
-  imports: [SpinnerComponent, TabStripComponent],
+  imports: [
+    SpinnerComponent,
+    TabStripComponent,
+    FriendCardComponent,
+    TooltipDirective,
+  ],
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
@@ -44,45 +52,47 @@ export class ProfileComponent implements OnInit {
     { title: 'Ausstehend' },
   ];
 
+  filteredFriends: Friend[];
+
   friends = [
     {
       name: 'Nick FH',
-      username: 'nickboltee',
+      username: 'nick.fh@example.com',
       pictureUrl: '',
     },
     {
       name: 'Symi',
-      username: 'symi.wy',
+      username: 'symi.wy@example.com',
       pictureUrl: '',
     },
     {
       name: 'Adam',
-      username: 'adam.toufaili',
+      username: 'adam.toufaili@example.com',
       pictureUrl: '',
     },
     {
       name: 'Lorenz',
-      username: 'loroo_98',
+      username: 'lorenz.98@example.com',
       pictureUrl: '',
     },
     {
       name: 'Marie Wienroth',
-      username: 'marie_wienroth',
+      username: 'marie.wienroth@example.com',
       pictureUrl: '',
     },
     {
       name: 'Mika',
-      username: 'mika-lanczek',
+      username: 'mika.lanczek@example.com',
       pictureUrl: '',
     },
     {
       name: 'Mary',
-      username: 'marie_k12',
+      username: 'mary.k12@example.com',
       pictureUrl: '',
     },
     {
       name: 'Ines',
-      username: 'in263es',
+      username: 'ines.263@example.com',
       pictureUrl: '',
     },
   ];
@@ -95,7 +105,9 @@ export class ProfileComponent implements OnInit {
     private modalEventsService: ModalEventsService,
     private httpService: HttpClientService,
     private httpErrorHandler: HttpErrorHandlerService
-  ) {}
+  ) {
+    this.filteredFriends = this.friends;
+  }
 
   ngOnInit(): void {
     this.httpErrorHandler
@@ -186,5 +198,21 @@ export class ProfileComponent implements OnInit {
 
   onTabSelected(tabTitle: string) {
     this.activeTab = tabTitle;
+  }
+
+  filterFriends(event: Event) {
+    const searchTerm = (event.target as HTMLInputElement).value.toLowerCase();
+    this.filteredFriends = this.friends.filter(
+      (friend) =>
+        friend.name.toLowerCase().includes(searchTerm) ||
+        friend.username.toLowerCase().includes(searchTerm)
+    );
+  }
+
+  openFriendRequestsModal() {
+    throw new Error('Method not implemented.');
+  }
+  openAddFriendModal() {
+    throw new Error('Method not implemented.');
   }
 }
