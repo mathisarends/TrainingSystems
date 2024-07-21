@@ -57,7 +57,7 @@ export async function loginOAuth2(req: Request, res: Response): Promise<void> {
   try {
     const user = await userService.loginOAuth2User(userDAO, req.body.credential);
     authService.createAndSetToken({ id: user.id }, res);
-    res.redirect('http://localhost:4200?login=success');
+    res.redirect('http://localhost:4200/training?login=success');
   } catch (error) {
     res.status(500).json({ error: (error as unknown as Error).message });
   }

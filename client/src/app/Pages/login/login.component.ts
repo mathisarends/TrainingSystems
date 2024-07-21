@@ -4,6 +4,7 @@ import { HttpClientService } from '../../../service/http-client.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HttpMethods } from '../../types/httpMethods';
 import { DOCUMENT } from '@angular/common';
+import { ToastService } from '../../toast/toast.service';
 
 declare const google: any;
 
@@ -14,8 +15,34 @@ declare const google: any;
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent {
-  constructor(private router: Router, private httpClient: HttpClientService) {}
+export class LoginComponent implements OnInit {
+  constructor(
+    private router: Router,
+    private httpClient: HttpClientService,
+    private toastService: ToastService,
+    @Inject(DOCUMENT) private document: Document
+  ) {}
+
+  ngOnInit(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      // Prüfen, ob das Skript bereits existiert
+      if (this.document.getElementById('google-client-script')) {
+        resolve();
+        return;
+      }
+
+      // Skript erstellen und zum Head hinzufügen
+      const script = this.document.createElement('script');
+      script.id = 'google-client-script';
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.defer = true;
+      script.onload = () => resolve();
+      script.onerror = () =>
+        reject(new Error('Google script could not be loaded.'));
+      this.document.head.appendChild(script);
+    });
+  }
 
   async navigateTo(event: Event) {
     event.preventDefault();
@@ -62,12 +89,16 @@ export class LoginComponent {
       .subscribe({
         next: (response: Response) => {
           console.log('Login successful:', response);
-          this.router.navigate(['/']);
+          this.router.navigate(['/training']);
         },
         error: (error: HttpErrorResponse) => {
           console.error('Login error:', error);
           if (error.status === 401) {
             console.log('Unauthorized: Wrong credentials');
+            this.toastService.show(
+              'Ungültige Anmeldedaten',
+              'Die Kombination aus Nutzername und Passwort ist falsch'
+            );
           } else if (error.status === 400) {
             console.log('Bad request:', error.error);
           } else {

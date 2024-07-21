@@ -26,15 +26,16 @@
         </div>
       </form>
       <div class="form-link">
-        <span
-          >Don't have an account?
+        <span>
+          Don't have an account?
           <a
             href="/register"
             class="link signup-link"
             (click)="navigateTo($event)"
-            >Signup</a
-          ></span
-        >
+          >
+            Signup
+          </a>
+        </span>
       </div>
     </div>
     <div class="line"></div>
@@ -45,17 +46,19 @@
         data-context="signin"
         data-ux_mode="popup"
         data-login_uri="http://localhost:3000/user/login/oauth2"
-        data-auto_prompt="false"
+        data-itp_support="true"
       ></div>
 
+      <!-- über data-width ließe sich die breite steuern vllt kann man auf dieses attribut per js zugreifen?-->
       <div
         class="g_id_signin"
         data-type="standard"
         data-shape="rectangular"
         data-theme="outline"
-        data-text="signin_with"
+        data-text="continue_with"
         data-size="large"
-        data-logo_alignment="left"
+        data-logo_alignment="center"
+        data-width="240"
       ></div>
     </div>
   </div>
