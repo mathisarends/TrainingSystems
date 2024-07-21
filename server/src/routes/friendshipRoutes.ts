@@ -15,7 +15,7 @@ const router = express.Router();
 router.get('/', authService.authenticationMiddleware, getAllFriends);
 
 // Send a friend request
-router.post('/request/:userId/:friendId', authService.authenticationMiddleware, sendFriendRequest);
+router.post('/request/:friendId', authService.authenticationMiddleware, sendFriendRequest);
 
 // Delete a friend
 router.delete('/:userId/:friendId', authService.authenticationMiddleware, deleteFriend);

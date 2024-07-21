@@ -33,7 +33,7 @@ export async function sendFriendRequest(req: Request, res: Response) {
 
   try {
     const newFriendship = await friendshipDAO.create({
-      userId: req.params.userId,
+      userId: user.id,
       friendId: req.params.friendId,
       inviteStatus: InviteStatus.PENDING
     });
@@ -131,6 +131,7 @@ export async function getFriendSuggestions(req: Request, res: Response) {
     const suggestions = users
       .filter((u: User) => u.id !== user.id && !friendIds.includes(u.id))
       .map(u => ({
+        id: u.id,
         name: u.username,
         email: u.email,
         pictureUrl: u.pictureUrl

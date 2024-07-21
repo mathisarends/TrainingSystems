@@ -11,8 +11,13 @@
   (input)="filterFriends($event)"
 />
 
-@for (friend of filteredFriends; track friend) {
+@if (loading$ | async) {
+<app-spinner></app-spinner>
+} @else { @for (friend of friends$ | async; track friend.id) {
 <div class="col-12 mb-3">
-  <app-friend-card [friend]="friend"></app-friend-card>
+  <app-friend-card
+    [friend]="friend"
+    (friendRequestSend)="onFriendRequestSend($event)"
+  ></app-friend-card>
 </div>
-}
+} }

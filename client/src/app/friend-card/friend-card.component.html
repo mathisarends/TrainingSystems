@@ -11,6 +11,8 @@
       <h5 class="card-title mb-0">{{ friend.name }}</h5>
       <p class="card-text text-muted">{{ friend.email }}</p>
     </div>
-    <button class="custom-button"><i class="fas fa-user-plus"></i>Adden</button>
+    <button class="custom-button" (click)="onAddFriend()">
+      <i class="fas fa-user-plus"></i>Adden
+    </button>
   </div>
 </div>
