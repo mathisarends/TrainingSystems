@@ -11,7 +11,7 @@ import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { ProfileService } from '../../Pages/profile/profileService';
 import { User } from '../../types/user';
-import { SearchService } from '../../search.service';
+import { SearchService } from '../../../service/util/search.service';
 
 @Component({
   selector: 'app-header',

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
-import { AlertComponent } from '../components/alert/alert.component';
-import { ModalEventsService } from '../../service/modal-events.service';
+import { AlertComponent } from '../../components/alert/alert.component';
+import { ModalEventsService } from '../../../service/modal/modal-events.service';
 
 @Component({
   selector: 'app-delete-confirmation',

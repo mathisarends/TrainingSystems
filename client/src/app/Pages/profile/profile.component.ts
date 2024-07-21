@@ -8,20 +8,20 @@ import {
 import { ProfileService } from './profileService';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { User } from '../../types/user';
-import { ImageUploadService } from '../../image-upload.service';
-import { ModalService } from '../../../service/modalService';
+import { ImageUploadService } from '../../../service/util/image-upload.service';
+import { ModalService } from '../../../service/modal/modalService';
 import { ChangeProfilePictureConfirmationComponent } from '../../change-profile-picture-confirmation/change-profile-picture-confirmation.component';
-import { ModalSize } from '../../../service/modalSize';
-import { ModalEventsService } from '../../../service/modal-events.service';
+import { ModalSize } from '../../../service/modal/modalSize';
+import { ModalEventsService } from '../../../service/modal/modal-events.service';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { HttpClientService } from '../../../service/http/http-client.service';
 import { HttpMethods } from '../../types/httpMethods';
 
 import { HttpErrorHandlerService } from '../../../service/http/http-error-handler.service';
 import { FriendCardComponent } from '../../components/friend-card/friend-card.component';
-import { TooltipDirective } from '../../tooltip/tooltip.directive';
+import { TooltipDirective } from '../../../service/tooltip/tooltip.directive';
 import { Friend } from '../../components/friend-card/friend';
-import { FriendModalComponent } from '../../friend-modal/friend-modal.component';
+import { FriendModalComponent } from '../friend-modal/friend-modal.component';
 import { AlertComponent } from '../../components/alert/alert.component';
 
 @Component({

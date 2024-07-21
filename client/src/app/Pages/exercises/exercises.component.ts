@@ -1,17 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { HttpClientService } from '../../service/http/http-client.service';
+import { HttpClientService } from '../../../service/http/http-client.service';
 import { firstValueFrom, Subscription } from 'rxjs';
-import { HttpMethods } from '../types/httpMethods';
-import { Exercise } from '../../../../shared/models/exercise/exercise';
-import { SpinnerComponent } from '../components/spinner/spinner.component';
+import { HttpMethods } from '../../types/httpMethods';
+import { Exercise } from '../../../../../shared/models/exercise/exercise';
+import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { SearchService } from '../search.service';
-import { ModalService } from '../../service/modalService';
-import { ExerciseService } from '../../service/exercise/exercise.service';
+import { SearchService } from '../../../service/util/search.service';
+import { ModalService } from '../../../service/modal/modalService';
+import { ExerciseService } from '../../../service/exercise/exercise.service';
 import { ConfirmExerciseResetComponent } from '../confirm-exercise-reset/confirm-exercise-reset.component';
-import { ToastService } from '../components/toast/toast.service';
-import { ToastType } from '../components/toast/toastType';
+import { ToastService } from '../../components/toast/toast.service';
+import { ToastType } from '../../components/toast/toastType';
 
 @Component({
   selector: 'app-exercises',

@@ -7,7 +7,7 @@ import { TrainingPlansComponent } from './Pages/training-plans/training-plans.co
 import { StatisticsComponent } from './Pages/statistics/statistics.component';
 import { ProfileComponent } from './Pages/profile/profile.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
-import { ExercisesComponent } from './exercises/exercises.component';
+import { ExercisesComponent } from './Pages/exercises/exercises.component';
 import { TrainingViewComponent } from './Pages/training-view/training-view.component';
 
 export const routes: Routes = [

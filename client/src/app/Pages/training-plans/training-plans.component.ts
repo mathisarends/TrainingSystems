@@ -1,18 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ModalService } from '../../../service/modalService';
-import { CreateTrainingFormComponent } from '../../create-training-form/create-training-form.component';
+import { ModalService } from '../../../service/modal/modalService';
+import { CreateTrainingFormComponent } from '../create-training-form/create-training-form.component';
 import { HttpClientService } from '../../../service/http/http-client.service';
 import { HttpMethods } from '../../types/httpMethods';
 import { AlertComponent } from '../../components/alert/alert.component';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { TrainingPlanCardView } from '../../../../../shared/models/dtos/training/trainingDto.types.js';
 import { firstValueFrom, Subscription } from 'rxjs';
-import { SearchService } from '../../search.service';
+import { SearchService } from '../../../service/util/search.service';
 import { TrainingPlanService } from '../../../service/training/training-plan.service';
 import { CommonModule } from '@angular/common';
-import { TooltipDirective } from '../../tooltip/tooltip.directive';
+import { TooltipDirective } from '../../../service/tooltip/tooltip.directive';
 import { TrainingPlanCardComponent } from '../../components/training-plan-card/training-plan-card.component';
-import { ModalSize } from '../../../service/modalSize';
+import { ModalSize } from '../../../service/modal/modalSize';
 
 /**
  * Component to manage and display training plans.

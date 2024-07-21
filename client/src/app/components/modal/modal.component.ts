@@ -8,9 +8,9 @@ import {
   createComponent,
   ComponentRef,
 } from '@angular/core';
-import { ModalService } from '../../../service/modalService';
-import { ModalSize } from '../../../service/modalSize';
-import { ModalEventsService } from '../../../service/modal-events.service';
+import { ModalService } from '../../../service/modal/modalService';
+import { ModalSize } from '../../../service/modal/modalSize';
+import { ModalEventsService } from '../../../service/modal/modal-events.service';
 
 @Component({
   selector: 'app-modal',

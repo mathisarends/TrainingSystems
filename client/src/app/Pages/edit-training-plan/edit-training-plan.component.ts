@@ -8,9 +8,9 @@ import {
   ViewChild,
   AfterViewChecked,
 } from '@angular/core';
-import { HttpMethods } from '../types/httpMethods';
+import { HttpMethods } from '../../types/httpMethods';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ModalEventsService } from '../../service/modal-events.service';
+import { ModalEventsService } from '../../../service/modal/modal-events.service';
 import {
   FormBuilder,
   FormGroup,
@@ -18,12 +18,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { firstValueFrom, Subscription } from 'rxjs';
-import { HttpClientService } from '../../service/http/http-client.service';
+import { HttpClientService } from '../../../service/http/http-client.service';
 import { CommonModule } from '@angular/common';
-import { SpinnerComponent } from '../components/spinner/spinner.component';
-import { ModalService } from '../../service/modalService';
-import { TrainingPlanService } from '../../service/training/training-plan.service';
-import { ImageUploadService } from '../image-upload.service';
+import { SpinnerComponent } from '../../components/spinner/spinner.component';
+import { ModalService } from '../../../service/modal/modalService';
+import { TrainingPlanService } from '../../../service/training/training-plan.service';
+import { ImageUploadService } from '../../../service/util/image-upload.service';
 
 /**
  * Component for editing a training plan.

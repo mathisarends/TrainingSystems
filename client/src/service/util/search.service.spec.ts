@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { EstmaxService } from './estmax.service';
+import { SearchService } from '../service/util/search.service';
 
-describe('EstmaxService', () => {
-  let service: EstmaxService;
+describe('SearchService', () => {
+  let service: SearchService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(EstmaxService);
+    service = TestBed.inject(SearchService);
   });
 
   it('should be created', () => {
