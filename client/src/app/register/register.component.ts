@@ -1,9 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { HttpClientService } from '../../service/http-client.service.js';
 import { HttpMethods } from '../types/httpMethods';
 import { HttpErrorResponse } from '@angular/common/http';
+import { DOCUMENT } from '@angular/common';
+
+declare const google: any;
 
 @Component({
   selector: 'app-register',
@@ -13,7 +16,37 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrl: './register.component.scss',
 })
 export class RegisterComponent {
-  constructor(private router: Router, private httpClient: HttpClientService) {}
+  constructor(
+    private router: Router,
+    private httpClient: HttpClientService,
+    @Inject(DOCUMENT) private document: Document
+  ) {}
+
+  ngOnInit(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      // Prüfen, ob das Skript bereits existiert
+      const existingScript = this.document.getElementById(
+        'google-client-script'
+      );
+      if (existingScript) {
+        existingScript.remove();
+      }
+
+      // Skript erstellen und zum Head hinzufügen
+      const script = this.document.createElement('script');
+      script.id = 'google-client-script';
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.defer = true;
+      script.onload = () => {
+        google.accounts.id.initialize({});
+        resolve();
+      };
+      script.onerror = () =>
+        reject(new Error('Google script could not be loaded.'));
+      this.document.head.appendChild(script);
+    });
+  }
 
   async navigateTo(event: Event) {
     event.preventDefault();

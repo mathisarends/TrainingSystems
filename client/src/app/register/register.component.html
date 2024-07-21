@@ -43,7 +43,7 @@
           <button>Signup</button>
         </div>
       </form>
-      <div class="form-link">
+      <div class="form-link mt-3">
         <span
           >Already have an account?
           <a href="/login" class="link login-link" (click)="navigateTo($event)"
@@ -55,10 +55,26 @@
     <div class="line"></div>
 
     <div class="media-options">
-      <a href="#" class="field google">
-        <img src="/images/google.png" alt="" class="google-img" />
-        <span>Login with Google</span>
-      </a>
+      <div
+        id="g_id_onload"
+        data-client_id="643508334542-dlp04afd8ha9mt3v7pfc5mfkmqea3rqj.apps.googleusercontent.com"
+        data-context="signin"
+        data-ux_mode="popup"
+        data-login_uri="http://localhost:3000/user/login/oauth2"
+        data-itp_support="true"
+      ></div>
+
+      <!-- über data-width ließe sich die breite steuern vllt kann man auf dieses attribut per js zugreifen?-->
+      <div
+        class="g_id_signin"
+        data-type="standard"
+        data-shape="rectangular"
+        data-theme="outline"
+        data-text="continue_with"
+        data-size="large"
+        data-logo_alignment="center"
+        data-width="240"
+      ></div>
     </div>
   </div>
 </section>

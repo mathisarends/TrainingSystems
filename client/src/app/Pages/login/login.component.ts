@@ -26,9 +26,11 @@ export class LoginComponent implements OnInit {
   ngOnInit(): Promise<void> {
     return new Promise((resolve, reject) => {
       // Prüfen, ob das Skript bereits existiert
-      if (this.document.getElementById('google-client-script')) {
-        resolve();
-        return;
+      const existingScript = this.document.getElementById(
+        'google-client-script'
+      );
+      if (existingScript) {
+        existingScript.remove();
       }
 
       // Skript erstellen und zum Head hinzufügen
@@ -37,7 +39,10 @@ export class LoginComponent implements OnInit {
       script.src = 'https://accounts.google.com/gsi/client';
       script.async = true;
       script.defer = true;
-      script.onload = () => resolve();
+      script.onload = () => {
+        google.accounts.id.initialize({});
+        resolve();
+      };
       script.onerror = () =>
         reject(new Error('Google script could not be loaded.'));
       this.document.head.appendChild(script);

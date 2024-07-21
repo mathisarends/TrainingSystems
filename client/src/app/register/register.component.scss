@@ -3,34 +3,42 @@
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
 }
+
+::ng-deep .outlet-wrapper {
+  @media screen and (max-width: 768px) {
+    padding-inline: 0% !important;
+  }
+}
+
 .container {
-  height: calc(100vh - 200px);
+  height: 80vh;
   width: 100vw;
   display: flex;
   align-items: center;
   justify-content: center;
-  column-gap: 30px;
+  padding: 20px;
 }
+
 .form {
-  position: absolute;
   max-width: 430px;
   width: 100%;
   padding: 30px;
   border-radius: 6px;
   background: #fff;
   border: 1px solid rgb(226, 226, 226);
-  position: relative;
-  top: -200px;
 }
+
 header {
   font-size: 28px;
   font-weight: 600;
   color: #232836;
   text-align: center;
 }
+
 form {
   margin-top: 30px;
 }
+
 .form .field {
   position: relative;
   height: 50px;
@@ -38,6 +46,7 @@ form {
   margin-top: 20px;
   border-radius: 6px;
 }
+
 .field input,
 .field button {
   height: 100%;
@@ -47,14 +56,17 @@ form {
   font-weight: 400;
   border-radius: 6px;
 }
+
 .field input {
   outline: none;
   padding: 0 15px;
-  border: 1px solid#CACACA;
+  border: 1px solid #cacaca;
 }
+
 .field input:focus {
-  border-bottom-width: 2px;
+  border: 2px solid #0171d3 !important;
 }
+
 .eye-icon {
   position: absolute;
   top: 50%;
@@ -65,32 +77,43 @@ form {
   cursor: pointer;
   padding: 5px;
 }
+
 .field button {
   color: #fff;
   background-color: #0171d3;
   transition: all 0.3s ease;
   cursor: pointer;
 }
+
 .field button:hover {
   background-color: #016dcb;
 }
+
 .form-link {
   text-align: center;
-  margin-top: 10px;
+  margin-top: 15px;
 }
+
+.form-link:last-of-type {
+  margin-top: 0;
+}
+
 .form-link span,
 .form-link a {
   font-size: 14px;
   font-weight: 400;
   color: #232836;
 }
+
 .form a {
   color: #0171d3;
   text-decoration: none;
 }
+
 .form-content a:hover {
   text-decoration: underline;
 }
+
 .line {
   position: relative;
   height: 1px;
@@ -98,6 +121,7 @@ form {
   margin: 36px 0;
   background-color: #d4d4d4;
 }
+
 .line::before {
   content: "Or";
   position: absolute;
@@ -108,48 +132,21 @@ form {
   color: #8b8b8b;
   padding: 0 15px;
 }
-.media-options a {
+
+.media-options div,
+.media-options iframe {
+  width: 100%; /* Ensure full width */
   display: flex;
+  justify-content: center; /* Center the content inside */
   align-items: center;
-  justify-content: center;
 }
-a.facebook {
-  color: #fff;
-  background-color: #4267b2;
-}
-a.facebook .facebook-icon {
-  height: 28px;
-  width: 28px;
-  color: #0171d3;
-  font-size: 20px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #fff;
-}
-.facebook-icon,
-img.google-img {
-  position: absolute;
-  top: 50%;
-  left: 15px;
-  transform: translateY(-50%);
-}
-img.google-img {
-  height: 20px;
-  width: 20px;
-  object-fit: cover;
-}
-a.google {
-  border: 1px solid #cacaca;
-}
-a.google span {
-  font-weight: 500;
-  opacity: 0.6;
-  color: #232836;
-}
-@media screen and (max-width: 400px) {
+
+@media screen and (max-width: 482px) {
   .form {
-    padding: 20px 10px;
+    padding: 22.5px 20px;
+  }
+
+  .container {
+    padding: 0;
   }
 }
