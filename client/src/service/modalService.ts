@@ -60,6 +60,7 @@ export class ModalService {
     this.modalComponentRef.instance.size = size; // set the size
 
     if (componentData) {
+      console.log('🚀 ~ ModalService ~ componentData:', componentData);
       this.modalComponentRef.instance.childComponentData = componentData;
     }
   }

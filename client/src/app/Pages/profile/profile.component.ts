@@ -21,6 +21,7 @@ import { HttpErrorHandlerService } from '../../http-error-handler.service';
 import { FriendCardComponent } from '../../friend-card/friend-card.component';
 import { TooltipDirective } from '../../tooltip/tooltip.directive';
 import { Friend } from '../../friend-card/friend';
+import { FriendModalComponent } from '../../friend-modal/friend-modal.component';
 
 @Component({
   selector: 'app-profile',
@@ -40,6 +41,7 @@ export class ProfileComponent implements OnInit {
 
   @ViewChild('profileImage', { static: false })
   profileImageElement!: ElementRef;
+
   @ViewChild('fileInput', { static: false }) fileInputElement!: ElementRef;
 
   activeTab: string = 'Freunde';
@@ -55,6 +57,46 @@ export class ProfileComponent implements OnInit {
   filteredFriends: Friend[];
 
   friends = [
+    {
+      name: 'Nick FH',
+      username: 'nick.fh@example.com',
+      pictureUrl: '',
+    },
+    {
+      name: 'Symi',
+      username: 'symi.wy@example.com',
+      pictureUrl: '',
+    },
+    {
+      name: 'Adam',
+      username: 'adam.toufaili@example.com',
+      pictureUrl: '',
+    },
+    {
+      name: 'Lorenz',
+      username: 'lorenz.98@example.com',
+      pictureUrl: '',
+    },
+    {
+      name: 'Marie Wienroth',
+      username: 'marie.wienroth@example.com',
+      pictureUrl: '',
+    },
+    {
+      name: 'Mika',
+      username: 'mika.lanczek@example.com',
+      pictureUrl: '',
+    },
+    {
+      name: 'Mary',
+      username: 'mary.k12@example.com',
+      pictureUrl: '',
+    },
+    {
+      name: 'Ines',
+      username: 'ines.263@example.com',
+      pictureUrl: '',
+    },
     {
       name: 'Nick FH',
       username: 'nick.fh@example.com',
@@ -213,6 +255,12 @@ export class ProfileComponent implements OnInit {
     throw new Error('Method not implemented.');
   }
   openAddFriendModal() {
-    throw new Error('Method not implemented.');
+    this.modalService.open(
+      FriendModalComponent,
+      'Freunde hinzufügen',
+      'Fertig',
+      ModalSize.LARGE,
+      { friends: this.friends }
+    );
   }
 }

@@ -21,3 +21,16 @@
   opacity: 0;
   cursor: pointer;
 }
+
+::ng-deep .outlet-wrapper {
+  @media screen and (max-width: 768px) {
+    padding-inline: 0% !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}

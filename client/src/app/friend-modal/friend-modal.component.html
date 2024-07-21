@@ -1,1 +1,18 @@
-<p>friend-modal works!</p>
+<app-alert
+  alertType="light"
+  alertText="Deine Anfrage muss erst angenommen werden, damit du die Freunde in deiner Kontaktliste sehen kannst!"
+></app-alert>
+
+<input
+  class="form-control me-2 mt-2"
+  type="search"
+  placeholder="Freunde suchen"
+  aria-label="Search"
+  (input)="filterFriends($event)"
+/>
+
+@for (friend of filteredFriends; track friend) {
+<div class="col-12 mb-3">
+  <app-friend-card [friend]="friend"></app-friend-card>
+</div>
+}
