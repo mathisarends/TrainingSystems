@@ -44,6 +44,49 @@ export class ProfileComponent implements OnInit {
     { title: 'Ausstehend' },
   ];
 
+  friends = [
+    {
+      name: 'Nick FH',
+      username: 'nickboltee',
+      pictureUrl: '',
+    },
+    {
+      name: 'Symi',
+      username: 'symi.wy',
+      pictureUrl: '',
+    },
+    {
+      name: 'Adam',
+      username: 'adam.toufaili',
+      pictureUrl: '',
+    },
+    {
+      name: 'Lorenz',
+      username: 'loroo_98',
+      pictureUrl: '',
+    },
+    {
+      name: 'Marie Wienroth',
+      username: 'marie_wienroth',
+      pictureUrl: '',
+    },
+    {
+      name: 'Mika',
+      username: 'mika-lanczek',
+      pictureUrl: '',
+    },
+    {
+      name: 'Mary',
+      username: 'marie_k12',
+      pictureUrl: '',
+    },
+    {
+      name: 'Ines',
+      username: 'in263es',
+      pictureUrl: '',
+    },
+  ];
+
   constructor(
     private profileService: ProfileService,
     private imageUploadService: ImageUploadService,
