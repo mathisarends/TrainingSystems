@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Friend } from '../friend-card/friend';
+import { Friend } from '../components/friend-card/friend';
 
-import { FriendCardComponent } from '../friend-card/friend-card.component';
+import { FriendCardComponent } from '../components/friend-card/friend-card.component';
 import { SpinnerComponent } from '../components/spinner/spinner.component';
 import { AlertComponent } from '../components/alert/alert.component';
 import { HttpClientService } from '../../service/http-client.service';

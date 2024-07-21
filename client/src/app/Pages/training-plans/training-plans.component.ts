@@ -11,7 +11,7 @@ import { SearchService } from '../../search.service';
 import { TrainingPlanService } from '../../training-plan.service';
 import { CommonModule } from '@angular/common';
 import { TooltipDirective } from '../../tooltip/tooltip.directive';
-import { TrainingPlanCardComponent } from '../../training-plan-card/training-plan-card.component';
+import { TrainingPlanCardComponent } from '../../components/training-plan-card/training-plan-card.component';
 import { ModalSize } from '../../../service/modalSize';
 
 /**

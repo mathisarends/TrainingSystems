@@ -18,9 +18,9 @@ import { HttpClientService } from '../../../service/http-client.service';
 import { HttpMethods } from '../../types/httpMethods';
 import { TabStripComponent } from '../../tab-strip/tab-strip.component';
 import { HttpErrorHandlerService } from '../../http-error-handler.service';
-import { FriendCardComponent } from '../../friend-card/friend-card.component';
+import { FriendCardComponent } from '../../components/friend-card/friend-card.component';
 import { TooltipDirective } from '../../tooltip/tooltip.directive';
-import { Friend } from '../../friend-card/friend';
+import { Friend } from '../../components/friend-card/friend';
 import { FriendModalComponent } from '../../friend-modal/friend-modal.component';
 import { AlertComponent } from '../../components/alert/alert.component';
 

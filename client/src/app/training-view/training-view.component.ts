@@ -22,7 +22,7 @@ import { FormsModule } from '@angular/forms';
 import { CategoryPlaceholderService } from '../category-placeholder.service';
 import { ToastService } from '../toast/toast.service';
 import { SpinnerComponent } from '../components/spinner/spinner.component';
-import { PaginationComponent } from '../pagination/pagination.component';
+import { PaginationComponent } from '../components/pagination/pagination.component';
 import { ProgressBarComponent } from '../progress-bar/progress-bar.component';
 import { ExerciseDataDTO } from './exerciseDataDto';
 import { TrainingPlanDto } from './trainingPlanDto';

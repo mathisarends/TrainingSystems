@@ -1,17 +1,17 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TrainingPlanCardView } from '../../../../shared/models/dtos/training/trainingDto.types';
+import { TrainingPlanCardView } from '../../../../../shared/models/dtos/training/trainingDto.types';
 import { firstValueFrom, Subscription } from 'rxjs';
-import { HttpClientService } from '../../service/http-client.service';
-import { HttpMethods } from '../types/httpMethods';
+import { HttpClientService } from '../../../service/http-client.service';
+import { HttpMethods } from '../../types/httpMethods';
 import { Router } from '@angular/router';
-import { ModalService } from '../../service/modalService';
-import { EditTrainingPlanComponent } from '../edit-training-plan/edit-training-plan.component';
-import { ModalSize } from '../../service/modalSize';
+import { ModalService } from '../../../service/modalService';
+import { EditTrainingPlanComponent } from '../../edit-training-plan/edit-training-plan.component';
+import { ModalSize } from '../../../service/modalSize';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ModalEventsService } from '../../service/modal-events.service';
-import { DeleteConfirmationComponent } from '../delete-confirmation/delete-confirmation.component';
-import { TooltipDirective } from '../tooltip/tooltip.directive';
+import { ModalEventsService } from '../../../service/modal-events.service';
+import { DeleteConfirmationComponent } from '../../delete-confirmation/delete-confirmation.component';
+import { TooltipDirective } from '../../tooltip/tooltip.directive';
 
 /**
  * Component for displaying and managing a single training plan card.
