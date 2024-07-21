@@ -25,6 +25,7 @@ import { catchError, finalize } from 'rxjs/operators';
 export class FriendModalComponent implements OnInit {
   private loadingSubject = new BehaviorSubject<boolean>(true);
   private friendsSubject = new BehaviorSubject<Friend[]>([]);
+  private originalFriends: Friend[] = []; // Store the original friends list
 
   loading$ = this.loadingSubject.asObservable();
   friends$ = this.friendsSubject.asObservable();
@@ -42,6 +43,7 @@ export class FriendModalComponent implements OnInit {
         finalize(() => this.loadingSubject.next(false))
       )
       .subscribe((response) => {
+        this.originalFriends = response.suggestions; // Store the original friends list
         this.friendsSubject.next(response.suggestions);
       });
   }
@@ -49,14 +51,16 @@ export class FriendModalComponent implements OnInit {
   filterFriends(event: Event) {
     const searchTerm = (event.target as HTMLInputElement).value.toLowerCase();
 
-    this.friends$.subscribe((friends) => {
-      const filteredFriends = friends.filter(
+    if (searchTerm === '') {
+      this.friendsSubject.next(this.originalFriends);
+    } else {
+      const updatedFriends = this.originalFriends.filter(
         (friend) =>
           friend.name.toLowerCase().includes(searchTerm) ||
           friend.email.toLowerCase().includes(searchTerm)
       );
-      this.friendsSubject.next(filteredFriends);
-    });
+      this.friendsSubject.next(updatedFriends);
+    }
   }
 
   onFriendRequestSend(userId: string) {
