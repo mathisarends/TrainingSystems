@@ -1,8 +1,8 @@
 @if (isLoading) {
 <app-spinner></app-spinner>
 } @else {
-<div class="container profile-container my-md-5 my-0">
-  <div class="bg-white shadow rounded overflow-hidden">
+<div class="container my-md-5 my-0">
+  <div class="bg-white shadow rounded overflow-hidden profile-container">
     <div class="px-4 pt-0 pb-4 cover">
       <div class="media align-items-end profile-head">
         <div class="profile mr-3">
@@ -83,11 +83,16 @@
       </div>
 
       <div class="row">
-        @for (friend of filteredFriends; track friend) {
+        @if (filteredFriends.length === 0) {
+        <app-alert
+          alertType="light"
+          alertText="Du hast momentan keine Freunde. Füge einige hinzu, um dein Netzwerk zu erweitern!"
+        ></app-alert>
+        } @else { @for (friend of filteredFriends; track friend) {
         <div class="col-12 mb-3">
           <app-friend-card [friend]="friend"></app-friend-card>
         </div>
-        }
+        } }
       </div>
     </div>
   </div>

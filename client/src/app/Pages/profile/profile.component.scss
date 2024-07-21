@@ -22,6 +22,10 @@
   cursor: pointer;
 }
 
+.profile-container {
+  min-height: 90vh;
+}
+
 ::ng-deep .outlet-wrapper {
   @media screen and (max-width: 768px) {
     padding-inline: 0% !important;

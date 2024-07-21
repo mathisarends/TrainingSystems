@@ -22,6 +22,7 @@ import { FriendCardComponent } from '../../friend-card/friend-card.component';
 import { TooltipDirective } from '../../tooltip/tooltip.directive';
 import { Friend } from '../../friend-card/friend';
 import { FriendModalComponent } from '../../friend-modal/friend-modal.component';
+import { AlertComponent } from '../../components/alert/alert.component';
 
 @Component({
   selector: 'app-profile',
@@ -32,6 +33,7 @@ import { FriendModalComponent } from '../../friend-modal/friend-modal.component'
     TabStripComponent,
     FriendCardComponent,
     TooltipDirective,
+    AlertComponent,
   ],
   styleUrls: ['./profile.component.scss'],
 })
@@ -99,6 +101,7 @@ export class ProfileComponent implements OnInit {
     );
 
     this.friends = response.friends;
+
     this.filteredFriends = this.friends;
   }
 
