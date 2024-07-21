@@ -14,49 +14,14 @@ declare const google: any;
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnInit {
-  constructor(
-    private router: Router,
-    private httpClient: HttpClientService,
-    @Inject(DOCUMENT) private document: Document
-  ) {}
-
-  ngOnInit(): void {
-    this.loadGoogleScript()
-      .then(() => {
-        google.accounts.id.initialize({
-          client_id:
-            '643508334542-dlp04afd8ha9mt3v7pfc5mfkmqea3rqj.apps.googleusercontent.com',
-          callback: (response: any) => this.handleCredentialResponse(response),
-          ux_mode: 'redirect', // Set the ux_mode to redirect
-          login_uri: 'http://localhost:4200', // Change this to your redirect URI
-        });
-      })
-      .catch((error) => {
-        console.error('Error loading Google script:', error);
-      });
-  }
-
-  private loadGoogleScript(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const script = this.document.createElement('script');
-      script.src = 'https://accounts.google.com/gsi/client';
-      script.async = true;
-      script.defer = true;
-      script.onload = () => resolve();
-      script.onerror = () =>
-        reject(new Error('Google script could not be loaded.'));
-      this.document.head.appendChild(script);
-    });
-  }
+export class LoginComponent {
+  constructor(private router: Router, private httpClient: HttpClientService) {}
 
   async navigateTo(event: Event) {
     event.preventDefault();
 
     const linkElement = event.target as HTMLAnchorElement;
     const url = new URL(linkElement.href).pathname;
-
-    linkElement.classList.add('active');
 
     try {
       await this.router.navigate([url]);
@@ -108,29 +73,6 @@ export class LoginComponent implements OnInit {
           } else {
             console.log('An unknown error occurred');
           }
-        },
-      });
-  }
-
-  onGoogleLogin(event: Event): void {
-    event.preventDefault();
-    google.accounts.id.prompt(); // Trigger the Google sign-in redirect
-  }
-
-  handleCredentialResponse(response: any): void {
-    console.log('Encoded JWT ID token: ' + response.credential);
-
-    this.httpClient
-      .request<any>(HttpMethods.POST, 'user/login/oauth2', {
-        credential: response.credential,
-      })
-      .subscribe({
-        next: (response: any) => {
-          console.log('Google Login successful:', response);
-          this.router.navigate(['/']);
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Google Login error:', error);
         },
       });
   }

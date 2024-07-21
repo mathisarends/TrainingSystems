@@ -12,7 +12,6 @@ import { ExercisesComponent } from './exercises/exercises.component';
 import { TrainingViewComponent } from './training-view/training-view.component';
 
 export const routes: Routes = [
-  { path: '', component: LandingComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'training', component: TrainingPlansComponent },
