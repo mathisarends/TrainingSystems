@@ -10,4 +10,9 @@ router.post('/login/oauth2', userController.loginOAuth2);
 router.get('/profile', authService.authenticationMiddleware, userController.getProfile);
 router.post('/update-profile-picture', authService.authenticationMiddleware, userController.updateProfilePicture);
 
+router.post('/logout', async (req, res) => {
+  authService.removeToken(res);
+  res.status(200).json({ message: 'Token erfolgreicht entfernt ' });
+});
+
 export default router;

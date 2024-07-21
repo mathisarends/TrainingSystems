@@ -90,19 +90,11 @@
             >
           </li>
           <li><hr class="dropdown-divider" /></li>
-          @if (isAuthenticated) {
-          <li>
-            <a class="dropdown-item" href="#" (click)="handleLogout($event)"
-              >Sign out</a
-            >
-          </li>
-          } @else {
           <li>
             <a class="dropdown-item" href="#" (click)="handleLogin($event)"
               >Sign in</a
             >
           </li>
-          }
         </ul>
       </div>
     </div>

@@ -9,9 +9,6 @@ import {
 } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { ModalService } from '../../../service/modalService';
-import { LoginComponent } from '../../Pages/login/login.component';
-import { AuthenticatorService } from '../../auth/authenticator.service';
 import { ProfileService } from '../../Pages/profile/profileService';
 import { User } from '../../types/user';
 import { SearchService } from '../../search.service';
@@ -40,8 +37,6 @@ export class HeaderComponent implements OnInit {
    */
   constructor(
     private router: Router,
-    private modalService: ModalService,
-    private authService: AuthenticatorService,
     private profileService: ProfileService,
     private searchService: SearchService
   ) {
@@ -58,11 +53,6 @@ export class HeaderComponent implements OnInit {
    * Subscribes to authentication status and user profile data.
    */
   ngOnInit(): void {
-    // Subscribe to authentication status changes
-    this.authService.isAuthenticated$.subscribe((status) => {
-      this.isAuthenticated = status;
-    });
-
     // Fetch and subscribe to user profile data
     this.profileService.getProfile().subscribe({
       next: (data) => {
@@ -142,21 +132,5 @@ export class HeaderComponent implements OnInit {
   handleLogin(event: Event): void {
     event.preventDefault();
     this.router.navigate(['login']);
-  }
-
-  /**
-   * Handles the logout action.
-   * @param event - The logout event
-   */
-  handleLogout(event: Event): void {
-    event.preventDefault();
-    this.authService.logout();
-  }
-
-  /**
-   * Example function to open a modal using the ModalService.
-   */
-  test(): void {
-    this.modalService.open(LoginComponent, 'Login', 'Anmelden');
   }
 }
