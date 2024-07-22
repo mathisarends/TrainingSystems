@@ -21,10 +21,10 @@ router.post('/request/:friendId', authService.authenticationMiddleware, sendFrie
 router.delete('/:userId/:friendId', authService.authenticationMiddleware, deleteFriend);
 
 // Accept a friend request
-router.post('/accept/:userId/:friendId', authService.authenticationMiddleware, acceptFriendRequest);
+router.post('/accept/:friendId', authService.authenticationMiddleware, acceptFriendRequest);
 
 // Get all friend requests for a user
-router.get('/requests/:userId', authService.authenticationMiddleware, getAllFriendRequests);
+router.get('/requests', authService.authenticationMiddleware, getAllFriendRequests);
 
 // Get friend suggestions for a user
 router.get('/suggestions', authService.authenticationMiddleware, getFriendSuggestions);

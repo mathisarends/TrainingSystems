@@ -23,6 +23,7 @@ import { TooltipDirective } from '../../../service/tooltip/tooltip.directive';
 import { Friend } from '../../components/friend-card/friend';
 import { FriendModalComponent } from '../friend-modal/friend-modal.component';
 import { AlertComponent } from '../../components/alert/alert.component';
+import { FriendRequestComponent } from '../../friend-request/friend-request.component';
 
 @Component({
   selector: 'app-profile',
@@ -98,6 +99,8 @@ export class ProfileComponent implements OnInit {
     const response = await firstValueFrom(
       this.httpService.request<any>(HttpMethods.GET, 'friendship')
     );
+
+    console.log('🚀 ~ ProfileComponent ~ ngOnInit ~ response:', response);
 
     this.friends = response.friends;
 
@@ -176,7 +179,12 @@ export class ProfileComponent implements OnInit {
   }
 
   openFriendRequestsModal() {
-    throw new Error('Method not implemented.');
+    this.modalService.open(
+      FriendRequestComponent,
+      'Freundesanfragen',
+      'Fertig',
+      ModalSize.LARGE
+    );
   }
 
   openAddFriendModal() {
