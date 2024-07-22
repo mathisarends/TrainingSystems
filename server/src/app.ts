@@ -24,11 +24,24 @@ async function configureApp(app: Express) {
   app.use(
     cors({
       origin: 'http://localhost:4200',
-      credentials: true
+      credentials: true,
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+      allowedHeaders: 'Content-Type, Authorization'
     })
   );
 
-  app.use('/user', userRouter);
+  /*   app.use((req, res, next) => {
+    const userAgent = req.headers['user-agent'];
+    console.log('🚀 ~ app.use ~ userAgent:', userAgent);
+    const referer = req.headers['referer'];
+    console.log('🚀 ~ app.use ~ referer:', referer);
+
+    if (userAgent && userAgent.includes('node')) {
+      res.status(403).send('Forbidden');
+    } else {
+      next();
+    }
+  }) */ app.use('/user', userRouter);
   app.use('/training', trainingRouter);
   app.use('/exercise', exerciseRouter);
   app.use('/friendship', friendShipRouter);
