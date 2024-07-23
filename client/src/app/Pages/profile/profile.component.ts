@@ -51,7 +51,9 @@ export class ProfileComponent implements OnInit {
 
   filteredFriends: Friend[] = [];
   friends: Friend[] = [];
-  friendCardMode = FriendCardMode.REMOVE;
+
+  existingFriendCardMode = FriendCardMode.REMOVE;
+  pendingFriendCardMode = FriendCardMode.ADD;
 
   constructor(
     private profileService: ProfileService,
@@ -95,11 +97,8 @@ export class ProfileComponent implements OnInit {
       this.httpService.request<any>(HttpMethods.GET, 'friendship')
     );
 
-    console.log('🚀 ~ ProfileComponent ~ ngOnInit ~ response:', response);
-
     this.friends = response.friends;
-
-    this.filteredFriends = this.friends;
+    this.filteredFriends = this.friends; // hier bitte einmal kombinieren
   }
 
   restoreOriginalProfilePicture() {
@@ -159,6 +158,7 @@ export class ProfileComponent implements OnInit {
       }
     );
   }
+
   filterFriends(event: Event) {
     const searchTerm = (event.target as HTMLInputElement).value.toLowerCase();
     this.filteredFriends = this.friends.filter(

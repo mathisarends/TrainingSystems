@@ -83,16 +83,21 @@
       </div>
 
       <div class="row">
-        @if (filteredFriends.length === 0) {
+        @if (friends.length === 0) {
         <app-alert
           alertType="light"
           alertText="Du hast momentan keine Freunde. Füge einige hinzu, um dein Netzwerk zu erweitern!"
+        ></app-alert>
+        } @else if (filteredFriends.length === 0) {
+        <app-alert
+          alertType="light"
+          alertText="Du hast keine Freunde, die zu dieser Suchanfrage passen"
         ></app-alert>
         } @else { @for (friend of filteredFriends; track friend) {
         <div class="col-12 mb-3">
           <app-friend-card
             [friend]="friend"
-            [mode]="friendCardMode"
+            [mode]="existingFriendCardMode"
           ></app-friend-card>
         </div>
         } }
