@@ -13,7 +13,7 @@ import { ModalService } from '../../../service/modal/modalService';
 import { ChangeProfilePictureConfirmationComponent } from '../../change-profile-picture-confirmation/change-profile-picture-confirmation.component';
 import { ModalSize } from '../../../service/modal/modalSize';
 import { ModalEventsService } from '../../../service/modal/modal-events.service';
-import { firstValueFrom, Subscription } from 'rxjs';
+import { first, firstValueFrom, Subscription } from 'rxjs';
 import { HttpClientService } from '../../../service/http/http-client.service';
 import { HttpMethods } from '../../types/httpMethods';
 
@@ -184,5 +184,27 @@ export class ProfileComponent implements OnInit {
       'Fertig',
       ModalSize.LARGE
     );
+  }
+
+  async onFriendRemove(friendId: string) {
+    console.log('🚀 ~ ProfileComponent ~ onFriendRemove ~ event:', friendId);
+
+    try {
+      const response = await firstValueFrom(
+        this.httpService.request<any>(
+          HttpMethods.DELETE,
+          `friendship/${friendId}`
+        )
+      );
+
+      const friendshipsAfterDelete = await firstValueFrom(
+        this.httpService.request<any>(HttpMethods.GET, 'friendship')
+      );
+
+      this.friends = friendshipsAfterDelete.friends;
+      this.filteredFriends = this.friends; // hier bitte einmal kombinieren
+    } catch (error) {
+      console.error('Error while deleting friend', error);
+    }
   }
 }

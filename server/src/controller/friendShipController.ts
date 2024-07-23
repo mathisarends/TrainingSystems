@@ -15,20 +15,8 @@ export async function getAllFriends(req: Request, res: Response) {
   const friendshipDAO: MongoGenericDAO<Friendship> = req.app.locals.friendshipDAO;
 
   try {
-    // Find friendships where the user is the requester
-    const requestedFriendships = await friendshipDAO.findAll({
-      userId: user.id,
-      inviteStatus: InviteStatus.ACCEPTED
-    });
-
-    // Find friendships where the user is the accepter
-    const acceptedFriendships = await friendshipDAO.findAll({
-      friendId: user.id,
-      inviteStatus: InviteStatus.ACCEPTED
-    });
-
     // Combine the results
-    const allFriendships = [...requestedFriendships, ...acceptedFriendships];
+    const allFriendships = await findAllFriendsForUser(friendshipDAO, user);
 
     // Extract unique friend IDs
     const friendIds = new Set(
@@ -91,8 +79,23 @@ export async function deleteFriend(req: Request, res: Response) {
 
   const friendshipDAO: MongoGenericDAO<Friendship> = req.app.locals.friendshipDAO;
 
+  console.log('userid', user.id);
+  console.log('friendid', req.params.friendId);
+
   try {
-    const friendship = await friendshipDAO.findOne({ userId: req.params.userId, friendId: req.params.friendId });
+    let friendship = await friendshipDAO.findOne({
+      userId: user.id,
+      friendId: req.params.friendId,
+      inviteStatus: InviteStatus.ACCEPTED
+    });
+
+    if (!friendship) {
+      friendship = await friendshipDAO.findOne({
+        userId: req.params.friendId,
+        friendId: user.id,
+        inviteStatus: InviteStatus.ACCEPTED
+      });
+    }
 
     if (!friendship) {
       return res.status(404).json({ error: 'No existing friendship relation found' });
@@ -211,4 +214,21 @@ async function getUserObj(req: Request, res: Response) {
 
   const user = await userDAO.findOne({ id: userClaimsSet.id });
   return user;
+}
+
+// beidseitige Freundschaften finden
+async function findAllFriendsForUser(friendshipDAO: MongoGenericDAO<Friendship>, user: User) {
+  const requestedFriendships = await friendshipDAO.findAll({
+    userId: user.id,
+    inviteStatus: InviteStatus.ACCEPTED
+  });
+
+  // Find friendships where the user is the accepter
+  const acceptedFriendships = await friendshipDAO.findAll({
+    friendId: user.id,
+    inviteStatus: InviteStatus.ACCEPTED
+  });
+
+  // Combine the results
+  return [...requestedFriendships, ...acceptedFriendships];
 }

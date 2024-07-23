@@ -18,7 +18,7 @@ router.get('/', authService.authenticationMiddleware, getAllFriends);
 router.post('/request/:friendId', authService.authenticationMiddleware, sendFriendRequest);
 
 // Delete a friend
-router.delete('/:userId/:friendId', authService.authenticationMiddleware, deleteFriend);
+router.delete('/:friendId', authService.authenticationMiddleware, deleteFriend);
 
 // Accept a friend request
 router.post('/accept/:friendId', authService.authenticationMiddleware, acceptFriendRequest);

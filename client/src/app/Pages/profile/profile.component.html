@@ -98,6 +98,7 @@
           <app-friend-card
             [friend]="friend"
             [mode]="existingFriendCardMode"
+            (confirmEvent)="onFriendRemove($event)"
           ></app-friend-card>
         </div>
         } }
