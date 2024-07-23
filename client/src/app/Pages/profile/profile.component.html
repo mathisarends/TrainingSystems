@@ -90,7 +90,10 @@
         ></app-alert>
         } @else { @for (friend of filteredFriends; track friend) {
         <div class="col-12 mb-3">
-          <app-friend-card [friend]="friend"></app-friend-card>
+          <app-friend-card
+            [friend]="friend"
+            [mode]="friendCardMode"
+          ></app-friend-card>
         </div>
         } }
       </div>

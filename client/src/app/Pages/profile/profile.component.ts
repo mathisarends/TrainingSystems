@@ -24,6 +24,7 @@ import { Friend } from '../../components/friend-card/friend';
 import { FriendModalComponent } from '../friend-modal/friend-modal.component';
 import { AlertComponent } from '../../components/alert/alert.component';
 import { FriendRequestComponent } from '../../friend-request/friend-request.component';
+import { FriendCardMode } from '../../components/friend-card/friend-card-mode';
 
 @Component({
   selector: 'app-profile',
@@ -46,18 +47,12 @@ export class ProfileComponent implements OnInit {
 
   @ViewChild('fileInput', { static: false }) fileInputElement!: ElementRef;
 
-  activeTab: string = 'Freunde';
-
   private subscription: Subscription = new Subscription();
-
-  tabs = [
-    { title: 'Freunde', active: true },
-    { title: 'Anfragen' },
-    { title: 'Ausstehend' },
-  ];
 
   filteredFriends: Friend[] = [];
   friends: Friend[] = [];
+  friendCardMode = FriendCardMode.REMOVE;
+
   constructor(
     private profileService: ProfileService,
     private imageUploadService: ImageUploadService,
@@ -164,11 +159,6 @@ export class ProfileComponent implements OnInit {
       }
     );
   }
-
-  onTabSelected(tabTitle: string) {
-    this.activeTab = tabTitle;
-  }
-
   filterFriends(event: Event) {
     const searchTerm = (event.target as HTMLInputElement).value.toLowerCase();
     this.filteredFriends = this.friends.filter(
