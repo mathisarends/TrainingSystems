@@ -11,7 +11,7 @@ export class MongoGenericDAO<T extends Entity> implements GenericDAO<T> {
     private collection: string
   ) {}
 
-  public async create(partEntity: Omit<T, keyof Entity>) {
+  public async create(partEntity: Omit<T, keyof Entity>): Promise<T> {
     const entity = { ...partEntity, id: uuidv4(), createdAt: new Date().getTime() };
     await this.db.collection(this.collection).insertOne(entity);
     return entity as T;
@@ -25,21 +25,25 @@ export class MongoGenericDAO<T extends Entity> implements GenericDAO<T> {
       .toArray() as Promise<T[]>;
   }
 
-  public async findOne(entityFilter: Partial<T>) {
+  public async findWithOr(orConditions: Filter<T>): Promise<T[]> {
+    return this.db.collection<T>(this.collection).find(orConditions).sort({ createdAt: -1 }).toArray() as Promise<T[]>;
+  }
+
+  public async findOne(entityFilter: Partial<T>): Promise<T | null> {
     return this.db.collection<T>(this.collection).findOne(entityFilter as Filter<T>) as Promise<T | null>;
   }
 
-  public async update(entity: Partial<T> & Pick<Entity, 'id'>) {
+  public async update(entity: Partial<T> & Pick<Entity, 'id'>): Promise<boolean> {
     const result = await this.db.collection(this.collection).updateOne({ id: entity.id }, { $set: entity });
     return !!result.modifiedCount;
   }
 
-  public async delete(id: string) {
+  public async delete(id: string): Promise<boolean> {
     const result = await this.db.collection(this.collection).deleteOne({ id });
     return !!result.deletedCount;
   }
 
-  public async deleteAll(entityFilter?: Partial<T>) {
+  public async deleteAll(entityFilter?: Partial<T>): Promise<number> {
     if (!entityFilter) {
       await this.db.collection(this.collection).drop();
       return -1;

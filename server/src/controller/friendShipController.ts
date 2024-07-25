@@ -15,15 +15,15 @@ export async function getAllFriends(req: Request, res: Response) {
   const friendshipDAO: MongoGenericDAO<Friendship> = req.app.locals.friendshipDAO;
 
   try {
-    // Combine the results
-    const allFriendships = await findAllFriendsForUser(friendshipDAO, user);
+    const allFriendships = await friendshipDAO.findWithOr({
+      $or: [{ userId: user.id }, { friendId: user.id }],
+      inviteStatus: InviteStatus.ACCEPTED
+    });
 
-    // Extract unique friend IDs
     const friendIds = new Set(
       allFriendships.map(friendship => (friendship.userId === user.id ? friendship.friendId : friendship.userId))
     );
 
-    // Fetch friend details
     const friends = await Promise.all(
       Array.from(friendIds).map(async id => {
         const friend = await userDAO.findOne({ id });
@@ -38,7 +38,6 @@ export async function getAllFriends(req: Request, res: Response) {
       })
     );
 
-    // Filter out null values
     const validFriends = friends.filter(friend => friend !== null);
 
     res.status(200).json({ friends: validFriends });
@@ -47,6 +46,7 @@ export async function getAllFriends(req: Request, res: Response) {
     res.status(500).json({ error: `Error while getting friends of user: ${err.message}` });
   }
 }
+
 export async function sendFriendRequest(req: Request, res: Response) {
   const user = await getUserObj(req, res);
 
@@ -55,6 +55,8 @@ export async function sendFriendRequest(req: Request, res: Response) {
   }
 
   const friendshipDAO: MongoGenericDAO<Friendship> = req.app.locals.friendshipDAO;
+
+  // hier noch prüfen ob es schon eine pending friendsip oder sogar eine bestehende zwischen den beiden nutzern gibt und dann einen entsprehcendne fehler werdfen
 
   try {
     const newFriendship = await friendshipDAO.create({
@@ -79,29 +81,20 @@ export async function deleteFriend(req: Request, res: Response) {
 
   const friendshipDAO: MongoGenericDAO<Friendship> = req.app.locals.friendshipDAO;
 
-  console.log('userid', user.id);
-  console.log('friendid', req.params.friendId);
-
   try {
-    let friendship = await friendshipDAO.findOne({
-      userId: user.id,
-      friendId: req.params.friendId,
+    const friendship = await friendshipDAO.findWithOr({
+      $or: [
+        { userId: user.id, friendId: req.params.friendId },
+        { userId: req.params.friendId, friendId: user.id }
+      ],
       inviteStatus: InviteStatus.ACCEPTED
     });
 
-    if (!friendship) {
-      friendship = await friendshipDAO.findOne({
-        userId: req.params.friendId,
-        friendId: user.id,
-        inviteStatus: InviteStatus.ACCEPTED
-      });
-    }
-
-    if (!friendship) {
+    if (!friendship.length) {
       return res.status(404).json({ error: 'No existing friendship relation found' });
     }
 
-    await friendshipDAO.delete(friendship.id);
+    await friendshipDAO.delete(friendship[0].id);
     res.status(200).json({ message: 'Friend deleted successfully' });
   } catch (error) {
     const err = error as Error;
@@ -183,13 +176,12 @@ export async function getFriendSuggestions(req: Request, res: Response) {
   const friendshipDAO: MongoGenericDAO<Friendship> = req.app.locals.friendshipDAO;
 
   try {
-    // Get all users
     const users = await userDAO.findAll({});
 
     const friendships = await friendshipDAO.findAll({
       userId: user.id
     });
-    console.log('🚀 ~ getFriendSuggestions ~ friendships:', friendships);
+
     const friendIds = friendships.map(f => f.friendId);
 
     const suggestions = users
@@ -214,21 +206,4 @@ async function getUserObj(req: Request, res: Response) {
 
   const user = await userDAO.findOne({ id: userClaimsSet.id });
   return user;
-}
-
-// beidseitige Freundschaften finden
-async function findAllFriendsForUser(friendshipDAO: MongoGenericDAO<Friendship>, user: User) {
-  const requestedFriendships = await friendshipDAO.findAll({
-    userId: user.id,
-    inviteStatus: InviteStatus.ACCEPTED
-  });
-
-  // Find friendships where the user is the accepter
-  const acceptedFriendships = await friendshipDAO.findAll({
-    friendId: user.id,
-    inviteStatus: InviteStatus.ACCEPTED
-  });
-
-  // Combine the results
-  return [...requestedFriendships, ...acceptedFriendships];
 }
