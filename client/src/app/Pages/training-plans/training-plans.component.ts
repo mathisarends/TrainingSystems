@@ -87,7 +87,8 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
       CreateTrainingFormComponent,
       'Trainingsplan erstellen',
       'Erstellen',
-      ModalSize.LARGE
+      ModalSize.LARGE,
+      { confirmationRequired: true }
     );
   }
 

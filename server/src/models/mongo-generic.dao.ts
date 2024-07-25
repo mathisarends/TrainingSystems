@@ -17,7 +17,7 @@ export class MongoGenericDAO<T extends Entity> implements GenericDAO<T> {
     return entity as T;
   }
 
-  public async findAll(entityFilter?: Partial<T>) {
+  public async findAll(entityFilter?: Partial<T>): Promise<T[]> {
     return this.db
       .collection<T>(this.collection)
       .find((entityFilter as Filter<T>) ?? {})
@@ -25,12 +25,16 @@ export class MongoGenericDAO<T extends Entity> implements GenericDAO<T> {
       .toArray() as Promise<T[]>;
   }
 
-  public async findWithOr(orConditions: Filter<T>): Promise<T[]> {
-    return this.db.collection<T>(this.collection).find(orConditions).sort({ createdAt: -1 }).toArray() as Promise<T[]>;
+  public async findByCondition(condition: Filter<T>): Promise<T[]> {
+    return this.db.collection<T>(this.collection).find(condition).sort({ createdAt: -1 }).toArray() as Promise<T[]>;
   }
 
   public async findOne(entityFilter: Partial<T>): Promise<T | null> {
     return this.db.collection<T>(this.collection).findOne(entityFilter as Filter<T>) as Promise<T | null>;
+  }
+
+  public async findOneWithCondition(condition: Filter<T>): Promise<T | null> {
+    return this.db.collection<T>(this.collection).findOne(condition) as Promise<T | null>;
   }
 
   public async update(entity: Partial<T> & Pick<Entity, 'id'>): Promise<boolean> {

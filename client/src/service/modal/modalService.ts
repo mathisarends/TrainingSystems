@@ -58,6 +58,8 @@ export class ModalService {
     this.modalComponentRef.instance.title = title;
     this.modalComponentRef.instance.confirmButtonText = buttonText;
     this.modalComponentRef.instance.size = size; // set the size
+    this.modalComponentRef.instance.confirmationRequired =
+      componentData?.confirmationRequired ?? false;
 
     if (componentData) {
       console.log('🚀 ~ ModalService ~ componentData:', componentData);

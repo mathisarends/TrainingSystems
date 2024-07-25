@@ -15,13 +15,15 @@ export async function getAllFriends(req: Request, res: Response) {
   const friendshipDAO: MongoGenericDAO<Friendship> = req.app.locals.friendshipDAO;
 
   try {
-    const allFriendships = await friendshipDAO.findWithOr({
+    const allFriendships = await friendshipDAO.findByCondition({
       $or: [{ userId: user.id }, { friendId: user.id }],
       inviteStatus: InviteStatus.ACCEPTED
     });
 
     const friendIds = new Set(
-      allFriendships.map(friendship => (friendship.userId === user.id ? friendship.friendId : friendship.userId))
+      allFriendships.map((friendship: Friendship) =>
+        friendship.userId === user.id ? friendship.friendId : friendship.userId
+      )
     );
 
     const friends = await Promise.all(
@@ -58,6 +60,18 @@ export async function sendFriendRequest(req: Request, res: Response) {
 
   // hier noch prüfen ob es schon eine pending friendsip oder sogar eine bestehende zwischen den beiden nutzern gibt und dann einen entsprehcendne fehler werdfen
 
+  const existingFriendship = await friendshipDAO.findOneWithCondition({
+    $or: [
+      { userId: user.id, friendId: req.params.friendId },
+      { userId: req.params.friendId, friendId: user.id }
+    ],
+    inviteStatus: { $in: [InviteStatus.PENDING, InviteStatus.ACCEPTED] }
+  });
+
+  if (existingFriendship) {
+    return res.status(400).json({ error: 'A pending or accepted friendship already exists between these users' });
+  }
+
   try {
     const newFriendship = await friendshipDAO.create({
       userId: user.id,
@@ -82,7 +96,7 @@ export async function deleteFriend(req: Request, res: Response) {
   const friendshipDAO: MongoGenericDAO<Friendship> = req.app.locals.friendshipDAO;
 
   try {
-    const friendship = await friendshipDAO.findWithOr({
+    const friendship = await friendshipDAO.findByCondition({
       $or: [
         { userId: user.id, friendId: req.params.friendId },
         { userId: req.params.friendId, friendId: user.id }

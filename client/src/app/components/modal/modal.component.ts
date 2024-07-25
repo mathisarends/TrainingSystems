@@ -23,6 +23,7 @@ export class ModalComponent implements AfterViewInit {
   @Input() childComponentType!: any;
   @Input() childComponentData: any;
   @Input() size: ModalSize = ModalSize.MEDIUM;
+  @Input() confirmationRequired = false;
   @ViewChild('modalContent', { read: ViewContainerRef })
   modalContent!: ViewContainerRef;
   childComponentRef!: ComponentRef<any>;
@@ -62,6 +63,12 @@ export class ModalComponent implements AfterViewInit {
   confirm() {
     if (this.childComponentRef.instance.onSubmit) {
       this.childComponentRef.instance.onSubmit();
+    }
+
+    console.log('this.confirmationRequired', this.confirmationRequired);
+
+    if (!this.confirmationRequired) {
+      this.modalService.close();
     }
   }
 }

@@ -25,6 +25,7 @@ import { FriendModalComponent } from '../friend-modal/friend-modal.component';
 import { AlertComponent } from '../../components/alert/alert.component';
 import { FriendRequestComponent } from '../../friend-request/friend-request.component';
 import { FriendCardMode } from '../../components/friend-card/friend-card-mode';
+import { PaginationComponent } from '../../components/pagination/pagination.component';
 
 @Component({
   selector: 'app-profile',
@@ -35,6 +36,7 @@ import { FriendCardMode } from '../../components/friend-card/friend-card-mode';
     FriendCardComponent,
     TooltipDirective,
     AlertComponent,
+    PaginationComponent,
   ],
   styleUrls: ['./profile.component.scss'],
 })

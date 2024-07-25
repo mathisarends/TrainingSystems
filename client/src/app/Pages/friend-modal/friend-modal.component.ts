@@ -83,4 +83,8 @@ export class FriendModalComponent implements OnInit {
     );
     this.friendsSubject.next(updatedFriends);
   }
+
+  onSubmit(): void {
+    console.log('called by service? ');
+  }
 }
