@@ -83,13 +83,13 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
    * Opens the modal to create a new training plan.
    */
   createNewPlan(): void {
-    this.modalService.open(
-      CreateTrainingFormComponent,
-      'Trainingsplan erstellen',
-      'Erstellen',
-      ModalSize.LARGE,
-      { confirmationRequired: true }
-    );
+    this.modalService.open({
+      component: CreateTrainingFormComponent,
+      title: 'Trainingsplan erstellen',
+      buttonText: 'Erstellen',
+      size: ModalSize.LARGE,
+      confirmationRequired: true,
+    });
   }
 
   /**

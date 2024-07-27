@@ -9,6 +9,7 @@ import {
 import { ModalComponent } from '../../app/components/modal/modal.component';
 import { ModalOverlayComponent } from '../../app/components/modal-overlay/modal-overlay.component';
 import { ModalSize } from './modalSize';
+import { ModalOptions } from './modal-options';
 
 @Injectable({
   providedIn: 'root',
@@ -24,21 +25,11 @@ export class ModalService {
   ) {}
 
   /**
-   * Opens a modal dialog with the specified component, title, and button text.
-   * Optionally, data can be passed to the child component.
+   * Opens a modal dialog with the specified options.
    *
-   * @param component - The component to be rendered inside the modal.
-   * @param title - The title of the modal dialog.
-   * @param buttonText - The text to display on the confirm button.
-   * @param componentData - Optional data to pass to the child component.
+   * @param options - The options for the modal dialog.
    */
-  open(
-    component: any,
-    title: string,
-    buttonText: string,
-    size: ModalSize = ModalSize.MEDIUM,
-    componentData?: any
-  ) {
+  open(options: ModalOptions) {
     // added size parameter
     this.overlayComponentRef = createComponent(ModalOverlayComponent, {
       environmentInjector: this.environmentInjector,
@@ -54,18 +45,26 @@ export class ModalService {
     this.appRef.attachView(this.modalComponentRef.hostView);
     document.body.appendChild(this.modalComponentRef.location.nativeElement);
 
-    this.modalComponentRef.instance.childComponentType = component;
-    this.modalComponentRef.instance.title = title;
-    this.modalComponentRef.instance.confirmButtonText = buttonText;
-    this.modalComponentRef.instance.size = size; // set the size
+    this.modalComponentRef.instance.childComponentType = options.component;
+    this.modalComponentRef.instance.title = options.title;
+    this.modalComponentRef.instance.confirmButtonText = options.buttonText;
+    this.modalComponentRef.instance.size = options.size ?? ModalSize.MEDIUM; // set the size
     this.modalComponentRef.instance.confirmationRequired =
-      componentData?.confirmationRequired ?? false;
+      options.confirmationRequired ?? false;
 
-    if (componentData) {
-      console.log('🚀 ~ ModalService ~ componentData:', componentData);
-      this.modalComponentRef.instance.childComponentData = componentData;
+    if (options.componentData) {
+      console.log('🚀 ~ ModalService ~ componentData:', options.componentData);
+      this.modalComponentRef.instance.childComponentData =
+        options.componentData;
+    }
+
+    if (options.minHeight) {
+      this.modalComponentRef.location.nativeElement.style.minHeight = `${options.minHeight}px`;
     }
   }
+
+  // TODO: open basic text component
+  openBasicTextComponent() {}
 
   /**
    * Closes the modal dialog and cleans up the components.

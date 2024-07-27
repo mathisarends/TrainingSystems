@@ -91,13 +91,13 @@ export class TrainingPlanCardComponent {
    * @param index - The index of the training plan to edit.
    */
   showEditTrainingPlanModal(id: string): void {
-    this.modalService.open(
-      EditTrainingPlanComponent,
-      'Trainingsplan bearbeiten',
-      'Übernehmen',
-      ModalSize.LARGE,
-      { id }
-    );
+    this.modalService.open({
+      component: EditTrainingPlanComponent,
+      title: 'Trainingsplan bearbeiten',
+      buttonText: '*Übernehmen',
+      size: ModalSize.LARGE,
+      componentData: { id },
+    });
   }
 
   /**
@@ -105,13 +105,12 @@ export class TrainingPlanCardComponent {
    * @param index - The index of the training plan to delete.
    */
   showDeleteTrainingPlanModal(): void {
-    this.modalService.open(
-      DeleteConfirmationComponent,
-      'Trainingsplan wirklich löschen?',
-      'Löschen',
-      ModalSize.MEDIUM,
-      { id: this.trainingPlan.id }
-    );
+    this.modalService.open({
+      component: DeleteConfirmationComponent,
+      title: 'Trainingsplan wirklich löschen?',
+      buttonText: 'Löschen',
+      componentData: { id: this.trainingPlan.id },
+    });
   }
 
   /**

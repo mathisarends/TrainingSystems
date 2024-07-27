@@ -136,10 +136,10 @@ export class ExercisesComponent implements OnInit, OnDestroy {
 
   async onReset(event: Event): Promise<void> {
     event.preventDefault();
-    this.modalService.open(
-      ConfirmExerciseResetComponent,
-      'Übungen zurücksetzen',
-      'Zurücksetzen'
-    );
+    this.modalService.open({
+      component: ConfirmExerciseResetComponent,
+      title: 'Übungen zurücksetzen',
+      buttonText: 'Zurücksetzen',
+    });
   }
 }

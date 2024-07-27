@@ -149,16 +149,16 @@ export class ProfileComponent implements OnInit {
   }
 
   showProfilePictureChangeDialog(newProfilePicture: string) {
-    this.modalService.open(
-      ChangeProfilePictureConfirmationComponent,
-      'Profilbild Ändern',
-      'Bestätigen',
-      ModalSize.LARGE,
-      {
+    this.modalService.open({
+      component: ChangeProfilePictureConfirmationComponent,
+      title: 'Profilbild ändern',
+      buttonText: 'Bestäigen',
+      size: ModalSize.LARGE,
+      componentData: {
         oldProfilePicture: this.profile.pictureUrl,
         newProfilePicture: newProfilePicture,
-      }
-    );
+      },
+    });
   }
 
   filterFriends(event: Event) {
@@ -171,21 +171,21 @@ export class ProfileComponent implements OnInit {
   }
 
   openFriendRequestsModal() {
-    this.modalService.open(
-      FriendRequestComponent,
-      'Freundesanfragen',
-      'Fertig',
-      ModalSize.LARGE
-    );
+    this.modalService.open({
+      component: FriendRequestComponent,
+      title: 'Freundesanfragen',
+      buttonText: 'Fertig',
+      size: ModalSize.LARGE,
+    });
   }
 
   openAddFriendModal() {
-    this.modalService.open(
-      FriendModalComponent,
-      'Freunde hinzufügen',
-      'Fertig',
-      ModalSize.LARGE
-    );
+    this.modalService.open({
+      component: FriendCardComponent,
+      title: 'Freunde hinzufügen',
+      buttonText: 'Fertig',
+      size: ModalSize.LARGE,
+    });
   }
 
   async onFriendRemove(friendId: string) {
