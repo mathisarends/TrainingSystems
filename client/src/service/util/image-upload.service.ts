@@ -16,11 +16,13 @@ export class ImageUploadService {
    * @param event - The file input change event.
    * @param callback - Callback function to handle the processed image result.
    * @param crop - Flag indicating whether to crop the image to a square.
+   * @param colorCallback - Optional callback function to handle the dominant colors.
    */
   handleImageUpload(
     event: any,
     callback: (result: string) => void,
-    crop: boolean = false
+    crop: boolean = false,
+    colorCallback?: (colors: string[]) => void
   ) {
     const file = event.target.files[0];
     if (file) {
@@ -28,10 +30,29 @@ export class ImageUploadService {
       reader.onload = (e: any) => {
         const base64Str = e.target.result;
         if (base64Str.length > this.maxSizeInBytes) {
-          this.resizeImage(base64Str, callback);
+          this.resizeImage(base64Str, (resizedBase64) => {
+            if (colorCallback) {
+              this.extractDominantColors(resizedBase64, (colors) => {
+                colorCallback(colors);
+              });
+            }
+            callback(resizedBase64);
+          });
         } else if (crop) {
-          this.resizeAndCropImage(base64Str, callback);
+          this.resizeAndCropImage(base64Str, (resizedBase64) => {
+            if (colorCallback) {
+              this.extractDominantColors(resizedBase64, (colors) => {
+                colorCallback(colors);
+              });
+            }
+            callback(resizedBase64);
+          });
         } else {
+          if (colorCallback) {
+            this.extractDominantColors(base64Str, (colors) => {
+              colorCallback(colors);
+            });
+          }
           callback(base64Str);
         }
       };
@@ -107,5 +128,61 @@ export class ImageUploadService {
       ctx.drawImage(img, 0, 0, width, height);
       callback(canvas.toDataURL());
     };
+  }
+
+  /**
+   * Extracts the dominant colors from an image.
+   * @param base64Str - The base64 string representation of the image.
+   * @param callback - Callback function to handle the extracted colors.
+   */
+  private extractDominantColors(
+    base64Str: string,
+    callback: (colors: string[]) => void,
+    numColors: number = 5
+  ) {
+    const img = new Image();
+    img.src = base64Str;
+    img.crossOrigin = 'Anonymous';
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.drawImage(img, 0, 0, img.width, img.height);
+        const imageData = ctx.getImageData(0, 0, img.width, img.height);
+        const colors = this.getDominantColorsFromData(
+          imageData.data,
+          numColors
+        );
+        callback(colors);
+      }
+    };
+  }
+
+  /**
+   * Processes image data to find the dominant colors.
+   * @param data - The image data array.
+   * @param numColors - The number of dominant colors to extract.
+   * @returns An array of dominant colors in RGB format.
+   */
+  private getDominantColorsFromData(
+    data: Uint8ClampedArray,
+    numColors: number
+  ): string[] {
+    const colorMap: { [key: string]: number } = {};
+    for (let i = 0; i < data.length; i += 4) {
+      const rgb = `${data[i]},${data[i + 1]},${data[i + 2]}`;
+      if (colorMap[rgb]) {
+        colorMap[rgb]++;
+      } else {
+        colorMap[rgb] = 1;
+      }
+    }
+
+    const sortedColors = Object.keys(colorMap).sort(
+      (a, b) => colorMap[b] - colorMap[a]
+    );
+    return sortedColors.slice(0, numColors).map((color) => `rgb(${color})`);
   }
 }
