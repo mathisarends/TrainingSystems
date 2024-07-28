@@ -1,4 +1,4 @@
-@if (allTrainingPlans) {
+@if (allTrainingPlans$ | async; as allTrainingPlans) {
 <!-- + Button with Label -->
 <div class="container mt-4 mb-3">
   <div class="d-flex justify-content-end align-items-center">
@@ -13,15 +13,23 @@
   <div class="container">
     <div class="row">
       <!-- Alert if no training plans -->
-      @if (filteredTrainingPlans.length === 0) {
+      @if (filteredTrainingPlans$ | async; as filteredTrainingPlans) { @if
+      (filteredTrainingPlans.length === 0 && allTrainingPlans.length === 0) {
       <div class="col-12">
         <app-alert
           alertType="light"
           alertText="Du hast noch keine eigenen Trainingspläne erstellt. Erstelle welche mit dem Button oben!"
         ></app-alert>
       </div>
-      } @else { @for (trainingPlan of filteredTrainingPlans; track trainingPlan;
-      let i = $index) {
+      } @else if (filteredTrainingPlans.length === 0) {
+      <div class="col-12">
+        <app-alert
+          alertType="light"
+          alertText="Keine deiner bestehenden Trainingpläne passen zu dieser Suchanfrage!"
+        ></app-alert>
+      </div>
+      } @else { @for (trainingPlan of filteredTrainingPlans; track trainingPlan)
+      {
       <div [ngClass]="getColumnClass()">
         <app-training-plan-card
           [trainingPlan]="trainingPlan"
@@ -29,11 +37,10 @@
           (changedPlanConstellation)="onChangedPlanConstellation()"
         ></app-training-plan-card>
       </div>
-      } }
+      } } }
     </div>
   </div>
 </section>
-
 } @else {
 <app-spinner></app-spinner>
 }
