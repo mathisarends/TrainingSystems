@@ -13,11 +13,13 @@
       <div class="modal-body">
         <ng-template #modalContent></ng-template>
       </div>
+      @if (footer) {
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" (click)="confirm()">
           {{ confirmButtonText }}
         </button>
       </div>
+      }
     </div>
   </div>
 </div>

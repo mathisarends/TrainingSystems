@@ -40,4 +40,6 @@ export interface ModalOptions {
    * Auf true zu setzen, wenn man z.B. Formvalidierung innerhalb einer Komponente benutzen will
    */
   confirmationRequired?: boolean;
+
+  hasFooter?: boolean;
 }

@@ -23,7 +23,8 @@ export class ModalComponent implements AfterViewInit {
   @Input() childComponentType!: any;
   @Input() childComponentData: any;
   @Input() size: ModalSize = ModalSize.MEDIUM;
-  @Input() confirmationRequired = false;
+  @Input() footer: boolean = false;
+  @Input() confirmationRequired = true;
   @ViewChild('modalContent', { read: ViewContainerRef })
   modalContent!: ViewContainerRef;
   childComponentRef!: ComponentRef<any>;

@@ -1,0 +1,47 @@
+.timer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+}
+
+.timer-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 5px solid #007bff;
+  margin: 20px 0;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.timer-controls {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.adjust-button,
+.skip-button {
+  padding: 10px 20px;
+  margin: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.adjust-button {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+}
+
+.skip-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+}

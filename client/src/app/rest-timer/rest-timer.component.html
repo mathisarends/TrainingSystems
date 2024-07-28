@@ -1,0 +1,12 @@
+<div class="timer-container">
+  <h2>Rest Timer</h2>
+  <p>Adjust duration via the +/- buttons.</p>
+  <div class="timer-display">
+    <span class="time-remaining">{{ formatTime(remainingTime) }}</span>
+  </div>
+  <div class="timer-controls">
+    <button class="adjust-button" (click)="adjustTime(-10)">-10s</button>
+    <button class="adjust-button" (click)="adjustTime(10)">+10s</button>
+    <button class="skip-button" (click)="skipTimer()">Skip</button>
+  </div>
+</div>

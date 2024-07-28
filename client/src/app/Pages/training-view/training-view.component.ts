@@ -31,8 +31,10 @@ import { catchError, tap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SwipeService } from '../../../service/swipe/swipe.service';
 import { MobileService } from '../../../service/util/mobile.service';
-import { PauseTimeProgressBarComponent } from '../../pause-time-progress-bar/pause-time-progress-bar.component';
+
 import { PauseTimeService } from '../../../service/training/pause-time.service';
+import { ModalService } from '../../../service/modal/modalService';
+import { RestTimerComponent } from '../../rest-timer/rest-timer.component';
 
 /**
  * Component to manage and display the training view.
@@ -41,13 +43,7 @@ import { PauseTimeService } from '../../../service/training/pause-time.service';
 @Component({
   selector: 'app-training-view',
   standalone: true,
-  imports: [
-    SpinnerComponent,
-    CommonModule,
-    FormsModule,
-    PaginationComponent,
-    PauseTimeProgressBarComponent,
-  ],
+  imports: [SpinnerComponent, CommonModule, FormsModule, PaginationComponent],
   templateUrl: './training-view.component.html',
   styleUrls: ['./training-view.component.scss'],
 })
@@ -81,7 +77,8 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
     private navigationService: TrainingViewNavigationService,
     private swipeService: SwipeService,
     private pauseTimeService: PauseTimeService,
-    private mobileService: MobileService
+    private mobileService: MobileService,
+    private modalService: ModalService
   ) {}
 
   /**
@@ -299,11 +296,13 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
   }
 
   switchToTimerView(event: Event) {
-    console.log(
-      '🚀 ~ TrainingViewComponent ~ switchToTimerView ~ event:',
-      event
-    );
     event.preventDefault();
-    console.log('switch');
+
+    this.modalService.open({
+      component: RestTimerComponent,
+      title: 'Pause Timer',
+      buttonText: 'Abbrechen',
+      hasFooter: false,
+    });
   }
 }

@@ -49,6 +49,7 @@ export class ModalService {
     this.modalComponentRef.instance.title = options.title;
     this.modalComponentRef.instance.confirmButtonText = options.buttonText;
     this.modalComponentRef.instance.size = options.size ?? ModalSize.MEDIUM; // set the size
+    this.modalComponentRef.instance.footer = options.hasFooter ?? true;
     this.modalComponentRef.instance.confirmationRequired =
       options.confirmationRequired ?? false;
 
