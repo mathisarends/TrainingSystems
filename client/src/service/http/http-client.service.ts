@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { HttpMethods } from '../../app/types/httpMethods';
 import { environment } from '../../config/environment';
+import { isPlatformBrowser } from '@angular/common';
 
 /**
  * @description
@@ -14,8 +15,10 @@ import { environment } from '../../config/environment';
 })
 export class HttpClientService {
   private baseUrl: string = environment.apiUrl;
-
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
 
   /**
    * Makes an HTTP request using the specified method.
@@ -36,32 +39,37 @@ export class HttpClientService {
     params?: HttpParams,
     headers?: HttpHeaders
   ): Observable<T> {
-    const fullUrl = `${this.baseUrl}/${url}`;
+    if (isPlatformBrowser(this.platformId)) {
+      const fullUrl = `${this.baseUrl}/${url}`;
 
-    const options = {
-      body,
-      params,
-      headers,
-      withCredentials: true,
-    };
+      const options = {
+        body,
+        params,
+        headers,
+        withCredentials: true,
+      };
 
-    switch (method) {
-      case HttpMethods.GET:
-        return this.http.get<T>(fullUrl, { ...options });
-      case HttpMethods.POST:
-        return this.http.post<T>(fullUrl, body, options);
-      case HttpMethods.PUT:
-        return this.http.put<T>(fullUrl, body, options);
-      case HttpMethods.DELETE:
-        return this.http.delete<T>(fullUrl, { ...options });
-      case HttpMethods.PATCH:
-        return this.http.patch<T>(fullUrl, body, options);
-      case HttpMethods.HEAD:
-        return this.http.head<T>(fullUrl, { ...options });
-      case HttpMethods.OPTIONS:
-        return this.http.options<T>(fullUrl, { ...options });
-      default:
-        throw new Error('Invalid HTTP method');
+      switch (method) {
+        case HttpMethods.GET:
+          return this.http.get<T>(fullUrl, { ...options });
+        case HttpMethods.POST:
+          return this.http.post<T>(fullUrl, body, options);
+        case HttpMethods.PUT:
+          return this.http.put<T>(fullUrl, body, options);
+        case HttpMethods.DELETE:
+          return this.http.delete<T>(fullUrl, { ...options });
+        case HttpMethods.PATCH:
+          return this.http.patch<T>(fullUrl, body, options);
+        case HttpMethods.HEAD:
+          return this.http.head<T>(fullUrl, { ...options });
+        case HttpMethods.OPTIONS:
+          return this.http.options<T>(fullUrl, { ...options });
+        default:
+          throw new Error('Invalid HTTP method');
+      }
+    } else {
+      // Skipping HTTP request on the server
+      return of(null as unknown as T);
     }
   }
 }

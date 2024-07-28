@@ -72,7 +72,7 @@ export class ProfileComponent implements OnInit {
       .handleResponse(this.profileService.getProfile())
       .subscribe({
         next: (data) => {
-          this.profile = data.userDto;
+          this.profile = data?.userDto;
           this.isLoading = false;
         },
         error: (err) => {

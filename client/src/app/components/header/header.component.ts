@@ -54,22 +54,12 @@ export class HeaderComponent implements OnInit {
    */
   ngOnInit(): void {
     // Fetch and subscribe to user profile data
-    this.profileService.getProfile().subscribe({
-      next: (data) => {
-        console.log(
-          '🚀 ~ HeaderComponent ~ this.profileService.getProfile ~ data:',
-          data
-        );
-        this.profile = data.userDto;
-      },
-      error: (err) => {
-        this.profile = null;
-      },
-      complete: () => {
-        console.log('Profile successfully loaded');
-      },
+    this.profileService.getProfile().subscribe((data: any) => {
+      this.profile = data?.userDto;
     });
   }
+
+  //         this.profile = data?.userDto;
 
   /**
    * Handles the search input event and emits the value.

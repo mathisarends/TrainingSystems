@@ -81,8 +81,8 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
       const response: any = await firstValueFrom(
         this.httpClient.request<any>(HttpMethods.GET, 'training/plans')
       );
-      this.allTrainingPlans$.next(response.trainingPlanDtos);
-      this.filteredTrainingPlans$.next(response.trainingPlanDtos);
+      this.allTrainingPlans$.next(response?.trainingPlanDtos);
+      this.filteredTrainingPlans$.next(response?.trainingPlanDtos);
     } catch (error) {
       console.error('Fehler beim Laden:', error);
       this.allTrainingPlans$.next([]);
