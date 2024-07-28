@@ -1,9 +1,14 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
-import { combineLatest, Observable, of } from 'rxjs';
+import {
+  CanActivate,
+  Router,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+} from '@angular/router';
+import { Observable, of } from 'rxjs';
 import { AuthService } from './auth-service.service';
-import { DeleteConfirmationComponent } from './Pages/delete-confirmation/delete-confirmation.component';
 import { ModalService } from '../service/modal/modalService';
+import { AuthInfoComponent } from './auth-info/auth-info.component';
 
 @Injectable({
   providedIn: 'root',
@@ -11,16 +16,21 @@ import { ModalService } from '../service/modal/modalService';
 export class AuthGuard implements CanActivate {
   constructor(
     private authService: AuthService,
-    private router: Router,
     private modalService: ModalService
   ) {}
 
-  canActivate() {
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable<boolean> {
     if (this.authService.isLoggedIn()) {
       return of(true);
     } else {
+      sessionStorage.setItem('redirectUrl', state.url);
+
+      console.log('Aktuelle URL:', state.url);
       this.modalService.open({
-        component: DeleteConfirmationComponent,
+        component: AuthInfoComponent,
         title: 'Anmeldung erforderlich',
         buttonText: 'Anmelden',
       });
