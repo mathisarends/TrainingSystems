@@ -1,4 +1,9 @@
-import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
+import {
+  EventEmitter,
+  Injectable,
+  Renderer2,
+  RendererFactory2,
+} from '@angular/core';
 import { ExerciseDataDTO } from '../../app/Pages/training-view/exerciseDataDto';
 
 @Injectable({
@@ -6,6 +11,7 @@ import { ExerciseDataDTO } from '../../app/Pages/training-view/exerciseDataDto';
 })
 export class PauseTimeService {
   private renderer: Renderer2;
+  countdownEmitter: EventEmitter<number> = new EventEmitter<number>();
 
   constructor(rendererFactory: RendererFactory2) {
     this.renderer = rendererFactory.createRenderer(null, null);
@@ -38,7 +44,7 @@ export class PauseTimeService {
   }
 
   /**
-   * Starts a countdown and logs the remaining time every second.
+   * Starts a countdown and emits the remaining time every second.
    * @param seconds - The total number of seconds for the countdown.
    */
   private startCountdown(seconds: number) {
@@ -46,10 +52,15 @@ export class PauseTimeService {
 
     const intervalId = setInterval(() => {
       if (remainingTime > 0) {
-        console.log(`Remaining time: ${remainingTime} seconds`);
+        console.log(
+          '🚀 ~ PauseTimeService ~ intervalId ~ remainingTime:',
+          remainingTime
+        );
+        this.countdownEmitter.emit(remainingTime);
         remainingTime--;
       } else {
         clearInterval(intervalId);
+        this.countdownEmitter.emit(0);
         console.log('Countdown finished');
       }
     }, 1000);

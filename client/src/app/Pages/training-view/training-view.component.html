@@ -7,10 +7,24 @@
     class="table table-striped training-table responsive-table caption-top mb-4"
   >
     <caption>
-      <span class="context-headline"
-        >W{{ trainingWeekIndex + 1 }}D{{ trainingDayIndex + 1 }}</span
-      >
-      <span class="headline">{{ trainingPlanData.title }}</span>
+      <div class="d-flex justify-content-between align-items-center">
+        <span>
+          <span class="context-headline"
+            >W{{ trainingWeekIndex + 1 }}D{{ trainingDayIndex + 1 }}</span
+          >
+          <span class="headline">{{ trainingPlanData.title }}</span>
+        </span>
+        @if (isMobile) {
+        <button
+          type="button"
+          class="btn btn-light btn-md m-1"
+          appTooltip="Ansehen"
+          (click)="switchToTimerView($event)"
+        >
+          <i class="bx bx-timer"></i>
+        </button>
+        }
+      </div>
     </caption>
 
     <thead>

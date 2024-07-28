@@ -30,8 +30,9 @@ import { forkJoin, BehaviorSubject, EMPTY } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SwipeService } from '../../../service/swipe/swipe.service';
-import { PauseTimeService } from '../../../service/training/pause-time.service';
 import { MobileService } from '../../../service/util/mobile.service';
+import { PauseTimeProgressBarComponent } from '../../pause-time-progress-bar/pause-time-progress-bar.component';
+import { PauseTimeService } from '../../../service/training/pause-time.service';
 
 /**
  * Component to manage and display the training view.
@@ -40,7 +41,13 @@ import { MobileService } from '../../../service/util/mobile.service';
 @Component({
   selector: 'app-training-view',
   standalone: true,
-  imports: [SpinnerComponent, CommonModule, FormsModule, PaginationComponent],
+  imports: [
+    SpinnerComponent,
+    CommonModule,
+    FormsModule,
+    PaginationComponent,
+    PauseTimeProgressBarComponent,
+  ],
   templateUrl: './training-view.component.html',
   styleUrls: ['./training-view.component.scss'],
 })
@@ -56,7 +63,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
   dataViewLoaded$ = this.dataViewLoaded.asObservable();
 
   private automationContextInitialized = false;
-  mobileView = false;
+  isMobile = false;
 
   @ViewChildren('weightInput') weightInputs!: QueryList<ElementRef>;
   @ViewChild('trainingTable', { static: false }) trainingTable!: ElementRef;
@@ -90,7 +97,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
       this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
     });
 
-    this.mobileView = this.mobileService.isMobileView();
+    this.isMobile = this.mobileService.isMobileView();
   }
 
   /**
@@ -200,10 +207,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
       )
       .pipe(
         tap(() => {
-          this.toastService.show(
-            'Speichern erfolgreich',
-            'Deine Änderungen wurden erfolgreich gespeichert'
-          );
+          this.toastService.show('Erfolg', 'Daten gespeichert');
           this.formService.clearChanges(); // Clear changes after submission
         }),
         catchError((error) => {
@@ -292,5 +296,14 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
         estMax: '',
       }
     );
+  }
+
+  switchToTimerView(event: Event) {
+    console.log(
+      '🚀 ~ TrainingViewComponent ~ switchToTimerView ~ event:',
+      event
+    );
+    event.preventDefault();
+    console.log('switch');
   }
 }

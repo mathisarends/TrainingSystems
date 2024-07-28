@@ -34,47 +34,55 @@ export class SwipeService {
     let touchStartX = 0;
     let touchEndX = 0;
 
-    const swipeThreshold = 125;
+    const swipeThreshold = 125; // Adjusted threshold for swipe detection
 
     const handleTouchStart = (event: TouchEvent) => {
       touchStartX = event.changedTouches[0].screenX;
+      touchEndX = touchStartX; // Initialize touchEndX to the same value as touchStartX
     };
 
     const handleTouchMove = (event: TouchEvent) => {
-      touchEndX = event.changedTouches[0].screenX;
+      touchEndX = event.changedTouches[0].screenX; // Update touchEndX during move
     };
 
     const handleTouchEnd = () => {
-      if (
-        touchEndX < touchStartX &&
-        Math.abs(touchStartX - touchEndX) > swipeThreshold
-      ) {
-        swipeLeftCallback();
-      } else if (
-        touchEndX > touchStartX &&
-        Math.abs(touchEndX - touchStartX) > swipeThreshold
-      ) {
-        swipeRightCallback();
+      const swipeDistance = touchStartX - touchEndX;
+
+      if (Math.abs(swipeDistance) > swipeThreshold) {
+        if (swipeDistance > 0) {
+          swipeLeftCallback();
+        } else {
+          swipeRightCallback();
+        }
       }
     };
 
-    const listenerStart = this.renderer.listen(
+    this.registerListener(
       element,
       'touchstart',
-      handleTouchStart
+      handleTouchStart as EventListener
     );
-    const listenerMove = this.renderer.listen(
+    this.registerListener(
       element,
       'touchmove',
-      handleTouchMove
+      handleTouchMove as EventListener
     );
-    const listenerEnd = this.renderer.listen(
-      element,
-      'touchend',
-      handleTouchEnd
-    );
+    this.registerListener(element, 'touchend', handleTouchEnd as EventListener);
+  }
 
-    this.listeners.push(listenerStart, listenerMove, listenerEnd);
+  /**
+   * Registers an event listener and stores the unlisten function.
+   * @param element - The HTML element to attach the listener to.
+   * @param event - The event type to listen for.
+   * @param handler - The event handler function.
+   */
+  private registerListener(
+    element: HTMLElement,
+    event: string,
+    handler: EventListener
+  ) {
+    const unlisten = this.renderer.listen(element, event, handler);
+    this.listeners.push(unlisten);
   }
 
   /**
