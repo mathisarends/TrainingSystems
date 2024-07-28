@@ -1,7 +1,6 @@
 import {
   Component,
   OnInit,
-  AfterViewInit,
   AfterViewChecked,
   Renderer2,
   Inject,
@@ -43,9 +42,7 @@ import { SwipeService } from '../../../service/swipe/swipe.service';
   templateUrl: './training-view.component.html',
   styleUrls: ['./training-view.component.scss'],
 })
-export class TrainingViewComponent
-  implements OnInit, AfterViewInit, AfterViewChecked
-{
+export class TrainingViewComponent implements OnInit, AfterViewChecked {
   title = '';
   trainingWeekIndex: number = 0;
   trainingDayIndex: number = 0;
@@ -56,10 +53,10 @@ export class TrainingViewComponent
   private dataViewLoaded = new BehaviorSubject<boolean>(false);
   dataViewLoaded$ = this.dataViewLoaded.asObservable();
 
+  private automationContextInitialized = false;
+
   @ViewChildren('weightInput') weightInputs!: QueryList<ElementRef>;
   @ViewChild('trainingTable', { static: false }) trainingTable!: ElementRef;
-
-  private swipeListenerInitialized = false;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -91,34 +88,24 @@ export class TrainingViewComponent
   }
 
   /**
-   * Lifecycle hook that is called after the component's view has been initialized.
-   * Initializes RPE validation, estimated max calculation, and auto-save functionality.
-   */
-  ngAfterViewInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      this.rpeService.initializeRPEValidation();
-      this.estMaxService.initializeEstMaxCalculation();
-      this.autoSaveService.initializeAutoSave();
-    }
-  }
-
-  /**
    * Lifecycle hook that is called after the component's view has been checked.
    * Initializes the swipe listener once the data view has loaded.
    */
   ngAfterViewChecked(): void {
-    if (isPlatformBrowser(this.platformId) && !this.swipeListenerInitialized) {
-      const exerciseCategorySelectors = document.querySelectorAll(
-        '.exercise-category-selector'
-      ) as NodeListOf<HTMLSelectElement>;
-      this.categoryPlaceholderService.handlePlaceholderCategory(
-        exerciseCategorySelectors,
-        this.renderer
-      );
-
+    if (
+      isPlatformBrowser(this.platformId) &&
+      !this.automationContextInitialized
+    ) {
       if (this.dataViewLoaded.getValue() && this.trainingTable) {
         this.initializeSwipeListener();
-        this.swipeListenerInitialized = true;
+
+        this.categoryPlaceholderService.handlePlaceholderCategory();
+
+        this.rpeService.initializeRPEValidation();
+        this.estMaxService.initializeEstMaxCalculation();
+        this.autoSaveService.initializeAutoSave();
+
+        this.automationContextInitialized = true;
       }
     }
   }
@@ -178,6 +165,7 @@ export class TrainingViewComponent
         tap(() => {
           if (this.trainingPlanData && this.exerciseData && this.title) {
             this.dataViewLoaded.next(true);
+            console.log('emitted true');
             this.removeSwipeListener();
             this.initializeSwipeListener();
           } else {
@@ -228,8 +216,7 @@ export class TrainingViewComponent
   onInputChange(event: Event): void {
     this.formService.trackChange(event);
     this.categoryPlaceholderService.updatePlaceholderVisibility(
-      event.target as HTMLSelectElement,
-      this.renderer
+      event.target as HTMLSelectElement
     );
   }
 
@@ -242,8 +229,7 @@ export class TrainingViewComponent
     this.categoryPlaceholderService.onCategoryChange(
       event,
       this.exerciseData.exerciseCategories,
-      this.exerciseData.defaultRepSchemeByCategory,
-      this.renderer
+      this.exerciseData.defaultRepSchemeByCategory
     );
   }
 

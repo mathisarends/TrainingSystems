@@ -47,7 +47,7 @@ table caption {
   font-size: 1.5rem;
   font-weight: bold;
   padding-top: 1rem;
-  padding-bottom: 2rem;
+  padding-bottom: 1.75rem;
 }
 
 .context-headline,
@@ -113,5 +113,9 @@ table caption {
 
   .actualRPE {
     text-align: left;
+  }
+
+  table caption {
+    padding-bottom: 1rem;
   }
 }
