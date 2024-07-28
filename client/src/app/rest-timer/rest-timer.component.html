@@ -1,12 +1,33 @@
 <div class="timer-container">
-  <h2>Rest Timer</h2>
-  <p>Adjust duration via the +/- buttons.</p>
   <div class="timer-display">
     <span class="time-remaining">{{ formatTime(remainingTime) }}</span>
   </div>
-  <div class="timer-controls">
-    <button class="adjust-button" (click)="adjustTime(-10)">-10s</button>
-    <button class="adjust-button" (click)="adjustTime(10)">+10s</button>
-    <button class="skip-button" (click)="skipTimer()">Skip</button>
+  <div
+    class="timer-controls d-flex justify-content-center align-items-center gap-1 mt-2"
+  >
+    <button
+      type="button"
+      class="btn btn-light btn-lg m-1"
+      appTooltip="Reduce 10 seconds"
+      (click)="adjustTime(-20)"
+    >
+      <i class="bx bx-minus"></i>
+    </button>
+    <button
+      type="button"
+      class="btn btn-light btn-lg m-1"
+      appTooltip="Add 10 seconds"
+      (click)="adjustTime(30)"
+    >
+      <i class="bx bx-plus"></i>
+    </button>
+    <button
+      type="button"
+      class="btn btn-light btn-lg m-1"
+      appTooltip="End Timer"
+      (click)="skipTimer()"
+    >
+      <i class="bx bx-stop"></i>
+    </button>
   </div>
 </div>

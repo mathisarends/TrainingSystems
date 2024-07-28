@@ -10,18 +10,17 @@ import { PauseTimeService } from '../../service/training/pause-time.service';
   styleUrl: './rest-timer.component.scss',
 })
 export class RestTimerComponent {
-  endTimer() {
-    throw new Error('Method not implemented.');
-  }
   pauseTimer() {
     throw new Error('Method not implemented.');
   }
   @Output() timerFinished = new EventEmitter<void>();
 
-  remainingTime!: number;
+  remainingTime: number;
   timerSubscription: Subscription | null = null;
 
-  constructor(private pauseTimeService: PauseTimeService) {}
+  constructor(private pauseTimeService: PauseTimeService) {
+    this.remainingTime = this.pauseTimeService.getCurrentTime();
+  }
 
   ngOnInit(): void {
     this.timerSubscription = this.pauseTimeService.countdownEmitter.subscribe(

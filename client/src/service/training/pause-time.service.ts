@@ -12,6 +12,9 @@ import { ExerciseDataDTO } from '../../app/Pages/training-view/exerciseDataDto';
 export class PauseTimeService {
   private renderer: Renderer2;
   countdownEmitter: EventEmitter<number> = new EventEmitter<number>();
+  private remainingTime: number = 0; // Store the remaining time
+  private intervalId: any; // Store the interval ID
+  countdownRunning = false;
 
   constructor(rendererFactory: RendererFactory2) {
     this.renderer = rendererFactory.createRenderer(null, null);
@@ -48,21 +51,31 @@ export class PauseTimeService {
    * @param seconds - The total number of seconds for the countdown.
    */
   private startCountdown(seconds: number) {
-    let remainingTime = seconds;
+    if (this.countdownRunning && this.intervalId) {
+      clearInterval(this.intervalId);
+    }
 
-    const intervalId = setInterval(() => {
-      if (remainingTime > 0) {
-        console.log(
-          '🚀 ~ PauseTimeService ~ intervalId ~ remainingTime:',
-          remainingTime
-        );
-        this.countdownEmitter.emit(remainingTime);
-        remainingTime--;
+    this.countdownRunning = true;
+    this.remainingTime = seconds; // Initialize remaining time
+    this.countdownEmitter.emit(this.remainingTime); // Emit immediately
+
+    this.intervalId = setInterval(() => {
+      if (this.remainingTime > 0) {
+        this.remainingTime--;
+        this.countdownEmitter.emit(this.remainingTime);
       } else {
-        clearInterval(intervalId);
+        clearInterval(this.intervalId);
+        this.countdownRunning = false;
         this.countdownEmitter.emit(0);
         console.log('Countdown finished');
       }
     }, 1000);
+  }
+
+  /**
+   * Get the current remaining time.
+   */
+  getCurrentTime(): number {
+    return this.remainingTime;
   }
 }
