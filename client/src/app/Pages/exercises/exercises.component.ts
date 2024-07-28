@@ -11,7 +11,6 @@ import { ModalService } from '../../../service/modal/modalService';
 import { ExerciseService } from '../../../service/exercise/exercise.service';
 import { ConfirmExerciseResetComponent } from '../confirm-exercise-reset/confirm-exercise-reset.component';
 import { ToastService } from '../../components/toast/toast.service';
-import { ToastType } from '../../components/toast/toastType';
 
 @Component({
   selector: 'app-exercises',
