@@ -1,5 +1,27 @@
 <div class="timer-container">
   <div class="timer-display">
+    <svg #progressRing class="progress-ring" width="200" height="200">
+      <circle
+        class="progress-ring__background"
+        stroke="#007bff"
+        stroke-width="10"
+        fill="transparent"
+        r="90"
+        cx="100"
+        cy="100"
+        style="outline: none; box-shadow: none"
+      />
+      <circle
+        class="progress-ring__circle"
+        stroke="white"
+        stroke-width="10"
+        fill="transparent"
+        r="90"
+        cx="100"
+        cy="100"
+        style="outline: none; box-shadow: none"
+      />
+    </svg>
     <span class="time-remaining">{{ formatTime(remainingTime) }}</span>
   </div>
   <div
@@ -9,7 +31,7 @@
       type="button"
       class="btn btn-light btn-lg m-1"
       appTooltip="Reduce 10 seconds"
-      (click)="adjustTime(-20)"
+      (click)="adjustTime(-10)"
     >
       <i class="bx bx-minus"></i>
     </button>
@@ -17,7 +39,7 @@
       type="button"
       class="btn btn-light btn-lg m-1"
       appTooltip="Add 10 seconds"
-      (click)="adjustTime(30)"
+      (click)="adjustTime(10)"
     >
       <i class="bx bx-plus"></i>
     </button>

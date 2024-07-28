@@ -13,6 +13,8 @@ export class PauseTimeService {
   private renderer: Renderer2;
   countdownEmitter: EventEmitter<number> = new EventEmitter<number>();
   private remainingTime: number = 0; // Store the remaining time
+  private initialTime: number = 0;
+
   private intervalId: any; // Store the interval ID
   countdownRunning = false;
 
@@ -35,6 +37,7 @@ export class PauseTimeService {
           const categoryValue = closestCategorySelector.value;
 
           const pauseTime = exerciseData.categoryPauseTimes[categoryValue];
+          this.initialTime = pauseTime;
 
           if (pauseTime) {
             this.startCountdown(pauseTime);
@@ -73,9 +76,36 @@ export class PauseTimeService {
   }
 
   /**
+   * Adjust the remaining time by the specified number of seconds.
+   * @param seconds - The number of seconds to adjust the timer by.
+   */
+  adjustTime(seconds: number) {
+    this.remainingTime = Math.max(this.remainingTime + seconds, 0);
+    this.countdownEmitter.emit(this.remainingTime);
+  }
+
+  /**
+   * Skip the timer by setting the remaining time to 0.
+   */
+  skipTimer() {
+    this.remainingTime = 0;
+    clearInterval(this.intervalId);
+    this.countdownRunning = false;
+    this.countdownEmitter.emit(this.remainingTime);
+    console.log('Timer skipped');
+  }
+
+  /**
    * Get the current remaining time.
    */
   getCurrentTime(): number {
     return this.remainingTime;
+  }
+
+  /**
+   * Get the initial time set for the timer.
+   */
+  getInitialTime(): number {
+    return this.initialTime;
   }
 }

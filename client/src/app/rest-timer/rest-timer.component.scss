@@ -8,44 +8,38 @@
 }
 
 .timer-display {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 200px;
   height: 200px;
-  border-radius: 50%;
-  border: 5px solid #007bff;
   margin: 20px 0;
   font-size: 2.5rem;
   font-weight: bold;
   color: #007bff;
 }
 
+.progress-ring {
+  position: absolute;
+  transform: rotate(-90deg); /* Rotate the whole ring to start from top */
+}
+
+.progress-ring__background {
+  transform-origin: 50% 50%;
+}
+
+.progress-ring__circle {
+  transition: stroke-dashoffset 1s linear;
+  transform-origin: 50% 50%;
+}
+
+.time-remaining {
+  position: absolute;
+}
+
 .timer-controls {
   display: flex;
   justify-content: space-around;
   width: 100%;
-}
-
-.adjust-button,
-.skip-button {
-  padding: 10px 20px;
-  margin: 5px;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.adjust-button {
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-}
-
-.skip-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-}
-
-.gap {
-  gap: 1rem;
 }
