@@ -66,8 +66,6 @@ export class ModalComponent implements AfterViewInit {
       this.childComponentRef.instance.onSubmit();
     }
 
-    console.log('this.confirmationRequired', this.confirmationRequired);
-
     if (!this.confirmationRequired) {
       this.modalService.close();
     }

@@ -14,15 +14,30 @@ import { AuthGuard } from './auth-guard.service';
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'training', component: TrainingPlansComponent },
-  { path: 'training/view', component: TrainingViewComponent },
-  { path: 'statistics', component: StatisticsComponent },
-  { path: 'profile', component: ProfileComponent },
-  { path: 'spinner', component: SpinnerComponent },
+  {
+    path: 'training',
+    component: TrainingPlansComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'training/view',
+    component: TrainingViewComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'statistics',
+    component: StatisticsComponent,
+    canActivate: [AuthGuard],
+  },
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
   {
     path: 'exercises',
     component: ExercisesComponent,
     canActivate: [AuthGuard],
   },
-  { path: 'training/:planId/:week/:day', component: TrainingViewComponent },
+  {
+    path: 'training/:planId/:week/:day',
+    component: TrainingViewComponent,
+    canActivate: [AuthGuard],
+  },
 ];

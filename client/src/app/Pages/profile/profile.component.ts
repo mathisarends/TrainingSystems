@@ -16,12 +16,9 @@ import { ModalEventsService } from '../../../service/modal/modal-events.service'
 import { first, firstValueFrom, Subscription } from 'rxjs';
 import { HttpClientService } from '../../../service/http/http-client.service';
 import { HttpMethods } from '../../types/httpMethods';
-
-import { HttpErrorHandlerService } from '../../../service/http/http-error-handler.service';
 import { FriendCardComponent } from '../../components/friend-card/friend-card.component';
 import { TooltipDirective } from '../../../service/tooltip/tooltip.directive';
 import { Friend } from '../../components/friend-card/friend';
-import { FriendModalComponent } from '../friend-modal/friend-modal.component';
 import { AlertComponent } from '../../components/alert/alert.component';
 import { FriendRequestComponent } from '../../friend-request/friend-request.component';
 import { FriendCardMode } from '../../components/friend-card/friend-card-mode';
@@ -63,25 +60,22 @@ export class ProfileComponent implements OnInit {
     private renderer: Renderer2,
     private modalService: ModalService,
     private modalEventsService: ModalEventsService,
-    private httpService: HttpClientService,
-    private httpErrorHandler: HttpErrorHandlerService
+    private httpService: HttpClientService
   ) {}
 
   async ngOnInit(): Promise<void> {
-    this.httpErrorHandler
-      .handleResponse(this.profileService.getProfile())
-      .subscribe({
-        next: (data) => {
-          this.profile = data?.userDto;
-          this.isLoading = false;
-        },
-        error: (err) => {
-          console.error('Fehler beim Abrufen des Profils', err);
-        },
-        complete: () => {
-          console.log('Profil erfolgreich geladen');
-        },
-      });
+    this.profileService.getProfile().subscribe({
+      next: (data) => {
+        this.profile = data?.userDto;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Fehler beim Abrufen des Profils', err);
+      },
+      complete: () => {
+        console.log('Profil erfolgreich geladen');
+      },
+    });
 
     this.subscription.add(
       this.modalEventsService.confirmClick$.subscribe(() =>

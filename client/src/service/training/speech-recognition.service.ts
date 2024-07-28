@@ -1,5 +1,6 @@
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, NgZone, PLATFORM_ID } from '@angular/core';
+import { Subject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +9,8 @@ export class SpeechRecognitionService {
   private recognition: any;
   private isListening = false;
   private timeoutId: any;
-  private readonly TIMEOUT_DURATION = 1500; // Set the timeout duration (in milliseconds)
+  private readonly TIMEOUT_DURATION = 3000; // Set the timeout duration (in milliseconds)
+  private stopListeningSubject: Subject<void> = new Subject<void>();
 
   constructor(
     private zone: NgZone,
@@ -57,9 +59,14 @@ export class SpeechRecognitionService {
         clearTimeout(this.timeoutId);
       };
 
+      // Start the timeout when the user starts speaking
+      this.recognition.onaudiostart = () => {
+        console.log('Audio started');
+        this.resetTimeout(); // Start the timeout when audio starts
+      };
+
       this.isListening = true;
       this.recognition.start();
-      this.resetTimeout(); // Start the timeout when recognition starts
     }
   }
 
@@ -69,6 +76,7 @@ export class SpeechRecognitionService {
       this.recognition.stop();
       this.isListening = false;
       clearTimeout(this.timeoutId);
+      this.notifyStopListening();
     }
   }
 
@@ -77,6 +85,14 @@ export class SpeechRecognitionService {
     this.timeoutId = setTimeout(() => {
       this.stopListening();
     }, this.TIMEOUT_DURATION);
+  }
+
+  private notifyStopListening(): void {
+    this.stopListeningSubject.next();
+  }
+
+  onStopListening(): Observable<void> {
+    return this.stopListeningSubject.asObservable();
   }
 }
 

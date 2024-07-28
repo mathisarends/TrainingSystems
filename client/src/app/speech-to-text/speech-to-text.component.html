@@ -21,5 +21,10 @@
       <p>Abgeleitete Aktion</p>
     </div>
   </div>
+  } @if (trainingSet) {
+  <div class="train ing-set">
+    <h3>Abgeleitetes Training Set</h3>
+    <pre>{{ getFormattedTrainingSet() }}</pre>
+  </div>
   }
 </div>

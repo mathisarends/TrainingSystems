@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-auth-info',
@@ -8,10 +7,4 @@ import { Router } from '@angular/router';
   templateUrl: './auth-info.component.html',
   styleUrl: './auth-info.component.scss',
 })
-export class AuthInfoComponent {
-  constructor(private router: Router) {}
-
-  onSubmit(): void {
-    this.router.navigate(['login']);
-  }
-}
+export class AuthInfoComponent {}
