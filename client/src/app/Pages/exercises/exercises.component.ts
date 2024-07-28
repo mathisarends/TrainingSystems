@@ -11,6 +11,7 @@ import { ModalService } from '../../../service/modal/modalService';
 import { ExerciseService } from '../../../service/exercise/exercise.service';
 import { ConfirmExerciseResetComponent } from '../confirm-exercise-reset/confirm-exercise-reset.component';
 import { ToastService } from '../../components/toast/toast.service';
+import { AuthService } from '../../auth-service.service';
 
 @Component({
   selector: 'app-exercises',
@@ -40,10 +41,17 @@ export class ExercisesComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private searchService: SearchService,
     private modalService: ModalService,
-    private exerciseService: ExerciseService
+    private exerciseService: ExerciseService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    const authenticated = this.authService.isLoggedIn();
+    console.log(
+      '🚀 ~ ExercisesComponent ~ ngOnInit ~ authenticated:',
+      authenticated
+    );
+
     this.loadExercises();
 
     // Subscribe to search input changes
@@ -86,16 +94,19 @@ export class ExercisesComponent implements OnInit, OnDestroy {
       const response: any = await firstValueFrom(
         this.httpClient.request<any>(HttpMethods.GET, 'exercise')
       );
-      const exercisesData = response.exercisesData;
-      this.exerciseCategories = exercisesData.exerciseCategories;
-      this.categorizedExercises = exercisesData.categorizedExercises;
-      this.maxFactors = exercisesData.maxFactors;
-      this.categoryPauseTimes = exercisesData.categoryPauseTimes;
+      const exercisesData = response?.exercisesData;
+      this.exerciseCategories = exercisesData?.exerciseCategories;
+      this.categorizedExercises = exercisesData?.categorizedExercises;
+      this.maxFactors = exercisesData?.maxFactors;
+      this.categoryPauseTimes = exercisesData?.categoryPauseTimes;
       this.defaultRepSchemeByCategory =
-        exercisesData.defaultRepSchemeByCategory;
+        exercisesData?.defaultRepSchemeByCategory;
 
       // Initialize filteredCategories with all categories
-      this.filteredCategories = [...this.exerciseCategories];
+
+      if (this.exerciseCategories) {
+        this.filteredCategories = [...this.exerciseCategories];
+      }
     } catch (error) {
       console.error('Error loading exercises:', error);
     } finally {

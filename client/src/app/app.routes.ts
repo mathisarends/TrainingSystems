@@ -9,6 +9,7 @@ import { ProfileComponent } from './Pages/profile/profile.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { ExercisesComponent } from './Pages/exercises/exercises.component';
 import { TrainingViewComponent } from './Pages/training-view/training-view.component';
+import { AuthGuard } from './auth-guard.service';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -18,6 +19,10 @@ export const routes: Routes = [
   { path: 'statistics', component: StatisticsComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'spinner', component: SpinnerComponent },
-  { path: 'exercises', component: ExercisesComponent },
+  {
+    path: 'exercises',
+    component: ExercisesComponent,
+    canActivate: [AuthGuard],
+  },
   { path: 'training/:planId/:week/:day', component: TrainingViewComponent },
 ];
