@@ -1,0 +1,57 @@
+/* speech-to-text.component.scss */
+.speech-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+
+.mic-icon {
+  font-size: 4rem;
+  color: #007bff;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  transition: transform 0.2s ease-in-out;
+
+  &.listening {
+    animation: pulse 1s infinite;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.075);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.transcript {
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  word-wrap: break-word;
+
+  .derived-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+
+    i {
+      font-size: 2rem;
+      color: #007bff;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-size: 1rem;
+      color: #007bff;
+      font-weight: bold;
+    }
+  }
+}

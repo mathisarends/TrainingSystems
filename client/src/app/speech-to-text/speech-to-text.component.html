@@ -1,0 +1,25 @@
+<div class="speech-container">
+  <div
+    class="mic-icon"
+    [class.listening]="isListening"
+    (click)="toggleListening()"
+  >
+    <i class="bx bx-microphone"></i>
+  </div>
+  @if (transcript) {
+  <div class="transcript">
+    <app-alert
+      alertType="light"
+      [alertText]="
+        transcript
+          ? transcript
+          : 'Aufgrundlage deiner Audioeingabe werden hier die entsprechenden Werte in deinem Trainingsplan festgesetzt!'
+      "
+    ></app-alert>
+    <div class="derived-action">
+      <i class="bx bx-down-arrow"></i>
+      <p>Abgeleitete Aktion</p>
+    </div>
+  </div>
+  }
+</div>

@@ -28,13 +28,14 @@ import { AutoSaveService } from '../../../service/training/auto-save.service';
 import { TrainingViewNavigationService } from './training-view-navigation.service';
 import { forkJoin, BehaviorSubject, EMPTY } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { HttpErrorResponse } from '@angular/common/http';
 import { SwipeService } from '../../../service/swipe/swipe.service';
 import { MobileService } from '../../../service/util/mobile.service';
 
 import { PauseTimeService } from '../../../service/training/pause-time.service';
 import { ModalService } from '../../../service/modal/modalService';
 import { RestTimerComponent } from '../../rest-timer/rest-timer.component';
+import { SpeechRecognitionService } from '../../../service/training/speech-recognition.service';
+import { SpeechToTextComponent } from '../../speech-to-text/speech-to-text.component';
 
 /**
  * Component to manage and display the training view.
@@ -78,7 +79,8 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
     private swipeService: SwipeService,
     private pauseTimeService: PauseTimeService,
     private mobileService: MobileService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private speechRecognitionService: SpeechRecognitionService
   ) {}
 
   /**
@@ -165,13 +167,6 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
           this.trainingPlanData = trainingPlan;
           this.exerciseData = exerciseData;
           this.title = trainingPlan?.title;
-        }),
-        catchError((error: unknown) => {
-          if ((error as HttpErrorResponse).status !== 499) {
-            console.error('Error loading training data:', error);
-            return EMPTY;
-          }
-          return EMPTY;
         }),
         tap(() => {
           if (this.trainingPlanData && this.exerciseData && this.title) {
@@ -304,5 +299,24 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
       buttonText: 'Abbrechen',
       hasFooter: false,
     });
+  }
+
+  // TODO: automatisch ende der Spracherkennung erkennen und string parsen und damit daten verarbeiten automatisch in die felder setze nund so.
+  recordTrainingData(event: Event) {
+    event.preventDefault();
+
+    this.modalService.open({
+      component: SpeechToTextComponent,
+      title: 'Übungen eintragen',
+      buttonText: 'Übernhmen',
+    });
+
+    /* this.speechRecognitionService.startListening((transcript) => {
+      console.log(
+        '🚀 ~ TrainingViewComponent ~ this.speechRecognitionService.startListening ~ transcript:',
+        transcript
+      );
+      this.modalService.open()
+    }); */
   }
 }

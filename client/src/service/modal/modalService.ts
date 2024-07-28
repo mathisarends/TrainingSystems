@@ -64,9 +64,6 @@ export class ModalService {
     }
   }
 
-  // TODO: open basic text component
-  openBasicTextComponent() {}
-
   /**
    * Closes the modal dialog and cleans up the components.
    */
