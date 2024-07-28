@@ -30,6 +30,8 @@ import { forkJoin, BehaviorSubject, EMPTY } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SwipeService } from '../../../service/swipe/swipe.service';
+import { PauseTimeService } from '../../../service/training/pause-time.service';
+import { MobileService } from '../../../service/util/mobile.service';
 
 /**
  * Component to manage and display the training view.
@@ -54,6 +56,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
   dataViewLoaded$ = this.dataViewLoaded.asObservable();
 
   private automationContextInitialized = false;
+  mobileView = false;
 
   @ViewChildren('weightInput') weightInputs!: QueryList<ElementRef>;
   @ViewChild('trainingTable', { static: false }) trainingTable!: ElementRef;
@@ -65,12 +68,13 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
     private formService: FormService,
     private rpeService: RpeService,
     private estMaxService: EstMaxService,
-    private renderer: Renderer2,
     private toastService: ToastService,
     private categoryPlaceholderService: CategoryPlaceholderService,
     private autoSaveService: AutoSaveService,
     private navigationService: TrainingViewNavigationService,
-    private swipeService: SwipeService
+    private swipeService: SwipeService,
+    private pauseTimeService: PauseTimeService,
+    private mobileService: MobileService
   ) {}
 
   /**
@@ -85,6 +89,8 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
 
       this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
     });
+
+    this.mobileView = this.mobileService.isMobileView();
   }
 
   /**
@@ -104,6 +110,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
         this.rpeService.initializeRPEValidation();
         this.estMaxService.initializeEstMaxCalculation();
         this.autoSaveService.initializeAutoSave();
+        this.pauseTimeService.initializePauseTimers(this.exerciseData);
 
         this.automationContextInitialized = true;
       }
@@ -165,7 +172,6 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
         tap(() => {
           if (this.trainingPlanData && this.exerciseData && this.title) {
             this.dataViewLoaded.next(true);
-            console.log('emitted true');
             this.removeSwipeListener();
             this.initializeSwipeListener();
           } else {

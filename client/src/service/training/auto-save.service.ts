@@ -14,10 +14,6 @@ export class AutoSaveService {
     const weightInputs = document.querySelectorAll(
       '.weight'
     ) as NodeListOf<HTMLInputElement>;
-    console.log(
-      '🚀 ~ AutoSaveService ~ initializeAutoSave ~ weightInputs:',
-      weightInputs
-    );
     const form = document.getElementById('form') as HTMLFormElement;
 
     weightInputs.forEach((weightInput) => {
