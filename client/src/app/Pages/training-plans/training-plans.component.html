@@ -22,10 +22,10 @@
       </div>
       } @else { @for (trainingPlan of filteredTrainingPlans; track trainingPlan;
       let i = $index) {
-      <div [ngClass]="getColumnClass(i)">
+      <div [ngClass]="getColumnClass()">
         <app-training-plan-card
           [trainingPlan]="trainingPlan"
-          [columnClass]="getColumnClass(i)"
+          [columnClass]="getColumnClass()"
           (changedPlanConstellation)="onChangedPlanConstellation()"
         ></app-training-plan-card>
       </div>

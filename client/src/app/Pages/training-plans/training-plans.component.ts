@@ -13,7 +13,6 @@ import { CommonModule } from '@angular/common';
 import { TooltipDirective } from '../../../service/tooltip/tooltip.directive';
 import { TrainingPlanCardComponent } from '../../components/training-plan-card/training-plan-card.component';
 import { ModalSize } from '../../../service/modal/modalSize';
-import { ToastService } from '../../components/toast/toast.service';
 
 /**
  * Component to manage and display training plans.
@@ -41,8 +40,7 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
     private modalService: ModalService,
     private httpClient: HttpClientService,
     private searchService: SearchService,
-    private trainingPlanService: TrainingPlanService,
-    private toastService: ToastService
+    private trainingPlanService: TrainingPlanService
   ) {}
 
   /**
@@ -149,7 +147,7 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
    * @param index - The index of the training plan.
    * @returns {string} - The column class.
    */
-  getColumnClass(index: number): string {
+  getColumnClass(): string {
     const totalItems = this.filteredTrainingPlans.length;
     if (totalItems % 3 === 0) {
       return 'col-lg-4 col-md-6 col-sm-12';
