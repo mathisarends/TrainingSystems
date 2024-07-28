@@ -16,6 +16,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { TrainingPlanService } from '../../../service/training/training-plan.service';
 import { ImageUploadService } from '../../../service/util/image-upload.service';
 import { ModalService } from '../../../service/modal/modalService';
+import { ToastService } from '../../components/toast/toast.service';
 
 /**
  * Component for creating a training form.
@@ -46,7 +47,8 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
     private trainingPlanService: TrainingPlanService,
     private httpClient: HttpClientService,
     private imageUploadService: ImageUploadService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private toastService: ToastService
   ) {
     this.trainingForm = this.fb.group({
       title: ['', Validators.required],
@@ -88,6 +90,8 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
             formData
           )
         );
+
+        this.toastService.show('Erfolg', 'Plan erstellt!');
 
         this.trainingPlanService.trainingPlanChanged();
         this.modalService.close(); // Close modal on successful submission

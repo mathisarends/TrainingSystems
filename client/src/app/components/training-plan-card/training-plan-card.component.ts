@@ -12,6 +12,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ModalEventsService } from '../../../service/modal/modal-events.service';
 import { DeleteConfirmationComponent } from '../../Pages/delete-confirmation/delete-confirmation.component';
 import { TooltipDirective } from '../../../service/tooltip/tooltip.directive';
+import { ToastService } from '../toast/toast.service';
 
 /**
  * Component for displaying and managing a single training plan card.
@@ -34,7 +35,8 @@ export class TrainingPlanCardComponent {
     private httpClient: HttpClientService,
     private router: Router,
     private modalService: ModalService,
-    private modalEventsService: ModalEventsService
+    private modalEventsService: ModalEventsService,
+    private toastService: ToastService
   ) {}
 
   /**
@@ -128,6 +130,7 @@ export class TrainingPlanCardComponent {
         );
 
         this.modalService.close();
+        this.toastService.show('Erfolg', 'Plan gelöscht');
 
         this.changedPlanConstellation.emit();
       } catch (error) {

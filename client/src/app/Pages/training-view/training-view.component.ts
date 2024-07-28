@@ -28,7 +28,7 @@ import { TrainingPlanDto } from './trainingPlanDto';
 import { AutoSaveService } from '../../../service/training/auto-save.service';
 import { TrainingViewNavigationService } from './training-view-navigation.service';
 import { forkJoin, BehaviorSubject, EMPTY } from 'rxjs';
-import { catchError, take, tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SwipeService } from '../../../service/swipe/swipe.service';
 
@@ -166,7 +166,7 @@ export class TrainingViewComponent
         tap(({ trainingPlan, exerciseData }) => {
           this.trainingPlanData = trainingPlan;
           this.exerciseData = exerciseData;
-          this.title = trainingPlan.title;
+          this.title = trainingPlan?.title;
         }),
         catchError((error: unknown) => {
           if ((error as HttpErrorResponse).status !== 499) {
@@ -176,9 +176,13 @@ export class TrainingViewComponent
           return EMPTY;
         }),
         tap(() => {
-          this.dataViewLoaded.next(true);
-          this.removeSwipeListener();
-          this.initializeSwipeListener();
+          if (this.trainingPlanData && this.exerciseData && this.title) {
+            this.dataViewLoaded.next(true);
+            this.removeSwipeListener();
+            this.initializeSwipeListener();
+          } else {
+            this.dataViewLoaded.next(false);
+          }
         })
       )
       .subscribe();

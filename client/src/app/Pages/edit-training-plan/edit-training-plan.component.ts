@@ -24,6 +24,7 @@ import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { ModalService } from '../../../service/modal/modalService';
 import { TrainingPlanService } from '../../../service/training/training-plan.service';
 import { ImageUploadService } from '../../../service/util/image-upload.service';
+import { ToastService } from '../../components/toast/toast.service';
 
 /**
  * Component for editing a training plan.
@@ -54,17 +55,17 @@ export class EditTrainingPlanComponent
    * @param trainingPlanService - Service to manage training plans.
    * @param httpClient - Service to handle HTTP requests.
    * @param renderer - Renderer2 instance to manipulate DOM elements.
-   * @param el - ElementRef instance to reference DOM elements.
    * @param imageUploadService - Service to handle image uploads.
    */
   constructor(
     private fb: FormBuilder,
     private modalEventsService: ModalEventsService,
     private modalService: ModalService,
+    private toastService: ToastService,
     private trainingPlanService: TrainingPlanService,
     private httpClient: HttpClientService,
     private renderer: Renderer2,
-    private el: ElementRef,
+
     private imageUploadService: ImageUploadService
   ) {
     this.trainingForm = this.fb.group({
@@ -162,9 +163,10 @@ export class EditTrainingPlanComponent
             formData
           )
         );
-
         this.trainingPlanService.trainingPlanChanged();
         this.modalService.close();
+
+        this.toastService.show('Erfolg', 'Plan bearbeitet');
       } catch (error) {
         const httpError = error as HttpErrorResponse;
 
