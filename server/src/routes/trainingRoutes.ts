@@ -40,7 +40,7 @@ router.get('statistics/plan/:id', authService.authenticationMiddleware, async (r
 
     const exerciseData = prepareTrainingWeeksForExercise(trainingPlan, exerciseCategory);
 
-    res.status(200).json({ exerciseData });
+    res.status(200).json(exerciseData);
   } catch (error) {
     const errMessage = 'Es ist ein Fehler beim Abrufen der Statistiken aufgetreten ' + error;
     console.error(errMessage);
