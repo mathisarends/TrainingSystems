@@ -7,6 +7,8 @@ import { TrainingPlanDTO } from '../dto/trainingDto.js';
 import { BasicTrainingPlanView, TrainingPlanCardView } from '@shared/models/dtos/training/trainingDto.types.js';
 import { UserClaimsSet } from './exerciseService.js';
 import { WeightRecommendationBase } from '@shared/models/training/enum/weightRecommandationBase.js';
+import { Exercise } from '@shared/models/training/exercise.js';
+import { TrainingDay } from '@shared/models/training/trainingDay.js';
 
 export async function getTrainingPlans(
   userDAO: MongoGenericDAO<User>,
@@ -205,4 +207,97 @@ function addNewTrainingWeeks(trainingWeeks: TrainingWeek[], trainingFrequency: n
 
 export function removeTrainingWeeks(trainingWeeks: TrainingWeek[], removeTrainingWeeks: number) {
   trainingWeeks.splice(-removeTrainingWeeks, removeTrainingWeeks);
+}
+
+// Function to find the latest training day with weight entry
+export function findLatestTrainingDayWithWeight(trainingPlan: TrainingPlan) {
+  for (let wIndex = trainingPlan.trainingWeeks.length - 1; wIndex >= 0; wIndex--) {
+    const trainingWeek = trainingPlan.trainingWeeks[wIndex];
+    for (let dIndex = trainingWeek.trainingDays.length - 1; dIndex >= 0; dIndex--) {
+      const trainingDay = trainingWeek.trainingDays[dIndex];
+
+      if (trainingDay.exercises?.some(exercise => exercise.weight)) {
+        if (dIndex + 1 < trainingWeek.trainingDays.length) {
+          const nextDay = trainingWeek.trainingDays[dIndex + 1];
+          if (!nextDay.exercises?.some(exercise => exercise.weight)) {
+            return { weekIndex: wIndex, dayIndex: dIndex };
+          }
+        } else if (wIndex + 1 < trainingPlan.trainingWeeks.length) {
+          const nextWeek = trainingPlan.trainingWeeks[wIndex + 1];
+          if (
+            nextWeek.trainingDays.length > 0 &&
+            !nextWeek.trainingDays[0].exercises?.some(exercise => exercise.weight)
+          ) {
+            return { weekIndex: wIndex, dayIndex: dIndex };
+          }
+        } else {
+          return { weekIndex: wIndex, dayIndex: dIndex };
+        }
+      }
+    }
+  }
+  return { weekIndex: 0, dayIndex: 0 };
+}
+
+/**
+ * Creates a new Exercise object.
+ * @param fieldName - The name of the field being updated.
+ * @param fieldValue - The value to be assigned to the field.
+ * @returns A complete Exercise object with default values.
+ */
+export function createExerciseObject(fieldName: string, fieldValue: string): Exercise | null {
+  return {
+    category: fieldName.endsWith('category') ? fieldValue : '',
+    exercise: '',
+    sets: 0,
+    reps: 0,
+    weight: '',
+    targetRPE: 0,
+    actualRPE: 0,
+    estMax: 0
+  };
+}
+
+export function updateExercise(
+  fieldName: string,
+  fieldValue: string,
+  exercise: Exercise,
+  trainingDay: TrainingDay,
+  exerciseIndex: number
+) {
+  // zum löschen nachdem sie gelöscht wurde wird sie aber wieder neue erstellt!!! also funktioniert noch nicht
+  if (fieldName.endsWith('category') && (fieldValue === '- Bitte Auswählen -' || fieldValue === '')) {
+    trainingDay.exercises.splice(exerciseIndex - 1, 1);
+    return;
+  }
+
+  switch (true) {
+    case fieldName.endsWith('category'):
+      exercise.category = fieldValue;
+      break;
+    case fieldName.endsWith('exercise_name'):
+      exercise.exercise = fieldValue;
+      break;
+    case fieldName.endsWith('sets'):
+      exercise.sets = Number(fieldValue);
+      break;
+    case fieldName.endsWith('reps'):
+      exercise.reps = Number(fieldValue);
+      break;
+    case fieldName.endsWith('weight'):
+      exercise.weight = fieldValue;
+      break;
+    case fieldName.endsWith('targetRPE'):
+      exercise.targetRPE = Number(fieldValue);
+      break;
+    case fieldName.endsWith('actualRPE'):
+      exercise.actualRPE = Number(fieldValue);
+      break;
+    case fieldName.endsWith('estMax'):
+      exercise.estMax = Number(fieldValue);
+      break;
+    default:
+      console.log('Dieses Feld gibt es leider nicht!');
+      break;
+  }
 }
