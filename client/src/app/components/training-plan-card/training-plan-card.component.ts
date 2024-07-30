@@ -102,6 +102,11 @@ export class TrainingPlanCardComponent {
     });
   }
 
+  viewStatistics(id: string): void {
+    console.log('id', id);
+    this.router.navigate(['statistics']);
+  }
+
   /**
    * Opens the modal to delete a training plan.
    * @param index - The index of the training plan to delete.
