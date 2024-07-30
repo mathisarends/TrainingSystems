@@ -1,3 +1,13 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
 #MyLineChart {
   height: 400px;
+}
+
+#MyFancyLineChart {
+  height: 500px;
 }
