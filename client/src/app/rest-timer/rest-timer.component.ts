@@ -42,10 +42,15 @@ export class RestTimerComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         if (remainingTime === 0) {
           this.timerFinished.emit();
+          this.playTimerFinishedAudio();
         }
       }
     );
     this.pauseTimeService.countdownEmitter.emit(this.remainingTime);
+  }
+
+  playTimerFinishedAudio() {
+    new Audio('./audio/boxing_bell.mp3').play();
   }
 
   ngAfterViewInit(): void {
