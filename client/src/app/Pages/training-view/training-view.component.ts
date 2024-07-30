@@ -34,7 +34,6 @@ import { MobileService } from '../../../service/util/mobile.service';
 import { PauseTimeService } from '../../../service/training/pause-time.service';
 import { ModalService } from '../../../service/modal/modalService';
 import { RestTimerComponent } from '../../rest-timer/rest-timer.component';
-import { SpeechRecognitionService } from '../../../service/training/speech-recognition.service';
 import { SpeechToTextComponent } from '../../speech-to-text/speech-to-text.component';
 
 /**
@@ -79,8 +78,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
     private swipeService: SwipeService,
     private pauseTimeService: PauseTimeService,
     private mobileService: MobileService,
-    private modalService: ModalService,
-    private speechRecognitionService: SpeechRecognitionService
+    private modalService: ModalService
   ) {}
 
   /**

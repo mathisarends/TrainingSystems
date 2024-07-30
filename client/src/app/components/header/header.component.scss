@@ -1,7 +1,18 @@
+#header {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  padding-inline: 7.5%;
+}
+
 .form-control {
   background-color: inherit;
 }
 
-header {
-  padding-inline: 7.5%;
+@media screen and (max-width: 786px) {
+  #header {
+    padding-inline: 5%;
+    padding-left: 1.5%;
+  }
 }
