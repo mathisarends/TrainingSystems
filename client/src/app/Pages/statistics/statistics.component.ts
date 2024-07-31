@@ -30,10 +30,11 @@ export class StatisticsComponent implements OnInit {
   }
 
   fetchTrainingStatistics(id: string | undefined): void {
+    const exercises = 'squat,bench,deadlift'; // Define the exercises you want to fetch
     this.httpService
       .request<Partial<TrainingExerciseTonnageDto>>(
         HttpMethods.GET,
-        `training/statistics/${id}`
+        `training/statistics/${id}?exercises=${exercises}`
       )
       .subscribe((response) => {
         console.log(

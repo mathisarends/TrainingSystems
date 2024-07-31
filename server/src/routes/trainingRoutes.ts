@@ -17,12 +17,11 @@ router.patch('/plan/:id/:week/:day', authService.authenticationMiddleware, train
 
 router.get('/plan/:id/latest', authService.authenticationMiddleware, trainingController.getLatestTrainingPlan);
 
-router.get('statistics/plan/:id', authService.authenticationMiddleware, async (req, res) => {
+// gets tonnage for squat, bench and deadlift
+router.get('/statistics/:id', authService.authenticationMiddleware, async (req, res) => {
   const userClaimsSet = res.locals.user;
   const trainingPlanId = req.params.id;
-  const exerciseCategoryParam = req.query.category as string;
-
-  const exerciseCategory = mapExerciseCategoryParam(exerciseCategoryParam);
+  const exerciseCategories = (req.query.exercises as string).split(',');
 
   try {
     const userDAO = req.app.locals.userDAO;
@@ -37,10 +36,17 @@ router.get('statistics/plan/:id', authService.authenticationMiddleware, async (r
     }
 
     const trainingPlan = user.trainingPlans[trainingPlanIndex];
+    // Define the structure of the response data
+    const responseData: { [key: string]: ReturnType<typeof prepareTrainingWeeksForExercise> } = {};
 
-    const exerciseData = prepareTrainingWeeksForExercise(trainingPlan, exerciseCategory);
-
-    res.status(200).json(exerciseData);
+    // Process the exercise categories
+    exerciseCategories.forEach(category => {
+      const exerciseCategory = mapToExerciseCategory(category); // Use the mapping function
+      if (exerciseCategory) {
+        responseData[category.toLowerCase()] = prepareTrainingWeeksForExercise(trainingPlan, exerciseCategory);
+      }
+    });
+    res.status(200).json(responseData);
   } catch (error) {
     const errMessage = 'Es ist ein Fehler beim Abrufen der Statistiken aufgetreten ' + error;
     console.error(errMessage);
@@ -48,42 +54,30 @@ router.get('statistics/plan/:id', authService.authenticationMiddleware, async (r
   }
 });
 
+// Prepare tonnage data for a specific exercise category over the training weeks
 function prepareTrainingWeeksForExercise(trainingPlan: TrainingPlan, exerciseCategory: ExerciseCategories) {
-  const results: unknown[] = [];
-
-  trainingPlan.trainingWeeks.forEach((week, weekIndex) => {
-    let movedWeightForCategory: number = 0;
-    let totalSetsForCategory: number = 0;
-    let rpeSum: number = 0;
+  return trainingPlan.trainingWeeks.map(week => {
+    let tonnageInCategory = 0;
 
     week.trainingDays.forEach(trainingDay => {
       trainingDay.exercises.forEach(exercise => {
         if (exercise.category === exerciseCategory) {
-          const weight = typeof exercise.weight === 'string' ? parseFloat(exercise.weight) : exercise.weight;
-          if (!isNaN(weight)) {
-            movedWeightForCategory += exercise.sets * exercise.reps * weight;
-            totalSetsForCategory += exercise.sets;
-            rpeSum += exercise.actualRPE * exercise.sets;
-          }
+          const weight = parseFloat(exercise.weight) || 0;
+          tonnageInCategory += exercise.sets * exercise.reps * weight;
         }
       });
     });
 
-    const averageRPE = totalSetsForCategory ? rpeSum / totalSetsForCategory : 0;
-
-    results.push({
-      week: weekIndex + 1,
-      movedWeightForCategory,
-      totalSetsForCategory,
-      averageRPE
-    });
+    return {
+      tonnageInCategory
+    };
   });
-
-  return results;
 }
 
-function mapExerciseCategoryParam(categoryParam: string): ExerciseCategories {
-  switch (categoryParam.toLowerCase()) {
+export default router;
+
+function mapToExerciseCategory(category: string): ExerciseCategories | undefined {
+  switch (category.toLowerCase()) {
     case 'squat':
       return ExerciseCategories.SQUAT;
     case 'bench':
@@ -105,8 +99,6 @@ function mapExerciseCategoryParam(categoryParam: string): ExerciseCategories {
     case 'legs':
       return ExerciseCategories.LEGS;
     default:
-      throw new Error(`Invalid exercise category: ${categoryParam}`);
+      return undefined; // In case the category does not match any enum values
   }
 }
-
-export default router;
