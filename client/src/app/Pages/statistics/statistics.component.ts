@@ -19,7 +19,9 @@ import { Tonnage } from './tonnage';
   styleUrls: ['./statistics.component.scss'],
 })
 export class StatisticsComponent implements OnInit {
-  public lineChart: any;
+  lineChart: any;
+  pieChart: any;
+
   dataLoaded: boolean = false;
 
   constructor(private router: Router, private httpService: HttpClientService) {}
@@ -30,7 +32,7 @@ export class StatisticsComponent implements OnInit {
   }
 
   fetchTrainingStatistics(id: string | undefined): void {
-    const exercises = 'squat,bench,deadlift'; // Define the exercises you want to fetch
+    const exercises = 'squat,bench,deadlift,overheadpress'; // Define the exercises you want to fetch
     this.httpService
       .request<Partial<TrainingExerciseTonnageDto>>(
         HttpMethods.GET,
@@ -43,6 +45,7 @@ export class StatisticsComponent implements OnInit {
         );
         this.dataLoaded = true;
         this.initializeChart(response);
+        this.createPieChart(response);
       });
   }
 
@@ -171,5 +174,65 @@ export class StatisticsComponent implements OnInit {
     };
 
     return colors[category];
+  }
+
+  createPieChart(data: Partial<TrainingExerciseTonnageDto>): void {
+    // Berechne die Gesamttonnage für jede Kategorie
+    const categoryTotals = Object.keys(data).map((categoryKey) => {
+      const categoryData =
+        data[categoryKey as keyof TrainingExerciseTonnageDto] || [];
+      return this.calculateTotalTonnage(categoryData);
+    });
+
+    // Generiere Labels und Farben für den Pie-Chart basierend auf den Kategorien
+    const labels = Object.keys(data).map((categoryKey) =>
+      this.formatCategoryLabel(categoryKey)
+    );
+    const backgroundColors = labels.map(
+      (label) => this.getCategoryColor(label.toLowerCase()).backgroundColor
+    );
+
+    if (this.pieChart) {
+      this.pieChart.destroy();
+    }
+
+    // Erstelle den Pie-Chart
+    this.pieChart = new Chart('MyPieChart', {
+      type: 'pie',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            data: categoryTotals, // Verwende die berechneten Tonnagen
+            backgroundColor: backgroundColors,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                return context.label + ': ' + context.raw + ' kg';
+              },
+            },
+          },
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Tonnage (anteilig)',
+            },
+          },
+        },
+      },
+    });
+  }
+
+  calculateTotalTonnage(data: Tonnage[]): number {
+    return data.reduce((total, week) => total + week.tonnageInCategory, 0);
   }
 }
