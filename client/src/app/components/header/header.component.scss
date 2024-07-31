@@ -4,6 +4,11 @@
   right: 0;
   top: 0;
   padding-inline: 7.5%;
+  z-index: 999;
+}
+
+#header .dropdown {
+  z-index: 1000;
 }
 
 .form-control {

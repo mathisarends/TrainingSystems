@@ -104,7 +104,7 @@ export class TrainingPlanCardComponent {
 
   viewStatistics(id: string): void {
     console.log('id', id);
-    this.router.navigate(['statistics']);
+    this.router.navigate([`statistics/${id}`]);
   }
 
   /**
