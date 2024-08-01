@@ -6,6 +6,7 @@ import { HttpMethods } from '../../types/httpMethods';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { TrainingExerciseTonnageDto } from './main-exercise-tonnage-dto';
 import { Tonnage } from './tonnage';
+import { MultiSelectComponent } from '../../multi-select/multi-select.component';
 
 /**
  * Component responsible for displaying training statistics in a line chart.
@@ -14,7 +15,7 @@ import { Tonnage } from './tonnage';
 @Component({
   selector: 'app-statistics',
   standalone: true,
-  imports: [SpinnerComponent],
+  imports: [SpinnerComponent, MultiSelectComponent],
   templateUrl: './statistics.component.html',
   styleUrls: ['./statistics.component.scss'],
 })
@@ -236,3 +237,5 @@ export class StatisticsComponent implements OnInit {
     return data.reduce((total, week) => total + week.tonnageInCategory, 0);
   }
 }
+
+// TODO: Balkendiagramme für Sets. MultiSelect hübsche Komponente bauen

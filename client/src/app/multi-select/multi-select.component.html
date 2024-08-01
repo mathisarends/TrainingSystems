@@ -1,0 +1,37 @@
+<div class="dropdown" [class.show]="isOpen()" (click)="toggleDropdown()">
+  <button
+    class="btn btn-light dropdown-toggle"
+    type="button"
+    aria-haspopup="true"
+    aria-expanded="isOpen()"
+  >
+    {{ getSelectedText() }}
+  </button>
+  <div
+    class="dropdown-menu p-2"
+    [class.show]="isOpen()"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="dropdown-search">
+      <input
+        type="text"
+        class="form-control w-100"
+        placeholder="Search..."
+        [(ngModel)]="searchTerm"
+      />
+    </div>
+
+    @for (option of filteredOptions(); track option) {
+    <div class="form-check">
+      <input
+        type="checkbox"
+        class="form-check-input"
+        [id]="option"
+        [checked]="selected().has(option)"
+        (change)="onSelectionChange(option, $event)"
+      />
+      <label class="form-check-label" [for]="option">{{ option }}</label>
+    </div>
+    }
+  </div>
+</div>
