@@ -1,6 +1,12 @@
 @if (!dataLoaded) {
 <app-spinner />
+} @else {
+<app-multi-select
+  [options]="['Squat', 'Bench', 'Deadlift', 'Overheadpress']"
+  (selectionChange)="changeDisplayCategories($any($event))"
+/>
 }
+
 <div>
   <canvas id="MyLineChart"></canvas>
 </div>
@@ -8,5 +14,3 @@
 <div>
   <canvas id="MyPieChart"></canvas>
 </div>
-
-<app-multi-select [options]="['Squat', 'Bench', 'Deadlift']" />

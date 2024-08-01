@@ -32,6 +32,30 @@ export class StatisticsComponent implements OnInit {
     this.fetchTrainingStatistics(id);
   }
 
+  changeDisplayCategories(newExercises: string[]) {
+    console.log(
+      '🚀 ~ StatisticsComponent ~ changeDisplayCategories ~ newExercises:',
+      newExercises
+    );
+    const id = this.router.url.split('/').pop();
+
+    const exercises = newExercises.join(',');
+    /* this.httpService
+      .request<Partial<TrainingExerciseTonnageDto>>(
+        HttpMethods.GET,
+        `training/statistics/${id}?exercises=${exercises}`
+      )
+      .subscribe((response) => {
+        console.log(
+          '🚀 ~ StatisticsComponent ~ .subscribe ~ response:',
+          response
+        );
+        this.dataLoaded = true;
+        this.initializeChart(response);
+        this.createPieChart(response);
+      }); */
+  }
+
   fetchTrainingStatistics(id: string | undefined): void {
     const exercises = 'squat,bench,deadlift,overheadpress'; // Define the exercises you want to fetch
     this.httpService

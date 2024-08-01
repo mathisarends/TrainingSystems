@@ -1,5 +1,5 @@
 .dropdown {
-  width: 250px;
+  width: 100%;
 }
 
 .dropdown button {
@@ -10,9 +10,8 @@
 }
 
 .dropdown-menu {
-  max-height: 200px;
+  width: 100%;
   overflow-y: auto;
-  width: 250px;
 }
 
 .dropdown-menu.show {

@@ -10,9 +10,9 @@ import { FormsModule } from '@angular/forms';
 })
 export class MultiSelectComponent {
   @Input() options: string[] = [];
-  @Output() selectionChange = new EventEmitter<Set<string>>();
+  @Output() selectionChange = new EventEmitter<string[]>();
 
-  selected = signal(new Set<string>());
+  selected = signal<string[]>([]); // Use a signal holding an array of strings
   isOpen = signal(false);
   searchTerm = '';
 
@@ -32,21 +32,38 @@ export class MultiSelectComponent {
 
   onSelectionChange(option: string, event: Event): void {
     const inputElement = event.target as HTMLInputElement;
-    const newSelected = new Set(this.selected());
+    const newSelected = [...this.selected()]; // Create a copy of the array
+
     if (inputElement.checked) {
-      newSelected.add(option);
+      newSelected.push(option);
     } else {
-      newSelected.delete(option);
+      const index = newSelected.indexOf(option);
+      if (index > -1) {
+        newSelected.splice(index, 1); // Remove the item from the array
+      }
     }
-    this.selected.set(newSelected);
-    this.selectionChange.emit(newSelected);
+
+    this.selected.set(newSelected); // Update the signal with the new array
+    this.selectionChange.emit(newSelected); // Emit the updated array
   }
 
   getSelectedText(): string {
-    const selectedArray = Array.from(this.selected());
-    if (selectedArray.length === 0) {
-      return 'Select options';
+    const selectedArray = this.selected();
+    const characterLimit = 30; // Set your desired character limit
+    let displayedText = '';
+
+    for (let i = 0; i < selectedArray.length; i++) {
+      const nextItem = selectedArray[i];
+      if ((displayedText + nextItem).length > characterLimit) {
+        displayedText += ', ...';
+        break;
+      }
+      if (displayedText.length > 0) {
+        displayedText += ', ';
+      }
+      displayedText += nextItem;
     }
-    return selectedArray.join(', ');
+
+    return displayedText || 'Select options';
   }
 }
