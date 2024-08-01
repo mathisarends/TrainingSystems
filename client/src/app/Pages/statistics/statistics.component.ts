@@ -7,6 +7,7 @@ import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { TrainingExerciseTonnageDto } from './main-exercise-tonnage-dto';
 import { Tonnage } from './tonnage';
 import { MultiSelectComponent } from '../../multi-select/multi-select.component';
+import { ChartColorService } from '../../chart-color.service';
 
 /**
  * Component responsible for displaying training statistics in a line chart.
@@ -25,7 +26,11 @@ export class StatisticsComponent implements OnInit {
 
   dataLoaded: boolean = false;
 
-  constructor(private router: Router, private httpService: HttpClientService) {}
+  constructor(
+    private router: Router,
+    private httpService: HttpClientService,
+    private chartColorService: ChartColorService // Inject the ColorService
+  ) {}
 
   ngOnInit(): void {
     const id = this.router.url.split('/').pop();
@@ -118,9 +123,8 @@ export class StatisticsComponent implements OnInit {
     });
   }
 
-  // Create a dataset for a specific exercise category
   createDataset(category: string, data: Tonnage[]): any {
-    const colors = this.getCategoryColor(category);
+    const colors = this.chartColorService.getCategoryColor(category); // Use the ColorService
     return {
       label: this.formatCategoryLabel(category),
       data: this.extractTonnageData(data),
@@ -134,7 +138,6 @@ export class StatisticsComponent implements OnInit {
     return data.map((week) => week.tonnageInCategory);
   }
 
-  // Helper function to generate dynamic labels based on the length of the data
   generateWeekLabels(length: number): string[] {
     return Array.from({ length }, (_, index) => `Woche ${index + 1}`);
   }
@@ -143,100 +146,37 @@ export class StatisticsComponent implements OnInit {
     return category.charAt(0).toUpperCase() + category.slice(1);
   }
 
-  /**
-   * Retrieves the color settings (border color and background color) for a specific exercise category.
-   * @param category - The name of the exercise category.
-   * @returns An object containing the borderColor and backgroundColor for the category.
-   */
-  getCategoryColor(category: string): {
-    borderColor: string;
-    backgroundColor: string;
-  } {
-    const colors: {
-      [key: string]: { borderColor: string; backgroundColor: string };
-    } = {
-      squat: {
-        borderColor: 'rgba(255, 99, 132, 1)',
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-      },
-      bench: {
-        borderColor: 'rgba(54, 162, 235, 1)',
-        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-      },
-      deadlift: {
-        borderColor: 'rgba(75, 192, 192, 1)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-      },
-      overheadpress: {
-        borderColor: 'rgba(153, 102, 255, 1)',
-        backgroundColor: 'rgba(153, 102, 255, 0.2)',
-      },
-      back: {
-        borderColor: 'rgba(255, 159, 64, 1)',
-        backgroundColor: 'rgba(255, 159, 64, 0.2)',
-      },
-      chest: {
-        borderColor: 'rgba(255, 206, 86, 1)',
-        backgroundColor: 'rgba(255, 206, 86, 0.2)',
-      },
-      shoulder: {
-        borderColor: 'rgba(75, 192, 192, 1)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-      },
-      biceps: {
-        borderColor: 'rgba(153, 102, 255, 1)',
-        backgroundColor: 'rgba(153, 102, 255, 0.2)',
-      },
-      triceps: {
-        borderColor: 'rgba(201, 203, 207, 1)',
-        backgroundColor: 'rgba(201, 203, 207, 0.2)',
-      },
-      legs: {
-        borderColor: 'rgba(54, 162, 235, 1)',
-        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-      },
-      rdm: {
-        // Changed from 'default' to '_default' to avoid reserved keyword issues
-        borderColor: 'rgba(201, 203, 207, 1)',
-        backgroundColor: 'rgba(201, 203, 207, 0.2)',
-      },
-    };
-
-    return colors[category];
-  }
-
   createPieChart(data: Partial<TrainingExerciseTonnageDto>): void {
     if (this.pieChart) {
       this.pieChart.destroy();
     }
 
-    // Berechne die Gesamttonnage für jede Kategorie
     const categoryTotals = Object.keys(data).map((categoryKey) => {
       const categoryData =
         data[categoryKey as keyof TrainingExerciseTonnageDto] || [];
       return this.calculateTotalTonnage(categoryData);
     });
 
-    // Generiere Labels und Farben für den Pie-Chart basierend auf den Kategorien
     const labels = Object.keys(data).map((categoryKey) =>
       this.formatCategoryLabel(categoryKey)
     );
     const backgroundColors = labels.map(
-      (label) => this.getCategoryColor(label.toLowerCase()).backgroundColor
+      (label) =>
+        this.chartColorService.getCategoryColor(label.toLowerCase())
+          .backgroundColor // Use the ColorService
     );
 
     if (this.pieChart) {
       this.pieChart.destroy();
     }
 
-    // Erstelle den Pie-Chart
     this.pieChart = new Chart('MyPieChart', {
       type: 'pie',
       data: {
         labels: labels,
         datasets: [
           {
-            data: categoryTotals, // Verwende die berechneten Tonnagen
+            data: categoryTotals,
             backgroundColor: backgroundColors,
           },
         ],
@@ -269,5 +209,3 @@ export class StatisticsComponent implements OnInit {
     return data.reduce((total, week) => total + week.tonnageInCategory, 0);
   }
 }
-
-// TODO: Balkendiagramme für Sets. MultiSelect hübsche Komponente bauen

@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  Output,
+  signal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 /**
@@ -65,5 +72,16 @@ export class MultiSelectComponent {
     }
 
     return displayedText || 'Select options';
+  }
+
+  /**
+   * Closes the dropdown if clicked outside the component
+   */
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (this.isOpen() && !target.closest('app-multi-select')) {
+      this.isOpen.set(false);
+    }
   }
 }
