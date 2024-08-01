@@ -8,6 +8,8 @@ import { TrainingExerciseTonnageDto } from './main-exercise-tonnage-dto';
 import { Tonnage } from './tonnage';
 import { MultiSelectComponent } from '../../multi-select/multi-select.component';
 import { ChartColorService } from '../../chart-color.service';
+import { ToastService } from '../../components/toast/toast.service';
+import { firstValueFrom } from 'rxjs';
 
 /**
  * Component responsible for displaying training statistics in a line chart.
@@ -29,22 +31,27 @@ export class StatisticsComponent implements OnInit {
   constructor(
     private router: Router,
     private httpService: HttpClientService,
+    private toastService: ToastService,
     private chartColorService: ChartColorService // Inject the ColorService
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     const id = this.router.url.split('/').pop();
-    this.fetchTrainingStatistics(id);
+    await this.fetchTrainingStatistics(id);
   }
 
   changeDisplayCategories(newExercises: string[]) {
-    console.log(
-      '🚀 ~ StatisticsComponent ~ changeDisplayCategories ~ newExercises:',
-      newExercises
-    );
     const id = this.router.url.split('/').pop();
 
     const exercises = newExercises.join(',');
+
+    this.httpService
+      .request<any>(
+        HttpMethods.POST,
+        `training/statistics/${id}/viewedCategories?exercises=${exercises}`
+      )
+      .subscribe((response) => {});
+
     this.httpService
       .request<Partial<TrainingExerciseTonnageDto>>(
         HttpMethods.GET,
@@ -61,8 +68,19 @@ export class StatisticsComponent implements OnInit {
       });
   }
 
-  fetchTrainingStatistics(id: string | undefined): void {
-    const exercises = 'squat,bench,deadlift,overheadpress'; // Define the exercises you want to fetch
+  async fetchTrainingStatistics(id: string | undefined): Promise<void> {
+    const exercises = await firstValueFrom(
+      this.httpService.request<any>(
+        HttpMethods.GET,
+        `training/statistics/${id}/viewedCategories`
+      )
+    );
+
+    console.log(
+      '🚀 ~ StatisticsComponent ~ fetchTrainingStatistics ~ exercises:',
+      exercises
+    );
+
     this.httpService
       .request<Partial<TrainingExerciseTonnageDto>>(
         HttpMethods.GET,
