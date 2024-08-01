@@ -40,7 +40,7 @@ export class StatisticsComponent implements OnInit {
     const id = this.router.url.split('/').pop();
 
     const exercises = newExercises.join(',');
-    /* this.httpService
+    this.httpService
       .request<Partial<TrainingExerciseTonnageDto>>(
         HttpMethods.GET,
         `training/statistics/${id}?exercises=${exercises}`
@@ -53,7 +53,7 @@ export class StatisticsComponent implements OnInit {
         this.dataLoaded = true;
         this.initializeChart(response);
         this.createPieChart(response);
-      }); */
+      });
   }
 
   fetchTrainingStatistics(id: string | undefined): void {
@@ -75,6 +75,10 @@ export class StatisticsComponent implements OnInit {
   }
 
   initializeChart(data: Partial<TrainingExerciseTonnageDto>): void {
+    if (this.lineChart) {
+      this.lineChart.destroy();
+    }
+
     const datasets = Object.keys(data).map((categoryKey) => {
       const categoryData =
         data[categoryKey as keyof TrainingExerciseTonnageDto];
@@ -202,6 +206,10 @@ export class StatisticsComponent implements OnInit {
   }
 
   createPieChart(data: Partial<TrainingExerciseTonnageDto>): void {
+    if (this.pieChart) {
+      this.pieChart.destroy();
+    }
+
     // Berechne die Gesamttonnage für jede Kategorie
     const categoryTotals = Object.keys(data).map((categoryKey) => {
       const categoryData =
