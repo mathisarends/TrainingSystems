@@ -2,7 +2,7 @@
 <app-spinner />
 } @else {
 <app-multi-select
-  [options]="['Squat', 'Bench', 'Deadlift', 'Overheadpress']"
+  [options]="allExercises"
   [initialSelected]="selectedExercises!"
   (selectionChange)="changeDisplayCategories($event)"
 ></app-multi-select>

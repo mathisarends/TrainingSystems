@@ -27,7 +27,8 @@ export class StatisticsComponent implements OnInit {
 
   dataLoaded: boolean = false;
 
-  selectedExercises?: string[];
+  selectedExercises!: string[];
+  allExercises!: string[];
 
   constructor(
     private router: Router,
@@ -70,6 +71,10 @@ export class StatisticsComponent implements OnInit {
   }
 
   async fetchTrainingStatistics(id: string | undefined): Promise<void> {
+    this.allExercises = await firstValueFrom(
+      this.httpService.request<any>(HttpMethods.GET, `exercise/categories`)
+    );
+
     this.selectedExercises = await firstValueFrom(
       this.httpService.request<any>(
         HttpMethods.GET,
