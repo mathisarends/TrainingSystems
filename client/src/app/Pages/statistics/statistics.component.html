@@ -8,16 +8,18 @@
 ></app-multi-select>
 
 <app-line-chart
-  [data]="datasets"
-  [labels]="labels"
+  [data]="lineChartDatasets"
+  [labels]="lineChartLabels"
   yAxisTitle="Tonnage (kg)"
 ></app-line-chart>
+
+<app-pie-chart
+  [data]="pieChartData"
+  [labels]="pieChartLabels"
+  [backgroundColors]="pieChartBackgroundColors"
+></app-pie-chart>
 }
 
 <!-- <div>
   <canvas id="lineChart"></canvas>
 </div> -->
-
-<div>
-  <canvas id="MyPieChart"></canvas>
-</div>

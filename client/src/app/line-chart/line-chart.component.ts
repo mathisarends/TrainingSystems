@@ -25,7 +25,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges {
   @Input() yAxisTitle: string = 'Value';
   @Input() maintainAspectRatio: boolean = false;
 
-  lineChart!: Chart<'line'>;
+  chart!: Chart<'line'>;
 
   ngAfterViewInit(): void {
     this.initializeChart();
@@ -38,11 +38,17 @@ export class LineChartComponent implements AfterViewInit, OnChanges {
   }
 
   initializeChart(): void {
-    if (this.lineChart) {
-      this.lineChart.destroy();
+    if (this.chart) {
+      this.chart.destroy();
     }
 
-    this.lineChart = new Chart(this.canvas.nativeElement.getContext('2d'), {
+    const context = this.canvas.nativeElement.getContext('2d');
+    if (!context) {
+      console.error('Failed to get canvas context');
+      return;
+    }
+
+    this.chart = new Chart(context, {
       type: 'line',
       data: {
         labels: this.labels,
@@ -63,8 +69,12 @@ export class LineChartComponent implements AfterViewInit, OnChanges {
         plugins: {
           tooltip: {
             callbacks: {
-              label: function (context) {
-                return context.dataset.label + ': ' + context.parsed.y;
+              label: (context) => {
+                return context.dataset.label
+                  ? `${context.dataset.label}: ${
+                      context.parsed.y || context.raw
+                    } kg`
+                  : `${context.label}: ${context.raw} kg`;
               },
             },
           },
@@ -74,10 +84,10 @@ export class LineChartComponent implements AfterViewInit, OnChanges {
   }
 
   updateChart(): void {
-    if (this.lineChart) {
-      this.lineChart.data.labels = this.labels;
-      this.lineChart.data.datasets = this.data;
-      this.lineChart.update();
+    if (this.chart) {
+      this.chart.data.labels = this.labels;
+      this.chart.data.datasets = this.data;
+      this.chart.update();
     }
   }
 }
