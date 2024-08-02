@@ -49,4 +49,6 @@ export interface TrainingPlan {
    * The BASE-64 encoded coverImage of the training plan.
    */
   coverImageBase64?: string;
+
+  recentlyViewedCategoriesInStatisticSection?: string[];
 }

@@ -3,8 +3,9 @@
 } @else {
 <app-multi-select
   [options]="['Squat', 'Bench', 'Deadlift', 'Overheadpress']"
-  (selectionChange)="changeDisplayCategories($any($event))"
-/>
+  [initialSelected]="selectedExercises!"
+  (selectionChange)="changeDisplayCategories($event)"
+></app-multi-select>
 }
 
 <div>

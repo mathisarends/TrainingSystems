@@ -17,6 +17,60 @@ router.patch('/plan/:id/:week/:day', authService.authenticationMiddleware, train
 
 router.get('/plan/:id/latest', authService.authenticationMiddleware, trainingController.getLatestTrainingPlan);
 
+router.post('/statistics/:id/viewedCategories', authService.authenticationMiddleware, async (req, res) => {
+  const userClaimsSet = res.locals.user;
+  const trainingPlanId = req.params.id;
+  const exerciseCategories = (req.query.exercises as string).split(',');
+
+  try {
+    const userDAO = req.app.locals.userDAO;
+    const user = await userDAO.findOne({ id: userClaimsSet.id });
+    if (!user) {
+      return res.status(404).json({ error: 'Benutzer nicht gefunden' });
+    }
+
+    const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
+    if (trainingPlanIndex === -1) {
+      return res.status(404).json({ message: 'No training plan was found for the given URL' });
+    }
+
+    const trainingPlan = user.trainingPlans[trainingPlanIndex];
+    trainingPlan.recentlyViewedCategoriesInStatisticSection = exerciseCategories;
+
+    await userDAO.update(user);
+
+    res.status(200).json('Kategorien geupdated');
+  } catch (error) {
+    const errMessage = 'Fehler beim Setzen der zuletzt besuchten Kategorien ' + error;
+    res.status(500).json(errMessage);
+  }
+});
+
+router.get('/statistics/:id/viewedCategories', authService.authenticationMiddleware, async (req, res) => {
+  const userClaimsSet = res.locals.user;
+  const trainingPlanId = req.params.id;
+
+  try {
+    const userDAO = req.app.locals.userDAO;
+    const user = await userDAO.findOne({ id: userClaimsSet.id });
+    if (!user) {
+      return res.status(404).json({ error: 'Benutzer nicht gefunden' });
+    }
+
+    const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
+    if (trainingPlanIndex === -1) {
+      return res.status(404).json({ message: 'No training plan was found for the given URL' });
+    }
+
+    const trainingPlan = user.trainingPlans[trainingPlanIndex];
+
+    res.status(200).json(trainingPlan.recentlyViewedCategoriesInStatisticSection ?? ['Squat', 'Bench', 'Deadlift']);
+  } catch (error) {
+    const errMessage = 'Fehler beim Abrufen der zuletzt besuchten Kategorien ' + error;
+    res.status(500).json(errMessage);
+  }
+});
+
 // gets tonnage for squat, bench and deadlift
 router.get('/statistics/:id', authService.authenticationMiddleware, async (req, res) => {
   const userClaimsSet = res.locals.user;

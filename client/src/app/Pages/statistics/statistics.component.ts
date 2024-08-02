@@ -8,7 +8,6 @@ import { TrainingExerciseTonnageDto } from './main-exercise-tonnage-dto';
 import { Tonnage } from './tonnage';
 import { MultiSelectComponent } from '../../multi-select/multi-select.component';
 import { ChartColorService } from '../../chart-color.service';
-import { ToastService } from '../../components/toast/toast.service';
 import { firstValueFrom } from 'rxjs';
 
 /**
@@ -28,10 +27,12 @@ export class StatisticsComponent implements OnInit {
 
   dataLoaded: boolean = false;
 
+  selectedExercises?: string[];
+
   constructor(
     private router: Router,
     private httpService: HttpClientService,
-    private toastService: ToastService,
+
     private chartColorService: ChartColorService // Inject the ColorService
   ) {}
 
@@ -69,22 +70,17 @@ export class StatisticsComponent implements OnInit {
   }
 
   async fetchTrainingStatistics(id: string | undefined): Promise<void> {
-    const exercises = await firstValueFrom(
+    this.selectedExercises = await firstValueFrom(
       this.httpService.request<any>(
         HttpMethods.GET,
         `training/statistics/${id}/viewedCategories`
       )
     );
 
-    console.log(
-      '🚀 ~ StatisticsComponent ~ fetchTrainingStatistics ~ exercises:',
-      exercises
-    );
-
     this.httpService
       .request<Partial<TrainingExerciseTonnageDto>>(
         HttpMethods.GET,
-        `training/statistics/${id}?exercises=${exercises}`
+        `training/statistics/${id}?exercises=${this.selectedExercises}`
       )
       .subscribe((response) => {
         console.log(

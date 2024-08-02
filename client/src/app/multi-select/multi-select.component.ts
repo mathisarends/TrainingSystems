@@ -3,6 +3,7 @@ import {
   EventEmitter,
   HostListener,
   Input,
+  OnInit, // Import OnInit interface
   Output,
   signal,
 } from '@angular/core';
@@ -11,7 +12,6 @@ import { FormsModule } from '@angular/forms';
 /**
  * Represents a generic multi-select-dropdown
  */
-
 @Component({
   selector: 'app-multi-select',
   standalone: true,
@@ -19,13 +19,18 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './multi-select.component.html',
   styleUrl: './multi-select.component.scss',
 })
-export class MultiSelectComponent {
+export class MultiSelectComponent implements OnInit {
   @Input() options: string[] = [];
+  @Input() initialSelected: string[] = []; // New Input for initial selection
   @Output() selectionChange = new EventEmitter<string[]>();
 
   selected = signal<string[]>([]);
   isOpen = signal(false);
   searchTerm = '';
+
+  ngOnInit(): void {
+    this.selected.set(this.initialSelected); // Set the initial selected items
+  }
 
   toggleDropdown(): void {
     this.isOpen.set(!this.isOpen());
