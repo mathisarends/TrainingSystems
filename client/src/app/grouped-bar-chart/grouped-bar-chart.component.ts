@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import Chart from 'chart.js/auto';
 
+//TODO: Grouped Bar chart dynamisieren mit den set daten
 @Component({
   standalone: true,
   selector: 'app-grouped-bar-chart',

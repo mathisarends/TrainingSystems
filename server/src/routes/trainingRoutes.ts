@@ -72,6 +72,42 @@ router.get('/statistics/:id/viewedCategories', authService.authenticationMiddlew
   }
 });
 
+router.get('/statistics/:id/sets', authService.authenticationMiddleware, async (req, res) => {
+  const userClaimsSet = res.locals.user;
+  const trainingPlanId = req.params.id;
+  const exerciseCategories = (req.query.exercises as string).split(',');
+
+  try {
+    const userDAO = req.app.locals.userDAO;
+    const user = await userDAO.findOne({ id: userClaimsSet.id });
+    if (!user) {
+      return res.status(404).json({ error: 'Benutzer nicht gefunden' });
+    }
+
+    const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
+    if (trainingPlanIndex === -1) {
+      return res.status(404).json({ message: 'No training plan was found for the given URL' });
+    }
+
+    const trainingPlan = user.trainingPlans[trainingPlanIndex];
+    // Define the structure of the response data
+    const responseData: { [key: string]: number[] } = {};
+
+    // Process the exercise categories
+    exerciseCategories.forEach(category => {
+      const exerciseCategory = mapToExerciseCategory(category); // Use the mapping function
+      if (exerciseCategory) {
+        responseData[category.toLowerCase()] = getSetsPerWeek(trainingPlan, exerciseCategory);
+      }
+    });
+
+    res.status(200).json(responseData);
+  } catch (error) {
+    const errMessage = 'Es ist ein Fehler beim Abrufen der Statistiken aufgetreten ' + error;
+    console.error(errMessage);
+    res.status(500).json({ error: errMessage });
+  }
+});
 // gets tonnage for squat, bench and deadlift
 router.get('/statistics/:id', authService.authenticationMiddleware, async (req, res) => {
   const userClaimsSet = res.locals.user;
@@ -108,6 +144,22 @@ router.get('/statistics/:id', authService.authenticationMiddleware, async (req, 
     res.status(500).json({ error: errMessage });
   }
 });
+
+function getSetsPerWeek(trainingPlan: TrainingPlan, exerciseCategory: ExerciseCategories) {
+  return trainingPlan.trainingWeeks.map(week => {
+    let sets = 0;
+
+    week.trainingDays.forEach(trainingDay => {
+      trainingDay.exercises.forEach(exercise => {
+        if (exercise.category === exerciseCategory) {
+          sets += exercise.sets;
+        }
+      });
+    });
+
+    return sets;
+  });
+}
 
 // Prepare tonnage data for a specific exercise category over the training weeks
 function prepareTrainingWeeksForExercise(trainingPlan: TrainingPlan, exerciseCategory: ExerciseCategories) {
