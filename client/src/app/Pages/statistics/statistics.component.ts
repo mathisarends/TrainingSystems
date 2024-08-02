@@ -9,6 +9,7 @@ import { Tonnage } from './tonnage';
 import { MultiSelectComponent } from '../../multi-select/multi-select.component';
 import { ChartColorService } from '../../chart-color.service';
 import { firstValueFrom } from 'rxjs';
+import { LineChartComponent } from '../../line-chart/line-chart.component';
 
 /**
  * Component responsible for displaying training statistics in a line chart.
@@ -17,7 +18,7 @@ import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'app-statistics',
   standalone: true,
-  imports: [SpinnerComponent, MultiSelectComponent],
+  imports: [SpinnerComponent, MultiSelectComponent, LineChartComponent],
   templateUrl: './statistics.component.html',
   styleUrls: ['./statistics.component.scss'],
 })
@@ -29,6 +30,9 @@ export class StatisticsComponent implements OnInit {
 
   selectedExercises!: string[];
   allExercises!: string[];
+
+  datasets!: any[];
+  labels!: string[];
 
   constructor(
     private router: Router,
@@ -99,10 +103,6 @@ export class StatisticsComponent implements OnInit {
   }
 
   initializeChart(data: Partial<TrainingExerciseTonnageDto>): void {
-    if (this.lineChart) {
-      this.lineChart.destroy();
-    }
-
     const datasets = Object.keys(data).map((categoryKey) => {
       const categoryData =
         data[categoryKey as keyof TrainingExerciseTonnageDto];
@@ -111,35 +111,9 @@ export class StatisticsComponent implements OnInit {
 
     const labels = this.generateWeekLabels(datasets[0]?.data.length || 0);
 
-    this.lineChart = new Chart('lineChart', {
-      type: 'line',
-      data: {
-        labels: labels, // Use dynamically generated labels
-        datasets: datasets,
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          y: {
-            beginAtZero: true,
-            title: {
-              display: true,
-              text: 'Tonnage (kg)',
-            },
-          },
-        },
-        plugins: {
-          tooltip: {
-            callbacks: {
-              label: function (context) {
-                return context.dataset.label + ': ' + context.parsed.y + ' kg';
-              },
-            },
-          },
-        },
-      },
-    });
+    // Setze die Daten und Labels für die LineChartComponent
+    this.datasets = datasets;
+    this.labels = labels;
   }
 
   createDataset(category: string, data: Tonnage[]): any {

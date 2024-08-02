@@ -1,4 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import Chart from 'chart.js/auto';
 
 @Component({
@@ -6,19 +14,27 @@ import Chart from 'chart.js/auto';
   standalone: true,
   imports: [],
   templateUrl: './line-chart.component.html',
-  styleUrl: "./line-chart.component.scss"
+  styleUrl: './line-chart.component.scss',
 })
-export class LineChartComponent implements OnInit {
-  @Input() chartId: string = 'lineChart'; // Default ID for the canvas element
-  @Input() data: any[] = []; // Array of datasets
-  @Input() labels: string[] = []; // Array of labels for the X-axis
-  @Input() yAxisTitle: string = 'Value'; // Title for the Y-axis
-  @Input() maintainAspectRatio: boolean = false; // Option to maintain aspect ratio
+export class LineChartComponent implements AfterViewInit, OnChanges {
+  @ViewChild('canvas') canvas!: ElementRef;
 
-  lineChart: any;
+  @Input() chartId: string = 'lineChart';
+  @Input() data: any[] = [];
+  @Input() labels: string[] = [];
+  @Input() yAxisTitle: string = 'Value';
+  @Input() maintainAspectRatio: boolean = false;
 
-  ngOnInit(): void {
+  lineChart!: Chart<'line'>;
+
+  ngAfterViewInit(): void {
     this.initializeChart();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['data'] && !changes['data'].firstChange) {
+      this.updateChart();
+    }
   }
 
   initializeChart(): void {
@@ -26,7 +42,7 @@ export class LineChartComponent implements OnInit {
       this.lineChart.destroy();
     }
 
-    this.lineChart = new Chart(this.chartId, {
+    this.lineChart = new Chart(this.canvas.nativeElement.getContext('2d'), {
       type: 'line',
       data: {
         labels: this.labels,
@@ -55,5 +71,13 @@ export class LineChartComponent implements OnInit {
         },
       },
     });
+  }
+
+  updateChart(): void {
+    if (this.lineChart) {
+      this.lineChart.data.labels = this.labels;
+      this.lineChart.data.datasets = this.data;
+      this.lineChart.update();
+    }
   }
 }

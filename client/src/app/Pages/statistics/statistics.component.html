@@ -6,10 +6,17 @@
   [initialSelected]="selectedExercises!"
   (selectionChange)="changeDisplayCategories($event)"
 ></app-multi-select>
+
+<app-line-chart
+  [data]="datasets"
+  [labels]="labels"
+  yAxisTitle="Tonnage (kg)"
+></app-line-chart>
 }
-<div>
+
+<!-- <div>
   <canvas id="lineChart"></canvas>
-</div>
+</div> -->
 
 <div>
   <canvas id="MyPieChart"></canvas>
