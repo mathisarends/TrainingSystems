@@ -19,7 +19,7 @@ export class PieChartComponent implements AfterViewInit, OnChanges {
   @ViewChild('canvas') canvas!: ElementRef;
 
   @Input() chartId: string = 'pieChart';
-  @Input() data: any[] = []; // Array of data for the Pie chart
+  @Input() data: number[] = []; // Array of data for the Pie chart
   @Input() labels: string[] = []; // Array of labels for the Pie chart
   @Input() backgroundColors: string[] = []; // Array of background colors for the Pie chart
 
@@ -30,7 +30,7 @@ export class PieChartComponent implements AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['data'] && !changes['data'].firstChange) {
+    if (changes['data'] || changes['labels'] || changes['backgroundColors']) {
       this.updateChart();
     }
   }
@@ -75,7 +75,8 @@ export class PieChartComponent implements AfterViewInit, OnChanges {
   updateChart(): void {
     if (this.pieChart) {
       this.pieChart.data.labels = this.labels;
-      this.pieChart.data.datasets = this.data;
+      this.pieChart.data.datasets[0].data = this.data;
+      this.pieChart.data.datasets[0].backgroundColor = this.backgroundColors;
       this.pieChart.update();
     }
   }
