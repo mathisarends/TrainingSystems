@@ -70,26 +70,39 @@ export class StatisticsComponent implements OnInit {
   }
 
   async fetchTrainingStatistics(id: string | undefined): Promise<void> {
-    this.allExercises = await firstValueFrom(
-      this.httpService.request<any>(HttpMethods.GET, `exercise/categories`)
-    );
+    try {
+      // Führe beide Anfragen parallel aus und warte auf beide
+      const [allExercisesResponse, selectedExercisesResponse] =
+        await Promise.all([
+          firstValueFrom(
+            this.httpService.request<any>(
+              HttpMethods.GET,
+              `exercise/categories`
+            )
+          ),
+          firstValueFrom(
+            this.httpService.request<any>(
+              HttpMethods.GET,
+              `training/statistics/${id}/viewedCategories`
+            )
+          ),
+        ]);
 
-    this.selectedExercises = await firstValueFrom(
-      this.httpService.request<any>(
-        HttpMethods.GET,
-        `training/statistics/${id}/viewedCategories`
-      )
-    );
+      this.allExercises = allExercisesResponse;
+      this.selectedExercises = selectedExercisesResponse;
 
-    this.httpService
-      .request<Partial<TrainingExerciseTonnageDto>>(
-        HttpMethods.GET,
-        `training/statistics/${id}?exercises=${this.selectedExercises}`
-      )
-      .subscribe((response) => {
-        this.dataLoaded = true;
-        this.initializeCharts(response);
-      });
+      this.httpService
+        .request<Partial<TrainingExerciseTonnageDto>>(
+          HttpMethods.GET,
+          `training/statistics/${id}?exercises=${this.selectedExercises}`
+        )
+        .subscribe((response) => {
+          this.dataLoaded = true;
+          this.initializeCharts(response);
+        });
+    } catch (error) {
+      console.error('Error fetching training statistics:', error);
+    }
   }
 
   initializeCharts(data: Partial<TrainingExerciseTonnageDto>): void {
