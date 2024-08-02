@@ -111,7 +111,7 @@ export class StatisticsComponent implements OnInit {
 
     const labels = this.generateWeekLabels(datasets[0]?.data.length || 0);
 
-    this.lineChart = new Chart('MyLineChart', {
+    this.lineChart = new Chart('lineChart', {
       type: 'line',
       data: {
         labels: labels, // Use dynamically generated labels

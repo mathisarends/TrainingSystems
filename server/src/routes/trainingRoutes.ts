@@ -4,6 +4,7 @@ import { authService } from '../service/authService.js';
 import { findTrainingPlanIndexById } from '../service/trainingService.js';
 import { TrainingPlan } from '../../../shared/models/training/trainingPlan.js';
 import { ExerciseCategories } from '../utils/ExerciseCategores.js';
+import { mapToExerciseCategory } from './exerciseRoutes.js';
 
 const router = express.Router();
 
@@ -129,30 +130,3 @@ function prepareTrainingWeeksForExercise(trainingPlan: TrainingPlan, exerciseCat
 }
 
 export default router;
-
-function mapToExerciseCategory(category: string): ExerciseCategories | undefined {
-  switch (category.toLowerCase()) {
-    case 'squat':
-      return ExerciseCategories.SQUAT;
-    case 'bench':
-      return ExerciseCategories.BENCH;
-    case 'deadlift':
-      return ExerciseCategories.DEADLIFT;
-    case 'overheadpress':
-      return ExerciseCategories.OVERHEADPRESS;
-    case 'chest':
-      return ExerciseCategories.CHEST;
-    case 'back':
-      return ExerciseCategories.BACK;
-    case 'shoulder':
-      return ExerciseCategories.SHOULDER;
-    case 'triceps':
-      return ExerciseCategories.TRICEPS;
-    case 'biceps':
-      return ExerciseCategories.BICEPS;
-    case 'legs':
-      return ExerciseCategories.LEGS;
-    default:
-      return undefined; // In case the category does not match any enum values
-  }
-}

@@ -6,6 +6,7 @@ import Chart from 'chart.js/auto';
   standalone: true,
   imports: [],
   templateUrl: './line-chart.component.html',
+  styleUrl: "./line-chart.component.scss"
 })
 export class LineChartComponent implements OnInit {
   @Input() chartId: string = 'lineChart'; // Default ID for the canvas element
