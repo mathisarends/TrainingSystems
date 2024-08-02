@@ -10,7 +10,7 @@ import { MultiSelectComponent } from '../../multi-select/multi-select.component'
 import { ChartColorService } from '../../chart-color.service';
 import { firstValueFrom } from 'rxjs';
 import { LineChartComponent } from '../../line-chart/line-chart.component';
-import { PieChartComponent } from '../../pie-chart/pie-chart.component';
+import { GroupedBarChartComponent } from '../../grouped-bar-chart/grouped-bar-chart.component';
 
 /**
  * Component responsible for displaying training statistics in a line chart.
@@ -23,7 +23,7 @@ import { PieChartComponent } from '../../pie-chart/pie-chart.component';
     SpinnerComponent,
     MultiSelectComponent,
     LineChartComponent,
-    PieChartComponent,
+    GroupedBarChartComponent,
   ],
   templateUrl: './statistics.component.html',
   styleUrls: ['./statistics.component.scss'],
@@ -38,10 +38,6 @@ export class StatisticsComponent implements OnInit {
 
   lineChartDatasets!: any[];
   lineChartLabels!: string[];
-
-  pieChartData!: number[];
-  pieChartLabels!: string[];
-  pieChartBackgroundColors!: string[];
 
   constructor(
     private router: Router,
@@ -114,21 +110,6 @@ export class StatisticsComponent implements OnInit {
     });
     this.lineChartLabels = this.generateWeekLabels(
       this.lineChartDatasets[0]?.data.length || 0
-    );
-
-    // Set data for the pie chart
-    this.pieChartData = Object.keys(data).map((categoryKey) => {
-      const categoryData =
-        data[categoryKey as keyof TrainingExerciseTonnageDto] || [];
-      return this.calculateTotalTonnage(categoryData);
-    });
-    this.pieChartLabels = Object.keys(data).map((categoryKey) =>
-      this.formatCategoryLabel(categoryKey)
-    );
-    this.pieChartBackgroundColors = this.pieChartLabels.map(
-      (label) =>
-        this.chartColorService.getCategoryColor(label.toLowerCase())
-          .backgroundColor
     );
   }
 

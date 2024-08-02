@@ -1,5 +1,9 @@
 :host {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 3.5rem;
+}
+
+app-multi-select {
+  margin-bottom: -20px;
 }
