@@ -8,10 +8,11 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { catchError, filter } from 'rxjs/operators';
 import { ProfileService } from '../../Pages/profile/profileService';
 import { User } from '../../types/user';
 import { SearchService } from '../../../service/util/search.service';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -54,11 +55,33 @@ export class HeaderComponent implements OnInit {
    */
   ngOnInit(): void {
     // Fetch and subscribe to user profile data
-    this.profileService.getProfile().subscribe((data: any) => {
-      this.profile = data?.userDto;
-    });
-  }
+    this.profileService
+      .getProfile()
+      .pipe(
+        catchError((error) => {
+          console.log('🚀 ~ HeaderComponent ~ ngOnInit ~ error:', error);
+          if (error.status === 401) {
+            // Handle 401 Unauthorized
+            console.error('Unauthorized access - Redirecting to login.');
+            this.router.navigate(['/login']); // Redirect to login page
+          } else {
+            console.error('An error occurred:', error);
+          }
+          return of(null); // Return a fallback value or empty observable
+        })
+      )
 
+      .subscribe((data: any) => {
+        console.log(
+          '🚀 ~ HeaderComponent ~ this.profileService.getProfile ~ data:',
+          data
+        );
+
+        if (data) {
+          this.profile = data?.userDto;
+        }
+      });
+  }
   //         this.profile = data?.userDto;
 
   /**

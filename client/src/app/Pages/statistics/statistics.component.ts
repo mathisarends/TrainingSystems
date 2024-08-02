@@ -29,6 +29,8 @@ import { PieChartComponent } from '../../pie-chart/pie-chart.component';
   styleUrls: ['./statistics.component.scss'],
 })
 export class StatisticsComponent implements OnInit {
+  // TODO: statistic component refactor
+
   dataLoaded: boolean = false;
 
   selectedExercises!: string[];
