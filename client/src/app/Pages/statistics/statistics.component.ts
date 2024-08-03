@@ -13,6 +13,7 @@ import { GroupedBarChartComponent } from '../../grouped-bar-chart/grouped-bar-ch
 import { BarChartData } from '../../grouped-bar-chart/bar-chart.-data';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
 import { log } from 'console';
+import { ToastService } from '../../components/toast/toast.service';
 
 /**
  * Component responsible for displaying training statistics in a line chart.
@@ -47,7 +48,8 @@ export class StatisticsComponent implements OnInit {
   constructor(
     private router: Router,
     private httpService: HttpClientService,
-    private chartColorService: ChartColorService
+    private chartColorService: ChartColorService,
+    private toastService: ToastService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -184,10 +186,12 @@ export class StatisticsComponent implements OnInit {
     const exercisesQueryParam = exericses.join(',');
 
     // Zuletzt besuchte Kategorien festse
-    this.httpService.request<any>(
-      HttpMethods.POST,
-      `training/statistics/${id}/viewedCategories?exercises=${exercisesQueryParam}`
-    );
+    this.httpService
+      .request<any>(
+        HttpMethods.POST,
+        `training/statistics/${id}/viewedCategories?exercises=${exercisesQueryParam}`
+      )
+      .subscribe((response) => {});
   }
 
   // TODO: implement switch view here

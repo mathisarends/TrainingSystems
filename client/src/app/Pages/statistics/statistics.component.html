@@ -1,28 +1,32 @@
 @if (!dataLoaded) {
 <app-spinner />
 } @else {
-<app-multi-select
-  [options]="allExercises"
-  [initialSelected]="selectedExercises!"
-  (selectionChange)="changeDisplayCategories($event)"
-></app-multi-select>
 
-<app-line-chart
-  [data]="lineChartDatasets"
-  [labels]="lineChartLabels"
-  yAxisTitle="Tonnage (kg)"
-/>
+<main>
+  <app-multi-select
+    [options]="allExercises"
+    [initialSelected]="selectedExercises!"
+    (selectionChange)="changeDisplayCategories($event)"
+  ></app-multi-select>
 
-<app-grouped-bar-chart
-  [labels]="groupedBarChartLabels"
-  [barChartDataSets]="groupedBarChartDatasets"
-/>
+  <app-line-chart
+    [data]="lineChartDatasets"
+    [labels]="lineChartLabels"
+    yAxisTitle="Tonnage (kg)"
+  />
 
-<div class="d-flex justify-content-center">
+  <app-grouped-bar-chart
+    [labels]="groupedBarChartLabels"
+    [barChartDataSets]="groupedBarChartDatasets"
+  />
+</main>
+
+<footer class="d-flex justify-content-center">
   <app-pagination
     [currentPage]="currentView === 'volume' ? 0 : 1"
     [totalPages]="2"
     (pageChanged)="changeView($event)"
   />
-</div>
+</footer>
+
 }
