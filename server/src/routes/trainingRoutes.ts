@@ -108,6 +108,7 @@ router.get('/statistics/:id/sets', authService.authenticationMiddleware, async (
     res.status(500).json({ error: errMessage });
   }
 });
+
 // gets tonnage for squat, bench and deadlift
 router.get('/statistics/:id', authService.authenticationMiddleware, async (req, res) => {
   const userClaimsSet = res.locals.user;

@@ -7,14 +7,13 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import Chart from 'chart.js/auto';
+import Chart, { ActiveElement, ChartEvent } from 'chart.js/auto';
 
 @Component({
   selector: 'app-line-chart',
   standalone: true,
-  imports: [],
   templateUrl: './line-chart.component.html',
-  styleUrl: './line-chart.component.scss',
+  styleUrls: ['./line-chart.component.scss'],
 })
 export class LineChartComponent implements AfterViewInit, OnChanges {
   @ViewChild('canvas') canvas!: ElementRef;
@@ -79,6 +78,24 @@ export class LineChartComponent implements AfterViewInit, OnChanges {
               },
             },
           },
+        },
+        onClick: (event: ChartEvent, elements: ActiveElement[]) => {
+          if (elements.length) {
+            const element = elements[0];
+            const datasetIndex = element.datasetIndex;
+            const index = element.index;
+            const dataset = this.chart.data.datasets[datasetIndex];
+            const label = this.chart.data.labels![index];
+            const value = dataset.data[index];
+
+            // Hier kannst du die Aktion definieren, die ausgeführt werden soll
+            console.log(
+              `Clicked on point in dataset ${dataset.label} at ${label}: ${value}`
+            );
+
+            // Beispiel: Navigation zu einer Detailseite
+            // this.router.navigate(['/details', dataset.label, label]);
+          }
         },
       },
     });
