@@ -36,6 +36,10 @@ export class TrainingViewNavigationService {
     direction: number,
     trainingPlanData: TrainingPlanDto
   ): number {
+    console.log(
+      '🚀 ~ TrainingViewNavigationService ~ trainingWeekIndex:',
+      trainingWeekIndex
+    );
     let week = 0;
 
     if (trainingWeekIndex === 0 && direction === -1) {
@@ -52,7 +56,7 @@ export class TrainingViewNavigationService {
     this.router.navigate([], {
       queryParams: {
         week: week,
-        day: trainingWeekIndex,
+        day: 0,
       },
       queryParamsHandling: 'merge',
     });
