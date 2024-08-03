@@ -132,7 +132,13 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
       this.swipeService.addSwipeListener(
         this.trainingTable.nativeElement,
         () => this.onPageChanged(this.trainingDayIndex + 1),
-        () => this.onPageChanged(this.trainingDayIndex - 1)
+        () => this.onPageChanged(this.trainingDayIndex - 1),
+        () => {
+          this.navigateWeek(-1);
+        },
+        () => {
+          this.navigateWeek(1);
+        }
       );
     }
   }

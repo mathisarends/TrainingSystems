@@ -36,6 +36,11 @@ export interface User extends Entity {
    */
   trainingPlans: TrainingPlan[];
 
+  /**
+   * Shows whether the navigation tutorial at the training page was completed
+   */
+  navigationLectureComplete?: boolean;
+
   placeholderExercises: Exercise[];
   squatExercises: Exercise[];
   benchExercises: Exercise[];
