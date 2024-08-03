@@ -8,10 +8,9 @@ import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { SearchService } from '../../../service/util/search.service';
 import { ModalService } from '../../../service/modal/modalService';
-import { ExerciseService } from '../../../service/exercise/exercise.service';
-import { ConfirmExerciseResetComponent } from '../confirm-exercise-reset/confirm-exercise-reset.component';
 import { ToastService } from '../../components/toast/toast.service';
 import { AuthService } from '../../auth-service.service';
+import { BasicInfoComponent } from '../../basic-info/basic-info.component';
 
 @Component({
   selector: 'app-exercises',
@@ -41,7 +40,6 @@ export class ExercisesComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private searchService: SearchService,
     private modalService: ModalService,
-    private exerciseService: ExerciseService,
     private authService: AuthService
   ) {}
 
@@ -60,20 +58,6 @@ export class ExercisesComponent implements OnInit, OnDestroy {
         // Filter categories based on search text
       }
     );
-
-    // Subscribe to preExerciseReset event
-    this.preExerciseResetSubscription =
-      this.exerciseService.preExerciseReset$.subscribe(() => {
-        this.modalService.close();
-        this.isLoading = true;
-      });
-
-    // Subscribe to resetSuccessful event
-    this.resetSuccessfulSubscription =
-      this.exerciseService.resetSuccessful$.subscribe(async () => {
-        await this.loadExercises();
-        this.isLoading = false;
-      });
   }
 
   ngOnDestroy(): void {
@@ -146,10 +130,26 @@ export class ExercisesComponent implements OnInit, OnDestroy {
 
   async onReset(event: Event): Promise<void> {
     event.preventDefault();
-    this.modalService.open({
-      component: ConfirmExerciseResetComponent,
+    const confirmed = await this.modalService.open({
+      component: BasicInfoComponent,
       title: 'Übungen zurücksetzen',
       buttonText: 'Zurücksetzen',
+      componentData: {
+        text: '  Bist du dir sicher, dass du die Übungen auf die Standarteinstellungen zurücksetzen willst? Die Änderungen können danach nicht weider rückgängig gemacht werden!',
+      },
     });
+
+    if (confirmed) {
+      try {
+        await firstValueFrom(
+          this.httpClient.request<any>(HttpMethods.POST, 'exercise/reset')
+        );
+
+        await this.loadExercises();
+        this.toastService.show('Erfolg', 'Übungskatalog zurückgesetzt!');
+      } catch (error) {
+        console.error('Error resetting exercises:', error);
+      }
+    }
   }
 }
