@@ -1,7 +1,7 @@
 @if (isLoading) {
 <app-spinner></app-spinner>
 } @else {
-<div class="container pt-4">
+<div class="container">
   <form (submit)="onSubmit($event)">
     @for (category of filteredCategories; track category; let categoryIndex =
     $index) { @if (categoryIndex > 0) {
