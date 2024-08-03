@@ -42,7 +42,6 @@ export class EstMaxService {
    */
   private handleInputChange(event: Event): void {
     const target = event.target as HTMLInputElement;
-    console.log('🚀 ~ EstMaxService ~ handleInputChange ~ target:', target);
 
     if (
       target &&

@@ -12,6 +12,7 @@
   <app-line-chart
     [data]="lineChartDatasets"
     [labels]="lineChartLabels"
+    (drillThrough)="showDrillThroughGraph($event)"
     yAxisTitle="Tonnage (kg)"
   />
 

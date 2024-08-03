@@ -2,15 +2,15 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnChanges,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import Chart, { ActiveElement, ChartEvent } from 'chart.js/auto';
-import { ModalService } from '../../service/modal/modalService';
-import { HttpClientService } from '../../service/http/http-client.service';
-import { HttpMethods } from '../types/httpMethods';
+import { ExerciseDrillThroughEvent } from './exercise-drill-through-event';
 
 @Component({
   selector: 'app-line-chart',
@@ -27,10 +27,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges {
   @Input() yAxisTitle: string = 'Value';
   @Input() maintainAspectRatio: boolean = false;
 
-  constructor(
-    private modalSerivce: ModalService,
-    private httpService: HttpClientService
-  ) {}
+  @Output() drillThrough = new EventEmitter<ExerciseDrillThroughEvent>();
 
   chart!: Chart<'line'>;
 
@@ -92,27 +89,14 @@ export class LineChartComponent implements AfterViewInit, OnChanges {
             const element = elements[0];
             const datasetIndex = element.datasetIndex;
             const index = element.index;
-            const dataset = this.chart.data.datasets[datasetIndex];
-            const label = this.chart.data.labels![index];
-            const value = dataset.data[index];
+            const exercise = this.chart.data.datasets[datasetIndex]
+              .label as string;
+            const label = this.chart.data.labels![index] as string;
 
-            // Hier kannst du die Aktion definieren, die ausgeführt werden soll
-            console.log(
-              `Clicked on point in dataset ${dataset.label} at ${label}: ${value}`
-            );
+            // Extract the week number from the label (assuming the label format is "Woche X")
+            const weekNumber = parseInt(label.match(/\d+/)?.[0] || '0', 10);
 
-            const id = '42904af2-5e66-442d-b62e-7fa06509100f';
-            this.httpService
-              .request(
-                HttpMethods.GET,
-                `training/statistics/${id}/drilldown/${dataset.label}/${0}`
-              )
-              .subscribe((response) => {
-                console.log(
-                  '🚀 ~ LineChartComponent ~ this.httpService.request ~ response:',
-                  response
-                );
-              });
+            this.drillThrough.emit({ exerciseName: exercise, weekNumber });
           }
         },
       },

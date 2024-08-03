@@ -14,6 +14,7 @@ import { BarChartData } from '../../grouped-bar-chart/bar-chart.-data';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
 import { log } from 'console';
 import { ToastService } from '../../components/toast/toast.service';
+import { ExerciseDrillThroughEvent } from '../../line-chart/exercise-drill-through-event';
 
 /**
  * Component responsible for displaying training statistics in a line chart.
@@ -45,6 +46,8 @@ export class StatisticsComponent implements OnInit {
   groupedBarChartDatasets!: BarChartData[];
   groupedBarChartLabels!: string[];
 
+  id!: string;
+
   constructor(
     private router: Router,
     private httpService: HttpClientService,
@@ -53,19 +56,39 @@ export class StatisticsComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    const id = this.router.url.split('/').pop();
-    if (id) {
-      await this.fetchInitialData(id);
+    this.id = this.router.url.split('/').pop()!;
+    if (this.id) {
+      await this.fetchInitialData(this.id);
     }
   }
 
   async changeDisplayCategories(newExercises: string[]) {
-    const id = this.router.url.split('/').pop()!;
-    this.updateLastViewedCategories(id, newExercises);
+    this.updateLastViewedCategories(this.id, newExercises);
 
-    if (id) {
-      await this.fetchStatistics(id, newExercises);
+    if (this.id) {
+      await this.fetchStatistics(this.id, newExercises);
     }
+  }
+
+  showDrillThroughGraph(drillThroughData: ExerciseDrillThroughEvent) {
+    console.log(
+      '🚀 ~ StatisticsComponent ~ showDrillThroughGraph ~ drillThroughData:',
+      drillThroughData
+    );
+
+    this.httpService
+      .request(
+        HttpMethods.GET,
+        `training/statistics/${this.id}/drilldown/${
+          drillThroughData.exerciseName
+        }/${drillThroughData.weekNumber - 1}`
+      )
+      .subscribe((response) => {
+        console.log(
+          '🚀 ~ StatisticsComponent ~ this.httpService.request ~ response:',
+          response
+        );
+      });
   }
 
   private async fetchInitialData(id: string): Promise<void> {
