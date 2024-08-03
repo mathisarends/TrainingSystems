@@ -38,4 +38,8 @@ export class FormService {
   clearChanges(): void {
     this.changedData = {};
   }
+
+  hasUnsavedChanges(): boolean {
+    return Object.keys(this.changedData).length > 0;
+  }
 }

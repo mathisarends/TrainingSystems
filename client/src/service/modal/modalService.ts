@@ -36,7 +36,7 @@ export class ModalService {
    * @returns A promise that resolves when the modal is confirmed or rejected.
    */
   open(options: ModalOptions): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
+    return new Promise<boolean>((resolve) => {
       // Create the overlay component
       this.overlayComponentRef = createComponent(ModalOverlayComponent, {
         environmentInjector: this.environmentInjector,
@@ -85,6 +85,7 @@ export class ModalService {
       });
     });
   }
+
   /**
    * Closes the modal dialog and cleans up the components.
    */

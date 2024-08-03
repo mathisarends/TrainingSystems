@@ -39,6 +39,7 @@ import { TrainingViewNavigationComponent } from '../../training-view-navigation/
 import { ModalSize } from '../../../service/modal/modalSize';
 import { ConfirmExerciseResetComponent } from '../confirm-exercise-reset/confirm-exercise-reset.component';
 import { DeleteConfirmationComponent } from '../delete-confirmation/delete-confirmation.component';
+import { BasicInfoComponent } from '../../basic-info/basic-info.component';
 
 /**
  * Component to manage and display the training view.
@@ -253,20 +254,17 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
    */
 
   async onPageChanged(day: number): Promise<void> {
-    const unsavedChanges = !!this.formService.getChanges();
-
-    if (unsavedChanges) {
+    if (this.formService.hasUnsavedChanges()) {
       const confirmed = await this.modalService.open({
-        component: DeleteConfirmationComponent,
+        component: BasicInfoComponent,
         title: 'Ungespeicherte Änderungen',
         buttonText: 'Änderungen verwerfen',
+        componentData: {
+          text: 'Es gibt ungespeicherte Änderungen. Möchtest du wirklich fortfahren und die Änderungen verwerfen?',
+        },
       });
 
-      if (confirmed) {
-        this.navigateDay(day);
-      } else {
-        console.log('abgebrochen blyat');
-      }
+      if (confirmed) this.navigateDay(day);
     } else {
       this.navigateDay(day);
     }
