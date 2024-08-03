@@ -5,6 +5,8 @@ import { findTrainingPlanIndexById } from '../service/trainingService.js';
 import { TrainingPlan } from '../../../shared/models/training/trainingPlan.js';
 import { ExerciseCategories } from '../utils/ExerciseCategores.js';
 import { mapToExerciseCategory } from './exerciseRoutes.js';
+import { TrainingDay } from '@shared/models/training/trainingDay.js';
+import { Exercise } from '@shared/models/training/exercise.js';
 
 const router = express.Router();
 
@@ -141,6 +143,67 @@ router.get('/statistics/:id', authService.authenticationMiddleware, async (req, 
     res.status(200).json(responseData);
   } catch (error) {
     const errMessage = 'Es ist ein Fehler beim Abrufen der Statistiken aufgetreten ' + error;
+    console.error(errMessage);
+    res.status(500).json({ error: errMessage });
+  }
+});
+
+router.get('/statistics/:id/drilldown/:category/:week', authService.authenticationMiddleware, async (req, res) => {
+  const userClaimsSet = res.locals.user;
+  const trainingPlanId = req.params.id;
+  const weekIndex = parseInt(req.params.week, 10);
+  const category = req.params.category;
+
+  try {
+    // TOOO: warum werden exercises nicht mit einem enum abgespeichert wie liegen die da in der datenbank?
+    const mappedCategory = mapToExerciseCategory(category);
+
+    const userDAO = req.app.locals.userDAO;
+    const user = await userDAO.findOne({ id: userClaimsSet.id });
+    if (!user) {
+      return res.status(404).json({ error: 'Benutzer nicht gefunden' });
+    }
+
+    const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
+    if (trainingPlanIndex === -1) {
+      return res.status(404).json({ message: 'Kein Trainingsplan für die gegebene URL gefunden' });
+    }
+
+    const trainingPlan = user.trainingPlans[trainingPlanIndex];
+    const trainingWeek = trainingPlan.trainingWeeks[weekIndex];
+
+    if (!trainingWeek) {
+      return res.status(404).json({ message: 'Ungültige Trainingswoche' });
+    }
+
+    const tonnageMap = new Map();
+
+    // Berechne die Tonnage für jede Übung in der spezifischen Kategorie und Woche
+    trainingWeek.trainingDays.forEach((trainingDay: TrainingDay) => {
+      trainingDay.exercises.forEach((exercise: Exercise) => {
+        console.log('🚀 ~ trainingDay.exercises.forEach ~ exercise:', exercise);
+        if (exercise.category === mappedCategory) {
+          const weight = parseFloat(exercise.weight) || 0;
+          const exerciseTonnage = exercise.sets * exercise.reps * weight;
+
+          console.log('exercise', exercise.exercise);
+
+          // Wenn die Übung bereits in der Map existiert, addiere die Tonnage
+          if (tonnageMap.has(exercise.exercise)) {
+            tonnageMap.set(exercise.exercise, tonnageMap.get(exercise.exercise) + exerciseTonnage);
+          } else {
+            tonnageMap.set(exercise.exercise, exerciseTonnage);
+          }
+        }
+      });
+    });
+
+    // Konvertiere die Map in ein Array von Objekten für die JSON-Antwort
+    const tonnageArray = Array.from(tonnageMap, ([exercise, tonnage]) => ({ exercise, tonnage }));
+
+    res.status(200).json({ category, week: weekIndex, exercises: tonnageArray });
+  } catch (error) {
+    const errMessage = 'Es ist ein Fehler beim Abrufen der Drilldown-Statistiken aufgetreten: ' + error;
     console.error(errMessage);
     res.status(500).json({ error: errMessage });
   }

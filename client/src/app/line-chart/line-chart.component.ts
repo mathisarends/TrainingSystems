@@ -8,6 +8,11 @@ import {
   ViewChild,
 } from '@angular/core';
 import Chart, { ActiveElement, ChartEvent } from 'chart.js/auto';
+import { ModalService } from '../../service/modal/modalService';
+import { DeleteConfirmationComponent } from '../Pages/delete-confirmation/delete-confirmation.component';
+import { ModalSize } from '../../service/modal/modalSize';
+import { HttpClientService } from '../../service/http/http-client.service';
+import { HttpMethods } from '../types/httpMethods';
 
 @Component({
   selector: 'app-line-chart',
@@ -23,6 +28,11 @@ export class LineChartComponent implements AfterViewInit, OnChanges {
   @Input() labels: string[] = [];
   @Input() yAxisTitle: string = 'Value';
   @Input() maintainAspectRatio: boolean = false;
+
+  constructor(
+    private modalSerivce: ModalService,
+    private httpService: HttpClientService
+  ) {}
 
   chart!: Chart<'line'>;
 
@@ -93,8 +103,26 @@ export class LineChartComponent implements AfterViewInit, OnChanges {
               `Clicked on point in dataset ${dataset.label} at ${label}: ${value}`
             );
 
-            // Beispiel: Navigation zu einer Detailseite
-            // this.router.navigate(['/details', dataset.label, label]);
+            const id = '42904af2-5e66-442d-b62e-7fa06509100f';
+            this.httpService
+              .request(
+                HttpMethods.GET,
+                `training/statistics/${id}/drilldown/${dataset.label}/${0}`
+              )
+              .subscribe((response) => {
+                console.log(
+                  '🚀 ~ LineChartComponent ~ this.httpService.request ~ response:',
+                  response
+                );
+              });
+
+            this.modalSerivce.open({
+              component: DeleteConfirmationComponent,
+              size: ModalSize.LARGE,
+              title: 'Drilldown',
+              buttonText: 'Abschließen',
+              hasFooter: false,
+            });
           }
         },
       },

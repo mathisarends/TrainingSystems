@@ -124,9 +124,16 @@ export class CategoryPlaceholderService {
     category: string,
     defaultRepSchemeByCategory: { [key: string]: any }
   ): void {
-    const exerciseSelect = tableRow.querySelector(
+    const exerciseNameSelectors = tableRow.querySelectorAll(
       '.exercise-name-selector'
-    ) as HTMLSelectElement;
+    ) as NodeListOf<HTMLSelectElement>;
+
+    // Finde den ersten sichtbaren und nicht deaktivierten selector
+    const exerciseSelect = Array.from(exerciseNameSelectors).find(
+      (selector) =>
+        window.getComputedStyle(selector).opacity === '1' && !selector.disabled
+    )!;
+
     const setsInput = tableRow.querySelector('.sets') as HTMLInputElement;
     const repsInput = tableRow.querySelector('.reps') as HTMLInputElement;
     const targetRPEInput = tableRow.querySelector(

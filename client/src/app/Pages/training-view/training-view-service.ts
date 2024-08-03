@@ -35,6 +35,7 @@ export class TrainingViewService {
     day: number,
     changedData: any
   ): Observable<any> {
+    console.log('🚀 ~ TrainingViewService ~ changedData:', changedData);
     return this.httpClient.request<any>(
       HttpMethods.PATCH,
       `training/plan/${planId}/${week}/${day}`,

@@ -187,6 +187,10 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
   onSubmit(event: Event): void {
     event.preventDefault();
     const changedData = this.formService.getChanges();
+    console.log(
+      '🚀 ~ TrainingViewComponent ~ onSubmit ~ changedData:',
+      changedData
+    );
 
     this.trainingViewService
       .submitTrainingPlan(
