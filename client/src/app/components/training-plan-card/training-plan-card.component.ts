@@ -9,10 +9,10 @@ import { ModalService } from '../../../service/modal/modalService';
 import { EditTrainingPlanComponent } from '../../Pages/edit-training-plan/edit-training-plan.component';
 import { ModalSize } from '../../../service/modal/modalSize';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ModalEventsService } from '../../../service/modal/modal-events.service';
-import { DeleteConfirmationComponent } from '../../Pages/delete-confirmation/delete-confirmation.component';
+
 import { TooltipDirective } from '../../../service/tooltip/tooltip.directive';
 import { ToastService } from '../toast/toast.service';
+import { BasicInfoComponent } from '../../basic-info/basic-info.component';
 
 /**
  * Component for displaying and managing a single training plan card.
@@ -29,41 +29,12 @@ export class TrainingPlanCardComponent {
   @Input() columnClass!: string;
   @Output() changedPlanConstellation = new EventEmitter<void>();
 
-  private subscriptions: Subscription[] = [];
-
   constructor(
     private httpClient: HttpClientService,
     private router: Router,
     private modalService: ModalService,
-    private modalEventsService: ModalEventsService,
     private toastService: ToastService
   ) {}
-
-  /**
-   * This method subscribes to the confirmClick$ observable from the ModalEventsService.
-   * When a confirm click event is emitted, it checks if the emitted id matches the id
-   * of the current training plan. If they match, it calls the handleDelete method
-   * to delete the training plan.
-   *
-   * @returns {Promise<void>}
-   */
-  async ngOnInit(): Promise<void> {
-    const confirmClickSubscription =
-      this.modalEventsService.confirmClick$.subscribe(async (id) => {
-        if (id === this.trainingPlan.id) {
-          await this.handleDelete(this.trainingPlan.id);
-        }
-      });
-    this.subscriptions.push(confirmClickSubscription);
-  }
-
-  /**
-   * Lifecycle hook that runs when the component is destroyed.
-   * Unsubscribes from all subscriptions to avoid memory leaks.
-   */
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
-  }
 
   /**
    * Navigates to the view page of the training plan.
@@ -111,13 +82,19 @@ export class TrainingPlanCardComponent {
    * Opens the modal to delete a training plan.
    * @param index - The index of the training plan to delete.
    */
-  showDeleteTrainingPlanModal(): void {
-    this.modalService.open({
-      component: DeleteConfirmationComponent,
-      title: 'Trainingsplan wirklich löschen?',
+  async showDeleteTrainingPlanModal(): Promise<void> {
+    const confirmed = await this.modalService.open({
+      component: BasicInfoComponent,
+      title: 'Trainingsplan löschen',
       buttonText: 'Löschen',
-      componentData: { id: this.trainingPlan.id },
+      componentData: {
+        text: 'Bist du dir sicher, dass du dieses Element löschen willst? Diese Änderung kann nicht mehr rückgängig gemacht werden!',
+      },
     });
+
+    if (confirmed) {
+      await this.handleDelete(this.trainingPlan.id);
+    }
   }
 
   /**

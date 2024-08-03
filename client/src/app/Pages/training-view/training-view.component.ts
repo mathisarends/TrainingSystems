@@ -37,8 +37,6 @@ import { RestTimerComponent } from '../../rest-timer/rest-timer.component';
 import { SpeechToTextComponent } from '../../speech-to-text/speech-to-text.component';
 import { TrainingViewNavigationComponent } from '../../training-view-navigation/training-view-navigation.component';
 import { ModalSize } from '../../../service/modal/modalSize';
-import { ConfirmExerciseResetComponent } from '../confirm-exercise-reset/confirm-exercise-reset.component';
-import { DeleteConfirmationComponent } from '../delete-confirmation/delete-confirmation.component';
 import { BasicInfoComponent } from '../../basic-info/basic-info.component';
 
 /**

@@ -9,8 +9,6 @@ import {
 } from '@angular/core';
 import Chart, { ActiveElement, ChartEvent } from 'chart.js/auto';
 import { ModalService } from '../../service/modal/modalService';
-import { DeleteConfirmationComponent } from '../Pages/delete-confirmation/delete-confirmation.component';
-import { ModalSize } from '../../service/modal/modalSize';
 import { HttpClientService } from '../../service/http/http-client.service';
 import { HttpMethods } from '../types/httpMethods';
 
@@ -115,14 +113,6 @@ export class LineChartComponent implements AfterViewInit, OnChanges {
                   response
                 );
               });
-
-            this.modalSerivce.open({
-              component: DeleteConfirmationComponent,
-              size: ModalSize.LARGE,
-              title: 'Drilldown',
-              buttonText: 'Abschließen',
-              hasFooter: false,
-            });
           }
         },
       },
