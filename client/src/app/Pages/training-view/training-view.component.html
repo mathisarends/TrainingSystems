@@ -184,3 +184,12 @@
   </button>
 </form>
 }
+
+@if (!isMobile) {
+  <div class="fixed-bottom-bar">
+    <i class="bx bx-left-arrow-alt icon" (click)="navigateWeek(-1)"></i>
+    <i class="bx bx-right-arrow-alt icon" (click)="navigateWeek(1)"></i>
+  </div>
+}
+
+
