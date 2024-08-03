@@ -16,10 +16,19 @@
           type="button"
           class="btn btn-light btn-md m-1"
           appTooltip="Ansehen"
+          (click)="openNavigationMenu()"
+        >
+          <i class="bx bx-menu"></i>
+        </button>
+        <!-- Feature Toggle muss noch ausgebaut werden -->
+        <!-- <button
+          type="button"
+          class="btn btn-light btn-md m-1"
+          appTooltip="Ansehen"
           (click)="recordTrainingData($event)"
         >
           <i class="bx bx-microphone"></i>
-        </button>
+        </button> -->
         <button
           type="button"
           class="btn btn-light btn-md m-1"
@@ -161,7 +170,7 @@
     </tbody>
   </table>
 
-  <div class="mb-4">
+  <div class="pagination-container mb-4">
     <app-pagination
       [currentPage]="trainingDayIndex"
       [totalPages]="trainingPlanData.trainingFrequency"

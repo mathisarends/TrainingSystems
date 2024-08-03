@@ -35,6 +35,8 @@ import { PauseTimeService } from '../../../service/training/pause-time.service';
 import { ModalService } from '../../../service/modal/modalService';
 import { RestTimerComponent } from '../../rest-timer/rest-timer.component';
 import { SpeechToTextComponent } from '../../speech-to-text/speech-to-text.component';
+import { TrainingViewNavigationComponent } from '../../training-view-navigation/training-view-navigation.component';
+import { ModalSize } from '../../../service/modal/modalSize';
 
 /**
  * Component to manage and display the training view.
@@ -300,6 +302,16 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
       component: RestTimerComponent,
       title: 'Pause Timer',
       buttonText: 'Abbrechen',
+      hasFooter: false,
+    });
+  }
+
+  openNavigationMenu() {
+    this.modalService.open({
+      component: TrainingViewNavigationComponent,
+      title: 'Navigationshinweise',
+      buttonText: 'Fertig',
+      size: ModalSize.MEDIUM,
       hasFooter: false,
     });
   }
