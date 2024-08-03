@@ -45,6 +45,7 @@
   font-weight: bold;
   font-family: "Poppins", sans-serif;
   padding-bottom: 1.5rem;
+  z-index: 1;
 }
 
 .context-headline,
@@ -123,7 +124,6 @@
     right: 5%;
 
     background-color: white;
-    z-index: 1000;
   }
 
   /* Adjust table for visibility */
