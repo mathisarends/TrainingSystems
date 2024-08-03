@@ -31,7 +31,7 @@ export class TrainingViewNavigationService {
     return trainingDayIndex;
   }
 
-  /** Per Defaulft auf den ersten Tag der Woche navigieren */
+  /** Per Default auf den ersten Tag der Woche navigieren */
   navigateWeek(
     trainingWeekIndex: number,
     direction: number,

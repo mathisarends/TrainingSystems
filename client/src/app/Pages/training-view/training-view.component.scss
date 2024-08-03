@@ -112,15 +112,23 @@
     text-align: left;
   }
 
+  /* Fixate header in mobile view */
   #fixed-caption {
-    padding-bottom: 0.65rem;
+    padding-top: 0.45rem;
+    padding-bottom: 0.15rem;
 
-    /* position: fixed;
+    position: fixed;
     top: 71.25px;
     left: 5%;
     right: 5%;
 
     background-color: white;
-    z-index: 1000; */
+    z-index: 1000;
+  }
+
+  /* Adjust table for visibility */
+  table {
+    position: relative;
+    top: 37.5px;
   }
 }
