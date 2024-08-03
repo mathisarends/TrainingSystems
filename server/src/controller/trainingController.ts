@@ -179,7 +179,7 @@ export async function getTrainingPlan(req: Request, res: Response) {
         }
 
         if (exercise) {
-          updateExercise(fieldName, fieldValue, exerciseInLaterWeek, trainingDayInLaterWeek, exerciseIndex);
+          updateExercise(fieldName, fieldValue, exerciseInLaterWeek, trainingDayInLaterWeek, exerciseIndex, true);
         }
 
         tempWeekIndex++;

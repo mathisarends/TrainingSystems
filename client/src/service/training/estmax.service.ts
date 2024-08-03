@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { FormService } from '../form/form.service';
 
 @Injectable({
   providedIn: 'root',
@@ -7,6 +8,8 @@ export class EstMaxService {
   private readonly SQUAT_MAX_ID = 'userMaxSquat';
   private readonly BENCH_MAX_ID = 'userMaxBench';
   private readonly DEADLIFT_MAX_ID = 'userMaxDeadlift';
+
+  constructor(private formService: FormService) {}
 
   /**
    * Initializes the event listeners for weight, actual RPE, and reps inputs to calculate estimated max.
@@ -78,10 +81,9 @@ export class EstMaxService {
           const estMaxInput = parentRow.querySelector(
             '.estMax'
           ) as HTMLInputElement;
-          estMaxInput.value = estMax.toString();
 
-          const changeEvent = new Event('change', { bubbles: true });
-          estMaxInput.dispatchEvent(changeEvent);
+          estMaxInput.value = estMax.toString();
+          this.formService.addChange(estMaxInput.name, estMaxInput.value);
 
           const nextRow = parentRow.nextElementSibling!;
           const exercise = (

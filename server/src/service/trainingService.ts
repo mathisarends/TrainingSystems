@@ -263,11 +263,16 @@ export function updateExercise(
   fieldValue: string,
   exercise: Exercise,
   trainingDay: TrainingDay,
-  exerciseIndex: number
+  exerciseIndex: number,
+  copyMode = false
 ) {
   // zum löschen nachdem sie gelöscht wurde wird sie aber wieder neue erstellt!!! also funktioniert noch nicht
   if (fieldName.endsWith('category') && (fieldValue === '- Bitte Auswählen -' || fieldValue === '')) {
     trainingDay.exercises.splice(exerciseIndex - 1, 1);
+    return;
+  }
+
+  if (copyMode && (fieldName.endsWith('actualRPE') || fieldName.endsWith('weight') || fieldName.endsWith('estMax'))) {
     return;
   }
 
