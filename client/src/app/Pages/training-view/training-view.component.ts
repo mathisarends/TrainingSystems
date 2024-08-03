@@ -267,7 +267,8 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
     this.trainingWeekIndex = this.navigationService.navigateWeek(
       this.trainingWeekIndex,
       direction,
-      this.trainingPlanData
+      this.trainingPlanData,
+      this.trainingDayIndex
     );
     this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
   }

@@ -31,10 +31,12 @@ export class TrainingViewNavigationService {
     return trainingDayIndex;
   }
 
+  /** Per Defaulft auf den ersten Tag der Woche navigieren */
   navigateWeek(
     trainingWeekIndex: number,
     direction: number,
-    trainingPlanData: TrainingPlanDto
+    trainingPlanData: TrainingPlanDto,
+    day = 0
   ): number {
     console.log(
       '🚀 ~ TrainingViewNavigationService ~ trainingWeekIndex:',
@@ -56,7 +58,7 @@ export class TrainingViewNavigationService {
     this.router.navigate([], {
       queryParams: {
         week: week,
-        day: 0,
+        day: day,
       },
       queryParamsHandling: 'merge',
     });
