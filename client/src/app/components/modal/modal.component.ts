@@ -7,6 +7,8 @@ import {
   EnvironmentInjector,
   createComponent,
   ComponentRef,
+  EventEmitter,
+  Output,
 } from '@angular/core';
 import { ModalService } from '../../../service/modal/modalService';
 import { ModalSize } from '../../../service/modal/modalSize';
@@ -18,6 +20,9 @@ import { ModalEventsService } from '../../../service/modal/modal-events.service'
   styleUrls: ['./modal.component.scss'],
 })
 export class ModalComponent implements AfterViewInit {
+  @Output() confirmed = new EventEmitter<void>();
+  @Output() cancelled = new EventEmitter<void>();
+
   @Input() title: string = 'Default Title';
   @Input() confirmButtonText: string = 'Submit';
   @Input() childComponentType!: any;
@@ -58,6 +63,7 @@ export class ModalComponent implements AfterViewInit {
 
   close() {
     this.modalEventService.emitAbortClick();
+    this.cancelled.emit();
     this.modalService.close();
   }
 
@@ -69,5 +75,7 @@ export class ModalComponent implements AfterViewInit {
     if (!this.confirmationRequired) {
       this.modalService.close();
     }
+
+    this.confirmed.emit();
   }
 }

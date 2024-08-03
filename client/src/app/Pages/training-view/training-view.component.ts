@@ -37,6 +37,8 @@ import { RestTimerComponent } from '../../rest-timer/rest-timer.component';
 import { SpeechToTextComponent } from '../../speech-to-text/speech-to-text.component';
 import { TrainingViewNavigationComponent } from '../../training-view-navigation/training-view-navigation.component';
 import { ModalSize } from '../../../service/modal/modalSize';
+import { ConfirmExerciseResetComponent } from '../confirm-exercise-reset/confirm-exercise-reset.component';
+import { DeleteConfirmationComponent } from '../delete-confirmation/delete-confirmation.component';
 
 /**
  * Component to manage and display the training view.
@@ -247,11 +249,30 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
 
   /**
    * Handles page change events.
-   * Navigates to the specified training day and reloads the data.
-   * @param day - Index of the training day to navigate to.
+   * Checks for unsaved data and
    */
 
-  onPageChanged(day: number): void {
+  async onPageChanged(day: number): Promise<void> {
+    const unsavedChanges = !!this.formService.getChanges();
+
+    if (unsavedChanges) {
+      const confirmed = await this.modalService.open({
+        component: DeleteConfirmationComponent,
+        title: 'Ungespeicherte Änderungen',
+        buttonText: 'Änderungen verwerfen',
+      });
+
+      if (confirmed) {
+        this.navigateDay(day);
+      } else {
+        console.log('abgebrochen blyat');
+      }
+    } else {
+      this.navigateDay(day);
+    }
+  }
+
+  navigateDay(day: number) {
     if (day >= this.trainingPlanData.trainingBlockLength) {
       day = 0;
     } else if (day < 0) {
