@@ -6,10 +6,12 @@ import {
   ViewChild,
 } from '@angular/core';
 import Chart from 'chart.js/auto';
+import { AlertComponent } from '../components/alert/alert.component';
 
 @Component({
   selector: 'app-polar-chart',
   standalone: true,
+  imports: [AlertComponent],
   templateUrl: './polar-chart.component.html',
   styleUrls: ['./polar-chart.component.scss'],
 })

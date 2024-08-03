@@ -15,6 +15,8 @@ import { PaginationComponent } from '../../components/pagination/pagination.comp
 import { log } from 'console';
 import { ToastService } from '../../components/toast/toast.service';
 import { ExerciseDrillThroughEvent } from '../../line-chart/exercise-drill-through-event';
+import { ModalService } from '../../../service/modal/modalService';
+import { PolarChartComponent } from '../../polar-chart/polar-chart.component';
 
 /**
  * Component responsible for displaying training statistics in a line chart.
@@ -52,7 +54,7 @@ export class StatisticsComponent implements OnInit {
     private router: Router,
     private httpService: HttpClientService,
     private chartColorService: ChartColorService,
-    private toastService: ToastService
+    private modalService: ModalService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -71,11 +73,6 @@ export class StatisticsComponent implements OnInit {
   }
 
   showDrillThroughGraph(drillThroughData: ExerciseDrillThroughEvent) {
-    console.log(
-      '🚀 ~ StatisticsComponent ~ showDrillThroughGraph ~ drillThroughData:',
-      drillThroughData
-    );
-
     this.httpService
       .request(
         HttpMethods.GET,
@@ -83,11 +80,31 @@ export class StatisticsComponent implements OnInit {
           drillThroughData.exerciseName
         }/${drillThroughData.weekNumber - 1}`
       )
-      .subscribe((response) => {
+      .subscribe((response: any) => {
         console.log(
-          '🚀 ~ StatisticsComponent ~ this.httpService.request ~ response:',
+          '🚀 ~ StatisticsComponent ~ .subscribe ~ response:',
           response
         );
+
+        const data: number[] = response.exercises.map(
+          (exercise: any) => exercise.tonnage
+        );
+        console.log('🚀 ~ StatisticsComponent ~ .subscribe ~ data:', data);
+        const labels: string[] = response.exercises.map(
+          (exercise: any) => exercise.exercise
+        );
+        console.log('🚀 ~ StatisticsComponent ~ .subscribe ~ labels:', labels);
+
+        this.modalService.open({
+          component: PolarChartComponent,
+          title: ` Woche ${drillThroughData.weekNumber} - ${drillThroughData.exerciseName}`,
+          hasFooter: false,
+          buttonText: '',
+          componentData: {
+            data,
+            labels,
+          },
+        });
       });
   }
 
