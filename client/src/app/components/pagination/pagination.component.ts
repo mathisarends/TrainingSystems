@@ -18,6 +18,8 @@ export class PaginationComponent {
   }
 
   navigatePage(page: number, event: Event): void {
+    this.currentPage = page;
+
     event.preventDefault();
     if (page >= 0 && page < this.totalPages) {
       this.pageChanged.emit(page);

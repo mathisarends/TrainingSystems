@@ -11,7 +11,18 @@
   [data]="lineChartDatasets"
   [labels]="lineChartLabels"
   yAxisTitle="Tonnage (kg)"
-></app-line-chart>
+/>
 
-<app-grouped-bar-chart></app-grouped-bar-chart>
+<app-grouped-bar-chart
+  [labels]="groupedBarChartLabels"
+  [barChartDataSets]="groupedBarChartDatasets"
+/>
+
+<div class="d-flex justify-content-center">
+  <app-pagination
+    [currentPage]="currentView === 'volume' ? 0 : 1"
+    [totalPages]="2"
+    (pageChanged)="changeView($event)"
+  />
+</div>
 }

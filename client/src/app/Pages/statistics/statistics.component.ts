@@ -10,6 +10,9 @@ import { ChartColorService } from '../../chart-color.service';
 import { firstValueFrom } from 'rxjs';
 import { LineChartComponent } from '../../line-chart/line-chart.component';
 import { GroupedBarChartComponent } from '../../grouped-bar-chart/grouped-bar-chart.component';
+import { BarChartData } from '../../grouped-bar-chart/bar-chart.-data';
+import { PaginationComponent } from '../../components/pagination/pagination.component';
+import { log } from 'console';
 
 /**
  * Component responsible for displaying training statistics in a line chart.
@@ -23,12 +26,14 @@ import { GroupedBarChartComponent } from '../../grouped-bar-chart/grouped-bar-ch
     MultiSelectComponent,
     LineChartComponent,
     GroupedBarChartComponent,
+    PaginationComponent,
   ],
   templateUrl: './statistics.component.html',
   styleUrls: ['./statistics.component.scss'],
 })
 export class StatisticsComponent implements OnInit {
   dataLoaded: boolean = false;
+  currentView: 'volume' | 'performance' = 'volume';
 
   selectedExercises!: string[];
   allExercises!: string[];
@@ -36,7 +41,7 @@ export class StatisticsComponent implements OnInit {
   lineChartDatasets!: any[];
   lineChartLabels!: string[];
 
-  groupedBarChartDatasets!: number[];
+  groupedBarChartDatasets!: BarChartData[];
   groupedBarChartLabels!: string[];
 
   constructor(
@@ -135,10 +140,10 @@ export class StatisticsComponent implements OnInit {
     this.groupedBarChartDatasets = Object.keys(setsResponse).map(
       (categoryKey) => {
         const setsData = setsResponse[categoryKey];
-        return this.createBarDataset(categoryKey, setsData);
+        return this.createBarDataset(categoryKey, setsData || []);
       }
     );
-    this.groupedBarChartLabels = this.lineChartLabels; // Assuming both charts use the same labels (weeks)
+    this.groupedBarChartLabels = this.lineChartLabels;
   }
 
   private createTonnageDataSet(category: string, data: Tonnage[]): any {
@@ -158,6 +163,8 @@ export class StatisticsComponent implements OnInit {
       label: this.formatCategoryLabel(category),
       data: data, // Use the raw numbers of sets per week
       backgroundColor: colors.backgroundColor,
+      borderColor: colors.borderColor,
+      borderWidth: 1,
     };
   }
 
@@ -181,5 +188,14 @@ export class StatisticsComponent implements OnInit {
       HttpMethods.POST,
       `training/statistics/${id}/viewedCategories?exercises=${exercisesQueryParam}`
     );
+  }
+
+  // TODO: implement switch view here
+  changeView(index: number) {
+    if (index == 0) {
+      this.currentView === 'volume';
+    } else {
+      this.currentView === 'performance';
+    }
   }
 }

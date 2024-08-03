@@ -32,6 +32,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log('🚀 ~ LineChartComponent ~ ngOnChanges ~ changes:', changes);
     if (changes['data'] && !changes['data'].firstChange) {
       this.updateChart();
     }
