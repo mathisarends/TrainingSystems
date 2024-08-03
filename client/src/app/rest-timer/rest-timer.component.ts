@@ -40,7 +40,7 @@ export class RestTimerComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.progressRing) {
           this.updateCircle();
         }
-        if (remainingTime === 0) {
+        if (remainingTime === 0 && this.initialTime) {
           this.timerFinished.emit();
           this.playTimerFinishedAudio();
         }
