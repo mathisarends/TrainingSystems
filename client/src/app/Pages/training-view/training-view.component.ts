@@ -280,6 +280,8 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
       this.trainingPlanData.trainingFrequency,
       this.trainingWeekIndex
     );
+
+    this.automationContextInitialized = false;
     this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
   }
 
@@ -295,6 +297,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
       this.trainingPlanData,
       this.trainingDayIndex
     );
+    this.automationContextInitialized = false;
     this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
   }
 
