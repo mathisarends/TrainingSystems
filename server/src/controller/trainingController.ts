@@ -6,7 +6,8 @@ import {
   createExerciseObject,
   createNewTrainingPlanWithPlaceholders,
   findLatestTrainingDayWithWeight,
-  findTrainingPlanIndexById,
+  findTrainingPlanById,
+  handleWeekDifference,
   updateExercise
 } from '../service/trainingService.js';
 import { TrainingDay } from '@shared/models/training/trainingDay.js';
@@ -100,10 +101,27 @@ export async function getPlanForEdit(req: Request, res: Response): Promise<void>
 }
 
 export async function updatePlan(req: Request, res: Response): Promise<void> {
+  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
+  const planId = req.params.id;
+
   try {
-    const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
-    const userClaimsSet = res.locals.user;
-    await trainingService.updateTrainingPlan(userDAO, userClaimsSet, req.params.id, req.body);
+    const user = await getUser(req, res);
+
+    const trainingPlan = findTrainingPlanById(user.trainingPlans, planId);
+
+    trainingPlan.title = req.body.title;
+    trainingPlan.trainingFrequency = Number(req.body.trainingFrequency);
+    trainingPlan.weightRecommandationBase = req.body.weightPlaceholders as WeightRecommendationBase;
+    if (req.body.coverImage) {
+      trainingPlan.coverImageBase64 = req.body.coverImage;
+    }
+
+    if (trainingPlan.trainingWeeks.length !== Number(req.body.trainingWeeks)) {
+      const difference = trainingPlan.trainingWeeks.length - parseInt(req.body.trainingWeeks);
+      handleWeekDifference(trainingPlan, difference);
+    }
+
+    await userDAO.update(user);
     res.status(200).json({ message: 'Trainingsplan erfolgreich aktualisiert' });
   } catch (error) {
     console.error('Es ist ein Fehler beim Aktualisieren des Trainingsplans aufgetreten', error);
@@ -112,18 +130,35 @@ export async function updatePlan(req: Request, res: Response): Promise<void> {
 }
 
 export async function getPlanForDay(req: Request, res: Response): Promise<void> {
+  const { id, week, day } = req.params;
+
+  const trainingWeekIndex = Number(week);
+  const trainingDayIndex = Number(day);
+
   try {
-    const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
-    const userClaimsSet = res.locals.user;
-    const { id, week, day } = req.params;
-    const trainingPlanForDay = await trainingService.getTrainingPlanForDay(
-      userDAO,
-      userClaimsSet,
-      id,
-      Number(week),
-      Number(day)
-    );
-    res.status(200).json(trainingPlanForDay);
+    const user = await getUser(req, res);
+
+    const trainingPlan = findTrainingPlanById(user.trainingPlans, id);
+
+    if (trainingWeekIndex > trainingPlan.trainingWeeks.length) {
+      throw new Error('Die angefragte Woche gibt es nicht im Trainingsplan bitte erhöhe die Blocklänge');
+    }
+
+    const trainingWeek = trainingPlan.trainingWeeks[trainingWeekIndex];
+    if (trainingDayIndex > trainingWeek.trainingDays.length) {
+      throw new Error('Der angefragte Tag ist zu hoch für die angegebene Trainingsfrequenz');
+    }
+
+    const trainingDay = trainingWeek.trainingDays[trainingDayIndex];
+
+    const trainingPlanForTrainingDay = {
+      title: trainingPlan.title,
+      trainingFrequency: trainingPlan.trainingFrequency,
+      trainingBlockLength: trainingPlan.trainingWeeks.length,
+      trainingDay
+    };
+
+    res.status(200).json(trainingPlanForTrainingDay);
   } catch (error) {
     console.log('Es ist ein Fehler beim Aufrufen des Trainingsplans aufgetreten!', error);
     res.status(500).json({ error: (error as unknown as Error).message });
@@ -131,15 +166,9 @@ export async function getPlanForDay(req: Request, res: Response): Promise<void> 
 }
 
 export async function getLatestTrainingPlan(req: Request, res: Response) {
+  const trainingPlanId = req.params.id;
   try {
-    const userClaimsSet = res.locals.user;
-    const trainingPlanId = req.params.id;
-
-    const userDAO = req.app.locals.userDAO;
-    const user = await userDAO.findOne({ id: userClaimsSet.id });
-    if (!user) {
-      return res.status(404).json({ error: 'Benutzer nicht gefunden' });
-    }
+    const user = await getUser(req, res);
 
     const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
@@ -151,7 +180,7 @@ export async function getLatestTrainingPlan(req: Request, res: Response) {
   }
 }
 
-export async function getTrainingPlan(req: Request, res: Response) {
+export async function updateTrainingData(req: Request, res: Response) {
   const userClaimsSet = res.locals.user;
 
   const trainingPlanId = req.params.id;

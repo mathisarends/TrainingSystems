@@ -1,7 +1,6 @@
 import { TrainingPlan } from '../../../shared/models/training/trainingPlan.js';
 import {
   DetailedTrainingPlanView,
-  CustomTrainingPlanView,
   TrainingPlanCardView
 } from '../../../shared/models/dtos/training/trainingDto.types.js';
 

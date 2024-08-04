@@ -50,67 +50,6 @@ export async function createTrainingPlan(
   return getAllPlansBasic(user.trainingPlans);
 }
 
-export async function updateTrainingPlan(
-  userDAO: MongoGenericDAO<User>,
-  userClaimsSet: UserClaimsSet,
-  trainingPlanId: string,
-  planDetails: Record<string, string>
-): Promise<void> {
-  const user: User | null = await userDAO.findOne({ id: userClaimsSet.id });
-  if (!user) {
-    throw new Error('Benutzer nicht gefunden');
-  }
-
-  const trainingPlan = findTrainingPlanById(user.trainingPlans, trainingPlanId);
-
-  trainingPlan.title = planDetails.title;
-  trainingPlan.trainingFrequency = Number(planDetails.trainingFrequency);
-  trainingPlan.weightRecommandationBase = planDetails.weightPlaceholders as WeightRecommendationBase;
-  if (planDetails.coverImage) {
-    trainingPlan.coverImageBase64 = planDetails.coverImage;
-  }
-
-  if (trainingPlan.trainingWeeks.length !== Number(planDetails.trainingWeeks)) {
-    const difference = trainingPlan.trainingWeeks.length - parseInt(planDetails.trainingWeeks);
-    handleWeekDifference(trainingPlan, difference);
-  }
-
-  await userDAO.update(user);
-}
-
-export async function getTrainingPlanForDay(
-  userDAO: MongoGenericDAO<User>,
-  userClaimsSet: UserClaimsSet,
-  trainingPlanId: string,
-  trainingWeekIndex: number,
-  trainingDayIndex: number
-) {
-  const user: User | null = await userDAO.findOne({ id: userClaimsSet.id });
-  if (!user) {
-    throw new Error('Benutzer nicht gefunden');
-  }
-
-  const trainingPlan = findTrainingPlanById(user.trainingPlans, trainingPlanId);
-
-  if (trainingWeekIndex > trainingPlan.trainingWeeks.length) {
-    throw new Error('Die angefragte Woche gibt es nicht im Trainingsplan bitte erhöhe die Blocklänge');
-  }
-
-  const trainingWeek = trainingPlan.trainingWeeks[trainingWeekIndex];
-  if (trainingDayIndex > trainingWeek.trainingDays.length) {
-    throw new Error('Der angefragte Tag ist zu hoch für die angegebene Trainingsfrequenz');
-  }
-
-  const trainingDay = trainingWeek.trainingDays[trainingDayIndex];
-
-  return {
-    title: trainingPlan.title,
-    trainingFrequency: trainingPlan.trainingFrequency,
-    trainingBlockLength: trainingPlan.trainingWeeks.length,
-    trainingDay
-  };
-}
-
 export function findTrainingPlanById(trainingPlans: TrainingPlan[], planId: string): TrainingPlan {
   const plan = trainingPlans.find(plan => plan.id === planId);
 
@@ -143,7 +82,7 @@ export function createNewTrainingPlanWithPlaceholders(weeks: number, daysPerWeek
   }));
 }
 
-function handleWeekDifference(trainingPlan: TrainingPlan, difference: number) {
+export function handleWeekDifference(trainingPlan: TrainingPlan, difference: number) {
   const absoluteDifference = Math.abs(difference);
   if (difference < 0) {
     addNewTrainingWeeks(trainingPlan.trainingWeeks, trainingPlan.trainingFrequency, absoluteDifference);
