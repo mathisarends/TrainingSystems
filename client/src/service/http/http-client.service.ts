@@ -14,7 +14,9 @@ import { isPlatformBrowser } from '@angular/common';
   providedIn: 'root',
 })
 export class HttpClientService {
-  private baseUrl: string = environment.apiUrl;
+  private baseUrl: string = environment.production
+    ? environment.produUrl
+    : environment.apiUrl;
   constructor(
     private http: HttpClient,
     @Inject(PLATFORM_ID) private platformId: Object
