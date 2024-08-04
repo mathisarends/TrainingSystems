@@ -1,82 +1,75 @@
-<div class="timer-container">
-  <div class="timer-display">
-    <svg #progressRing class="progress-ring" width="200" height="200">
-      <defs>
-        <!-- Gradient for the background ring -->
-        <linearGradient
-          id="backgroundGradient"
-          x1="0%"
-          y1="0%"
-          x2="100%"
-          y2="100%"
-        >
-          <stop offset="0%" style="stop-color: #007bff; stop-opacity: 1" />
-          <stop offset="100%" style="stop-color: #00c6ff; stop-opacity: 1" />
-        </linearGradient>
+<div class="timer-display">
+  <svg #progressRing class="progress-ring" width="300" height="300">
+    <defs>
+      <!-- Gradient for the background ring -->
+      <linearGradient
+        id="backgroundGradient"
+        x1="0%"
+        y1="0%"
+        x2="100%"
+        y2="100%"
+      >
+        <stop offset="0%" style="stop-color: #007bff; stop-opacity: 1" />
+        <stop offset="100%" style="stop-color: #00c6ff; stop-opacity: 1" />
+      </linearGradient>
 
-        <!-- Gradient for the progress ring -->
-        <linearGradient
-          id="progressGradient"
-          x1="0%"
-          y1="0%"
-          x2="100%"
-          y2="100%"
-        >
-          <stop offset="0%" style="stop-color: #ffffff; stop-opacity: 1" />
-          <stop offset="100%" style="stop-color: #f8f9fa; stop-opacity: 1" />
-        </linearGradient>
-      </defs>
+      <!-- Gradient for the progress ring -->
+      <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color: #ffffff; stop-opacity: 1" />
+        <stop offset="100%" style="stop-color: #f8f9fa; stop-opacity: 1" />
+      </linearGradient>
+    </defs>
 
-      <!-- Background ring -->
-      <circle
-        class="progress-ring__background"
-        stroke="url(#backgroundGradient)"
-        stroke-width="10"
-        fill="transparent"
-        r="90"
-        cx="100"
-        cy="100"
-        style="outline: none; box-shadow: none"
-      />
+    <!-- Background ring -->
+    <circle
+      class="progress-ring__background"
+      stroke="url(#backgroundGradient)"
+      stroke-width="10"
+      fill="transparent"
+      r="135"
+      cx="150"
+      cy="150"
+    />
 
-      <!-- Progress ring -->
-      <circle
-        class="progress-ring__circle"
-        stroke="url(#progressGradient)"
-        stroke-width="10"
-        fill="transparent"
-        r="90"
-        cx="100"
-        cy="100"
-        style="outline: none; box-shadow: none"
-      />
-    </svg>
-    <span class="time-remaining">{{ formatTime(remainingTime) }}</span>
-  </div>
-  <div
-    class="timer-controls d-flex justify-content-center align-items-center gap-1 mt-2"
+    <!-- Progress ring -->
+    <circle
+      class="progress-ring__circle"
+      stroke="url(#progressGradient)"
+      stroke-width="10"
+      fill="transparent"
+      r="135"
+      cx="150"
+      cy="150"
+    />
+  </svg>
+  <span class="time-remaining">{{ formatTime(remainingTime) }}</span>
+
+  <span class="initial-time">{{ formatTime(initialTime) }}</span>
+</div>
+
+<div
+  class="timer-controls d-flex justify-content-center align-items-center gap-1 mt-2"
+>
+  <button
+    type="button"
+    class="btn btn-light btn-lg m-1"
+    (click)="adjustTime(-30)"
   >
-    <button
-      type="button"
-      class="btn btn-light btn-lg m-1"
-      (click)="adjustTime(-30)"
-    >
-      <i class="bx bx-minus"></i>
-    </button>
-    <button
-      type="button"
-      class="btn btn-light btn-lg m-1"
-      (click)="adjustTime(30)"
-    >
-      <i class="bx bx-plus"></i>
-    </button>
-    <button
-      type="button"
-      class="btn btn-light btn-lg m-1"
-      appTooltip="End Timer"
-      (click)="skipTimer()"
-    >
-      <i class="bx bx-stop"></i>
-    </button>
-  </div>
+    <i class="bx bx-minus"></i>
+  </button>
+  <button
+    type="button"
+    class="btn btn-light btn-lg m-1"
+    (click)="adjustTime(30)"
+  >
+    <i class="bx bx-plus"></i>
+  </button>
+  <button
+    type="button"
+    class="btn btn-light btn-lg m-1"
+    appTooltip="End Timer"
+    (click)="skipTimer()"
+  >
+    <i class="bx bx-stop"></i>
+  </button>
 </div>
