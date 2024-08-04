@@ -46,7 +46,22 @@ export class RestTimerComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
     );
+
     this.pauseTimeService.countdownEmitter.emit(this.remainingTime);
+  }
+
+  ngAfterViewChecked(): void {
+    if (this.progressRing && this.remainingTime === 0) {
+      const circle = this.progressRing.nativeElement.querySelector(
+        '.progress-ring__circle'
+      );
+      const radius = circle.r.baseVal.value;
+
+      const circumference = 2 * Math.PI * radius;
+
+      circle.style.strokeDasharray = `${circumference} ${circumference}`;
+      circle.style.strokeDashoffset = `${circumference}`;
+    }
   }
 
   playTimerFinishedAudio() {
@@ -85,7 +100,9 @@ export class RestTimerComponent implements OnInit, OnDestroy, AfterViewInit {
       '.progress-ring__circle'
     );
     const radius = circle.r.baseVal.value;
+
     const circumference = 2 * Math.PI * radius;
+
     const offset = (this.remainingTime / this.initialTime) * circumference;
 
     circle.style.strokeDasharray = `${circumference} ${circumference}`;
