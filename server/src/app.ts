@@ -24,7 +24,7 @@ async function configureApp(app: Express) {
 
   app.use(
     cors({
-      origin: 'http://localhost:4200',
+      origin: ['http://localhost:4200', 'https://trainingsystemsre.onrender.com'],
       credentials: true,
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
       allowedHeaders: 'Content-Type, Authorization'
