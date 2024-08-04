@@ -7,6 +7,9 @@ import { ExerciseCategories } from '../utils/ExerciseCategores.js';
 import { mapToExerciseCategory } from './exerciseRoutes.js';
 import { TrainingDay } from '@shared/models/training/trainingDay.js';
 import { Exercise } from '@shared/models/training/exercise.js';
+import { getUser } from '../service/userService.js';
+import { MongoGenericDAO } from 'models/mongo-generic.dao.js';
+import { User } from '@shared/models/user.js';
 
 const router = express.Router();
 
@@ -21,16 +24,12 @@ router.patch('/plan/:id/:week/:day', authService.authenticationMiddleware, train
 router.get('/plan/:id/latest', authService.authenticationMiddleware, trainingController.getLatestTrainingPlan);
 
 router.post('/statistics/:id/viewedCategories', authService.authenticationMiddleware, async (req, res) => {
-  const userClaimsSet = res.locals.user;
+  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
   const trainingPlanId = req.params.id;
   const exerciseCategories = (req.query.exercises as string).split(',');
 
   try {
-    const userDAO = req.app.locals.userDAO;
-    const user = await userDAO.findOne({ id: userClaimsSet.id });
-    if (!user) {
-      return res.status(404).json({ error: 'Benutzer nicht gefunden' });
-    }
+    const user = await getUser(req, res);
 
     const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
     if (trainingPlanIndex === -1) {
@@ -50,15 +49,10 @@ router.post('/statistics/:id/viewedCategories', authService.authenticationMiddle
 });
 
 router.get('/statistics/:id/viewedCategories', authService.authenticationMiddleware, async (req, res) => {
-  const userClaimsSet = res.locals.user;
   const trainingPlanId = req.params.id;
 
   try {
-    const userDAO = req.app.locals.userDAO;
-    const user = await userDAO.findOne({ id: userClaimsSet.id });
-    if (!user) {
-      return res.status(404).json({ error: 'Benutzer nicht gefunden' });
-    }
+    const user = await getUser(req, res);
 
     const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
     if (trainingPlanIndex === -1) {
@@ -75,16 +69,11 @@ router.get('/statistics/:id/viewedCategories', authService.authenticationMiddlew
 });
 
 router.get('/statistics/:id/sets', authService.authenticationMiddleware, async (req, res) => {
-  const userClaimsSet = res.locals.user;
   const trainingPlanId = req.params.id;
   const exerciseCategories = (req.query.exercises as string).split(',');
 
   try {
-    const userDAO = req.app.locals.userDAO;
-    const user = await userDAO.findOne({ id: userClaimsSet.id });
-    if (!user) {
-      return res.status(404).json({ error: 'Benutzer nicht gefunden' });
-    }
+    const user = await getUser(req, res);
 
     const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
     if (trainingPlanIndex === -1) {
@@ -113,16 +102,11 @@ router.get('/statistics/:id/sets', authService.authenticationMiddleware, async (
 
 // gets tonnage for squat, bench and deadlift
 router.get('/statistics/:id', authService.authenticationMiddleware, async (req, res) => {
-  const userClaimsSet = res.locals.user;
   const trainingPlanId = req.params.id;
   const exerciseCategories = (req.query.exercises as string).split(',');
 
   try {
-    const userDAO = req.app.locals.userDAO;
-    const user = await userDAO.findOne({ id: userClaimsSet.id });
-    if (!user) {
-      return res.status(404).json({ error: 'Benutzer nicht gefunden' });
-    }
+    const user = await getUser(req, res);
 
     const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
     if (trainingPlanIndex === -1) {
@@ -149,7 +133,6 @@ router.get('/statistics/:id', authService.authenticationMiddleware, async (req, 
 });
 
 router.get('/statistics/:id/drilldown/:category/:week', authService.authenticationMiddleware, async (req, res) => {
-  const userClaimsSet = res.locals.user;
   const trainingPlanId = req.params.id;
   const weekIndex = parseInt(req.params.week, 10);
   const category = req.params.category;
@@ -158,11 +141,7 @@ router.get('/statistics/:id/drilldown/:category/:week', authService.authenticati
     // TOOO: warum werden exercises nicht mit einem enum abgespeichert wie liegen die da in der datenbank?
     const mappedCategory = mapToExerciseCategory(category);
 
-    const userDAO = req.app.locals.userDAO;
-    const user = await userDAO.findOne({ id: userClaimsSet.id });
-    if (!user) {
-      return res.status(404).json({ error: 'Benutzer nicht gefunden' });
-    }
+    const user = await getUser(req, res);
 
     const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
     if (trainingPlanIndex === -1) {
