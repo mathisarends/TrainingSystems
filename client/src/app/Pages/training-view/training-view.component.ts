@@ -160,7 +160,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
    * @param day - Index of the training day.
    */
   loadData(planId: string, week: number, day: number): void {
-    this.dataViewLoaded.next(false);
+    /* this.dataViewLoaded.next(false); */
     forkJoin({
       trainingPlan: this.trainingViewService.loadTrainingPlan(
         planId,
@@ -171,10 +171,6 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
     })
       .pipe(
         tap(({ trainingPlan, exerciseData }) => {
-          console.log(
-            '🚀 ~ TrainingViewComponent ~ tap ~ exerciseData:',
-            exerciseData
-          );
           this.trainingPlanData = trainingPlan;
           this.exerciseData = exerciseData;
           this.title = trainingPlan?.title;
@@ -200,10 +196,6 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
   onSubmit(event: Event): void {
     event.preventDefault();
     const changedData = this.formService.getChanges();
-    console.log(
-      '🚀 ~ TrainingViewComponent ~ onSubmit ~ changedData:',
-      changedData
-    );
 
     this.trainingViewService
       .submitTrainingPlan(

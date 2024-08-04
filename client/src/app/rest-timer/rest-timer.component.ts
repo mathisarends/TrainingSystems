@@ -50,17 +50,11 @@ export class RestTimerComponent implements OnInit, OnDestroy, AfterViewInit {
     this.pauseTimeService.countdownEmitter.emit(this.remainingTime);
   }
 
+  // Intitial color
   ngAfterViewChecked(): void {
     if (this.progressRing && this.remainingTime === 0) {
-      const circle = this.progressRing.nativeElement.querySelector(
-        '.progress-ring__circle'
-      );
-      const radius = circle.r.baseVal.value;
-
-      const circumference = 2 * Math.PI * radius;
-
-      circle.style.strokeDasharray = `${circumference} ${circumference}`;
-      circle.style.strokeDashoffset = `${circumference}`;
+      // Initiale Kreisfüllung beim Start
+      this.updateCircle();
     }
   }
 
@@ -103,7 +97,11 @@ export class RestTimerComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const circumference = 2 * Math.PI * radius;
 
-    const offset = (this.remainingTime / this.initialTime) * circumference;
+    let offset = (this.remainingTime / this.initialTime) * circumference;
+
+    if (this.remainingTime === 0) {
+      offset = circumference;
+    }
 
     circle.style.strokeDasharray = `${circumference} ${circumference}`;
     circle.style.strokeDashoffset = `${offset}`;
