@@ -19,6 +19,10 @@ import { WeightRecommendationBase } from '@shared/models/training/enum/weightRec
 import { TrainingPlan } from '@shared/models/training/trainingPlan.js';
 import { v4 as uuidv4 } from 'uuid';
 
+/**
+ * Retrieves the list of training plans for the user, summarizing them into card views.
+ * The result is intended to be a lightweight representation of the user's training plans.
+ */
 export async function getPlans(req: Request, res: Response): Promise<void> {
   try {
     const user = await getUser(req, res);
@@ -33,6 +37,10 @@ export async function getPlans(req: Request, res: Response): Promise<void> {
   }
 }
 
+/**
+ * Creates a new training plan for the user with the specified parameters.
+ * This plan includes placeholders for exercises based on the provided frequency and number of weeks.
+ */
 export async function createPlan(req: Request, res: Response): Promise<void> {
   try {
     const user = await getUser(req, res);
@@ -66,6 +74,10 @@ export async function createPlan(req: Request, res: Response): Promise<void> {
   }
 }
 
+/**
+ * Deletes a training plan from the user's list of training plans based on the provided plan ID.
+ * This method ensures that the specified plan is removed from the user's data in the database.
+ */
 export async function deletePlan(req: Request, res: Response): Promise<void> {
   const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
   const planId = req.params.planId;
@@ -83,6 +95,10 @@ export async function deletePlan(req: Request, res: Response): Promise<void> {
   }
 }
 
+/**
+ * Retrieves a training plan for editing purposes. This method returns the plan in a format
+ * that is suitable for client-side editing, typically including all details needed for modification.
+ */
 export async function getPlanForEdit(req: Request, res: Response): Promise<void> {
   const planId = req.params.id;
 
@@ -100,6 +116,11 @@ export async function getPlanForEdit(req: Request, res: Response): Promise<void>
   }
 }
 
+/**
+ * Updates an existing training plan based on user input. Adjustments can include changes
+ * to the plan's title, frequency, and week structure. It also handles differences in the
+ * number of weeks by either adding or removing weeks from the plan.
+ */
 export async function updatePlan(req: Request, res: Response): Promise<void> {
   const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
   const planId = req.params.id;
@@ -129,6 +150,30 @@ export async function updatePlan(req: Request, res: Response): Promise<void> {
   }
 }
 
+/**
+ * Fetches the latest day with recorded weight data from the specified training plan.
+ * This is particularly useful for resuming or reviewing recent training progress.
+ */
+export async function getLatestTrainingPlan(req: Request, res: Response) {
+  const trainingPlanId = req.params.id;
+  try {
+    const user = await getUser(req, res);
+
+    const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
+
+    const { weekIndex, dayIndex } = findLatestTrainingDayWithWeight(trainingPlan);
+    return res.status(200).json({ weekIndex, dayIndex });
+  } catch (error) {
+    console.error('Error fetching latest training day:', error);
+    return res.status(500).json({ error: 'Interner Serverfehler' });
+  }
+}
+
+/**
+ * Updates an existing training plan based on user input. Adjustments can include changes
+ * to the plan's title, frequency, and week structure. It also handles differences in the
+ * number of weeks by either adding or removing weeks from the plan.
+ */
 export async function getPlanForDay(req: Request, res: Response): Promise<void> {
   const { id, week, day } = req.params;
 
@@ -165,21 +210,10 @@ export async function getPlanForDay(req: Request, res: Response): Promise<void> 
   }
 }
 
-export async function getLatestTrainingPlan(req: Request, res: Response) {
-  const trainingPlanId = req.params.id;
-  try {
-    const user = await getUser(req, res);
-
-    const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
-
-    const { weekIndex, dayIndex } = findLatestTrainingDayWithWeight(trainingPlan);
-    return res.status(200).json({ weekIndex, dayIndex });
-  } catch (error) {
-    console.error('Error fetching latest training day:', error);
-    return res.status(500).json({ error: 'Interner Serverfehler' });
-  }
-}
-
+/**
+ * Updates the training data for a specific day in a training plan. The update affects not only
+ * the specified day but can also propagate to the same day in subsequent weeks, maintaining consistency.
+ */
 export async function updateTrainingDataForTrainingDay(req: Request, res: Response) {
   const userDAO = req.app.locals.userDAO;
   const trainingPlanId = req.params.id;
