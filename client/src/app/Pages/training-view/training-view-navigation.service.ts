@@ -38,10 +38,6 @@ export class TrainingViewNavigationService {
     trainingPlanData: TrainingPlanDto,
     day = 0
   ): number {
-    console.log(
-      '🚀 ~ TrainingViewNavigationService ~ trainingWeekIndex:',
-      trainingWeekIndex
-    );
     let week = 0;
 
     if (trainingWeekIndex === 0 && direction === -1) {

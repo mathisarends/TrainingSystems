@@ -5,6 +5,7 @@ import {
   RendererFactory2,
 } from '@angular/core';
 import { ExerciseDataDTO } from '../../app/Pages/training-view/exerciseDataDto';
+import { NotificationService } from '../../app/notification.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,10 @@ export class PauseTimeService {
   private intervalId: any; // Store the interval ID
   countdownRunning = false;
 
-  constructor(rendererFactory: RendererFactory2) {
+  constructor(
+    rendererFactory: RendererFactory2,
+    private notificationService: NotificationService
+  ) {
     this.renderer = rendererFactory.createRenderer(null, null);
   }
 
@@ -61,15 +65,27 @@ export class PauseTimeService {
     this.countdownRunning = true;
     this.remainingTime = seconds; // Initialize remaining time
     this.countdownEmitter.emit(this.remainingTime); // Emit immediately
+    this.notificationService.sendNotification(
+      'Timer Update',
+      this.formatTime(this.remainingTime)
+    );
 
     this.intervalId = setInterval(() => {
       if (this.remainingTime > 0) {
         this.remainingTime--;
         this.countdownEmitter.emit(this.remainingTime);
+        this.notificationService.sendNotification(
+          'Timer Update',
+          this.formatTime(this.remainingTime)
+        );
       } else {
         clearInterval(this.intervalId);
         this.countdownRunning = false;
         this.countdownEmitter.emit(0);
+        this.notificationService.sendNotification(
+          'Timer Update',
+          'Countdown finished'
+        );
         console.log('Countdown finished');
       }
     }, 1000);
@@ -107,5 +123,15 @@ export class PauseTimeService {
    */
   getInitialTime(): number {
     return this.initialTime;
+  }
+
+  private formatTime(seconds: number): string {
+    const minutes: number = Math.floor(seconds / 60);
+    const secs: number = seconds % 60;
+    return `${this.padZero(minutes)}:${this.padZero(secs)}`;
+  }
+
+  private padZero(num: number): string {
+    return num < 10 ? `0${num}` : num.toString();
   }
 }
