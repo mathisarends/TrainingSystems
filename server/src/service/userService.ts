@@ -1,5 +1,5 @@
-import { MongoGenericDAO } from 'models/mongo-generic.dao.js';
-import { User } from '@shared/models/user.js';
+import { MongoGenericDAO } from '../models/dao/mongo-generic.dao.js';
+import { User } from '../models/collections/user/user.js';
 import bcrypt from 'bcryptjs';
 import { OAuth2Client } from 'google-auth-library';
 import {

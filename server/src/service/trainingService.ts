@@ -1,7 +1,7 @@
-import { TrainingPlan } from '@shared/models/training/trainingPlan.js';
-import { TrainingWeek } from '@shared/models/training/trainingWeek.js';
-import { Exercise } from '@shared/models/training/exercise.js';
-import { TrainingDay } from '@shared/models/training/trainingDay.js';
+import { TrainingPlan } from '../models/training/trainingPlan.js';
+import { TrainingWeek } from '../models/training/trainingWeek.js';
+import { Exercise } from '../models/training/exercise.js';
+import { TrainingDay } from '../models/training/trainingDay.js';
 
 export function findTrainingPlanById(trainingPlans: TrainingPlan[], planId: string): TrainingPlan {
   const plan = trainingPlans.find(plan => plan.id === planId);
@@ -56,17 +56,17 @@ export function findLatestTrainingDayWithWeight(trainingPlan: TrainingPlan) {
     for (let dIndex = trainingWeek.trainingDays.length - 1; dIndex >= 0; dIndex--) {
       const trainingDay = trainingWeek.trainingDays[dIndex];
 
-      if (trainingDay.exercises?.some(exercise => exercise.weight)) {
+      if (trainingDay.exercises?.some((exercise: Exercise) => exercise.weight)) {
         if (dIndex + 1 < trainingWeek.trainingDays.length) {
           const nextDay = trainingWeek.trainingDays[dIndex + 1];
-          if (!nextDay.exercises?.some(exercise => exercise.weight)) {
+          if (!nextDay.exercises?.some((exercise: Exercise) => exercise.weight)) {
             return { weekIndex: wIndex, dayIndex: dIndex };
           }
         } else if (wIndex + 1 < trainingPlan.trainingWeeks.length) {
           const nextWeek = trainingPlan.trainingWeeks[wIndex + 1];
           if (
             nextWeek.trainingDays.length > 0 &&
-            !nextWeek.trainingDays[0].exercises?.some(exercise => exercise.weight)
+            !nextWeek.trainingDays[0].exercises?.some((exercise: Exercise) => exercise.weight)
           ) {
             return { weekIndex: wIndex, dayIndex: dIndex };
           }
@@ -106,7 +106,6 @@ export function updateExercise(
   exerciseIndex: number,
   copyMode = false
 ) {
-  // zum löschen nachdem sie gelöscht wurde wird sie aber wieder neue erstellt!!! also funktioniert noch nicht
   if (fieldName.endsWith('category') && (fieldValue === '- Bitte Auswählen -' || fieldValue === '')) {
     trainingDay.exercises.splice(exerciseIndex - 1, 1);
     return;
