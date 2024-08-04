@@ -1,29 +1,71 @@
 import { Request, Response } from 'express';
 import { MongoGenericDAO } from 'models/mongo-generic.dao.js';
-import * as exerciseService from '../service/exerciseService.js';
 import { User } from '@shared/models/user.js';
 import { ApiData } from '@shared/models/apiData.js';
-import { UserClaimsSet } from '../service/exerciseService.js';
+import { getUser } from '../service/userService.js';
+import {
+  getExerciseFieldByCategory,
+  mapChangedDataToCategories,
+  prepareExercisesData,
+  processExerciseChanges,
+  resetUserExercises,
+  mapToExerciseCategory
+} from '../utils/exerciseUtils.js';
+import { ExerciseCategories } from '../utils/ExerciseCategores.js';
 
+/**
+ * Fetches all exercise categories.
+ */
+export function getCategories(req: Request, res: Response): void {
+  const categories = Object.values(ExerciseCategories).filter(category => category !== ExerciseCategories.PLACEHOLDER);
+  res.status(200).json(categories);
+}
+
+/**
+ * Fetches exercises by category.
+ */
+export async function getExercisesByCategory(req: Request, res: Response): Promise<void> {
+  const category = req.params.category;
+
+  const user = await getUser(req, res);
+  const mappedCategory = mapToExerciseCategory(category);
+  const exerciseNames = getExerciseFieldByCategory(mappedCategory, user).map(exercise => exercise.name);
+
+  res.status(200).json(exerciseNames);
+}
+
+/**
+ * Fetches all exercises data for the user.
+ */
 export async function getExercises(req: Request, res: Response): Promise<void> {
   try {
-    const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
-    const userClaimsSet: UserClaimsSet = res.locals.user;
-
-    const exercisesData = await exerciseService.getUserExercises(userDAO, userClaimsSet);
+    const user = await getUser(req, res);
+    const exercisesData = prepareExercisesData(user);
     res.status(200).json({ exercisesData });
   } catch (error) {
     res.status(404).json({ error: (error as unknown as Error).message });
   }
 }
 
+/**
+ * Updates exercises for the user based on provided data.
+ */
 export async function updateExercises(req: Request, res: Response): Promise<void> {
+  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
   try {
-    const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
-    const userClaimsSet: UserClaimsSet = res.locals.user;
     const changedData: ApiData = req.body;
+    const user = await getUser(req, res);
+    const changedCategoriesMap = mapChangedDataToCategories(changedData);
 
-    await exerciseService.updateUserExercises(userDAO, userClaimsSet, changedData);
+    Object.entries(changedCategoriesMap).forEach(([category, { fieldNames, newValues }]) => {
+      const userExerciseField = getExerciseFieldByCategory(category as ExerciseCategories, user);
+
+      for (let index = 0; index < fieldNames.length; index++) {
+        processExerciseChanges(fieldNames[index], index, newValues, userExerciseField);
+      }
+    });
+
+    await userDAO.update(user);
     res.status(200).json({ message: 'Erfolgreich aktualisiert.' });
   } catch (error) {
     console.error('An error occurred while updating user exercises', error);
@@ -31,12 +73,15 @@ export async function updateExercises(req: Request, res: Response): Promise<void
   }
 }
 
+/**
+ * Resets the user's exercise catalog to default values.
+ */
 export async function resetExercises(req: Request, res: Response): Promise<void> {
+  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
   try {
-    const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
-    const userClaimsSet: UserClaimsSet = res.locals.user;
-
-    await exerciseService.resetUserExerciseData(userDAO, userClaimsSet);
+    const user = await getUser(req, res);
+    resetUserExercises(user);
+    await userDAO.update(user);
     res.status(200).json({ message: 'Übungskatalog zurückgesetzt!' });
   } catch (error) {
     console.error('An error occurred while resetting user exercises', error);

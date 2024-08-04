@@ -15,6 +15,10 @@ export function errorHandler(err: Error, req: Request, res: Response, next: Next
  * Async handler middleware.
  * This function wraps an asynchronous route handler and ensures that any errors that occur within the function
  * are properly caught and passed to the central error handling middleware.
+ *
+ * By using this wrapper, you don't need to manually add `try/catch` blocks in your async route handlers,
+ * as any errors that occur will be automatically caught and forwarded to the next middleware (typically your error handler).
+ *
  */
 export const asyncHandler = (fn: RequestHandler) => (req: Request, res: Response, next: NextFunction) => {
   Promise.resolve(fn(req, res, next)).catch(next);
