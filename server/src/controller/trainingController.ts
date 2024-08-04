@@ -58,7 +58,7 @@ export async function createPlan(req: Request, res: Response): Promise<void> {
     user.trainingPlans.push(newTrainingPlan);
     await userDAO.update(user);
 
-    res.status(200).json('Plan erfolgreich erstellt');
+    res.status(200).json({ message: 'Plan erfolgreich erstellt' });
   } catch (error) {
     console.error('Es ist ein Fehler beim Erstellen des Trainingsplans aufgetreten', error);
     res.status(500).json({ error: (error as unknown as Error).message });
@@ -66,10 +66,18 @@ export async function createPlan(req: Request, res: Response): Promise<void> {
 }
 
 export async function deletePlan(req: Request, res: Response): Promise<void> {
+  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
+  const planId = req.params.planId;
   try {
-    const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
-    const userClaimsSet = res.locals.user;
-    await trainingService.deleteTrainingPlan(userDAO, userClaimsSet, req.params.planId);
+    const user = await getUser(req, res);
+    const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, planId);
+    if (trainingPlanIndex === -1) {
+      throw new Error('Ungültige Trainingsplan-ID');
+    }
+
+    user.trainingPlans.splice(trainingPlanIndex, 1);
+    await userDAO.update(user);
+
     res.status(201).json({ message: 'Trainingsplan erfolgreich gelöscht' });
   } catch (error) {
     console.error('Es ist ein Fehler beim Löschen des Trainingsplans aufgetreten', error);
@@ -78,10 +86,20 @@ export async function deletePlan(req: Request, res: Response): Promise<void> {
 }
 
 export async function getPlanForEdit(req: Request, res: Response): Promise<void> {
+  const planId = req.params.id;
+
   try {
-    const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
-    const userClaimsSet = res.locals.user;
-    const trainingPlanEditView = await trainingService.getTrainingPlanForEdit(userDAO, userClaimsSet, req.params.id);
+    const user = await getUser(req, res);
+
+    const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, planId);
+    if (trainingPlanIndex === -1) {
+      throw new Error('Ungültige Trainingsplan-ID');
+    }
+
+    const trainingPlan = user.trainingPlans[trainingPlanIndex];
+
+    const trainingPlanEditView = TrainingPlanDTO.getEditView(trainingPlan);
+
     res.status(200).json({ trainingPlanEditView });
   } catch (error) {
     console.error('Es ist ein Fehler beim Editieren des Trainingsplans aufgetreten', error);

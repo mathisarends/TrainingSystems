@@ -50,53 +50,6 @@ export async function createTrainingPlan(
   return getAllPlansBasic(user.trainingPlans);
 }
 
-export async function deleteTrainingPlan(
-  userDAO: MongoGenericDAO<User>,
-  userClaimsSet: UserClaimsSet,
-  planId: string
-): Promise<void> {
-  const user: User | null = await userDAO.findOne({ id: userClaimsSet.id });
-  if (!user) {
-    throw new Error('Benutzer nicht gefunden');
-  }
-
-  const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, planId);
-  if (trainingPlanIndex === -1) {
-    throw new Error('Ungültige Trainingsplan-ID');
-  }
-
-  user.trainingPlans.splice(trainingPlanIndex, 1);
-  await userDAO.update(user);
-}
-
-export async function getTrainingPlanForEdit(
-  userDAO: MongoGenericDAO<User>,
-  userClaimsSet: UserClaimsSet,
-  trainingPlanId: string
-): Promise<BasicTrainingPlanView> {
-  const user: User | null = await userDAO.findOne({ id: userClaimsSet.id });
-  if (!user) {
-    throw new Error('Benutzer nicht gefunden');
-  }
-
-  const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
-  if (trainingPlanIndex === -1) {
-    throw new Error('Ungültige Trainingsplan-ID');
-  }
-
-  const trainingPlan = user.trainingPlans[trainingPlanIndex];
-  const fields: Array<keyof TrainingPlan> = [
-    'id',
-    'title',
-    'trainingFrequency',
-    'weightRecommandationBase',
-    'trainingWeeks',
-    'coverImageBase64'
-  ];
-
-  return TrainingPlanDTO.getCustomView(trainingPlan, fields);
-}
-
 export async function updateTrainingPlan(
   userDAO: MongoGenericDAO<User>,
   userClaimsSet: UserClaimsSet,

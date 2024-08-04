@@ -21,6 +21,17 @@ export class TrainingPlanDTO {
     };
   }
 
+  static getEditView(plan: TrainingPlan): Partial<TrainingPlan> {
+    return {
+      id: plan.id,
+      title: plan.title,
+      trainingFrequency: plan.trainingFrequency,
+      weightRecommandationBase: plan.weightRecommandationBase,
+      trainingWeeks: plan.trainingWeeks,
+      coverImageBase64: plan.coverImageBase64 ?? ''
+    };
+  }
+
   /**
    * Returns a detailed view of the training plan.
    * @param plan The full training plan.
@@ -28,20 +39,6 @@ export class TrainingPlanDTO {
    */
   static getDetailedView(plan: TrainingPlan): DetailedTrainingPlanView {
     return plan;
-  }
-
-  /**
-   * Returns a custom view of the training plan.
-   * @param plan The full training plan.
-   * @param fields The fields to include in the custom view.
-   * @returns A custom view of the training plan.
-   */
-  static getCustomView<T extends keyof TrainingPlan>(plan: TrainingPlan, fields: T[]): CustomTrainingPlanView<T> {
-    const customView: Partial<TrainingPlan> = {};
-    fields.forEach(field => {
-      customView[field] = plan[field];
-    });
-    return customView as CustomTrainingPlanView<T>;
   }
 
   /**
