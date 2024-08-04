@@ -1,10 +1,10 @@
-import { Exercise } from '@shared/models/exercise/exercise';
-import { ExerciseCategory } from '@shared/models/exercise/exerciseCategory.js';
+import { UserExerciseCategory } from '../../models/collections/user/user-exercise-category.js';
+import { UserExercise } from '../../models/collections/user/user-exercise.js';
 
 /**
  * Shoulder exercise category with default settings.
  */
-const Shoulder: ExerciseCategory = {
+const Shoulder: UserExerciseCategory = {
   name: 'Shoulder',
   pauseTime: 90,
   defaultSets: 3,
@@ -15,7 +15,7 @@ const Shoulder: ExerciseCategory = {
 /**
  * List of shoulder exercises.
  */
-const shoulderExercises: Exercise[] = [
+const shoulderExercises: UserExercise[] = [
   {
     name: 'Reverse Flyes',
     category: Shoulder

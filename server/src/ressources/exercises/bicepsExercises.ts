@@ -1,10 +1,10 @@
-import { Exercise } from '@shared/models/exercise/exercise';
-import { ExerciseCategory } from '@shared/models/exercise/exerciseCategory.js';
+import { UserExerciseCategory } from '../../models/collections/user/user-exercise-category.js';
+import { UserExercise } from '../../models/collections/user/user-exercise.js';
 
 /**
  * Biceps exercise category with default settings.
  */
-const Biceps: ExerciseCategory = {
+const Biceps: UserExerciseCategory = {
   name: 'Biceps',
   pauseTime: 90,
   defaultSets: 3,
@@ -15,7 +15,7 @@ const Biceps: ExerciseCategory = {
 /**
  * List of biceps exercises.
  */
-const bicepsExercises: Exercise[] = [
+const bicepsExercises: UserExercise[] = [
   {
     name: 'Biceps-Curls',
     category: Biceps

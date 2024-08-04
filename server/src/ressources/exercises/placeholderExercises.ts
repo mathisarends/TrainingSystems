@@ -1,4 +1,4 @@
-import { Exercise } from '@shared/models/exercise/exercise';
+import { UserExercise } from '../../models/collections/user/user-exercise.js';
 
 /**
  * Placeholder exercise category to be used when no selection is made.
@@ -10,7 +10,7 @@ const placeholder = {
 /**
  * List of placeholder exercises.
  */
-const placeHolderExercises: Exercise[] = [
+const placeHolderExercises: UserExercise[] = [
   {
     name: 'Placeholder',
     category: placeholder

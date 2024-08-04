@@ -11,8 +11,8 @@ import {
   shoulderExercises,
   squatExercises,
   tricepExercises
-} from '../ressources/exerciseCatalog.js';
-import { ExerciseCategoryType } from './exercise-category.js';
+} from '../ressources/exercises/exerciseCatalog.js';
+import { ExerciseCategoryType } from '../models/training/exercise-category-type.js';
 import { UserExercise } from '../models/collections/user/user-exercise.js';
 import { ApiData } from '../models/apiData.js';
 import { UserExerciseCategory } from '../models/collections/user/user-exercise-category.js';

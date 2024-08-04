@@ -1,10 +1,10 @@
-import { Exercise } from '@shared/models/exercise/exercise';
-import { ExerciseCategory } from '@shared/models/exercise/exerciseCategory.js';
+import { UserExerciseCategory } from '../../models/collections/user/user-exercise-category.js';
+import { UserExercise } from '../../models/collections/user/user-exercise.js';
 
 /**
  * Legs exercise category with default settings.
  */
-const Legs: ExerciseCategory = {
+const Legs: UserExerciseCategory = {
   name: 'Legs',
   pauseTime: 120,
   defaultSets: 3,
@@ -15,7 +15,7 @@ const Legs: ExerciseCategory = {
 /**
  * List of leg exercises.
  */
-const legExercises: Exercise[] = [
+const legExercises: UserExercise[] = [
   {
     name: 'Hip Thrusts',
     category: Legs

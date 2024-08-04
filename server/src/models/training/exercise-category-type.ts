@@ -1,4 +1,9 @@
-export enum ExerciseCategories {
+/**
+ * Enum representing different categories of exercises.
+ *
+ * This enum is used to categorize exercises into specific muscle groups or exercise types.
+ */
+export enum ExerciseCategoryType {
   PLACEHOLDER = '- Bitte Auswählen -',
   SQUAT = 'Squat',
   BENCH = 'Bench',

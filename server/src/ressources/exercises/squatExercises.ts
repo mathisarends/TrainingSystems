@@ -1,10 +1,9 @@
-import { Exercise } from '@shared/models/exercise/exercise';
-import { ExerciseCategory } from '@shared/models/exercise/exerciseCategory.js';
-
+import { UserExerciseCategory } from '../../models/collections/user/user-exercise-category.js';
+import { UserExercise } from '../../models/collections/user/user-exercise.js';
 /**
  * Squat exercise category with default settings.
  */
-const Squat: ExerciseCategory = {
+const Squat: UserExerciseCategory = {
   name: 'Squat',
   pauseTime: 240,
   defaultSets: 3,
@@ -15,7 +14,7 @@ const Squat: ExerciseCategory = {
 /**
  * List of squat exercises.
  */
-const squatExercises: Exercise[] = [
+const squatExercises: UserExercise[] = [
   {
     name: 'Lowbar - Squat',
     category: Squat

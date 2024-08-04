@@ -14,7 +14,7 @@ import {
   tricepExercises,
   bicepsExercises,
   legExercises
-} from '../ressources/exerciseCatalog.js';
+} from '../ressources/exercises/exerciseCatalog.js';
 import { Request, Response } from 'express';
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);

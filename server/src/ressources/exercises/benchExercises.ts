@@ -1,10 +1,10 @@
-import { Exercise } from '@shared/models/exercise/exercise.js';
-import { ExerciseCategory } from '@shared/models/exercise/exerciseCategory.js';
+import { UserExerciseCategory } from '../../models/collections/user/user-exercise-category.js';
+import { UserExercise } from '../../models/collections/user/user-exercise.js';
 
 /**
  * Bench press exercise category with default settings.
  */
-const Bench: ExerciseCategory = {
+const Bench: UserExerciseCategory = {
   name: 'Bench',
   pauseTime: 180,
   defaultSets: 4,
@@ -15,7 +15,7 @@ const Bench: ExerciseCategory = {
 /**
  * List of bench press exercises.
  */
-const benchExercises: Exercise[] = [
+const benchExercises: UserExercise[] = [
   {
     name: 'Comp. Bench',
     category: Bench

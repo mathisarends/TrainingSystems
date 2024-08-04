@@ -1,10 +1,9 @@
-import { Exercise } from '@shared/models/exercise/exercise';
-import { ExerciseCategory } from '@shared/models/exercise/exerciseCategory.js';
-
+import { UserExerciseCategory } from '../../models/collections/user/user-exercise-category.js';
+import { UserExercise } from '../../models/collections/user/user-exercise.js';
 /**
  * Deadlift exercise category with default settings.
  */
-const Deadlift: ExerciseCategory = {
+const Deadlift: UserExerciseCategory = {
   name: 'Deadlift',
   pauseTime: 240,
   defaultSets: 3,
@@ -15,7 +14,7 @@ const Deadlift: ExerciseCategory = {
 /**
  * List of deadlift exercises.
  */
-const deadliftExercises: Exercise[] = [
+const deadliftExercises: UserExercise[] = [
   {
     name: 'Conventional',
     category: Deadlift

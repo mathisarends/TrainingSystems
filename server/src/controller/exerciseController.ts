@@ -11,7 +11,7 @@ import {
   resetUserExercises,
   mapToExerciseCategory
 } from '../utils/exerciseUtils.js';
-import { ExerciseCategoryType } from '../utils/exercise-category.js';
+import { ExerciseCategoryType } from '../models/training/exercise-category-type.js';
 import { UserExercise } from '../models/collections/user/user-exercise.js';
 
 /**

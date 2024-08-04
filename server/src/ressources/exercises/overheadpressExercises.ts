@@ -1,10 +1,10 @@
-import { Exercise } from '@shared/models/exercise/exercise';
-import { ExerciseCategory } from '@shared/models/exercise/exerciseCategory.js';
+import { UserExerciseCategory } from '../../models/collections/user/user-exercise-category.js';
+import { UserExercise } from '../../models/collections/user/user-exercise.js';
 
 /**
  * Overhead press exercise category with default settings.
  */
-const Overheadpress: ExerciseCategory = {
+const Overheadpress: UserExerciseCategory = {
   name: 'Overheadpress',
   pauseTime: 150,
   defaultSets: 3,
@@ -15,7 +15,7 @@ const Overheadpress: ExerciseCategory = {
 /**
  * List of overhead press exercises.
  */
-const overheadpressExercises: Exercise[] = [
+const overheadpressExercises: UserExercise[] = [
   {
     name: 'Overheadpress',
     category: Overheadpress

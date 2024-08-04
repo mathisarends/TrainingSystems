@@ -1,4 +1,4 @@
-import { Entity } from 'models/entity';
+import { Entity } from '../collections/entity.js';
 
 export interface GenericDAO<T extends Entity> {
   create(partEntity: Omit<T, keyof Entity>): Promise<T>;

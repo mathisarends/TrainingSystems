@@ -26,16 +26,6 @@ export interface TrainingPlan {
   lastUpdated: Date;
 
   /**
-   * Indicates whether automatic progression is enabled.
-   */
-  automaticProgressionEnabled?: boolean;
-
-  /**
-   * Indicates whether a deload is enabled for the last week of the training plan.
-   */
-  lastWeekDeloadEnabled?: boolean;
-
-  /**
    * The base for weight recommendations, can be 'max', 'lastWeek', or 'off'.
    */
   weightRecommandationBase: WeightRecommendationBase;
