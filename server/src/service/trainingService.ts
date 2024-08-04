@@ -4,7 +4,7 @@ import { TrainingWeek } from '@shared/models/training/trainingWeek.js';
 import { User } from '@shared/models/user.js';
 import { v4 as uuidv4 } from 'uuid';
 import { TrainingPlanDTO } from '../dto/trainingDto.js';
-import { BasicTrainingPlanView, TrainingPlanCardView } from '@shared/models/dtos/training/trainingDto.types.js';
+import { TrainingPlanCardView } from '@shared/models/dtos/training/trainingDto.types.js';
 import { UserClaimsSet } from './exerciseService.js';
 import { WeightRecommendationBase } from '@shared/models/training/enum/weightRecommandationBase.js';
 import { Exercise } from '@shared/models/training/exercise.js';
@@ -61,12 +61,8 @@ export async function updateTrainingPlan(
     throw new Error('Benutzer nicht gefunden');
   }
 
-  const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
-  if (trainingPlanIndex === -1) {
-    throw new Error('Ungültige Trainingsplan-ID');
-  }
+  const trainingPlan = findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
-  const trainingPlan = user.trainingPlans[trainingPlanIndex];
   trainingPlan.title = planDetails.title;
   trainingPlan.trainingFrequency = Number(planDetails.trainingFrequency);
   trainingPlan.weightRecommandationBase = planDetails.weightPlaceholders as WeightRecommendationBase;
@@ -94,12 +90,8 @@ export async function getTrainingPlanForDay(
     throw new Error('Benutzer nicht gefunden');
   }
 
-  const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
-  if (trainingPlanIndex === -1) {
-    throw new Error('Ungültige Trainingsplan-ID');
-  }
+  const trainingPlan = findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
-  const trainingPlan = user.trainingPlans[trainingPlanIndex];
   if (trainingWeekIndex > trainingPlan.trainingWeeks.length) {
     throw new Error('Die angefragte Woche gibt es nicht im Trainingsplan bitte erhöhe die Blocklänge');
   }
@@ -119,8 +111,23 @@ export async function getTrainingPlanForDay(
   };
 }
 
+export function findTrainingPlanById(trainingPlans: TrainingPlan[], planId: string): TrainingPlan {
+  const plan = trainingPlans.find(plan => plan.id === planId);
+
+  if (!plan) {
+    throw new Error(`Training plan with ID ${planId} not found.`);
+  }
+  return plan;
+}
+
 export function findTrainingPlanIndexById(trainingPlans: TrainingPlan[], planId: string): number {
-  return trainingPlans.findIndex(plan => plan.id === planId);
+  const index = trainingPlans.findIndex(plan => plan.id === planId);
+
+  if (index === -1) {
+    throw new Error(`Training plan with ID ${planId} not found.`);
+  }
+
+  return index;
 }
 
 export function getAllPlansBasic(trainingPlans: TrainingPlan[], pictureUrl?: string): TrainingPlanCardView[] {

@@ -1,7 +1,7 @@
 import express from 'express';
 import * as trainingController from '../controller/trainingController.js';
 import { authService } from '../service/authService.js';
-import { findTrainingPlanIndexById } from '../service/trainingService.js';
+import { findTrainingPlanById } from '../service/trainingService.js';
 import { TrainingPlan } from '../../../shared/models/training/trainingPlan.js';
 import { ExerciseCategories } from '../utils/ExerciseCategores.js';
 import { mapToExerciseCategory } from './exerciseRoutes.js';
@@ -32,12 +32,8 @@ router.post('/statistics/:id/viewedCategories', authService.authenticationMiddle
   try {
     const user = await getUser(req, res);
 
-    const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
-    if (trainingPlanIndex === -1) {
-      return res.status(404).json({ message: 'No training plan was found for the given URL' });
-    }
+    const trainingPlan = findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
-    const trainingPlan = user.trainingPlans[trainingPlanIndex];
     trainingPlan.recentlyViewedCategoriesInStatisticSection = exerciseCategories;
 
     await userDAO.update(user);
@@ -55,12 +51,7 @@ router.get('/statistics/:id/viewedCategories', authService.authenticationMiddlew
   try {
     const user = await getUser(req, res);
 
-    const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
-    if (trainingPlanIndex === -1) {
-      return res.status(404).json({ message: 'No training plan was found for the given URL' });
-    }
-
-    const trainingPlan = user.trainingPlans[trainingPlanIndex];
+    const trainingPlan = findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
     res.status(200).json(trainingPlan.recentlyViewedCategoriesInStatisticSection ?? ['Squat', 'Bench', 'Deadlift']);
   } catch (error) {
@@ -76,12 +67,8 @@ router.get('/statistics/:id/sets', authService.authenticationMiddleware, async (
   try {
     const user = await getUser(req, res);
 
-    const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
-    if (trainingPlanIndex === -1) {
-      return res.status(404).json({ message: 'No training plan was found for the given URL' });
-    }
+    const trainingPlan = findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
-    const trainingPlan = user.trainingPlans[trainingPlanIndex];
     // Define the structure of the response data
     const responseData: { [key: string]: number[] } = {};
 
@@ -109,12 +96,8 @@ router.get('/statistics/:id', authService.authenticationMiddleware, async (req, 
   try {
     const user = await getUser(req, res);
 
-    const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
-    if (trainingPlanIndex === -1) {
-      return res.status(404).json({ message: 'No training plan was found for the given URL' });
-    }
+    const trainingPlan = findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
-    const trainingPlan = user.trainingPlans[trainingPlanIndex];
     // Define the structure of the response data
     const responseData: { [key: string]: ReturnType<typeof prepareTrainingWeeksForExercise> } = {};
 
@@ -144,12 +127,8 @@ router.get('/statistics/:id/drilldown/:category/:week', authService.authenticati
 
     const user = await getUser(req, res);
 
-    const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
-    if (trainingPlanIndex === -1) {
-      return res.status(404).json({ message: 'Kein Trainingsplan für die gegebene URL gefunden' });
-    }
+    const trainingPlan = findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
-    const trainingPlan = user.trainingPlans[trainingPlanIndex];
     const trainingWeek = trainingPlan.trainingWeeks[weekIndex];
 
     if (!trainingWeek) {

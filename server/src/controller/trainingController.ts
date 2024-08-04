@@ -70,10 +70,7 @@ export async function deletePlan(req: Request, res: Response): Promise<void> {
   const planId = req.params.planId;
   try {
     const user = await getUser(req, res);
-    const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, planId);
-    if (trainingPlanIndex === -1) {
-      throw new Error('Ungültige Trainingsplan-ID');
-    }
+    const trainingPlanIndex = trainingService.findTrainingPlanIndexById(user.trainingPlans, planId);
 
     user.trainingPlans.splice(trainingPlanIndex, 1);
     await userDAO.update(user);
@@ -91,12 +88,7 @@ export async function getPlanForEdit(req: Request, res: Response): Promise<void>
   try {
     const user = await getUser(req, res);
 
-    const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, planId);
-    if (trainingPlanIndex === -1) {
-      throw new Error('Ungültige Trainingsplan-ID');
-    }
-
-    const trainingPlan = user.trainingPlans[trainingPlanIndex];
+    const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, planId);
 
     const trainingPlanEditView = TrainingPlanDTO.getEditView(trainingPlan);
 
@@ -149,12 +141,7 @@ export async function getLatestTrainingPlan(req: Request, res: Response) {
       return res.status(404).json({ error: 'Benutzer nicht gefunden' });
     }
 
-    const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
-    if (trainingPlanIndex === -1) {
-      return res.status(404).json({ message: 'No training plan was found for the given URL' });
-    }
-
-    const trainingPlan = user.trainingPlans[trainingPlanIndex];
+    const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
     const { weekIndex, dayIndex } = findLatestTrainingDayWithWeight(trainingPlan);
     return res.status(200).json({ weekIndex, dayIndex });
@@ -180,12 +167,7 @@ export async function getTrainingPlan(req: Request, res: Response) {
     throw new Error('Benutzer nicht gefunden');
   }
 
-  const trainingPlanIndex = findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
-  if (trainingPlanIndex === -1) {
-    throw new Error('Ungültige Trainingsplan-ID');
-  }
-
-  const trainingPlan = user.trainingPlans[trainingPlanIndex];
+  const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
   try {
     const trainingDay = trainingPlan.trainingWeeks[trainingWeekIndex].trainingDays[trainingDayIndex];
