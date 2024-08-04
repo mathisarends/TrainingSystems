@@ -5,6 +5,8 @@
   text-align: center;
   padding-top: 1.75rem;
   padding-bottom: 1.75rem;
+  background-color: #f8f9fa;
+  border-radius: 15px;
 }
 
 .timer-display {
@@ -12,12 +14,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 200px;
-  height: 200px;
+  width: 220px;
+  height: 220px;
   margin: 20px 0;
   font-size: 2.5rem;
   font-weight: bold;
   color: #007bff;
+  border-radius: 50%;
+  background-color: #fff;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .progress-ring {
@@ -36,10 +41,35 @@
 
 .time-remaining {
   position: absolute;
+  font-size: 2.5rem;
+  color: #333;
 }
 
 .timer-controls {
   display: flex;
   justify-content: space-around;
   width: 100%;
+}
+
+.timer-controls button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.timer-controls button:hover {
+  background-color: #0056b3;
+  transform: scale(1.1);
+}
+
+.timer-controls button i {
+  font-size: 1.5rem;
 }
