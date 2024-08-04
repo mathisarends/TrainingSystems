@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { MongoGenericDAO } from '../models/dao/mongo-generic.dao.js';
-import { User } from '../models/user.js';
+import { User } from '../models/collections/user.js';
 import { Friendship } from '../models/friendship/friendShip.js';
 import { InviteStatus } from '../models/friendship/invite-status.js';
 import { getUser } from '../service/userService.js';

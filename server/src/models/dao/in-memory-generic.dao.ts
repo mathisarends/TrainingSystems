@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Entity } from '../entity.js';
+import { Entity } from '../collections/entity.js';
 import { GenericDAO } from './generic.dao.js';
 
 export class InMemoryGenericDAO<T extends Entity> implements GenericDAO<T> {

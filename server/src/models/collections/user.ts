@@ -1,7 +1,7 @@
 /* Autor: Mathis Kristoffer Arends */
 import { Entity } from './entity.js';
-import { UserExercise } from './exercise/user-exercise.js';
-import { TrainingPlan } from './training/trainingPlan.js';
+import { UserExercise } from '../exercise/user-exercise.js';
+import { TrainingPlan } from '../training/trainingPlan.js';
 
 /**
  * Represents a user with authentication details.

@@ -1,5 +1,6 @@
 import { TrainingPlan } from '../models/training/trainingPlan.js';
-import { DetailedTrainingPlanView, TrainingPlanCardView } from '../models/dto/trainingDto.types.js';
+import { TrainingPlanCardViewDto } from '../models/dto/training-plan-card-view-dto.js';
+import { TrainingPlanEditViewDto } from '../models/dto/training-plan-edit-view-dto.js';
 
 export class TrainingPlanDTO {
   /**
@@ -7,7 +8,7 @@ export class TrainingPlanDTO {
    * @param plan The full training plan.
    * @returns A basic view of the training plan.
    */
-  static getCardView(plan: TrainingPlan): TrainingPlanCardView {
+  static getCardView(plan: TrainingPlan): TrainingPlanCardViewDto {
     return {
       id: plan.id,
       title: plan.title,
@@ -17,7 +18,7 @@ export class TrainingPlanDTO {
     };
   }
 
-  static getEditView(plan: TrainingPlan): Partial<TrainingPlan> {
+  static getEditView(plan: TrainingPlan): TrainingPlanEditViewDto {
     return {
       id: plan.id,
       title: plan.title,
@@ -26,15 +27,6 @@ export class TrainingPlanDTO {
       trainingWeeks: plan.trainingWeeks,
       coverImageBase64: plan.coverImageBase64 ?? ''
     };
-  }
-
-  /**
-   * Returns a detailed view of the training plan.
-   * @param plan The full training plan.
-   * @returns A detailed view of the training plan.
-   */
-  static getDetailedView(plan: TrainingPlan): DetailedTrainingPlanView {
-    return plan;
   }
 
   /**

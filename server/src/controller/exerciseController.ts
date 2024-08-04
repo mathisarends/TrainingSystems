@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { MongoGenericDAO } from '../models/dao/mongo-generic.dao.js';
-import { User } from '../models/user.js';
+import { User } from '../models/collections/user.js';
 import { ApiData } from '../models/apiData.js';
 import { getUser } from '../service/userService.js';
 import {
@@ -12,6 +12,7 @@ import {
   mapToExerciseCategory
 } from '../utils/exerciseUtils.js';
 import { ExerciseCategoryType } from '../utils/exercise-category.js';
+import { UserExercise } from '../models/exercise/user-exercise.js';
 
 /**
  * Fetches all exercise categories.
@@ -31,7 +32,7 @@ export async function getExercisesByCategory(req: Request, res: Response): Promi
 
   const user = await getUser(req, res);
   const mappedCategory = mapToExerciseCategory(category);
-  const exerciseNames = getExerciseFieldByCategory(mappedCategory, user).map(exercise => exercise.name);
+  const exerciseNames = getExerciseFieldByCategory(mappedCategory, user).map((exercise: UserExercise) => exercise.name);
 
   res.status(200).json(exerciseNames);
 }
