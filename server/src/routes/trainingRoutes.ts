@@ -186,8 +186,6 @@ router.get('/statistics/:id/drilldown/:category/:week', authService.authenticati
           const weight = parseFloat(exercise.weight) || 0;
           const exerciseTonnage = exercise.sets * exercise.reps * weight;
 
-          console.log('exercise', exercise.exercise);
-
           // Wenn die Übung bereits in der Map existiert, addiere die Tonnage
           if (tonnageMap.has(exercise.exercise)) {
             tonnageMap.set(exercise.exercise, tonnageMap.get(exercise.exercise) + exerciseTonnage);

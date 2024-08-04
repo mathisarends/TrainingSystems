@@ -15,6 +15,7 @@ body {
 
 .blur-background > *:not(app-modal) {
   filter: blur(2px);
+  transition: filter 0.3s ease-in-out; /* Optional: smooth transition */
 }
 
 .outlet-wrapper {

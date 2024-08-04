@@ -2,8 +2,13 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 1040; /* Bootstrap Modals haben einen z-index von 1050 */
+  z-index: 1040; /* Ensure this is below Bootstrap Modals if used */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
 }

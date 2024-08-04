@@ -71,11 +71,8 @@ export async function loginOAuth2(req: Request, res: Response): Promise<void> {
  * @returns {Promise<void>} A promise that resolves when the user profile is retrieved.
  */
 export async function getProfile(req: Request, res: Response): Promise<void> {
-  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
-  const userClaimsSet = res.locals.user;
-
   try {
-    const user = await userService.getUserProfile(userDAO, userClaimsSet);
+    const user = await userService.getUser(req, res);
     const formattedCreatedAt = new Date(user.createdAt).toLocaleDateString('de-DE', {
       year: 'numeric',
       month: 'long',

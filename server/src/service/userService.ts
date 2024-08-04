@@ -15,12 +15,9 @@ import {
   bicepsExercises,
   legExercises
 } from '../ressources/exerciseCatalog.js';
+import { Request, Response } from 'express';
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
-interface UserClaimsSet {
-  id: string;
-}
 
 export async function registerUser(userDAO: MongoGenericDAO<User>, userDetails: Record<string, string>): Promise<User> {
   const { username, email, password, confirmPassword } = userDetails;
@@ -104,7 +101,10 @@ export async function loginOAuth2User(userDAO: MongoGenericDAO<User>, token: str
   return user!;
 }
 
-export async function getUserProfile(userDAO: MongoGenericDAO<User>, userClaimsSet: UserClaimsSet): Promise<User> {
+export async function getUser(req: Request, res: Response): Promise<User> {
+  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
+  const userClaimsSet = res.locals.user;
+
   const user = await userDAO.findOne({ id: userClaimsSet.id });
   if (!user) {
     throw new Error('Benutzer nicht gefunden');
