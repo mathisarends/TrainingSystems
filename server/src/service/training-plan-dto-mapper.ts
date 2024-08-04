@@ -2,7 +2,7 @@ import { TrainingPlan } from '../models/training/trainingPlan.js';
 import { TrainingPlanCardViewDto } from '../models/dto/training-plan-card-view-dto.js';
 import { TrainingPlanEditViewDto } from '../models/dto/training-plan-edit-view-dto.js';
 
-export class TrainingPlanDTO {
+export class TrainingPlanDtoMapper {
   /**
    * Returns a basic view of the training plan.
    * @param plan The full training plan.

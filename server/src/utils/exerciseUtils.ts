@@ -1,4 +1,4 @@
-import { User } from '../models/collections/user.js';
+import { User } from '../models/collections/user/user.js';
 import {
   backExercises,
   benchExercises,
@@ -13,9 +13,9 @@ import {
   tricepExercises
 } from '../ressources/exerciseCatalog.js';
 import { ExerciseCategoryType } from './exercise-category.js';
-import { UserExercise } from '../models/exercise/user-exercise.js';
+import { UserExercise } from '../models/collections/user/user-exercise.js';
 import { ApiData } from '../models/apiData.js';
-import { UserExerciseCategory } from '../models/exercise/exercise-category.js';
+import { UserExerciseCategory } from '../models/collections/user/user-exercise-category.js';
 
 /**
  * Prepares exercise data for rendering on the client side.

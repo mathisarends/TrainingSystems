@@ -1,4 +1,4 @@
-import { TrainingPlan } from './trainingPlan.js';
+import { TrainingPlan } from '../training/trainingPlan.js';
 
 export type BasicTrainingPlanView = Pick<
   TrainingPlan,

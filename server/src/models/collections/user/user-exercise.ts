@@ -1,4 +1,4 @@
-import { UserExerciseCategory } from './exercise-category.js';
+import { UserExerciseCategory } from './user-exercise-category.js';
 
 /**
  * Represents an exercise with its associated details.

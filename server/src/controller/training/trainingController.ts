@@ -1,18 +1,18 @@
 import { Request, Response } from 'express';
-import { MongoGenericDAO } from 'models/mongo-generic.dao.js';
+import { MongoGenericDAO } from '../../models/dao/mongo-generic.dao.js';
 import * as trainingService from '../../service/trainingService.js';
-import { User } from '@shared/models/user.js';
+import { User } from '../../models/collections/user/user.js';
 import {
   createNewTrainingPlanWithPlaceholders,
   findTrainingPlanById,
   handleWeekDifference
 } from '../../service/trainingService.js';
 import { getUser } from '../../service/userService.js';
-import { TrainingPlanDTO } from '../../dto/trainingDto.js';
-import { TrainingPlanCardView } from '@shared/models/dtos/training/trainingDto.types.js';
-import { WeightRecommendationBase } from '@shared/models/training/enum/weightRecommandationBase.js';
+import { TrainingPlanDtoMapper } from '../../service/training-plan-dto-mapper.js';
+import { TrainingPlanCardViewDto } from '../../models/dto/training-plan-card-view-dto.js';
+import { WeightRecommendationBase } from '../../models/training/weight-recommandation.enum.js';
 import { v4 as uuidv4 } from 'uuid';
-import { TrainingPlan } from '@shared/models/training/trainingPlan.js';
+import { TrainingPlan } from '../../models/training/trainingPlan.js';
 
 /**
  * Retrieves the list of training plans for the user, summarizing them into card views.
@@ -20,8 +20,8 @@ import { TrainingPlan } from '@shared/models/training/trainingPlan.js';
  */
 export async function getPlans(req: Request, res: Response): Promise<void> {
   const user = await getUser(req, res);
-  const trainingPlanCards: TrainingPlanCardView[] = user.trainingPlans.map(plan => ({
-    ...TrainingPlanDTO.getCardView(plan),
+  const trainingPlanCards: TrainingPlanCardViewDto[] = user.trainingPlans.map((plan: TrainingPlan) => ({
+    ...TrainingPlanDtoMapper.getCardView(plan),
     pictureUrl: user.pictureUrl
   }));
 
@@ -88,7 +88,7 @@ export async function getPlanForEdit(req: Request, res: Response): Promise<void>
 
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, planId);
 
-  const trainingPlanEditView = TrainingPlanDTO.getEditView(trainingPlan);
+  const trainingPlanEditView = TrainingPlanDtoMapper.getEditView(trainingPlan);
 
   res.status(200).json({ trainingPlanEditView });
 }

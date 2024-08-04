@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { MongoGenericDAO } from '../models/dao/mongo-generic.dao.js';
-import { User } from '../models/collections/user.js';
+import { User } from '../models/collections/user/user.js';
 import { ApiData } from '../models/apiData.js';
 import { getUser } from '../service/userService.js';
 import {
@@ -12,7 +12,7 @@ import {
   mapToExerciseCategory
 } from '../utils/exerciseUtils.js';
 import { ExerciseCategoryType } from '../utils/exercise-category.js';
-import { UserExercise } from '../models/exercise/user-exercise.js';
+import { UserExercise } from '../models/collections/user/user-exercise.js';
 
 /**
  * Fetches all exercise categories.
