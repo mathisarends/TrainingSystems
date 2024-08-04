@@ -2,6 +2,7 @@
 import { Entity } from '../entity.js';
 import { UserExercise } from './user-exercise.js';
 import { TrainingPlan } from '../../training/trainingPlan.js';
+import { ExerciseCategoryType } from '../../training/exercise-category-type.js';
 
 /**
  * Represents a user with authentication details.
@@ -41,15 +42,5 @@ export interface User extends Entity {
    */
   navigationLectureComplete?: boolean;
 
-  placeholderExercises: UserExercise[];
-  squatExercises: UserExercise[];
-  benchExercises: UserExercise[];
-  deadliftExercises: UserExercise[];
-  overheadpressExercises: UserExercise[];
-  chestExercises: UserExercise[];
-  backExercises: UserExercise[];
-  shoulderExercises: UserExercise[];
-  tricepsExercises: UserExercise[];
-  bicepsExercises: UserExercise[];
-  legExercises: UserExercise[];
+  exercises: Record<ExerciseCategoryType, UserExercise[]>;
 }

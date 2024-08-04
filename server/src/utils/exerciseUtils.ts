@@ -27,23 +27,7 @@ export function prepareExercisesData(user: User) {
   const defaultRepSchemeByCategory: Record<string, { defaultSets: number; defaultReps: number; defaultRPE: number }> =
     {};
 
-  const allCategorysArray = [
-    user.placeholderExercises,
-    user.squatExercises,
-    user.benchExercises,
-    user.deadliftExercises,
-    user.overheadpressExercises,
-    user.backExercises,
-    user.chestExercises,
-    user.shoulderExercises,
-    user.bicepsExercises,
-    user.tricepsExercises,
-    user.legExercises
-  ];
-
-  for (const categoryArray of allCategorysArray) {
-    const exercises = Array.isArray(categoryArray) ? categoryArray : [categoryArray]; // Umwandelung in Array für iteration
-
+  for (const exercises of Object.values(user.exercises)) {
     for (const exercise of exercises) {
       if (exercise && exercise.category.name) {
         const categoryName = exercise.category.name;
@@ -149,30 +133,13 @@ export function getAssociatedCategoryByIndex(index: number) {
  * Gets the exercise field corresponding to the specified category from the user's data.
  */
 export function getExerciseFieldByCategory(category: ExerciseCategoryType, user: User) {
-  switch (category) {
-    case ExerciseCategoryType.SQUAT:
-      return user.squatExercises;
-    case ExerciseCategoryType.BENCH:
-      return user.benchExercises;
-    case ExerciseCategoryType.DEADLIFT:
-      return user.deadliftExercises;
-    case ExerciseCategoryType.OVERHEADPRESS:
-      return user.overheadpressExercises;
-    case ExerciseCategoryType.CHEST:
-      return user.chestExercises;
-    case ExerciseCategoryType.BACK:
-      return user.backExercises;
-    case ExerciseCategoryType.SHOULDER:
-      return user.shoulderExercises;
-    case ExerciseCategoryType.TRICEPS:
-      return user.tricepsExercises;
-    case ExerciseCategoryType.BICEPS:
-      return user.bicepsExercises;
-    case ExerciseCategoryType.LEGS:
-      return user.legExercises;
-    default:
-      throw new Error(`Unknown category: ${category}`);
+  const exercises = user.exercises[category];
+
+  if (!exercises) {
+    throw new Error(`Unknown category: ${category}`);
   }
+
+  return exercises;
 }
 
 /**
@@ -281,17 +248,19 @@ export function isExercise(fieldName: string) {
  * Resets the user's exercises to the default values.
  */
 export function resetUserExercises(user: User) {
-  user.placeholderExercises = placeHolderExercises;
-  user.squatExercises = squatExercises;
-  user.benchExercises = benchExercises;
-  user.deadliftExercises = deadliftExercises;
-  user.overheadpressExercises = overheadpressExercises;
-  user.backExercises = backExercises;
-  user.chestExercises = chestExercises;
-  user.shoulderExercises = shoulderExercises;
-  user.bicepsExercises = bicepsExercises;
-  user.tricepsExercises = tricepExercises;
-  user.legExercises = legExercises;
+  user.exercises = {
+    [ExerciseCategoryType.PLACEHOLDER]: placeHolderExercises,
+    [ExerciseCategoryType.SQUAT]: squatExercises,
+    [ExerciseCategoryType.BENCH]: benchExercises,
+    [ExerciseCategoryType.DEADLIFT]: deadliftExercises,
+    [ExerciseCategoryType.OVERHEADPRESS]: overheadpressExercises,
+    [ExerciseCategoryType.CHEST]: chestExercises,
+    [ExerciseCategoryType.BACK]: backExercises,
+    [ExerciseCategoryType.SHOULDER]: shoulderExercises,
+    [ExerciseCategoryType.TRICEPS]: tricepExercises,
+    [ExerciseCategoryType.BICEPS]: bicepsExercises,
+    [ExerciseCategoryType.LEGS]: legExercises
+  };
 }
 
 export function mapToExerciseCategory(category: string): ExerciseCategoryType {

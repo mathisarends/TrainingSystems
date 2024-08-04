@@ -16,6 +16,7 @@ import {
   legExercises
 } from '../ressources/exercises/exerciseCatalog.js';
 import { Request, Response } from 'express';
+import { ExerciseCategoryType } from '../models/training/exercise-category-type.js';
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -40,17 +41,19 @@ export async function registerUser(userDAO: MongoGenericDAO<User>, userDetails: 
     email,
     password: await bcrypt.hash(password, 10),
     trainingPlans: [],
-    placeholderExercises: placeHolderExercises,
-    squatExercises: squatExercises,
-    benchExercises: benchExercises,
-    deadliftExercises: deadliftExercises,
-    overheadpressExercises: overheadpressExercises,
-    chestExercises: chestExercises,
-    backExercises: backExercises,
-    shoulderExercises: shoulderExercises,
-    tricepsExercises: tricepExercises,
-    bicepsExercises: bicepsExercises,
-    legExercises: legExercises
+    exercises: {
+      [ExerciseCategoryType.PLACEHOLDER]: placeHolderExercises,
+      [ExerciseCategoryType.SQUAT]: squatExercises,
+      [ExerciseCategoryType.BENCH]: benchExercises,
+      [ExerciseCategoryType.DEADLIFT]: deadliftExercises,
+      [ExerciseCategoryType.OVERHEADPRESS]: overheadpressExercises,
+      [ExerciseCategoryType.CHEST]: chestExercises,
+      [ExerciseCategoryType.BACK]: backExercises,
+      [ExerciseCategoryType.SHOULDER]: shoulderExercises,
+      [ExerciseCategoryType.TRICEPS]: tricepExercises,
+      [ExerciseCategoryType.BICEPS]: bicepsExercises,
+      [ExerciseCategoryType.LEGS]: legExercises
+    }
   };
 
   return userDAO.create(userObj);
@@ -83,17 +86,19 @@ export async function loginOAuth2User(userDAO: MongoGenericDAO<User>, token: str
       email: email,
       pictureUrl: picture,
       trainingPlans: [],
-      placeholderExercises: placeHolderExercises,
-      squatExercises: squatExercises,
-      benchExercises: benchExercises,
-      deadliftExercises: deadliftExercises,
-      overheadpressExercises: overheadpressExercises,
-      chestExercises: chestExercises,
-      backExercises: backExercises,
-      shoulderExercises: shoulderExercises,
-      tricepsExercises: tricepExercises,
-      bicepsExercises: bicepsExercises,
-      legExercises: legExercises
+      exercises: {
+        [ExerciseCategoryType.PLACEHOLDER]: placeHolderExercises,
+        [ExerciseCategoryType.SQUAT]: squatExercises,
+        [ExerciseCategoryType.BENCH]: benchExercises,
+        [ExerciseCategoryType.DEADLIFT]: deadliftExercises,
+        [ExerciseCategoryType.OVERHEADPRESS]: overheadpressExercises,
+        [ExerciseCategoryType.CHEST]: chestExercises,
+        [ExerciseCategoryType.BACK]: backExercises,
+        [ExerciseCategoryType.SHOULDER]: shoulderExercises,
+        [ExerciseCategoryType.TRICEPS]: tricepExercises,
+        [ExerciseCategoryType.BICEPS]: bicepsExercises,
+        [ExerciseCategoryType.LEGS]: legExercises
+      }
     };
     user = await userDAO.create(userObj);
   }

@@ -44,6 +44,7 @@ export async function getExercises(req: Request, res: Response): Promise<void> {
   try {
     const user = await getUser(req, res);
     const exercisesData = prepareExercisesData(user);
+    console.log('🚀 ~ getExercises ~ exercisesData:', exercisesData);
     res.status(200).json({ exercisesData });
   } catch (error) {
     res.status(404).json({ error: (error as unknown as Error).message });
