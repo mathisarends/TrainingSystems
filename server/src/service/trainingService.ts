@@ -22,15 +22,10 @@ export async function getTrainingPlans(
 }
 
 export async function createTrainingPlan(
+  user: User,
   userDAO: MongoGenericDAO<User>,
-  userClaimsSet: UserClaimsSet,
   planDetails: Record<string, string>
 ): Promise<TrainingPlanCardView[]> {
-  const user: User | null = await userDAO.findOne({ id: userClaimsSet.id });
-  if (!user) {
-    throw new Error('Benutzer nicht gefunden');
-  }
-
   const title = planDetails.title;
   const trainingFrequency = Number(planDetails.trainingFrequency);
   const trainingWeeks = Number(planDetails.trainingWeeks);
@@ -175,14 +170,14 @@ export function findTrainingPlanIndexById(trainingPlans: TrainingPlan[], planId:
   return trainingPlans.findIndex(plan => plan.id === planId);
 }
 
-function getAllPlansBasic(trainingPlans: TrainingPlan[], pictureUrl?: string): TrainingPlanCardView[] {
+export function getAllPlansBasic(trainingPlans: TrainingPlan[], pictureUrl?: string): TrainingPlanCardView[] {
   return trainingPlans.map(plan => ({
     ...TrainingPlanDTO.getBasicView(plan),
     pictureUrl
   }));
 }
 
-function createNewTrainingPlanWithPlaceholders(weeks: number, daysPerWeek: number): TrainingWeek[] {
+export function createNewTrainingPlanWithPlaceholders(weeks: number, daysPerWeek: number): TrainingWeek[] {
   return Array.from({ length: weeks }, () => ({
     trainingDays: Array.from({ length: daysPerWeek }, () => ({ exercises: [] }))
   }));

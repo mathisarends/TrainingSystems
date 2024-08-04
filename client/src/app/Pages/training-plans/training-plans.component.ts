@@ -1,4 +1,9 @@
-import { Component, DestroyRef, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  OnInit,
+} from '@angular/core';
 import { ModalService } from '../../../service/modal/modalService';
 import { CreateTrainingFormComponent } from '../create-training-form/create-training-form.component';
 import { HttpClientService } from '../../../service/http/http-client.service';
@@ -29,9 +34,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     TrainingPlanCardComponent,
   ],
   templateUrl: './training-plans.component.html',
-  styleUrls: ['./training-plans.component.scss'],
 })
-export class TrainingPlansComponent implements OnInit, OnDestroy {
+export class TrainingPlansComponent implements OnInit {
   protected allTrainingPlans$ = new BehaviorSubject<
     TrainingPlanCardView[] | null
   >(null);
@@ -44,7 +48,8 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
     private httpClient: HttpClientService,
     private searchService: SearchService,
     private trainingPlanService: TrainingPlanService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   /**
@@ -65,13 +70,14 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.loadTrainingPlans();
       });
-  }
 
-  /**
-   * Lifecycle hook that runs when the component is destroyed.
-   * Unsubscribes from subscriptions to avoid memory leaks.
-   */
-  ngOnDestroy(): void {}
+    this.allTrainingPlans$.subscribe((plans) =>
+      console.log('All Plans:', plans)
+    );
+    this.filteredTrainingPlans$.subscribe((plans) =>
+      console.log('Filtered Plans:', plans)
+    );
+  }
 
   /**
    * Loads training plans from the server.
@@ -81,8 +87,12 @@ export class TrainingPlansComponent implements OnInit, OnDestroy {
       const response: any = await firstValueFrom(
         this.httpClient.request<any>(HttpMethods.GET, 'training/plans')
       );
-      this.allTrainingPlans$.next(response?.trainingPlanDtos);
-      this.filteredTrainingPlans$.next(response?.trainingPlanDtos);
+
+      this.allTrainingPlans$.next(response?.trainingPlanCards);
+      this.filteredTrainingPlans$.next(response?.trainingPlanCards);
+
+      // Mark for change detection
+      this.changeDetectorRef.markForCheck();
     } catch (error) {
       console.error('Fehler beim Laden:', error);
       this.allTrainingPlans$.next([]);

@@ -13,6 +13,7 @@ import { User } from '@shared/models/user.js';
 
 const router = express.Router();
 
+/** Lädt eine Kartenansicht mit allen Trainingspplänen */
 router.get('/plans', authService.authenticationMiddleware, trainingController.getPlans);
 router.post('/create', authService.authenticationMiddleware, trainingController.createPlan);
 router.delete('/delete/:planId', authService.authenticationMiddleware, trainingController.deletePlan);

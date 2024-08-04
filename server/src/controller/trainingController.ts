@@ -4,19 +4,29 @@ import * as trainingService from '../service/trainingService.js';
 import { User } from '@shared/models/user.js';
 import {
   createExerciseObject,
+  createNewTrainingPlanWithPlaceholders,
   findLatestTrainingDayWithWeight,
   findTrainingPlanIndexById,
   updateExercise
 } from '../service/trainingService.js';
 import { TrainingDay } from '@shared/models/training/trainingDay.js';
 import { Exercise } from '@shared/models/training/exercise.js';
+import { getUser } from '../service/userService.js';
+import { TrainingPlanDTO } from '../dto/trainingDto.js';
+import { TrainingPlanCardView } from '@shared/models/dtos/training/trainingDto.types.js';
+import { WeightRecommendationBase } from '@shared/models/training/enum/weightRecommandationBase.js';
+import { TrainingPlan } from '@shared/models/training/trainingPlan.js';
+import { v4 as uuidv4 } from 'uuid';
 
 export async function getPlans(req: Request, res: Response): Promise<void> {
   try {
-    const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
-    const userClaimsSet = res.locals.user;
-    const trainingPlanDtos = await trainingService.getTrainingPlans(userDAO, userClaimsSet);
-    res.status(200).json({ trainingPlanDtos });
+    const user = await getUser(req, res);
+    const trainingPlanCards: TrainingPlanCardView[] = user.trainingPlans.map(plan => ({
+      ...TrainingPlanDTO.getBasicView(plan),
+      pictureUrl: user.pictureUrl
+    }));
+
+    res.status(200).json({ trainingPlanCards });
   } catch (error) {
     res.status(404).json({ error: (error as unknown as Error).message });
   }
@@ -24,10 +34,31 @@ export async function getPlans(req: Request, res: Response): Promise<void> {
 
 export async function createPlan(req: Request, res: Response): Promise<void> {
   try {
+    const user = await getUser(req, res);
     const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
-    const userClaimsSet = res.locals.user;
-    const trainingPlanDtos = await trainingService.createTrainingPlan(userDAO, userClaimsSet, req.body);
-    res.status(200).json({ trainingPlanDtos });
+
+    const title = req.body.title;
+    const trainingFrequency = Number(req.body.trainingFrequency);
+    const trainingWeeks = Number(req.body.trainingWeeks);
+    const weightRecommandation = req.body.weightPlaceholders as WeightRecommendationBase;
+    const coverImage = req.body.coverImage;
+
+    const trainingWeeksArr = createNewTrainingPlanWithPlaceholders(trainingWeeks, trainingFrequency);
+
+    const newTrainingPlan: TrainingPlan = {
+      id: uuidv4(),
+      title,
+      trainingFrequency,
+      weightRecommandationBase: weightRecommandation,
+      lastUpdated: new Date(),
+      trainingWeeks: trainingWeeksArr,
+      coverImageBase64: coverImage
+    };
+
+    user.trainingPlans.push(newTrainingPlan);
+    await userDAO.update(user);
+
+    res.status(200).json('Plan erfolgreich erstellt');
   } catch (error) {
     console.error('Es ist ein Fehler beim Erstellen des Trainingsplans aufgetreten', error);
     res.status(500).json({ error: (error as unknown as Error).message });
