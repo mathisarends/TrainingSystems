@@ -17,20 +17,15 @@ export async function updateViewedCategories(req: Request, res: Response): Promi
   const trainingPlanId = req.params.id;
   const exerciseCategories = (req.query.exercises as string).split(',');
 
-  try {
-    const user = await getUser(req, res);
+  const user = await getUser(req, res);
 
-    const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
+  const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
-    trainingPlan.recentlyViewedCategoriesInStatisticSection = exerciseCategories;
+  trainingPlan.recentlyViewedCategoriesInStatisticSection = exerciseCategories;
 
-    await userDAO.update(user);
+  await userDAO.update(user);
 
-    res.status(200).json('Kategorien geupdated');
-  } catch (error) {
-    const errMessage = 'Fehler beim Setzen der zuletzt besuchten Kategorien: ' + error;
-    res.status(500).json(errMessage);
-  }
+  res.status(200).json('Kategorien geupdated');
 }
 
 /**
@@ -39,16 +34,11 @@ export async function updateViewedCategories(req: Request, res: Response): Promi
 export async function getViewedCategories(req: Request, res: Response): Promise<void> {
   const trainingPlanId = req.params.id;
 
-  try {
-    const user = await getUser(req, res);
+  const user = await getUser(req, res);
 
-    const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
+  const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
-    res.status(200).json(trainingPlan.recentlyViewedCategoriesInStatisticSection ?? ['Squat', 'Bench', 'Deadlift']);
-  } catch (error) {
-    const errMessage = 'Fehler beim Abrufen der zuletzt besuchten Kategorien: ' + error;
-    res.status(500).json(errMessage);
-  }
+  res.status(200).json(trainingPlan.recentlyViewedCategoriesInStatisticSection ?? ['Squat', 'Bench', 'Deadlift']);
 }
 
 /**
@@ -58,26 +48,20 @@ export async function getSetsForCategories(req: Request, res: Response): Promise
   const trainingPlanId = req.params.id;
   const exerciseCategories = (req.query.exercises as string).split(',');
 
-  try {
-    const user = await getUser(req, res);
+  const user = await getUser(req, res);
 
-    const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
+  const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
-    const responseData: { [key: string]: number[] } = {};
+  const responseData: { [key: string]: number[] } = {};
 
-    exerciseCategories.forEach(category => {
-      const exerciseCategory = mapToExerciseCategory(category);
-      if (exerciseCategory) {
-        responseData[category.toLowerCase()] = getSetsPerWeek(trainingPlan, exerciseCategory);
-      }
-    });
+  exerciseCategories.forEach(category => {
+    const exerciseCategory = mapToExerciseCategory(category);
+    if (exerciseCategory) {
+      responseData[category.toLowerCase()] = getSetsPerWeek(trainingPlan, exerciseCategory);
+    }
+  });
 
-    res.status(200).json(responseData);
-  } catch (error) {
-    const errMessage = 'Es ist ein Fehler beim Abrufen der Statistiken aufgetreten: ' + error;
-    console.error(errMessage);
-    res.status(500).json({ error: errMessage });
-  }
+  res.status(200).json(responseData);
 }
 
 /**
@@ -87,26 +71,20 @@ export async function getTonnageForCategories(req: Request, res: Response): Prom
   const trainingPlanId = req.params.id;
   const exerciseCategories = (req.query.exercises as string).split(',');
 
-  try {
-    const user = await getUser(req, res);
+  const user = await getUser(req, res);
 
-    const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
+  const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
-    const responseData: { [key: string]: ReturnType<typeof prepareTrainingWeeksForExercise> } = {};
+  const responseData: { [key: string]: ReturnType<typeof prepareTrainingWeeksForExercise> } = {};
 
-    exerciseCategories.forEach(category => {
-      const exerciseCategory = mapToExerciseCategory(category);
-      if (exerciseCategory) {
-        responseData[category.toLowerCase()] = prepareTrainingWeeksForExercise(trainingPlan, exerciseCategory);
-      }
-    });
+  exerciseCategories.forEach(category => {
+    const exerciseCategory = mapToExerciseCategory(category);
+    if (exerciseCategory) {
+      responseData[category.toLowerCase()] = prepareTrainingWeeksForExercise(trainingPlan, exerciseCategory);
+    }
+  });
 
-    res.status(200).json(responseData);
-  } catch (error) {
-    const errMessage = 'Es ist ein Fehler beim Abrufen der Statistiken aufgetreten: ' + error;
-    console.error(errMessage);
-    res.status(500).json({ error: errMessage });
-  }
+  res.status(200).json(responseData);
 }
 
 /**
@@ -117,44 +95,38 @@ export async function getDrilldownForCategory(req: Request, res: Response): Prom
   const weekIndex = parseInt(req.params.week, 10);
   const category = req.params.category;
 
-  try {
-    const mappedCategory = mapToExerciseCategory(category);
+  const mappedCategory = mapToExerciseCategory(category);
 
-    const user = await getUser(req, res);
+  const user = await getUser(req, res);
 
-    const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
+  const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
-    const trainingWeek = trainingPlan.trainingWeeks[weekIndex];
+  const trainingWeek = trainingPlan.trainingWeeks[weekIndex];
 
-    if (!trainingWeek) {
-      return res.status(404).json({ message: 'Ungültige Trainingswoche' });
-    }
-
-    const tonnageMap = new Map();
-
-    trainingWeek.trainingDays.forEach((trainingDay: TrainingDay) => {
-      trainingDay.exercises.forEach((exercise: Exercise) => {
-        if (exercise.category === mappedCategory) {
-          const weight = parseFloat(exercise.weight) || 0;
-          const exerciseTonnage = exercise.sets * exercise.reps * weight;
-
-          if (tonnageMap.has(exercise.exercise)) {
-            tonnageMap.set(exercise.exercise, tonnageMap.get(exercise.exercise) + exerciseTonnage);
-          } else {
-            tonnageMap.set(exercise.exercise, exerciseTonnage);
-          }
-        }
-      });
-    });
-
-    const tonnageArray = Array.from(tonnageMap, ([exercise, tonnage]) => ({ exercise, tonnage }));
-
-    return res.status(200).json({ category, week: weekIndex, exercises: tonnageArray });
-  } catch (error) {
-    const errMessage = 'Es ist ein Fehler beim Abrufen der Drilldown-Statistiken aufgetreten: ' + error;
-    console.error(errMessage);
-    return res.status(500).json({ error: errMessage });
+  if (!trainingWeek) {
+    return res.status(404).json({ message: 'Ungültige Trainingswoche' });
   }
+
+  const tonnageMap = new Map();
+
+  trainingWeek.trainingDays.forEach((trainingDay: TrainingDay) => {
+    trainingDay.exercises.forEach((exercise: Exercise) => {
+      if (exercise.category === mappedCategory) {
+        const weight = parseFloat(exercise.weight) || 0;
+        const exerciseTonnage = exercise.sets * exercise.reps * weight;
+
+        if (tonnageMap.has(exercise.exercise)) {
+          tonnageMap.set(exercise.exercise, tonnageMap.get(exercise.exercise) + exerciseTonnage);
+        } else {
+          tonnageMap.set(exercise.exercise, exerciseTonnage);
+        }
+      }
+    });
+  });
+
+  const tonnageArray = Array.from(tonnageMap, ([exercise, tonnage]) => ({ exercise, tonnage }));
+
+  return res.status(200).json({ category, week: weekIndex, exercises: tonnageArray });
 }
 
 /**

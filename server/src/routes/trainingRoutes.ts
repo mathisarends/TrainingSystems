@@ -15,43 +15,51 @@ router.get('/edit/:id', authService.authenticationMiddleware, asyncHandler(train
 router.patch('/edit/:id', authService.authenticationMiddleware, asyncHandler(trainingController.updatePlan));
 
 // Auf einen Trainingstag bezogen
-router.get('/plan/:id/:week/:day', authService.authenticationMiddleware, trainingDayController.getPlanForDay);
+router.get(
+  '/plan/:id/:week/:day',
+  authService.authenticationMiddleware,
+  asyncHandler(trainingDayController.getPlanForDay)
+);
 router.patch(
   '/plan/:id/:week/:day',
   authService.authenticationMiddleware,
-  trainingDayController.updateTrainingDataForTrainingDay
+  asyncHandler(trainingDayController.updateTrainingDataForTrainingDay)
 );
-router.get('/plan/:id/latest', authService.authenticationMiddleware, trainingDayController.getLatestTrainingDay);
+router.get(
+  '/plan/:id/latest',
+  authService.authenticationMiddleware,
+  asyncHandler(trainingDayController.getLatestTrainingDay)
+);
 
 // Statistiken
 router.post(
   '/statistics/:id/viewedCategories',
   authService.authenticationMiddleware,
-  trainingStatisticsController.updateViewedCategories
+  asyncHandler(trainingStatisticsController.updateViewedCategories)
 );
 
 router.get(
   '/statistics/:id/viewedCategories',
   authService.authenticationMiddleware,
-  trainingStatisticsController.getViewedCategories
+  asyncHandler(trainingStatisticsController.getViewedCategories)
 );
 
 router.get(
   '/statistics/:id/sets',
   authService.authenticationMiddleware,
-  trainingStatisticsController.getSetsForCategories
+  asyncHandler(trainingStatisticsController.getSetsForCategories)
 );
 
 router.get(
   '/statistics/:id',
   authService.authenticationMiddleware,
-  trainingStatisticsController.getTonnageForCategories
+  asyncHandler(trainingStatisticsController.getTonnageForCategories)
 );
 
 router.get(
   '/statistics/:id/drilldown/:category/:week',
   authService.authenticationMiddleware,
-  trainingStatisticsController.getDrilldownForCategory
+  asyncHandler(trainingStatisticsController.getDrilldownForCategory)
 );
 
 export default router;

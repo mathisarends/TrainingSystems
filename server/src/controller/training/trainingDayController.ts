@@ -24,34 +24,29 @@ export async function getPlanForDay(req: Request, res: Response): Promise<void> 
   const trainingWeekIndex = Number(week);
   const trainingDayIndex = Number(day);
 
-  try {
-    const user = await getUser(req, res);
+  const user = await getUser(req, res);
 
-    const trainingPlan = findTrainingPlanById(user.trainingPlans, id);
+  const trainingPlan = findTrainingPlanById(user.trainingPlans, id);
 
-    if (trainingWeekIndex > trainingPlan.trainingWeeks.length) {
-      throw new Error('Die angefragte Woche gibt es nicht im Trainingsplan bitte erhöhe die Blocklänge');
-    }
-
-    const trainingWeek = trainingPlan.trainingWeeks[trainingWeekIndex];
-    if (trainingDayIndex > trainingWeek.trainingDays.length) {
-      throw new Error('Der angefragte Tag ist zu hoch für die angegebene Trainingsfrequenz');
-    }
-
-    const trainingDay = trainingWeek.trainingDays[trainingDayIndex];
-
-    const trainingPlanForTrainingDay = {
-      title: trainingPlan.title,
-      trainingFrequency: trainingPlan.trainingFrequency,
-      trainingBlockLength: trainingPlan.trainingWeeks.length,
-      trainingDay
-    };
-
-    res.status(200).json(trainingPlanForTrainingDay);
-  } catch (error) {
-    console.log('Es ist ein Fehler beim Aufrufen des Trainingsplans aufgetreten!', error);
-    res.status(500).json({ error: (error as unknown as Error).message });
+  if (trainingWeekIndex > trainingPlan.trainingWeeks.length) {
+    throw new Error('Die angefragte Woche gibt es nicht im Trainingsplan bitte erhöhe die Blocklänge');
   }
+
+  const trainingWeek = trainingPlan.trainingWeeks[trainingWeekIndex];
+  if (trainingDayIndex > trainingWeek.trainingDays.length) {
+    throw new Error('Der angefragte Tag ist zu hoch für die angegebene Trainingsfrequenz');
+  }
+
+  const trainingDay = trainingWeek.trainingDays[trainingDayIndex];
+
+  const trainingPlanForTrainingDay = {
+    title: trainingPlan.title,
+    trainingFrequency: trainingPlan.trainingFrequency,
+    trainingBlockLength: trainingPlan.trainingWeeks.length,
+    trainingDay
+  };
+
+  res.status(200).json(trainingPlanForTrainingDay);
 }
 
 /**
@@ -70,26 +65,21 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
 
   const changedData: Record<string, string> = req.body.body;
 
-  try {
-    const user = await getUser(req, res);
-    const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
+  const user = await getUser(req, res);
+  const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
-    const trainingDay = trainingPlan.trainingWeeks[trainingWeekIndex]?.trainingDays[trainingDayIndex];
+  const trainingDay = trainingPlan.trainingWeeks[trainingWeekIndex]?.trainingDays[trainingDayIndex];
 
-    if (!trainingDay) {
-      return res.status(400).json({ error: 'Ungültige Woche oder Tag Index' });
-    }
-
-    updateTrainingDay(trainingDay, changedData, trainingDayIndex);
-    propagateChangesToFutureWeeks(trainingPlan, trainingWeekIndex, trainingDayIndex, changedData);
-
-    await userDAO.update(user);
-
-    res.status(200).json({ message: 'Trainingsplan erfolgreich aktualisiert', trainingDay });
-  } catch (error) {
-    console.error('Error updating training day:', error);
-    return res.status(500).json({ error: 'Interner Serverfehler beim Aktualisieren des Plans' });
+  if (!trainingDay) {
+    return res.status(400).json({ error: 'Ungültige Woche oder Tag Index' });
   }
+
+  updateTrainingDay(trainingDay, changedData, trainingDayIndex);
+  propagateChangesToFutureWeeks(trainingPlan, trainingWeekIndex, trainingDayIndex, changedData);
+
+  await userDAO.update(user);
+
+  res.status(200).json({ message: 'Trainingsplan erfolgreich aktualisiert', trainingDay });
 }
 
 /**
@@ -98,17 +88,13 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
  */
 export async function getLatestTrainingDay(req: Request, res: Response) {
   const trainingPlanId = req.params.id;
-  try {
-    const user = await getUser(req, res);
 
-    const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
+  const user = await getUser(req, res);
 
-    const { weekIndex, dayIndex } = findLatestTrainingDayWithWeight(trainingPlan);
-    return res.status(200).json({ weekIndex, dayIndex });
-  } catch (error) {
-    console.error('Error fetching latest training day:', error);
-    return res.status(500).json({ error: 'Interner Serverfehler' });
-  }
+  const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
+
+  const { weekIndex, dayIndex } = findLatestTrainingDayWithWeight(trainingPlan);
+  return res.status(200).json({ weekIndex, dayIndex });
 }
 
 /**
