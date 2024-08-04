@@ -1,4 +1,4 @@
-import { TrainingDay } from "./trainingDay.js";
+import { TrainingDay } from "../../../server/src/models/training/trainingDay.js";
 
 /**
  * Represents a training week, which includes multiple training days and statistics for specific exercises.

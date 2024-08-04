@@ -1,7 +1,7 @@
 /* Autor: Mathis Kristoffer Arends */
-import { Entity } from "./entity.js";
-import { Exercise } from "./exercise/exercise.js";
-import { TrainingPlan } from "./training/trainingPlan.js";
+import { Entity } from './entity.js';
+import { UserExercise } from './exercise/user-exercise.js';
+import { TrainingPlan } from './training/trainingPlan.js';
 
 /**
  * Represents a user with authentication details.
@@ -41,15 +41,15 @@ export interface User extends Entity {
    */
   navigationLectureComplete?: boolean;
 
-  placeholderExercises: Exercise[];
-  squatExercises: Exercise[];
-  benchExercises: Exercise[];
-  deadliftExercises: Exercise[];
-  overheadpressExercises: Exercise[];
-  chestExercises: Exercise[];
-  backExercises: Exercise[];
-  shoulderExercises: Exercise[];
-  tricepsExercises: Exercise[];
-  bicepsExercises: Exercise[];
-  legExercises: Exercise[];
+  placeholderExercises: UserExercise[];
+  squatExercises: UserExercise[];
+  benchExercises: UserExercise[];
+  deadliftExercises: UserExercise[];
+  overheadpressExercises: UserExercise[];
+  chestExercises: UserExercise[];
+  backExercises: UserExercise[];
+  shoulderExercises: UserExercise[];
+  tricepsExercises: UserExercise[];
+  bicepsExercises: UserExercise[];
+  legExercises: UserExercise[];
 }

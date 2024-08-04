@@ -1,7 +1,7 @@
 /**
  * Represents the category of an exercise with default settings.
  */
-export interface ExerciseCategory {
+export interface UserExerciseCategory {
   /**
    * The name of the category.
    */

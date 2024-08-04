@@ -4,7 +4,7 @@ import * as trainingService from '../../service/trainingService.js';
 import { TrainingPlan } from '@shared/models/training/trainingPlan.js';
 import { TrainingDay } from '@shared/models/training/trainingDay.js';
 import { Exercise } from '@shared/models/training/exercise.js';
-import { ExerciseCategories } from '../../utils/ExerciseCategores.js';
+import { ExerciseCategories } from '../../utils/exercise-category.js';
 import { MongoGenericDAO } from 'models/mongo-generic.dao.js';
 import { User } from '@shared/models/user.js';
 import { mapToExerciseCategory } from '../../utils/exerciseUtils.js';

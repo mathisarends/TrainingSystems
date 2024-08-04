@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClientService } from '../../../service/http/http-client.service';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { HttpMethods } from '../../types/httpMethods';
-import { Exercise } from '../../../../../shared/models/exercise/exercise';
+import { UserExercise } from '../../../types/exercise/user-exercise';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -22,7 +22,7 @@ import { BasicInfoComponent } from '../../basic-info/basic-info.component';
 export class ExercisesComponent implements OnInit, OnDestroy {
   protected isLoading = true;
   exerciseCategories: string[] = [];
-  categorizedExercises: { [category: string]: Exercise[] } = {};
+  categorizedExercises: { [category: string]: UserExercise[] } = {};
   maxFactors: { [exercise: string]: number } = {};
   categoryPauseTimes: { [category: string]: number } = {};
   defaultRepSchemeByCategory: { [category: string]: any } = {};

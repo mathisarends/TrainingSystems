@@ -11,9 +11,8 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "resolveJsonModule": true,
-    "baseUrl": "./src",
     "paths": {
-      "@shared/*": ["../../shared/*"]
+      "@shared/*": ["../../../shared/*"]
     }
   },
   "include": ["src/**/*.ts"],

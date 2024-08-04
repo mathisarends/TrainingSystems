@@ -1,6 +1,6 @@
 import { Express } from 'express';
 import mongoose from 'mongoose';
-import { MongoGenericDAO } from './models/mongo-generic.dao.js';
+import { MongoGenericDAO } from './models/dao/mongo-generic.dao.js';
 import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
 

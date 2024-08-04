@@ -1,8 +1,6 @@
-/* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
-
 import { v4 as uuidv4 } from 'uuid';
 import { Client } from 'pg';
-import { Entity } from '@shared/models/entity.js';
+import { Entity } from 'models/entity.js';
 import { GenericDAO } from './generic.dao.js';
 
 export class PsqlGenericDAO<T extends Entity> implements GenericDAO<T> {

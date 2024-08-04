@@ -1,5 +1,5 @@
-import { TrainingWeek } from "./trainingWeek.js";
-import { WeightRecommendationBase } from "./enum/weightRecommandationBase.js";
+import { TrainingWeek } from './trainingWeek.js';
+import { WeightRecommendationBase } from './enum/weightRecommandationBase.js';
 
 /**
  * Interface representing a training plan.

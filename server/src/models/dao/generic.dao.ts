@@ -1,6 +1,4 @@
-/* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
-
-import { Entity } from '@shared/models/entity';
+import { Entity } from 'models/entity';
 
 export interface GenericDAO<T extends Entity> {
   create(partEntity: Omit<T, keyof Entity>): Promise<T>;

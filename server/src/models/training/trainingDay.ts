@@ -1,4 +1,4 @@
-import { Exercise } from "./exercise.js";
+import { Exercise } from './exercise.js';
 
 /**
  * Represents a training day, which includes the date and a list of exercises performed.

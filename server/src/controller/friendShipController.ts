@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { MongoGenericDAO } from 'models/mongo-generic.dao.js';
-import { User } from '../../../shared/models/user.js';
-import { Friendship } from '../../../shared/models/friendShip.js';
-import { InviteStatus } from '../routes/inviteStatus.js';
+import { MongoGenericDAO } from '../models/dao/mongo-generic.dao.js';
+import { User } from '../models/user.js';
+import { Friendship } from '../models/friendship/friendShip.js';
+import { InviteStatus } from '../models/friendship/invite-status.js';
 import { getUser } from '../service/userService.js';
 
 export async function getAllFriends(req: Request, res: Response) {

@@ -1,8 +1,6 @@
-/* Autor: Prof. Dr. Norman Lahme-Hütig (FH Münster) */
-
 import { Db, Filter } from 'mongodb';
 import { v4 as uuidv4 } from 'uuid';
-import { Entity } from '@shared/models/entity.js';
+import { Entity } from '../entity.js';
 import { GenericDAO } from './generic.dao.js';
 
 export class MongoGenericDAO<T extends Entity> implements GenericDAO<T> {

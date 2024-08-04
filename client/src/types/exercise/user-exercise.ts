@@ -1,8 +1,9 @@
-import { ExerciseCategory } from "./exerciseCategory.js";
+import { UserExerciseCategory } from './exercise-category.js';
+
 /**
  * Represents an exercise with its associated details.
  */
-export interface Exercise {
+export interface UserExercise {
   /**
    * The name of the exercise.
    */
@@ -17,5 +18,5 @@ export interface Exercise {
   /**
    * The category details for the exercise.
    */
-  category: ExerciseCategory;
+  category: UserExerciseCategory;
 }

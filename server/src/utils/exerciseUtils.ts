@@ -1,4 +1,4 @@
-import { User } from '@shared/models/user.js';
+import { User } from '../models/user.js';
 import {
   backExercises,
   benchExercises,
@@ -12,10 +12,10 @@ import {
   squatExercises,
   tricepExercises
 } from '../ressources/exerciseCatalog.js';
-import { ApiData } from '@shared/models/apiData.js';
-import { ExerciseCategory } from '@shared/models/exercise/exerciseCategory.js';
-import { Exercise } from '@shared/models/exercise/exercise.js';
-import { ExerciseCategories } from './ExerciseCategores.js';
+import { ExerciseCategoryType } from './exercise-category.js';
+import { UserExercise } from '../models/exercise/user-exercise.js';
+import { ApiData } from '../models/apiData.js';
+import { UserExerciseCategory } from '../models/exercise/exercise-category.js';
 
 /**
  * Prepares exercise data for rendering on the client side.
@@ -119,27 +119,27 @@ export function mapChangedDataToCategories(changedData: ApiData): {
 export function getAssociatedCategoryByIndex(index: number) {
   switch (index) {
     case 0:
-      return ExerciseCategories.PLACEHOLDER;
+      return ExerciseCategoryType.PLACEHOLDER;
     case 1:
-      return ExerciseCategories.SQUAT;
+      return ExerciseCategoryType.SQUAT;
     case 2:
-      return ExerciseCategories.BENCH;
+      return ExerciseCategoryType.BENCH;
     case 3:
-      return ExerciseCategories.DEADLIFT;
+      return ExerciseCategoryType.DEADLIFT;
     case 4:
-      return ExerciseCategories.OVERHEADPRESS;
+      return ExerciseCategoryType.OVERHEADPRESS;
     case 5:
-      return ExerciseCategories.BACK;
+      return ExerciseCategoryType.BACK;
     case 6:
-      return ExerciseCategories.CHEST;
+      return ExerciseCategoryType.CHEST;
     case 7:
-      return ExerciseCategories.SHOULDER;
+      return ExerciseCategoryType.SHOULDER;
     case 8:
-      return ExerciseCategories.BICEPS;
+      return ExerciseCategoryType.BICEPS;
     case 9:
-      return ExerciseCategories.TRICEPS;
+      return ExerciseCategoryType.TRICEPS;
     case 10:
-      return ExerciseCategories.LEGS;
+      return ExerciseCategoryType.LEGS;
     default:
       throw new Error('Category is not valid');
   }
@@ -148,27 +148,27 @@ export function getAssociatedCategoryByIndex(index: number) {
 /**
  * Gets the exercise field corresponding to the specified category from the user's data.
  */
-export function getExerciseFieldByCategory(category: ExerciseCategories, user: User) {
+export function getExerciseFieldByCategory(category: ExerciseCategoryType, user: User) {
   switch (category) {
-    case ExerciseCategories.SQUAT:
+    case ExerciseCategoryType.SQUAT:
       return user.squatExercises;
-    case ExerciseCategories.BENCH:
+    case ExerciseCategoryType.BENCH:
       return user.benchExercises;
-    case ExerciseCategories.DEADLIFT:
+    case ExerciseCategoryType.DEADLIFT:
       return user.deadliftExercises;
-    case ExerciseCategories.OVERHEADPRESS:
+    case ExerciseCategoryType.OVERHEADPRESS:
       return user.overheadpressExercises;
-    case ExerciseCategories.CHEST:
+    case ExerciseCategoryType.CHEST:
       return user.chestExercises;
-    case ExerciseCategories.BACK:
+    case ExerciseCategoryType.BACK:
       return user.backExercises;
-    case ExerciseCategories.SHOULDER:
+    case ExerciseCategoryType.SHOULDER:
       return user.shoulderExercises;
-    case ExerciseCategories.TRICEPS:
+    case ExerciseCategoryType.TRICEPS:
       return user.tricepsExercises;
-    case ExerciseCategories.BICEPS:
+    case ExerciseCategoryType.BICEPS:
       return user.bicepsExercises;
-    case ExerciseCategories.LEGS:
+    case ExerciseCategoryType.LEGS:
       return user.legExercises;
     default:
       throw new Error(`Unknown category: ${category}`);
@@ -182,7 +182,7 @@ export function processExerciseChanges(
   fieldName: string,
   index: number,
   newValues: unknown[],
-  userExerciseField: Exercise[]
+  userExerciseField: UserExercise[]
 ) {
   if (isExercise(fieldName)) {
     const exerciseIndex: number = isCategoryIndexAboveTen(fieldName)
@@ -208,7 +208,7 @@ export function processExerciseChanges(
     // means a field which is applied for all exercises of the category
     // was change which means we have to iterate over all fields
 
-    userExerciseField.forEach((exerciseField: Exercise) => {
+    userExerciseField.forEach((exerciseField: UserExercise) => {
       switch (true) {
         case fieldName.endsWith('categoryPauseTimeSelect'):
           exerciseField.category.pauseTime = Number(newValues[index]);
@@ -233,10 +233,10 @@ export function processExerciseChanges(
  * Creates and returns an exercise object.
  */
 export function createExerciseObject(
-  category: ExerciseCategory,
+  category: UserExerciseCategory,
   name: string,
   maxFactor: number | undefined
-): Exercise {
+): UserExercise {
   const object = {
     category: category,
     name,
@@ -249,7 +249,7 @@ export function createExerciseObject(
 /**
  * Gets the category information from the first element of a list.
  */
-export function getCategoryInfoFromList(exerciseList: Exercise[]) {
+export function getCategoryInfoFromList(exerciseList: UserExercise[]) {
   if (exerciseList.length > 0) {
     const firstExercise = exerciseList[0];
     return firstExercise.category;
@@ -294,28 +294,28 @@ export function resetUserExercises(user: User) {
   user.legExercises = legExercises;
 }
 
-export function mapToExerciseCategory(category: string): ExerciseCategories {
+export function mapToExerciseCategory(category: string): ExerciseCategoryType {
   switch (category.toLowerCase()) {
     case 'squat':
-      return ExerciseCategories.SQUAT;
+      return ExerciseCategoryType.SQUAT;
     case 'bench':
-      return ExerciseCategories.BENCH;
+      return ExerciseCategoryType.BENCH;
     case 'deadlift':
-      return ExerciseCategories.DEADLIFT;
+      return ExerciseCategoryType.DEADLIFT;
     case 'overheadpress':
-      return ExerciseCategories.OVERHEADPRESS;
+      return ExerciseCategoryType.OVERHEADPRESS;
     case 'chest':
-      return ExerciseCategories.CHEST;
+      return ExerciseCategoryType.CHEST;
     case 'back':
-      return ExerciseCategories.BACK;
+      return ExerciseCategoryType.BACK;
     case 'shoulder':
-      return ExerciseCategories.SHOULDER;
+      return ExerciseCategoryType.SHOULDER;
     case 'triceps':
-      return ExerciseCategories.TRICEPS;
+      return ExerciseCategoryType.TRICEPS;
     case 'biceps':
-      return ExerciseCategories.BICEPS;
+      return ExerciseCategoryType.BICEPS;
     case 'legs':
-      return ExerciseCategories.LEGS;
+      return ExerciseCategoryType.LEGS;
     default:
       throw new Error('Die übergebende Kategorie ist ungültig');
   }

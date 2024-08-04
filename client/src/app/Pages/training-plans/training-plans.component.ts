@@ -10,7 +10,7 @@ import { HttpClientService } from '../../../service/http/http-client.service';
 import { HttpMethods } from '../../types/httpMethods';
 import { AlertComponent } from '../../components/alert/alert.component';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
-import { TrainingPlanCardView } from '../../../../../shared/models/dtos/training/trainingDto.types.js';
+import { TrainingPlanCardView } from '../../../types/exercise/training-plan-card-view-dto';
 import { firstValueFrom, BehaviorSubject } from 'rxjs';
 import { SearchService } from '../../../service/util/search.service';
 import { TrainingPlanService } from '../../../service/training/training-plan.service';

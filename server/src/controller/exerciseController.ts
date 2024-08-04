@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { MongoGenericDAO } from 'models/mongo-generic.dao.js';
-import { User } from '@shared/models/user.js';
-import { ApiData } from '@shared/models/apiData.js';
+import { MongoGenericDAO } from '../models/dao/mongo-generic.dao.js';
+import { User } from '../models/user.js';
+import { ApiData } from '../models/apiData.js';
 import { getUser } from '../service/userService.js';
 import {
   getExerciseFieldByCategory,
@@ -11,13 +11,15 @@ import {
   resetUserExercises,
   mapToExerciseCategory
 } from '../utils/exerciseUtils.js';
-import { ExerciseCategories } from '../utils/ExerciseCategores.js';
+import { ExerciseCategoryType } from '../utils/exercise-category.js';
 
 /**
  * Fetches all exercise categories.
  */
 export function getCategories(req: Request, res: Response): void {
-  const categories = Object.values(ExerciseCategories).filter(category => category !== ExerciseCategories.PLACEHOLDER);
+  const categories = Object.values(ExerciseCategoryType).filter(
+    category => category !== ExerciseCategoryType.PLACEHOLDER
+  );
   res.status(200).json(categories);
 }
 
@@ -58,7 +60,7 @@ export async function updateExercises(req: Request, res: Response): Promise<void
     const changedCategoriesMap = mapChangedDataToCategories(changedData);
 
     Object.entries(changedCategoriesMap).forEach(([category, { fieldNames, newValues }]) => {
-      const userExerciseField = getExerciseFieldByCategory(category as ExerciseCategories, user);
+      const userExerciseField = getExerciseFieldByCategory(category as ExerciseCategoryType, user);
 
       for (let index = 0; index < fieldNames.length; index++) {
         processExerciseChanges(fieldNames[index], index, newValues, userExerciseField);

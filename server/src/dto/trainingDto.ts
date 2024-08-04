@@ -1,8 +1,5 @@
-import { TrainingPlan } from '../../../shared/models/training/trainingPlan.js';
-import {
-  DetailedTrainingPlanView,
-  TrainingPlanCardView
-} from '../../../shared/models/dtos/training/trainingDto.types.js';
+import { TrainingPlan } from '../models/training/trainingPlan.js';
+import { DetailedTrainingPlanView, TrainingPlanCardView } from '../models/dto/trainingDto.types.js';
 
 export class TrainingPlanDTO {
   /**
