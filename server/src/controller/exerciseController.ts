@@ -41,14 +41,17 @@ export async function getExercisesByCategory(req: Request, res: Response): Promi
  * Fetches all exercises data for the user.
  */
 export async function getExercises(req: Request, res: Response): Promise<void> {
-  try {
-    const user = await getUser(req, res);
-    const exercisesData = prepareExercisesData(user);
-    console.log('🚀 ~ getExercises ~ exercisesData:', exercisesData);
-    res.status(200).json({ exercisesData });
-  } catch (error) {
-    res.status(404).json({ error: (error as unknown as Error).message });
-  }
+  const user = await getUser(req, res);
+  const { exerciseCategories, categoryPauseTimes, categorizedExercises, defaultRepSchemeByCategory, maxFactors } =
+    prepareExercisesData(user);
+
+  res.status(200).json({
+    exerciseCategories,
+    categoryPauseTimes,
+    categorizedExercises,
+    defaultRepSchemeByCategory,
+    maxFactors
+  });
 }
 
 /**
