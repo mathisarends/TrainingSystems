@@ -1,18 +1,23 @@
 import express from 'express';
-import * as userController from '../controller/userController.js';
 import { authService } from '../service/authService.js';
+import UserController from '../controller/userController.js';
+import { asyncHandler } from '../middleware/error-handler.js';
 
 const router = express.Router();
 
-router.post('/register', userController.register);
-router.post('/login', userController.login);
-router.post('/login/oauth2', userController.loginOAuth2);
-router.get('/profile', authService.authenticationMiddleware, userController.getProfile);
-router.post('/update-profile-picture', authService.authenticationMiddleware, userController.updateProfilePicture);
+const userController = new UserController();
 
-router.post('/logout', async (req, res) => {
-  authService.removeToken(res);
-  res.status(200).json({ message: 'Token erfolgreicht entfernt ' });
-});
+// Weise die Methoden der UserController-Klasse den Routen zu
+router.post('/register', asyncHandler(userController.register));
+router.post('/login', asyncHandler(userController.login));
+router.post('/login/oauth2', asyncHandler(userController.loginOAuth2));
+router.get('/profile', authService.authenticationMiddleware, asyncHandler(userController.getProfile));
+router.post(
+  '/update-profile-picture',
+  authService.authenticationMiddleware,
+  asyncHandler(userController.updateProfilePicture)
+);
+
+router.post('/logout', userController.signOut);
 
 export default router;

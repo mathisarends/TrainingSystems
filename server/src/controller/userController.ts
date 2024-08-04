@@ -1,37 +1,33 @@
 import { Request, Response } from 'express';
-import { MongoGenericDAO } from '../models/mongo-generic.dao';
 import * as userService from '../service/userService.js';
 import { authService } from '../service/authService.js';
-import { User } from '@shared/models/user.js';
 
 /**
- * Registers a new user.
+ * Controller class for handling user-related operations.
  *
- * @param {Request} req - The request object.
- * @param {Response} res - The response object.
+ * This class provides methods to handle user registration, login, OAuth2 login, profile retrieval,
+ * profile picture update, and user sign-out. The methods interact with the user service and
+ * authentication service to manage user data and sessions.
+ *
  */
-export async function register(req: Request, res: Response): Promise<void> {
-  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
+class UserController {
+  constructor() {
+    this.register = this.register.bind(this);
+    this.login = this.login.bind(this);
+    this.loginOAuth2 = this.loginOAuth2.bind(this);
+    this.getProfile = this.getProfile.bind(this);
+    this.updateProfilePicture = this.updateProfilePicture.bind(this);
+  }
 
-  try {
+  async register(req: Request, res: Response): Promise<void> {
+    const userDAO = req.app.locals.userDAO;
     const user = await userService.registerUser(userDAO, req.body);
     authService.createAndSetToken({ id: user.id }, res);
     res.status(200).json({ message: 'Dein Account wurde erfolgreich erstellt' });
-  } catch (error) {
-    res.status(400).json({ error: (error as unknown as Error).message });
   }
-}
 
-/**
- * Logs in an existing user.
- *
- * @param {Request} req - The request object.
- * @param {Response} res - The response object.
- */
-export async function login(req: Request, res: Response) {
-  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
-
-  try {
+  async login(req: Request, res: Response) {
+    const userDAO = req.app.locals.userDAO;
     const user = await userService.loginUser(userDAO, req.body.email, req.body.password);
     if (!user) {
       authService.removeToken(res);
@@ -39,39 +35,16 @@ export async function login(req: Request, res: Response) {
     }
     authService.createAndSetToken({ id: user.id }, res);
     res.status(200).json({ message: 'Erfolgreich eingeloggt' });
-  } catch (error) {
-    res.status(500).json({ error: (error as unknown as Error).message });
   }
-}
 
-/**
- * Logs in a user via OAuth2.
- *
- * @param {Request} req - The request object.
- * @param {Response} res - The response object.
- * @returns {Promise<void>} A promise that resolves when the user is logged in via OAuth2.
- */
-export async function loginOAuth2(req: Request, res: Response): Promise<void> {
-  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
-
-  try {
+  async loginOAuth2(req: Request, res: Response): Promise<void> {
+    const userDAO = req.app.locals.userDAO;
     const user = await userService.loginOAuth2User(userDAO, req.body.credential);
     authService.createAndSetToken({ id: user.id }, res);
     res.redirect('http://localhost:4200/training?login=success');
-  } catch (error) {
-    res.status(500).json({ error: (error as unknown as Error).message });
   }
-}
 
-/**
- * Gets the profile of the currently logged-in user.
- *
- * @param {Request} req - The request object.
- * @param {Response} res - The response object.
- * @returns {Promise<void>} A promise that resolves when the user profile is retrieved.
- */
-export async function getProfile(req: Request, res: Response): Promise<void> {
-  try {
+  async getProfile(req: Request, res: Response): Promise<void> {
     const user = await userService.getUser(req, res);
     const formattedCreatedAt = new Date(user.createdAt).toLocaleDateString('de-DE', {
       year: 'numeric',
@@ -87,27 +60,27 @@ export async function getProfile(req: Request, res: Response): Promise<void> {
     };
 
     res.status(200).json({ userDto });
-  } catch (error) {
-    res.status(404).json({ error: (error as unknown as Error).message });
   }
-}
 
-export async function updateProfilePicture(req: Request, res: Response): Promise<void> {
-  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
-  const userClaimsSet = res.locals.user;
-
-  try {
-    const user = await userService.getUserProfile(userDAO, userClaimsSet);
+  async updateProfilePicture(req: Request, res: Response): Promise<Response> {
+    const userDAO = req.app.locals.userDAO;
+    const user = await userService.getUser(req, res);
     const profilePicture = req.body.profilePicture;
+
     if (!profilePicture) {
-      throw new Error('Profilbild nicht gefunden');
+      return res.status(404).json({ error: 'Profile picture not found in request body' });
     }
 
     user.pictureUrl = profilePicture;
     await userDAO.update(user);
 
-    res.status(200).json({ message: 'Dein Profilbild wurde erfolgreich geupdated' });
-  } catch (error) {
-    res.status(404).json({ error: (error as unknown as Error).message });
+    return res.status(200).json({ message: 'Dein Profilbild wurde erfolgreich geupdated' });
+  }
+
+  signOut(req: Request, res: Response): void {
+    authService.removeToken(res);
+    res.status(200).json({ message: 'Token erfolgreich entfernt' });
   }
 }
+
+export default UserController;
