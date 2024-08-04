@@ -3,8 +3,10 @@ import * as exerciseController from '../controller/exerciseController.js';
 import { authService } from '../service/authService.js';
 import { MongoGenericDAO } from '../models/mongo-generic.dao.js';
 import { User } from '@shared/models/user.js';
-import { getExerciseFieldByCategory, prepareExercisesData } from '../utils/exerciseUtils.js';
+import { getExerciseFieldByCategory, mapToExerciseCategory, prepareExercisesData } from '../utils/exerciseUtils.js';
 import { ExerciseCategories } from '../utils/ExerciseCategores.js';
+import { getUser } from '../service/userService.js';
+import { asyncHandler } from '../middleware/error-handler.js';
 
 const router = express.Router();
 
@@ -56,25 +58,23 @@ router.get('/exercises/:category', authService.authenticationMiddleware, async (
   }
 });
 
-router.get('/training', authService.authenticationMiddleware, async (req, res) => {
-  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
-  const userClaimsSet = res.locals.user;
+router.get(
+  '/training',
+  authService.authenticationMiddleware,
+  asyncHandler(async (req, res) => {
+    const user = await getUser(req, res);
 
-  const user = await userDAO.findOne({ id: userClaimsSet.id });
-  if (!user) {
-    throw new Error('Benutzer nicht gefunden');
-  }
+    const { exerciseCategories, categoryPauseTimes, categorizedExercises, defaultRepSchemeByCategory, maxFactors } =
+      prepareExercisesData(user);
 
-  const { exerciseCategories, categoryPauseTimes, categorizedExercises, defaultRepSchemeByCategory, maxFactors } =
-    prepareExercisesData(user);
-
-  res.status(200).json({
-    exerciseCategories,
-    categoryPauseTimes,
-    categorizedExercises,
-    defaultRepSchemeByCategory,
-    maxFactors
-  });
-});
+    res.status(200).json({
+      exerciseCategories,
+      categoryPauseTimes,
+      categorizedExercises,
+      defaultRepSchemeByCategory,
+      maxFactors
+    });
+  })
+);
 
 export default router;

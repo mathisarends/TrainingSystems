@@ -11,6 +11,7 @@ import trainingRouter from './routes/trainingRoutes.js';
 import exerciseRouter from './routes/exerciseRoutes.js';
 import friendShipRouter from './routes/friendshipRoutes.js';
 import session from 'express-session';
+import { errorHandler } from './middleware/error-handler.js';
 dotenv.config();
 
 const PORT = process.env.port ? parseInt(process.env.port, 10) : 3000;
@@ -30,21 +31,12 @@ async function configureApp(app: Express) {
     })
   );
 
-  /*   app.use((req, res, next) => {
-    const userAgent = req.headers['user-agent'];
-    console.log('🚀 ~ app.use ~ userAgent:', userAgent);
-    const referer = req.headers['referer'];
-    console.log('🚀 ~ app.use ~ referer:', referer);
-
-    if (userAgent && userAgent.includes('node')) {
-      res.status(403).send('Forbidden');
-    } else {
-      next();
-    }
-  }) */ app.use('/user', userRouter);
+  app.use('/user', userRouter);
   app.use('/training', trainingRouter);
   app.use('/exercise', exerciseRouter);
   app.use('/friendship', friendShipRouter);
+
+  app.use(errorHandler);
 }
 export async function start() {
   const app = express();
