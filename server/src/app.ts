@@ -22,6 +22,13 @@ async function configureApp(app: Express) {
   app.use(express.json({ limit: '10mb' }));
   app.use(cookieParser());
 
+  // Middleware to log the Origin header
+  app.use((req, res, next) => {
+    const origin = req.headers.origin;
+    console.log(`Origin: ${origin}`);
+    next();
+  });
+
   app.use(
     cors({
       origin: ['http://localhost:4200', 'https://trainingsystemsre.onrender.com'],

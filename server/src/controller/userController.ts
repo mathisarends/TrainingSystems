@@ -17,6 +17,7 @@ export async function login(req: Request, res: Response) {
     return res.status(401).json({ error: 'Keine gültige Email und Passwort Kombination' });
   }
   authService.createAndSetToken({ id: user.id }, res);
+
   res.status(200).json({ message: 'Erfolgreich eingeloggt' });
 }
 
