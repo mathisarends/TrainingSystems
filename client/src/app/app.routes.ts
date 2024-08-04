@@ -17,27 +17,27 @@ export const routes: Routes = [
   {
     path: 'training',
     component: TrainingPlansComponent,
-    canActivate: [AuthGuard],
+    /* canActivate: [AuthGuard], */
   },
   {
     path: 'training/view',
     component: TrainingViewComponent,
-    canActivate: [AuthGuard],
+    /* canActivate: [AuthGuard], */
   },
   {
     path: 'statistics/:planId',
     component: StatisticsComponent,
-    canActivate: [AuthGuard],
+    /* canActivate: [AuthGuard], */
   },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
   {
     path: 'exercises',
     component: ExercisesComponent,
-    canActivate: [AuthGuard],
+    /* canActivate: [AuthGuard], */
   },
   {
     path: 'training/:planId/:week/:day',
     component: TrainingViewComponent,
-    canActivate: [AuthGuard],
+    /* canActivate: [AuthGuard], */
   },
 ];
