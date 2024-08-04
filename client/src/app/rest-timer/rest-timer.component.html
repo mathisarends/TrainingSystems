@@ -47,29 +47,12 @@
   <span class="initial-time">{{ formatTime(initialTime) }}</span>
 </div>
 
-<div
-  class="timer-controls d-flex justify-content-center align-items-center gap-1 mt-2"
->
-  <button
-    type="button"
-    class="btn btn-light btn-lg m-1"
-    (click)="adjustTime(-30)"
-  >
-    <i class="bx bx-minus"></i>
+<div class="timer-controls">
+  <button class="timer-button minus-button" (click)="adjustTime(-30)">
+    -30 SEC
   </button>
-  <button
-    type="button"
-    class="btn btn-light btn-lg m-1"
-    (click)="adjustTime(30)"
-  >
-    <i class="bx bx-plus"></i>
+  <button class="timer-button plus-button" (click)="adjustTime(30)">
+    +30 SEC
   </button>
-  <button
-    type="button"
-    class="btn btn-light btn-lg m-1"
-    appTooltip="End Timer"
-    (click)="skipTimer()"
-  >
-    <i class="bx bx-stop"></i>
-  </button>
+  <button class="timer-button skip-button" (click)="skipTimer()">SKIP</button>
 </div>

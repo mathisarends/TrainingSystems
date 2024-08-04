@@ -61,3 +61,38 @@
   top: calc(50% + 2rem);
   transform: translateY(-50%);
 }
+
+.timer-controls {
+  display: flex;
+  justify-content: space-between; /* Platzierung der Buttons */
+  width: 100%; /* Nimmt die gesamte Breite des Containers ein */
+  padding: 0 10px; /* Etwas Polsterung, um sie nicht an den Rand zu drücken */
+  margin-top: 20px; /* Abstand zum Timer oben */
+}
+
+.timer-button {
+  flex: 1;
+  margin: 0 5px; /* Abstand zwischen den Buttons */
+  padding: 15px 10px; /* Button-Größe anpassen */
+  border: none;
+  border-radius: 5px;
+  font-size: 1.085rem;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.minus-button {
+  color: #007bff;
+  background-color: inherit;
+}
+
+.plus-button {
+  color: #007bff;
+  background-color: inherit;
+}
+
+.skip-button {
+  background-color: #007bff;
+}
