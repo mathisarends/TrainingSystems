@@ -59,7 +59,6 @@ export class HeaderComponent implements OnInit {
       .getProfile()
       .pipe(
         catchError((error) => {
-          console.log('🚀 ~ HeaderComponent ~ ngOnInit ~ error:', error);
           if (error.status === 401) {
             // Handle 401 Unauthorized
             console.error('Unauthorized access - Redirecting to login.');
@@ -72,11 +71,6 @@ export class HeaderComponent implements OnInit {
       )
 
       .subscribe((data: any) => {
-        console.log(
-          '🚀 ~ HeaderComponent ~ this.profileService.getProfile ~ data:',
-          data
-        );
-
         if (data) {
           this.profile = data?.userDto;
         }
