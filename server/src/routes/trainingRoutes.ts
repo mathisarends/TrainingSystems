@@ -20,7 +20,11 @@ router.delete('/delete/:planId', authService.authenticationMiddleware, trainingC
 router.get('/edit/:id', authService.authenticationMiddleware, trainingController.getPlanForEdit);
 router.patch('/edit/:id', authService.authenticationMiddleware, trainingController.updatePlan);
 router.get('/plan/:id/:week/:day', authService.authenticationMiddleware, trainingController.getPlanForDay);
-router.patch('/plan/:id/:week/:day', authService.authenticationMiddleware, trainingController.updateTrainingData);
+router.patch(
+  '/plan/:id/:week/:day',
+  authService.authenticationMiddleware,
+  trainingController.updateTrainingDataForTrainingDay
+);
 
 router.get('/plan/:id/latest', authService.authenticationMiddleware, trainingController.getLatestTrainingPlan);
 

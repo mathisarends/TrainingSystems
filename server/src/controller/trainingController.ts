@@ -23,7 +23,7 @@ export async function getPlans(req: Request, res: Response): Promise<void> {
   try {
     const user = await getUser(req, res);
     const trainingPlanCards: TrainingPlanCardView[] = user.trainingPlans.map(plan => ({
-      ...TrainingPlanDTO.getBasicView(plan),
+      ...TrainingPlanDTO.getCardView(plan),
       pictureUrl: user.pictureUrl
     }));
 
@@ -180,77 +180,107 @@ export async function getLatestTrainingPlan(req: Request, res: Response) {
   }
 }
 
-export async function updateTrainingData(req: Request, res: Response) {
-  const userClaimsSet = res.locals.user;
-
+export async function updateTrainingDataForTrainingDay(req: Request, res: Response) {
+  const userDAO = req.app.locals.userDAO;
   const trainingPlanId = req.params.id;
   const trainingWeekIndex = Number(req.params.week);
   const trainingDayIndex = Number(req.params.day);
 
-  const userDAO = req.app.locals.userDAO;
+  if (isNaN(trainingWeekIndex) || isNaN(trainingDayIndex)) {
+    return res.status(400).json({ error: 'Ungültige Woche oder Tag Index' });
+  }
 
   const changedData: Record<string, string> = req.body.body;
 
-  const user: User | null = await userDAO.findOne({ id: userClaimsSet.id });
-  if (!user) {
-    throw new Error('Benutzer nicht gefunden');
-  }
-
-  const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
-
   try {
-    const trainingDay = trainingPlan.trainingWeeks[trainingWeekIndex].trainingDays[trainingDayIndex];
+    const user = await getUser(req, res);
+    const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
-    // Iterate over the keys and values in changedData
-    for (const [fieldName, fieldValue] of Object.entries(changedData)) {
-      const dayIndex = parseInt(fieldName.charAt(3));
+    const trainingDay = trainingPlan.trainingWeeks[trainingWeekIndex]?.trainingDays[trainingDayIndex];
 
-      if (dayIndex !== trainingDayIndex) {
-        return res
-          .status(400)
-          .json({ error: 'Die gesendeten Daten passen logisch nicht auf die angegebene Trainingswoche' });
-      }
-
-      const exerciseIndex = parseInt(fieldName.charAt(13));
-      const exercise = trainingDay.exercises[exerciseIndex - 1];
-
-      // neue exercises nur erstellen, wenn es auch eine neue category ist
-      if (!exercise && fieldName.endsWith('category')) {
-        const newExercise = createExerciseObject(fieldName, fieldValue) as Exercise;
-        trainingDay.exercises.push(newExercise);
-      }
-
-      if (exercise) {
-        updateExercise(fieldName, fieldValue, exercise, trainingDay, exerciseIndex);
-      }
-
-      let tempWeekIndex = trainingWeekIndex + 1;
-
-      // updateComingWeeksIfNotPresent (own method)
-      while (tempWeekIndex < trainingPlan.trainingWeeks.length) {
-        const trainingDayInLaterWeek = trainingPlan.trainingWeeks[tempWeekIndex].trainingDays[
-          trainingDayIndex
-        ] as TrainingDay;
-        const exerciseInLaterWeek = trainingDayInLaterWeek.exercises[exerciseIndex - 1] as Exercise;
-
-        if (!exercise) {
-          const newExercise = createExerciseObject(fieldName, fieldValue) as Exercise;
-          trainingDayInLaterWeek.exercises.push(newExercise);
-        }
-
-        if (exercise) {
-          updateExercise(fieldName, fieldValue, exerciseInLaterWeek, trainingDayInLaterWeek, exerciseIndex, true);
-        }
-
-        tempWeekIndex++;
-      }
+    if (!trainingDay) {
+      return res.status(400).json({ error: 'Ungültige Woche oder Tag Index' });
     }
+
+    updateTrainingDay(trainingDay, changedData, trainingDayIndex);
+    propagateChangesToFutureWeeks(trainingPlan, trainingWeekIndex, trainingDayIndex, changedData);
 
     await userDAO.update(user);
 
     res.status(200).json({ message: 'Trainingsplan erfolgreich aktualisiert', trainingDay });
   } catch (error) {
     console.error('Error updating training day:', error);
-    return res.status(400).json({ error: 'Plan konnte aufgrund ungültiger Parameter nicht gefunden werden ' });
+    return res.status(500).json({ error: 'Interner Serverfehler beim Aktualisieren des Plans' });
+  }
+}
+
+/**
+ * Updates a training day with new data.
+ *
+ * @param trainingDay - The training day to be updated.
+ * @param changedData - The new data to be applied.
+ * @param trainingDayIndex - The index of the day being updated.
+ */
+function updateTrainingDay(
+  trainingDay: TrainingDay,
+  changedData: Record<string, string>,
+  trainingDayIndex: number
+): void {
+  for (const [fieldName, fieldValue] of Object.entries(changedData)) {
+    const dayIndex = parseInt(fieldName.charAt(3));
+
+    if (dayIndex !== trainingDayIndex) {
+      throw new Error('Die gesendeten Daten passen logisch nicht auf die angegebene Trainingswoche');
+    }
+
+    const exerciseIndex = parseInt(fieldName.charAt(13));
+    const exercise = trainingDay.exercises[exerciseIndex - 1];
+
+    // If no exercise exists and the field indicates a new category, create a new exercise
+    if (!exercise && fieldName.endsWith('category')) {
+      const newExercise = createExerciseObject(fieldName, fieldValue) as Exercise;
+      trainingDay.exercises.push(newExercise);
+    }
+
+    if (exercise) {
+      updateExercise(fieldName, fieldValue, exercise, trainingDay, exerciseIndex);
+    }
+  }
+}
+
+/**
+ * Propagates changes to the exercises to all following weeks in the training plan.
+ *
+ * @param trainingPlan - The training plan containing the weeks and days.
+ * @param startWeekIndex - The week index from which to start propagating changes.
+ * @param trainingDayIndex - The day index to be updated.
+ * @param changedData - The data to be propagated.
+ */
+function propagateChangesToFutureWeeks(
+  trainingPlan: TrainingPlan,
+  startWeekIndex: number,
+  trainingDayIndex: number,
+  changedData: Record<string, string>
+): void {
+  let tempWeekIndex = startWeekIndex + 1;
+
+  while (tempWeekIndex < trainingPlan.trainingWeeks.length) {
+    const trainingDayInLaterWeek = trainingPlan.trainingWeeks[tempWeekIndex].trainingDays[
+      trainingDayIndex
+    ] as TrainingDay;
+
+    for (const [fieldName, fieldValue] of Object.entries(changedData)) {
+      const exerciseIndex = parseInt(fieldName.charAt(13));
+      const exerciseInLaterWeek = trainingDayInLaterWeek.exercises[exerciseIndex - 1] as Exercise;
+
+      if (!exerciseInLaterWeek) {
+        const newExercise = createExerciseObject(fieldName, fieldValue) as Exercise;
+        trainingDayInLaterWeek.exercises.push(newExercise);
+      } else {
+        updateExercise(fieldName, fieldValue, exerciseInLaterWeek, trainingDayInLaterWeek, exerciseIndex, true);
+      }
+    }
+
+    tempWeekIndex++;
   }
 }

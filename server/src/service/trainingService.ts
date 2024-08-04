@@ -1,54 +1,7 @@
-import { MongoGenericDAO } from 'models/mongo-generic.dao.js';
 import { TrainingPlan } from '@shared/models/training/trainingPlan.js';
 import { TrainingWeek } from '@shared/models/training/trainingWeek.js';
-import { User } from '@shared/models/user.js';
-import { v4 as uuidv4 } from 'uuid';
-import { TrainingPlanDTO } from '../dto/trainingDto.js';
-import { TrainingPlanCardView } from '@shared/models/dtos/training/trainingDto.types.js';
-import { UserClaimsSet } from './exerciseService.js';
-import { WeightRecommendationBase } from '@shared/models/training/enum/weightRecommandationBase.js';
 import { Exercise } from '@shared/models/training/exercise.js';
 import { TrainingDay } from '@shared/models/training/trainingDay.js';
-
-export async function getTrainingPlans(
-  userDAO: MongoGenericDAO<User>,
-  userClaimsSet: UserClaimsSet
-): Promise<TrainingPlanCardView[]> {
-  const user = await userDAO.findOne({ id: userClaimsSet.id });
-  if (!user) {
-    throw new Error('Benutzer nicht gefunden');
-  }
-  return getAllPlansBasic(user.trainingPlans, user.pictureUrl);
-}
-
-export async function createTrainingPlan(
-  user: User,
-  userDAO: MongoGenericDAO<User>,
-  planDetails: Record<string, string>
-): Promise<TrainingPlanCardView[]> {
-  const title = planDetails.title;
-  const trainingFrequency = Number(planDetails.trainingFrequency);
-  const trainingWeeks = Number(planDetails.trainingWeeks);
-  const weightRecommandation = planDetails.weightPlaceholders as WeightRecommendationBase;
-  const coverImage = planDetails.coverImage;
-
-  const trainingWeeksArr = createNewTrainingPlanWithPlaceholders(trainingWeeks, trainingFrequency);
-
-  const newTrainingPlan: TrainingPlan = {
-    id: uuidv4(),
-    title,
-    trainingFrequency,
-    weightRecommandationBase: weightRecommandation,
-    lastUpdated: new Date(),
-    trainingWeeks: trainingWeeksArr,
-    coverImageBase64: coverImage
-  };
-
-  user.trainingPlans.push(newTrainingPlan);
-  await userDAO.update(user);
-
-  return getAllPlansBasic(user.trainingPlans);
-}
 
 export function findTrainingPlanById(trainingPlans: TrainingPlan[], planId: string): TrainingPlan {
   const plan = trainingPlans.find(plan => plan.id === planId);
@@ -67,13 +20,6 @@ export function findTrainingPlanIndexById(trainingPlans: TrainingPlan[], planId:
   }
 
   return index;
-}
-
-export function getAllPlansBasic(trainingPlans: TrainingPlan[], pictureUrl?: string): TrainingPlanCardView[] {
-  return trainingPlans.map(plan => ({
-    ...TrainingPlanDTO.getBasicView(plan),
-    pictureUrl
-  }));
 }
 
 export function createNewTrainingPlanWithPlaceholders(weeks: number, daysPerWeek: number): TrainingWeek[] {

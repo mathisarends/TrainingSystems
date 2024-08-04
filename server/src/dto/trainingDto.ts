@@ -10,7 +10,7 @@ export class TrainingPlanDTO {
    * @param plan The full training plan.
    * @returns A basic view of the training plan.
    */
-  static getBasicView(plan: TrainingPlan): TrainingPlanCardView {
+  static getCardView(plan: TrainingPlan): TrainingPlanCardView {
     return {
       id: plan.id,
       title: plan.title,
