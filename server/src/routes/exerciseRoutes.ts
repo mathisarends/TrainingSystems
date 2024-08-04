@@ -77,31 +77,4 @@ router.get('/training', authService.authenticationMiddleware, async (req, res) =
   });
 });
 
-export function mapToExerciseCategory(category: string): ExerciseCategories {
-  switch (category.toLowerCase()) {
-    case 'squat':
-      return ExerciseCategories.SQUAT;
-    case 'bench':
-      return ExerciseCategories.BENCH;
-    case 'deadlift':
-      return ExerciseCategories.DEADLIFT;
-    case 'overheadpress':
-      return ExerciseCategories.OVERHEADPRESS;
-    case 'chest':
-      return ExerciseCategories.CHEST;
-    case 'back':
-      return ExerciseCategories.BACK;
-    case 'shoulder':
-      return ExerciseCategories.SHOULDER;
-    case 'triceps':
-      return ExerciseCategories.TRICEPS;
-    case 'biceps':
-      return ExerciseCategories.BICEPS;
-    case 'legs':
-      return ExerciseCategories.LEGS;
-    default:
-      throw new Error('Die übergebende Kategorie ist ungültig');
-  }
-}
-
 export default router;
