@@ -4,14 +4,15 @@ import * as trainingDayController from '../controller/training/trainingDayContro
 import * as trainingStatisticsController from '../controller/training/trainingStatisticsController.js';
 
 import { authService } from '../service/authService.js';
+import { asyncHandler } from '../middleware/error-handler.js';
 const router = express.Router();
 
 /** Lädt eine Kartenansicht mit allen Trainingspplänen */
-router.get('/plans', authService.authenticationMiddleware, trainingController.getPlans);
-router.post('/create', authService.authenticationMiddleware, trainingController.createPlan);
-router.delete('/delete/:planId', authService.authenticationMiddleware, trainingController.deletePlan);
-router.get('/edit/:id', authService.authenticationMiddleware, trainingController.getPlanForEdit);
-router.patch('/edit/:id', authService.authenticationMiddleware, trainingController.updatePlan);
+router.get('/plans', authService.authenticationMiddleware, asyncHandler(trainingController.getPlans));
+router.post('/create', authService.authenticationMiddleware, asyncHandler(trainingController.createPlan));
+router.delete('/delete/:planId', authService.authenticationMiddleware, asyncHandler(trainingController.deletePlan));
+router.get('/edit/:id', authService.authenticationMiddleware, asyncHandler(trainingController.getPlanForEdit));
+router.patch('/edit/:id', authService.authenticationMiddleware, asyncHandler(trainingController.updatePlan));
 
 // Auf einen Trainingstag bezogen
 router.get('/plan/:id/:week/:day', authService.authenticationMiddleware, trainingDayController.getPlanForDay);

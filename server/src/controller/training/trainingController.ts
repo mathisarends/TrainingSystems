@@ -19,17 +19,13 @@ import { TrainingPlan } from '@shared/models/training/trainingPlan.js';
  * The result is intended to be a lightweight representation of the user's training plans.
  */
 export async function getPlans(req: Request, res: Response): Promise<void> {
-  try {
-    const user = await getUser(req, res);
-    const trainingPlanCards: TrainingPlanCardView[] = user.trainingPlans.map(plan => ({
-      ...TrainingPlanDTO.getCardView(plan),
-      pictureUrl: user.pictureUrl
-    }));
+  const user = await getUser(req, res);
+  const trainingPlanCards: TrainingPlanCardView[] = user.trainingPlans.map(plan => ({
+    ...TrainingPlanDTO.getCardView(plan),
+    pictureUrl: user.pictureUrl
+  }));
 
-    res.status(200).json({ trainingPlanCards });
-  } catch (error) {
-    res.status(404).json({ error: (error as unknown as Error).message });
-  }
+  res.status(200).json({ trainingPlanCards });
 }
 
 /**
@@ -37,36 +33,31 @@ export async function getPlans(req: Request, res: Response): Promise<void> {
  * This plan includes placeholders for exercises based on the provided frequency and number of weeks.
  */
 export async function createPlan(req: Request, res: Response): Promise<void> {
-  try {
-    const user = await getUser(req, res);
-    const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
+  const user = await getUser(req, res);
+  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
 
-    const title = req.body.title;
-    const trainingFrequency = Number(req.body.trainingFrequency);
-    const trainingWeeks = Number(req.body.trainingWeeks);
-    const weightRecommandation = req.body.weightPlaceholders as WeightRecommendationBase;
-    const coverImage = req.body.coverImage;
+  const title = req.body.title;
+  const trainingFrequency = Number(req.body.trainingFrequency);
+  const trainingWeeks = Number(req.body.trainingWeeks);
+  const weightRecommandation = req.body.weightPlaceholders as WeightRecommendationBase;
+  const coverImage = req.body.coverImage;
 
-    const trainingWeeksArr = createNewTrainingPlanWithPlaceholders(trainingWeeks, trainingFrequency);
+  const trainingWeeksArr = createNewTrainingPlanWithPlaceholders(trainingWeeks, trainingFrequency);
 
-    const newTrainingPlan: TrainingPlan = {
-      id: uuidv4(),
-      title,
-      trainingFrequency,
-      weightRecommandationBase: weightRecommandation,
-      lastUpdated: new Date(),
-      trainingWeeks: trainingWeeksArr,
-      coverImageBase64: coverImage
-    };
+  const newTrainingPlan: TrainingPlan = {
+    id: uuidv4(),
+    title,
+    trainingFrequency,
+    weightRecommandationBase: weightRecommandation,
+    lastUpdated: new Date(),
+    trainingWeeks: trainingWeeksArr,
+    coverImageBase64: coverImage
+  };
 
-    user.trainingPlans.push(newTrainingPlan);
-    await userDAO.update(user);
+  user.trainingPlans.push(newTrainingPlan);
+  await userDAO.update(user);
 
-    res.status(200).json({ message: 'Plan erfolgreich erstellt' });
-  } catch (error) {
-    console.error('Es ist ein Fehler beim Erstellen des Trainingsplans aufgetreten', error);
-    res.status(500).json({ error: (error as unknown as Error).message });
-  }
+  res.status(200).json({ message: 'Plan erfolgreich erstellt' });
 }
 
 /**
@@ -76,18 +67,14 @@ export async function createPlan(req: Request, res: Response): Promise<void> {
 export async function deletePlan(req: Request, res: Response): Promise<void> {
   const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
   const planId = req.params.planId;
-  try {
-    const user = await getUser(req, res);
-    const trainingPlanIndex = trainingService.findTrainingPlanIndexById(user.trainingPlans, planId);
 
-    user.trainingPlans.splice(trainingPlanIndex, 1);
-    await userDAO.update(user);
+  const user = await getUser(req, res);
+  const trainingPlanIndex = trainingService.findTrainingPlanIndexById(user.trainingPlans, planId);
 
-    res.status(201).json({ message: 'Trainingsplan erfolgreich gelöscht' });
-  } catch (error) {
-    console.error('Es ist ein Fehler beim Löschen des Trainingsplans aufgetreten', error);
-    res.status(500).json({ error: (error as unknown as Error).message });
-  }
+  user.trainingPlans.splice(trainingPlanIndex, 1);
+  await userDAO.update(user);
+
+  res.status(201).json({ message: 'Trainingsplan erfolgreich gelöscht' });
 }
 
 /**
@@ -97,18 +84,13 @@ export async function deletePlan(req: Request, res: Response): Promise<void> {
 export async function getPlanForEdit(req: Request, res: Response): Promise<void> {
   const planId = req.params.id;
 
-  try {
-    const user = await getUser(req, res);
+  const user = await getUser(req, res);
 
-    const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, planId);
+  const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, planId);
 
-    const trainingPlanEditView = TrainingPlanDTO.getEditView(trainingPlan);
+  const trainingPlanEditView = TrainingPlanDTO.getEditView(trainingPlan);
 
-    res.status(200).json({ trainingPlanEditView });
-  } catch (error) {
-    console.error('Es ist ein Fehler beim Editieren des Trainingsplans aufgetreten', error);
-    res.status(500).json({ error: (error as unknown as Error).message });
-  }
+  res.status(200).json({ trainingPlanEditView });
 }
 
 /**
@@ -120,27 +102,22 @@ export async function updatePlan(req: Request, res: Response): Promise<void> {
   const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
   const planId = req.params.id;
 
-  try {
-    const user = await getUser(req, res);
+  const user = await getUser(req, res);
 
-    const trainingPlan = findTrainingPlanById(user.trainingPlans, planId);
+  const trainingPlan = findTrainingPlanById(user.trainingPlans, planId);
 
-    trainingPlan.title = req.body.title;
-    trainingPlan.trainingFrequency = Number(req.body.trainingFrequency);
-    trainingPlan.weightRecommandationBase = req.body.weightPlaceholders as WeightRecommendationBase;
-    if (req.body.coverImage) {
-      trainingPlan.coverImageBase64 = req.body.coverImage;
-    }
-
-    if (trainingPlan.trainingWeeks.length !== Number(req.body.trainingWeeks)) {
-      const difference = trainingPlan.trainingWeeks.length - parseInt(req.body.trainingWeeks);
-      handleWeekDifference(trainingPlan, difference);
-    }
-
-    await userDAO.update(user);
-    res.status(200).json({ message: 'Trainingsplan erfolgreich aktualisiert' });
-  } catch (error) {
-    console.error('Es ist ein Fehler beim Aktualisieren des Trainingsplans aufgetreten', error);
-    res.status(500).json({ error: (error as unknown as Error).message });
+  trainingPlan.title = req.body.title;
+  trainingPlan.trainingFrequency = Number(req.body.trainingFrequency);
+  trainingPlan.weightRecommandationBase = req.body.weightPlaceholders as WeightRecommendationBase;
+  if (req.body.coverImage) {
+    trainingPlan.coverImageBase64 = req.body.coverImage;
   }
+
+  if (trainingPlan.trainingWeeks.length !== Number(req.body.trainingWeeks)) {
+    const difference = trainingPlan.trainingWeeks.length - parseInt(req.body.trainingWeeks);
+    handleWeekDifference(trainingPlan, difference);
+  }
+
+  await userDAO.update(user);
+  res.status(200).json({ message: 'Trainingsplan erfolgreich aktualisiert' });
 }
