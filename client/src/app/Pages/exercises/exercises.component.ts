@@ -78,13 +78,12 @@ export class ExercisesComponent implements OnInit, OnDestroy {
       const response: any = await firstValueFrom(
         this.httpClient.request<any>(HttpMethods.GET, 'exercise')
       );
-      const exercisesData = response?.exercisesData;
-      this.exerciseCategories = exercisesData?.exerciseCategories;
-      this.categorizedExercises = exercisesData?.categorizedExercises;
-      this.maxFactors = exercisesData?.maxFactors;
-      this.categoryPauseTimes = exercisesData?.categoryPauseTimes;
-      this.defaultRepSchemeByCategory =
-        exercisesData?.defaultRepSchemeByCategory;
+
+      this.exerciseCategories = response?.exerciseCategories;
+      this.categorizedExercises = response?.categorizedExercises;
+      this.maxFactors = response?.maxFactors;
+      this.categoryPauseTimes = response?.categoryPauseTimes;
+      this.defaultRepSchemeByCategory = response?.defaultRepSchemeByCategory;
 
       // Initialize filteredCategories with all categories
 
