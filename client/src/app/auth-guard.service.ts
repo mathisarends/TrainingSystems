@@ -1,10 +1,12 @@
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import {
   CanActivate,
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
+  Router,
 } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { AuthService } from './auth-service.service';
 import { ModalService } from '../service/modal/modalService';
 import { AuthInfoComponent } from './auth-info/auth-info.component';
@@ -17,6 +19,7 @@ export class AuthGuard implements CanActivate {
   constructor(
     private authService: AuthService,
     private modalService: ModalService,
+    private router: Router,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
@@ -24,23 +27,22 @@ export class AuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> {
-    if (this.authService.isLoggedIn()) {
-      return of(true);
-    } else {
-      if (isPlatformBrowser(this.platformId)) {
-        sessionStorage.setItem('redirectUrl', state.url);
+    return this.authService.isLoggedIn().pipe(
+      tap((isLoggedIn) => {
+        if (!isLoggedIn && isPlatformBrowser(this.platformId)) {
+          console.log('Aktuelle URL:', state.url);
 
-        console.log('Aktuelle URL:', state.url);
-        this.modalService.open({
-          component: AuthInfoComponent,
-          title: 'Anmeldung erforderlich',
-          buttonText: 'Anmelden',
-        });
+          // Öffne das Modal zur Authentifizierung
+          this.modalService.open({
+            component: AuthInfoComponent,
+            title: 'Anmeldung erforderlich',
+            buttonText: 'Anmelden',
+          });
 
-        return of(false);
-      }
-
-      return of(false);
-    }
+          // Optional: Umleiten auf eine Login-Seite
+          this.router.navigate(['/login']);
+        }
+      })
+    );
   }
 }

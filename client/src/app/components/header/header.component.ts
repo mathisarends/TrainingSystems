@@ -76,7 +76,6 @@ export class HeaderComponent implements OnInit {
         }
       });
   }
-  //         this.profile = data?.userDto;
 
   /**
    * Handles the search input event and emits the value.

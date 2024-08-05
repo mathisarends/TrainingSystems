@@ -73,6 +73,7 @@ export async function loginOAuth2User(userDAO: MongoGenericDAO<User>, token: str
     audience: process.env.GOOGLE_CLIENT_ID
   });
   const payload = ticket.getPayload();
+
   if (!payload) {
     throw new Error('Invalid Google token');
   }

@@ -11,7 +11,9 @@ class AuthService {
     if (res.locals.user) {
       next();
     } else {
+      console.log('cookies', req.cookies);
       const token = req.cookies['jwt-token'] || '';
+      console.log('🚀 ~ AuthService ~ token:', token);
       try {
         res.locals.user = this.verifyToken(token);
         next();
@@ -23,7 +25,14 @@ class AuthService {
 
   createAndSetToken(userClaimSet: Record<string, unknown>, res: Response) {
     const token = jwt.sign(userClaimSet, SECRET, { algorithm: 'HS256', expiresIn: '1d' });
-    res.cookie('jwt-token', token);
+
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    res.cookie('jwt-token', token, {
+      httpOnly: true,
+      sameSite: isProduction ? 'none' : 'lax',
+      maxAge: 24 * 60 * 60 * 1000
+    });
   }
 
   verifyToken(token: string) {
