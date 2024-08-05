@@ -2,6 +2,7 @@ import express from 'express';
 import { authService } from '../service/authService.js';
 import * as userController from '../controller/userController.js';
 import { asyncHandler } from '../middleware/error-handler.js';
+import { getUser } from '../service/userService.js';
 
 const router = express.Router();
 
@@ -16,5 +17,15 @@ router.post(
 );
 
 router.post('/logout', userController.signOut);
+
+router.get(
+  '/auth-state',
+  authService.authenticationMiddleware,
+  asyncHandler(async (req, res) => {
+    const user = await getUser(req, res);
+    console.log('🚀 ~ asyncHandler ~ user:', user);
+    return res.status(200).json({ message: 'auth verified' });
+  })
+);
 
 export default router;

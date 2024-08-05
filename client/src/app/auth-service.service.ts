@@ -1,36 +1,27 @@
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Injectable } from '@angular/core';
+import { HttpClientService } from '../service/http/http-client.service';
+import { Observable, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+import { HttpMethods } from './types/httpMethods';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+  constructor(private httpService: HttpClientService) {}
 
-  isLoggedIn(): boolean {
-    if (isPlatformBrowser(this.platformId)) {
-      const token = this.getToken();
-      return !!token;
-    }
-    return false; // Default to not logged in if not in browser
-  }
-
-  private getToken(): string | null {
-    if (isPlatformBrowser(this.platformId)) {
-      // Extrahieren Sie den JWT aus dem Cookie
-      const name = 'jwt-token=';
-      const decodedCookie = decodeURIComponent(document.cookie);
-      const ca = decodedCookie.split(';');
-      for (let i = 0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) === ' ') {
-          c = c.substring(1);
-        }
-        if (c.indexOf(name) === 0) {
-          return c.substring(name.length, c.length);
-        }
-      }
-    }
-    return null;
+  isLoggedIn(): Observable<boolean> {
+    return this.httpService
+      .request<any>(HttpMethods.GET, 'user/auth-state')
+      .pipe(
+        map((response) => {
+          console.log('🚀 ~ AuthService ~ isLoggedIn ~ response:', response);
+          return true;
+        }),
+        catchError((error) => {
+          console.error('Error during authentication check:', error);
+          return of(false); // Rückgabe eines Observables mit dem Wert false bei einem Fehler
+        })
+      );
   }
 }
