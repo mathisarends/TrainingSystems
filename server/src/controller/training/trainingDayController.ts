@@ -1,15 +1,15 @@
 import { Request, Response } from 'express';
 import { getUser } from '../../service/userService.js';
 import * as trainingService from '../../service/trainingService.js';
-import { TrainingDay } from '@shared/models/training/trainingDay.js';
+import { TrainingDay } from '../../models/training/trainingDay.js';
 
 import {
   createExerciseObject,
   findLatestTrainingDayWithWeight,
   updateExercise
 } from '../../service/trainingService.js';
-import { Exercise } from '@shared/models/training/exercise.js';
-import { TrainingPlan } from '@shared/models/training/trainingPlan.js';
+import { Exercise } from '../../models/training/exercise.js';
+import { TrainingPlan } from '../../models/training/trainingPlan.js';
 
 import { findTrainingPlanById } from '../../service/trainingService.js';
 

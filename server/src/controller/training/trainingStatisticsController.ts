@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 import { getUser } from '../../service/userService.js';
 import * as trainingService from '../../service/trainingService.js';
-import { TrainingPlan } from '@shared/models/training/trainingPlan.js';
-import { TrainingDay } from '@shared/models/training/trainingDay.js';
-import { Exercise } from '@shared/models/training/exercise.js';
-import { ExerciseCategories } from '../../utils/exercise-category.js';
-import { MongoGenericDAO } from 'models/mongo-generic.dao.js';
-import { User } from '@shared/models/user.js';
+import { TrainingPlan } from '../../models/training/trainingPlan.js';
+import { TrainingDay } from '../../models/training/trainingDay.js';
+import { ExerciseCategoryType } from '../../models/training/exercise-category-type.js';
+import { MongoGenericDAO } from '../../models/dao/mongo-generic.dao.js';
+import { User } from '../../models/collections/user/user.js';
 import { mapToExerciseCategory } from '../../utils/exerciseUtils.js';
+import { Exercise } from '../../models/training/exercise.js';
 
 /**
  * Updates the list of recently viewed exercise categories for the statistics section of a specific training plan.
@@ -132,7 +132,7 @@ export async function getDrilldownForCategory(req: Request, res: Response): Prom
 /**
  * Calculates the number of sets per week for a specific exercise category in a training plan.
  */
-function getSetsPerWeek(trainingPlan: TrainingPlan, exerciseCategory: ExerciseCategories): number[] {
+function getSetsPerWeek(trainingPlan: TrainingPlan, exerciseCategory: ExerciseCategoryType): number[] {
   return trainingPlan.trainingWeeks.map(week => {
     let sets = 0;
 
@@ -153,13 +153,13 @@ function getSetsPerWeek(trainingPlan: TrainingPlan, exerciseCategory: ExerciseCa
  */
 function prepareTrainingWeeksForExercise(
   trainingPlan: TrainingPlan,
-  exerciseCategory: ExerciseCategories
+  exerciseCategory: ExerciseCategoryType
 ): { tonnageInCategory: number }[] {
   return trainingPlan.trainingWeeks.map(week => {
     let tonnageInCategory = 0;
 
     week.trainingDays.forEach(trainingDay => {
-      trainingDay.exercises.forEach(exercise => {
+      trainingDay.exercises.forEach((exercise: Exercise) => {
         if (exercise.category === exerciseCategory) {
           const weight = parseFloat(exercise.weight) || 0;
           tonnageInCategory += exercise.sets * exercise.reps * weight;

@@ -6,7 +6,8 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "node --no-warnings --loader ts-node/esm src/app.ts",
+    "build": "tsc",
+    "prod": "node --no-warnings dist/app.js",
     "dev": "nodemon --watch 'src/**' --ext 'ts,json' --exec node --no-warnings --loader ts-node/esm src/app.ts",
     "lint": "eslint . --ext .ts"
   },
