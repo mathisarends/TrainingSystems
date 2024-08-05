@@ -7,8 +7,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "prod": "node --no-warnings dist/app.js",
-    "dev": "nodemon --watch 'src/**' --ext 'ts,json' --exec node --no-warnings --loader ts-node/esm src/app.ts",
+    "start": "nodemon --watch 'src/**' --ext 'ts,json' --exec node --no-warnings --loader ts-node/esm src/app.ts",
     "lint": "eslint . --ext .ts"
   },
   "keywords": [],
