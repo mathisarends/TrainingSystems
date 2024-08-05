@@ -6,18 +6,18 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const mongoURI = process.env.mongo_uri!;
-
 export default async function startDB(app: Express) {
   try {
-    await mongoose.connect(mongoURI);
+    const isProduction = process.env.NODE_ENV === 'production';
+    const dbURI = isProduction ? process.env.mongo_uri_prod! : process.env.mongo_uri!;
+
+    await mongoose.connect(dbURI);
     console.log('Database connected');
 
-    const client = new MongoClient(mongoURI);
-
+    const client = new MongoClient(dbURI);
     await client.connect();
-    const db = client.db();
 
+    const db = client.db();
     app.locals.userDAO = new MongoGenericDAO(db, 'user');
     app.locals.friendshipDAO = new MongoGenericDAO(db, 'friendships');
   } catch (err) {
