@@ -94,7 +94,7 @@ export class LoginComponent implements OnInit {
       .subscribe({
         next: (response: Response) => {
           console.log('Login successful:', response);
-          this.router.navigate(['/training']);
+          this.router.navigate(['/']);
         },
         error: (error: HttpErrorResponse) => {
           console.error('Login error:', error);
