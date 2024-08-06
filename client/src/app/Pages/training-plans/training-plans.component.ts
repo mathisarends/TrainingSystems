@@ -19,6 +19,7 @@ import { TooltipDirective } from '../../../service/tooltip/tooltip.directive';
 import { TrainingPlanCardComponent } from '../../components/training-plan-card/training-plan-card.component';
 import { ModalSize } from '../../../service/modal/modalSize';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MobileService } from '../../../service/util/mobile.service';
 
 /**
  * Component to manage and display training plans.
@@ -44,13 +45,16 @@ export class TrainingPlansComponent implements OnInit {
     TrainingPlanCardView[] | null
   >(null);
 
+  isMobile = false;
+
   constructor(
     private modalService: ModalService,
     private httpClient: HttpClientService,
     private searchService: SearchService,
     private trainingPlanService: TrainingPlanService,
     private destroyRef: DestroyRef,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private mobileService: MobileService
   ) {}
 
   /**
@@ -78,6 +82,8 @@ export class TrainingPlansComponent implements OnInit {
     this.filteredTrainingPlans$.subscribe((plans) =>
       console.log('Filtered Plans:', plans)
     );
+
+    this.isMobile = this.mobileService.isMobileView();
   }
 
   /**
