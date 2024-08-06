@@ -22,8 +22,7 @@ router.get(
   '/auth-state',
   authService.authenticationMiddleware,
   asyncHandler(async (req, res) => {
-    const user = await getUser(req, res);
-    console.log('🚀 ~ asyncHandler ~ user:', user);
+    await getUser(req, res);
     return res.status(200).json({ message: 'auth verified' });
   })
 );

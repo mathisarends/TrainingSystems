@@ -11,9 +11,7 @@ class AuthService {
     if (res.locals.user) {
       next();
     } else {
-      console.log('cookies', req.cookies);
       const token = req.cookies['jwt-token'] || '';
-      console.log('🚀 ~ AuthService ~ token:', token);
       try {
         res.locals.user = this.verifyToken(token);
         next();
