@@ -1,0 +1,25 @@
+.row > * {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.fab {
+  position: fixed;
+  bottom: 30px;
+  right: 7.5%;
+  width: 56px;
+  height: 56px;
+  background-color: #6200ee; /* Beispielhafte Farbe, anpassbar */
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0px 2px 10px rgba(69, 0, 147, 0.3);
+  cursor: pointer;
+  z-index: 1000; /* Sicherstellen, dass der Button über anderen Elementen liegt */
+}
+
+.fab i {
+  font-size: 24px;
+}

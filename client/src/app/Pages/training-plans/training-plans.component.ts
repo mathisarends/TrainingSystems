@@ -34,6 +34,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     TrainingPlanCardComponent,
   ],
   templateUrl: './training-plans.component.html',
+  styleUrls: ['./training-plans.component.scss'],
 })
 export class TrainingPlansComponent implements OnInit {
   protected allTrainingPlans$ = new BehaviorSubject<
