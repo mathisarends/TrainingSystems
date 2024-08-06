@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
 
   oauthRoute =
     process.env['NODE_ENV'] === 'production'
-      ? 'https://trainingsystemsre.onrender.com/user/login/oauth2'
+      ? 'https://trainingsystems.onrender.com/user/login/oauth2'
       : 'http://localhost:3000/user/login/oauth2';
 
   ngOnInit(): Promise<void> {
