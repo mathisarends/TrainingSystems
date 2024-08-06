@@ -29,11 +29,14 @@ export async function loginOAuth2(req: Request, res: Response): Promise<void> {
   const user = await userService.loginOAuth2User(userDAO, req.body.credential);
   authService.createAndSetToken({ id: user.id }, res);
 
+  console.log('process.env.NODE_ENV', process.env.NODE_ENV);
+
   const redirectUrl =
     process.env.NODE_ENV === 'development'
       ? 'http://localhost:4200?login=success'
       : 'https://trainingsystemsre.onrender.com?login=success';
 
+  console.log('🚀 ~ loginOAuth2 ~ redirectUrl:', redirectUrl);
   res.redirect(redirectUrl);
 }
 
