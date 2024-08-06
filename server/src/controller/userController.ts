@@ -2,6 +2,9 @@ import { Request, Response } from 'express';
 import * as userService from '../service/userService.js';
 import { authService } from '../service/authService.js';
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 export async function register(req: Request, res: Response): Promise<void> {
   const userDAO = req.app.locals.userDAO;
   const user = await userService.registerUser(userDAO, req.body);
@@ -25,7 +28,13 @@ export async function loginOAuth2(req: Request, res: Response): Promise<void> {
   const userDAO = req.app.locals.userDAO;
   const user = await userService.loginOAuth2User(userDAO, req.body.credential);
   authService.createAndSetToken({ id: user.id }, res);
-  res.redirect('http://localhost:4200?login=success');
+
+  const redirectUrl =
+    process.env.NODE_ENV === 'development'
+      ? 'http://localhost:4200?login=success'
+      : 'https://trainingsystemsre.onrender.com?login=success';
+
+  res.redirect(redirectUrl);
 }
 
 export async function getProfile(req: Request, res: Response): Promise<void> {
