@@ -25,7 +25,7 @@ export async function loginOAuth2(req: Request, res: Response): Promise<void> {
   const userDAO = req.app.locals.userDAO;
   const user = await userService.loginOAuth2User(userDAO, req.body.credential);
   authService.createAndSetToken({ id: user.id }, res);
-  res.redirect('http://localhost:4200/training?login=success');
+  res.redirect('http://localhost:4200?login=success');
 }
 
 export async function getProfile(req: Request, res: Response): Promise<void> {
