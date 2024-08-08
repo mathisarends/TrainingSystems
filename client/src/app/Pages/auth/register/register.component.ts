@@ -1,8 +1,8 @@
 import { Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { HttpClientService } from '../../../service/http/http-client.service.js';
-import { HttpMethods } from '../../types/httpMethods.js';
+import { HttpClientService } from '../../../../service/http/http-client.service.js';
+import { HttpMethods } from '../../../types/httpMethods.js';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DOCUMENT } from '@angular/common';
 
@@ -13,7 +13,7 @@ declare const google: any;
   standalone: true,
   imports: [],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.scss',
+  styleUrls: ['../auth-shared.scss'],
 })
 export class RegisterComponent {
   oauthRoute =

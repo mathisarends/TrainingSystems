@@ -17,7 +17,7 @@ import { BasicInfoComponent } from '../../basic-info/basic-info.component';
   standalone: true,
   imports: [SpinnerComponent, CommonModule],
   templateUrl: './exercises.component.html',
-  styleUrls: ['./exercises.component.scss'],
+  styleUrls: ['./exercises.component.scss', '../../../css/tables.scss'],
 })
 export class ExercisesComponent implements OnInit, OnDestroy {
   protected isLoading = true;

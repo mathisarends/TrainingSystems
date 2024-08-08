@@ -12,23 +12,15 @@
       </span>
       @if (isMobile) {
       <div>
-        <button
-          type="button"
-          class="btn btn-light btn-md m-1"
-          appTooltip="Ansehen"
-          (click)="openNavigationMenu()"
-        >
-          <i class="bx bx-menu"></i>
-        </button>
         <!-- Feature Toggle muss noch ausgebaut werden -->
-        <!-- <button
+        <button
           type="button"
           class="btn btn-light btn-md m-1"
           appTooltip="Ansehen"
           (click)="recordTrainingData($event)"
         >
           <i class="bx bx-microphone"></i>
-        </button> -->
+        </button>
         <button
           type="button"
           class="btn btn-light btn-md m-1"
@@ -185,11 +177,7 @@
 </form>
 }
 
-@if (!isMobile) {
-  <div class="fixed-bottom-bar">
-    <i class="bx bx-left-arrow-alt icon" (click)="navigateWeek(-1)"></i>
-    <i class="bx bx-right-arrow-alt icon" (click)="navigateWeek(1)"></i>
-  </div>
-}
-
-
+<div class="fixed-bottom-bar">
+  <i class="bx bx-left-arrow-alt icon" (click)="navigateWeek(-1)"></i>
+  <i class="bx bx-right-arrow-alt icon" (click)="navigateWeek(1)"></i>
+</div>
