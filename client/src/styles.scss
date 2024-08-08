@@ -11,7 +11,8 @@ body {
   display: flex;
   flex-direction: column;
   margin: 0;
-  background-image: url("/images/background/white-2.jpg");
+  background-image: url("/images/background/white-3.avif");
+  background-repeat: repeat;
 }
 
 .blur-background > *:not(app-modal) {

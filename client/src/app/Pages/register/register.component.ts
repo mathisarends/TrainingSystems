@@ -16,6 +16,11 @@ declare const google: any;
   styleUrl: './register.component.scss',
 })
 export class RegisterComponent {
+  oauthRoute =
+    process.env['NODE_ENV'] === 'production'
+      ? 'https://trainingsystems.onrender.com/user/login/oauth2'
+      : 'http://localhost:3000/user/login/oauth2';
+
   constructor(
     private router: Router,
     private httpClient: HttpClientService,

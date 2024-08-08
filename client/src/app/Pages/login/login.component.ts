@@ -29,7 +29,6 @@ export class LoginComponent implements OnInit {
       : 'http://localhost:3000/user/login/oauth2';
 
   ngOnInit(): Promise<void> {
-    console.log('🚀 ~ LoginComponent ~ oauthRoute:', this.oauthRoute);
     return new Promise((resolve, reject) => {
       // Prüfen, ob das Skript bereits existiert
       const existingScript = this.document.getElementById(
