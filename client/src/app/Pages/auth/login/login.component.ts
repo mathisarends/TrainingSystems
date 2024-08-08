@@ -5,8 +5,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { HttpMethods } from '../../../types/httpMethods';
 import { DOCUMENT } from '@angular/common';
 import { ToastService } from '../../../components/toast/toast.service';
-
-declare const google: any;
+import { BaisAuthComponent } from '../basic-auth.component';
 
 @Component({
   selector: 'app-login',
@@ -15,73 +14,18 @@ declare const google: any;
   templateUrl: './login.component.html',
   styleUrls: ['../auth-shared.scss'],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent extends BaisAuthComponent implements OnInit {
   constructor(
-    private router: Router,
-    private httpClient: HttpClientService,
-    private toastService: ToastService,
-    @Inject(DOCUMENT) private document: Document
-  ) {}
-
-  oauthRoute =
-    process.env['NODE_ENV'] === 'production'
-      ? 'https://trainingsystems.onrender.com/user/login/oauth2'
-      : 'http://localhost:3000/user/login/oauth2';
+    router: Router,
+    httpClient: HttpClientService,
+    toastService: ToastService,
+    @Inject(DOCUMENT) document: Document
+  ) {
+    super(router, httpClient, toastService, document);
+  }
 
   ngOnInit(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      // Prüfen, ob das Skript bereits existiert
-      const existingScript = this.document.getElementById(
-        'google-client-script'
-      );
-      if (existingScript) {
-        existingScript.remove();
-      }
-
-      // Skript erstellen und zum Head hinzufügen
-      const script = this.document.createElement('script');
-      script.id = 'google-client-script';
-      script.src = 'https://accounts.google.com/gsi/client';
-      script.async = true;
-      script.defer = true;
-      script.onload = () => {
-        google.accounts.id.initialize({});
-        resolve();
-      };
-      script.onerror = () =>
-        reject(new Error('Google script could not be loaded.'));
-      this.document.head.appendChild(script);
-    });
-  }
-
-  async navigateTo(event: Event) {
-    event.preventDefault();
-
-    const linkElement = event.target as HTMLAnchorElement;
-    const url = new URL(linkElement.href).pathname;
-
-    try {
-      await this.router.navigate([url]);
-    } catch (error) {
-      console.error('Navigation error:', error);
-    }
-  }
-
-  togglePasswordVisibility(event: Event): void {
-    const eyeIcon = event.target as HTMLElement;
-    const pwFields =
-      eyeIcon.parentElement?.parentElement?.querySelectorAll('.password');
-    pwFields?.forEach((password) => {
-      if (password instanceof HTMLInputElement) {
-        if (password.type === 'password') {
-          password.type = 'text';
-          eyeIcon.classList.replace('bx-hide', 'bx-show');
-        } else {
-          password.type = 'password';
-          eyeIcon.classList.replace('bx-show', 'bx-hide');
-        }
-      }
-    });
+    return this.loadGoogleClientScript();
   }
 
   async onSubmit(event: Event) {
