@@ -20,6 +20,7 @@ import { TrainingPlanCardComponent } from '../../components/training-plan-card/t
 import { ModalSize } from '../../../service/modal/modalSize';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MobileService } from '../../../service/util/mobile.service';
+import { AccordionComponent } from '../../accordion/accordion.component';
 
 /**
  * Component to manage and display training plans.
@@ -33,6 +34,7 @@ import { MobileService } from '../../../service/util/mobile.service';
     CommonModule,
     TooltipDirective,
     TrainingPlanCardComponent,
+    AccordionComponent,
   ],
   templateUrl: './training-plans.component.html',
   styleUrls: ['./training-plans.component.scss'],
