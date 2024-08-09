@@ -146,6 +146,10 @@ export class TrainingPlansComponent implements OnInit {
    */
   getColumnClass(): string {
     const totalItems = this.filteredTrainingPlans$.value?.length || 0;
+    console.log(
+      '🚀 ~ TrainingPlansComponent ~ getColumnClass ~ totalItems:',
+      totalItems
+    );
     if (totalItems % 3 === 0) {
       return 'col-lg-4 col-md-6 col-sm-12';
     } else if (totalItems % 2 === 0) {

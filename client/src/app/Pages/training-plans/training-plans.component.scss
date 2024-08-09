@@ -1,4 +1,6 @@
-.row > * {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+@media screen and (max-width: 768px) {
+  .row > * {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
 }
