@@ -21,37 +21,28 @@
     </p>
   </div>
   <div class="card-footer" style="background: inherit; border-color: inherit">
-    <button
-      type="button"
-      class="btn btn-light btn-md m-1"
-      (click)="viewTrainingPlan(trainingPlan.id)"
-      appTooltip="Ansehen"
-    >
-      <i class="bx bx-show"></i>
-    </button>
-    <button
-      type="button"
-      class="btn btn-light btn-md m-1"
-      (click)="viewStatistics(trainingPlan.id)"
-      appTooltip="Statistiken"
-    >
-      <i class="bx bx-chart"></i>
-    </button>
-    <button
-      type="button"
-      class="btn btn-light btn-md m-1"
-      (click)="showEditTrainingPlanModal(trainingPlan.id)"
-      appTooltip="Bearbeiten"
-    >
-      <i class="bx bx-edit"></i>
-    </button>
-    <button
-      type="button"
-      class="btn btn-light btn-md m-1"
-      (click)="showDeleteTrainingPlanModal()"
-      appTooltip="Löschen"
-    >
-      <i class="bx bx-trash"></i>
-    </button>
+    <app-icon-button
+      [tooltipTitle]="'Ansehen'"
+      [iconClass]="'bx bx-show'"
+      (buttonClick)="viewTrainingPlan(trainingPlan.id)"
+    ></app-icon-button>
+
+    <app-icon-button
+      [tooltipTitle]="'Statistiken'"
+      [iconClass]="'bx bx-chart'"
+      (buttonClick)="viewStatistics(trainingPlan.id)"
+    ></app-icon-button>
+
+    <app-icon-button
+      [tooltipTitle]="'Bearbeiten'"
+      [iconClass]="'bx bx-edit'"
+      (buttonClick)="showEditTrainingPlanModal(trainingPlan.id)"
+    ></app-icon-button>
+
+    <app-icon-button
+      [tooltipTitle]="'Löschen'"
+      [iconClass]="'bx bx-trash'"
+      (buttonClick)="showDeleteTrainingPlanModal()"
+    ></app-icon-button>
   </div>
 </div>

@@ -13,6 +13,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { TooltipDirective } from '../../../service/tooltip/tooltip.directive';
 import { ToastService } from '../toast/toast.service';
 import { BasicInfoComponent } from '../../basic-info/basic-info.component';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
 
 /**
  * Component for displaying and managing a single training plan card.
@@ -20,7 +21,7 @@ import { BasicInfoComponent } from '../../basic-info/basic-info.component';
 @Component({
   selector: 'app-training-plan-card',
   standalone: true,
-  imports: [CommonModule, TooltipDirective],
+  imports: [CommonModule, TooltipDirective, IconButtonComponent],
   templateUrl: './training-plan-card.component.html',
   styleUrls: ['./training-plan-card.component.scss'],
 })
@@ -35,6 +36,10 @@ export class TrainingPlanCardComponent {
     private modalService: ModalService,
     private toastService: ToastService
   ) {}
+
+  test() {
+    console.log('bs');
+  }
 
   /**
    * Navigates to the view page of the training plan.

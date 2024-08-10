@@ -4,7 +4,8 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 1040;
+  background-repeat: repeat;
+  z-index: 1040; /* Ensure this is below Bootstrap Modals if used */
   display: flex;
   align-items: center;
   justify-content: center;

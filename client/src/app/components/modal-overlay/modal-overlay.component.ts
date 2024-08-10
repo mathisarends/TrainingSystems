@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Renderer2 } from '@angular/core';
+import { Component, Renderer2 } from '@angular/core';
 @Component({
   selector: 'app-modal-overlay',
   standalone: true,
