@@ -32,6 +32,16 @@
                 "glob": "service-worker.js",
                 "input": "src",
                 "output": "/"
+              },
+              {
+                "glob": "timer.js",
+                "input": "src",
+                "output": "/"
+              },
+              {
+                "glob": "notification-manager.js",
+                "input": "src",
+                "output": "/"
               }
             ],
             "styles": [
