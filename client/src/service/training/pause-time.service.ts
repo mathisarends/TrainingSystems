@@ -3,13 +3,14 @@ import {
   Renderer2,
   RendererFactory2,
   EventEmitter,
+  OnInit,
 } from '@angular/core';
 import { ExerciseDataDTO } from '../../app/Pages/training-view/exerciseDataDto';
 
 @Injectable({
   providedIn: 'root',
 })
-export class PauseTimeService {
+export class PauseTimeService implements OnInit {
   private renderer: Renderer2;
   private keepAliveIntervalId: any; // Store the keep-alive interval ID
   private remainingTime: number = 0; // Store the remaining time
@@ -18,8 +19,9 @@ export class PauseTimeService {
 
   constructor(rendererFactory: RendererFactory2) {
     this.renderer = rendererFactory.createRenderer(null, null);
+  }
 
-    // Event Listener für Nachrichten vom Service Worker
+  ngOnInit(): void {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.addEventListener('message', (event) => {
         if (event.data && event.data.command === 'currentTime') {

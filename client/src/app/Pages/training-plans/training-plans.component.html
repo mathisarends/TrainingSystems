@@ -34,10 +34,10 @@
       </div>
       } @else { @for (trainingPlan of filteredTrainingPlans; track trainingPlan)
       {
-      <div [ngClass]="getColumnClass()">
+      <div [ngClass]="columnClass">
         <app-training-plan-card
           [trainingPlan]="trainingPlan"
-          [columnClass]="getColumnClass()"
+          [columnClass]="columnClass"
           (changedPlanConstellation)="onChangedPlanConstellation()"
         ></app-training-plan-card>
       </div>

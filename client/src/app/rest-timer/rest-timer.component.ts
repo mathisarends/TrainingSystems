@@ -5,8 +5,6 @@ import {
   AfterViewInit,
   ViewChild,
   ElementRef,
-  EventEmitter,
-  Output,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { PauseTimeService } from '../../service/training/pause-time.service';

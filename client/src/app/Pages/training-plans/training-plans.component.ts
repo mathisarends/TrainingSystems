@@ -51,6 +51,8 @@ export class TrainingPlansComponent implements OnInit {
     TrainingPlanCardView[] | null
   >(null);
 
+  columnClass!: string; // bestimmt in Abhängig der Anzahl der Pläne welches Grid System benutzt werden soll
+
   isMobile = false;
 
   constructor(
@@ -59,7 +61,6 @@ export class TrainingPlansComponent implements OnInit {
     private searchService: SearchService,
     private trainingPlanService: TrainingPlanService,
     private destroyRef: DestroyRef,
-    private changeDetectorRef: ChangeDetectorRef,
     private mobileService: MobileService
   ) {}
 
@@ -82,12 +83,19 @@ export class TrainingPlansComponent implements OnInit {
         this.loadTrainingPlans();
       });
 
-    this.allTrainingPlans$.subscribe((plans) =>
-      console.log('All Plans:', plans)
-    );
-    this.filteredTrainingPlans$.subscribe((plans) =>
-      console.log('Filtered Plans:', plans)
-    );
+    this.filteredTrainingPlans$.subscribe((plans) => {
+      const amountOfPlans = plans?.length!;
+
+      if (amountOfPlans % 3 === 0) {
+        this.columnClass = 'col-lg-4 col-md-6 col-sm-12';
+      } else if (amountOfPlans % 2 === 0) {
+        this.columnClass = 'col-lg-6 col-md-6 col-sm-12';
+      } else if (amountOfPlans === 1) {
+        this.columnClass = 'col-lg-12 col-md-12 col-sm-12';
+      } else {
+        this.columnClass = 'col-lg-4 col-md-6 col-sm-12';
+      }
+    });
 
     this.isMobile = this.mobileService.isMobileView();
   }
@@ -95,7 +103,7 @@ export class TrainingPlansComponent implements OnInit {
   /**
    * Loads training plans from the server.
    */
-  private async loadTrainingPlans(): Promise<void> {
+  protected async loadTrainingPlans(): Promise<void> {
     try {
       const response: any = await firstValueFrom(
         this.httpClient.request<any>(HttpMethods.GET, 'training/plans')
@@ -105,7 +113,6 @@ export class TrainingPlansComponent implements OnInit {
       this.filteredTrainingPlans$.next(response?.trainingPlanCards);
 
       // Mark for change detection
-      this.changeDetectorRef.markForCheck();
     } catch (error) {
       console.error('Fehler beim Laden:', error);
       this.allTrainingPlans$.next([]);
@@ -127,13 +134,6 @@ export class TrainingPlansComponent implements OnInit {
   }
 
   /**
-   * Handles the event when the training plan constellation has changed (e.g., a plan was deleted).
-   */
-  onChangedPlanConstellation(): void {
-    this.loadTrainingPlans();
-  }
-
-  /**
    * Filters the training plans based on the search text.
    * @param searchText - The search input text.
    */
@@ -144,27 +144,5 @@ export class TrainingPlansComponent implements OnInit {
         trainingPlan.title.toLowerCase().includes(searchText.toLowerCase())
       )
     );
-  }
-
-  /**
-   * Determines the column class based on the index.
-   * @returns {string} - The column class.
-   */
-  getColumnClass(): string {
-    const totalItems = this.filteredTrainingPlans$.value?.length || 0;
-    console.log(
-      '🚀 ~ TrainingPlansComponent ~ getColumnClass ~ totalItems:',
-      totalItems
-    );
-    if (totalItems % 3 === 0) {
-      return 'col-lg-4 col-md-6 col-sm-12';
-    } else if (totalItems % 2 === 0) {
-      return 'col-lg-6 col-md-6 col-sm-12';
-    } else if (totalItems === 1) {
-      return 'col-lg-12 col-md-12 col-sm-12';
-    } else {
-      // Default to 3-column layout if not perfectly divisible
-      return 'col-lg-4 col-md-6 col-sm-12';
-    }
   }
 }

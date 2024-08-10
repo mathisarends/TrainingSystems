@@ -15,7 +15,6 @@ export class AuthService {
       .request<any>(HttpMethods.GET, 'user/auth-state')
       .pipe(
         map((response) => {
-          console.log('🚀 ~ AuthService ~ isLoggedIn ~ response:', response);
           return true;
         }),
         catchError((error) => {
