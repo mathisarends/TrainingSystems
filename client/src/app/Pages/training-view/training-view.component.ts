@@ -38,6 +38,8 @@ import { SpeechToTextComponent } from '../../speech-to-text/speech-to-text.compo
 import { TrainingViewNavigationComponent } from '../../training-view-navigation/training-view-navigation.component';
 import { ModalSize } from '../../../service/modal/modalSize';
 import { BasicInfoComponent } from '../../basic-info/basic-info.component';
+import { HttpClientService } from '../../../service/http/http-client.service';
+import { HttpMethods } from '../../types/httpMethods';
 
 /**
  * Component to manage and display the training view.
@@ -81,7 +83,8 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
     private swipeService: SwipeService,
     private pauseTimeService: PauseTimeService,
     private mobileService: MobileService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private httpService: HttpClientService
   ) {}
 
   /**
@@ -342,18 +345,18 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
   recordTrainingData(event: Event) {
     event.preventDefault();
 
-    this.modalService.open({
-      component: SpeechToTextComponent,
-      title: 'Übungen eintragen',
-      buttonText: 'Übernhmen',
-    });
-
-    /* this.speechRecognitionService.startListening((transcript) => {
-      console.log(
-        '🚀 ~ TrainingViewComponent ~ this.speechRecognitionService.startListening ~ transcript:',
-        transcript
-      );
-      this.modalService.open()
-    }); */
+    this.httpService
+      .request<any>(HttpMethods.GET, 'user/profile-picture')
+      .subscribe((response) => {
+        this.modalService.open({
+          component: SpeechToTextComponent,
+          title: 'Übungen eintragen',
+          buttonText: 'Übernhmen',
+          hasFooter: false,
+          componentData: {
+            profilePictureUrl: response,
+          },
+        });
+      });
   }
 }

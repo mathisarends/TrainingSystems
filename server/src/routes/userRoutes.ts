@@ -3,6 +3,7 @@ import { authService } from '../service/authService.js';
 import * as userController from '../controller/userController.js';
 import { asyncHandler } from '../middleware/error-handler.js';
 import { getUser } from '../service/userService.js';
+import { auth } from 'google-auth-library';
 
 const router = express.Router();
 
@@ -10,6 +11,17 @@ router.post('/register', asyncHandler(userController.register));
 router.post('/login', asyncHandler(userController.login));
 router.post('/login/oauth2', asyncHandler(userController.loginOAuth2));
 router.get('/profile', authService.authenticationMiddleware, asyncHandler(userController.getProfile));
+
+router.get(
+  '/profile-picture',
+  authService.authenticationMiddleware,
+  asyncHandler(async (req, res) => {
+    const user = await getUser(req, res);
+
+    res.status(200).json(user.pictureUrl);
+  })
+);
+
 router.post(
   '/update-profile-picture',
   authService.authenticationMiddleware,

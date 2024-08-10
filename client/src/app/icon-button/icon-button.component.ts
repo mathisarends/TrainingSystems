@@ -12,7 +12,6 @@ import { CommonModule } from '@angular/common';
 export class IconButtonComponent {
   tooltipTitle = input<string>('');
   iconClass = input.required<string>();
-  inheritBackground = input<boolean>(false);
   @Output() buttonClick = new EventEmitter<void>();
 
   onClick() {

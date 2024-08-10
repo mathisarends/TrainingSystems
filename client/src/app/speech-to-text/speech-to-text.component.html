@@ -1,30 +1,24 @@
 <div class="speech-container">
-  <div
-    class="mic-icon"
-    [class.listening]="isListening"
-    (click)="toggleListening()"
-  >
-    <i class="bx bx-microphone"></i>
+  <div [ngClass]="{ 'profile-picture-ring': true, speaking: isListening() }">
+    <img
+      [src]="profilePictureUrl"
+      alt="Profile Picture"
+      class="profile-picture"
+    />
   </div>
-  @if (transcript) {
-  <div class="transcript">
-    <app-alert
-      alertType="light"
-      [alertText]="
-        transcript
-          ? transcript
-          : 'Aufgrundlage deiner Audioeingabe werden hier die entsprechenden Werte in deinem Trainingsplan festgesetzt!'
-      "
-    ></app-alert>
-    <div class="derived-action">
-      <i class="bx bx-down-arrow"></i>
-      <p>Abgeleitete Aktion</p>
-    </div>
+
+  <!-- Transcript Speech Bubble (from the user) -->
+  <div class="chat-bubble left">
+    <p>{{ transcript !== "" ? transcript : "..." }}</p>
   </div>
-  } @if (trainingSet) {
-  <div class="train ing-set">
-    <h3>Abgeleitetes Training Set</h3>
-    <pre>{{ getFormattedTrainingSet() }}</pre>
+
+  <!-- Derived Action Speech Bubble (response) -->
+  <div class="chat-bubble right">
+    @if (isTrainingSetEmpty(trainingSet)) {
+    <p>...</p>
+
+    } @else {
+    <p>{{ trainingSet }}</p>
+    }
   </div>
-  }
 </div>

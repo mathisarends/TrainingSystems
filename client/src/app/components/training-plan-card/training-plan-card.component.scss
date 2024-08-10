@@ -7,7 +7,7 @@
 }
 
 .card:hover {
-  transform: scale(1.0125); /* Transform anstelle von scale verwenden */
+  transform: scale(1.01); /* Transform anstelle von scale verwenden */
 }
 
 /* Define the custom grid system */
@@ -30,40 +30,23 @@
 }
 
 .card-custom-img {
-  height: 200px;
-  min-height: 200px;
+  height: 175px;
+  min-height: 175px;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
   border-color: inherit;
 }
 
-/* First border-left-width setting is a fallback */
-.card-custom-img::after {
-  --bs-bg-opacity: 0.5;
-  position: absolute;
-  content: "";
-  top: 161px;
-  left: 0;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-top-width: 40px;
-  border-right-width: 0;
-  border-bottom-width: 0;
-  border-left-width: 545px;
-  border-left-width: calc(575px - 5vw);
-  border-top-color: transparent;
-  border-right-color: transparent;
-  border-bottom-color: transparent;
-  border-left-color: inherit;
+.card-body {
+  padding-top: 2.5rem;
 }
 
 .card-custom-avatar img {
   border-radius: 50%;
   box-shadow: 0 0 15px rgba(10, 10, 10, 0.3);
   position: absolute;
-  top: 132.5px;
+  top: 147.5px;
   left: 10px;
   width: 50px;
   height: 50px;
