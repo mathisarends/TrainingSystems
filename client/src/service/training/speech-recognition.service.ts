@@ -61,7 +61,6 @@ export class SpeechRecognitionService {
 
       // Start the timeout when the user starts speaking
       this.recognition.onaudiostart = () => {
-        console.log('Audio started');
         this.resetTimeout(); // Start the timeout when audio starts
       };
 
@@ -72,7 +71,6 @@ export class SpeechRecognitionService {
 
   stopListening(): void {
     if (this.isListening) {
-      console.log('stopped');
       this.recognition.stop();
       this.isListening = false;
       clearTimeout(this.timeoutId);

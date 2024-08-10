@@ -2,9 +2,20 @@
   <div [ngClass]="{ 'profile-picture-ring': true, speaking: isListening() }">
     <img
       [src]="profilePictureUrl"
+      (click)="toggleListening()"
       alt="Profile Picture"
       class="profile-picture"
     />
+  </div>
+
+  <div class="exercise-select form-group mt-3 w-100">
+    <select class="form-control" id="exerciseSelect">
+      @for (exercise of exercises; track exercise) {
+      <option>
+        {{ exercise.exercise }} {{ exercise.sets }} x {{ exercise.reps }}
+      </option>
+      }
+    </select>
   </div>
 
   <!-- Transcript Speech Bubble (from the user) -->
@@ -14,11 +25,11 @@
 
   <!-- Derived Action Speech Bubble (response) -->
   <div class="chat-bubble right">
-    @if (isTrainingSetEmpty(trainingSet)) {
+    @if (isTrainingSetEmpty(trainingSet) && isListening()) {
     <p>...</p>
 
     } @else {
-    <p>{{ trainingSet }}</p>
+    <pre>{{ getFormattedTrainingSet() }}</pre>
     }
   </div>
 </div>

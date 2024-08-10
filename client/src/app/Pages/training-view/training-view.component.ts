@@ -345,6 +345,12 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
   recordTrainingData(event: Event) {
     event.preventDefault();
 
+    const exercises = this.trainingPlanData.trainingDay.exercises;
+    console.log(
+      '🚀 ~ TrainingViewComponent ~ recordTrainingData ~ exercises:',
+      exercises
+    );
+
     this.httpService
       .request<any>(HttpMethods.GET, 'user/profile-picture')
       .subscribe((response) => {
@@ -355,6 +361,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
           hasFooter: false,
           componentData: {
             profilePictureUrl: response,
+            exercises: exercises,
           },
         });
       });

@@ -3,6 +3,7 @@ import { SpeechRecognitionService } from '../../service/training/speech-recognit
 import { AlertComponent } from '../components/alert/alert.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
+import { Exercise } from '../Pages/training-view/training-exercise';
 
 interface TrainingSet {
   weight?: number;
@@ -24,6 +25,7 @@ export class SpeechToTextComponent implements OnInit {
   transcript: string = '';
   trainingSet: TrainingSet = {};
 
+  @Input() exercises: Exercise[] = [];
   @Input() profilePictureUrl = '';
 
   constructor(
@@ -45,6 +47,18 @@ export class SpeechToTextComponent implements OnInit {
       });
 
     this.startListening();
+  }
+
+  toggleListening() {
+    if (this.isListening()) {
+      this.isListening.set(false);
+      this.extractTrainingSet(this.transcript);
+      this.transcript = '';
+    } else {
+      this.transcript = '';
+      this.isListening.set(true);
+      this.startListening();
+    }
   }
 
   startListening(): void {
@@ -84,7 +98,7 @@ export class SpeechToTextComponent implements OnInit {
       console.log('RPE wurde benannt:', trainingSet.rpe);
     }
 
-    const setSchemaMatch = transcriptLowerCase.match(/(\d+)\s*x\s*(\d+)/);
+    const setSchemaMatch = transcriptLowerCase.match(/(\d+)\s*[x*]\s*(\d+)/);
     if (setSchemaMatch) {
       trainingSet.sets = parseInt(setSchemaMatch[1], 10);
       trainingSet.reps = parseInt(setSchemaMatch[2], 10);
@@ -95,8 +109,6 @@ export class SpeechToTextComponent implements OnInit {
         trainingSet.reps,
         'Wiederholungen'
       );
-
-      this.trainingSet = trainingSet;
     }
 
     this.trainingSet = trainingSet;
@@ -110,16 +122,16 @@ export class SpeechToTextComponent implements OnInit {
     if (weight) {
       formattedSet += `Gewicht: ${weight} kg\n`;
     }
-    if (reps) {
-      formattedSet += `Wiederholungen: ${reps}\n`;
-    }
     if (sets) {
       formattedSet += `Sätze: ${sets}\n`;
+    }
+    if (reps) {
+      formattedSet += `Wiederholungen: ${reps}\n`;
     }
     if (rpe) {
       formattedSet += `RPE: ${rpe}\n`;
     }
 
-    return formattedSet.trim();
+    return formattedSet.trim(); // This will remove the last \n if present
   }
 }
