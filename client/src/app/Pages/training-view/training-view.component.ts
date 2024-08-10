@@ -305,26 +305,6 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
     this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
   }
 
-  /**
-   * Retrieves the exercise data for the specified index.
-   * @param index - Index of the exercise.
-   * @returns The exercise data object.
-   */
-  getExercise(index: number): any {
-    return (
-      this.trainingPlanData!.trainingDay?.exercises[index - 1] || {
-        category: '',
-        exercise: '',
-        sets: '',
-        reps: '',
-        weight: '',
-        targetRPE: '',
-        actualRPE: '',
-        estMax: '',
-      }
-    );
-  }
-
   switchToTimerView(event: Event) {
     event.preventDefault();
 
@@ -346,15 +326,10 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
     });
   }
 
-  // TODO: automatisch ende der Spracherkennung erkennen und string parsen und damit daten verarbeiten automatisch in die felder setze nund so.
   recordTrainingData(event: Event) {
     event.preventDefault();
 
     const exercises = this.trainingPlanData.trainingDay.exercises;
-    console.log(
-      '🚀 ~ TrainingViewComponent ~ recordTrainingData ~ exercises:',
-      exercises
-    );
 
     this.httpService
       .request<any>(HttpMethods.GET, 'user/profile-picture')
