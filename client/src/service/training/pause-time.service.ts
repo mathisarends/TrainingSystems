@@ -1,29 +1,31 @@
 import {
-  EventEmitter,
   Injectable,
   Renderer2,
   RendererFactory2,
+  EventEmitter,
 } from '@angular/core';
 import { ExerciseDataDTO } from '../../app/Pages/training-view/exerciseDataDto';
-import { NotificationService } from '../../app/notification.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PauseTimeService {
   private renderer: Renderer2;
-  countdownEmitter: EventEmitter<number> = new EventEmitter<number>();
+  private keepAliveIntervalId: any; // Store the keep-alive interval ID
   private remainingTime: number = 0; // Store the remaining time
-  private initialTime: number = 0;
+  countdownEmitter: EventEmitter<number> = new EventEmitter<number>(); // Countdown Emitter
 
-  private intervalId: any; // Store the interval ID
-  countdownRunning = false;
-
-  constructor(
-    rendererFactory: RendererFactory2,
-    private notificationService: NotificationService
-  ) {
+  constructor(rendererFactory: RendererFactory2) {
     this.renderer = rendererFactory.createRenderer(null, null);
+
+    // Event Listener für Nachrichten vom Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('message', (event) => {
+        if (event.data && event.data.command === 'currentTime') {
+          this.handleCurrentTimeUpdate(event.data.currentTime);
+        }
+      });
+    }
   }
 
   initializePauseTimers(exerciseData: ExerciseDataDTO) {
@@ -41,11 +43,11 @@ export class PauseTimeService {
           const categoryValue = closestCategorySelector.value;
 
           const pauseTime = exerciseData.categoryPauseTimes[categoryValue];
-          this.initialTime = pauseTime;
+          this.remainingTime = pauseTime;
 
           if (pauseTime) {
-            this.startCountdown(pauseTime);
             this.notifyServiceWorkerTimerStarted(pauseTime);
+            this.startKeepAlive(); // Start the keep-alive process
           } else {
             console.error(`No pause time found for category: ${categoryValue}`);
           }
@@ -61,12 +63,9 @@ export class PauseTimeService {
   private notifyServiceWorkerTimerStarted(remainingTime: number) {
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
       navigator.serviceWorker.controller.postMessage({
-        type: 'TIMER_STARTED',
-        remainingTime: remainingTime,
+        command: 'start',
+        duration: remainingTime,
       });
-      console.log(
-        `[PauseTimeService] Notified Service Worker: Timer started with ${remainingTime} seconds remaining.`
-      );
     } else {
       console.error(
         '[PauseTimeService] Service Worker not available or not registered.'
@@ -75,61 +74,30 @@ export class PauseTimeService {
   }
 
   /**
-   * Starts a countdown and emits the remaining time every second.
-   * @param seconds - The total number of seconds for the countdown.
+   * Starts the keep-alive process, sending a message to the Service Worker every 10 seconds.
    */
-  private startCountdown(seconds: number) {
-    if (this.countdownRunning && this.intervalId) {
-      clearInterval(this.intervalId);
+  private startKeepAlive() {
+    if (this.keepAliveIntervalId) {
+      clearInterval(this.keepAliveIntervalId);
     }
 
-    this.countdownRunning = true;
-    this.remainingTime = seconds; // Initialize remaining time
-    this.countdownEmitter.emit(this.remainingTime); // Emit immediately
-    this.notificationService.sendNotification(
-      'Timer Update',
-      this.formatTime(this.remainingTime)
-    );
-
-    this.intervalId = setInterval(() => {
-      if (this.remainingTime > 0) {
-        this.remainingTime--;
-        this.countdownEmitter.emit(this.remainingTime);
-        this.notificationService.sendNotification(
-          'Timer Update',
-          this.formatTime(this.remainingTime)
-        );
-      } else {
-        clearInterval(this.intervalId);
-        this.countdownRunning = false;
-        this.countdownEmitter.emit(0);
-        this.notificationService.sendNotification(
-          'Timer Update',
-          'Countdown finished'
-        );
-        console.log('Countdown finished');
+    this.keepAliveIntervalId = setInterval(() => {
+      if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({
+          command: 'keepAlive',
+          duration: this.remainingTime,
+        });
       }
-    }, 1000);
+    }, 10000); // 10 Sekunden Interval
   }
 
   /**
-   * Adjust the remaining time by the specified number of seconds.
-   * @param seconds - The number of seconds to adjust the timer by.
+   * Handles the current time update received from the Service Worker.
+   * @param currentTime - The current time sent from the Service Worker.
    */
-  adjustTime(seconds: number) {
-    this.remainingTime = Math.max(this.remainingTime + seconds, 0);
-    this.countdownEmitter.emit(this.remainingTime);
-  }
-
-  /**
-   * Skip the timer by setting the remaining time to 0.
-   */
-  skipTimer() {
-    this.remainingTime = 0;
-    clearInterval(this.intervalId);
-    this.countdownRunning = false;
-    this.countdownEmitter.emit(this.remainingTime);
-    console.log('Timer skipped');
+  private handleCurrentTimeUpdate(currentTime: number) {
+    this.remainingTime = currentTime;
+    this.countdownEmitter.emit(currentTime); // Emit countdown event for the component
   }
 
   /**
@@ -143,16 +111,6 @@ export class PauseTimeService {
    * Get the initial time set for the timer.
    */
   getInitialTime(): number {
-    return this.initialTime;
-  }
-
-  private formatTime(seconds: number): string {
-    const minutes: number = Math.floor(seconds / 60);
-    const secs: number = seconds % 60;
-    return `${this.padZero(minutes)}:${this.padZero(secs)}`;
-  }
-
-  private padZero(num: number): string {
-    return num < 10 ? `0${num}` : num.toString();
+    return this.remainingTime; // Assuming initial time is the same as remaining time at the start
   }
 }

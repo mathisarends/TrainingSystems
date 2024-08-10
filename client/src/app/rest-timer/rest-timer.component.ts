@@ -18,7 +18,6 @@ import { ModalService } from '../../service/modal/modalService';
   styleUrls: ['./rest-timer.component.scss'],
 })
 export class RestTimerComponent implements OnInit, OnDestroy, AfterViewInit {
-  @Output() timerFinished = new EventEmitter<void>();
   @ViewChild('progressRing') progressRing!: ElementRef;
 
   remainingTime: number;
@@ -41,7 +40,6 @@ export class RestTimerComponent implements OnInit, OnDestroy, AfterViewInit {
           this.updateCircle();
         }
         if (remainingTime === 0 && this.initialTime) {
-          this.timerFinished.emit();
           this.playTimerFinishedAudio();
         }
       }
@@ -73,14 +71,26 @@ export class RestTimerComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   adjustTime(seconds: number) {
-    this.pauseTimeService.adjustTime(seconds); // Adjust the timer in the service
+    this.sendMessageToServiceWorker('adjustTime', { seconds });
   }
 
   skipTimer() {
-    this.pauseTimeService.skipTimer(); // Skip the timer in the service
-    this.timerFinished.emit();
+    this.sendMessageToServiceWorker('skipTimer');
 
     this.modalService.close();
+  }
+
+  private sendMessageToServiceWorker(command: string, data?: any) {
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        command,
+        ...data,
+      });
+    } else {
+      console.error(
+        '[RestTimerComponent] Service Worker not available or not registered.'
+      );
+    }
   }
 
   formatTime(seconds: number): string {
