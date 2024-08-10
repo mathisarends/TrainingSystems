@@ -139,6 +139,9 @@ export class CategoryPlaceholderService {
     const targetRPEInput = tableRow.querySelector(
       '.targetRPE'
     ) as HTMLInputElement;
+    const weightInput = tableRow.querySelector('.weight') as HTMLInputElement;
+    const rpeInput = tableRow.querySelector('.actualRPE') as HTMLInputElement;
+    const estMaxInput = tableRow.querySelector('.estMax') as HTMLInputElement;
 
     if (category !== '- Bitte Auswählen -') {
       const defaultValues = defaultRepSchemeByCategory[category];
@@ -148,14 +151,25 @@ export class CategoryPlaceholderService {
         targetRPEInput.value = defaultValues.defaultRPE.toString();
       }
     } else {
-      this.resetInputs(exerciseSelect, setsInput, repsInput, targetRPEInput);
+      this.resetInputs(
+        exerciseSelect,
+        setsInput,
+        repsInput,
+        targetRPEInput,
+        weightInput,
+        rpeInput,
+        estMaxInput
+      );
     }
 
     this.updateFormService(
       exerciseSelect,
       setsInput,
       repsInput,
-      targetRPEInput
+      targetRPEInput,
+      weightInput,
+      rpeInput,
+      estMaxInput
     );
   }
 
@@ -170,12 +184,18 @@ export class CategoryPlaceholderService {
     exerciseSelect: HTMLSelectElement,
     setsInput: HTMLInputElement,
     repsInput: HTMLInputElement,
-    targetRPEInput: HTMLInputElement
+    targetRPEInput: HTMLInputElement,
+    weightInput: HTMLInputElement,
+    rpeInput: HTMLInputElement,
+    estMaxInput: HTMLInputElement
   ): void {
     exerciseSelect.value = '';
     setsInput.value = '';
     repsInput.value = '';
     targetRPEInput.value = '';
+    weightInput.value = '';
+    rpeInput.value = '';
+    estMaxInput.value = '';
   }
 
   /**
@@ -189,12 +209,18 @@ export class CategoryPlaceholderService {
     exerciseSelect: HTMLSelectElement,
     setsInput: HTMLInputElement,
     repsInput: HTMLInputElement,
-    targetRPEInput: HTMLInputElement
+    targetRPEInput: HTMLInputElement,
+    weightInput: HTMLInputElement,
+    rpeInput: HTMLInputElement,
+    estMaxInput: HTMLInputElement
   ): void {
     this.formService.addChange(exerciseSelect.name, exerciseSelect.value);
     this.formService.addChange(setsInput.name, setsInput.value);
     this.formService.addChange(repsInput.name, repsInput.value);
     this.formService.addChange(targetRPEInput.name, targetRPEInput.value);
+    this.formService.addChange(weightInput.name, weightInput.value); // Added weightInput
+    this.formService.addChange(rpeInput.name, rpeInput.value); // Added rpeInput
+    this.formService.addChange(estMaxInput.name, estMaxInput.value);
   }
 
   /**

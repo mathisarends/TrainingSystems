@@ -12,6 +12,7 @@ import { Exercise } from '../../models/training/exercise.js';
 import { TrainingPlan } from '../../models/training/trainingPlan.js';
 
 import { findTrainingPlanById } from '../../service/trainingService.js';
+import { WeightRecommendationBase } from '../../models/training/weight-recommandation.enum.js';
 
 /**
  * Updates an existing training plan based on user input. Adjustments can include changes
@@ -39,11 +40,18 @@ export async function getPlanForDay(req: Request, res: Response): Promise<void> 
 
   const trainingDay = trainingWeek.trainingDays[trainingDayIndex];
 
+  let previousTrainingDay = {};
+
+  if (trainingPlan.weightRecommandationBase === WeightRecommendationBase.LASTWEEK && trainingWeekIndex > 0) {
+    previousTrainingDay = trainingPlan.trainingWeeks[trainingWeekIndex - 1].trainingDays[trainingDayIndex];
+  }
+
   const trainingPlanForTrainingDay = {
     title: trainingPlan.title,
     trainingFrequency: trainingPlan.trainingFrequency,
     trainingBlockLength: trainingPlan.trainingWeeks.length,
-    trainingDay
+    trainingDay,
+    previousTrainingDay
   };
 
   res.status(200).json(trainingPlanForTrainingDay);

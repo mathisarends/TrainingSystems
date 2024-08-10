@@ -5,6 +5,7 @@ export class TrainingPlanDto {
   trainingFrequency!: number;
   trainingBlockLength!: number;
   trainingDay!: TrainingDay;
+  previousTrainingDay?: TrainingDay;
 
   constructor() {}
 
@@ -13,5 +14,6 @@ export class TrainingPlanDto {
     this.trainingFrequency = data.trainingFrequency;
     this.trainingBlockLength = data.trainingBlockLength;
     this.trainingDay = data.trainingDay;
+    this.previousTrainingDay = data.previousTrainingDay;
   }
 }

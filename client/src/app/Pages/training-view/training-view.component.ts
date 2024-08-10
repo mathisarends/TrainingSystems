@@ -175,6 +175,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
       .pipe(
         tap(({ trainingPlan, exerciseData }) => {
           this.trainingPlanData = trainingPlan;
+
           this.exerciseData = exerciseData;
           this.title = trainingPlan?.title;
         }),
@@ -199,6 +200,10 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
   onSubmit(event: Event): void {
     event.preventDefault();
     const changedData = this.formService.getChanges();
+    console.log(
+      '🚀 ~ TrainingViewComponent ~ onSubmit ~ changedData:',
+      changedData
+    );
 
     this.trainingViewService
       .submitTrainingPlan(

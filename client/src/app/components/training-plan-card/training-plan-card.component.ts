@@ -14,6 +14,7 @@ import { TooltipDirective } from '../../../service/tooltip/tooltip.directive';
 import { ToastService } from '../toast/toast.service';
 import { BasicInfoComponent } from '../../basic-info/basic-info.component';
 import { IconButtonComponent } from '../../icon-button/icon-button.component';
+import { TrainingPlanService } from '../../../service/training/training-plan.service';
 
 /**
  * Component for displaying and managing a single training plan card.
@@ -34,7 +35,8 @@ export class TrainingPlanCardComponent {
     private httpClient: HttpClientService,
     private router: Router,
     private modalService: ModalService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private trainingPlanService: TrainingPlanService
   ) {}
 
   test() {
@@ -118,6 +120,8 @@ export class TrainingPlanCardComponent {
 
         this.modalService.close();
         this.toastService.show('Erfolg', 'Plan gelöscht');
+
+        this.trainingPlanService.trainingPlanChanged();
 
         this.changedPlanConstellation.emit();
       } catch (error) {

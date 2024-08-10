@@ -122,6 +122,9 @@
           <td data-cell="Weight">
             <input
               #weightInput
+              [placeholder]="
+      trainingPlanData.previousTrainingDay?.exercises?.[k - 1]?.weight ?? ''
+              "
               type="number"
               class="transparent-input weight"
               name="day{{ trainingDayIndex }}_exercise{{ k }}_weight"
