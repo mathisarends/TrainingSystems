@@ -45,12 +45,33 @@ export class PauseTimeService {
 
           if (pauseTime) {
             this.startCountdown(pauseTime);
+            this.notifyServiceWorkerTimerStarted(pauseTime);
           } else {
             console.error(`No pause time found for category: ${categoryValue}`);
           }
         }
       });
     });
+  }
+
+  /**
+   * Benachrichtigt den Service Worker, dass ein Timer gestartet wurde.
+   * @param remainingTime - Die verbleibende Zeit in Sekunden.
+   */
+  private notifyServiceWorkerTimerStarted(remainingTime: number) {
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        type: 'TIMER_STARTED',
+        remainingTime: remainingTime,
+      });
+      console.log(
+        `[PauseTimeService] Notified Service Worker: Timer started with ${remainingTime} seconds remaining.`
+      );
+    } else {
+      console.error(
+        '[PauseTimeService] Service Worker not available or not registered.'
+      );
+    }
   }
 
   /**
