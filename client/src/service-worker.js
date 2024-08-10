@@ -100,6 +100,7 @@ function startTimer(duration) {
       self.registration.showNotification("TTS", {
         body: `Remaining time: ${formattedTime}`,
         tag: "timer-notification",
+        icon: "/images/logo-own.png",
       });
 
       // Sende die verbleibende Zeit in Sekunden an die Frontend-Anwendung
@@ -125,6 +126,7 @@ function notifyTimerExpired() {
   self.registration.showNotification("TTS", {
     body: "Your timer has expired!",
     tag: "timer-notification",
+    icon: "/images/logo-own.png",
     vibrate: [200, 100, 200],
   });
 }
