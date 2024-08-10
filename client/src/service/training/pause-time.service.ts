@@ -13,6 +13,7 @@ export class PauseTimeService {
   private renderer: Renderer2;
   private keepAliveIntervalId: any; // Store the keep-alive interval ID
   private remainingTime: number = 0; // Store the remaining time
+  private initialTime: number = 0;
   countdownEmitter: EventEmitter<number> = new EventEmitter<number>(); // Countdown Emitter
 
   constructor(rendererFactory: RendererFactory2) {
@@ -43,6 +44,7 @@ export class PauseTimeService {
           const categoryValue = closestCategorySelector.value;
 
           const pauseTime = exerciseData.categoryPauseTimes[categoryValue];
+          this.initialTime = pauseTime;
           this.remainingTime = pauseTime;
 
           if (pauseTime) {
@@ -111,6 +113,6 @@ export class PauseTimeService {
    * Get the initial time set for the timer.
    */
   getInitialTime(): number {
-    return this.remainingTime; // Assuming initial time is the same as remaining time at the start
+    return this.initialTime; // Assuming initial time is the same as remaining time at the start
   }
 }
