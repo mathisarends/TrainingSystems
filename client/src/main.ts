@@ -7,6 +7,19 @@ bootstrapApplication(AppComponent, appConfig).catch((err) =>
 );
 
 if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then((registrations) => {
+    registrations.forEach((registration) => {
+      if (registration.scope.includes('ngsw-worker.js')) {
+        registration.unregister().then(() => {
+          console.log('Angular Service Worker deregistered');
+        });
+      }
+    });
+  });
+}
+
+// Registering custom service worker
+if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker
       .register('/service-worker.js')
