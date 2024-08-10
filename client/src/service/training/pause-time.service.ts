@@ -3,31 +3,35 @@ import {
   Renderer2,
   RendererFactory2,
   EventEmitter,
-  OnInit,
 } from '@angular/core';
 import { ExerciseDataDTO } from '../../app/Pages/training-view/exerciseDataDto';
+import { Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
 })
-export class PauseTimeService implements OnInit {
+export class PauseTimeService {
   private renderer: Renderer2;
   private keepAliveIntervalId: any; // Store the keep-alive interval ID
   private remainingTime: number = 0; // Store the remaining time
   private initialTime: number = 0;
   countdownEmitter: EventEmitter<number> = new EventEmitter<number>(); // Countdown Emitter
 
-  constructor(rendererFactory: RendererFactory2) {
+  constructor(
+    rendererFactory: RendererFactory2,
+    @Inject(PLATFORM_ID) private platformId: any
+  ) {
     this.renderer = rendererFactory.createRenderer(null, null);
-  }
 
-  ngOnInit(): void {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.addEventListener('message', (event) => {
-        if (event.data && event.data.command === 'currentTime') {
-          this.handleCurrentTimeUpdate(event.data.currentTime);
-        }
-      });
+    if (isPlatformBrowser(this.platformId)) {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.addEventListener('message', (event) => {
+          if (event.data && event.data.command === 'currentTime') {
+            this.handleCurrentTimeUpdate(event.data.currentTime);
+          }
+        });
+      }
     }
   }
 
