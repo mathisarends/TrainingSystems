@@ -89,6 +89,19 @@ function startTimer(duration) {
     } else {
       remainingTime--;
 
+      // Formatiere die verbleibende Zeit auf mm:ss
+      const minutes = Math.floor(remainingTime / 60);
+      const seconds = remainingTime % 60;
+      let formattedTime = `${String(minutes).padStart(2, "0")}:${String(
+        seconds
+      ).padStart(2, "0")}`;
+
+      // Zeige die verbleibende Zeit in der Push-Benachrichtigung an
+      self.registration.showNotification("TTS", {
+        body: `Remaining time: ${formattedTime}`,
+        tag: "timer-notification",
+      });
+
       // Sende die verbleibende Zeit in Sekunden an die Frontend-Anwendung
       updateTimerDisplay(remainingTime);
     }
