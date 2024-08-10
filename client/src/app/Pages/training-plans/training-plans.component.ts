@@ -21,6 +21,8 @@ import { ModalSize } from '../../../service/modal/modalSize';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MobileService } from '../../../service/util/mobile.service';
 import { AccordionComponent } from '../../accordion/accordion.component';
+import { HeadlineComponent } from '../../headline/headline.component';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
 
 /**
  * Component to manage and display training plans.
@@ -35,6 +37,8 @@ import { AccordionComponent } from '../../accordion/accordion.component';
     TooltipDirective,
     TrainingPlanCardComponent,
     AccordionComponent,
+    HeadlineComponent,
+    IconButtonComponent,
   ],
   templateUrl: './training-plans.component.html',
   styleUrls: ['./training-plans.component.scss'],

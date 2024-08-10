@@ -1,36 +1,15 @@
 @if (allTrainingPlans$ | async; as allTrainingPlans) {
-<div class="dropdown">
-  <a
-    href="#"
-    class="d-flex align-items-center col-lg-4 mb-lg-0 link-dark text-decoration-none dropdown-toggle"
-    id="dropdownNavLink"
-    data-bs-toggle="dropdown"
-    aria-expanded="false"
-  >
-    Trainingspläne
-  </a>
-  <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownNavLink">
-    <li>
-      <a href="/" #navLink class="dropdown-item">Trainingspläne</a>
-    </li>
-    <li>
-      <a href="/exercises" #navLink class="dropdown-item">Übungen</a>
-    </li>
-    <li><hr class="dropdown-divider" /></li>
-    <li>
-      <a href="/statistics" #navLink class="dropdown-item">Statistiken</a>
-    </li>
-  </ul>
-</div>
 
 <!-- + Button with Label -->
 
-<div class="container mt-4 mb-3">
-  <div class="d-flex justify-content-end align-items-center">
-    <span class="me-2">Neuen Plan erstellen</span>
-    <button type="button" class="btn btn-light" (click)="createNewPlan()">
-      <i class="bx bx-plus"></i>
-    </button>
+<div class="container heading-container mt-4 mb-3">
+  <div class="d-flex justify-content-between align-items-center">
+    <app-headline [subHeading]="'own'" [heading]="'plans'" />
+
+    <app-icon-button
+      [iconClass]="'bx bx-plus'"
+      (buttonClick)="createNewPlan()"
+    />
   </div>
 </div>
 
