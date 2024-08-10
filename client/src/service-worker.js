@@ -1,11 +1,36 @@
 self.addEventListener("install", (event) => {
   console.log("[Service Worker] Installing Service Worker ...", event);
-  self.skipWaiting(); // Neuen sw benutzne
+
+  event.waitUntil(
+    // Hier könnten Caching-Operationen oder andere Installationsaufgaben hinzugefügt werden
+    Promise.resolve()
+      .then(() => {
+        console.log(
+          "[Service Worker] Installationsvorgang erfolgreich abgeschlossen"
+        );
+        self.skipWaiting(); // Neuen SW sofort benutzen
+      })
+      .catch((error) => {
+        console.error("[Service Worker] Installationsfehler:", error);
+      })
+  );
 });
 
 self.addEventListener("activate", (event) => {
   console.log("[Service Worker] Activating Service Worker ....", event);
-  return self.clients.claim();
+
+  event.waitUntil(
+    Promise.resolve()
+      .then(() => {
+        console.log(
+          "[Service Worker] Aktivierungsvorgang erfolgreich abgeschlossen"
+        );
+        return self.clients.claim(); // Übernehme sofort die Kontrolle
+      })
+      .catch((error) => {
+        console.error("[Service Worker] Aktivierungsfehler:", error);
+      })
+  );
 });
 
 let remainingTime = 0;
