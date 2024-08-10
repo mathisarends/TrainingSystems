@@ -1,6 +1,27 @@
 @if (allTrainingPlans$ | async; as allTrainingPlans) {
-
-<app-accordion />
+<div class="dropdown">
+  <a
+    href="#"
+    class="d-flex align-items-center col-lg-4 mb-lg-0 link-dark text-decoration-none dropdown-toggle"
+    id="dropdownNavLink"
+    data-bs-toggle="dropdown"
+    aria-expanded="false"
+  >
+    Trainingspläne
+  </a>
+  <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownNavLink">
+    <li>
+      <a href="/" #navLink class="dropdown-item">Trainingspläne</a>
+    </li>
+    <li>
+      <a href="/exercises" #navLink class="dropdown-item">Übungen</a>
+    </li>
+    <li><hr class="dropdown-divider" /></li>
+    <li>
+      <a href="/statistics" #navLink class="dropdown-item">Statistiken</a>
+    </li>
+  </ul>
+</div>
 
 <!-- + Button with Label -->
 
