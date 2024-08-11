@@ -1,5 +1,5 @@
 @if (!(dataViewLoaded$ | async)) {
-<app-spinner></app-spinner>
+<app-skeleton-training-table />
 } @else {
 <form (submit)="onSubmit($event)" class="mt-4" id="form">
   <div class="headline-container" [ngClass]="{ 'background-image': isMobile }">
@@ -143,8 +143,6 @@
       }
     </tbody>
   </table>
-
-  <app-skeleton-training-table />
 
   <div class="pagination-container mb-4">
     <app-pagination
