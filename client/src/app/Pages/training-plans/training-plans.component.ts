@@ -23,6 +23,7 @@ import { MobileService } from '../../../service/util/mobile.service';
 import { AccordionComponent } from '../../accordion/accordion.component';
 import { HeadlineComponent } from '../../headline/headline.component';
 import { IconButtonComponent } from '../../icon-button/icon-button.component';
+import { SkeletonCardComponent } from '../../skeleton-card/skeleton-card.component';
 
 /**
  * Component to manage and display training plans.
@@ -39,6 +40,7 @@ import { IconButtonComponent } from '../../icon-button/icon-button.component';
     AccordionComponent,
     HeadlineComponent,
     IconButtonComponent,
+    SkeletonCardComponent,
   ],
   templateUrl: './training-plans.component.html',
   styleUrls: ['./training-plans.component.scss'],

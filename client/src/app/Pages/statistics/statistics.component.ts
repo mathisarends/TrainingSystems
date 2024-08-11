@@ -234,7 +234,6 @@ export class StatisticsComponent implements OnInit {
       .subscribe((response) => {});
   }
 
-  // TODO: implement switch view here
   changeView(index: number) {
     if (index == 0) {
       this.currentView === 'volume';
