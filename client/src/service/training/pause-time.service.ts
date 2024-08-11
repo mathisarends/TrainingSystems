@@ -90,7 +90,11 @@ export class PauseTimeService {
     }
 
     this.keepAliveIntervalId = setInterval(() => {
-      if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+      if (
+        'serviceWorker' in navigator &&
+        navigator.serviceWorker.controller &&
+        this.remainingTime > 0
+      ) {
         navigator.serviceWorker.controller.postMessage({
           command: 'keepAlive',
           duration: this.remainingTime,
