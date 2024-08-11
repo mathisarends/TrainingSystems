@@ -12,8 +12,6 @@ import { LineChartComponent } from '../../line-chart/line-chart.component';
 import { GroupedBarChartComponent } from '../../grouped-bar-chart/grouped-bar-chart.component';
 import { BarChartData } from '../../grouped-bar-chart/bar-chart.-data';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
-import { log } from 'console';
-import { ToastService } from '../../components/toast/toast.service';
 import { ExerciseDrillThroughEvent } from '../../line-chart/exercise-drill-through-event';
 import { ModalService } from '../../../service/modal/modalService';
 import { PolarChartComponent } from '../../polar-chart/polar-chart.component';
@@ -129,7 +127,9 @@ export class StatisticsComponent implements OnInit {
       this.allExercises = allExercisesResponse;
       this.selectedExercises = selectedExercisesResponse;
 
-      await this.fetchStatistics(id, this.selectedExercises);
+      if (this.selectedExercises) {
+        await this.fetchStatistics(id, this.selectedExercises);
+      }
     } catch (error) {
       console.error('Error fetching initial data:', error);
     }

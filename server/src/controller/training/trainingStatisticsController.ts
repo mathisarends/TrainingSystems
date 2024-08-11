@@ -155,20 +155,24 @@ function prepareTrainingWeeksForExercise(
   trainingPlan: TrainingPlan,
   exerciseCategory: ExerciseCategoryType
 ): { tonnageInCategory: number }[] {
-  return trainingPlan.trainingWeeks.map(week => {
-    let tonnageInCategory = 0;
+  return trainingPlan.trainingWeeks
+    .map((week, index) => {
+      let tonnageInCategory = 0;
 
-    week.trainingDays.forEach(trainingDay => {
-      trainingDay.exercises.forEach((exercise: Exercise) => {
-        if (exercise.category === exerciseCategory) {
-          const weight = parseFloat(exercise.weight) || 0;
-          tonnageInCategory += exercise.sets * exercise.reps * weight;
-        }
+      week.trainingDays.forEach(trainingDay => {
+        trainingDay.exercises.forEach((exercise: Exercise) => {
+          if (exercise.category === exerciseCategory) {
+            const weight = parseFloat(exercise.weight) || 0;
+            tonnageInCategory += exercise.sets * exercise.reps * weight;
+          }
+        });
       });
-    });
 
-    return {
-      tonnageInCategory
-    };
-  });
+      return {
+        tonnageInCategory,
+        index
+      };
+    })
+    .filter(weekData => weekData.tonnageInCategory > 0 || weekData.index === 0 || weekData.index === 1) // Include first and second weeks even if tonnage is 0
+    .map(weekData => ({ tonnageInCategory: weekData.tonnageInCategory })); //
 }
