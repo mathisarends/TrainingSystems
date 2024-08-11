@@ -70,6 +70,7 @@ export class RestTimerComponent implements OnInit, OnDestroy, AfterViewInit {
 
   adjustTime(seconds: number) {
     this.sendMessageToServiceWorker('adjustTime', { seconds });
+    this.initialTime += seconds;
   }
 
   skipTimer() {
