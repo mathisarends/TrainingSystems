@@ -54,7 +54,7 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
       title: ['', Validators.required],
       trainingFrequency: ['4', Validators.required],
       trainingWeeks: ['4', Validators.required],
-      weightPlaceholders: ['max', Validators.required],
+      weightPlaceholders: ['lastWeek', Validators.required],
       coverImage: [''],
     });
   }

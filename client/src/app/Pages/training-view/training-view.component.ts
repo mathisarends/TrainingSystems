@@ -40,6 +40,7 @@ import { BasicInfoComponent } from '../../basic-info/basic-info.component';
 import { HttpClientService } from '../../../service/http/http-client.service';
 import { AutoProgressionComponent } from '../../auto-progression/auto-progression.component';
 import { HeadlineComponent } from '../../headline/headline.component';
+import { IconButtonComponent } from '../../icon-button/icon-button.component';
 
 /**
  * Component to manage and display the training view.
@@ -54,6 +55,7 @@ import { HeadlineComponent } from '../../headline/headline.component';
     FormsModule,
     PaginationComponent,
     HeadlineComponent,
+    IconButtonComponent,
   ],
   templateUrl: './training-view.component.html',
   styleUrls: ['./training-view.component.scss'],
@@ -91,8 +93,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
     private swipeService: SwipeService,
     private pauseTimeService: PauseTimeService,
     private mobileService: MobileService,
-    private modalService: ModalService,
-    private httpService: HttpClientService
+    private modalService: ModalService
   ) {}
 
   /**
@@ -227,9 +228,13 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
       .pipe(
         tap(() => {
           this.toastService.show('Erfolg', 'Daten gespeichert');
-          this.formService.clearChanges(); // Clear changes after submission
+          this.formService.clearChanges();
         }),
         catchError((error) => {
+          this.toastService.show(
+            'Fehler',
+            'Daten konnten nicht gespeichtert werden'
+          );
           console.error('Error updating training plan:', error);
           return [];
         })
@@ -266,7 +271,6 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
    * Handles page change events.
    * Checks for unsaved data and
    */
-
   async onPageChanged(day: number): Promise<void> {
     if (this.formService.hasUnsavedChanges()) {
       const confirmed = await this.modalService.open({
@@ -317,9 +321,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
     this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
   }
 
-  switchToTimerView(event: Event) {
-    event.preventDefault();
-
+  switchToTimerView() {
     this.modalService.open({
       component: RestTimerComponent,
       title: 'Pause Timer',

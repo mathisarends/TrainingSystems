@@ -34,3 +34,36 @@ body {
     padding-bottom: 5rem;
   }
 }
+
+/* Boostrap Overrides */
+
+.modal-content {
+  background-image: url("/images/background/white-3.avif");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.modal-header,
+.modal-body,
+.modal-footer {
+  background-color: transparent !important;
+}
+
+input.form-control,
+select.form-control,
+textarea.form-control {
+  background: inherit;
+}
+
+input.form-control::placeholder,
+select.form-control::placeholder,
+textarea.form-control::placeholder {
+  background-image: linear-gradient(
+      rgba(247, 247, 247, 0.6),
+      rgba(250, 250, 250, 0.65)
+    ),
+    url("/images/background/white-3.avif");
+  background-size: cover;
+  background-repeat: no-repeat;
+}

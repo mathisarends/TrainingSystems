@@ -8,15 +8,10 @@
       [heading]="trainingPlanData.title"
     />
     @if (isMobile) {
-    <button
-      type="button"
-      class="btn btn-light btn-md m-1"
-      appTooltip="Ansehen"
-      (click)="switchToTimerView($event)"
-    >
-      <i class="bx bx-timer"></i>
-    </button>
-
+    <app-icon-button
+      [iconClass]="'bx bx-timer'"
+      (buttonClick)="switchToTimerView()"
+    />
     }
   </div>
 
