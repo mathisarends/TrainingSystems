@@ -89,7 +89,7 @@
 @media (max-width: 768px) {
   .responsive-table td {
     display: grid;
-    grid-template-columns: 20ch auto;
+    grid-template-columns: 17ch auto;
     padding-top: 1em;
     padding-bottom: 1em;
   }
@@ -119,6 +119,10 @@
   }
 
   .actualRPE {
+    text-align: left;
+  }
+
+  .weight {
     text-align: left;
   }
 

@@ -37,10 +37,10 @@ import { RestTimerComponent } from '../../rest-timer/rest-timer.component';
 import { TrainingViewNavigationComponent } from '../../training-view-navigation/training-view-navigation.component';
 import { ModalSize } from '../../../service/modal/modalSize';
 import { BasicInfoComponent } from '../../basic-info/basic-info.component';
-import { HttpClientService } from '../../../service/http/http-client.service';
 import { AutoProgressionComponent } from '../../auto-progression/auto-progression.component';
 import { HeadlineComponent } from '../../headline/headline.component';
 import { IconButtonComponent } from '../../icon-button/icon-button.component';
+import { SkeletonTrainingTableComponent } from '../../skeleton-training-table/skeleton-training-table.component';
 
 /**
  * Component to manage and display the training view.
@@ -56,6 +56,7 @@ import { IconButtonComponent } from '../../icon-button/icon-button.component';
     PaginationComponent,
     HeadlineComponent,
     IconButtonComponent,
+    SkeletonTrainingTableComponent,
   ],
   templateUrl: './training-view.component.html',
   styleUrls: ['./training-view.component.scss'],
