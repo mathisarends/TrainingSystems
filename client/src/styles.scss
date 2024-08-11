@@ -36,7 +36,6 @@ body {
 }
 
 /* Boostrap Overrides */
-
 .modal-content {
   background-image: linear-gradient(
       rgba(240, 240, 240, 0.6),
@@ -69,4 +68,18 @@ textarea.form-control::placeholder {
     url("/images/background/white-3.avif");
   background-size: cover;
   background-repeat: no-repeat;
+}
+
+@media screen and (min-width: 1200px) {
+  body {
+    background-image: none;
+  }
+
+  .background-image {
+    background: none;
+  }
+
+  .modal-content {
+    background: white;
+  }
 }
