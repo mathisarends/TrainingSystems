@@ -13,6 +13,7 @@ import { TrainingPlanCardViewDto } from '../../models/dto/training-plan-card-vie
 import { WeightRecommendationBase } from '../../models/training/weight-recommandation.enum.js';
 import { v4 as uuidv4 } from 'uuid';
 import { TrainingPlan } from '../../models/training/trainingPlan.js';
+import { ExerciseCategoryType } from '../../models/training/exercise-category-type.js';
 
 /**
  * Retrieves the list of training plans for the user, summarizing them into card views.
@@ -120,4 +121,90 @@ export async function updatePlan(req: Request, res: Response): Promise<void> {
 
   await userDAO.update(user);
   res.status(200).json({ message: 'Trainingsplan erfolgreich aktualisiert' });
+}
+
+/**
+ * Automatically progresses a training plan based on the user's input.
+ * Handles deload phases and adjusts RPE for each exercise.
+ */
+export async function autoProgressionForTrainingPlan(req: Request, res: Response): Promise<void> {
+  const id = req.params.id;
+  const planDeload = req.query.deloadWeek === 'true';
+  const rpeIncrease = parseFloat(req.query.rpeProgression as string) || 0.5; // Default to 0.5 if not provided
+
+  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
+  const user = await getUser(req, res);
+
+  const trainingPlan = findTrainingPlanById(user.trainingPlans, id);
+
+  trainingPlan.trainingWeeks.forEach((trainingWeek, weekIndex) => {
+    if (planDeload && isLastWeek(trainingPlan, weekIndex)) {
+      handleDeloadWeek(trainingPlan, weekIndex);
+    } else if (weekIndex !== 0) {
+      adjustRPEForWeek(trainingPlan, weekIndex, rpeIncrease);
+    }
+  });
+
+  await userDAO.update(user);
+
+  res.status(200).json('Automatic Progression completed');
+}
+
+/**
+ * Determines if the current week is the last week of the training plan.
+ */
+function isLastWeek(trainingPlan: TrainingPlan, weekIndex: number): boolean {
+  return trainingPlan.trainingWeeks.length - 1 === weekIndex;
+}
+
+/**
+ * Handles adjustments for a deload week by reducing sets and adjusting RPE.
+ */
+function handleDeloadWeek(trainingPlan: TrainingPlan, weekIndex: number): void {
+  const lastTrainingWeek = trainingPlan.trainingWeeks[weekIndex - 1];
+  const deloadTrainingWeek = trainingPlan.trainingWeeks[weekIndex];
+
+  deloadTrainingWeek.trainingDays.forEach((trainingDay, dayIndex) => {
+    const trainingDayBeforeDeload = lastTrainingWeek.trainingDays[dayIndex];
+
+    trainingDay.exercises.forEach((exercise, exerciseIndex) => {
+      const exerciseBeforeDeload = trainingDayBeforeDeload.exercises[exerciseIndex];
+
+      if (exercise.exercise === exerciseBeforeDeload.exercise) {
+        exercise.sets = Math.max(exerciseBeforeDeload.sets - 1, 0); // Prevents negative sets
+        exercise.targetRPE = isMainCategory(exercise.category) ? 6 : 7;
+      }
+    });
+  });
+}
+
+/**
+ * Adjusts the RPE for each exercise for the given week, using the rpeIncrease parameter.
+ */
+function adjustRPEForWeek(trainingPlan: TrainingPlan, weekIndex: number, rpeIncrease: number): void {
+  const previousTrainingWeek = trainingPlan.trainingWeeks[weekIndex - 1];
+
+  trainingPlan.trainingWeeks[weekIndex].trainingDays.forEach((trainingDay, dayIndex) => {
+    const previousWeekTrainingDay = previousTrainingWeek.trainingDays[dayIndex];
+
+    trainingDay.exercises.forEach((exercise, exerciseIndex) => {
+      const previousWeekExercise = previousWeekTrainingDay?.exercises[exerciseIndex];
+
+      if (exercise.exercise === previousWeekExercise?.exercise) {
+        const rpeMax = isMainCategory(exercise.category) ? 9 : 10;
+        exercise.targetRPE = Math.min(previousWeekExercise?.targetRPE + rpeIncrease, rpeMax);
+      }
+    });
+  });
+}
+
+/**
+ * Checks if the exercise belongs to a main category (Squat, Bench, Deadlift).
+ */
+function isMainCategory(category: string): boolean {
+  return (
+    category === ExerciseCategoryType.SQUAT ||
+    category === ExerciseCategoryType.BENCH ||
+    category === ExerciseCategoryType.DEADLIFT
+  );
 }

@@ -40,6 +40,7 @@ import { ModalSize } from '../../../service/modal/modalSize';
 import { BasicInfoComponent } from '../../basic-info/basic-info.component';
 import { HttpClientService } from '../../../service/http/http-client.service';
 import { HttpMethods } from '../../types/httpMethods';
+import { AutoProgressionComponent } from '../../auto-progression/auto-progression.component';
 
 /**
  * Component to manage and display the training view.
@@ -345,5 +346,16 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
           },
         });
       });
+  }
+
+  openAutoProgressionModal() {
+    this.modalService.open({
+      component: AutoProgressionComponent,
+      title: 'Automatische Progression',
+      buttonText: 'Übernehmen',
+      componentData: {
+        planId: this.planId,
+      },
+    });
   }
 }

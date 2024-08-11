@@ -35,7 +35,7 @@ router.get(
 router.post(
   '/plan/:id/auto-progression',
   authService.authenticationMiddleware,
-  asyncHandler(async (req, res) => {})
+  asyncHandler(trainingController.autoProgressionForTrainingPlan)
 );
 
 // Statistiken
