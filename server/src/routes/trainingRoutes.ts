@@ -20,6 +20,7 @@ router.get(
   authService.authenticationMiddleware,
   asyncHandler(trainingDayController.getPlanForDay)
 );
+
 router.patch(
   '/plan/:id/:week/:day',
   authService.authenticationMiddleware,
@@ -29,6 +30,12 @@ router.get(
   '/plan/:id/latest',
   authService.authenticationMiddleware,
   asyncHandler(trainingDayController.getLatestTrainingDay)
+);
+
+router.post(
+  '/plan/:id/auto-progression',
+  authService.authenticationMiddleware,
+  asyncHandler(async (req, res) => {})
 );
 
 // Statistiken
