@@ -1,11 +1,8 @@
-.title {
-  font-size: 2.5rem;
-  font-weight: bold;
-}
-
-.week-day-info {
-  font-size: 1.5rem;
-  margin-left: 1rem;
+.headline-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
 }
 
 .training-table tr td input[type="number"] {
@@ -117,24 +114,18 @@
     text-align: left;
   }
 
-  /* Fixate header in mobile view */
-  #fixed-caption {
-    padding-top: 0.45rem;
-    padding-bottom: 0.15rem;
-
-    position: fixed;
-    top: 4.375rem;
-    padding-inline: 5%;
-    left: 0;
-    right: 0;
-
-    background: rgba(255, 255, 255, 0.65); /* Halbtransparentes Weiß */
+  .table {
+    position: relative;
+    top: 2.5rem;
   }
 
-  /* Adjust table for visibility */
-  table {
-    position: relative;
-    top: 2.25rem;
+  .headline-container {
+    position: fixed;
+    top: 4.25rem;
+    left: 0;
+    right: 0;
+    padding: 0.5rem 5%;
+    z-index: 10;
   }
 
   .table > :not(caption) > * > * {

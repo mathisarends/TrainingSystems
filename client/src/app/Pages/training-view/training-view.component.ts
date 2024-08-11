@@ -39,6 +39,7 @@ import { ModalSize } from '../../../service/modal/modalSize';
 import { BasicInfoComponent } from '../../basic-info/basic-info.component';
 import { HttpClientService } from '../../../service/http/http-client.service';
 import { AutoProgressionComponent } from '../../auto-progression/auto-progression.component';
+import { HeadlineComponent } from '../../headline/headline.component';
 
 /**
  * Component to manage and display the training view.
@@ -47,7 +48,13 @@ import { AutoProgressionComponent } from '../../auto-progression/auto-progressio
 @Component({
   selector: 'app-training-view',
   standalone: true,
-  imports: [SpinnerComponent, CommonModule, FormsModule, PaginationComponent],
+  imports: [
+    SpinnerComponent,
+    CommonModule,
+    FormsModule,
+    PaginationComponent,
+    HeadlineComponent,
+  ],
   templateUrl: './training-view.component.html',
   styleUrls: ['./training-view.component.scss'],
 })
@@ -64,6 +71,8 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
 
   private automationContextInitialized = false;
   isMobile = false;
+
+  subHeading: string = '';
 
   @ViewChildren('weightInput') weightInputs!: QueryList<ElementRef>;
   @ViewChild('trainingTable', { static: false }) trainingTable!: ElementRef;
@@ -95,6 +104,10 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
       this.planId = params['planId'];
       this.trainingWeekIndex = parseInt(params['week']);
       this.trainingDayIndex = parseInt(params['day']);
+
+      this.subHeading = `W${this.trainingWeekIndex + 1}D${
+        this.trainingDayIndex + 1
+      }`;
 
       this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
     });

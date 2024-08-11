@@ -2,27 +2,22 @@
 <app-spinner></app-spinner>
 } @else {
 <form (submit)="onSubmit($event)" class="mt-4" id="form">
-  <div id="fixed-caption">
-    <div class="d-flex justify-content-between align-items-center">
-      <span>
-        <span class="context-headline"
-          >W{{ trainingWeekIndex + 1 }}D{{ trainingDayIndex + 1 }}</span
-        >
-        <span class="headline">{{ trainingPlanData.title }}</span>
-      </span>
-      @if (isMobile) {
-      <div>
-        <button
-          type="button"
-          class="btn btn-light btn-md m-1"
-          appTooltip="Ansehen"
-          (click)="switchToTimerView($event)"
-        >
-          <i class="bx bx-timer"></i>
-        </button>
-      </div>
-      }
-    </div>
+  <div class="headline-container" [ngClass]="{ 'background-image': isMobile }">
+    <app-headline
+      [subHeading]="subHeading"
+      [heading]="trainingPlanData.title"
+    />
+    @if (isMobile) {
+    <button
+      type="button"
+      class="btn btn-light btn-md m-1"
+      appTooltip="Ansehen"
+      (click)="switchToTimerView($event)"
+    >
+      <i class="bx bx-timer"></i>
+    </button>
+
+    }
   </div>
 
   <table
