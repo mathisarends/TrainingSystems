@@ -27,9 +27,22 @@
   <div class="chat-bubble right">
     @if (isTrainingSetEmpty(trainingSet) && isListening()) {
     <p>...</p>
-
+    } @else if (isTrainingSetEmpty(trainingSet) && !isListening()) {
+    <p>Es konnten keine Daten abgeleitet werden</p>
     } @else {
     <pre>{{ getFormattedTrainingSet() }}</pre>
+
     }
   </div>
+
+  @if (isTrainingSetEmpty(trainingSet) && !isListening()) {
+  <div class="chat-bubble right">
+    <p>Versuche es mit folgenden Format:</p>
+  </div>
+
+  <div class="chat-bubble right">
+    <p>100 KG 3 x 8 RPE 7</p>
+  </div>
+
+  }
 </div>

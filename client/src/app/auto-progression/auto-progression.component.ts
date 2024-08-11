@@ -4,11 +4,12 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpMethods } from '../types/httpMethods';
 import { ToastService } from '../components/toast/toast.service';
+import { AlertComponent } from '../components/alert/alert.component';
 
 @Component({
   selector: 'app-auto-progression',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, AlertComponent],
   templateUrl: './auto-progression.component.html',
   styleUrl: './auto-progression.component.scss',
 })

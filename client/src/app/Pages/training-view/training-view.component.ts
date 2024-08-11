@@ -34,12 +34,10 @@ import { MobileService } from '../../../service/util/mobile.service';
 import { PauseTimeService } from '../../../service/training/pause-time.service';
 import { ModalService } from '../../../service/modal/modalService';
 import { RestTimerComponent } from '../../rest-timer/rest-timer.component';
-import { SpeechToTextComponent } from '../../speech-to-text/speech-to-text.component';
 import { TrainingViewNavigationComponent } from '../../training-view-navigation/training-view-navigation.component';
 import { ModalSize } from '../../../service/modal/modalSize';
 import { BasicInfoComponent } from '../../basic-info/basic-info.component';
 import { HttpClientService } from '../../../service/http/http-client.service';
-import { HttpMethods } from '../../types/httpMethods';
 import { AutoProgressionComponent } from '../../auto-progression/auto-progression.component';
 
 /**
@@ -325,27 +323,6 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
       size: ModalSize.MEDIUM,
       hasFooter: false,
     });
-  }
-
-  recordTrainingData(event: Event) {
-    event.preventDefault();
-
-    const exercises = this.trainingPlanData.trainingDay.exercises;
-
-    this.httpService
-      .request<any>(HttpMethods.GET, 'user/profile-picture')
-      .subscribe((response) => {
-        this.modalService.open({
-          component: SpeechToTextComponent,
-          title: 'Übungen eintragen',
-          buttonText: 'Übernhmen',
-          hasFooter: false,
-          componentData: {
-            profilePictureUrl: response,
-            exercises: exercises,
-          },
-        });
-      });
   }
 
   openAutoProgressionModal() {
