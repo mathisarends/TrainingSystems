@@ -38,10 +38,13 @@ body {
 /* Boostrap Overrides */
 
 .modal-content {
-  background-image: url("/images/background/white-3.avif");
+  background-image: linear-gradient(
+      rgba(240, 240, 240, 0.6),
+      rgba(250, 250, 250, 0.65)
+    ),
+    url("/images/background/white-3.avif");
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center;
 }
 
 .modal-header,
