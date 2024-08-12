@@ -53,13 +53,14 @@
                   : 1
             }"
           >
+            @for (category of exerciseData.exerciseCategories; track category) {
             <option
-              *ngFor="let category of exerciseData.exerciseCategories"
               [value]="category"
               [selected]="exercise.category === category"
             >
               {{ category }}
             </option>
+            }
           </select>
         </td>
         <td data-cell="Exercise">
@@ -71,15 +72,15 @@
             [style.display]="exercise.category === category ? 'block' : 'none'"
             (change)="onInputChange($event)"
           >
+            @for ( exerciseName of exerciseData.categorizedExercises[category];
+            track exerciseName) {
             <option
-              *ngFor="
-                let exerciseName of exerciseData.categorizedExercises[category]
-              "
               [value]="exerciseName"
               [selected]="exercise.exercise === exerciseName"
             >
               {{ exerciseName }}
             </option>
+            }
           </select>
         </td>
         <td data-cell="Sets">
