@@ -189,6 +189,10 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
       .pipe(
         tap(({ trainingPlan, exerciseData }) => {
           this.trainingPlanData = trainingPlan;
+          console.log(
+            '🚀 ~ TrainingViewComponent ~ tap ~ this.trainingPlanData:',
+            this.trainingPlanData?.previousTrainingDay
+          );
 
           this.exerciseData = exerciseData;
           this.title = trainingPlan?.title;
