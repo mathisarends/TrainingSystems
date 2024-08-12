@@ -37,7 +37,8 @@
       '', exercise: '', sets: '', reps: '', weight: '', targetRPE: '',
       actualRPE: '', estMax: '', }; @let previousTrainingDayExercise =
       trainingPlanData.previousTrainingDay?.exercises?.[i] ?? { exercise:
-      undefined, weight: undefined };
+      undefined, weight: undefined }; @let namePrefix = 'day' + trainingDayIndex
+      + '_exercise' + k + '_:';
 
       <tr>
         <td data-cell="Category">
@@ -96,7 +97,7 @@
           <input
             type="number"
             class="transparent-input reps"
-            name="day{{ trainingDayIndex }}_exercise{{ k }}_reps"
+            [name]="namePrefix + 'reps'"
             [value]="exercise.reps || ''"
             (input)="onInputChange($event)"
           />
@@ -112,7 +113,7 @@
             "
             type="text"
             class="transparent-input weight"
-            name="day{{ trainingDayIndex }}_exercise{{ k }}_weight"
+            [name]="namePrefix + 'weight'"
             [value]="exercise.weight || ''"
             (input)="onInputChange($event)"
           />
@@ -121,7 +122,7 @@
           <input
             type="number"
             class="transparent-input targetRPE"
-            name="day{{ trainingDayIndex }}_exercise{{ k }}_targetRPE"
+            [name]="namePrefix + 'targetRPE'"
             [value]="exercise.targetRPE || ''"
             (input)="onInputChange($event)"
           />
@@ -130,7 +131,7 @@
           <input
             type="string"
             class="transparent-input actualRPE"
-            name="day{{ trainingDayIndex }}_exercise{{ k }}_actualRPE"
+            [name]="namePrefix + 'actualRPE'"
             [value]="exercise.actualRPE || ''"
             (input)="onInputChange($event)"
           />
@@ -140,7 +141,7 @@
             type="number"
             class="transparent-input estMax"
             readonly
-            name="day{{ trainingDayIndex }}_exercise{{ k }}_estMax"
+            [name]="namePrefix + 'estMax'"
             [value]="exercise.estMax || ''"
             (input)="onInputChange($event)"
           />
