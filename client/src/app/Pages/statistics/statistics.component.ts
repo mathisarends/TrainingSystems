@@ -36,6 +36,8 @@ import { HeadlineComponent } from '../../headline/headline.component';
   styleUrls: ['./statistics.component.scss'],
 })
 export class StatisticsComponent implements OnInit {
+  trainingPlanTitle: string = '';
+
   dataLoaded: boolean = false;
   currentView: 'volume' | 'performance' = 'volume';
 
@@ -139,7 +141,10 @@ export class StatisticsComponent implements OnInit {
 
       const [tonnageResponse, setsResponse] = await Promise.all([
         firstValueFrom(
-          this.httpService.request<Partial<TrainingExerciseTonnageDto>>(
+          this.httpService.request<{
+            title: string;
+            data: Partial<TrainingExerciseTonnageDto>;
+          }>(
             HttpMethods.GET,
             `training/statistics/${id}?exercises=${exercisesQuery}`
           )
@@ -153,27 +158,35 @@ export class StatisticsComponent implements OnInit {
       ]);
 
       this.dataLoaded = true;
-      this.initializeCharts(tonnageResponse, setsResponse);
+      this.initializeCharts(
+        tonnageResponse.data,
+        setsResponse,
+        tonnageResponse.title
+      );
     } catch (error) {
       console.error('Error fetching training statistics:', error);
     }
   }
 
   private initializeCharts(
-    tonnageResponse: Partial<TrainingExerciseTonnageDto>,
-    setsResponse: { [key: string]: number[] }
+    tonnageData: Partial<TrainingExerciseTonnageDto>,
+    setsResponse: { [key: string]: number[] },
+    title: string // Neuer Parameter für den Titel
   ): void {
-    // Set data for the line chart
-    this.lineChartDatasets = Object.keys(tonnageResponse).map((categoryKey) => {
+    // Setze den Titel des Trainingsplans
+    this.trainingPlanTitle = title;
+
+    // Setze Daten für das Liniendiagramm
+    this.lineChartDatasets = Object.keys(tonnageData).map((categoryKey) => {
       const categoryData =
-        tonnageResponse[categoryKey as keyof TrainingExerciseTonnageDto];
+        tonnageData[categoryKey as keyof TrainingExerciseTonnageDto];
       return this.createTonnageDataSet(categoryKey, categoryData || []);
     });
     this.lineChartLabels = this.generateWeekLabels(
       this.lineChartDatasets[0]?.data.length || 0
     );
 
-    // Set data for the grouped bar chart
+    // Setze Daten für das gruppierte Balkendiagramm
     this.groupedBarChartDatasets = Object.keys(setsResponse).map(
       (categoryKey) => {
         const setsData = setsResponse[categoryKey];
