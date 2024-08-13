@@ -4,10 +4,16 @@
     type="button"
     aria-haspopup="true"
     aria-expanded="isOpen()"
+    style="
+      display: flex;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      gap: 5px;
+    "
   >
-    <span>{{ getSelectedText() }}</span>
-    <span class="caret"></span>
-    <!-- Chevron icon is always to the right -->
+    @for (select of selected(); track select) {
+    <div class="chip bg-light">{{ select }}</div>
+    }
   </button>
   <div
     class="dropdown-menu background-image p-2"

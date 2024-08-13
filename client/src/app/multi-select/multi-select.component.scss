@@ -13,6 +13,10 @@
   align-items: center;
 }
 
+.dropdown button:active {
+  background: none;
+}
+
 .dropdown-menu {
   width: 100%;
   overflow-y: auto;
@@ -42,4 +46,11 @@
 .form-check-input:checked {
   background-color: #007bff;
   border-color: #007bff;
+}
+
+.chip {
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #000;
 }
