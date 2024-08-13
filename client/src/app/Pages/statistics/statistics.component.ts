@@ -15,6 +15,7 @@ import { PaginationComponent } from '../../components/pagination/pagination.comp
 import { ExerciseDrillThroughEvent } from '../../line-chart/exercise-drill-through-event';
 import { ModalService } from '../../../service/modal/modalService';
 import { PolarChartComponent } from '../../polar-chart/polar-chart.component';
+import { HeadlineComponent } from '../../headline/headline.component';
 
 /**
  * Component responsible for displaying training statistics in a line chart.
@@ -29,6 +30,7 @@ import { PolarChartComponent } from '../../polar-chart/polar-chart.component';
     LineChartComponent,
     GroupedBarChartComponent,
     PaginationComponent,
+    HeadlineComponent,
   ],
   templateUrl: './statistics.component.html',
   styleUrls: ['./statistics.component.scss'],
@@ -79,19 +81,12 @@ export class StatisticsComponent implements OnInit {
         }/${drillThroughData.weekNumber - 1}`
       )
       .subscribe((response: any) => {
-        console.log(
-          '🚀 ~ StatisticsComponent ~ .subscribe ~ response:',
-          response
-        );
-
         const data: number[] = response.exercises.map(
           (exercise: any) => exercise.tonnage
         );
-        console.log('🚀 ~ StatisticsComponent ~ .subscribe ~ data:', data);
         const labels: string[] = response.exercises.map(
           (exercise: any) => exercise.exercise
         );
-        console.log('🚀 ~ StatisticsComponent ~ .subscribe ~ labels:', labels);
 
         this.modalService.open({
           component: PolarChartComponent,

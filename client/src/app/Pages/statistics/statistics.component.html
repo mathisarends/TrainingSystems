@@ -1,8 +1,9 @@
 @if (!dataLoaded) {
 <app-spinner />
 } @else {
-
 <main>
+  <app-headline [subHeading]="'stats'" [heading]="'Test'" />
+
   <app-multi-select
     [options]="allExercises"
     [initialSelected]="selectedExercises!"

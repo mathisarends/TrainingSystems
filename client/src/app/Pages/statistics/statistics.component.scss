@@ -8,7 +8,7 @@
 main {
   display: flex;
   flex-direction: column;
-  gap: 3.5rem;
+  gap: 2rem;
   justify-content: center;
   max-width: 1800px;
   width: 100%;
@@ -16,7 +16,7 @@ main {
 }
 
 app-multi-select {
-  margin-bottom: -1.5rem;
+  margin-top: -1rem;
 }
 
 footer {
