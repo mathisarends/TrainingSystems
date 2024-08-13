@@ -58,6 +58,12 @@ router.get(
 );
 
 router.get(
+  '/statitics/:id/performance',
+  authService.authenticationMiddleware,
+  asyncHandler(trainingStatisticsController.getPerformanceCharts)
+);
+
+router.get(
   '/statistics/:id',
   authService.authenticationMiddleware,
   asyncHandler(trainingStatisticsController.getTonnageForCategories)

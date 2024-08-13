@@ -129,6 +129,59 @@ export async function getDrilldownForCategory(req: Request, res: Response): Prom
   return res.status(200).json({ category, week: weekIndex, exercises: tonnageArray });
 }
 
+export async function getPerformanceCharts(req: Request, res: Response): Promise<void> {
+  const trainingPlanId = req.params.id;
+  const exerciseCategories = (req.query.exercises as string).split(',');
+
+  const mappedExerciseCategories = exerciseCategories.map((category: string) => mapToExerciseCategory(category));
+
+  // bislang werden nur für diese Kategorien 1RM erlaubt
+  const mainExercises = [ExerciseCategoryType.SQUAT, ExerciseCategoryType.BENCH, ExerciseCategoryType.DEADLIFT];
+
+  if (mappedExerciseCategories.some(exercise => !mainExercises.includes(exercise))) {
+    res.status(400).json({ error: 'Invalid exercise category provided' });
+    return;
+  }
+
+  const user = await getUser(req, res);
+  const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
+
+  const performanceData = mappedExerciseCategories.reduce(
+    (result, category) => {
+      result[category] = getBestPerformanceByExercise(trainingPlan, category as ExerciseCategoryType);
+      return result;
+    },
+    {} as Record<ExerciseCategoryType, { bestPerformance: number }[]>
+  );
+
+  res.status(200).json(performanceData);
+}
+
+function getBestPerformanceByExercise(
+  trainingPlan: TrainingPlan,
+  exerciseCategory: ExerciseCategoryType
+): { bestPerformance: number }[] {
+  return trainingPlan.trainingWeeks
+    .map((week, index) => {
+      let bestPerformance = 0;
+
+      week.trainingDays.forEach(trainingDay => {
+        trainingDay.exercises.forEach((exercise: Exercise) => {
+          if (exercise.category === exerciseCategory) {
+            bestPerformance = Math.max(bestPerformance, exercise.estMax);
+          }
+        });
+      });
+
+      return {
+        bestPerformance,
+        isInitialWeek: index === 0 || index === 1
+      };
+    })
+    .filter(weekData => weekData.bestPerformance > 0 || weekData.isInitialWeek)
+    .map(weekData => ({ bestPerformance: weekData.bestPerformance }));
+}
+
 /**
  * Calculates the number of sets per week for a specific exercise category in a training plan.
  */
