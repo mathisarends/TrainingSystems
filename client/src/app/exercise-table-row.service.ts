@@ -16,20 +16,6 @@ enum ExerciseTableRowInputType {
 })
 export class ExerciseTableRowService {
   /**
-   * List of allowed class names for validation.
-   */
-  allowedElementClassList = [
-    'exercise-category-selector',
-    'exercise-name-selector',
-    'sets',
-    'reps',
-    'weight',
-    'targetRPE',
-    'actualRPE',
-    'estMax',
-  ];
-
-  /**
    * Finds the `HTMLSelectElement` for the exercise category within the same table row as the provided element.
    *
    * @param element The reference element within the table row.
@@ -72,22 +58,30 @@ export class ExerciseTableRowService {
    * @param inputType The type of input to find, based on the ExerciseTableRowInputType enum.
    * @returns The found HTMLElement or null if not found.
    */
-  getElementByType(element: HTMLElement, inputType: ExerciseTableRowInputType): HTMLElement | null {
+  getElementByType(element: HTMLElement, inputType: ExerciseTableRowInputType): HTMLElement {
     return this.findClosestElementInRow(element, inputType);
   }
+
   /**
    * Finds the closest element within the same table row based on the provided selector.
    *
    * @param element The reference element within the table row.
    * @param selector The CSS selector for the target element.
+   * @returns The found HTMLElement.
+   * @throws Will throw an error if no matching element is found.
    */
-  private findClosestElementInRow(element: HTMLElement, selector: string): HTMLElement | null {
-    const foundElement = element.closest('tr')?.querySelector(selector) as HTMLElement | null;
 
-    if (!foundElement) {
-      throw new Error(`Element with selector ${selector} not found in the same table row.`);
+  private findClosestElementInRow(element: HTMLElement, selector: string): HTMLElement {
+    const tableRow = element.closest('tr');
+    if (!tableRow) {
+      throw new Error('The element is not contained within a table row.');
     }
 
-    return foundElement;
+    const associatedElement = tableRow.querySelector(selector);
+    if (!associatedElement) {
+      throw new Error(`No matching element found for selector: ${selector}`);
+    }
+
+    return associatedElement as HTMLElement;
   }
 }
