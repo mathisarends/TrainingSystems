@@ -1,40 +1,93 @@
 import { Injectable } from '@angular/core';
 
+enum ExerciseTableRowInputType {
+  CATEGORY_SELECTOR = '.exercise-category-selector',
+  EXERCISE_SELECTOR = '.exercise-name-selector:not([disabled])[style*="display: block"]',
+  SETS_INPUT = '.sets',
+  REPS_INPUT = '.reps',
+  WEIGHT_INPUT = '.weight',
+  TARGET_RPE_INPUT = '.targetRPE',
+  ACTUAL_RPE_INPUT = '.actualRPE',
+  EST_MAX_INPUT = '.estMax',
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class ExerciseTableRowService {
   /**
-   * Findet das `HTMLSelectElement` für die Übungskategorie innerhalb der Tabellenzeile.
-   *
-   * @param element Das Ausgangselement innerhalb der Tabellenzeile.
-   * @returns Das gefundene `HTMLSelectElement` oder null, falls nicht gefunden.
+   * List of allowed class names for validation.
    */
-  static getExerciseCategorySelector(element: HTMLElement): HTMLSelectElement | null {
-    return this.findClosestElementInRow(element, '.exercise-category-selector') as HTMLSelectElement | null;
+  allowedElementClassList = [
+    'exercise-category-selector',
+    'exercise-name-selector',
+    'sets',
+    'reps',
+    'weight',
+    'targetRPE',
+    'actualRPE',
+    'estMax',
+  ];
+
+  /**
+   * Finds the `HTMLSelectElement` for the exercise category within the same table row as the provided element.
+   *
+   * @param element The reference element within the table row.
+   */
+  getExerciseCategorySelectorByElement(element: HTMLElement): HTMLSelectElement {
+    return this.getElementByType(element, ExerciseTableRowInputType.CATEGORY_SELECTOR) as HTMLSelectElement;
   }
 
   /**
-   * Findet das `HTMLInputElement` für die Gewichtseingabe innerhalb der Tabellenzeile.
+   * Finds the `HTMLSelectElement` for the visible and enabled exercise name within the same table row as the provided element.
    *
-   * @param element Das Ausgangselement innerhalb der Tabellenzeile.
-   * @returns Das gefundene `HTMLInputElement` oder null, falls nicht gefunden.
+   * @param element The reference element within the table row.
    */
-  static getWeightInput(element: HTMLElement): HTMLInputElement | null {
-    return this.findClosestElementInRow(element, '.weight') as HTMLInputElement | null;
+  getExerciseSelectorByElement(element: HTMLElement): HTMLSelectElement {
+    return this.getElementByType(element, ExerciseTableRowInputType.EXERCISE_SELECTOR) as HTMLSelectElement;
   }
 
   /**
-   * Findet das `HTMLInputElement` für die Anzahl der Sätze innerhalb der Tabellenzeile.
+   * Finds the `HTMLInputElement` for the weight input within the same table row as the provided element.
    *
-   * @param element Das Ausgangselement innerhalb der Tabellenzeile.
-   * @returns Das gefundene `HTMLInputElement` oder null, falls nicht gefunden.
+   * @param element The reference element within the table row.
    */
-  static getSetInput(element: HTMLElement): HTMLInputElement | null {
-    return this.findClosestElementInRow(element, '.sets') as HTMLInputElement | null;
+  getWeightInputByElement(element: HTMLElement): HTMLInputElement {
+    return this.getElementByType(element, ExerciseTableRowInputType.WEIGHT_INPUT) as HTMLInputElement;
   }
 
-  private static findClosestElementInRow(element: HTMLElement, selector: string): HTMLElement | null {
-    return element.closest('tr')?.querySelector(selector) as HTMLElement | null;
+  /**
+   * Finds the `HTMLInputElement` for the number of sets within the same table row as the provided element.
+   *
+   * @param element The reference element within the table row.
+   */
+  getSetInputByElement(element: HTMLElement): HTMLInputElement {
+    return this.getElementByType(element, ExerciseTableRowInputType.SETS_INPUT) as HTMLInputElement;
+  }
+
+  /**
+   * Finds the input element or select element within the same table row as the provided element, based on the specified input type.
+   *
+   * @param element The reference element within the table row.
+   * @param inputType The type of input to find, based on the ExerciseTableRowInputType enum.
+   * @returns The found HTMLElement or null if not found.
+   */
+  getElementByType(element: HTMLElement, inputType: ExerciseTableRowInputType): HTMLElement | null {
+    return this.findClosestElementInRow(element, inputType);
+  }
+  /**
+   * Finds the closest element within the same table row based on the provided selector.
+   *
+   * @param element The reference element within the table row.
+   * @param selector The CSS selector for the target element.
+   */
+  private findClosestElementInRow(element: HTMLElement, selector: string): HTMLElement | null {
+    const foundElement = element.closest('tr')?.querySelector(selector) as HTMLElement | null;
+
+    if (!foundElement) {
+      throw new Error(`Element with selector ${selector} not found in the same table row.`);
+    }
+
+    return foundElement;
   }
 }

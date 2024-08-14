@@ -2,6 +2,7 @@ import { Injectable, Renderer2, RendererFactory2, EventEmitter, signal, OnInit }
 import { ExerciseDataDTO } from '../../app/Pages/training-view/exerciseDataDto';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { ExerciseTableRowService } from '../../app/exercise-table-row.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +20,7 @@ export class PauseTimeService {
   constructor(
     rendererFactory: RendererFactory2,
     @Inject(PLATFORM_ID) private platformId: any,
+    private exerciseTableRowService: ExerciseTableRowService,
   ) {
     this.renderer = rendererFactory.createRenderer(null, null);
 
@@ -54,7 +56,8 @@ export class PauseTimeService {
           .closest('tr')
           ?.querySelector('.exercise-category-selector') as HTMLSelectElement;
 
-        const setInput = weightInput.closest('tr')?.querySelector('.sets') as HTMLInputElement;
+        const setInput = this.exerciseTableRowService.getSetInputByElement(weightInput) as HTMLInputElement;
+        console.log('🚀 ~ PauseTimeService ~ weightInput.addEventListener ~ setInput:', setInput);
 
         if (closestCategorySelector) {
           const categoryValue = closestCategorySelector.value;
