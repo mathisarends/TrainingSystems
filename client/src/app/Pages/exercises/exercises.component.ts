@@ -40,24 +40,19 @@ export class ExercisesComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private searchService: SearchService,
     private modalService: ModalService,
-    private authService: AuthService
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
     const authenticated = this.authService.isLoggedIn();
-    console.log(
-      '🚀 ~ ExercisesComponent ~ ngOnInit ~ authenticated:',
-      authenticated
-    );
+    console.log('🚀 ~ ExercisesComponent ~ ngOnInit ~ authenticated:', authenticated);
 
     this.loadExercises();
 
     // Subscribe to search input changes
-    this.searchSubscription = this.searchService.searchText$.subscribe(
-      (searchText) => {
-        // Filter categories based on search text
-      }
-    );
+    this.searchSubscription = this.searchService.searchText$.subscribe((searchText) => {
+      // Filter categories based on search text
+    });
   }
 
   ngOnDestroy(): void {
@@ -75,9 +70,7 @@ export class ExercisesComponent implements OnInit, OnDestroy {
   private async loadExercises(): Promise<void> {
     this.isLoading = true;
     try {
-      const response: any = await firstValueFrom(
-        this.httpClient.request<any>(HttpMethods.GET, 'exercise')
-      );
+      const response: any = await firstValueFrom(this.httpClient.request<any>(HttpMethods.GET, 'exercise'));
 
       this.exerciseCategories = response?.exerciseCategories;
       this.categorizedExercises = response?.categorizedExercises;
@@ -103,17 +96,10 @@ export class ExercisesComponent implements OnInit, OnDestroy {
 
     try {
       const response: any = await firstValueFrom(
-        this.httpClient.request<any>(
-          HttpMethods.PATCH,
-          'exercise',
-          this.changedData
-        )
+        this.httpClient.request<any>(HttpMethods.PATCH, 'exercise', this.changedData),
       );
 
-      this.toastService.show(
-        'Speichern erfolgreich',
-        'Deine Änderungen wurden erfolgreich gespeichert'
-      );
+      this.toastService.show('Speichern erfolgreich', 'Deine Änderungen wurden erfolgreich gespeichert');
 
       console.log('response', response);
     } catch (error) {
@@ -140,9 +126,7 @@ export class ExercisesComponent implements OnInit, OnDestroy {
 
     if (confirmed) {
       try {
-        await firstValueFrom(
-          this.httpClient.request<any>(HttpMethods.POST, 'exercise/reset')
-        );
+        await firstValueFrom(this.httpClient.request<any>(HttpMethods.POST, 'exercise/reset'));
 
         await this.loadExercises();
         this.toastService.show('Erfolg', 'Übungskatalog zurückgesetzt!');

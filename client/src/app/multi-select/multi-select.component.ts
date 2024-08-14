@@ -37,9 +37,7 @@ export class MultiSelectComponent implements OnInit {
   }
 
   filteredOptions(): string[] {
-    return this.options.filter((option) =>
-      option.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
+    return this.options.filter((option) => option.toLowerCase().includes(this.searchTerm.toLowerCase()));
   }
 
   onSelectionChange(option: string, event: Event): void {

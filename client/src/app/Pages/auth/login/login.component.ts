@@ -19,7 +19,7 @@ export class LoginComponent extends BaisAuthComponent implements OnInit {
     router: Router,
     httpClient: HttpClientService,
     toastService: ToastService,
-    @Inject(DOCUMENT) document: Document
+    @Inject(DOCUMENT) document: Document,
   ) {
     super(router, httpClient, toastService, document);
   }
@@ -38,27 +38,22 @@ export class LoginComponent extends BaisAuthComponent implements OnInit {
       password: formData.get('password'),
     };
 
-    this.httpClient
-      .request<any>(HttpMethods.POST, 'user/login', data)
-      .subscribe({
-        next: (response: Response) => {
-          console.log('Login successful:', response);
-          this.router.navigate(['/']);
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Login error:', error);
-          if (error.status === 401) {
-            console.log('Unauthorized: Wrong credentials');
-            this.toastService.show(
-              'Ungültige Anmeldedaten',
-              'Die Kombination aus Nutzername und Passwort ist falsch'
-            );
-          } else if (error.status === 400) {
-            console.log('Bad request:', error.error);
-          } else {
-            console.log('An unknown error occurred');
-          }
-        },
-      });
+    this.httpClient.request<any>(HttpMethods.POST, 'user/login', data).subscribe({
+      next: (response: Response) => {
+        console.log('Login successful:', response);
+        this.router.navigate(['/']);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Login error:', error);
+        if (error.status === 401) {
+          console.log('Unauthorized: Wrong credentials');
+          this.toastService.show('Ungültige Anmeldedaten', 'Die Kombination aus Nutzername und Passwort ist falsch');
+        } else if (error.status === 400) {
+          console.log('Bad request:', error.error);
+        } else {
+          console.log('An unknown error occurred');
+        }
+      },
+    });
   }
 }

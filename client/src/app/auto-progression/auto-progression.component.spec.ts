@@ -8,9 +8,8 @@ describe('AutoProgressionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AutoProgressionComponent]
-    })
-    .compileComponents();
+      imports: [AutoProgressionComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(AutoProgressionComponent);
     component = fixture.componentInstance;

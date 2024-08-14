@@ -1,7 +1,7 @@
 class NotificationManager {
   constructor() {
-    this.defaultTag = "timer-notification";
-    this.defaultIcon = "/images/logo-own.png";
+    this.defaultTag = 'timer-notification';
+    this.defaultIcon = '/images/logo-own.png';
   }
 
   showNotification(title, body, options = {}) {
@@ -17,13 +17,11 @@ class NotificationManager {
   }
 
   closeNotifications() {
-    self.registration
-      .getNotifications({ tag: this.defaultTag })
-      .then((notifications) => {
-        notifications.forEach((notification) => {
-          notification.close();
-        });
+    self.registration.getNotifications({ tag: this.defaultTag }).then((notifications) => {
+      notifications.forEach((notification) => {
+        notification.close();
       });
+    });
   }
 }
 

@@ -37,7 +37,7 @@ export class ModalComponent implements AfterViewInit {
   constructor(
     private environmentInjector: EnvironmentInjector,
     private modalService: ModalService,
-    private modalEventService: ModalEventsService
+    private modalEventService: ModalEventsService,
   ) {}
 
   ngAfterViewInit() {

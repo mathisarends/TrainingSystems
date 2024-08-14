@@ -12,12 +12,7 @@ import { HttpMethods } from '../types/httpMethods';
 @Component({
   selector: 'app-friend-modal',
   standalone: true,
-  imports: [
-    FriendCardComponent,
-    AlertComponent,
-    SpinnerComponent,
-    CommonModule,
-  ],
+  imports: [FriendCardComponent, AlertComponent, SpinnerComponent, CommonModule],
   templateUrl: './friend-request.component.html',
   styleUrls: ['./friend-request.component.scss'],
 })
@@ -39,7 +34,7 @@ export class FriendRequestComponent implements OnInit {
           console.error('Error while fetching friend suggestions:', error);
           return [];
         }),
-        finalize(() => this.loadingSubject.next(false))
+        finalize(() => this.loadingSubject.next(false)),
       )
       .subscribe((response) => {
         this.originalFriends = response.usersFromRequests || []; // Store the original friends list
@@ -54,9 +49,7 @@ export class FriendRequestComponent implements OnInit {
       this.friendsSubject.next(this.originalFriends);
     } else {
       const updatedFriends = this.originalFriends.filter(
-        (friend) =>
-          friend.name.toLowerCase().includes(searchTerm) ||
-          friend.email.toLowerCase().includes(searchTerm)
+        (friend) => friend.name.toLowerCase().includes(searchTerm) || friend.email.toLowerCase().includes(searchTerm),
       );
       this.friendsSubject.next(updatedFriends);
     }
@@ -64,20 +57,12 @@ export class FriendRequestComponent implements OnInit {
 
   async onFriendAccept(userId: string) {
     const response = await firstValueFrom(
-      this.httpService.request<any>(
-        HttpMethods.POST,
-        `friendship/accept/${userId}`
-      )
+      this.httpService.request<any>(HttpMethods.POST, `friendship/accept/${userId}`),
     );
-    console.log(
-      '🚀 ~ FriendRequestComponent ~ onFriendAccept ~ response:',
-      response
-    );
+    console.log('🚀 ~ FriendRequestComponent ~ onFriendAccept ~ response:', response);
 
     const currentFriends = this.friendsSubject.value;
-    const updatedFriends = currentFriends.filter(
-      (friend) => userId !== friend.id
-    );
+    const updatedFriends = currentFriends.filter((friend) => userId !== friend.id);
     this.friendsSubject.next(updatedFriends);
   }
 }

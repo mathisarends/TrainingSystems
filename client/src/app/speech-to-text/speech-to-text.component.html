@@ -1,48 +1,39 @@
 <div class="speech-container">
   <div [ngClass]="{ 'profile-picture-ring': true, speaking: isListening() }">
-    <img
-      [src]="profilePictureUrl"
-      (click)="toggleListening()"
-      alt="Profile Picture"
-      class="profile-picture"
-    />
+    <img [src]="profilePictureUrl" (click)="toggleListening()" alt="Profile Picture" class="profile-picture" />
   </div>
 
   <div class="exercise-select form-group mt-3">
     <select class="form-control" id="exerciseSelect">
       @for (exercise of exercises; track exercise) {
-      <option>
-        {{ exercise.exercise }} {{ exercise.sets }} x {{ exercise.reps }}
-      </option>
+        <option>{{ exercise.exercise }} {{ exercise.sets }} x {{ exercise.reps }}</option>
       }
     </select>
   </div>
 
   <!-- Transcript Speech Bubble (from the user) -->
   <div class="chat-bubble left">
-    <p>{{ transcript !== "" ? transcript : "..." }}</p>
+    <p>{{ transcript !== '' ? transcript : '...' }}</p>
   </div>
 
   <!-- Derived Action Speech Bubble (response) -->
   <div class="chat-bubble right">
     @if (isTrainingSetEmpty(trainingSet) && isListening()) {
-    <p>...</p>
+      <p>...</p>
     } @else if (isTrainingSetEmpty(trainingSet) && !isListening()) {
-    <p>Es konnten keine Daten abgeleitet werden</p>
+      <p>Es konnten keine Daten abgeleitet werden</p>
     } @else {
-    <pre>{{ getFormattedTrainingSet() }}</pre>
-
+      <pre>{{ getFormattedTrainingSet() }}</pre>
     }
   </div>
 
   @if (isTrainingSetEmpty(trainingSet) && !isListening()) {
-  <div class="chat-bubble right">
-    <p>Versuche es mit folgenden Format:</p>
-  </div>
+    <div class="chat-bubble right">
+      <p>Versuche es mit folgenden Format:</p>
+    </div>
 
-  <div class="chat-bubble right">
-    <p>100 KG 3 x 8 RPE 7</p>
-  </div>
-
+    <div class="chat-bubble right">
+      <p>100 KG 3 x 8 RPE 7</p>
+    </div>
   }
 </div>

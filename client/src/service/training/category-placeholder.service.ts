@@ -9,7 +9,7 @@ export class CategoryPlaceholderService {
 
   constructor(
     private formService: FormService,
-    private rendererFactory: RendererFactory2
+    private rendererFactory: RendererFactory2,
   ) {
     this.renderer = this.rendererFactory.createRenderer(null, null);
   }
@@ -18,9 +18,7 @@ export class CategoryPlaceholderService {
    * Handles the visibility of placeholder categories.
    */
   handlePlaceholderCategory(): void {
-    const selectors = document.querySelectorAll(
-      '.exercise-category-selector'
-    ) as NodeListOf<HTMLSelectElement>;
+    const selectors = document.querySelectorAll('.exercise-category-selector') as NodeListOf<HTMLSelectElement>;
 
     selectors.forEach((categorySelector) => {
       const category = categorySelector.value;
@@ -35,11 +33,7 @@ export class CategoryPlaceholderService {
    * @param target The HTML select element.
    */
   updatePlaceholderVisibility(target: HTMLSelectElement): void {
-    this.renderer.setStyle(
-      target,
-      'opacity',
-      target.value !== '- Bitte Auswählen -' ? '1' : '0'
-    );
+    this.renderer.setStyle(target, 'opacity', target.value !== '- Bitte Auswählen -' ? '1' : '0');
   }
 
   /**
@@ -51,7 +45,7 @@ export class CategoryPlaceholderService {
   onCategoryChange(
     event: Event,
     exerciseCategories: string[],
-    defaultRepSchemeByCategory: { [key: string]: any }
+    defaultRepSchemeByCategory: { [key: string]: any },
   ): void {
     const target = event.target as HTMLSelectElement;
     const category = target.value;
@@ -61,15 +55,10 @@ export class CategoryPlaceholderService {
       this.formService.addChange(target.name, target.value);
 
       const exerciseNameSelectors = tableRow.querySelectorAll(
-        '.exercise-name-selector'
+        '.exercise-name-selector',
       ) as NodeListOf<HTMLSelectElement>;
 
-      this.updateCategoryStyles(
-        target,
-        category,
-        exerciseNameSelectors,
-        exerciseCategories
-      );
+      this.updateCategoryStyles(target, category, exerciseNameSelectors, exerciseCategories);
 
       this.updateInputValues(tableRow, category, defaultRepSchemeByCategory);
 
@@ -90,7 +79,7 @@ export class CategoryPlaceholderService {
     target: HTMLSelectElement,
     category: string,
     exerciseNameSelectors: NodeListOf<HTMLSelectElement>,
-    exerciseCategories: string[]
+    exerciseCategories: string[],
   ): void {
     if (category === '- Bitte Auswählen -') {
       this.renderer.setStyle(target, 'opacity', '0');
@@ -102,11 +91,7 @@ export class CategoryPlaceholderService {
       this.renderer.setStyle(target, 'opacity', '1');
       const index = exerciseCategories.indexOf(category);
       exerciseNameSelectors.forEach((selector, i) => {
-        this.renderer.setStyle(
-          selector,
-          'display',
-          i === index ? 'block' : 'none'
-        );
+        this.renderer.setStyle(selector, 'display', i === index ? 'block' : 'none');
         this.renderer.setStyle(selector, 'opacity', i === index ? '1' : '0');
         selector.disabled = i !== index;
       });
@@ -122,23 +107,18 @@ export class CategoryPlaceholderService {
   private updateInputValues(
     tableRow: Element,
     category: string,
-    defaultRepSchemeByCategory: { [key: string]: any }
+    defaultRepSchemeByCategory: { [key: string]: any },
   ): void {
-    const exerciseNameSelectors = tableRow.querySelectorAll(
-      '.exercise-name-selector'
-    ) as NodeListOf<HTMLSelectElement>;
+    const exerciseNameSelectors = tableRow.querySelectorAll('.exercise-name-selector') as NodeListOf<HTMLSelectElement>;
 
     // Finde den ersten sichtbaren und nicht deaktivierten selector
     const exerciseSelect = Array.from(exerciseNameSelectors).find(
-      (selector) =>
-        window.getComputedStyle(selector).opacity === '1' && !selector.disabled
+      (selector) => window.getComputedStyle(selector).opacity === '1' && !selector.disabled,
     )!;
 
     const setsInput = tableRow.querySelector('.sets') as HTMLInputElement;
     const repsInput = tableRow.querySelector('.reps') as HTMLInputElement;
-    const targetRPEInput = tableRow.querySelector(
-      '.targetRPE'
-    ) as HTMLInputElement;
+    const targetRPEInput = tableRow.querySelector('.targetRPE') as HTMLInputElement;
     const weightInput = tableRow.querySelector('.weight') as HTMLInputElement;
     const rpeInput = tableRow.querySelector('.actualRPE') as HTMLInputElement;
     const estMaxInput = tableRow.querySelector('.estMax') as HTMLInputElement;
@@ -151,26 +131,10 @@ export class CategoryPlaceholderService {
         targetRPEInput.value = defaultValues.defaultRPE.toString();
       }
     } else {
-      this.resetInputs(
-        exerciseSelect,
-        setsInput,
-        repsInput,
-        targetRPEInput,
-        weightInput,
-        rpeInput,
-        estMaxInput
-      );
+      this.resetInputs(exerciseSelect, setsInput, repsInput, targetRPEInput, weightInput, rpeInput, estMaxInput);
     }
 
-    this.updateFormService(
-      exerciseSelect,
-      setsInput,
-      repsInput,
-      targetRPEInput,
-      weightInput,
-      rpeInput,
-      estMaxInput
-    );
+    this.updateFormService(exerciseSelect, setsInput, repsInput, targetRPEInput, weightInput, rpeInput, estMaxInput);
   }
 
   /**
@@ -187,7 +151,7 @@ export class CategoryPlaceholderService {
     targetRPEInput: HTMLInputElement,
     weightInput: HTMLInputElement,
     rpeInput: HTMLInputElement,
-    estMaxInput: HTMLInputElement
+    estMaxInput: HTMLInputElement,
   ): void {
     exerciseSelect.value = '';
     setsInput.value = '';
@@ -212,7 +176,7 @@ export class CategoryPlaceholderService {
     targetRPEInput: HTMLInputElement,
     weightInput: HTMLInputElement,
     rpeInput: HTMLInputElement,
-    estMaxInput: HTMLInputElement
+    estMaxInput: HTMLInputElement,
   ): void {
     this.formService.addChange(exerciseSelect.name, exerciseSelect.value);
     this.formService.addChange(setsInput.name, setsInput.value);
@@ -231,9 +195,7 @@ export class CategoryPlaceholderService {
     let nextRow = tableRow.nextElementSibling;
 
     while (nextRow) {
-      const nextCategorySelector = nextRow.querySelector(
-        '.exercise-category-selector'
-      ) as HTMLSelectElement;
+      const nextCategorySelector = nextRow.querySelector('.exercise-category-selector') as HTMLSelectElement;
 
       if (
         nextCategorySelector &&
@@ -254,12 +216,8 @@ export class CategoryPlaceholderService {
    * @param nextRow The next table row element.
    */
   private copyValuesToPreviousRow(currentRow: Element, nextRow: Element): void {
-    const exerciseCategorySelector = currentRow.querySelector(
-      '.exercise-category-selector'
-    ) as HTMLSelectElement;
-    const nextCategorySelector = nextRow.querySelector(
-      '.exercise-category-selector'
-    ) as HTMLSelectElement;
+    const exerciseCategorySelector = currentRow.querySelector('.exercise-category-selector') as HTMLSelectElement;
+    const nextCategorySelector = nextRow.querySelector('.exercise-category-selector') as HTMLSelectElement;
 
     if (exerciseCategorySelector && nextCategorySelector) {
       const currentInputs = this.getInputElements(currentRow);
@@ -269,10 +227,7 @@ export class CategoryPlaceholderService {
       exerciseCategorySelector.dispatchEvent(new Event('change'));
 
       this.copyInputValues(currentInputs, nextInputs);
-      this.updateFormServiceWithInputElements(
-        exerciseCategorySelector,
-        currentInputs
-      );
+      this.updateFormServiceWithInputElements(exerciseCategorySelector, currentInputs);
 
       this.resetNextRowValues(nextCategorySelector, nextInputs);
     }
@@ -285,9 +240,7 @@ export class CategoryPlaceholderService {
    */
   private getInputElements(row: Element) {
     return {
-      exerciseNameSelect: row.querySelector(
-        '.exercise-name-selector'
-      ) as HTMLSelectElement,
+      exerciseNameSelect: row.querySelector('.exercise-name-selector') as HTMLSelectElement,
       setsInput: row.querySelector('.sets') as HTMLInputElement,
       repsInput: row.querySelector('.reps') as HTMLInputElement,
       targetRPEInput: row.querySelector('.targetRPE') as HTMLInputElement,
@@ -315,10 +268,7 @@ export class CategoryPlaceholderService {
    * @param categorySelector The category selector.
    * @param inputs The input elements.
    */
-  private updateFormServiceWithInputElements(
-    categorySelector: HTMLSelectElement,
-    inputs: any
-  ): void {
+  private updateFormServiceWithInputElements(categorySelector: HTMLSelectElement, inputs: any): void {
     this.formService.addChange(categorySelector.name, categorySelector.value);
 
     for (const key in inputs) {
@@ -333,10 +283,7 @@ export class CategoryPlaceholderService {
    * @param categorySelector The category selector of the next row.
    * @param inputs The input elements of the next row.
    */
-  private resetNextRowValues(
-    categorySelector: HTMLSelectElement,
-    inputs: any
-  ): void {
+  private resetNextRowValues(categorySelector: HTMLSelectElement, inputs: any): void {
     categorySelector.value = '- Bitte Auswählen -';
     categorySelector.dispatchEvent(new Event('change'));
 

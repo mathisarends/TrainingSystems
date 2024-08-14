@@ -1,12 +1,4 @@
-import {
-  Component,
-  AfterViewInit,
-  ViewChild,
-  ElementRef,
-  OnChanges,
-  SimpleChanges,
-  Input,
-} from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, OnChanges, SimpleChanges, Input } from '@angular/core';
 import Chart from 'chart.js/auto';
 import { BarChartData } from './bar-chart.-data';
 
@@ -30,10 +22,7 @@ export class GroupedBarChartComponent implements AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (
-      changes['barChartDataSets'] &&
-      !changes['barChartDataSets'].firstChange
-    ) {
+    if (changes['barChartDataSets'] && !changes['barChartDataSets'].firstChange) {
       this.updateChart();
     }
   }

@@ -1,10 +1,5 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
-import {
-  CanActivate,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
-  Router,
-} from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AuthService } from './auth-service.service';
@@ -20,13 +15,10 @@ export class AuthGuard implements CanActivate {
     private authService: AuthService,
     private modalService: ModalService,
     private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
   ) {}
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<boolean> {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     return this.authService.isLoggedIn().pipe(
       tap((isLoggedIn) => {
         if (!isLoggedIn && isPlatformBrowser(this.platformId)) {
@@ -42,7 +34,7 @@ export class AuthGuard implements CanActivate {
           // Optional: Umleiten auf eine Login-Seite
           this.router.navigate(['/login']);
         }
-      })
+      }),
     );
   }
 }

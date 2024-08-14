@@ -14,7 +14,7 @@ export class SpeechRecognitionService {
 
   constructor(
     private zone: NgZone,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
   ) {
     this.initRecognition();
   }

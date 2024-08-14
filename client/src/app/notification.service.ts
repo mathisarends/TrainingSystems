@@ -24,12 +24,7 @@ export class NotificationService {
    * @param icon - (Optional) The icon to display in the notification.
    * @param autoCloseTime - (Optional) Time in milliseconds to auto-close the notification.
    */
-  sendNotification(
-    title: string,
-    message: string,
-    icon?: string,
-    autoCloseTime: number = 3000
-  ): void {
+  sendNotification(title: string, message: string, icon?: string, autoCloseTime: number = 3000): void {
     if (Notification.permission === 'granted') {
       const notificationOptions: NotificationOptions = {
         body: message,

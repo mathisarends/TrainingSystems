@@ -56,7 +56,7 @@ export class StatisticsComponent implements OnInit {
     private router: Router,
     private httpService: HttpClientService,
     private chartColorService: ChartColorService,
-    private modalService: ModalService
+    private modalService: ModalService,
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -78,17 +78,11 @@ export class StatisticsComponent implements OnInit {
     this.httpService
       .request(
         HttpMethods.GET,
-        `training/statistics/${this.id}/drilldown/${
-          drillThroughData.exerciseName
-        }/${drillThroughData.weekNumber - 1}`
+        `training/statistics/${this.id}/drilldown/${drillThroughData.exerciseName}/${drillThroughData.weekNumber - 1}`,
       )
       .subscribe((response: any) => {
-        const data: number[] = response.exercises.map(
-          (exercise: any) => exercise.tonnage
-        );
-        const labels: string[] = response.exercises.map(
-          (exercise: any) => exercise.exercise
-        );
+        const data: number[] = response.exercises.map((exercise: any) => exercise.tonnage);
+        const labels: string[] = response.exercises.map((exercise: any) => exercise.exercise);
 
         this.modalService.open({
           component: PolarChartComponent,
@@ -105,21 +99,10 @@ export class StatisticsComponent implements OnInit {
 
   private async fetchInitialData(id: string): Promise<void> {
     try {
-      const [allExercisesResponse, selectedExercisesResponse] =
-        await Promise.all([
-          firstValueFrom(
-            this.httpService.request<any>(
-              HttpMethods.GET,
-              `exercise/categories`
-            )
-          ),
-          firstValueFrom(
-            this.httpService.request<any>(
-              HttpMethods.GET,
-              `training/statistics/${id}/viewedCategories`
-            )
-          ),
-        ]);
+      const [allExercisesResponse, selectedExercisesResponse] = await Promise.all([
+        firstValueFrom(this.httpService.request<any>(HttpMethods.GET, `exercise/categories`)),
+        firstValueFrom(this.httpService.request<any>(HttpMethods.GET, `training/statistics/${id}/viewedCategories`)),
+      ]);
 
       this.allExercises = allExercisesResponse;
       this.selectedExercises = selectedExercisesResponse;
@@ -132,10 +115,7 @@ export class StatisticsComponent implements OnInit {
     }
   }
 
-  private async fetchStatistics(
-    id: string,
-    exercises: string[]
-  ): Promise<void> {
+  private async fetchStatistics(id: string, exercises: string[]): Promise<void> {
     try {
       const exercisesQuery = exercises.join(',');
 
@@ -144,25 +124,15 @@ export class StatisticsComponent implements OnInit {
           this.httpService.request<{
             title: string;
             data: Partial<TrainingExerciseTonnageDto>;
-          }>(
-            HttpMethods.GET,
-            `training/statistics/${id}?exercises=${exercisesQuery}`
-          )
+          }>(HttpMethods.GET, `training/statistics/${id}?exercises=${exercisesQuery}`),
         ),
         firstValueFrom(
-          this.httpService.request<any>(
-            HttpMethods.GET,
-            `training/statistics/${id}/sets?exercises=${exercisesQuery}`
-          )
+          this.httpService.request<any>(HttpMethods.GET, `training/statistics/${id}/sets?exercises=${exercisesQuery}`),
         ),
       ]);
 
       this.dataLoaded = true;
-      this.initializeCharts(
-        tonnageResponse.data,
-        setsResponse,
-        tonnageResponse.title
-      );
+      this.initializeCharts(tonnageResponse.data, setsResponse, tonnageResponse.title);
     } catch (error) {
       console.error('Error fetching training statistics:', error);
     }
@@ -171,28 +141,23 @@ export class StatisticsComponent implements OnInit {
   private initializeCharts(
     tonnageData: Partial<TrainingExerciseTonnageDto>,
     setsResponse: { [key: string]: number[] },
-    title: string // Neuer Parameter für den Titel
+    title: string, // Neuer Parameter für den Titel
   ): void {
     // Setze den Titel des Trainingsplans
     this.trainingPlanTitle = title;
 
     // Setze Daten für das Liniendiagramm
     this.lineChartDatasets = Object.keys(tonnageData).map((categoryKey) => {
-      const categoryData =
-        tonnageData[categoryKey as keyof TrainingExerciseTonnageDto];
+      const categoryData = tonnageData[categoryKey as keyof TrainingExerciseTonnageDto];
       return this.createTonnageDataSet(categoryKey, categoryData || []);
     });
-    this.lineChartLabels = this.generateWeekLabels(
-      this.lineChartDatasets[0]?.data.length || 0
-    );
+    this.lineChartLabels = this.generateWeekLabels(this.lineChartDatasets[0]?.data.length || 0);
 
     // Setze Daten für das gruppierte Balkendiagramm
-    this.groupedBarChartDatasets = Object.keys(setsResponse).map(
-      (categoryKey) => {
-        const setsData = setsResponse[categoryKey];
-        return this.createBarDataset(categoryKey, setsData || []);
-      }
-    );
+    this.groupedBarChartDatasets = Object.keys(setsResponse).map((categoryKey) => {
+      const setsData = setsResponse[categoryKey];
+      return this.createBarDataset(categoryKey, setsData || []);
+    });
     this.groupedBarChartLabels = this.lineChartLabels;
   }
 
@@ -235,10 +200,7 @@ export class StatisticsComponent implements OnInit {
 
     // Zuletzt besuchte Kategorien festse
     this.httpService
-      .request<any>(
-        HttpMethods.POST,
-        `training/statistics/${id}/viewedCategories?exercises=${exercisesQueryParam}`
-      )
+      .request<any>(HttpMethods.POST, `training/statistics/${id}/viewedCategories?exercises=${exercisesQueryParam}`)
       .subscribe((response) => {});
   }
 

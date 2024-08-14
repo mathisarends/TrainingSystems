@@ -21,7 +21,7 @@ export class ModalService {
   constructor(
     private appRef: ApplicationRef,
     private injector: Injector,
-    private environmentInjector: EnvironmentInjector
+    private environmentInjector: EnvironmentInjector,
   ) {}
 
   /**
@@ -43,9 +43,7 @@ export class ModalService {
         elementInjector: this.injector,
       });
       this.appRef.attachView(this.overlayComponentRef.hostView);
-      document.body.appendChild(
-        this.overlayComponentRef.location.nativeElement
-      );
+      document.body.appendChild(this.overlayComponentRef.location.nativeElement);
 
       // Create the modal component
       this.modalComponentRef = createComponent(ModalComponent, {
@@ -61,12 +59,10 @@ export class ModalService {
       this.modalComponentRef.instance.confirmButtonText = options.buttonText;
       this.modalComponentRef.instance.size = options.size ?? ModalSize.MEDIUM;
       this.modalComponentRef.instance.footer = options.hasFooter ?? true;
-      this.modalComponentRef.instance.confirmationRequired =
-        options.confirmationRequired ?? false;
+      this.modalComponentRef.instance.confirmationRequired = options.confirmationRequired ?? false;
 
       if (options.componentData) {
-        this.modalComponentRef.instance.childComponentData =
-          options.componentData;
+        this.modalComponentRef.instance.childComponentData = options.componentData;
       }
 
       if (options.minHeight) {

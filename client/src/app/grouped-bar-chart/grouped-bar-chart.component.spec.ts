@@ -8,9 +8,8 @@ describe('GroupedBarChartComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GroupedBarChartComponent]
-    })
-    .compileComponents();
+      imports: [GroupedBarChartComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(GroupedBarChartComponent);
     component = fixture.componentInstance;

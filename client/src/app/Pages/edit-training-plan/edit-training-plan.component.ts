@@ -1,22 +1,8 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  Input,
-  Renderer2,
-  ElementRef,
-  ViewChild,
-  AfterViewChecked,
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Renderer2, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
 import { HttpMethods } from '../../types/httpMethods';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ModalEventsService } from '../../../service/modal/modal-events.service';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { HttpClientService } from '../../../service/http/http-client.service';
 import { CommonModule } from '@angular/common';
@@ -36,9 +22,7 @@ import { ToastService } from '../../components/toast/toast.service';
   templateUrl: './edit-training-plan.component.html',
   styleUrls: ['./edit-training-plan.component.scss'],
 })
-export class EditTrainingPlanComponent
-  implements OnInit, OnDestroy, AfterViewChecked
-{
+export class EditTrainingPlanComponent implements OnInit, OnDestroy, AfterViewChecked {
   @Input() id!: string;
   @ViewChild('coverImage') coverImageElement!: ElementRef<HTMLImageElement>;
 
@@ -66,7 +50,7 @@ export class EditTrainingPlanComponent
     private httpClient: HttpClientService,
     private renderer: Renderer2,
 
-    private imageUploadService: ImageUploadService
+    private imageUploadService: ImageUploadService,
   ) {
     this.trainingForm = this.fb.group({
       title: ['', Validators.required],
@@ -85,9 +69,7 @@ export class EditTrainingPlanComponent
       await this.fetchTrainingPlan(this.id);
     }
 
-    this.subscription.add(
-      this.modalEventsService.confirmClick$.subscribe(() => this.onSubmit())
-    );
+    this.subscription.add(this.modalEventsService.confirmClick$.subscribe(() => this.onSubmit()));
   }
 
   /**
@@ -110,9 +92,7 @@ export class EditTrainingPlanComponent
    */
   private async fetchTrainingPlan(id: string): Promise<void> {
     try {
-      const response: any = await firstValueFrom(
-        this.httpClient.request<any>(HttpMethods.GET, `training/edit/${id}`)
-      );
+      const response: any = await firstValueFrom(this.httpClient.request<any>(HttpMethods.GET, `training/edit/${id}`));
 
       this.loading = false;
 
@@ -120,8 +100,7 @@ export class EditTrainingPlanComponent
         title: response.trainingPlanEditView.title,
         trainingFrequency: response.trainingPlanEditView.trainingFrequency,
         trainingWeeks: response.trainingPlanEditView.trainingWeeks.length,
-        weightPlaceholders:
-          response.trainingPlanEditView.weightRecommandationBase,
+        weightPlaceholders: response.trainingPlanEditView.weightRecommandationBase,
         coverImage: response.trainingPlanEditView.coverImageBase64 || '',
       });
 
@@ -143,7 +122,7 @@ export class EditTrainingPlanComponent
       this.renderer.setAttribute(
         this.coverImageElement.nativeElement,
         'src',
-        imageUrl || 'https://via.placeholder.com/150'
+        imageUrl || 'https://via.placeholder.com/150',
       );
     }
   }
@@ -156,13 +135,7 @@ export class EditTrainingPlanComponent
       const formData = this.trainingForm.value;
 
       try {
-        await firstValueFrom(
-          this.httpClient.request<any>(
-            HttpMethods.PATCH,
-            `training/edit/${this.id}`,
-            formData
-          )
-        );
+        await firstValueFrom(this.httpClient.request<any>(HttpMethods.PATCH, `training/edit/${this.id}`, formData));
         this.trainingPlanService.trainingPlanChanged();
         this.modalService.close();
 
@@ -190,11 +163,7 @@ export class EditTrainingPlanComponent
   protected handleImageUpload(event: any): void {
     this.imageUploadService.handleImageUpload(event, (result: string) => {
       if (this.coverImageElement) {
-        this.renderer.setAttribute(
-          this.coverImageElement.nativeElement,
-          'src',
-          result
-        );
+        this.renderer.setAttribute(this.coverImageElement.nativeElement, 'src', result);
       }
       this.trainingForm.patchValue({ coverImage: result });
     });

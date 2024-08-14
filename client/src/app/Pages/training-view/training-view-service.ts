@@ -11,34 +11,17 @@ import { TrainingPlanDto } from './trainingPlanDto';
 export class TrainingViewService {
   constructor(private httpClient: HttpClientService) {}
 
-  loadTrainingPlan(
-    planId: string,
-    week: number,
-    day: number
-  ): Observable<TrainingPlanDto> {
-    return this.httpClient.request<TrainingPlanDto>(
-      HttpMethods.GET,
-      `training/plan/${planId}/${week}/${day}`
-    );
+  loadTrainingPlan(planId: string, week: number, day: number): Observable<TrainingPlanDto> {
+    return this.httpClient.request<TrainingPlanDto>(HttpMethods.GET, `training/plan/${planId}/${week}/${day}`);
   }
 
   loadExerciseData(): Observable<ExerciseDataDTO> {
-    return this.httpClient.request<ExerciseDataDTO>(
-      HttpMethods.GET,
-      'exercise/training'
-    );
+    return this.httpClient.request<ExerciseDataDTO>(HttpMethods.GET, 'exercise/training');
   }
 
-  submitTrainingPlan(
-    planId: string,
-    week: number,
-    day: number,
-    changedData: any
-  ): Observable<any> {
-    return this.httpClient.request<any>(
-      HttpMethods.PATCH,
-      `training/plan/${planId}/${week}/${day}`,
-      { body: changedData }
-    );
+  submitTrainingPlan(planId: string, week: number, day: number, changedData: any): Observable<any> {
+    return this.httpClient.request<any>(HttpMethods.PATCH, `training/plan/${planId}/${week}/${day}`, {
+      body: changedData,
+    });
   }
 }

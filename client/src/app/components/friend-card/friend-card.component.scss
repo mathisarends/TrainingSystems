@@ -8,7 +8,9 @@
   display: flex; /* Flex display for alignment */
   align-items: center; /* Center items vertically */
   gap: 0.5rem; /* Space between icon and text */
-  transition: background-color 0.3s, border-color 0.3s;
+  transition:
+    background-color 0.3s,
+    border-color 0.3s;
 }
 
 .custom-button i {

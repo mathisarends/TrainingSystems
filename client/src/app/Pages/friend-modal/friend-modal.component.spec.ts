@@ -8,9 +8,8 @@ describe('FriendModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FriendModalComponent]
-    })
-    .compileComponents();
+      imports: [FriendModalComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(FriendModalComponent);
     component = fixture.componentInstance;

@@ -11,11 +11,7 @@
       <h5 class="card-title mb-0">{{ friend.name }}</h5>
       <p class="card-text text-muted">{{ friend.email }}</p>
     </div>
-    <button
-      type="button"
-      class="btn btn-light btn-md m-1"
-      (click)="onConfirm()"
-    >
+    <button type="button" class="btn btn-light btn-md m-1" (click)="onConfirm()">
       <i [class]="getIconClass()"></i>
     </button>
   </div>

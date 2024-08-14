@@ -33,7 +33,7 @@ export class SwipeService {
     swipeLeftCallback: () => void,
     swipeRightCallback: () => void,
     swipeDiagonalTopLeftToBottomRightCallback?: () => void,
-    swipeDiagonalTopRightToBottomLeftCallback?: () => void
+    swipeDiagonalTopRightToBottomLeftCallback?: () => void,
   ) {
     let touchStartX = 0;
     let touchStartY = 0;
@@ -61,22 +61,14 @@ export class SwipeService {
       const deltaX = touchStartX - touchEndX;
       const deltaY = touchStartY - touchEndY;
 
-      const isHorizontalSwipe =
-        Math.abs(deltaX) > swipeThreshold &&
-        Math.abs(deltaY) < verticalThreshold;
+      const isHorizontalSwipe = Math.abs(deltaX) > swipeThreshold && Math.abs(deltaY) < verticalThreshold;
 
       // Der hier ist gefixt fixe den anderen auch
       const isDiagonalSwipeTopLeftToBottomRight =
-        Math.abs(deltaX) > swipeThreshold &&
-        Math.abs(deltaY) > verticalThreshold &&
-        deltaX < 0 &&
-        deltaY < 0;
+        Math.abs(deltaX) > swipeThreshold && Math.abs(deltaY) > verticalThreshold && deltaX < 0 && deltaY < 0;
 
       const isDiagonalSwipeTopRightToBottomLeft =
-        deltaX > swipeThreshold &&
-        Math.abs(deltaY) > verticalThreshold &&
-        deltaX > 0 &&
-        deltaY < 0;
+        deltaX > swipeThreshold && Math.abs(deltaY) > verticalThreshold && deltaX > 0 && deltaY < 0;
 
       if (isHorizontalSwipe) {
         if (deltaX > 0) {
@@ -85,29 +77,15 @@ export class SwipeService {
           swipeRightCallback();
         }
         // TODO: nur der hier wird gehitten unabhängig
-      } else if (
-        isDiagonalSwipeTopLeftToBottomRight &&
-        swipeDiagonalTopLeftToBottomRightCallback
-      ) {
+      } else if (isDiagonalSwipeTopLeftToBottomRight && swipeDiagonalTopLeftToBottomRightCallback) {
         swipeDiagonalTopLeftToBottomRightCallback();
-      } else if (
-        isDiagonalSwipeTopRightToBottomLeft &&
-        swipeDiagonalTopRightToBottomLeftCallback
-      ) {
+      } else if (isDiagonalSwipeTopRightToBottomLeft && swipeDiagonalTopRightToBottomLeftCallback) {
         swipeDiagonalTopRightToBottomLeftCallback();
       }
     };
 
-    this.registerListener(
-      element,
-      'touchstart',
-      handleTouchStart as EventListener
-    );
-    this.registerListener(
-      element,
-      'touchmove',
-      handleTouchMove as EventListener
-    );
+    this.registerListener(element, 'touchstart', handleTouchStart as EventListener);
+    this.registerListener(element, 'touchmove', handleTouchMove as EventListener);
     this.registerListener(element, 'touchend', handleTouchEnd as EventListener);
   }
 
@@ -117,11 +95,7 @@ export class SwipeService {
    * @param event - The event type to listen for.
    * @param handler - The event handler function.
    */
-  private registerListener(
-    element: HTMLElement,
-    event: string,
-    handler: EventListener
-  ) {
+  private registerListener(element: HTMLElement, event: string, handler: EventListener) {
     const unlisten = this.renderer.listen(element, event, handler);
     this.listeners.push(unlisten);
   }

@@ -1,8 +1,5 @@
 <header id="header" class="py-3 border-bottom bg-light">
-  <div
-    class="container-fluid d-grid gap-3 align-items-center"
-    style="grid-template-columns: 1fr 2fr"
-  >
+  <div class="container-fluid d-grid gap-3 align-items-center" style="grid-template-columns: 1fr 2fr">
     <div class="dropdown">
       <a
         href="#"
@@ -11,45 +8,18 @@
         data-bs-toggle="dropdown"
         aria-expanded="false"
       >
-        <img
-          class="bi me-2"
-          width="38"
-          height="32"
-          src="/images/logo-own.png"
-          alt=""
-        />
+        <img class="bi me-2" width="38" height="32" src="/images/logo-own.png" alt="" />
       </a>
-      <ul
-        class="dropdown-menu text-small shadow"
-        aria-labelledby="dropdownNavLink"
-      >
+      <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownNavLink">
         <li>
-          <a
-            href="/"
-            #navLink
-            class="dropdown-item"
-            (click)="navigateTo($event)"
-            >Trainingspläne</a
-          >
+          <a href="/" #navLink class="dropdown-item" (click)="navigateTo($event)">Trainingspläne</a>
         </li>
         <li>
-          <a
-            href="/exercises"
-            #navLink
-            class="dropdown-item"
-            (click)="navigateTo($event)"
-            >Übungen</a
-          >
+          <a href="/exercises" #navLink class="dropdown-item" (click)="navigateTo($event)">Übungen</a>
         </li>
         <li><hr class="dropdown-divider" /></li>
         <li>
-          <a
-            href="/statistics"
-            #navLink
-            class="dropdown-item"
-            (click)="navigateTo($event)"
-            >Statistiken</a
-          >
+          <a href="/statistics" #navLink class="dropdown-item" (click)="navigateTo($event)">Statistiken</a>
         </li>
       </ul>
     </div>
@@ -80,20 +50,13 @@
             class="rounded-circle"
           />
         </a>
-        <ul
-          class="dropdown-menu text-small shadow"
-          aria-labelledby="dropdownUser2"
-        >
+        <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
           <li>
-            <a class="dropdown-item" href="profile" (click)="navigateTo($event)"
-              >Profile</a
-            >
+            <a class="dropdown-item" href="profile" (click)="navigateTo($event)">Profile</a>
           </li>
           <li><hr class="dropdown-divider" /></li>
           <li>
-            <a class="dropdown-item" href="#" (click)="handleLogin($event)"
-              >Sign in</a
-            >
+            <a class="dropdown-item" href="#" (click)="handleLogin($event)">Sign in</a>
           </li>
         </ul>
       </div>

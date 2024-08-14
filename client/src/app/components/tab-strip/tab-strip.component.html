@@ -1,7 +1,7 @@
 <div class="tab-strip">
   @for (tab of tabs; track tab; let index = $index) {
-  <div (click)="selectTab(tab)" [class.active]="tab.active" class="tab">
-    {{ tab.title }}
-  </div>
+    <div (click)="selectTab(tab)" [class.active]="tab.active" class="tab">
+      {{ tab.title }}
+    </div>
   }
 </div>

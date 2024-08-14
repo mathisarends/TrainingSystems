@@ -8,9 +8,8 @@ describe('TabStripComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TabStripComponent]
-    })
-    .compileComponents();
+      imports: [TabStripComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(TabStripComponent);
     component = fixture.componentInstance;

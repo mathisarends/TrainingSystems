@@ -94,7 +94,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
     private swipeService: SwipeService,
     private pauseTimeService: PauseTimeService,
     private mobileService: MobileService,
-    private modalService: ModalService
+    private modalService: ModalService,
   ) {}
 
   /**
@@ -107,9 +107,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
       this.trainingWeekIndex = parseInt(params['week']);
       this.trainingDayIndex = parseInt(params['day']);
 
-      this.subHeading = `W${this.trainingWeekIndex + 1}D${
-        this.trainingDayIndex + 1
-      }`;
+      this.subHeading = `W${this.trainingWeekIndex + 1}D${this.trainingDayIndex + 1}`;
 
       this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
     });
@@ -122,10 +120,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
    * Initializes the swipe listener once the data view has loaded.
    */
   ngAfterViewChecked(): void {
-    if (
-      isPlatformBrowser(this.platformId) &&
-      !this.automationContextInitialized
-    ) {
+    if (isPlatformBrowser(this.platformId) && !this.automationContextInitialized) {
       if (this.dataViewLoaded.getValue() && this.trainingTable) {
         this.initializeSwipeListener();
 
@@ -156,7 +151,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
         },
         () => {
           this.navigateWeek(1);
-        }
+        },
       );
     }
   }
@@ -179,11 +174,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
   loadData(planId: string, week: number, day: number): void {
     this.dataViewLoaded.next(false);
     forkJoin({
-      trainingPlan: this.trainingViewService.loadTrainingPlan(
-        planId,
-        week,
-        day
-      ),
+      trainingPlan: this.trainingViewService.loadTrainingPlan(planId, week, day),
       exerciseData: this.trainingViewService.loadExerciseData(),
     })
       .pipe(
@@ -191,7 +182,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
           this.trainingPlanData = trainingPlan;
           console.log(
             '🚀 ~ TrainingViewComponent ~ tap ~ this.trainingPlanData:',
-            this.trainingPlanData?.previousTrainingDay
+            this.trainingPlanData?.previousTrainingDay,
           );
 
           this.exerciseData = exerciseData;
@@ -205,7 +196,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
           } else {
             this.dataViewLoaded.next(false);
           }
-        })
+        }),
       )
       .subscribe();
   }
@@ -218,31 +209,20 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
   onSubmit(event: Event): void {
     event.preventDefault();
     const changedData = this.formService.getChanges();
-    console.log(
-      '🚀 ~ TrainingViewComponent ~ onSubmit ~ changedData:',
-      changedData
-    );
+    console.log('🚀 ~ TrainingViewComponent ~ onSubmit ~ changedData:', changedData);
 
     this.trainingViewService
-      .submitTrainingPlan(
-        this.planId,
-        this.trainingWeekIndex,
-        this.trainingDayIndex,
-        changedData
-      )
+      .submitTrainingPlan(this.planId, this.trainingWeekIndex, this.trainingDayIndex, changedData)
       .pipe(
         tap(() => {
           this.toastService.show('Erfolg', 'Daten gespeichert');
           this.formService.clearChanges();
         }),
         catchError((error) => {
-          this.toastService.show(
-            'Fehler',
-            'Daten konnten nicht gespeichtert werden'
-          );
+          this.toastService.show('Fehler', 'Daten konnten nicht gespeichtert werden');
           console.error('Error updating training plan:', error);
           return [];
-        })
+        }),
       )
       .subscribe();
   }
@@ -254,9 +234,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
    */
   onInputChange(event: Event): void {
     this.formService.trackChange(event);
-    this.categoryPlaceholderService.updatePlaceholderVisibility(
-      event.target as HTMLSelectElement
-    );
+    this.categoryPlaceholderService.updatePlaceholderVisibility(event.target as HTMLSelectElement);
   }
 
   /**
@@ -268,7 +246,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
     this.categoryPlaceholderService.onCategoryChange(
       event,
       this.exerciseData.exerciseCategories,
-      this.exerciseData.defaultRepSchemeByCategory
+      this.exerciseData.defaultRepSchemeByCategory,
     );
   }
 
@@ -303,7 +281,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
     this.trainingDayIndex = this.navigationService.navigateDay(
       day,
       this.trainingPlanData.trainingFrequency,
-      this.trainingWeekIndex
+      this.trainingWeekIndex,
     );
 
     this.automationContextInitialized = false;
@@ -320,7 +298,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
       this.trainingWeekIndex,
       direction,
       this.trainingPlanData,
-      this.trainingDayIndex
+      this.trainingDayIndex,
     );
     this.automationContextInitialized = false;
     this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);

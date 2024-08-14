@@ -36,7 +36,7 @@ export class TrainingPlanCardComponent {
     private router: Router,
     private modalService: ModalService,
     private toastService: ToastService,
-    private trainingPlanService: TrainingPlanService
+    private trainingPlanService: TrainingPlanService,
   ) {}
 
   test() {
@@ -48,12 +48,7 @@ export class TrainingPlanCardComponent {
    * @param id - The ID of the training plan to view.
    */
   async viewTrainingPlan(id: string): Promise<void> {
-    const response = await firstValueFrom(
-      this.httpClient.request<any>(
-        HttpMethods.GET,
-        `training/plan/${id}/latest`
-      )
-    );
+    const response = await firstValueFrom(this.httpClient.request<any>(HttpMethods.GET, `training/plan/${id}/latest`));
     const latestWeek = response.weekIndex;
     const latestDay = response.dayIndex;
 
@@ -111,12 +106,7 @@ export class TrainingPlanCardComponent {
   private async handleDelete(id: string): Promise<void> {
     if (id) {
       try {
-        await firstValueFrom(
-          this.httpClient.request<any>(
-            HttpMethods.DELETE,
-            `training/delete/${id}`
-          )
-        );
+        await firstValueFrom(this.httpClient.request<any>(HttpMethods.DELETE, `training/delete/${id}`));
 
         this.modalService.close();
         this.toastService.show('Erfolg', 'Plan gelöscht');

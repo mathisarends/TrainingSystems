@@ -15,25 +15,13 @@ export class EstMaxService {
    * Initializes the event listeners for weight, actual RPE, and reps inputs to calculate estimated max.
    */
   initializeEstMaxCalculation(): void {
-    const weightInputs = document.querySelectorAll(
-      '.weight'
-    ) as NodeListOf<HTMLInputElement>;
-    const actualRpeInputs = document.querySelectorAll(
-      '.actualRPE'
-    ) as NodeListOf<HTMLInputElement>;
-    const repsInputs = document.querySelectorAll(
-      '.reps'
-    ) as NodeListOf<HTMLInputElement>;
+    const weightInputs = document.querySelectorAll('.weight') as NodeListOf<HTMLInputElement>;
+    const actualRpeInputs = document.querySelectorAll('.actualRPE') as NodeListOf<HTMLInputElement>;
+    const repsInputs = document.querySelectorAll('.reps') as NodeListOf<HTMLInputElement>;
 
-    weightInputs.forEach((input) =>
-      input.addEventListener('change', (e) => this.handleInputChange(e))
-    );
-    actualRpeInputs.forEach((input) =>
-      input.addEventListener('change', (e) => this.handleInputChange(e))
-    );
-    repsInputs.forEach((input) =>
-      input.addEventListener('change', (e) => this.handleInputChange(e))
-    );
+    weightInputs.forEach((input) => input.addEventListener('change', (e) => this.handleInputChange(e)));
+    actualRpeInputs.forEach((input) => input.addEventListener('change', (e) => this.handleInputChange(e)));
+    repsInputs.forEach((input) => input.addEventListener('change', (e) => this.handleInputChange(e)));
   }
 
   /**
@@ -55,72 +43,35 @@ export class EstMaxService {
         return;
       }
 
-      const category = (
-        parentRow.querySelector(
-          '.exercise-category-selector'
-        ) as HTMLInputElement
-      )?.value;
+      const category = (parentRow.querySelector('.exercise-category-selector') as HTMLInputElement)?.value;
 
-      if (
-        category === 'Squat' ||
-        category === 'Bench' ||
-        category === 'Deadlift'
-      ) {
-        const weight = parseFloat(
-          (parentRow.querySelector('.weight') as HTMLInputElement)?.value
-        );
-        const reps = parseInt(
-          (parentRow.querySelector('.reps') as HTMLInputElement)?.value
-        );
-        const rpe = parseFloat(
-          (parentRow.querySelector('.actualRPE') as HTMLInputElement)?.value
-        );
+      if (category === 'Squat' || category === 'Bench' || category === 'Deadlift') {
+        const weight = parseFloat((parentRow.querySelector('.weight') as HTMLInputElement)?.value);
+        const reps = parseInt((parentRow.querySelector('.reps') as HTMLInputElement)?.value);
+        const rpe = parseFloat((parentRow.querySelector('.actualRPE') as HTMLInputElement)?.value);
         if (weight && reps && rpe) {
           const estMax = this.calcEstMax(weight, reps, rpe, category);
-          const estMaxInput = parentRow.querySelector(
-            '.estMax'
-          ) as HTMLInputElement;
+          const estMaxInput = parentRow.querySelector('.estMax') as HTMLInputElement;
 
           estMaxInput.value = estMax.toString();
           this.formService.addChange(estMaxInput.name, estMaxInput.value);
 
           const nextRow = parentRow.nextElementSibling!;
           const exercise = (
-            parentRow.querySelector(
-              '.exercise-name-selector:not([style*="display: none"])'
-            ) as HTMLInputElement
+            parentRow.querySelector('.exercise-name-selector:not([style*="display: none"])') as HTMLInputElement
           )?.value;
           const nextExercise = (
-            nextRow.querySelector(
-              '.exercise-name-selector:not([style*="display: none"])'
-            ) as HTMLInputElement
+            nextRow.querySelector('.exercise-name-selector:not([style*="display: none"])') as HTMLInputElement
           )?.value;
-          const nextWeightInputValue = (
-            nextRow.querySelector('.weight') as HTMLInputElement
-          )?.value;
+          const nextWeightInputValue = (nextRow.querySelector('.weight') as HTMLInputElement)?.value;
 
-          if (
-            nextRow &&
-            exercise === nextExercise &&
-            estMax &&
-            !nextWeightInputValue
-          ) {
-            const nextRowReps = parseInt(
-              (nextRow.querySelector('.reps') as HTMLInputElement)?.value
-            );
-            const nextRowRPE = parseFloat(
-              (nextRow.querySelector('.targetRPE') as HTMLInputElement)?.value
-            );
+          if (nextRow && exercise === nextExercise && estMax && !nextWeightInputValue) {
+            const nextRowReps = parseInt((nextRow.querySelector('.reps') as HTMLInputElement)?.value);
+            const nextRowRPE = parseFloat((nextRow.querySelector('.targetRPE') as HTMLInputElement)?.value);
 
             if (nextRowReps && nextRowRPE) {
-              const backoffWeight = this.calcBackoff(
-                nextRowReps,
-                nextRowRPE,
-                estMax
-              );
-              const nextRowWeightInput = nextRow.querySelector(
-                '.weight'
-              ) as HTMLInputElement;
+              const backoffWeight = this.calcBackoff(nextRowReps, nextRowRPE, estMax);
+              const nextRowWeightInput = nextRow.querySelector('.weight') as HTMLInputElement;
               nextRowWeightInput.placeholder = backoffWeight.toString();
             }
           }
@@ -137,12 +88,7 @@ export class EstMaxService {
    * @param category - The exercise category (e.g., Squat, Bench, Deadlift).
    * @returns The calculated estimated max weight.
    */
-  private calcEstMax(
-    weight: number,
-    reps: number,
-    rpe: number,
-    category: string
-  ): number {
+  private calcEstMax(weight: number, reps: number, rpe: number, category: string): number {
     const actualReps = reps + (10 - rpe);
     const unroundedValue = weight * (1 + 0.0333 * actualReps);
     const roundedValue = Math.ceil(unroundedValue / 2.5) * 2.5;
@@ -156,14 +102,9 @@ export class EstMaxService {
    * @param topSetMax - The top set maximum weight.
    * @returns The calculated backoff weight range as a string.
    */
-  private calcBackoff(
-    planedReps: number,
-    planedRPE: number,
-    topSetMax: number
-  ): string {
+  private calcBackoff(planedReps: number, planedRPE: number, topSetMax: number): string {
     const totalReps = planedReps + (10 - planedRPE);
-    let percentage =
-      (0.484472 * totalReps * totalReps - 33.891 * totalReps + 1023.67) * 0.001;
+    let percentage = (0.484472 * totalReps * totalReps - 33.891 * totalReps + 1023.67) * 0.001;
     let backoffWeight = topSetMax * percentage;
     backoffWeight = Math.ceil(backoffWeight / 2.5) * 2.5;
 
@@ -180,18 +121,11 @@ export class EstMaxService {
    */
   private getMaxByCategory(category: string): number {
     if (category === 'Squat') {
-      return parseInt(
-        (document.getElementById(this.SQUAT_MAX_ID) as HTMLInputElement).value
-      );
+      return parseInt((document.getElementById(this.SQUAT_MAX_ID) as HTMLInputElement).value);
     } else if (category === 'Bench') {
-      return parseInt(
-        (document.getElementById(this.BENCH_MAX_ID) as HTMLInputElement).value
-      );
+      return parseInt((document.getElementById(this.BENCH_MAX_ID) as HTMLInputElement).value);
     } else {
-      return parseInt(
-        (document.getElementById(this.DEADLIFT_MAX_ID) as HTMLInputElement)
-          .value
-      );
+      return parseInt((document.getElementById(this.DEADLIFT_MAX_ID) as HTMLInputElement).value);
     }
   }
 }

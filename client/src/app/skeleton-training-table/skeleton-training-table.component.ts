@@ -5,8 +5,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './skeleton-training-table.component.html',
-  styleUrl: './skeleton-training-table.component.scss'
+  styleUrl: './skeleton-training-table.component.scss',
 })
-export class SkeletonTrainingTableComponent {
-
-}
+export class SkeletonTrainingTableComponent {}

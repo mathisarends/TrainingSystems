@@ -20,7 +20,7 @@ export class RegisterComponent extends BaisAuthComponent implements OnInit {
     router: Router,
     httpClient: HttpClientService,
     toastService: ToastService,
-    @Inject(DOCUMENT) document: Document
+    @Inject(DOCUMENT) document: Document,
   ) {
     super(router, httpClient, toastService, document);
   }
@@ -40,23 +40,21 @@ export class RegisterComponent extends BaisAuthComponent implements OnInit {
       password: formData.get('password'),
       confirmPassword: formData.get('confirmPassword'),
     };
-    this.httpClient
-      .request<any>(HttpMethods.POST, 'user/register', data)
-      .subscribe({
-        next: (response: Response) => {
-          console.log('Account erfolgreich erstellt');
-          this.router.navigate(['login']);
-        },
-        error: (error: HttpErrorResponse) => {
-          console.error('Registration error:', error);
-          if (error.status === 409) {
-            console.log('User already exists');
-          } else if (error.status === 400) {
-            console.log('Bad request:', error.error);
-          } else {
-            console.log('An unknown error occurred');
-          }
-        },
-      });
+    this.httpClient.request<any>(HttpMethods.POST, 'user/register', data).subscribe({
+      next: (response: Response) => {
+        console.log('Account erfolgreich erstellt');
+        this.router.navigate(['login']);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Registration error:', error);
+        if (error.status === 409) {
+          console.log('User already exists');
+        } else if (error.status === 400) {
+          console.log('Bad request:', error.error);
+        } else {
+          console.log('An unknown error occurred');
+        }
+      },
+    });
   }
 }

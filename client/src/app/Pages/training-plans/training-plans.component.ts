@@ -1,9 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  DestroyRef,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, OnInit } from '@angular/core';
 import { ModalService } from '../../../service/modal/modalService';
 import { CreateTrainingFormComponent } from '../create-training-form/create-training-form.component';
 import { HttpClientService } from '../../../service/http/http-client.service';
@@ -46,12 +41,8 @@ import { SkeletonCardComponent } from '../../skeleton-card/skeleton-card.compone
   styleUrls: ['./training-plans.component.scss'],
 })
 export class TrainingPlansComponent implements OnInit {
-  protected allTrainingPlans$ = new BehaviorSubject<
-    TrainingPlanCardView[] | null
-  >(null);
-  protected filteredTrainingPlans$ = new BehaviorSubject<
-    TrainingPlanCardView[] | null
-  >(null);
+  protected allTrainingPlans$ = new BehaviorSubject<TrainingPlanCardView[] | null>(null);
+  protected filteredTrainingPlans$ = new BehaviorSubject<TrainingPlanCardView[] | null>(null);
 
   columnClass!: string; // bestimmt in Abhängig der Anzahl der Pläne welches Grid System benutzt werden soll
 
@@ -63,7 +54,7 @@ export class TrainingPlansComponent implements OnInit {
     private searchService: SearchService,
     private trainingPlanService: TrainingPlanService,
     private destroyRef: DestroyRef,
-    private mobileService: MobileService
+    private mobileService: MobileService,
   ) {}
 
   /**
@@ -73,17 +64,13 @@ export class TrainingPlansComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     await this.loadTrainingPlans();
 
-    this.searchService.searchText$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((searchText) => {
-        this.filterTrainingPlans(searchText);
-      });
+    this.searchService.searchText$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((searchText) => {
+      this.filterTrainingPlans(searchText);
+    });
 
-    this.trainingPlanService.trainingPlansChanged$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.loadTrainingPlans();
-      });
+    this.trainingPlanService.trainingPlansChanged$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.loadTrainingPlans();
+    });
 
     this.filteredTrainingPlans$.subscribe((plans) => {
       const amountOfPlans = plans?.length!;
@@ -107,9 +94,7 @@ export class TrainingPlansComponent implements OnInit {
    */
   protected async loadTrainingPlans(): Promise<void> {
     try {
-      const response: any = await firstValueFrom(
-        this.httpClient.request<any>(HttpMethods.GET, 'training/plans')
-      );
+      const response: any = await firstValueFrom(this.httpClient.request<any>(HttpMethods.GET, 'training/plans'));
 
       this.allTrainingPlans$.next(response?.trainingPlanCards);
       this.filteredTrainingPlans$.next(response?.trainingPlanCards);
@@ -142,9 +127,7 @@ export class TrainingPlansComponent implements OnInit {
   private filterTrainingPlans(searchText: string): void {
     const allPlans = this.allTrainingPlans$.value || [];
     this.filteredTrainingPlans$.next(
-      allPlans.filter((trainingPlan) =>
-        trainingPlan.title.toLowerCase().includes(searchText.toLowerCase())
-      )
+      allPlans.filter((trainingPlan) => trainingPlan.title.toLowerCase().includes(searchText.toLowerCase())),
     );
   }
 }

@@ -10,12 +10,7 @@
       <form [formGroup]="autoProgressionForm" (ngSubmit)="onSubmit()">
         <!-- RPE Progression per Week -->
         <div class="form-floating mb-4">
-          <select
-            id="rpe_progression"
-            class="form-control"
-            formControlName="rpeProgression"
-            required
-          >
+          <select id="rpe_progression" class="form-control" formControlName="rpeProgression" required>
             <option value="0">0</option>
             <option value="0.5" selected>0.5</option>
             <option value="1">1</option>
@@ -25,12 +20,7 @@
 
         <!-- Deload Week Planning -->
         <div class="form-floating mb-4">
-          <select
-            id="deload_week"
-            class="form-control"
-            formControlName="deloadWeek"
-            required
-          >
+          <select id="deload_week" class="form-control" formControlName="deloadWeek" required>
             <option value="true" selected>Ja</option>
             <option value="false">Nein</option>
           </select>

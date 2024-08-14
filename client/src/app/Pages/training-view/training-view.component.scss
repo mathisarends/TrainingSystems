@@ -5,7 +5,7 @@
   margin-bottom: 1rem;
 }
 
-.training-table tr td input[type="number"] {
+.training-table tr td input[type='number'] {
   text-align: center;
 }
 
@@ -48,7 +48,7 @@
 
 #fixed-caption {
   font-weight: bold;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   padding-bottom: 1.5rem;
   z-index: 1;
 }
@@ -99,7 +99,7 @@
   }
 
   .responsive-table td::before {
-    content: attr(data-cell) ": ";
+    content: attr(data-cell) ': ';
   }
 
   .training-table tr {
@@ -114,7 +114,7 @@
     border: none;
   }
 
-  .training-table tr td input[type="number"] {
+  .training-table tr td input[type='number'] {
     text-align: left;
   }
 

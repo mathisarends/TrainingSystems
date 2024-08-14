@@ -2,56 +2,55 @@
   <div class="d-flex justify-content-between align-items-center">
     <app-headline [subHeading]="'own'" [heading]="'plans'" />
 
-    <app-icon-button
-      [iconClass]="'bx bx-plus'"
-      (buttonClick)="createNewPlan()"
-    />
+    <app-icon-button [iconClass]="'bx bx-plus'" (buttonClick)="createNewPlan()" />
   </div>
 </div>
 
 @if (allTrainingPlans$ | async; as allTrainingPlans) {
-<section id="gallery">
-  <div class="container">
-    <div class="row">
-      <!-- Alert if no training plans -->
-      @if (filteredTrainingPlans$ | async; as filteredTrainingPlans) { @if
-      (filteredTrainingPlans.length === 0 && allTrainingPlans.length === 0) {
-      <div class="col-12">
-        <app-alert
-          alertType="light"
-          alertText="Du hast noch keine eigenen Trainingspläne erstellt. Erstelle welche mit dem Button oben!"
-        ></app-alert>
+  <section id="gallery">
+    <div class="container">
+      <div class="row">
+        <!-- Alert if no training plans -->
+        @if (filteredTrainingPlans$ | async; as filteredTrainingPlans) {
+          @if (filteredTrainingPlans.length === 0 && allTrainingPlans.length === 0) {
+            <div class="col-12">
+              <app-alert
+                alertType="light"
+                alertText="Du hast noch keine eigenen Trainingspläne erstellt. Erstelle welche mit dem Button oben!"
+              ></app-alert>
+            </div>
+          } @else if (filteredTrainingPlans.length === 0) {
+            <div class="col-12">
+              <app-alert
+                alertType="light"
+                alertText="Keine deiner bestehenden Trainingpläne passen zu dieser Suchanfrage!"
+              ></app-alert>
+            </div>
+          } @else {
+            @for (trainingPlan of filteredTrainingPlans; track trainingPlan) {
+              <div [ngClass]="columnClass">
+                <app-training-plan-card
+                  [trainingPlan]="trainingPlan"
+                  [columnClass]="columnClass"
+                  (changedPlanConstellation)="loadTrainingPlans()"
+                ></app-training-plan-card>
+              </div>
+            }
+          }
+        }
       </div>
-      } @else if (filteredTrainingPlans.length === 0) {
-      <div class="col-12">
-        <app-alert
-          alertType="light"
-          alertText="Keine deiner bestehenden Trainingpläne passen zu dieser Suchanfrage!"
-        ></app-alert>
-      </div>
-      } @else { @for (trainingPlan of filteredTrainingPlans; track trainingPlan)
-      {
-      <div [ngClass]="columnClass">
-        <app-training-plan-card
-          [trainingPlan]="trainingPlan"
-          [columnClass]="columnClass"
-          (changedPlanConstellation)="loadTrainingPlans()"
-        ></app-training-plan-card>
-      </div>
-      } } }
     </div>
-  </div>
-</section>
+  </section>
 } @else {
-<section id="gallery">
-  <div class="container">
-    <div class="row">
-      @for (k of [1, 2, 3]; track k) {
-      <div [ngClass]="columnClass">
-        <app-skeleton-card />
+  <section id="gallery">
+    <div class="container">
+      <div class="row">
+        @for (k of [1, 2, 3]; track k) {
+          <div [ngClass]="columnClass">
+            <app-skeleton-card />
+          </div>
+        }
       </div>
-      }
     </div>
-  </div>
-</section>
+  </section>
 }

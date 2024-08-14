@@ -1,11 +1,4 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  AfterViewInit,
-  ViewChild,
-  ElementRef,
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { PauseTimeService } from '../../service/training/pause-time.service';
 import { ModalService } from '../../service/modal/modalService';
@@ -24,24 +17,22 @@ export class RestTimerComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private pauseTimeService: PauseTimeService,
-    private modalService: ModalService
+    private modalService: ModalService,
   ) {
     this.remainingTime = this.pauseTimeService.getCurrentTime();
     this.initialTime = this.pauseTimeService.getInitialTime(); // Store the initial time
   }
 
   ngOnInit(): void {
-    this.timerSubscription = this.pauseTimeService.countdownEmitter.subscribe(
-      (remainingTime: number) => {
-        this.remainingTime = remainingTime;
-        if (this.progressRing) {
-          this.updateCircle();
-        }
-        if (remainingTime === 0 && this.initialTime) {
-          this.playTimerFinishedAudio();
-        }
+    this.timerSubscription = this.pauseTimeService.countdownEmitter.subscribe((remainingTime: number) => {
+      this.remainingTime = remainingTime;
+      if (this.progressRing) {
+        this.updateCircle();
       }
-    );
+      if (remainingTime === 0 && this.initialTime) {
+        this.playTimerFinishedAudio();
+      }
+    });
 
     this.pauseTimeService.countdownEmitter.emit(this.remainingTime);
   }
@@ -85,9 +76,7 @@ export class RestTimerComponent implements OnInit, OnDestroy, AfterViewInit {
         ...data,
       });
     } else {
-      console.error(
-        '[RestTimerComponent] Service Worker not available or not registered.'
-      );
+      console.error('[RestTimerComponent] Service Worker not available or not registered.');
     }
   }
 
@@ -98,9 +87,7 @@ export class RestTimerComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private updateCircle() {
-    const circle = this.progressRing.nativeElement.querySelector(
-      '.progress-ring__circle'
-    );
+    const circle = this.progressRing.nativeElement.querySelector('.progress-ring__circle');
     const radius = circle.r.baseVal.value;
 
     const circumference = 2 * Math.PI * radius;

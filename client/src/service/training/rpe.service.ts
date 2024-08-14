@@ -28,9 +28,7 @@ export class RpeService {
    * Initializes the RPE validation by adding event listeners to the target and actual RPE inputs.
    */
   initializeRPEValidation(): void {
-    const targetRPEInputs = document.querySelectorAll(
-      '.targetRPE'
-    ) as NodeListOf<HTMLInputElement>;
+    const targetRPEInputs = document.querySelectorAll('.targetRPE') as NodeListOf<HTMLInputElement>;
     targetRPEInputs.forEach((input) => {
       input.addEventListener('change', (e) => {
         const targetRPEInput = e.target as HTMLInputElement;
@@ -39,9 +37,7 @@ export class RpeService {
       });
     });
 
-    const actualRPEInputs = document.querySelectorAll(
-      '.actualRPE'
-    ) as NodeListOf<HTMLInputElement>;
+    const actualRPEInputs = document.querySelectorAll('.actualRPE') as NodeListOf<HTMLInputElement>;
     actualRPEInputs.forEach((input) => {
       input.addEventListener('change', (e) => {
         this.handleActualRPEChange(e);
@@ -92,9 +88,7 @@ export class RpeService {
 
     const parentRow = rpeInput.closest('tr')!;
     const planedRPE = parentRow.querySelector('.targetRPE') as HTMLInputElement;
-    const workoutNotes = parentRow.querySelector(
-      '.workout-notes'
-    ) as HTMLInputElement;
+    const workoutNotes = parentRow.querySelector('.workout-notes') as HTMLInputElement;
 
     const rpeDiff = parseFloat(planedRPE.value) - rpe;
   }
@@ -105,10 +99,7 @@ export class RpeService {
    * @param rpeInput - The HTML input element containing the RPE values.
    * @param numbers - The array of RPE values to validate.
    */
-  private validateMultipleRPEs(
-    rpeInput: HTMLInputElement,
-    numbers: number[]
-  ): void {
+  private validateMultipleRPEs(rpeInput: HTMLInputElement, numbers: number[]): void {
     const parentRow = rpeInput.closest('tr')!;
     const setInputs = parentRow.querySelector('.sets') as HTMLInputElement;
 
@@ -117,12 +108,8 @@ export class RpeService {
       const average = sum / numbers.length;
 
       const roundedAverage = Math.ceil(average / 0.5) * 0.5;
-      const planedRPE = parentRow.querySelector(
-        '.targetRPE'
-      ) as HTMLInputElement;
-      const workoutNotes = parentRow.querySelector(
-        '.workout-notes'
-      ) as HTMLInputElement;
+      const planedRPE = parentRow.querySelector('.targetRPE') as HTMLInputElement;
+      const workoutNotes = parentRow.querySelector('.workout-notes') as HTMLInputElement;
 
       const rpeDiff = parseFloat(planedRPE.value) - roundedAverage;
       this.validateRPE(roundedAverage, rpeInput);

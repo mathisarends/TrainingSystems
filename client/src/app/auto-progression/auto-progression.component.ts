@@ -21,7 +21,7 @@ export class AutoProgressionComponent {
   constructor(
     private fb: FormBuilder,
     private httpService: HttpClientService,
-    private toastService: ToastService
+    private toastService: ToastService,
   ) {
     this.autoProgressionForm = this.fb.group({
       rpeProgression: ['0.5', Validators.required],
@@ -42,10 +42,7 @@ export class AutoProgressionComponent {
         error: (error) => {
           console.error('Subscription error:', error);
           if (error.status === 500) {
-            this.toastService.show(
-              'Fehler',
-              'Interner Serverfehler, bitte versuchen Sie es später erneut.'
-            );
+            this.toastService.show('Fehler', 'Interner Serverfehler, bitte versuchen Sie es später erneut.');
           }
         },
       });

@@ -38,7 +38,7 @@ export class TrainingViewNavigationComponent {
           },
           () => {
             console.log('4');
-          }
+          },
         );
       });
       this.swipeServiceInit = true;

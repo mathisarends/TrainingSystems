@@ -7,13 +7,12 @@ import { FormService } from '../../../service/form/form.service';
   providedIn: 'root',
 })
 export class TrainingViewNavigationService {
-  constructor(private router: Router, private formService: FormService) {}
+  constructor(
+    private router: Router,
+    private formService: FormService,
+  ) {}
 
-  navigateDay(
-    trainingDayIndex: number,
-    trainingFrequency: number,
-    week: number
-  ): number {
+  navigateDay(trainingDayIndex: number, trainingFrequency: number, week: number): number {
     if (trainingDayIndex >= 0 && trainingDayIndex <= trainingFrequency - 1) {
       trainingDayIndex = trainingDayIndex;
 
@@ -32,20 +31,12 @@ export class TrainingViewNavigationService {
   }
 
   /** Per Default auf den ersten Tag der Woche navigieren */
-  navigateWeek(
-    trainingWeekIndex: number,
-    direction: number,
-    trainingPlanData: TrainingPlanDto,
-    day = 0
-  ): number {
+  navigateWeek(trainingWeekIndex: number, direction: number, trainingPlanData: TrainingPlanDto, day = 0): number {
     let week = 0;
 
     if (trainingWeekIndex === 0 && direction === -1) {
       week = trainingPlanData.trainingBlockLength - 1;
-    } else if (
-      trainingWeekIndex === trainingPlanData.trainingBlockLength - 1 &&
-      direction === 1
-    ) {
+    } else if (trainingWeekIndex === trainingPlanData.trainingBlockLength - 1 && direction === 1) {
       week = 0;
     } else {
       week = trainingWeekIndex + direction;
@@ -69,13 +60,8 @@ export class TrainingViewNavigationService {
 
     for (const name in changedData) {
       if (changedData.hasOwnProperty(name)) {
-        const inputElement = document.querySelector(`[name="${name}"]`) as
-          | HTMLInputElement
-          | HTMLSelectElement;
-        if (
-          inputElement &&
-          inputElement.classList.contains('exercise-category-selector')
-        ) {
+        const inputElement = document.querySelector(`[name="${name}"]`) as HTMLInputElement | HTMLSelectElement;
+        if (inputElement && inputElement.classList.contains('exercise-category-selector')) {
           inputElement.value = '- Bitte Auswählen -';
           inputElement.dispatchEvent(new Event('change'));
         } else if (inputElement) {

@@ -22,7 +22,7 @@ export class ImageUploadService {
     event: any,
     callback: (result: string) => void,
     crop: boolean = false,
-    colorCallback?: (colors: string[]) => void
+    colorCallback?: (colors: string[]) => void,
   ) {
     const file = event.target.files[0];
     if (file) {
@@ -65,10 +65,7 @@ export class ImageUploadService {
    * @param base64Str - The base64 string representation of the image.
    * @param callback - Callback function to handle the processed image result.
    */
-  private resizeAndCropImage(
-    base64Str: string,
-    callback: (result: string) => void
-  ) {
+  private resizeAndCropImage(base64Str: string, callback: (result: string) => void) {
     const img = new Image();
     img.src = base64Str;
     img.onload = () => {
@@ -86,7 +83,7 @@ export class ImageUploadService {
         0,
         0,
         maxSize,
-        maxSize
+        maxSize,
       );
       callback(canvas.toDataURL());
     };
@@ -135,11 +132,7 @@ export class ImageUploadService {
    * @param base64Str - The base64 string representation of the image.
    * @param callback - Callback function to handle the extracted colors.
    */
-  private extractDominantColors(
-    base64Str: string,
-    callback: (colors: string[]) => void,
-    numColors: number = 5
-  ) {
+  private extractDominantColors(base64Str: string, callback: (colors: string[]) => void, numColors: number = 5) {
     const img = new Image();
     img.src = base64Str;
     img.crossOrigin = 'Anonymous';
@@ -151,10 +144,7 @@ export class ImageUploadService {
       if (ctx) {
         ctx.drawImage(img, 0, 0, img.width, img.height);
         const imageData = ctx.getImageData(0, 0, img.width, img.height);
-        const colors = this.getDominantColorsFromData(
-          imageData.data,
-          numColors
-        );
+        const colors = this.getDominantColorsFromData(imageData.data, numColors);
         callback(colors);
       }
     };
@@ -166,10 +156,7 @@ export class ImageUploadService {
    * @param numColors - The number of dominant colors to extract.
    * @returns An array of dominant colors in RGB format.
    */
-  private getDominantColorsFromData(
-    data: Uint8ClampedArray,
-    numColors: number
-  ): string[] {
+  private getDominantColorsFromData(data: Uint8ClampedArray, numColors: number): string[] {
     const colorMap: { [key: string]: number } = {};
     for (let i = 0; i < data.length; i += 4) {
       const rgb = `${data[i]},${data[i + 1]},${data[i + 2]}`;
@@ -180,9 +167,7 @@ export class ImageUploadService {
       }
     }
 
-    const sortedColors = Object.keys(colorMap).sort(
-      (a, b) => colorMap[b] - colorMap[a]
-    );
+    const sortedColors = Object.keys(colorMap).sort((a, b) => colorMap[b] - colorMap[a]);
     return sortedColors.slice(0, numColors).map((color) => `rgb(${color})`);
   }
 }

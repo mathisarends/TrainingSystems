@@ -30,7 +30,7 @@ export class SpeechToTextComponent implements OnInit {
 
   constructor(
     private speechRecognitionService: SpeechRecognitionService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
   ) {}
 
   isTrainingSetEmpty(obj: TrainingSet): boolean {
@@ -78,9 +78,7 @@ export class SpeechToTextComponent implements OnInit {
       console.log('gewicht wurde benannt:', trainingSet.weight);
     }
 
-    const repetitionsMatch = transcriptLowerCase.match(
-      /(\d+)\s*wiederholungen/
-    );
+    const repetitionsMatch = transcriptLowerCase.match(/(\d+)\s*wiederholungen/);
     if (repetitionsMatch) {
       trainingSet.reps = parseInt(repetitionsMatch[1], 10);
       console.log('wiederholungen wurden benannt:', trainingSet.reps);
@@ -102,13 +100,7 @@ export class SpeechToTextComponent implements OnInit {
     if (setSchemaMatch) {
       trainingSet.sets = parseInt(setSchemaMatch[1], 10);
       trainingSet.reps = parseInt(setSchemaMatch[2], 10);
-      console.log(
-        'Satzschema benannt:',
-        trainingSet.sets,
-        'Sätze mit',
-        trainingSet.reps,
-        'Wiederholungen'
-      );
+      console.log('Satzschema benannt:', trainingSet.sets, 'Sätze mit', trainingSet.reps, 'Wiederholungen');
     }
 
     this.trainingSet = trainingSet;

@@ -25,14 +25,9 @@ class Timer {
 
         const minutes = Math.floor(this.remainingTime / 60);
         const seconds = this.remainingTime % 60;
-        let formattedTime = `${String(minutes).padStart(2, "0")}:${String(
-          seconds
-        ).padStart(2, "0")}`;
+        let formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 
-        this.notificationManager.showNotification(
-          "TTS",
-          `Remaining time: ${formattedTime}`
-        );
+        this.notificationManager.showNotification('TTS', `Remaining time: ${formattedTime}`);
 
         this.updateTimerDisplay(this.remainingTime);
       }
@@ -43,7 +38,7 @@ class Timer {
     self.clients.matchAll().then((clients) => {
       clients.forEach((client) => {
         client.postMessage({
-          command: "currentTime",
+          command: 'currentTime',
           currentTime: time,
         });
       });
@@ -51,13 +46,9 @@ class Timer {
   }
 
   notifyTimerExpired() {
-    this.notificationManager.showNotification(
-      "TTS",
-      "Your timer has expired!",
-      {
-        vibrate: [200, 100, 200],
-      }
-    );
+    this.notificationManager.showNotification('TTS', 'Your timer has expired!', {
+      vibrate: [200, 100, 200],
+    });
   }
 
   stopTimer() {

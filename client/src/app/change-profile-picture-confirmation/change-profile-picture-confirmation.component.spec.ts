@@ -8,9 +8,8 @@ describe('ChangeProfilePictureConfirmationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ChangeProfilePictureConfirmationComponent]
-    })
-    .compileComponents();
+      imports: [ChangeProfilePictureConfirmationComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ChangeProfilePictureConfirmationComponent);
     component = fixture.componentInstance;

@@ -1,174 +1,159 @@
 @if (!(dataViewLoaded$ | async)) {
-<app-skeleton-training-table />
+  <app-skeleton-training-table />
 } @else {
-<form (submit)="onSubmit($event)" class="mt-4" id="form">
-  <div class="headline-container" [ngClass]="{ 'background-image': isMobile }">
-    <app-headline
-      [subHeading]="subHeading"
-      [heading]="trainingPlanData.title"
-    />
-    @if (isMobile) {
-    <app-icon-button
-      [iconClass]="'bx bx-timer'"
-      (buttonClick)="switchToTimerView()"
-    />
-    }
-  </div>
-
-  <table
-    #trainingTable
-    class="table table-striped training-table responsive-table caption-top mb-4"
-  >
-    <thead>
-      <tr>
-        <th scope="col">Category</th>
-        <th scope="col">Exercise</th>
-        <th scope="col" class="text-center">Sets</th>
-        <th scope="col" class="text-center">Reps</th>
-        <th scope="col" class="text-center">Weight</th>
-        <th scope="col" class="text-center">RPE</th>
-        <th scope="col" class="text-center">&#64;RPE</th>
-        <th scope="col" class="text-center">Max</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (k of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track k; let i = $index) {
-      @let exercise = trainingPlanData.trainingDay.exercises[i] || { category:
-      '', exercise: '', sets: '', reps: '', weight: '', targetRPE: '',
-      actualRPE: '', estMax: '', }; @let previousTrainingDayExercise =
-      trainingPlanData.previousTrainingDay?.exercises?.[i] ?? { exercise:
-      undefined, weight: undefined }; @let namePrefix = 'day' + trainingDayIndex
-      + '_exercise' + k + '_:';
-
-      <tr>
-        <td data-cell="Category">
-          <select
-            name="day{{ trainingDayIndex }}_exercise{{ k }}_category"
-            class="exercise-category-selector transparent-input w-100"
-            (change)="onCategoryChange($event)"
-            [ngStyle]="{
-              opacity:
-                exercise.category === '- Bitte Auswählen -' ||
-                !exercise.category
-                  ? 0
-                  : 1
-            }"
-          >
-            @for (category of exerciseData.exerciseCategories; track category) {
-            <option
-              [value]="category"
-              [selected]="exercise.category === category"
-            >
-              {{ category }}
-            </option>
-            }
-          </select>
-        </td>
-        <td data-cell="Exercise">
-          <select
-            *ngFor="let category of exerciseData.exerciseCategories"
-            name="day{{ trainingDayIndex }}_exercise{{ k }}_exercise_name"
-            class="exercise-name-selector transparent-input"
-            [disabled]="exercise.category !== category"
-            [style.display]="exercise.category === category ? 'block' : 'none'"
-            (change)="onInputChange($event)"
-          >
-            @for ( exerciseName of exerciseData.categorizedExercises[category];
-            track exerciseName) {
-            <option
-              [value]="exerciseName"
-              [selected]="exercise.exercise === exerciseName"
-            >
-              {{ exerciseName }}
-            </option>
-            }
-          </select>
-        </td>
-        <td data-cell="Sets">
-          <input
-            type="number"
-            class="transparent-input sets"
-            name="day{{ trainingDayIndex }}_exercise{{ k }}_sets"
-            [value]="exercise.sets || ''"
-            (input)="onInputChange($event)"
-          />
-        </td>
-        <td data-cell="Reps">
-          <input
-            type="number"
-            class="transparent-input reps"
-            [name]="namePrefix + 'reps'"
-            [value]="exercise.reps || ''"
-            (input)="onInputChange($event)"
-          />
-        </td>
-        <td data-cell="Weight">
-          <input
-            #weightInput
-            [placeholder]="
-              previousTrainingDayExercise?.exercise &&
-              previousTrainingDayExercise.exercise === exercise?.exercise
-                ? previousTrainingDayExercise?.weight
-                : ''
-            "
-            type="text"
-            class="transparent-input weight"
-            [name]="namePrefix + 'weight'"
-            [value]="exercise.weight || ''"
-            (input)="onInputChange($event)"
-          />
-        </td>
-        <td data-cell="RPE">
-          <input
-            type="number"
-            class="transparent-input targetRPE"
-            [name]="namePrefix + 'targetRPE'"
-            [value]="exercise.targetRPE || ''"
-            (input)="onInputChange($event)"
-          />
-        </td>
-        <td data-cell="@RPE">
-          <input
-            type="string"
-            class="transparent-input actualRPE"
-            [name]="namePrefix + 'actualRPE'"
-            [value]="exercise.actualRPE || ''"
-            (input)="onInputChange($event)"
-          />
-        </td>
-        <td data-cell="Est. Max">
-          <input
-            type="number"
-            class="transparent-input estMax"
-            readonly
-            [name]="namePrefix + 'estMax'"
-            [value]="exercise.estMax || ''"
-            (input)="onInputChange($event)"
-          />
-        </td>
-      </tr>
+  <form (submit)="onSubmit($event)" class="mt-4" id="form">
+    <div class="headline-container" [ngClass]="{ 'background-image': isMobile }">
+      <app-headline [subHeading]="subHeading" [heading]="trainingPlanData.title" />
+      @if (isMobile) {
+        <app-icon-button [iconClass]="'bx bx-timer'" (buttonClick)="switchToTimerView()" />
       }
-    </tbody>
-  </table>
+    </div>
 
-  <div class="pagination-container mb-4">
-    <app-pagination
-      [currentPage]="trainingDayIndex"
-      [totalPages]="trainingPlanData.trainingFrequency"
-      (pageChanged)="onPageChanged($event)"
-    ></app-pagination>
-  </div>
+    <table #trainingTable class="table table-striped training-table responsive-table caption-top mb-4">
+      <thead>
+        <tr>
+          <th scope="col">Category</th>
+          <th scope="col">Exercise</th>
+          <th scope="col" class="text-center">Sets</th>
+          <th scope="col" class="text-center">Reps</th>
+          <th scope="col" class="text-center">Weight</th>
+          <th scope="col" class="text-center">RPE</th>
+          <th scope="col" class="text-center">&#64;RPE</th>
+          <th scope="col" class="text-center">Max</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (k of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track k; let i = $index) {
+          @let exercise =
+            trainingPlanData.trainingDay.exercises[i] || {
+              category: '',
+              exercise: '',
+              sets: '',
+              reps: '',
+              weight: '',
+              targetRPE: '',
+              actualRPE: '',
+              estMax: '',
+            };
+          @let previousTrainingDayExercise =
+            trainingPlanData.previousTrainingDay?.exercises?.[i] ?? {
+              exercise: undefined,
+              weight: undefined,
+            };
+          @let namePrefix = 'day' + trainingDayIndex + '_exercise' + k + '_:';
 
-  <input type="submit" class="btn btn-dark" />
-  <button
-    class="btn btn-outline-dark m-1"
-    id="reset-btn"
-    type="button"
-    (click)="openAutoProgressionModal()"
-  >
-    Options
-  </button>
-</form>
+          <tr>
+            <td data-cell="Category">
+              <select
+                name="day{{ trainingDayIndex }}_exercise{{ k }}_category"
+                class="exercise-category-selector transparent-input w-100"
+                (change)="onCategoryChange($event)"
+                [ngStyle]="{
+                  opacity: exercise.category === '- Bitte Auswählen -' || !exercise.category ? 0 : 1,
+                }"
+              >
+                @for (category of exerciseData.exerciseCategories; track category) {
+                  <option [value]="category" [selected]="exercise.category === category">
+                    {{ category }}
+                  </option>
+                }
+              </select>
+            </td>
+            <td data-cell="Exercise">
+              <select
+                *ngFor="let category of exerciseData.exerciseCategories"
+                name="day{{ trainingDayIndex }}_exercise{{ k }}_exercise_name"
+                class="exercise-name-selector transparent-input"
+                [disabled]="exercise.category !== category"
+                [style.display]="exercise.category === category ? 'block' : 'none'"
+                (change)="onInputChange($event)"
+              >
+                @for (exerciseName of exerciseData.categorizedExercises[category]; track exerciseName) {
+                  <option [value]="exerciseName" [selected]="exercise.exercise === exerciseName">
+                    {{ exerciseName }}
+                  </option>
+                }
+              </select>
+            </td>
+            <td data-cell="Sets">
+              <input
+                type="number"
+                class="transparent-input sets"
+                name="day{{ trainingDayIndex }}_exercise{{ k }}_sets"
+                [value]="exercise.sets || ''"
+                (input)="onInputChange($event)"
+              />
+            </td>
+            <td data-cell="Reps">
+              <input
+                type="number"
+                class="transparent-input reps"
+                [name]="namePrefix + 'reps'"
+                [value]="exercise.reps || ''"
+                (input)="onInputChange($event)"
+              />
+            </td>
+            <td data-cell="Weight">
+              <input
+                #weightInput
+                [placeholder]="
+                  previousTrainingDayExercise?.exercise && previousTrainingDayExercise.exercise === exercise?.exercise
+                    ? previousTrainingDayExercise?.weight
+                    : ''
+                "
+                type="text"
+                class="transparent-input weight"
+                [name]="namePrefix + 'weight'"
+                [value]="exercise.weight || ''"
+                (input)="onInputChange($event)"
+              />
+            </td>
+            <td data-cell="RPE">
+              <input
+                type="number"
+                class="transparent-input targetRPE"
+                [name]="namePrefix + 'targetRPE'"
+                [value]="exercise.targetRPE || ''"
+                (input)="onInputChange($event)"
+              />
+            </td>
+            <td data-cell="@RPE">
+              <input
+                type="string"
+                class="transparent-input actualRPE"
+                [name]="namePrefix + 'actualRPE'"
+                [value]="exercise.actualRPE || ''"
+                (input)="onInputChange($event)"
+              />
+            </td>
+            <td data-cell="Est. Max">
+              <input
+                type="number"
+                class="transparent-input estMax"
+                readonly
+                [name]="namePrefix + 'estMax'"
+                [value]="exercise.estMax || ''"
+                (input)="onInputChange($event)"
+              />
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="pagination-container mb-4">
+      <app-pagination
+        [currentPage]="trainingDayIndex"
+        [totalPages]="trainingPlanData.trainingFrequency"
+        (pageChanged)="onPageChanged($event)"
+      ></app-pagination>
+    </div>
+
+    <input type="submit" class="btn btn-dark" />
+    <button class="btn btn-outline-dark m-1" id="reset-btn" type="button" (click)="openAutoProgressionModal()">
+      Options
+    </button>
+  </form>
 }
 
 <div class="fixed-bottom-bar">

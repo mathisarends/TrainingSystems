@@ -1,10 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  Input,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import Chart from 'chart.js/auto';
 import { AlertComponent } from '../components/alert/alert.component';
 
@@ -21,13 +15,7 @@ export class PolarChartComponent implements AfterViewInit {
   @Input() chartId: string = 'polarAreaChart';
   @Input() data: number[] = [11, 16, 7, 3, 14];
   @Input() labels: string[] = ['Red', 'Green', 'Yellow', 'Grey', 'Blue'];
-  @Input() backgroundColors: string[] = [
-    '#FF6384',
-    '#36A2EB',
-    '#FFCE56',
-    '#CCCCCC',
-    '#4BC0C0',
-  ];
+  @Input() backgroundColors: string[] = ['#FF6384', '#36A2EB', '#FFCE56', '#CCCCCC', '#4BC0C0'];
 
   chart!: Chart<'polarArea'>;
 

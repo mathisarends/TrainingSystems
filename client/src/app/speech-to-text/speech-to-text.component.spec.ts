@@ -8,9 +8,8 @@ describe('SpeechToTextComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SpeechToTextComponent]
-    })
-    .compileComponents();
+      imports: [SpeechToTextComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SpeechToTextComponent);
     component = fixture.componentInstance;

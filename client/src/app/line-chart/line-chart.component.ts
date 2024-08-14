@@ -76,9 +76,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges {
             callbacks: {
               label: (context) => {
                 return context.dataset.label
-                  ? `${context.dataset.label}: ${
-                      context.parsed.y || context.raw
-                    } kg`
+                  ? `${context.dataset.label}: ${context.parsed.y || context.raw} kg`
                   : `${context.label}: ${context.raw} kg`;
               },
             },
@@ -89,8 +87,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges {
             const element = elements[0];
             const datasetIndex = element.datasetIndex;
             const index = element.index;
-            const exercise = this.chart.data.datasets[datasetIndex]
-              .label as string;
+            const exercise = this.chart.data.datasets[datasetIndex].label as string;
             const label = this.chart.data.labels![index] as string;
 
             // Extract the week number from the label (assuming the label format is "Woche X")

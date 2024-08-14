@@ -1,10 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ElementRef,
-  ViewChild,
-  Renderer2,
-} from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, Renderer2 } from '@angular/core';
 import { ProfileService } from './profileService';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { User } from '../../types/user';
@@ -28,13 +22,7 @@ import { PaginationComponent } from '../../components/pagination/pagination.comp
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   standalone: true,
-  imports: [
-    SpinnerComponent,
-    FriendCardComponent,
-    TooltipDirective,
-    AlertComponent,
-    PaginationComponent,
-  ],
+  imports: [SpinnerComponent, FriendCardComponent, TooltipDirective, AlertComponent, PaginationComponent],
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
@@ -60,7 +48,7 @@ export class ProfileComponent implements OnInit {
     private renderer: Renderer2,
     private modalService: ModalService,
     private modalEventsService: ModalEventsService,
-    private httpService: HttpClientService
+    private httpService: HttpClientService,
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -77,21 +65,11 @@ export class ProfileComponent implements OnInit {
       },
     });
 
-    this.subscription.add(
-      this.modalEventsService.confirmClick$.subscribe(() =>
-        this.uploadProfilePicture()
-      )
-    );
+    this.subscription.add(this.modalEventsService.confirmClick$.subscribe(() => this.uploadProfilePicture()));
 
-    this.subscription.add(
-      this.modalEventsService.abortClick$.subscribe(() =>
-        this.restoreOriginalProfilePicture()
-      )
-    );
+    this.subscription.add(this.modalEventsService.abortClick$.subscribe(() => this.restoreOriginalProfilePicture()));
 
-    const response = await firstValueFrom(
-      this.httpService.request<any>(HttpMethods.GET, 'friendship')
-    );
+    const response = await firstValueFrom(this.httpService.request<any>(HttpMethods.GET, 'friendship'));
 
     this.friends = response.friends;
     this.filteredFriends = this.friends; // hier bitte einmal kombinieren
@@ -101,7 +79,7 @@ export class ProfileComponent implements OnInit {
     this.renderer.setAttribute(
       this.profileImageElement.nativeElement,
       'src',
-      this.profile.pictureUrl ?? '/images/profile-placeholder.webp'
+      this.profile.pictureUrl ?? '/images/profile-placeholder.webp',
     );
   }
 
@@ -130,15 +108,11 @@ export class ProfileComponent implements OnInit {
     this.imageUploadService.handleImageUpload(
       event,
       (result: string) => {
-        this.renderer.setAttribute(
-          this.profileImageElement.nativeElement,
-          'src',
-          result
-        );
+        this.renderer.setAttribute(this.profileImageElement.nativeElement, 'src', result);
 
         this.showProfilePictureChangeDialog(result);
       },
-      true
+      true,
     );
   }
 
@@ -158,9 +132,7 @@ export class ProfileComponent implements OnInit {
   filterFriends(event: Event) {
     const searchTerm = (event.target as HTMLInputElement).value.toLowerCase();
     this.filteredFriends = this.friends.filter(
-      (friend) =>
-        friend.name.toLowerCase().includes(searchTerm) ||
-        friend.email.toLowerCase().includes(searchTerm)
+      (friend) => friend.name.toLowerCase().includes(searchTerm) || friend.email.toLowerCase().includes(searchTerm),
     );
   }
 
@@ -187,15 +159,10 @@ export class ProfileComponent implements OnInit {
 
     try {
       const response = await firstValueFrom(
-        this.httpService.request<any>(
-          HttpMethods.DELETE,
-          `friendship/${friendId}`
-        )
+        this.httpService.request<any>(HttpMethods.DELETE, `friendship/${friendId}`),
       );
 
-      const friendshipsAfterDelete = await firstValueFrom(
-        this.httpService.request<any>(HttpMethods.GET, 'friendship')
-      );
+      const friendshipsAfterDelete = await firstValueFrom(this.httpService.request<any>(HttpMethods.GET, 'friendship'));
 
       this.friends = friendshipsAfterDelete.friends;
       this.filteredFriends = this.friends; // hier bitte einmal kombinieren

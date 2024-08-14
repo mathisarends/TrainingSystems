@@ -8,9 +8,8 @@ describe('TrainingViewNavigationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TrainingViewNavigationComponent]
-    })
-    .compileComponents();
+      imports: [TrainingViewNavigationComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(TrainingViewNavigationComponent);
     component = fixture.componentInstance;

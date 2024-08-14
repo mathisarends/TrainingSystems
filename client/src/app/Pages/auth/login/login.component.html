@@ -4,26 +4,11 @@
       <header>Login</header>
       <form (submit)="onSubmit($event)">
         <div class="field input-field">
-          <input
-            type="email"
-            placeholder="Email"
-            class="input"
-            name="email"
-            autocomplete="off"
-          />
+          <input type="email" placeholder="Email" class="input" name="email" autocomplete="off" />
         </div>
         <div class="field input-field">
-          <input
-            autocomplete="off"
-            type="password"
-            placeholder="Password"
-            class="password"
-            name="password"
-          />
-          <i
-            class="bx bx-hide eye-icon"
-            (click)="togglePasswordVisibility($event)"
-          ></i>
+          <input autocomplete="off" type="password" placeholder="Password" class="password" name="password" />
+          <i class="bx bx-hide eye-icon" (click)="togglePasswordVisibility($event)"></i>
         </div>
 
         <div class="field button-field">
@@ -33,20 +18,11 @@
       <div class="form-link">
         <span>
           Don't have an account?
-          <a
-            href="/register"
-            class="link signup-link"
-            (click)="navigateTo($event)"
-          >
-            Signup
-          </a>
+          <a href="/register" class="link signup-link" (click)="navigateTo($event)"> Signup </a>
         </span>
       </div>
       <div class="form-link">
-        <span
-          >Forgot Password?
-          <a href="#" class="forgot-pass">Click here </a></span
-        >
+        <span>Forgot Password? <a href="#" class="forgot-pass">Click here </a></span>
       </div>
     </div>
     <div class="line"></div>

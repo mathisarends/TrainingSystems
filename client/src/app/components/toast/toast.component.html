@@ -1,11 +1,11 @@
 <div class="toast-container">
   @for (toast of toastService.toasts; track toast) {
-  <div class="toast" [class.active]="true" role="alert">
-    <div class="message">
-      <span id="toast-headline">{{ toast.title }}</span>
-      <span class="info">{{ toast.text }}</span>
+    <div class="toast" [class.active]="true" role="alert">
+      <div class="message">
+        <span id="toast-headline">{{ toast.title }}</span>
+        <span class="info">{{ toast.text }}</span>
+      </div>
+      <div class="close-icon-container" (click)="remove(toast)">✖</div>
     </div>
-    <div class="close-icon-container" (click)="remove(toast)">✖</div>
-  </div>
   }
 </div>

@@ -1,6 +1,6 @@
 /* Tooltip container styles */
 .tooltip-container {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   position: absolute;
   background: rgba(0, 0, 0, 0.8);
   color: #fff;
@@ -9,7 +9,9 @@
   font-size: 12px;
   pointer-events: none;
   z-index: 1000;
-  transition: opacity 0.2s, visibility 0.2s;
+  transition:
+    opacity 0.2s,
+    visibility 0.2s;
   visibility: hidden;
   opacity: 0;
   display: flex;
@@ -20,7 +22,7 @@
 
 /* Tooltip arrow styles */
 .tooltip-container::after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: -10px;
   left: 50%;

@@ -13,7 +13,7 @@ export abstract class BaisAuthComponent {
     protected router: Router,
     protected httpClient: HttpClientService,
     protected toastService: ToastService,
-    @Inject(DOCUMENT) protected document: Document
+    @Inject(DOCUMENT) protected document: Document,
   ) {
     this.oauthRoute =
       process.env['NODE_ENV'] === 'production'
@@ -23,9 +23,7 @@ export abstract class BaisAuthComponent {
 
   protected loadGoogleClientScript(): Promise<void> {
     return new Promise((resolve, reject) => {
-      const existingScript = this.document.getElementById(
-        'google-client-script'
-      );
+      const existingScript = this.document.getElementById('google-client-script');
       if (existingScript) {
         existingScript.remove();
       }
@@ -39,8 +37,7 @@ export abstract class BaisAuthComponent {
         google.accounts.id.initialize({});
         resolve();
       };
-      script.onerror = () =>
-        reject(new Error('Google script could not be loaded.'));
+      script.onerror = () => reject(new Error('Google script could not be loaded.'));
       this.document.head.appendChild(script);
     });
   }
@@ -54,9 +51,7 @@ export abstract class BaisAuthComponent {
 
   protected togglePasswordVisibility(event: Event): void {
     const eyeIcon = event.target as HTMLElement;
-    const pwField = eyeIcon.parentElement?.querySelector(
-      '.password'
-    ) as HTMLInputElement;
+    const pwField = eyeIcon.parentElement?.querySelector('.password') as HTMLInputElement;
     if (pwField) {
       pwField.type = pwField.type === 'password' ? 'text' : 'password';
       eyeIcon.classList.toggle('bx-show');

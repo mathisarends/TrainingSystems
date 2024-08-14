@@ -14,14 +14,11 @@ import { isPlatformBrowser } from '@angular/common';
   providedIn: 'root',
 })
 export class HttpClientService {
-  private baseUrl: string =
-    process.env['NODE_ENV'] === 'production'
-      ? environment.produUrl
-      : environment.apiUrl;
+  private baseUrl: string = process.env['NODE_ENV'] === 'production' ? environment.produUrl : environment.apiUrl;
 
   constructor(
     private http: HttpClient,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
   ) {}
 
   /**
@@ -36,13 +33,7 @@ export class HttpClientService {
    * @returns An Observable of type T with the HTTP response.
    * @throws Will throw an error if an invalid HTTP method is provided.
    */
-  request<T>(
-    method: HttpMethods,
-    url: string,
-    body?: any,
-    params?: HttpParams,
-    headers?: HttpHeaders
-  ): Observable<T> {
+  request<T>(method: HttpMethods, url: string, body?: any, params?: HttpParams, headers?: HttpHeaders): Observable<T> {
     if (isPlatformBrowser(this.platformId)) {
       const fullUrl = `${this.baseUrl}/${url}`;
 

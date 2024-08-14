@@ -10,7 +10,7 @@ export class AutoSaveService {
 
   constructor(
     rendererFactory: RendererFactory2,
-    private formService: FormService
+    private formService: FormService,
   ) {
     this.renderer = rendererFactory.createRenderer(null, null);
   }
@@ -55,16 +55,11 @@ export class AutoSaveService {
    * @param {HTMLFormElement} form The form element to be submitted.
    * @returns {() => void} The function to remove the event listener.
    */
-  private createWeightInputListener(
-    weightInput: HTMLInputElement,
-    form: HTMLFormElement
-  ): () => void {
+  private createWeightInputListener(weightInput: HTMLInputElement, form: HTMLFormElement): () => void {
     return this.renderer.listen(weightInput, 'change', () => {
       const weightValues = this.parseWeightInputValues(weightInput);
       const tableRow = weightInput.closest('tr');
-      const amountOfSets = Number(
-        (tableRow?.querySelector('.sets') as HTMLInputElement).value
-      );
+      const amountOfSets = Number((tableRow?.querySelector('.sets') as HTMLInputElement).value);
 
       if (weightValues.length === amountOfSets) {
         const roundedWeight = this.calculateRoundedWeight(weightValues);
@@ -83,9 +78,7 @@ export class AutoSaveService {
    * @returns {number[]} The parsed weight values.
    */
   private parseWeightInputValues(weightInput: HTMLInputElement): number[] {
-    return weightInput.value
-      .split(';')
-      .map((value) => parseFloat(value.trim().replace(',', '.')));
+    return weightInput.value.split(';').map((value) => parseFloat(value.trim().replace(',', '.')));
   }
 
   /**
@@ -95,8 +88,7 @@ export class AutoSaveService {
    * @returns {number} The rounded average weight.
    */
   private calculateRoundedWeight(weightValues: number[]): number {
-    const averageWeight =
-      weightValues.reduce((acc, curr) => acc + curr, 0) / weightValues.length;
+    const averageWeight = weightValues.reduce((acc, curr) => acc + curr, 0) / weightValues.length;
     return Math.round(averageWeight / 2.5) * 2.5;
   }
 

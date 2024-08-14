@@ -1,33 +1,29 @@
 @if (!dataLoaded) {
-<app-spinner />
+  <app-spinner />
 } @else {
-<app-headline [subHeading]="'statistiken'" [heading]="trainingPlanTitle" />
-<main>
-  <app-multi-select
-    [options]="allExercises"
-    [initialSelected]="selectedExercises!"
-    (selectionChange)="changeDisplayCategories($event)"
-  ></app-multi-select>
+  <app-headline [subHeading]="'statistiken'" [heading]="trainingPlanTitle" />
+  <main>
+    <app-multi-select
+      [options]="allExercises"
+      [initialSelected]="selectedExercises!"
+      (selectionChange)="changeDisplayCategories($event)"
+    ></app-multi-select>
 
-  <app-line-chart
-    [data]="lineChartDatasets"
-    [labels]="lineChartLabels"
-    (drillThrough)="showDrillThroughGraph($event)"
-    yAxisTitle="Tonnage (kg)"
-  />
+    <app-line-chart
+      [data]="lineChartDatasets"
+      [labels]="lineChartLabels"
+      (drillThrough)="showDrillThroughGraph($event)"
+      yAxisTitle="Tonnage (kg)"
+    />
 
-  <app-grouped-bar-chart
-    [labels]="groupedBarChartLabels"
-    [barChartDataSets]="groupedBarChartDatasets"
-  />
-</main>
+    <app-grouped-bar-chart [labels]="groupedBarChartLabels" [barChartDataSets]="groupedBarChartDatasets" />
+  </main>
 
-<footer class="d-flex justify-content-center">
-  <app-pagination
-    [currentPage]="currentView === 'volume' ? 0 : 1"
-    [totalPages]="2"
-    (pageChanged)="changeView($event)"
-  />
-</footer>
-
+  <footer class="d-flex justify-content-center">
+    <app-pagination
+      [currentPage]="currentView === 'volume' ? 0 : 1"
+      [totalPages]="2"
+      (pageChanged)="changeView($event)"
+    />
+  </footer>
 }

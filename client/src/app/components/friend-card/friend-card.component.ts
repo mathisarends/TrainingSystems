@@ -21,8 +21,6 @@ export class FriendCardComponent {
   }
 
   getIconClass(): string {
-    return this.mode === FriendCardMode.ADD
-      ? 'bx bx-user-plus'
-      : 'bx bx-user-minus';
+    return this.mode === FriendCardMode.ADD ? 'bx bx-user-plus' : 'bx bx-user-minus';
   }
 }

@@ -1,11 +1,4 @@
-import {
-  Injectable,
-  Renderer2,
-  RendererFactory2,
-  EventEmitter,
-  signal,
-  OnInit,
-} from '@angular/core';
+import { Injectable, Renderer2, RendererFactory2, EventEmitter, signal, OnInit } from '@angular/core';
 import { ExerciseDataDTO } from '../../app/Pages/training-view/exerciseDataDto';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
@@ -25,7 +18,7 @@ export class PauseTimeService {
 
   constructor(
     rendererFactory: RendererFactory2,
-    @Inject(PLATFORM_ID) private platformId: any
+    @Inject(PLATFORM_ID) private platformId: any,
   ) {
     this.renderer = rendererFactory.createRenderer(null, null);
 
@@ -38,20 +31,13 @@ export class PauseTimeService {
         });
       }
 
-      document.addEventListener(
-        'visibilitychange',
-        this.handleVisibilityChange
-      );
+      document.addEventListener('visibilitychange', this.handleVisibilityChange);
     }
   }
 
   // TODO: hier brauchen wir eignetlich logik, dass der nutzer verlässlich auch einen neuen set gemacht hat wie könnte man das identifizieren?
   handleVisibilityChange = () => {
-    if (
-      this.currentSetNotLastSet &&
-      this.remainingTime === 0 &&
-      this.restartTimerOnDisplayOnlock
-    ) {
+    if (this.currentSetNotLastSet && this.remainingTime === 0 && this.restartTimerOnDisplayOnlock) {
       console.log('timer shall start again');
       /* this.notifyServiceWorkerTimerStarted(this.initialTime);
       this.startKeepAlive(); */
@@ -60,9 +46,7 @@ export class PauseTimeService {
 
   // TODO: hier auch das currentSEtNotLastSet setzen wenn der nutzer einfach die erste eingabe macht und es mehr als einen set gibt
   initializePauseTimers(exerciseData: ExerciseDataDTO) {
-    const weightInputs = document.querySelectorAll(
-      '.weight'
-    ) as NodeListOf<HTMLInputElement>;
+    const weightInputs = document.querySelectorAll('.weight') as NodeListOf<HTMLInputElement>;
 
     weightInputs.forEach((weightInput) => {
       weightInput.addEventListener('change', () => {
@@ -70,9 +54,7 @@ export class PauseTimeService {
           .closest('tr')
           ?.querySelector('.exercise-category-selector') as HTMLSelectElement;
 
-        const setInput = weightInput
-          .closest('tr')
-          ?.querySelector('.sets') as HTMLInputElement;
+        const setInput = weightInput.closest('tr')?.querySelector('.sets') as HTMLInputElement;
 
         if (closestCategorySelector) {
           const categoryValue = closestCategorySelector.value;
@@ -109,9 +91,7 @@ export class PauseTimeService {
    * @returns {number[]} The parsed weight values.
    */
   private parseWeightInputValues(weightInput: HTMLInputElement): number[] {
-    return weightInput.value
-      .split(';')
-      .map((value) => parseFloat(value.trim().replace(',', '.')));
+    return weightInput.value.split(';').map((value) => parseFloat(value.trim().replace(',', '.')));
   }
 
   /**
@@ -125,9 +105,7 @@ export class PauseTimeService {
         duration: remainingTime,
       });
     } else {
-      console.error(
-        '[PauseTimeService] Service Worker not available or not registered.'
-      );
+      console.error('[PauseTimeService] Service Worker not available or not registered.');
     }
   }
 
@@ -140,11 +118,7 @@ export class PauseTimeService {
     }
 
     this.keepAliveIntervalId = setInterval(() => {
-      if (
-        'serviceWorker' in navigator &&
-        navigator.serviceWorker.controller &&
-        this.remainingTime > 0
-      ) {
+      if ('serviceWorker' in navigator && navigator.serviceWorker.controller && this.remainingTime > 0) {
         navigator.serviceWorker.controller.postMessage({
           command: 'keepAlive',
           duration: this.remainingTime,

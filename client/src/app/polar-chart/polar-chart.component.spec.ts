@@ -8,9 +8,8 @@ describe('PolarChartComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PolarChartComponent]
-    })
-    .compileComponents();
+      imports: [PolarChartComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PolarChartComponent);
     component = fixture.componentInstance;

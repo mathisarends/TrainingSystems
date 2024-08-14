@@ -1,12 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  OnInit,
-  Output,
-  QueryList,
-  ViewChildren,
-} from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { catchError, filter } from 'rxjs/operators';
 import { ProfileService } from '../../Pages/profile/profileService';
@@ -39,14 +31,12 @@ export class HeaderComponent implements OnInit {
   constructor(
     private router: Router,
     private profileService: ProfileService,
-    private searchService: SearchService
+    private searchService: SearchService,
   ) {
     // Subscribe to router events to update active link on navigation end
-    this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe(() => {
-        this.updateActiveLink();
-      });
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
+      this.updateActiveLink();
+    });
   }
 
   /**
@@ -67,7 +57,7 @@ export class HeaderComponent implements OnInit {
             console.error('An error occurred:', error);
           }
           return of(null); // Return a fallback value or empty observable
-        })
+        }),
       )
 
       .subscribe((data: any) => {

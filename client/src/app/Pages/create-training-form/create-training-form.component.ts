@@ -1,10 +1,4 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  ViewChild,
-  ElementRef,
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { ModalEventsService } from '../../../service/modal/modal-events.service';
@@ -48,7 +42,7 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
     private httpClient: HttpClientService,
     private imageUploadService: ImageUploadService,
     private modalService: ModalService,
-    private toastService: ToastService
+    private toastService: ToastService,
   ) {
     this.trainingForm = this.fb.group({
       title: ['', Validators.required],
@@ -63,9 +57,7 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
    * Lifecycle hook to handle initialization tasks.
    */
   ngOnInit() {
-    this.subscription.add(
-      this.modalEventsService.confirmClick$.subscribe(() => this.onSubmit())
-    );
+    this.subscription.add(this.modalEventsService.confirmClick$.subscribe(() => this.onSubmit()));
   }
 
   /**
@@ -84,11 +76,7 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
 
       try {
         const response = await firstValueFrom(
-          this.httpClient.request<any>(
-            HttpMethods.POST,
-            'training/create',
-            formData
-          )
+          this.httpClient.request<any>(HttpMethods.POST, 'training/create', formData),
         );
 
         this.toastService.show('Erfolg', 'Plan erstellt!');
@@ -110,14 +98,11 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
    * @param event - The file input change event.
    */
   handleImageUpload(event: any) {
-    console.log(
-      '🚀 ~ CreateTrainingFormComponent ~ handleImageUpload ~ event:',
-      event
-    );
+    console.log('🚀 ~ CreateTrainingFormComponent ~ handleImageUpload ~ event:', event);
     this.imageUploadService.handleImageUpload(event, (result: string) => {
       console.log(
         '🚀 ~ CreateTrainingFormComponent ~ this.imageUploadService.handleImageUpload ~ this.coverImage:',
-        this.coverImage
+        this.coverImage,
       );
       if (this.coverImage) {
         this.coverImage.nativeElement.src = result;

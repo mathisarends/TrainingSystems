@@ -1,11 +1,4 @@
-import {
-  Directive,
-  ElementRef,
-  HostListener,
-  Input,
-  Renderer2,
-  OnDestroy,
-} from '@angular/core';
+import { Directive, ElementRef, HostListener, Input, Renderer2, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -31,7 +24,7 @@ export class TooltipDirective implements OnDestroy {
   constructor(
     private el: ElementRef,
     private renderer: Renderer2,
-    private router: Router
+    private router: Router,
   ) {
     this.routerSubscription = this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
@@ -55,10 +48,7 @@ export class TooltipDirective implements OnDestroy {
 
       const text = this.renderer.createElement('span');
       this.renderer.addClass(text, 'tooltip-text');
-      this.renderer.appendChild(
-        text,
-        this.renderer.createText(this.tooltipMessage)
-      );
+      this.renderer.appendChild(text, this.renderer.createText(this.tooltipMessage));
       this.renderer.appendChild(this.tooltipElement, text);
 
       this.renderer.appendChild(document.body, this.tooltipElement);
@@ -67,17 +57,12 @@ export class TooltipDirective implements OnDestroy {
     this.renderer.setStyle(
       this.tooltipElement,
       'top',
-      `${rect.top + window.scrollY - this.tooltipElement.offsetHeight - 7.5}px`
+      `${rect.top + window.scrollY - this.tooltipElement.offsetHeight - 7.5}px`,
     );
     this.renderer.setStyle(
       this.tooltipElement,
       'left',
-      `${
-        rect.left +
-        window.scrollX +
-        rect.width / 2 -
-        this.tooltipElement.offsetWidth / 2
-      }px`
+      `${rect.left + window.scrollX + rect.width / 2 - this.tooltipElement.offsetWidth / 2}px`,
     );
     this.renderer.setStyle(this.tooltipElement, 'visibility', 'visible');
     this.renderer.setStyle(this.tooltipElement, 'opacity', '1');

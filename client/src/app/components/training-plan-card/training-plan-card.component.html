@@ -2,10 +2,7 @@
   <div
     class="card-custom-img"
     [ngStyle]="{
-      'background-image':
-        'url(' +
-        (trainingPlan.coverImageBase64 || '/images/training/training_3.jpg') +
-        ')'
+      'background-image': 'url(' + (trainingPlan.coverImageBase64 || '/images/training/training_3.jpg') + ')',
     }"
   ></div>
   <div class="card-custom-avatar">
@@ -13,9 +10,7 @@
   </div>
   <div class="card-body" style="overflow-y: auto">
     <h4 class="card-title">{{ trainingPlan.title }}</h4>
-    <p class="card-text">
-      {{ trainingPlan.trainingFrequency }} Trainings / Woche
-    </p>
+    <p class="card-text">{{ trainingPlan.trainingFrequency }} Trainings / Woche</p>
     <p class="card-text ml-3">
       {{ trainingPlan.lastUpdated }}
     </p>
