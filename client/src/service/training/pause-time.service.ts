@@ -3,6 +3,8 @@ import {
   Renderer2,
   RendererFactory2,
   EventEmitter,
+  signal,
+  OnInit,
 } from '@angular/core';
 import { ExerciseDataDTO } from '../../app/Pages/training-view/exerciseDataDto';
 import { Inject, PLATFORM_ID } from '@angular/core';
@@ -12,6 +14,9 @@ import { isPlatformBrowser } from '@angular/common';
   providedIn: 'root',
 })
 export class PauseTimeService {
+  currentSetNotLastSet: boolean = true;
+  restartTimerOnDisplayOnlock = false;
+
   private renderer: Renderer2;
   private keepAliveIntervalId: any; // Store the keep-alive interval ID
   private remainingTime: number = 0; // Store the remaining time
@@ -32,9 +37,28 @@ export class PauseTimeService {
           }
         });
       }
+
+      document.addEventListener(
+        'visibilitychange',
+        this.handleVisibilityChange
+      );
     }
   }
 
+  // TODO: hier brauchen wir eignetlich logik, dass der nutzer verlässlich auch einen neuen set gemacht hat wie könnte man das identifizieren?
+  handleVisibilityChange = () => {
+    if (
+      this.currentSetNotLastSet &&
+      this.remainingTime === 0 &&
+      this.restartTimerOnDisplayOnlock
+    ) {
+      console.log('timer shall start again');
+      /* this.notifyServiceWorkerTimerStarted(this.initialTime);
+      this.startKeepAlive(); */
+    }
+  };
+
+  // TODO: hier auch das currentSEtNotLastSet setzen wenn der nutzer einfach die erste eingabe macht und es mehr als einen set gibt
   initializePauseTimers(exerciseData: ExerciseDataDTO) {
     const weightInputs = document.querySelectorAll(
       '.weight'
@@ -46,14 +70,27 @@ export class PauseTimeService {
           .closest('tr')
           ?.querySelector('.exercise-category-selector') as HTMLSelectElement;
 
+        const setInput = weightInput
+          .closest('tr')
+          ?.querySelector('.sets') as HTMLInputElement;
+
         if (closestCategorySelector) {
           const categoryValue = closestCategorySelector.value;
+
+          const weightValues = this.parseWeightInputValues(weightInput);
 
           const pauseTime = exerciseData.categoryPauseTimes[categoryValue];
           this.initialTime = pauseTime;
           this.remainingTime = pauseTime;
 
           if (pauseTime) {
+            if (Number(setInput.value) > weightValues.length) {
+              this.currentSetNotLastSet = true;
+              this.restartTimerOnDisplayOnlock = true;
+            } else {
+              this.currentSetNotLastSet = false;
+            }
+
             this.notifyServiceWorkerTimerStarted(pauseTime);
             this.startKeepAlive(); // Start the keep-alive process
           } else {
@@ -62,6 +99,19 @@ export class PauseTimeService {
         }
       });
     });
+  }
+
+  /**
+   * Parses the weight input field values into an array of numbers,
+   * converting commas to dots before parsing to ensure valid float conversion.
+   *
+   * @param {HTMLInputElement} weightInput The weight input field.
+   * @returns {number[]} The parsed weight values.
+   */
+  private parseWeightInputValues(weightInput: HTMLInputElement): number[] {
+    return weightInput.value
+      .split(';')
+      .map((value) => parseFloat(value.trim().replace(',', '.')));
   }
 
   /**
@@ -109,6 +159,7 @@ export class PauseTimeService {
    */
   private handleCurrentTimeUpdate(currentTime: number) {
     this.remainingTime = currentTime;
+
     this.countdownEmitter.emit(currentTime); // Emit countdown event for the component
   }
 
