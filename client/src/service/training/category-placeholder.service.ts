@@ -1,5 +1,6 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { FormService } from '../form/form.service';
+import { ExerciseTableRowService } from './exercise-table-row.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +11,7 @@ export class CategoryPlaceholderService {
   constructor(
     private formService: FormService,
     private rendererFactory: RendererFactory2,
+    private exerciseTableRowService: ExerciseTableRowService,
   ) {
     this.renderer = this.rendererFactory.createRenderer(null, null);
   }

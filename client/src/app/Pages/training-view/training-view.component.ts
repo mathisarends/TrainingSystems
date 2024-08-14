@@ -1,16 +1,4 @@
-import {
-  Component,
-  OnInit,
-  AfterViewChecked,
-  Renderer2,
-  Inject,
-  PLATFORM_ID,
-  ViewChildren,
-  ElementRef,
-  QueryList,
-  ViewChild,
-} from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Component, OnInit, AfterViewChecked, ViewChildren, ElementRef, QueryList, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TrainingViewService } from './training-view-service';
 import { FormService } from '../../../service/form/form.service';
@@ -41,6 +29,7 @@ import { AutoProgressionComponent } from '../../auto-progression/auto-progressio
 import { HeadlineComponent } from '../../headline/headline.component';
 import { IconButtonComponent } from '../../icon-button/icon-button.component';
 import { SkeletonTrainingTableComponent } from '../../skeleton-training-table/skeleton-training-table.component';
+import { BrowserCheckService } from '../../browser-check.service';
 
 /**
  * Component to manage and display the training view.
@@ -81,7 +70,6 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
   @ViewChild('trainingTable', { static: false }) trainingTable!: ElementRef;
 
   constructor(
-    @Inject(PLATFORM_ID) private platformId: Object,
     private route: ActivatedRoute,
     private trainingViewService: TrainingViewService,
     private formService: FormService,
@@ -95,6 +83,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
     private pauseTimeService: PauseTimeService,
     private mobileService: MobileService,
     private modalService: ModalService,
+    private browserCheckService: BrowserCheckService,
   ) {}
 
   /**
@@ -120,7 +109,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
    * Initializes the swipe listener once the data view has loaded.
    */
   ngAfterViewChecked(): void {
-    if (isPlatformBrowser(this.platformId) && !this.automationContextInitialized) {
+    if (this.browserCheckService.isBrowser() && !this.automationContextInitialized) {
       if (this.dataViewLoaded.getValue() && this.trainingTable) {
         this.initializeSwipeListener();
 

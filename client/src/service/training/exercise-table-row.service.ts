@@ -52,6 +52,15 @@ export class ExerciseTableRowService {
   }
 
   /**
+   * Finds the `HTMLInputElement` for the number of sets within the same table row as the provided element.
+   *
+   * @param element The reference element within the table row.
+   */
+  getPlanedRpeByElement(element: HTMLElement): HTMLInputElement {
+    return this.getElementByType(element, ExerciseTableRowInputType.TARGET_RPE_INPUT) as HTMLInputElement;
+  }
+
+  /**
    * Finds the input element or select element within the same table row as the provided element, based on the specified input type.
    *
    * @param element The reference element within the table row.

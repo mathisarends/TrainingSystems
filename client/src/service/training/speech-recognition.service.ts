@@ -1,6 +1,6 @@
-import { isPlatformBrowser } from '@angular/common';
-import { Inject, Injectable, NgZone, PLATFORM_ID } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
+import { BrowserCheckService } from '../../app/browser-check.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,13 +14,13 @@ export class SpeechRecognitionService {
 
   constructor(
     private zone: NgZone,
-    @Inject(PLATFORM_ID) private platformId: Object,
+    private browserCheckService: BrowserCheckService,
   ) {
     this.initRecognition();
   }
 
   private initRecognition(): void {
-    if (isPlatformBrowser(this.platformId) && !this.recognition) {
+    if (this.browserCheckService.isBrowser() && !this.recognition) {
       const { webkitSpeechRecognition }: IWindow = <IWindow>(<unknown>window);
       this.recognition = new webkitSpeechRecognition();
       this.recognition.continuous = true; // Set to true for continuous recognition
@@ -30,7 +30,7 @@ export class SpeechRecognitionService {
   }
 
   startListening(callback: (transcript: string) => void): void {
-    if (isPlatformBrowser(this.platformId)) {
+    if (this.browserCheckService.isBrowser()) {
       if (this.isListening) return;
 
       this.recognition.onresult = (event: any) => {

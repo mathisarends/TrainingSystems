@@ -1,8 +1,7 @@
 import { Injectable, Renderer2, RendererFactory2, EventEmitter, signal, OnInit } from '@angular/core';
 import { ExerciseDataDTO } from '../../app/Pages/training-view/exerciseDataDto';
-import { Inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { ExerciseTableRowService } from '../../app/exercise-table-row.service';
+import { ExerciseTableRowService } from './exercise-table-row.service';
+import { BrowserCheckService } from '../../app/browser-check.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,19 +18,17 @@ export class PauseTimeService {
 
   constructor(
     rendererFactory: RendererFactory2,
-    @Inject(PLATFORM_ID) private platformId: any,
     private exerciseTableRowService: ExerciseTableRowService,
+    private browserCheckService: BrowserCheckService,
   ) {
     this.renderer = rendererFactory.createRenderer(null, null);
 
-    if (isPlatformBrowser(this.platformId)) {
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.addEventListener('message', (event) => {
-          if (event.data && event.data.command === 'currentTime') {
-            this.handleCurrentTimeUpdate(event.data.currentTime);
-          }
-        });
-      }
+    if (this.browserCheckService.isBrowser() && 'serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('message', (event) => {
+        if (event.data && event.data.command === 'currentTime') {
+          this.handleCurrentTimeUpdate(event.data.currentTime);
+        }
+      });
 
       document.addEventListener('visibilitychange', this.handleVisibilityChange);
     }
@@ -41,8 +38,6 @@ export class PauseTimeService {
   handleVisibilityChange = () => {
     if (this.currentSetNotLastSet && this.remainingTime === 0 && this.restartTimerOnDisplayOnlock) {
       console.log('timer shall start again');
-      /* this.notifyServiceWorkerTimerStarted(this.initialTime);
-      this.startKeepAlive(); */
     }
   };
 
@@ -52,35 +47,27 @@ export class PauseTimeService {
 
     weightInputs.forEach((weightInput) => {
       weightInput.addEventListener('change', () => {
-        const closestCategorySelector = weightInput
-          .closest('tr')
-          ?.querySelector('.exercise-category-selector') as HTMLSelectElement;
-
+        const categoryValue = this.exerciseTableRowService.getExerciseCategorySelectorByElement(weightInput).value;
         const setInput = this.exerciseTableRowService.getSetInputByElement(weightInput) as HTMLInputElement;
-        console.log('🚀 ~ PauseTimeService ~ weightInput.addEventListener ~ setInput:', setInput);
 
-        if (closestCategorySelector) {
-          const categoryValue = closestCategorySelector.value;
+        const weightValues = this.parseWeightInputValues(weightInput);
 
-          const weightValues = this.parseWeightInputValues(weightInput);
+        const pauseTime = exerciseData.categoryPauseTimes[categoryValue];
+        this.initialTime = pauseTime;
+        this.remainingTime = pauseTime;
 
-          const pauseTime = exerciseData.categoryPauseTimes[categoryValue];
-          this.initialTime = pauseTime;
-          this.remainingTime = pauseTime;
-
-          if (pauseTime) {
-            if (Number(setInput.value) > weightValues.length) {
-              this.currentSetNotLastSet = true;
-              this.restartTimerOnDisplayOnlock = true;
-            } else {
-              this.currentSetNotLastSet = false;
-            }
-
-            this.notifyServiceWorkerTimerStarted(pauseTime);
-            this.startKeepAlive(); // Start the keep-alive process
+        if (pauseTime) {
+          if (Number(setInput.value) > weightValues.length) {
+            this.currentSetNotLastSet = true;
+            this.restartTimerOnDisplayOnlock = true;
           } else {
-            console.error(`No pause time found for category: ${categoryValue}`);
+            this.currentSetNotLastSet = false;
           }
+
+          this.notifyServiceWorkerTimerStarted(pauseTime);
+          this.startKeepAlive(); // Start the keep-alive process
+        } else {
+          console.error(`No pause time found for category: ${categoryValue}`);
         }
       });
     });

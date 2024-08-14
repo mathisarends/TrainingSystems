@@ -1,5 +1,6 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { FormService } from '../form/form.service';
+import { ExerciseTableRowService } from './exercise-table-row.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,7 @@ export class AutoSaveService {
   constructor(
     rendererFactory: RendererFactory2,
     private formService: FormService,
+    private exerciseTableRowService: ExerciseTableRowService,
   ) {
     this.renderer = rendererFactory.createRenderer(null, null);
   }
@@ -58,8 +60,7 @@ export class AutoSaveService {
   private createWeightInputListener(weightInput: HTMLInputElement, form: HTMLFormElement): () => void {
     return this.renderer.listen(weightInput, 'change', () => {
       const weightValues = this.parseWeightInputValues(weightInput);
-      const tableRow = weightInput.closest('tr');
-      const amountOfSets = Number((tableRow?.querySelector('.sets') as HTMLInputElement).value);
+      const amountOfSets = Number(this.exerciseTableRowService.getSetInputByElement(weightInput).value);
 
       if (weightValues.length === amountOfSets) {
         const roundedWeight = this.calculateRoundedWeight(weightValues);

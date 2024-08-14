@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ExerciseTableRowService } from './exercise-table-row.service';
+import { ExerciseTableRowService } from '../service/training/exercise-table-row.service';
 
 describe('ExerciseTableRowService', () => {
   let service: ExerciseTableRowService;

@@ -1,9 +1,9 @@
-import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { HttpMethods } from '../../app/types/httpMethods';
 import { environment } from '../../config/environment';
-import { isPlatformBrowser } from '@angular/common';
+import { BrowserCheckService } from '../../app/browser-check.service';
 
 /**
  * @description
@@ -18,7 +18,7 @@ export class HttpClientService {
 
   constructor(
     private http: HttpClient,
-    @Inject(PLATFORM_ID) private platformId: Object,
+    private browserCheckService: BrowserCheckService,
   ) {}
 
   /**
@@ -34,7 +34,7 @@ export class HttpClientService {
    * @throws Will throw an error if an invalid HTTP method is provided.
    */
   request<T>(method: HttpMethods, url: string, body?: any, params?: HttpParams, headers?: HttpHeaders): Observable<T> {
-    if (isPlatformBrowser(this.platformId)) {
+    if (this.browserCheckService.isBrowser()) {
       const fullUrl = `${this.baseUrl}/${url}`;
 
       const options = {

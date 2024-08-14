@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ExerciseTableRowService } from './exercise-table-row.service';
 
 @Injectable({
   providedIn: 'root',
@@ -8,41 +9,37 @@ export class RpeService {
   private readonly MAX_RPE = 10;
   private readonly changeEvent = new Event('change', { bubbles: true });
 
-  /**
-   * Validates the RPE value to ensure it falls within the acceptable range.
-   * Dispatches a change event to reflect the updates.
-   * @param rpe - The RPE value to validate.
-   * @param rpeInput - The HTML input element containing the RPE value.
-   */
-  validateRPE(rpe: number, rpeInput: HTMLInputElement): void {
-    if (rpe < this.MIN_RPE) {
-      rpeInput.value = this.MIN_RPE.toString();
-    } else if (rpe > this.MAX_RPE) {
-      rpeInput.value = this.MAX_RPE.toString();
-    } else {
-      rpeInput.value = rpe.toString();
-    }
-  }
+  constructor(private exerciseTableRow: ExerciseTableRowService) {}
 
   /**
    * Initializes the RPE validation by adding event listeners to the target and actual RPE inputs.
    */
   initializeRPEValidation(): void {
-    const targetRPEInputs = document.querySelectorAll('.targetRPE') as NodeListOf<HTMLInputElement>;
-    targetRPEInputs.forEach((input) => {
-      input.addEventListener('change', (e) => {
-        const targetRPEInput = e.target as HTMLInputElement;
-        const targetRPE: number = parseInt(targetRPEInput.value);
-        this.validateRPE(targetRPE, targetRPEInput);
-      });
-    });
+    this.addEventListenersToRPEInputs('.targetRPE', this.handleTargetRPEChange.bind(this));
+    this.addEventListenersToRPEInputs('.actualRPE', this.handleActualRPEChange.bind(this));
+  }
 
-    const actualRPEInputs = document.querySelectorAll('.actualRPE') as NodeListOf<HTMLInputElement>;
-    actualRPEInputs.forEach((input) => {
-      input.addEventListener('change', (e) => {
-        this.handleActualRPEChange(e);
-      });
+  /**
+   * Adds event listeners to RPE input elements.
+   * @param selector - The CSS selector for the RPE input elements.
+   * @param handler - The event handler function to be called on change.
+   */
+  private addEventListenersToRPEInputs(selector: string, handler: (event: Event) => void): void {
+    const inputs = document.querySelectorAll(selector) as NodeListOf<HTMLInputElement>;
+    inputs.forEach((input) => {
+      input.addEventListener('change', handler);
     });
+  }
+
+  /**
+   * Handles the change event for target RPE inputs.
+   * Validates the RPE values and updates the input accordingly.
+   * @param event - The change event triggered by the target RPE input.
+   */
+  private handleTargetRPEChange(event: Event): void {
+    const targetRPEInput = event.target as HTMLInputElement;
+    const targetRPE: number = parseInt(targetRPEInput.value);
+    this.validateSingleRPE(targetRPE, targetRPEInput);
   }
 
   /**
@@ -52,45 +49,44 @@ export class RpeService {
    */
   private handleActualRPEChange(event: Event): void {
     const target = event.target as HTMLInputElement;
-    let rpe = target.value;
+    const rpeValues = this.parseRPEInput(target.value);
 
-    if (rpe === '') {
-      target.value = '';
-      target.dispatchEvent(this.changeEvent);
-      return;
+    if (rpeValues.length === 1) {
+      this.validateSingleRPE(rpeValues[0], target);
+    } else {
+      this.validateMultipleRPEs(target, rpeValues);
     }
-
-    rpe = rpe.replace(/,/g, '.'); // Replace commas with dots
-    const numbers = rpe.split(';').map(Number);
-    console.log('🚀 ~ RpeService ~ handleActualRPEChange ~ numbers:', numbers);
-
-    if (numbers.length === 1 && !isNaN(numbers[0])) {
-      this.validateSingleRPE(target, numbers[0]);
-      return;
-    }
-
-    if (numbers.some(isNaN)) {
-      target.value = '';
-      target.dispatchEvent(this.changeEvent);
-      return;
-    }
-
-    this.validateMultipleRPEs(target, numbers);
   }
 
   /**
-   * Validates a single RPE value and updates the corresponding elements.
-   * @param rpeInput - The HTML input element containing the RPE value.
-   * @param rpe - The RPE value to validate.
+   * Parses the RPE input string and returns an array of numbers.
+   * Replaces commas with dots and splits the input by semicolons.
+   * @param rpeString - The RPE input string.
+   * @returns An array of parsed RPE numbers.
    */
-  private validateSingleRPE(rpeInput: HTMLInputElement, rpe: number): void {
-    this.validateRPE(rpe, rpeInput);
+  private parseRPEInput(rpeString: string): number[] {
+    return rpeString
+      .replace(/,/g, '.')
+      .split(';')
+      .map((value) => parseFloat(value.trim()))
+      .filter((num) => !isNaN(num));
+  }
 
-    const parentRow = rpeInput.closest('tr')!;
-    const planedRPE = parentRow.querySelector('.targetRPE') as HTMLInputElement;
-    const workoutNotes = parentRow.querySelector('.workout-notes') as HTMLInputElement;
-
-    const rpeDiff = parseFloat(planedRPE.value) - rpe;
+  /**
+   * Validates a single RPE value to ensure it falls within the acceptable range.
+   * Dispatches a change event to reflect the updates.
+   * @param rpe - The RPE value to validate.
+   * @param rpeInput - The HTML input element containing the RPE value.
+   */
+  private validateSingleRPE(rpe: number, rpeInput: HTMLInputElement): void {
+    if (rpe < this.MIN_RPE) {
+      rpeInput.value = this.MIN_RPE.toString();
+    } else if (rpe > this.MAX_RPE) {
+      rpeInput.value = this.MAX_RPE.toString();
+    } else {
+      rpeInput.value = rpe.toString();
+    }
+    rpeInput.dispatchEvent(this.changeEvent);
   }
 
   /**
@@ -100,19 +96,26 @@ export class RpeService {
    * @param numbers - The array of RPE values to validate.
    */
   private validateMultipleRPEs(rpeInput: HTMLInputElement, numbers: number[]): void {
-    const parentRow = rpeInput.closest('tr')!;
-    const setInputs = parentRow.querySelector('.sets') as HTMLInputElement;
+    const setInput = this.exerciseTableRow.getSetInputByElement(rpeInput);
 
-    if (numbers.length === parseInt(setInputs.value)) {
-      const sum = numbers.reduce((acc, num) => acc + num, 0);
-      const average = sum / numbers.length;
-
-      const roundedAverage = Math.ceil(average / 0.5) * 0.5;
-      const planedRPE = parentRow.querySelector('.targetRPE') as HTMLInputElement;
-      const workoutNotes = parentRow.querySelector('.workout-notes') as HTMLInputElement;
-
-      const rpeDiff = parseFloat(planedRPE.value) - roundedAverage;
-      this.validateRPE(roundedAverage, rpeInput);
+    if (numbers.length === Number(setInput.value)) {
+      const averageRPE = this.calculateAverageRPE(numbers);
+      this.validateSingleRPE(averageRPE, rpeInput);
+    } else {
+      rpeInput.value = '';
+      rpeInput.dispatchEvent(this.changeEvent);
     }
+  }
+
+  /**
+   * Calculates the average of an array of RPE values.
+   * Rounds the average to the nearest 0.5.
+   * @param numbers - The array of RPE values.
+   * @returns The rounded average RPE.
+   */
+  private calculateAverageRPE(numbers: number[]): number {
+    const sum = numbers.reduce((acc, num) => acc + num, 0);
+    const average = sum / numbers.length;
+    return Math.ceil(average / 0.5) * 0.5;
   }
 }
