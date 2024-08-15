@@ -30,7 +30,7 @@ class AuthService {
       httpOnly: true,
       sameSite: isProduction ? 'none' : 'lax',
       secure: isProduction ? true : false,
-      maxAge: 24 * 60 * 60 * 1000
+      maxAge: 30 * 24 * 60 * 60 * 1000
     });
   }
 
