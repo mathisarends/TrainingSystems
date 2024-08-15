@@ -5,10 +5,7 @@ import { SwUpdate } from '@angular/service-worker';
   providedIn: 'root',
 })
 export class ServiceWorkerService {
-  constructor(private swUpdate: SwUpdate) {
-    this.checkForUpdates();
-  }
-
+  constructor(private swUpdate: SwUpdate) {}
   /**
    * Register the service worker and check for updates.
    */
@@ -18,6 +15,7 @@ export class ServiceWorkerService {
         .register('/ngsw-worker.js')
         .then((registration) => {
           console.log('Service Worker registered with scope:', registration.scope);
+          this.checkForUpdates();
         })
         .catch((error) => {
           console.error('Service Worker registration failed:', error);
