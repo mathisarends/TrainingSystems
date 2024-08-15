@@ -5,37 +5,19 @@ import { SwUpdate } from '@angular/service-worker';
   providedIn: 'root',
 })
 export class ServiceWorkerService {
-  constructor(private swUpdate: SwUpdate) {}
   /**
    * Register the service worker and check for updates.
    */
   registerServiceWorker() {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker
-        .register('/ngsw-worker.js')
+        .register('/service-worker.js')
         .then((registration) => {
           console.log('Service Worker registered with scope:', registration.scope);
-          this.checkForUpdates();
         })
         .catch((error) => {
           console.error('Service Worker registration failed:', error);
         });
-    }
-  }
-
-  /**
-   * Checks for updates in the service worker.
-   */
-  private checkForUpdates() {
-    if (this.swUpdate.isEnabled) {
-      this.swUpdate.versionUpdates.subscribe((event) => {
-        if (event.type === 'VERSION_READY') {
-          console.log('A new version is available. Refresh the page to update.');
-          if (confirm('A new version is available. Load new version?')) {
-            window.location.reload();
-          }
-        }
-      });
     }
   }
 
