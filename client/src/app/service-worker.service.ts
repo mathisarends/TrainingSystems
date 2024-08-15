@@ -32,16 +32,12 @@ export class ServiceWorkerService {
   }
 
   /**
-   * Listen for messages from the service worker.
+   * Listen for messages from the service worker and process them using a callback function.
+   * @param callback The function to handle the message.
    */
-  listenForMessages(): void {
+  listenForMessages(callback: (event: MessageEvent) => void): void {
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.addEventListener('message', (event) => {
-        if (event.data) {
-          console.log('Message from Service Worker:', event.data);
-          // Handle the received message
-        }
-      });
+      navigator.serviceWorker.addEventListener('message', callback);
     }
   }
 }
