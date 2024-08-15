@@ -1,5 +1,18 @@
 @if (!dataLoaded) {
-  <app-spinner />
+  <app-headline [subHeading]="'statistiken'" [heading]="'...'" />
+  <main class="mt-3">
+    <app-chart-skeleton />
+
+    <app-chart-skeleton />
+  </main>
+
+  <footer class="d-flex justify-content-center">
+    <app-pagination
+      [currentPage]="currentView === 'volume' ? 0 : 1"
+      [totalPages]="2"
+      (pageChanged)="changeView($event)"
+    />
+  </footer>
 } @else {
   <app-headline [subHeading]="'statistiken'" [heading]="trainingPlanTitle" />
   <main>
@@ -17,6 +30,8 @@
     />
 
     <app-grouped-bar-chart [labels]="groupedBarChartLabels" [barChartDataSets]="groupedBarChartDatasets" />
+
+    <app-chart-skeleton />
   </main>
 
   <footer class="d-flex justify-content-center">

@@ -16,6 +16,8 @@ import { ExerciseDrillThroughEvent } from '../../line-chart/exercise-drill-throu
 import { ModalService } from '../../../service/modal/modalService';
 import { PolarChartComponent } from '../../polar-chart/polar-chart.component';
 import { HeadlineComponent } from '../../headline/headline.component';
+import { ChartSkeletonComponent } from '../../chart-skeleton/chart-skeleton.component';
+import { SkeletonCardComponent } from '../../skeleton-card/skeleton-card.component';
 
 /**
  * Component responsible for displaying training statistics in a line chart.
@@ -31,6 +33,8 @@ import { HeadlineComponent } from '../../headline/headline.component';
     GroupedBarChartComponent,
     PaginationComponent,
     HeadlineComponent,
+    ChartSkeletonComponent,
+    SkeletonCardComponent,
   ],
   templateUrl: './statistics.component.html',
   styleUrls: ['./statistics.component.scss'],
