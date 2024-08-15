@@ -35,6 +35,8 @@ export class ExercisesComponent implements OnInit, OnDestroy {
   private resetSuccessfulSubscription!: Subscription;
   changedData: { [key: string]: any } = {};
 
+  momentaryInput!: string;
+
   constructor(
     private httpClient: HttpClientService,
     private toastService: ToastService,
@@ -45,7 +47,6 @@ export class ExercisesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const authenticated = this.authService.isLoggedIn();
-    console.log('🚀 ~ ExercisesComponent ~ ngOnInit ~ authenticated:', authenticated);
 
     this.loadExercises();
 
@@ -92,17 +93,11 @@ export class ExercisesComponent implements OnInit, OnDestroy {
 
   async onSubmit(event: Event): Promise<void> {
     event.preventDefault();
-    console.log('🚀 ~ ExercisesComponent ~ changedData:', this.changedData);
 
     try {
-      const response: any = await firstValueFrom(
-        this.httpClient.request<any>(HttpMethods.PATCH, 'exercise', this.changedData),
-      );
-
-      this.toastService.show('Speichern erfolgreich', 'Deine Änderungen wurden erfolgreich gespeichert');
-
-      console.log('response', response);
+      await firstValueFrom(this.httpClient.request<any>(HttpMethods.PATCH, 'exercise', this.changedData));
     } catch (error) {
+      this.toastService.show('Fehler', 'Soeichern war nicht erfolgreich');
       const httpError = error as HttpErrorResponse;
       console.error('Error updating user exercises:', error);
     }
@@ -111,6 +106,20 @@ export class ExercisesComponent implements OnInit, OnDestroy {
   onInputChange(event: Event): void {
     const target = event.target as HTMLInputElement | HTMLSelectElement;
     this.changedData[target.name] = target.value;
+  }
+
+  onInteractiveElementFocus(event: Event) {
+    const interactiveElement = event.target as HTMLInputElement | HTMLSelectElement;
+
+    this.momentaryInput = interactiveElement.value;
+  }
+
+  onInteractiveElementBlur(event: Event) {
+    const interactiveElement = event.target as HTMLInputElement | HTMLSelectElement;
+
+    if (interactiveElement.value !== this.momentaryInput) {
+      this.onSubmit(new Event('submit'));
+    }
   }
 
   async onReset(event: Event): Promise<void> {
