@@ -9,6 +9,6 @@ import { CommonModule } from '@angular/common';
   styleUrl: './alert.component.scss',
 })
 export class AlertComponent {
-  @Input() alertType: string = 'primary'; // Default type
+  @Input() alertType: string = 'primary';
   @Input() alertText: string = 'This is an alert!';
 }

@@ -9,13 +9,13 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { SearchService } from '../../../service/util/search.service';
 import { ModalService } from '../../../service/modal/modalService';
 import { ToastService } from '../../components/toast/toast.service';
-import { AuthService } from '../../auth-service.service';
 import { BasicInfoComponent } from '../../basic-info/basic-info.component';
+import { ExerciseTableSkeletonComponent } from '../../exercise-table-skeleton/exercise-table-skeleton.component';
 
 @Component({
   selector: 'app-exercises',
   standalone: true,
-  imports: [SpinnerComponent, CommonModule],
+  imports: [SpinnerComponent, CommonModule, ExerciseTableSkeletonComponent],
   templateUrl: './exercises.component.html',
   styleUrls: ['./exercises.component.scss', '../../../css/tables.scss'],
 })
@@ -42,12 +42,9 @@ export class ExercisesComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private searchService: SearchService,
     private modalService: ModalService,
-    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
-    const authenticated = this.authService.isLoggedIn();
-
     this.loadExercises();
 
     // Subscribe to search input changes
