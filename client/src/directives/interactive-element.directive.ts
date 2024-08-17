@@ -1,6 +1,6 @@
 import { Directive, HostListener, Input } from '@angular/core';
-import { InteractiveElementService } from './interactive-element.service';
-import { FormService } from '../form/form.service';
+import { InteractiveElementService } from '../service/util/interactive-element.service';
+import { FormService } from '../service/form/form.service';
 
 /**
  * Defines the types of elements this directive can be applied to.

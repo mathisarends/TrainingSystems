@@ -3,22 +3,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 /**
  * Service to manage search text across the application.
- *
- * The `SearchService` is used to share the search input text between different
- * components. It uses a `BehaviorSubject` to hold the current search text and
- * allows components to subscribe to changes or update the search text.
- *
- * @example
- * // Injecting SearchService into a component
- * constructor(private searchService: SearchService) {}
- *
- * // Updating the search text
- * this.searchService.updateSearchText('new search text');
- *
- * // Subscribing to search text changes
- * this.searchService.searchText$.subscribe(searchText => {
- *   console.log('Search text changed:', searchText);
- * });
  */
 @Injectable({
   providedIn: 'root',

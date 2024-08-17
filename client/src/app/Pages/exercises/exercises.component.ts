@@ -8,7 +8,7 @@ import { ExerciseTableSkeletonComponent } from '../../components/loaders/exercis
 import { ExerciseDataDTO } from '../training-view/exerciseDataDto';
 import { FormService } from '../../../service/form/form.service';
 import { InteractiveElementService } from '../../../service/util/interactive-element.service';
-import { InteractiveElementDirective } from '../../../service/util/interactive-element.directive';
+import { InteractiveElementDirective } from '../../../directives/interactive-element.directive';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ExerciseService } from '../training-view/exercise.service.';
 
