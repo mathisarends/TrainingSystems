@@ -16,7 +16,7 @@ export class TrainingViewService {
   }
 
   loadExerciseData(): Observable<ExerciseDataDTO> {
-    return this.httpClient.request<ExerciseDataDTO>(HttpMethods.GET, 'exercise/training');
+    return this.httpClient.request<ExerciseDataDTO>(HttpMethods.GET, 'exercise');
   }
 
   submitTrainingPlan(planId: string, week: number, day: number, changedData: any): Observable<any> {

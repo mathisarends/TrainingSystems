@@ -3,7 +3,7 @@
 } @else {
   <div class="container">
     <form (submit)="onSubmit($event)">
-      @for (category of filteredCategories; track category; let categoryIndex = $index) {
+      @for (category of exerciseData.exerciseCategories; track category; let categoryIndex = $index) {
         @if (categoryIndex > 0) {
           <table class="table mb-5 table-hover">
             <thead>
@@ -12,7 +12,11 @@
               </tr>
             </thead>
             <tbody>
-              @for (exercise of categorizedExercises[category]; track exercise; let exerciseIndex = $index) {
+              @for (
+                exercise of exerciseData.categorizedExercises[category];
+                track exercise;
+                let exerciseIndex = $index
+              ) {
                 <tr>
                   <td [attr.data-cell]="category">
                     <input
@@ -40,7 +44,7 @@
                       class="transparent-input"
                     >
                       @for (time of [60, 90, 120, 150, 180, 210, 240, 270, 300]; track time) {
-                        <option [value]="time" [selected]="categoryPauseTimes[category] === time">
+                        <option [value]="time" [selected]="exerciseData.categoryPauseTimes[category] === time">
                           {{ time / 60 }} Minuten
                         </option>
                       }
@@ -59,7 +63,10 @@
                       class="transparent-input"
                     >
                       @for (sets of [2, 3, 4, 5, 6]; track sets) {
-                        <option [value]="sets" [selected]="defaultRepSchemeByCategory[category]?.defaultSets === sets">
+                        <option
+                          [value]="sets"
+                          [selected]="exerciseData.defaultRepSchemeByCategory[category].defaultSets === sets"
+                        >
                           {{ sets }} Sets
                         </option>
                       }
@@ -78,7 +85,10 @@
                       class="transparent-input"
                     >
                       @for (reps of [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]; track reps) {
-                        <option [value]="reps" [selected]="defaultRepSchemeByCategory[category]?.defaultReps === reps">
+                        <option
+                          [value]="reps"
+                          [selected]="exerciseData.defaultRepSchemeByCategory[category].defaultReps === reps"
+                        >
                           {{ reps }} Reps
                         </option>
                       }
@@ -97,7 +107,10 @@
                       class="transparent-input"
                     >
                       @for (rpe of [6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10]; track rpe) {
-                        <option [value]="rpe" [selected]="defaultRepSchemeByCategory[category]?.defaultRPE === rpe">
+                        <option
+                          [value]="rpe"
+                          [selected]="exerciseData.defaultRepSchemeByCategory[category].defaultRPE === rpe"
+                        >
                           RPE {{ rpe }}
                         </option>
                       }

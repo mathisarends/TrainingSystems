@@ -17,6 +17,4 @@ router.get(
   asyncHandler(exerciseController.getExercisesByCategory)
 );
 
-router.get('/training', authService.authenticationMiddleware, asyncHandler(exerciseController.getExercises));
-
 export default router;

@@ -9,7 +9,6 @@ export class ExerciseDataDTO {
       defaultRPE: number;
     };
   } = {};
-  private _maxFactors: any;
 
   constructor(data?: Partial<ExerciseDataDTO>) {
     if (data) {
@@ -17,7 +16,6 @@ export class ExerciseDataDTO {
       this._categoryPauseTimes = data.categoryPauseTimes || {};
       this._categorizedExercises = data.categorizedExercises || {};
       this._defaultRepSchemeByCategory = data.defaultRepSchemeByCategory || {};
-      this._maxFactors = data.maxFactors || {};
     }
   }
 
@@ -63,13 +61,5 @@ export class ExerciseDataDTO {
     };
   }) {
     this._defaultRepSchemeByCategory = value;
-  }
-
-  get maxFactors(): any {
-    return this._maxFactors;
-  }
-
-  set maxFactors(value: any) {
-    this._maxFactors = value;
   }
 }
