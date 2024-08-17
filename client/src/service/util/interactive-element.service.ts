@@ -7,7 +7,7 @@ import { Subject } from 'rxjs';
  * It is often used to save data automatically without requiring direct user intervention.
  */
 @Injectable({ providedIn: 'root' })
-export class InputChangeTrackingService {
+export class InteractiveElementService {
   private momentaryInput: string | undefined;
 
   private inputChangedSubject = new Subject<void>();
