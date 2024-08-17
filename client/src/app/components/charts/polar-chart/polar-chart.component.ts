@@ -1,6 +1,7 @@
+import { AlertComponent } from '../../alert/alert.component';
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
+
 import Chart from 'chart.js/auto';
-import { AlertComponent } from '../components/alert/alert.component';
 
 @Component({
   selector: 'app-polar-chart',

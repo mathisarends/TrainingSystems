@@ -1,15 +1,15 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { firstValueFrom, Subscription } from 'rxjs';
-import { ModalEventsService } from '../../../service/modal/modal-events.service';
+import { ModalEventsService } from '../../../../service/modal/modal-events.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpService } from '../../../service/http/http-client.service';
+import { HttpService } from '../../../../service/http/http-client.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { TrainingPlanService } from '../../../service/training/training-plan.service';
-import { ImageUploadService } from '../../../service/util/image-upload.service';
-import { ModalService } from '../../../service/modal/modalService';
-import { ToastService } from '../../components/toast/toast.service';
+import { TrainingPlanService } from '../../../../service/training/training-plan.service';
+import { ImageUploadService } from '../../../../service/util/image-upload.service';
+import { ModalService } from '../../../../service/modal/modalService';
+import { ToastService } from '../../../components/toast/toast.service';
 
 /**
  * Component for creating a training form.

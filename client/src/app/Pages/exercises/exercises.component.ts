@@ -3,7 +3,7 @@ import { catchError, map, Observable, of } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ModalService } from '../../../service/modal/modalService';
 import { ToastService } from '../../components/toast/toast.service';
-import { BasicInfoComponent } from '../../basic-info/basic-info.component';
+import { BasicInfoComponent } from '../modal-pages/basic-info/basic-info.component';
 import { ExerciseTableSkeletonComponent } from '../../components/loaders/exercise-table-skeleton/exercise-table-skeleton.component';
 import { ExerciseDataDTO } from '../training-view/exerciseDataDto';
 import { FormService } from '../../../service/form/form.service';

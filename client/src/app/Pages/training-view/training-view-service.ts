@@ -4,9 +4,7 @@ import { ExerciseDataDTO } from './exerciseDataDto';
 import { TrainingPlanDto } from './trainingPlanDto';
 import { HttpService } from '../../../service/http/http-client.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class TrainingViewService {
   constructor(private httpClient: HttpService) {}
   loadTrainingPlan(planId: string, week: number, day: number): Observable<TrainingPlanDto> {

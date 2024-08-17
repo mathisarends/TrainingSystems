@@ -10,8 +10,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 import { TooltipDirective } from '../../../service/tooltip/tooltip.directive';
 import { ToastService } from '../toast/toast.service';
-import { BasicInfoComponent } from '../../basic-info/basic-info.component';
-import { IconButtonComponent } from '../../icon-button/icon-button.component';
+import { BasicInfoComponent } from '../../Pages/modal-pages/basic-info/basic-info.component';
+import { IconButtonComponent } from '../icon-button/icon-button.component';
 import { TrainingPlanService } from '../../../service/training/training-plan.service';
 import { HttpService } from '../../../service/http/http-client.service';
 

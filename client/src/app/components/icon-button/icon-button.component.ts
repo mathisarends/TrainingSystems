@@ -1,5 +1,5 @@
 import { Component, EventEmitter, input, Output } from '@angular/core';
-import { TooltipDirective } from '../../service/tooltip/tooltip.directive';
+import { TooltipDirective } from '../../../service/tooltip/tooltip.directive';
 import { CommonModule } from '@angular/common';
 
 @Component({

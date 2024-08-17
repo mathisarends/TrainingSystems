@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { PauseTimeService } from '../../service/training/pause-time.service';
-import { ModalService } from '../../service/modal/modalService';
+import { PauseTimeService } from '../../../../service/training/pause-time.service';
+import { ModalService } from '../../../../service/modal/modalService';
 
 @Component({
   selector: 'app-rest-timer',

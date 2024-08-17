@@ -5,7 +5,7 @@ import { tap } from 'rxjs/operators';
 import { AuthService } from './auth-service.service';
 import { ModalService } from '../service/modal/modalService';
 import { BrowserCheckService } from './browser-check.service';
-import { BasicInfoComponent } from './basic-info/basic-info.component';
+import { BasicInfoComponent } from './Pages/modal-pages/basic-info/basic-info.component';
 
 @Injectable({
   providedIn: 'root',

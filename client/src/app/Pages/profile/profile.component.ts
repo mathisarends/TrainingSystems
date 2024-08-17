@@ -12,8 +12,8 @@ import { FriendCardComponent } from '../../components/friend-card/friend-card.co
 import { TooltipDirective } from '../../../service/tooltip/tooltip.directive';
 import { Friend } from '../../components/friend-card/friend';
 import { AlertComponent } from '../../components/alert/alert.component';
-import { FriendRequestComponent } from '../../friend-request/friend-request.component';
 import { FriendCardMode } from '../../components/friend-card/friend-card-mode';
+import { FriendRequestComponent } from '../modal-pages/friend-request/friend-request.component';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
 import { ChangeProfilePictureConfirmationComponent } from '../modal-pages/change-profile-picture-confirmation/change-profile-picture-confirmation.component';
 

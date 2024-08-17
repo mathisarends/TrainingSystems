@@ -21,13 +21,13 @@ import { MobileService } from '../../../service/util/mobile.service';
 import { AutoProgressionComponent } from '../modal-pages/auto-progression/auto-progression.component';
 import { PauseTimeService } from '../../../service/training/pause-time.service';
 import { ModalService } from '../../../service/modal/modalService';
-import { RestTimerComponent } from '../../rest-timer/rest-timer.component';
-import { TrainingViewNavigationComponent } from '../../training-view-navigation/training-view-navigation.component';
+import { RestTimerComponent } from '../modal-pages/rest-timer/rest-timer.component';
+import { TrainingViewNavigationComponent } from '../modal-pages/training-view-navigation/training-view-navigation.component';
 import { ModalSize } from '../../../service/modal/modalSize';
-import { BasicInfoComponent } from '../../basic-info/basic-info.component';
+import { BasicInfoComponent } from '../modal-pages/basic-info/basic-info.component';
 import { HeadlineComponent } from '../../components/headline/headline.component';
-import { IconButtonComponent } from '../../icon-button/icon-button.component';
-import { SkeletonTrainingTableComponent } from '../../skeleton-training-table/skeleton-training-table.component';
+import { IconButtonComponent } from '../../components/icon-button/icon-button.component';
+import { SkeletonTrainingTableComponent } from '../../components/loaders/skeletons/skeleton-training-table/skeleton-training-table.component';
 import { BrowserCheckService } from '../../browser-check.service';
 
 /**
@@ -46,6 +46,7 @@ import { BrowserCheckService } from '../../browser-check.service';
     IconButtonComponent,
     SkeletonTrainingTableComponent,
   ],
+  providers: [TrainingViewService],
   templateUrl: './training-view.component.html',
   styleUrls: ['./training-view.component.scss'],
 })
