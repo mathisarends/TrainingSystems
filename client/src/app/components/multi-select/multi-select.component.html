@@ -5,9 +5,9 @@
     aria-expanded="isOpen()"
     style="display: flex; justify-content: space-between; align-items: center; width: 100%"
   >
-    <div class="chip-container" style="display: flex; flex-wrap: nowrap; gap: 5px">
+    <div class="chip-container">
       @for (select of selected(); track select) {
-        <div class="chip bg-light">{{ select }}</div>
+        <div class="chip">{{ select }}</div>
       }
     </div>
     <div>
@@ -18,7 +18,7 @@
       }
     </div>
   </div>
-  <div class="dropdown-menu background-image p-2" [class.show]="isOpen()" (click)="$event.stopPropagation()">
+  <div class="dropdown-menu p-2" [class.show]="isOpen()" (click)="$event.stopPropagation()">
     <div class="dropdown-search">
       <input
         type="text"
