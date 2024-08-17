@@ -4,28 +4,39 @@ importScripts('notification-manager.js');
 const notificationManager = new self.NotificationManager();
 const timer = new self.Timer(notificationManager);
 
-self.addEventListener('install', async (event) => {
-  console.log('[Service Worker] Installing Service Worker ...', event);
+/**
+ * Handles the 'install' event of the Service Worker.
+ * This event is triggered when the Service Worker is being installed.
+ */
+self.addEventListener('install', (event) => {
+  console.log('[Service Worker] Installing Service Worker...', event);
 
-  try {
-    await Promise.resolve();
-    console.log('[Service Worker] Installationsvorgang erfolgreich abgeschlossen');
-  } catch (error) {
-    console.error('[Service Worker] Installationsfehler:', error);
-  }
+  event.waitUntil(
+    Promise.resolve()
+      .then(() => console.log('[Service Worker] Installation successful'))
+      .catch((error) => console.error('[Service Worker] Installation failed:', error)),
+  );
 });
 
-self.addEventListener('activate', async (event) => {
-  console.log('[Service Worker] Activating Service Worker ....', event);
+/**
+ * Handles the 'activate' event of the Service Worker.
+ * This event is triggered when the Service Worker is activated.
+ */
+self.addEventListener('activate', (event) => {
+  console.log('[Service Worker] Activating Service Worker...', event);
 
-  try {
-    await Promise.resolve();
-    console.log('[Service Worker] Aktivierungsvorgang erfolgreich abgeschlossen');
-  } catch (error) {
-    console.error('[Service Worker] Aktivierungsfehler:', error);
-  }
+  event.waitUntil(
+    Promise.resolve()
+      .then(() => console.log('[Service Worker] Activation successful'))
+      .catch((error) => console.error('[Service Worker] Activation failed:', error)),
+  );
 });
 
+/**
+ * Handles incoming messages from the client.
+ *
+ * @param {MessageEvent} event - The message event containing data sent from the client.
+ */
 self.addEventListener('message', function (event) {
   const data = event.data;
 
