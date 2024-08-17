@@ -12,10 +12,16 @@
   </button>
   <div class="dropdown-menu background-image p-2" [class.show]="isOpen()" (click)="$event.stopPropagation()">
     <div class="dropdown-search">
-      <input type="text" class="form-control w-100" placeholder="Search..." [(ngModel)]="searchTerm" />
+      <input
+        type="text"
+        class="form-control w-100"
+        placeholder="Search..."
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="filterOptions()"
+      />
     </div>
 
-    @for (option of filteredOptions(); track option) {
+    @for (option of filteredItems(); track option) {
       <div class="form-check">
         <input
           type="checkbox"

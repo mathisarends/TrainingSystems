@@ -14,7 +14,8 @@
 #header .dropdown {
   z-index: 1000;
 
-  & .dropdown-item.active {
+  & .dropdown-item.active,
+  & .dropdown-item:active {
     background: #a78bfa;
   }
 }

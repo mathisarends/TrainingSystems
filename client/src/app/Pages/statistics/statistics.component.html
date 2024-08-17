@@ -17,8 +17,8 @@
   <app-headline [subHeading]="'statistiken'" [heading]="trainingPlanTitle" />
   <main>
     <app-multi-select
-      [options]="allExercises"
-      [initialSelected]="selectedExercises!"
+      [items]="allExercises"
+      [selectedItems]="selectedExercises!"
       (selectionChange)="changeDisplayCategories($event)"
     ></app-multi-select>
 
