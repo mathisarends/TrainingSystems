@@ -46,42 +46,6 @@
   font-size: 1.75rem;
 }
 
-#fixed-caption {
-  font-weight: bold;
-  font-family: 'Poppins', sans-serif;
-  padding-bottom: 1.5rem;
-  z-index: 1;
-}
-
-.context-headline,
-.headline {
-  font-size: 1.65rem;
-}
-
-.context-headline {
-  color: #c9c9c9;
-}
-
-.headline {
-  margin-left: 0.375rem;
-}
-
-.question-box {
-  display: inline-block;
-
-  color: black;
-  margin-left: 2rem;
-  cursor: pointer;
-  border-radius: 5px;
-  position: relative;
-  top: 2px;
-}
-
-.question-box .icon {
-  color: #4a4a4a;
-  font-size: 24px;
-}
-
 .table > :not(caption) > * > * {
   background-color: inherit;
 }
