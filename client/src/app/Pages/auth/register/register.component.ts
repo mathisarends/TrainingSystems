@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BaisAuthComponent } from '../basic-auth.component';
 import { Router } from '@angular/router';
-import { HttpClientService } from '../../../../service/http/http-client.service';
+import { HttpService } from '../../../../service/http/http.service';
 import { DOCUMENT } from '@angular/common';
 import { Inject } from '@angular/core';
 import { ToastService } from '../../../components/toast/toast.service';
@@ -18,7 +18,7 @@ import { HttpMethods } from '../../../types/httpMethods';
 export class RegisterComponent extends BaisAuthComponent implements OnInit {
   constructor(
     router: Router,
-    httpClient: HttpClientService,
+    httpClient: HttpService,
     toastService: ToastService,
     @Inject(DOCUMENT) document: Document,
   ) {

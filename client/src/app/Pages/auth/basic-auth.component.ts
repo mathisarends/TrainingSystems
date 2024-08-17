@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { HttpClientService } from '../../../service/http/http-client.service';
+import { HttpService } from '../../../service/http/http.service';
 import { DOCUMENT } from '@angular/common';
 import { Inject } from '@angular/core';
 import { ToastService } from '../../components/toast/toast.service';
@@ -11,7 +11,7 @@ export abstract class BaisAuthComponent {
 
   constructor(
     protected router: Router,
-    protected httpClient: HttpClientService,
+    protected httpClient: HttpService,
     protected toastService: ToastService,
     @Inject(DOCUMENT) protected document: Document,
   ) {

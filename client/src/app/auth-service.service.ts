@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClientService } from '../service/http/http-client.service';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { HttpMethods } from './types/httpMethods';
+import { HttpService } from '../service/http/http.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private httpService: HttpClientService) {}
+  constructor(private httpService: HttpService) {}
 
   isLoggedIn(): Observable<boolean> {
     return this.httpService.request<any>(HttpMethods.GET, 'user/auth-state').pipe(

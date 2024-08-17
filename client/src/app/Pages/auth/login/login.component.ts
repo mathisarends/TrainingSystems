@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClientService } from '../../../../service/http/http-client.service';
+import { HttpService } from '../../../../service/http/http.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HttpMethods } from '../../../types/httpMethods';
 import { DOCUMENT } from '@angular/common';
@@ -17,7 +17,7 @@ import { BaisAuthComponent } from '../basic-auth.component';
 export class LoginComponent extends BaisAuthComponent implements OnInit {
   constructor(
     router: Router,
-    httpClient: HttpClientService,
+    httpClient: HttpService,
     toastService: ToastService,
     @Inject(DOCUMENT) document: Document,
   ) {

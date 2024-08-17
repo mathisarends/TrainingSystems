@@ -4,7 +4,7 @@ import { firstValueFrom, Subscription } from 'rxjs';
 import { ModalEventsService } from '../../../service/modal/modal-events.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpClientService } from '../../../service/http/http-client.service';
+import { HttpService } from '../../../service/http/http.service';
 import { HttpMethods } from '../../types/httpMethods';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TrainingPlanService } from '../../../service/training/training-plan.service';
@@ -39,7 +39,7 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private modalEventsService: ModalEventsService,
     private trainingPlanService: TrainingPlanService,
-    private httpClient: HttpClientService,
+    private httpClient: HttpService,
     private imageUploadService: ImageUploadService,
     private modalService: ModalService,
     private toastService: ToastService,

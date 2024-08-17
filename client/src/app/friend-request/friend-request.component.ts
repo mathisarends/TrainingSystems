@@ -6,7 +6,7 @@ import { FriendCardComponent } from '../components/friend-card/friend-card.compo
 import { AlertComponent } from '../components/alert/alert.component';
 import { SpinnerComponent } from '../components/spinner/spinner.component';
 import { Friend } from '../components/friend-card/friend';
-import { HttpClientService } from '../../service/http/http-client.service';
+import { HttpService } from '../../service/http/http.service';
 import { HttpMethods } from '../types/httpMethods';
 
 @Component({
@@ -24,7 +24,7 @@ export class FriendRequestComponent implements OnInit {
   loading$ = this.loadingSubject.asObservable();
   friends$ = this.friendsSubject.asObservable();
 
-  constructor(private httpService: HttpClientService) {}
+  constructor(private httpService: HttpService) {}
 
   ngOnInit() {
     this.httpService

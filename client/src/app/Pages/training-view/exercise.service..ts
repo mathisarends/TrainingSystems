@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClientService } from '../../../service/http/http-client.service';
 import { HttpMethods } from '../../types/httpMethods';
 import { ExerciseDataDTO } from './exerciseDataDto';
 import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class ExerciseService {
-  constructor(private httpClient: HttpClientService) {}
+  constructor(private httpClient: HttpClient) {}
 
   /**
    * Loads the exercise data from the server.

@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
-import { HttpClientService } from '../../../service/http/http-client.service';
-import { firstValueFrom, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { HttpMethods } from '../../types/httpMethods';
 import { ExerciseDataDTO } from './exerciseDataDto';
 import { TrainingPlanDto } from './trainingPlanDto';
+import { HttpService } from '../../../service/http/http.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TrainingViewService {
-  constructor(private httpClient: HttpClientService) {}
-
+  constructor(private httpClient: HttpService) {}
   loadTrainingPlan(planId: string, week: number, day: number): Observable<TrainingPlanDto> {
     return this.httpClient.request<TrainingPlanDto>(HttpMethods.GET, `training/plan/${planId}/${week}/${day}`);
   }

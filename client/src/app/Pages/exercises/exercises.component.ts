@@ -6,11 +6,11 @@ import { ToastService } from '../../components/toast/toast.service';
 import { BasicInfoComponent } from '../../basic-info/basic-info.component';
 import { ExerciseTableSkeletonComponent } from '../../exercise-table-skeleton/exercise-table-skeleton.component';
 import { ExerciseDataDTO } from '../training-view/exerciseDataDto';
-import { ExerciseService } from '../training-view/exerciese,service';
 import { FormService } from '../../../service/form/form.service';
 import { InteractiveElementService } from '../../../service/util/interactive-element.service';
 import { InteractiveElementDirective } from '../../../service/util/interactive-element.directive';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ExerciseService } from '../training-view/exercise.service.';
 
 @Component({
   selector: 'app-exercises',
@@ -70,10 +70,6 @@ export class ExercisesComponent implements OnInit {
     );
   }
 
-  /**
-   * Saves the current state of the exercises by sending the changes to the service.
-   * If an error occurs during the save process, an error toast is shown.
-   */
   saveExerciseData(): void {
     this.exerciseService.updateExercises(this.formService.getChanges()).subscribe({
       error: (error) => {
@@ -83,12 +79,6 @@ export class ExercisesComponent implements OnInit {
     });
   }
 
-  /**
-   * Resets the exercise data to the default state after confirming the action with the user.
-   * If confirmed, the exercise data is reset and reloaded. In case of an error, an error toast is shown.
-   *
-   * @param event - The reset button click event.
-   */
   async onReset(event: Event): Promise<void> {
     event.preventDefault();
     const confirmed = await this.modalService.open({

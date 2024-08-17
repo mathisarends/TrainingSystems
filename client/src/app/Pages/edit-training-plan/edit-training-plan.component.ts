@@ -4,7 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ModalEventsService } from '../../../service/modal/modal-events.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom, Subscription } from 'rxjs';
-import { HttpClientService } from '../../../service/http/http-client.service';
+import { HttpService } from '../../../service/http/http.service';
 import { CommonModule } from '@angular/common';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { ModalService } from '../../../service/modal/modalService';
@@ -47,7 +47,7 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy, AfterViewCh
     private modalService: ModalService,
     private toastService: ToastService,
     private trainingPlanService: TrainingPlanService,
-    private httpClient: HttpClientService,
+    private httpClient: HttpService,
     private renderer: Renderer2,
 
     private imageUploadService: ImageUploadService,

@@ -7,8 +7,8 @@ import { ModalService } from '../../../service/modal/modalService';
 import { ChangeProfilePictureConfirmationComponent } from '../../change-profile-picture-confirmation/change-profile-picture-confirmation.component';
 import { ModalSize } from '../../../service/modal/modalSize';
 import { ModalEventsService } from '../../../service/modal/modal-events.service';
-import { first, firstValueFrom, Subscription } from 'rxjs';
-import { HttpClientService } from '../../../service/http/http-client.service';
+import { firstValueFrom, Subscription } from 'rxjs';
+import { HttpService } from '../../../service/http/http.service';
 import { HttpMethods } from '../../types/httpMethods';
 import { FriendCardComponent } from '../../components/friend-card/friend-card.component';
 import { TooltipDirective } from '../../../service/tooltip/tooltip.directive';
@@ -48,7 +48,7 @@ export class ProfileComponent implements OnInit {
     private renderer: Renderer2,
     private modalService: ModalService,
     private modalEventsService: ModalEventsService,
-    private httpService: HttpClientService,
+    private httpService: HttpService,
   ) {}
 
   async ngOnInit(): Promise<void> {

@@ -1,5 +1,5 @@
-import { Component, input, Input } from '@angular/core';
-import { HttpClientService } from '../../service/http/http-client.service';
+import { Component, input } from '@angular/core';
+import { HttpService } from '../../service/http/http.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpMethods } from '../types/httpMethods';
@@ -20,7 +20,7 @@ export class AutoProgressionComponent {
 
   constructor(
     private fb: FormBuilder,
-    private httpService: HttpClientService,
+    private httpService: HttpService,
     private toastService: ToastService,
   ) {
     this.autoProgressionForm = this.fb.group({

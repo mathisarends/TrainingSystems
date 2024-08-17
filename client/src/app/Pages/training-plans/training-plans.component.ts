@@ -1,7 +1,6 @@
-import { ChangeDetectorRef, Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { ModalService } from '../../../service/modal/modalService';
 import { CreateTrainingFormComponent } from '../create-training-form/create-training-form.component';
-import { HttpClientService } from '../../../service/http/http-client.service';
 import { HttpMethods } from '../../types/httpMethods';
 import { AlertComponent } from '../../components/alert/alert.component';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
@@ -19,6 +18,7 @@ import { AccordionComponent } from '../../accordion/accordion.component';
 import { HeadlineComponent } from '../../headline/headline.component';
 import { IconButtonComponent } from '../../icon-button/icon-button.component';
 import { SkeletonCardComponent } from '../../skeleton-card/skeleton-card.component';
+import { HttpService } from '../../../service/http/http.service';
 
 /**
  * Component to manage and display training plans.
@@ -50,7 +50,7 @@ export class TrainingPlansComponent implements OnInit {
 
   constructor(
     private modalService: ModalService,
-    private httpClient: HttpClientService,
+    private httpClient: HttpService,
     private searchService: SearchService,
     private trainingPlanService: TrainingPlanService,
     private destroyRef: DestroyRef,

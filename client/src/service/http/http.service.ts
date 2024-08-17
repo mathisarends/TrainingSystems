@@ -13,7 +13,7 @@ import { BrowserCheckService } from '../../app/browser-check.service';
 @Injectable({
   providedIn: 'root',
 })
-export class HttpClientService {
+export class HttpService {
   private baseUrl: string = process.env['NODE_ENV'] === 'production' ? environment.produUrl : environment.apiUrl;
 
   constructor(

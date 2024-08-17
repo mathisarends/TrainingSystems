@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClientService } from '../../../service/http/http-client.service';
+import { HttpService } from '../../../service/http/http.service';
 import { HttpMethods } from '../../types/httpMethods';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { TrainingExerciseTonnageDto } from './main-exercise-tonnage-dto';
@@ -58,7 +58,7 @@ export class StatisticsComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private httpService: HttpClientService,
+    private httpService: HttpService,
     private chartColorService: ChartColorService,
     private modalService: ModalService,
   ) {}
