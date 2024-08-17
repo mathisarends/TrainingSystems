@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { firstValueFrom, Subscription } from 'rxjs';
-import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { CommonModule } from '@angular/common';
 import { ModalService } from '../../../service/modal/modalService';
 import { ToastService } from '../../components/toast/toast.service';
@@ -10,17 +9,18 @@ import { ExerciseDataDTO } from '../training-view/exerciseDataDto';
 import { ExerciseService } from '../training-view/exerciese,service';
 import { FormService } from '../../../service/form/form.service';
 import { InteractiveElementService } from '../../../service/util/interactive-element.service';
+import { InteractiveElementDirective } from '../../../service/util/interactive-element.directive';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-exercises',
   standalone: true,
-  imports: [SpinnerComponent, CommonModule, ExerciseTableSkeletonComponent],
+  imports: [CommonModule, ExerciseTableSkeletonComponent, InteractiveElementDirective],
   providers: [ExerciseService],
   templateUrl: './exercises.component.html',
   styleUrls: ['./exercises.component.scss', '../../../css/tables.scss'],
 })
 export class ExercisesComponent implements OnInit {
-  private inputChangedSubscription!: Subscription;
   protected isLoading = true;
 
   maxExercises = 8;
@@ -34,12 +34,13 @@ export class ExercisesComponent implements OnInit {
     private exerciseService: ExerciseService,
     private formService: FormService,
     private interactiveElementService: InteractiveElementService,
+    private destroyRef: DestroyRef,
   ) {}
 
   ngOnInit(): void {
     this.loadExercises();
 
-    this.inputChangedSubscription = this.interactiveElementService.inputChanged$.subscribe(() => {
+    this.interactiveElementService.inputChanged$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.onSubmit(new Event('submit'));
     });
   }
@@ -67,21 +68,6 @@ export class ExercisesComponent implements OnInit {
       this.toastService.show('Fehler', 'Soeichern war nicht erfolgreich');
       console.error('Error updating user exercises:', error);
     }
-  }
-
-  onInputChange(event: Event): void {
-    const target = event.target as HTMLInputElement | HTMLSelectElement;
-    this.formService.addChange(target.name, target.value);
-  }
-
-  onInteractiveElementFocus(event: Event): void {
-    const interactiveElement = event.target as HTMLInputElement | HTMLSelectElement;
-    this.interactiveElementService.focus(interactiveElement.value);
-  }
-
-  onInteractiveElementBlur(event: Event): void {
-    const interactiveElement = event.target as HTMLInputElement | HTMLSelectElement;
-    this.interactiveElementService.blur(interactiveElement.value);
   }
 
   async onReset(event: Event): Promise<void> {

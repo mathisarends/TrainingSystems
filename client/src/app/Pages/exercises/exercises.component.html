@@ -22,12 +22,10 @@
                     <input
                       type="text"
                       class="transparent-input"
-                      (focus)="onInteractiveElementFocus($event)"
-                      (blur)="onInteractiveElementBlur($event)"
+                      appInteractiveElement
                       [name]="categoryIndex + '_' + exerciseIndex + '_exercise'"
                       [value]="exercise || ''"
                       style="text-align: left; padding: 0"
-                      (input)="onInputChange($event)"
                     />
                   </td>
                 </tr>
@@ -38,9 +36,7 @@
                   <div>
                     <select
                       [name]="categoryIndex + '_categoryPauseTimeSelect'"
-                      (focus)="onInteractiveElementFocus($event)"
-                      (blur)="onInteractiveElementBlur($event)"
-                      (change)="onInputChange($event)"
+                      appInteractiveElement
                       class="transparent-input"
                     >
                       @for (time of [60, 90, 120, 150, 180, 210, 240, 270, 300]; track time) {
@@ -57,9 +53,7 @@
                   <div>
                     <select
                       [name]="categoryIndex + '_categoryDefaultSetSelect'"
-                      (focus)="onInteractiveElementFocus($event)"
-                      (blur)="onInteractiveElementBlur($event)"
-                      (change)="onInputChange($event)"
+                      appInteractiveElement
                       class="transparent-input"
                     >
                       @for (sets of [2, 3, 4, 5, 6]; track sets) {
@@ -79,9 +73,7 @@
                   <div>
                     <select
                       [name]="categoryIndex + '_categoryDefaultRepSelect'"
-                      (focus)="onInteractiveElementFocus($event)"
-                      (blur)="onInteractiveElementBlur($event)"
-                      (change)="onInputChange($event)"
+                      appInteractiveElement
                       class="transparent-input"
                     >
                       @for (reps of [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]; track reps) {
@@ -101,9 +93,7 @@
                   <div>
                     <select
                       [name]="categoryIndex + '_categoryDefaultRPESelect'"
-                      (focus)="onInteractiveElementFocus($event)"
-                      (blur)="onInteractiveElementBlur($event)"
-                      (change)="onInputChange($event)"
+                      appInteractiveElement
                       class="transparent-input"
                     >
                       @for (rpe of [6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10]; track rpe) {
