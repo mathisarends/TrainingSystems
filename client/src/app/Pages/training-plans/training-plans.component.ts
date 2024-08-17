@@ -1,7 +1,6 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { ModalService } from '../../../service/modal/modalService';
 import { CreateTrainingFormComponent } from '../create-training-form/create-training-form.component';
-import { HttpMethods } from '../../types/httpMethods';
 import { AlertComponent } from '../../components/alert/alert.component';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { TrainingPlanCardView } from '../../../types/exercise/training-plan-card-view-dto';

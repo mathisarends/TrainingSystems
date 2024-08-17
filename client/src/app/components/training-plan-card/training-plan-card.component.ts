@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TrainingPlanCardView } from '../../../types/exercise/training-plan-card-view-dto';
 import { firstValueFrom } from 'rxjs';
-import { HttpMethods } from '../../types/httpMethods';
 import { Router } from '@angular/router';
 import { ModalService } from '../../../service/modal/modalService';
 import { EditTrainingPlanComponent } from '../../Pages/edit-training-plan/edit-training-plan.component';

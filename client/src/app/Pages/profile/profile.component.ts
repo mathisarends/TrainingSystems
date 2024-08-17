@@ -9,7 +9,6 @@ import { ModalSize } from '../../../service/modal/modalSize';
 import { ModalEventsService } from '../../../service/modal/modal-events.service';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { HttpService } from '../../../service/http/http-client.service';
-import { HttpMethods } from '../../types/httpMethods';
 import { FriendCardComponent } from '../../components/friend-card/friend-card.component';
 import { TooltipDirective } from '../../../service/tooltip/tooltip.directive';
 import { Friend } from '../../components/friend-card/friend';
@@ -54,8 +53,10 @@ export class ProfileComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.profileService.getProfile().subscribe({
       next: (data) => {
-        this.profile = data?.userDto;
-        this.isLoading = false;
+        if (data) {
+          this.profile = data.userDto;
+          this.isLoading = false;
+        }
       },
       error: (err) => {
         console.error('Fehler beim Abrufen des Profils', err);
@@ -71,8 +72,10 @@ export class ProfileComponent implements OnInit {
 
     const response = await firstValueFrom(this.httpService.get<any>('/friendship'));
 
-    this.friends = response.friends;
-    this.filteredFriends = this.friends; // hier bitte einmal kombinieren
+    this.friends = response?.friends;
+    if (this.friends) {
+      this.filteredFriends = this.friends; // hier bitte einmal kombinieren
+    }
   }
 
   restoreOriginalProfilePicture() {
@@ -156,11 +159,11 @@ export class ProfileComponent implements OnInit {
 
   async onFriendRemove(friendId: string) {
     try {
-      const response = await firstValueFrom(this.httpService.delete(`/friendship/${friendId}`));
+      await firstValueFrom(this.httpService.delete(`/friendship/${friendId}`));
 
       const friendshipsAfterDelete = await firstValueFrom(this.httpService.get<any>('/friendship'));
 
-      this.friends = friendshipsAfterDelete.friends;
+      this.friends = friendshipsAfterDelete?.friends;
       this.filteredFriends = this.friends; // hier bitte einmal kombinieren
     } catch (error) {
       console.error('Error while deleting friend', error);

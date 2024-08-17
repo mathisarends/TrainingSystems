@@ -5,7 +5,6 @@ import { ModalEventsService } from '../../../service/modal/modal-events.service'
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpService } from '../../../service/http/http-client.service';
-import { HttpMethods } from '../../types/httpMethods';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TrainingPlanService } from '../../../service/training/training-plan.service';
 import { ImageUploadService } from '../../../service/util/image-upload.service';

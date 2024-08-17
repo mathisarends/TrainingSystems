@@ -6,7 +6,6 @@ import { DOCUMENT } from '@angular/common';
 import { Inject } from '@angular/core';
 import { ToastService } from '../../../components/toast/toast.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { HttpMethods } from '../../../types/httpMethods';
 
 @Component({
   selector: 'app-register',

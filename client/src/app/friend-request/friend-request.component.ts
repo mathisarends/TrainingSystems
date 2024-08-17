@@ -7,7 +7,6 @@ import { AlertComponent } from '../components/alert/alert.component';
 import { SpinnerComponent } from '../components/spinner/spinner.component';
 import { Friend } from '../components/friend-card/friend';
 import { HttpService } from '../../service/http/http-client.service';
-import { HttpMethods } from '../types/httpMethods';
 
 @Component({
   selector: 'app-friend-modal',

@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy, Input, Renderer2, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
-import { HttpMethods } from '../../types/httpMethods';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ModalEventsService } from '../../../service/modal/modal-events.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';

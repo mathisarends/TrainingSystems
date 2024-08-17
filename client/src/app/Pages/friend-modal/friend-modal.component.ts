@@ -1,11 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Friend } from '../../components/friend-card/friend';
-
 import { FriendCardComponent } from '../../components/friend-card/friend-card.component';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { AlertComponent } from '../../components/alert/alert.component';
-import { HttpClientService } from '../../../service/http/http-client.service';
-import { HttpMethods } from '../../types/httpMethods';
+import { HttpService } from '../../../service/http/http-client.service';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { catchError, finalize } from 'rxjs/operators';
@@ -25,11 +23,11 @@ export class FriendModalComponent implements OnInit {
   loading$ = this.loadingSubject.asObservable();
   friends$ = this.friendsSubject.asObservable();
 
-  constructor(private httpService: HttpClientService) {}
+  constructor(private httpService: HttpService) {}
 
   ngOnInit() {
     this.httpService
-      .request<any>(HttpMethods.GET, 'friendship/suggestions')
+      .get<any>('/friendship/suggestions')
       .pipe(
         catchError((error) => {
           console.error('Error while fetching friend suggestions:', error);
@@ -58,9 +56,7 @@ export class FriendModalComponent implements OnInit {
 
   async onFriendRequestSend(friendId: string) {
     try {
-      const response = await firstValueFrom(
-        this.httpService.request<any>(HttpMethods.POST, `friendship/request/${friendId}`),
-      );
+      const response = await firstValueFrom(this.httpService.post(`/friendship/request/${friendId}`));
     } catch (error) {
       console.error('Error while adding user with id ' + friendId + '. ' + error);
     }

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpMethods } from '../../types/httpMethods';
 import { ExerciseDataDTO } from './exerciseDataDto';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../../service/http/http-client.service';

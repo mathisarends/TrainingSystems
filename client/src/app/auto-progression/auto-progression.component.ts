@@ -1,8 +1,7 @@
-import { Component, input, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { HttpService } from '../../service/http/http-client.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpMethods } from '../types/httpMethods';
 import { ToastService } from '../components/toast/toast.service';
 import { AlertComponent } from '../components/alert/alert.component';
 

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { HttpMethods } from '../../app/types/httpMethods';
 import { environment } from '../../config/environment';
 import { BrowserCheckService } from '../../app/browser-check.service';
 

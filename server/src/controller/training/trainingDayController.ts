@@ -72,7 +72,6 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
   }
 
   const changedData: Record<string, string> = req.body;
-  console.log('🚀 ~ updateTrainingDataForTrainingDay ~ changedData:', changedData);
 
   const user = await getUser(req, res);
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
