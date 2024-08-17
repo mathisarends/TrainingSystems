@@ -80,11 +80,11 @@ export class ExercisesComponent implements OnInit, OnDestroy {
 
       if (this.exerciseCategories) {
         this.filteredCategories = [...this.exerciseCategories];
+
+        this.isLoading = false;
       }
     } catch (error) {
       console.error('Error loading exercises:', error);
-    } finally {
-      this.isLoading = false;
     }
   }
 
