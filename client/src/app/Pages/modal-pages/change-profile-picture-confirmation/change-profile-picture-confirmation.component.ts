@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ModalEventsService } from '../../service/modal/modal-events.service';
+import { ModalEventsService } from '../../../../service/modal/modal-events.service';
 
 @Component({
   selector: 'app-change-profile-picture-confirmation',

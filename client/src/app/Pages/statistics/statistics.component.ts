@@ -1,21 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpService } from '../../../service/http/http-client.service';
-import { SpinnerComponent } from '../../components/spinner/spinner.component';
+import { SpinnerComponent } from '../../components/loaders/spinner/spinner.component';
 import { TrainingExerciseTonnageDto } from './main-exercise-tonnage-dto';
 import { Tonnage } from './tonnage';
 import { MultiSelectComponent } from '../../multi-select/multi-select.component';
 import { ChartColorService } from '../../chart-color.service';
 import { firstValueFrom } from 'rxjs';
-import { LineChartComponent } from '../../line-chart/line-chart.component';
-import { GroupedBarChartComponent } from '../../grouped-bar-chart/grouped-bar-chart.component';
-import { BarChartData } from '../../grouped-bar-chart/bar-chart.-data';
+import { LineChartComponent } from '../../components/charts/line-chart/line-chart.component';
+import { GroupedBarChartComponent } from '../../components/charts/grouped-bar-chart/grouped-bar-chart.component';
+import { BarChartData } from '../../components/charts/grouped-bar-chart/bar-chart.-data';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
-import { ExerciseDrillThroughEvent } from '../../line-chart/exercise-drill-through-event';
+import { ExerciseDrillThroughEvent } from '../../components/charts/line-chart/exercise-drill-through-event';
 import { ModalService } from '../../../service/modal/modalService';
 import { PolarChartComponent } from '../../polar-chart/polar-chart.component';
-import { HeadlineComponent } from '../../headline/headline.component';
-import { ChartSkeletonComponent } from '../../chart-skeleton/chart-skeleton.component';
+import { HeadlineComponent } from '../../components/headline/headline.component';
+import { ChartSkeletonComponent } from '../../components/loaders/chart-skeleton/chart-skeleton.component';
 import { SkeletonCardComponent } from '../../skeleton-card/skeleton-card.component';
 
 /**

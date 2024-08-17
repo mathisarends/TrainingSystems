@@ -10,7 +10,7 @@ import { ProfileComponent } from './Pages/profile/profile.component';
 import { ExercisesComponent } from './Pages/exercises/exercises.component';
 import { TrainingViewComponent } from './Pages/training-view/training-view.component';
 import { AuthGuard } from './auth-guard.service';
-import { SpinnerComponent } from './components/spinner/spinner.component';
+import { SpinnerComponent } from './components/loaders/spinner/spinner.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },

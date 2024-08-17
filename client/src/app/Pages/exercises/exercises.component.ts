@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ModalService } from '../../../service/modal/modalService';
 import { ToastService } from '../../components/toast/toast.service';
 import { BasicInfoComponent } from '../../basic-info/basic-info.component';
-import { ExerciseTableSkeletonComponent } from '../../exercise-table-skeleton/exercise-table-skeleton.component';
+import { ExerciseTableSkeletonComponent } from '../../components/loaders/exercise-table-skeleton/exercise-table-skeleton.component';
 import { ExerciseDataDTO } from '../training-view/exerciseDataDto';
 import { FormService } from '../../../service/form/form.service';
 import { InteractiveElementService } from '../../../service/util/interactive-element.service';

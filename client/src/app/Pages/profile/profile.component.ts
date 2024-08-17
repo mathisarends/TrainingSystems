@@ -1,10 +1,9 @@
 import { Component, OnInit, ElementRef, ViewChild, Renderer2 } from '@angular/core';
 import { ProfileService } from './profileService';
-import { SpinnerComponent } from '../../components/spinner/spinner.component';
+import { SpinnerComponent } from '../../components/loaders/spinner/spinner.component';
 import { User } from '../../types/user';
 import { ImageUploadService } from '../../../service/util/image-upload.service';
 import { ModalService } from '../../../service/modal/modalService';
-import { ChangeProfilePictureConfirmationComponent } from '../../change-profile-picture-confirmation/change-profile-picture-confirmation.component';
 import { ModalSize } from '../../../service/modal/modalSize';
 import { ModalEventsService } from '../../../service/modal/modal-events.service';
 import { firstValueFrom, Subscription } from 'rxjs';
@@ -16,6 +15,7 @@ import { AlertComponent } from '../../components/alert/alert.component';
 import { FriendRequestComponent } from '../../friend-request/friend-request.component';
 import { FriendCardMode } from '../../components/friend-card/friend-card-mode';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
+import { ChangeProfilePictureConfirmationComponent } from '../modal-pages/change-profile-picture-confirmation/change-profile-picture-confirmation.component';
 
 @Component({
   selector: 'app-profile',
@@ -97,7 +97,7 @@ export class ProfileComponent implements OnInit {
         next: () => {
           this.modalService.close();
         },
-        error: (x) => {
+        error: () => {
           this.modalService.close();
         },
       });

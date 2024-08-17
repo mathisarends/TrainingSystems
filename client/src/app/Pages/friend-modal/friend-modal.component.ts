@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Friend } from '../../components/friend-card/friend';
 import { FriendCardComponent } from '../../components/friend-card/friend-card.component';
-import { SpinnerComponent } from '../../components/spinner/spinner.component';
+import { SpinnerComponent } from '../../components/loaders/spinner/spinner.component';
 import { AlertComponent } from '../../components/alert/alert.component';
 import { HttpService } from '../../../service/http/http-client.service';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';

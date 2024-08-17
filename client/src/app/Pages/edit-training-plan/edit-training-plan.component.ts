@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { firstValueFrom, Subscription } from 'rxjs';
 import { HttpService } from '../../../service/http/http-client.service';
 import { CommonModule } from '@angular/common';
-import { SpinnerComponent } from '../../components/spinner/spinner.component';
+import { SpinnerComponent } from '../../components/loaders/spinner/spinner.component';
 import { ModalService } from '../../../service/modal/modalService';
 import { TrainingPlanService } from '../../../service/training/training-plan.service';
 import { ImageUploadService } from '../../../service/util/image-upload.service';

@@ -7,7 +7,7 @@ import {
   createComponent,
 } from '@angular/core';
 import { ModalComponent } from '../../app/components/modal/modal.component';
-import { ModalOverlayComponent } from '../../app/components/modal-overlay/modal-overlay.component';
+import { ModalOverlayComponent } from '../../app/components/modal/modal-overlay/modal-overlay.component';
 import { ModalSize } from './modalSize';
 import { ModalOptions } from './modal-options';
 

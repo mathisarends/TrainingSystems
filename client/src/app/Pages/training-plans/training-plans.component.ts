@@ -2,7 +2,7 @@ import { Component, DestroyRef, OnInit } from '@angular/core';
 import { ModalService } from '../../../service/modal/modalService';
 import { CreateTrainingFormComponent } from '../create-training-form/create-training-form.component';
 import { AlertComponent } from '../../components/alert/alert.component';
-import { SpinnerComponent } from '../../components/spinner/spinner.component';
+import { SpinnerComponent } from '../../components/loaders/spinner/spinner.component';
 import { TrainingPlanCardView } from '../../../types/exercise/training-plan-card-view-dto';
 import { firstValueFrom, BehaviorSubject } from 'rxjs';
 import { SearchService } from '../../../service/util/search.service';
@@ -13,7 +13,7 @@ import { TrainingPlanCardComponent } from '../../components/training-plan-card/t
 import { ModalSize } from '../../../service/modal/modalSize';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MobileService } from '../../../service/util/mobile.service';
-import { HeadlineComponent } from '../../headline/headline.component';
+import { HeadlineComponent } from '../../components/headline/headline.component';
 import { IconButtonComponent } from '../../icon-button/icon-button.component';
 import { SkeletonCardComponent } from '../../skeleton-card/skeleton-card.component';
 import { HttpService } from '../../../service/http/http-client.service';

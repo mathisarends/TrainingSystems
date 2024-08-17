@@ -8,29 +8,27 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoryPlaceholderService } from '../../../service/training/category-placeholder.service';
 import { ToastService } from '../../components/toast/toast.service';
-import { SpinnerComponent } from '../../components/spinner/spinner.component';
+import { SpinnerComponent } from '../../components/loaders/spinner/spinner.component';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
 import { ExerciseDataDTO } from './exerciseDataDto';
 import { TrainingPlanDto } from './trainingPlanDto';
 import { AutoSaveService } from '../../../service/training/auto-save.service';
 import { TrainingViewNavigationService } from './training-view-navigation.service';
-import { forkJoin, BehaviorSubject, EMPTY } from 'rxjs';
+import { forkJoin, BehaviorSubject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { SwipeService } from '../../../service/swipe/swipe.service';
 import { MobileService } from '../../../service/util/mobile.service';
-
+import { AutoProgressionComponent } from '../modal-pages/auto-progression/auto-progression.component';
 import { PauseTimeService } from '../../../service/training/pause-time.service';
 import { ModalService } from '../../../service/modal/modalService';
 import { RestTimerComponent } from '../../rest-timer/rest-timer.component';
 import { TrainingViewNavigationComponent } from '../../training-view-navigation/training-view-navigation.component';
 import { ModalSize } from '../../../service/modal/modalSize';
 import { BasicInfoComponent } from '../../basic-info/basic-info.component';
-import { AutoProgressionComponent } from '../../auto-progression/auto-progression.component';
-import { HeadlineComponent } from '../../headline/headline.component';
+import { HeadlineComponent } from '../../components/headline/headline.component';
 import { IconButtonComponent } from '../../icon-button/icon-button.component';
 import { SkeletonTrainingTableComponent } from '../../skeleton-training-table/skeleton-training-table.component';
 import { BrowserCheckService } from '../../browser-check.service';
-import { subtle } from 'crypto';
 
 /**
  * Component to manage and display the training view.
