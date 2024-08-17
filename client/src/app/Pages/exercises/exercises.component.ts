@@ -1,5 +1,5 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
-import { firstValueFrom, Subscription } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ModalService } from '../../../service/modal/modalService';
 import { ToastService } from '../../components/toast/toast.service';
@@ -21,12 +21,15 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   styleUrls: ['./exercises.component.scss', '../../../css/tables.scss'],
 })
 export class ExercisesComponent implements OnInit {
-  protected isLoading = true;
+  /**
+   * Observable that emits the exercise data or null if there's an error or it's still loading.
+   */
+  exerciseData$!: Observable<ExerciseDataDTO | null>;
 
+  /**
+   * Maximum number of exercises to display.
+   */
   maxExercises = 8;
-  exerciseData: ExerciseDataDTO = new ExerciseDataDTO();
-
-  momentaryInput!: string;
 
   constructor(
     private toastService: ToastService,
@@ -37,56 +40,55 @@ export class ExercisesComponent implements OnInit {
     private destroyRef: DestroyRef,
   ) {}
 
+  /**
+   * Initializes the component, loads exercise data, and sets up a subscription
+   * to save data automatically when an interactive element changes.
+   */
   ngOnInit(): void {
-    this.loadExercises();
+    this.exerciseData$ = this.loadExercises();
 
     this.interactiveElementService.inputChanged$
       .pipe(takeUntilDestroyed(this.destroyRef)) // Automatically unsubscribe
       .subscribe(() => {
-        this.onSubmit(new Event('submit'));
+        this.saveExerciseData();
       });
   }
 
-  private async loadExercises(): Promise<void> {
-    this.isLoading = true;
-    try {
-      const exerciseData = await firstValueFrom(this.exerciseService.loadExerciseData());
-
-      if (exerciseData) {
-        this.exerciseData = exerciseData;
-        this.isLoading = false;
-      }
-    } catch (error) {
-      console.error('Error loading exercises:', error);
-    }
+  /**
+   * Loads exercise data from the service and returns an Observable.
+   * In case of an error, it returns an Observable that emits null.
+   *
+   * @returns Observable of ExerciseDataDTO or null.
+   */
+  private loadExercises(): Observable<ExerciseDataDTO | null> {
+    return this.exerciseService.loadExerciseData().pipe(
+      map((exerciseData) => exerciseData),
+      catchError((error) => {
+        console.error('Error loading exercises:', error);
+        return of(null);
+      }),
+    );
   }
 
-  async onSubmit(event: Event): Promise<void> {
-    event.preventDefault();
-
-    try {
-      await firstValueFrom(this.exerciseService.updateExercises(this.formService.getChanges()));
-    } catch (error) {
-      this.toastService.show('Fehler', 'Soeichern war nicht erfolgreich');
-      console.error('Error updating user exercises:', error);
-    }
+  /**
+   * Saves the current state of the exercises by sending the changes to the service.
+   * If an error occurs during the save process, an error toast is shown.
+   */
+  saveExerciseData(): void {
+    this.exerciseService.updateExercises(this.formService.getChanges()).subscribe({
+      error: (error) => {
+        this.toastService.show('Fehler', 'Speichern war nicht erfolgreich');
+        console.error('Error updating user exercises:', error);
+      },
+    });
   }
 
-  onInputChange(event: Event): void {
-    const target = event.target as HTMLInputElement | HTMLSelectElement;
-    this.formService.addChange(target.name, target.value);
-  }
-
-  onInteractiveElementFocus(event: Event): void {
-    const interactiveElement = event.target as HTMLInputElement | HTMLSelectElement;
-    this.interactiveElementService.focus(interactiveElement.value);
-  }
-
-  onInteractiveElementBlur(event: Event): void {
-    const interactiveElement = event.target as HTMLInputElement | HTMLSelectElement;
-    this.interactiveElementService.blur(interactiveElement.value);
-  }
-
+  /**
+   * Resets the exercise data to the default state after confirming the action with the user.
+   * If confirmed, the exercise data is reset and reloaded. In case of an error, an error toast is shown.
+   *
+   * @param event - The reset button click event.
+   */
   async onReset(event: Event): Promise<void> {
     event.preventDefault();
     const confirmed = await this.modalService.open({
@@ -94,19 +96,21 @@ export class ExercisesComponent implements OnInit {
       title: 'Übungen zurücksetzen',
       buttonText: 'Zurücksetzen',
       componentData: {
-        text: '  Bist du dir sicher, dass du die Übungen auf die Standarteinstellungen zurücksetzen willst? Die Änderungen können danach nicht weider rückgängig gemacht werden!',
+        text: '  Bist du dir sicher, dass du die Übungen auf die Standarteinstellungen zurücksetzen willst? Die Änderungen können danach nicht wieder rückgängig gemacht werden!',
       },
     });
 
     if (confirmed) {
-      try {
-        await firstValueFrom(this.exerciseService.resetExercises());
-
-        await this.loadExercises();
-        this.toastService.show('Erfolg', 'Übungskatalog zurückgesetzt!');
-      } catch (error) {
-        console.error('Error resetting exercises:', error);
-      }
+      this.exerciseService.resetExercises().subscribe({
+        next: () => {
+          this.exerciseData$ = this.loadExercises();
+          this.toastService.show('Erfolg', 'Übungskatalog zurückgesetzt!');
+        },
+        error: (error) => {
+          this.toastService.show('Fehler', 'Übungskatalog nicht zurückgesetzt!');
+          console.error('Error resetting exercises:', error);
+        },
+      });
     }
   }
 }

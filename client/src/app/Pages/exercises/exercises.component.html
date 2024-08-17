@@ -1,8 +1,6 @@
-@if (isLoading) {
-  <app-exercise-table-skeleton />
-} @else {
+@if (exerciseData$ | async; as exerciseData) {
   <div class="container">
-    <form (submit)="onSubmit($event)">
+    <form>
       @for (category of exerciseData.exerciseCategories; track category; let categoryIndex = $index) {
         @if (categoryIndex > 0) {
           <table class="table mb-5 table-hover">
@@ -112,8 +110,9 @@
           </table>
         }
       }
-      <input type="submit" class="btn btn-dark" value="Submit" />
       <button class="btn btn-outline-dark m-1" id="reset-btn" type="button" (click)="onReset($event)">Reset</button>
     </form>
   </div>
+} @else {
+  <app-exercise-table-skeleton />
 }
