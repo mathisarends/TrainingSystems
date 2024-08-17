@@ -30,6 +30,7 @@ import { HeadlineComponent } from '../../headline/headline.component';
 import { IconButtonComponent } from '../../icon-button/icon-button.component';
 import { SkeletonTrainingTableComponent } from '../../skeleton-training-table/skeleton-training-table.component';
 import { BrowserCheckService } from '../../browser-check.service';
+import { subtle } from 'crypto';
 
 /**
  * Component to manage and display the training view.
@@ -209,6 +210,10 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
         }),
       )
       .subscribe();
+  }
+
+  saveTrainingData() {
+    this.onSubmit(new Event('submit'));
   }
 
   /**
