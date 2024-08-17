@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpMethods } from '../../types/httpMethods';
 import { ExerciseDataDTO } from './exerciseDataDto';
 import { TrainingPlanDto } from './trainingPlanDto';
-import { HttpService } from '../../../service/http/http.service';
+import { HttpService } from '../../../service/http/http-client.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,16 +10,15 @@ import { HttpService } from '../../../service/http/http.service';
 export class TrainingViewService {
   constructor(private httpClient: HttpService) {}
   loadTrainingPlan(planId: string, week: number, day: number): Observable<TrainingPlanDto> {
-    return this.httpClient.request<TrainingPlanDto>(HttpMethods.GET, `training/plan/${planId}/${week}/${day}`);
+    return this.httpClient.get<TrainingPlanDto>(`/training/plan/${planId}/${week}/${day}`);
   }
 
   loadExerciseData(): Observable<ExerciseDataDTO> {
-    return this.httpClient.request<ExerciseDataDTO>(HttpMethods.GET, 'exercise');
+    return this.httpClient.get<ExerciseDataDTO>('/exercise');
   }
 
-  submitTrainingPlan(planId: string, week: number, day: number, changedData: any): Observable<any> {
-    return this.httpClient.request<any>(HttpMethods.PATCH, `training/plan/${planId}/${week}/${day}`, {
-      body: changedData,
-    });
+  submitTrainingPlan(planId: string, week: number, day: number, changedData: Record<string, string>): Observable<any> {
+    console.log('🚀 ~ TrainingViewService ~ submitTrainingPlan ~ changedData:', changedData);
+    return this.httpClient.patch(`/training/plan/${planId}/${week}/${day}`, changedData);
   }
 }

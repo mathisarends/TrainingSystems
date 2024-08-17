@@ -65,8 +65,9 @@ export class AutoSaveService {
       if (weightValues.length === amountOfSets) {
         const roundedWeight = this.calculateRoundedWeight(weightValues);
         weightInput.value = roundedWeight.toString();
-        this.formService.addChange(weightInput.name, weightInput.value);
       }
+
+      this.formService.addChange(weightInput.name, weightInput.value);
       form.dispatchEvent(new Event('submit'));
     });
   }

@@ -71,7 +71,8 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
     return res.status(400).json({ error: 'Ungültige Woche oder Tag Index' });
   }
 
-  const changedData: Record<string, string> = req.body.body;
+  const changedData: Record<string, string> = req.body;
+  console.log('🚀 ~ updateTrainingDataForTrainingDay ~ changedData:', changedData);
 
   const user = await getUser(req, res);
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);

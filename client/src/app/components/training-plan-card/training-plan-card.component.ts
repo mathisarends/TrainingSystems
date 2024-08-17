@@ -14,7 +14,7 @@ import { ToastService } from '../toast/toast.service';
 import { BasicInfoComponent } from '../../basic-info/basic-info.component';
 import { IconButtonComponent } from '../../icon-button/icon-button.component';
 import { TrainingPlanService } from '../../../service/training/training-plan.service';
-import { HttpService } from '../../../service/http/http.service';
+import { HttpService } from '../../../service/http/http-client.service';
 
 /**
  * Component for displaying and managing a single training plan card.
@@ -48,7 +48,7 @@ export class TrainingPlanCardComponent {
    * @param id - The ID of the training plan to view.
    */
   async viewTrainingPlan(id: string): Promise<void> {
-    const response = await firstValueFrom(this.httpService.request<any>(HttpMethods.GET, `training/plan/${id}/latest`));
+    const response = await firstValueFrom(this.httpService.get<any>(`/training/plan/${id}/latest`));
     const latestWeek = response.weekIndex;
     const latestDay = response.dayIndex;
 
@@ -106,7 +106,7 @@ export class TrainingPlanCardComponent {
   private async handleDelete(id: string): Promise<void> {
     if (id) {
       try {
-        await firstValueFrom(this.httpService.request<any>(HttpMethods.DELETE, `training/delete/${id}`));
+        await firstValueFrom(this.httpService.delete(`/training/delete/${id}`));
 
         this.modalService.close();
         this.toastService.show('Erfolg', 'Plan gelöscht');

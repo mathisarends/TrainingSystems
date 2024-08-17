@@ -18,7 +18,7 @@ import { AccordionComponent } from '../../accordion/accordion.component';
 import { HeadlineComponent } from '../../headline/headline.component';
 import { IconButtonComponent } from '../../icon-button/icon-button.component';
 import { SkeletonCardComponent } from '../../skeleton-card/skeleton-card.component';
-import { HttpService } from '../../../service/http/http.service';
+import { HttpService } from '../../../service/http/http-client.service';
 
 /**
  * Component to manage and display training plans.
@@ -94,7 +94,7 @@ export class TrainingPlansComponent implements OnInit {
    */
   protected async loadTrainingPlans(): Promise<void> {
     try {
-      const response: any = await firstValueFrom(this.httpClient.request<any>(HttpMethods.GET, 'training/plans'));
+      const response: any = await firstValueFrom(this.httpClient.get<any>('/training/plans'));
 
       this.allTrainingPlans$.next(response?.trainingPlanCards);
       this.filteredTrainingPlans$.next(response?.trainingPlanCards);

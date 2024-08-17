@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BaisAuthComponent } from '../basic-auth.component';
 import { Router } from '@angular/router';
-import { HttpService } from '../../../../service/http/http.service';
+import { HttpService } from '../../../../service/http/http-client.service';
 import { DOCUMENT } from '@angular/common';
 import { Inject } from '@angular/core';
 import { ToastService } from '../../../components/toast/toast.service';
@@ -35,22 +35,22 @@ export class RegisterComponent extends BaisAuthComponent implements OnInit {
     const formData = new FormData(form);
 
     const data = {
-      username: formData.get('username'),
-      email: formData.get('email'),
-      password: formData.get('password'),
-      confirmPassword: formData.get('confirmPassword'),
+      username: formData.get('username') as string,
+      email: formData.get('email') as string,
+      password: formData.get('password') as string,
+      confirmPassword: formData.get('confirmPassword') as string,
     };
-    this.httpClient.request<any>(HttpMethods.POST, 'user/register', data).subscribe({
-      next: (response: Response) => {
-        console.log('Account erfolgreich erstellt');
+    this.httpClient.post<any>('/user/register', data).subscribe({
+      next: () => {
+        this.toastService.show('Erfolg', 'Account erfolgreich erstellt');
         this.router.navigate(['login']);
       },
       error: (error: HttpErrorResponse) => {
         console.error('Registration error:', error);
         if (error.status === 409) {
-          console.log('User already exists');
+          this.toastService.show('Fehler', 'Es gibt bereits einen Nutzer mit dieser Email');
         } else if (error.status === 400) {
-          console.log('Bad request:', error.error);
+          console.log('Fehler', 'Bad request');
         } else {
           console.log('An unknown error occurred');
         }

@@ -4,7 +4,7 @@ import { firstValueFrom, Subscription } from 'rxjs';
 import { ModalEventsService } from '../../../service/modal/modal-events.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpService } from '../../../service/http/http.service';
+import { HttpService } from '../../../service/http/http-client.service';
 import { HttpMethods } from '../../types/httpMethods';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TrainingPlanService } from '../../../service/training/training-plan.service';
@@ -75,9 +75,7 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
       const formData = this.trainingForm.value;
 
       try {
-        const response = await firstValueFrom(
-          this.httpClient.request<any>(HttpMethods.POST, 'training/create', formData),
-        );
+        const response = await firstValueFrom(this.httpClient.post('/training/create', formData));
 
         this.toastService.show('Erfolg', 'Plan erstellt!');
 

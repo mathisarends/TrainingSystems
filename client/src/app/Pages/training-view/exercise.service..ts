@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpMethods } from '../../types/httpMethods';
 import { ExerciseDataDTO } from './exerciseDataDto';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpService } from '../../../service/http/http-client.service';
 
 @Injectable()
 export class ExerciseService {
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpService) {}
 
   /**
    * Loads the exercise data from the server.
@@ -14,7 +14,7 @@ export class ExerciseService {
    * @returns An `Observable` that emits the exercise data when the request completes.
    */
   loadExerciseData(): Observable<ExerciseDataDTO> {
-    return this.httpClient.request<ExerciseDataDTO>(HttpMethods.GET, 'exercise');
+    return this.httpClient.get<ExerciseDataDTO>('/exercise');
   }
 
   /**
@@ -23,7 +23,7 @@ export class ExerciseService {
    * @returns An `Observable` that completes when the reset operation is finished.
    */
   resetExercises(): Observable<void> {
-    return this.httpClient.request<any>(HttpMethods.POST, 'exercise/reset');
+    return this.httpClient.post('/exercise/reset');
   }
 
   /**
@@ -33,6 +33,6 @@ export class ExerciseService {
    * @returns An `Observable` that completes when the update operation is finished.
    */
   updateExercises(changes: { [key: string]: any }): Observable<void> {
-    return this.httpClient.request<any>(HttpMethods.PATCH, 'exercise', changes);
+    return this.httpClient.patch('/exercise', changes);
   }
 }

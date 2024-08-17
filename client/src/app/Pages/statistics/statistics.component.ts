@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpService } from '../../../service/http/http.service';
+import { HttpService } from '../../../service/http/http-client.service';
 import { HttpMethods } from '../../types/httpMethods';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { TrainingExerciseTonnageDto } from './main-exercise-tonnage-dto';
@@ -80,9 +80,8 @@ export class StatisticsComponent implements OnInit {
 
   showDrillThroughGraph(drillThroughData: ExerciseDrillThroughEvent) {
     this.httpService
-      .request(
-        HttpMethods.GET,
-        `training/statistics/${this.id}/drilldown/${drillThroughData.exerciseName}/${drillThroughData.weekNumber - 1}`,
+      .get(
+        `/training/statistics/${this.id}/drilldown/${drillThroughData.exerciseName}/${drillThroughData.weekNumber - 1}`,
       )
       .subscribe((response: any) => {
         const data: number[] = response.exercises.map((exercise: any) => exercise.tonnage);
@@ -104,8 +103,8 @@ export class StatisticsComponent implements OnInit {
   private async fetchInitialData(id: string): Promise<void> {
     try {
       const [allExercisesResponse, selectedExercisesResponse] = await Promise.all([
-        firstValueFrom(this.httpService.request<any>(HttpMethods.GET, `exercise/categories`)),
-        firstValueFrom(this.httpService.request<any>(HttpMethods.GET, `training/statistics/${id}/viewedCategories`)),
+        firstValueFrom(this.httpService.get<any>(`/exercise/categories`)),
+        firstValueFrom(this.httpService.get<any>(`/training/statistics/${id}/viewedCategories`)),
       ]);
 
       this.allExercises = allExercisesResponse;
@@ -125,14 +124,12 @@ export class StatisticsComponent implements OnInit {
 
       const [tonnageResponse, setsResponse] = await Promise.all([
         firstValueFrom(
-          this.httpService.request<{
+          this.httpService.get<{
             title: string;
             data: Partial<TrainingExerciseTonnageDto>;
-          }>(HttpMethods.GET, `training/statistics/${id}?exercises=${exercisesQuery}`),
+          }>(`/training/statistics/${id}?exercises=${exercisesQuery}`),
         ),
-        firstValueFrom(
-          this.httpService.request<any>(HttpMethods.GET, `training/statistics/${id}/sets?exercises=${exercisesQuery}`),
-        ),
+        firstValueFrom(this.httpService.get<any>(`/training/statistics/${id}/sets?exercises=${exercisesQuery}`)),
       ]);
 
       this.dataLoaded = true;
@@ -204,8 +201,8 @@ export class StatisticsComponent implements OnInit {
 
     // Zuletzt besuchte Kategorien festse
     this.httpService
-      .request<any>(HttpMethods.POST, `training/statistics/${id}/viewedCategories?exercises=${exercisesQueryParam}`)
-      .subscribe((response) => {});
+      .post(`/training/statistics/${id}/viewedCategories?exercises=${exercisesQueryParam}`)
+      .subscribe(() => {});
   }
 
   changeView(index: number) {

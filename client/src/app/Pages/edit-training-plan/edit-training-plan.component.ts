@@ -4,7 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ModalEventsService } from '../../../service/modal/modal-events.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom, Subscription } from 'rxjs';
-import { HttpService } from '../../../service/http/http.service';
+import { HttpService } from '../../../service/http/http-client.service';
 import { CommonModule } from '@angular/common';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { ModalService } from '../../../service/modal/modalService';
@@ -92,7 +92,7 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy, AfterViewCh
    */
   private async fetchTrainingPlan(id: string): Promise<void> {
     try {
-      const response: any = await firstValueFrom(this.httpClient.request<any>(HttpMethods.GET, `training/edit/${id}`));
+      const response: any = await firstValueFrom(this.httpClient.get<any>(`/training/edit/${id}`));
 
       this.loading = false;
 
@@ -135,7 +135,7 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy, AfterViewCh
       const formData = this.trainingForm.value;
 
       try {
-        await firstValueFrom(this.httpClient.request<any>(HttpMethods.PATCH, `training/edit/${this.id}`, formData));
+        await firstValueFrom(this.httpClient.patch(`/training/edit/${this.id}`, formData));
         this.trainingPlanService.trainingPlanChanged();
         this.modalService.close();
 

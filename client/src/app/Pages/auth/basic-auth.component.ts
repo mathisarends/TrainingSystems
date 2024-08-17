@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { HttpService } from '../../../service/http/http.service';
+import { HttpService } from '../../../service/http/http-client.service';
 import { DOCUMENT } from '@angular/common';
 import { Inject } from '@angular/core';
 import { ToastService } from '../../components/toast/toast.service';

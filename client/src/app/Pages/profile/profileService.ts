@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpService } from '../../../service/http/http.service';
+import { HttpService } from '../../../service/http/http-client.service';
 import { HttpMethods } from '../../types/httpMethods';
 
 @Injectable({
@@ -10,6 +10,6 @@ export class ProfileService {
   constructor(private httpClientService: HttpService) {}
 
   getProfile(): Observable<any> {
-    return this.httpClientService.request<any>(HttpMethods.GET, 'user/profile');
+    return this.httpClientService.get<any>('/user/profile');
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpService } from '../../../../service/http/http.service';
+import { HttpService } from '../../../../service/http/http-client.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HttpMethods } from '../../../types/httpMethods';
 import { DOCUMENT } from '@angular/common';
@@ -34,13 +34,12 @@ export class LoginComponent extends BaisAuthComponent implements OnInit {
     const form = event.target as HTMLFormElement;
     const formData = new FormData(form);
     const data = {
-      email: formData.get('email'),
-      password: formData.get('password'),
+      email: formData.get('email') as string,
+      password: formData.get('password') as string,
     };
 
-    this.httpClient.request<any>(HttpMethods.POST, 'user/login', data).subscribe({
-      next: (response: Response) => {
-        console.log('Login successful:', response);
+    this.httpClient.post('/user/login', data).subscribe({
+      next: () => {
         this.router.navigate(['/']);
       },
       error: (error: HttpErrorResponse) => {

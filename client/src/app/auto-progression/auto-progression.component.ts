@@ -1,5 +1,5 @@
-import { Component, input } from '@angular/core';
-import { HttpService } from '../../service/http/http.service';
+import { Component, input, Input } from '@angular/core';
+import { HttpService } from '../../service/http/http-client.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpMethods } from '../types/httpMethods';
@@ -33,9 +33,9 @@ export class AutoProgressionComponent {
     if (this.autoProgressionForm.valid) {
       const { rpeProgression, deloadWeek } = this.autoProgressionForm.value;
 
-      const url = `training/plan/${this.planId}/auto-progression?rpeProgression=${rpeProgression}&deloadWeek=${deloadWeek}`;
+      const url = `/training/plan/${this.planId}/auto-progression?rpeProgression=${rpeProgression}&deloadWeek=${deloadWeek}`;
 
-      this.httpService.request<any>(HttpMethods.POST, url).subscribe({
+      this.httpService.post(url).subscribe({
         next: () => {
           this.toastService.show('Erfolg', 'Progression geplant');
         },

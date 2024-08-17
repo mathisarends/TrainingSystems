@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { HttpMethods } from './types/httpMethods';
-import { HttpService } from '../service/http/http.service';
+import { HttpService } from '../service/http/http-client.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +11,7 @@ export class AuthService {
   constructor(private httpService: HttpService) {}
 
   isLoggedIn(): Observable<boolean> {
-    return this.httpService.request<any>(HttpMethods.GET, 'user/auth-state').pipe(
+    return this.httpService.get('/user/auth-state').pipe(
       map((response) => {
         return true;
       }),

@@ -6,7 +6,7 @@ import { FriendCardComponent } from '../components/friend-card/friend-card.compo
 import { AlertComponent } from '../components/alert/alert.component';
 import { SpinnerComponent } from '../components/spinner/spinner.component';
 import { Friend } from '../components/friend-card/friend';
-import { HttpService } from '../../service/http/http.service';
+import { HttpService } from '../../service/http/http-client.service';
 import { HttpMethods } from '../types/httpMethods';
 
 @Component({
@@ -28,7 +28,7 @@ export class FriendRequestComponent implements OnInit {
 
   ngOnInit() {
     this.httpService
-      .request<any>(HttpMethods.GET, 'friendship/requests')
+      .get<any>('/friendship/requests')
       .pipe(
         catchError((error) => {
           console.error('Error while fetching friend suggestions:', error);
@@ -56,10 +56,7 @@ export class FriendRequestComponent implements OnInit {
   }
 
   async onFriendAccept(userId: string) {
-    const response = await firstValueFrom(
-      this.httpService.request<any>(HttpMethods.POST, `friendship/accept/${userId}`),
-    );
-    console.log('🚀 ~ FriendRequestComponent ~ onFriendAccept ~ response:', response);
+    const response = await firstValueFrom(this.httpService.get(`/friendship/accept/${userId}`));
 
     const currentFriends = this.friendsSubject.value;
     const updatedFriends = currentFriends.filter((friend) => userId !== friend.id);

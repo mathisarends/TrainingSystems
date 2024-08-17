@@ -88,7 +88,7 @@ export class PauseTimeService {
           duration: this.remainingTime,
         });
       }
-    }, 10000); // 10 seconds interval
+    }, 10000);
   }
 
   private handleCurrentTimeUpdate(currentTime: number) {
