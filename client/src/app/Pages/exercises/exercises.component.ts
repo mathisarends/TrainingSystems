@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClientService } from '../../../service/http/http-client.service';
-import { firstValueFrom, Subscription } from 'rxjs';
-import { HttpMethods } from '../../types/httpMethods';
+import { firstValueFrom } from 'rxjs';
 import { SpinnerComponent } from '../../components/spinner/spinner.component';
 import { CommonModule } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
 import { ModalService } from '../../../service/modal/modalService';
 import { ToastService } from '../../components/toast/toast.service';
 import { BasicInfoComponent } from '../../basic-info/basic-info.component';
@@ -25,13 +22,11 @@ export class ExercisesComponent implements OnInit {
   protected isLoading = true;
 
   maxExercises = 8;
-
   exerciseData: ExerciseDataDTO = new ExerciseDataDTO();
 
   momentaryInput!: string;
 
   constructor(
-    private httpClient: HttpClientService,
     private toastService: ToastService,
     private modalService: ModalService,
     private exerciseService: ExerciseService,
@@ -60,7 +55,7 @@ export class ExercisesComponent implements OnInit {
     event.preventDefault();
 
     try {
-      await firstValueFrom(this.httpClient.request<any>(HttpMethods.PATCH, 'exercise', this.formService.getChanges()));
+      await firstValueFrom(this.exerciseService.updateExercises(this.formService.getChanges()));
     } catch (error) {
       this.toastService.show('Fehler', 'Soeichern war nicht erfolgreich');
       console.error('Error updating user exercises:', error);
