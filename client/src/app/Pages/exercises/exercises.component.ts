@@ -40,9 +40,11 @@ export class ExercisesComponent implements OnInit {
   ngOnInit(): void {
     this.loadExercises();
 
-    this.interactiveElementService.inputChanged$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      this.onSubmit(new Event('submit'));
-    });
+    this.interactiveElementService.inputChanged$
+      .pipe(takeUntilDestroyed(this.destroyRef)) // Automatically unsubscribe
+      .subscribe(() => {
+        this.onSubmit(new Event('submit'));
+      });
   }
 
   private async loadExercises(): Promise<void> {
@@ -68,6 +70,21 @@ export class ExercisesComponent implements OnInit {
       this.toastService.show('Fehler', 'Soeichern war nicht erfolgreich');
       console.error('Error updating user exercises:', error);
     }
+  }
+
+  onInputChange(event: Event): void {
+    const target = event.target as HTMLInputElement | HTMLSelectElement;
+    this.formService.addChange(target.name, target.value);
+  }
+
+  onInteractiveElementFocus(event: Event): void {
+    const interactiveElement = event.target as HTMLInputElement | HTMLSelectElement;
+    this.interactiveElementService.focus(interactiveElement.value);
+  }
+
+  onInteractiveElementBlur(event: Event): void {
+    const interactiveElement = event.target as HTMLInputElement | HTMLSelectElement;
+    this.interactiveElementService.blur(interactiveElement.value);
   }
 
   async onReset(event: Event): Promise<void> {
