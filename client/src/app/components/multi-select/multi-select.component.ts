@@ -1,5 +1,7 @@
 import { Component, HostListener, output, signal, input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ChevronUpIconComponent } from '../icon/chevron-up-icon/chevron-up-icon.component';
+import { ChevronDownIconComponent } from '../icon/chevron-down-icon/chevron-down-icon.component';
 
 /**
  * Represents a generic multi-select-dropdown
@@ -7,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-multi-select',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, ChevronUpIconComponent, ChevronDownIconComponent],
   templateUrl: './multi-select.component.html',
   styleUrls: ['./multi-select.component.scss'],
 })

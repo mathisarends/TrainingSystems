@@ -9,8 +9,6 @@ const timer = new self.Timer(notificationManager);
  * This event is triggered when the Service Worker is being installed.
  */
 self.addEventListener('install', (event) => {
-  console.log('[Service Worker] Installing Service Worker...', event);
-
   event.waitUntil(
     Promise.resolve()
       .then(() => console.log('[Service Worker] Installation successful'))
@@ -23,8 +21,6 @@ self.addEventListener('install', (event) => {
  * This event is triggered when the Service Worker is activated.
  */
 self.addEventListener('activate', (event) => {
-  console.log('[Service Worker] Activating Service Worker...', event);
-
   event.waitUntil(
     Promise.resolve()
       .then(() => console.log('[Service Worker] Activation successful'))
