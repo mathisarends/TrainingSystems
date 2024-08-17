@@ -1,15 +1,23 @@
 <div class="dropdown" [class.show]="isOpen()" (click)="toggleDropdown()">
-  <button
-    class="btn btn-light"
-    type="button"
+  <div
+    role="button"
     aria-haspopup="true"
     aria-expanded="isOpen()"
-    style="display: flex; justify-content: flex-start; flex-wrap: wrap; gap: 5px"
+    style="display: flex; justify-content: space-between; align-items: center; width: 100%"
   >
-    @for (select of selected(); track select) {
-      <div class="chip bg-light">{{ select }}</div>
-    }
-  </button>
+    <div class="chip-container" style="display: flex; flex-wrap: nowrap; gap: 5px">
+      @for (select of selected(); track select) {
+        <div class="chip bg-light">{{ select }}</div>
+      }
+    </div>
+    <div>
+      @if (isOpen()) {
+        <app-chevron-up-icon />
+      } @else {
+        <app-chevron-down-icon />
+      }
+    </div>
+  </div>
   <div class="dropdown-menu background-image p-2" [class.show]="isOpen()" (click)="$event.stopPropagation()">
     <div class="dropdown-search">
       <input
@@ -35,5 +43,3 @@
     }
   </div>
 </div>
-
-<app-chevron-up-icon />
