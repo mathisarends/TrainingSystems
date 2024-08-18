@@ -16,7 +16,6 @@ import { ModalService } from '../../../service/modal/modalService';
 import { PolarChartComponent } from '../../components/charts/polar-chart/polar-chart.component';
 import { HeadlineComponent } from '../../components/headline/headline.component';
 import { ChartSkeletonComponent } from '../../components/loaders/chart-skeleton/chart-skeleton.component';
-import { ActivityCalendar } from '../../activity-calendar/activity-calendar.component';
 
 /**
  * Component responsible for displaying training statistics in a line chart.
@@ -33,7 +32,6 @@ import { ActivityCalendar } from '../../activity-calendar/activity-calendar.comp
     PaginationComponent,
     HeadlineComponent,
     ChartSkeletonComponent,
-    ActivityCalendar,
   ],
   templateUrl: './statistics.component.html',
   styleUrls: ['./statistics.component.scss'],
