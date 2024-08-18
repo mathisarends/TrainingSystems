@@ -1,6 +1,8 @@
 import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TooltipDirective } from '../../service/tooltip/tooltip.directive';
+import { MobileService } from '../../service/util/mobile.service';
+import { ActivityCalendarEntry, Level } from './activity-calendar-entry';
 
 @Component({
   selector: 'app-activity-calendar',
@@ -11,15 +13,17 @@ import { TooltipDirective } from '../../service/tooltip/tooltip.directive';
 })
 export class ActivityCalendar {
   trainingDays = input.required<number>();
-  grid: { day: number; value: number; level: number }[] = [];
+  grid: ActivityCalendarEntry[] = [];
 
-  constructor() {
-    // Beispielwerte, um die Trainingsaktivität zu simulieren
-    this.grid = Array.from({ length: 364 }, (_, day) => ({
-      day,
-      value: Math.floor(Math.random() * 1000), // Beispielwerte zwischen 0 und 1000
-      level: 0, // Initialisiertes Level
-    }));
+  constructor(private mobileService: MobileService) {
+    this.grid = Array.from(
+      { length: 364 },
+      (_, day): ActivityCalendarEntry => ({
+        day: day as 0 | 363,
+        value: Math.floor(Math.random() * 1000),
+        level: 0,
+      }),
+    );
 
     this.calculateLevels();
   }
@@ -51,15 +55,15 @@ export class ActivityCalendar {
     });
   }
 
-  getLevelForValue(value: number, thresholds: number[]): number {
+  getLevelForValue(value: number, thresholds: number[]): Level {
     if (value > thresholds[2]) {
-      return 4;
+      return 4 as Level;
     } else if (value > thresholds[1]) {
-      return 3;
+      return 3 as Level;
     } else if (value > thresholds[0]) {
-      return 2;
+      return 2 as Level;
     } else {
-      return 1;
+      return 1 as Level;
     }
   }
 }
