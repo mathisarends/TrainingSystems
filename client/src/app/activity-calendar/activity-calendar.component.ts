@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TooltipDirective } from '../../service/tooltip/tooltip.directive';
 import { MobileService } from '../../service/util/mobile.service';
@@ -11,11 +11,26 @@ import { ActivityCalendarEntry, Level } from './activity-calendar-entry';
   templateUrl: './activity-calendar.component.html',
   styleUrls: ['./activity-calendar.component.scss'],
 })
-export class ActivityCalendar {
+export class ActivityCalendar implements OnInit {
+  /**
+   * The number of training days. This value is required.
+   */
   trainingDays = input.required<number>();
+
+  /**
+   * The grid containing the activity data for each day of the year.
+   * Each entry represents a day and its corresponding activity level and value.
+   */
   grid: ActivityCalendarEntry[] = [];
 
-  constructor(private mobileService: MobileService) {
+  constructor(private mobileService: MobileService) {}
+
+  /**
+   * Initialize the grid with simulated activity data.
+   * The grid is filled with 364 days, where each day has a random activity value
+   * and an initial level of 0.
+   */
+  ngOnInit(): void {
     this.grid = Array.from(
       { length: 364 },
       (_, day): ActivityCalendarEntry => ({
@@ -28,12 +43,17 @@ export class ActivityCalendar {
     this.calculateLevels();
   }
 
+  /**
+   * Calculate the activity levels based on the value of each day.
+   * The levels are determined using calculated quantiles, where the grid
+   * entries are assigned a level from 1 to 4 based on their value.
+   */
   calculateLevels() {
     const values = this.grid.map((item) => item.value);
     const min = Math.min(...values);
     const max = Math.max(...values);
 
-    // Quantile berechnen
+    // Calculate quantiles
     const thresholds = this.calculateQuantiles(values, [0.25, 0.5, 0.75]);
 
     this.grid.forEach((item) => {
@@ -41,6 +61,14 @@ export class ActivityCalendar {
     });
   }
 
+  /**
+   * Calculate the quantiles for a given array of values.
+   * This method sorts the values and determines the thresholds for the given quantiles.
+   *
+   * @param values - The array of numeric values to calculate the quantiles from.
+   * @param quantiles - The quantiles to calculate, e.g., [0.25, 0.5, 0.75].
+   * @returns An array of numbers representing the calculated quantile thresholds.
+   */
   calculateQuantiles(values: number[], quantiles: number[]): number[] {
     const sortedValues = values.sort((a, b) => a - b);
     return quantiles.map((q) => {
@@ -55,6 +83,13 @@ export class ActivityCalendar {
     });
   }
 
+  /**
+   * Determine the activity level based on the value and calculated thresholds.
+   *
+   * @param value - The activity value for a specific day.
+   * @param thresholds - The thresholds for each quantile to determine the level.
+   * @returns The level corresponding to the value, ranging from 1 to 4.
+   */
   getLevelForValue(value: number, thresholds: number[]): Level {
     if (value > thresholds[2]) {
       return 4 as Level;
