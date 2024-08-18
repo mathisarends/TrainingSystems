@@ -1,0 +1,39 @@
+<div class="calendar-header">
+  <h6>447 contributions in 2024</h6>
+</div>
+<div class="calendar-container">
+  <div class="calendar-grid">
+    <div class="months">
+      <div>Jan</div>
+      <div>Feb</div>
+      <div>Mar</div>
+      <div>Apr</div>
+      <div>May</div>
+      <div>Jun</div>
+      <div>Jul</div>
+      <div>Aug</div>
+      <div>Sep</div>
+      <div>Oct</div>
+      <div>Nov</div>
+      <div>Dec</div>
+    </div>
+    <div class="contributions-wrapper">
+      <div class="days">
+        <div>Mon</div>
+        <div>Wed</div>
+        <div>Fri</div>
+      </div>
+      <div class="contribution-grid">
+        <div *ngFor="let day of grid; let i = index" class="day" [ngClass]="getDayClass(i)"></div>
+      </div>
+    </div>
+  </div>
+  <div class="legend">
+    <span>Less</span>
+    <div class="legend-color"></div>
+    <div class="legend-color"></div>
+    <div class="legend-color"></div>
+    <div class="legend-color"></div>
+    <span>More</span>
+  </div>
+</div>
