@@ -2,6 +2,7 @@ import { Component, HostListener, output, signal, input, OnInit } from '@angular
 import { FormsModule } from '@angular/forms';
 import { ChevronUpIconComponent } from '../icon/chevron-up-icon/chevron-up-icon.component';
 import { ChevronDownIconComponent } from '../icon/chevron-down-icon/chevron-down-icon.component';
+import { MultiSelectSpinnerComponent } from './multi-select-spinner/multi-select-spinner.component';
 
 /**
  * Represents a generic multi-select-dropdown
@@ -9,7 +10,7 @@ import { ChevronDownIconComponent } from '../icon/chevron-down-icon/chevron-down
 @Component({
   selector: 'app-multi-select',
   standalone: true,
-  imports: [FormsModule, ChevronUpIconComponent, ChevronDownIconComponent],
+  imports: [FormsModule, ChevronUpIconComponent, ChevronDownIconComponent, MultiSelectSpinnerComponent],
   templateUrl: './multi-select.component.html',
   styleUrls: ['./multi-select.component.scss'],
 })
@@ -52,6 +53,11 @@ export class MultiSelectComponent implements OnInit {
    * A signal representing the filtered items based on the search term.
    */
   filteredItems = signal<string[]>([]);
+
+  /**
+   * Represents the loading state if the option have to be loaded from the backend.
+   */
+  isLoading = input<boolean>(false);
 
   ngOnInit(): void {
     this.selected.set(this.selectedItems());

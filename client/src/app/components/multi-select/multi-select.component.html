@@ -11,7 +11,9 @@
       }
     </div>
     <div>
-      @if (isOpen()) {
+      @if (isLoading()) {
+        <app-multi-select-spinner />
+      } @else if (isOpen()) {
         <app-chevron-up-icon />
       } @else {
         <app-chevron-down-icon />
