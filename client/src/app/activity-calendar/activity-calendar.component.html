@@ -10,9 +10,9 @@
       <div>Jul</div>
       <div>Aug</div>
       <div>Sep</div>
-      <!--       <div>Oct</div>
+      <div>Okt</div>
       <div>Nov</div>
-      <div>Dec</div> -->
+      <div>Dec</div>
     </div>
     <div class="contributions-wrapper">
       <div class="days">
@@ -21,17 +21,14 @@
         <div>Fri</div>
       </div>
       <div class="contribution-grid">
-        <div
-          *ngFor="let day of grid"
-          class="day"
-          [ngClass]="'level-' + day.level"
-          [appTooltip]="day.value.toString()"
-        ></div>
+        @for (day of grid; track day) {
+          <div class="day" [ngClass]="'level-' + day.level" [appTooltip]="day.value.toString()"></div>
+        }
       </div>
     </div>
   </div>
   <div class="calendar-footer">
-    <div class="training-text">{{ trainingDays() }} Trainings dieses Jahr</div>
+    <div class="training-text">{{ trainingDays() }} Trainings</div>
     <div class="legend">
       <span>Less</span>
       <div class="legend-color level-1"></div>
