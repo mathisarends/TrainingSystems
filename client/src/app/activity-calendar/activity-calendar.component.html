@@ -1,29 +1,32 @@
 <div class="calendar-container">
   <div class="calendar-grid">
-    <div class="months">
-      <div>Jan</div>
-      <div>Feb</div>
-      <div>Mar</div>
-      <div>Apr</div>
-      <div>May</div>
-      <div>Jun</div>
-      <div>Jul</div>
-      <div>Aug</div>
-      <div>Sep</div>
-      <div>Okt</div>
-      <div>Nov</div>
-      <div>Dec</div>
-    </div>
     <div class="contributions-wrapper">
-      <div class="days">
-        <div>Mon</div>
-        <div>Wed</div>
-        <div>Fri</div>
+      <div class="months">
+        <div>Jan</div>
+        <div>Feb</div>
+        <div>Mar</div>
+        <div>Apr</div>
+        <div>May</div>
+        <div>Jun</div>
+        <div>Jul</div>
+        <div>Aug</div>
+        <div>Sep</div>
+        <div>Okt</div>
+        <div>Nov</div>
+        <div>Dec</div>
       </div>
-      <div class="contribution-grid">
-        @for (day of grid; track day) {
-          <div class="day" [ngClass]="'level-' + day.level" [appTooltip]="day.value.toString()"></div>
-        }
+
+      <div class="day-and-grid-wrapper">
+        <div class="days">
+          <div>Mon</div>
+          <div>Wed</div>
+          <div>Fri</div>
+        </div>
+        <div class="contribution-grid">
+          @for (day of grid; track day) {
+            <div class="day" [ngClass]="'level-' + day.level" [appTooltip]="day.value.toString()"></div>
+          }
+        </div>
       </div>
     </div>
   </div>
