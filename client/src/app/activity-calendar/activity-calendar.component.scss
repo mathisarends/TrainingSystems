@@ -21,11 +21,11 @@ $level-4-color: darken($accent-color, 10%);
   .months {
     display: grid;
     width: calc(52 * 0.8925rem + 52 * 4px);
-    grid-template-columns: repeat(12, 1fr); /* Changed from grid-template-rows to grid-template-columns */
+    grid-template-columns: repeat(12, 1fr);
     padding-left: 0.5rem;
     font-size: 12px;
     color: #6c757d;
-    text-align: center; /* Centers the month names */
+    text-align: center;
   }
 
   .day-and-grid-wrapper {
