@@ -22,7 +22,7 @@ class AuthService {
   };
 
   createAndSetToken(userClaimSet: Record<string, unknown>, res: Response) {
-    const token = jwt.sign(userClaimSet, SECRET, { algorithm: 'HS256', expiresIn: '1d' });
+    const token = jwt.sign(userClaimSet, SECRET, { algorithm: 'HS256', expiresIn: '30d' });
 
     const isProduction = process.env.NODE_ENV === 'production';
 
