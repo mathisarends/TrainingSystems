@@ -1,7 +1,6 @@
 import { Directive, HostListener, Input } from '@angular/core';
 import { InteractiveElementService } from '../service/util/interactive-element.service';
 import { FormService } from '../service/form/form.service';
-import { InteractiveElementDirective } from './interactive-element.directive';
 import { ExerciseTableRowService } from '../service/training/exercise-table-row.service';
 
 /**
@@ -27,8 +26,8 @@ export class WeightInputDirective {
    * @param target - The HTML element that triggered the focus event.
    */
   @HostListener('focus', ['$event.target'])
-  saveValueBeforePotentialChange(target: HTMLInputElement | HTMLSelectElement): void {
-    this.interactiveElementService.focus(target.value);
+  handleFocusEvent(weightInput: HTMLInputElement): void {
+    this.interactiveElementService.focus(weightInput.value);
   }
 
   /**
@@ -38,7 +37,7 @@ export class WeightInputDirective {
    * @param target - The HTML element that triggered the blur event.
    */
   @HostListener('blur', ['$event.target'])
-  parseWeightValues(weightInput: HTMLInputElement): void {
+  handleBlurEvent(weightInput: HTMLInputElement): void {
     const weightValues = this.parseWeightInputValues(weightInput);
     const amountOfSets = Number(this.exerciseTableRowService.getSetInputByElement(weightInput).value);
 
@@ -57,7 +56,7 @@ export class WeightInputDirective {
    * @param event - The input event triggered by the element.
    */
   @HostListener('input', ['$event'])
-  onInputChange(event: Event): void {
+  handleInputChange(event: Event): void {
     this.formService.trackChange(event);
   }
 

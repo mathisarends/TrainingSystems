@@ -39,6 +39,7 @@ import { InteractiveElementDirective } from '../../../directives/interactive-ele
 import { InteractiveElementService } from '../../../service/util/interactive-element.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { WeightInputDirective } from '../../../directives/weight-input.directive';
+import { ActualRpeInputDirective } from '../../../directives/rpe-input.directive';
 
 /**
  * Component to manage and display the training view.
@@ -56,6 +57,7 @@ import { WeightInputDirective } from '../../../directives/weight-input.directive
     SkeletonTrainingTableComponent,
     InteractiveElementDirective,
     WeightInputDirective,
+    ActualRpeInputDirective,
   ],
   providers: [TrainingViewService],
   templateUrl: './training-view.component.html',
@@ -77,7 +79,6 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
 
   subHeading: string = '';
 
-  @ViewChildren('weightInput') weightInputs!: QueryList<ElementRef>;
   @ViewChild('trainingTable', { static: false }) trainingTable!: ElementRef;
 
   constructor(
