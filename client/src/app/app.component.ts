@@ -6,12 +6,15 @@ import { ToastComponent } from './components/toast/toast.component';
 import { ServiceWorkerService } from './service-worker.service';
 import { BrowserCheckService } from './browser-check.service';
 import { MobileService } from '../service/util/mobile.service';
+import { RedirectService } from '../service/util/redirect.service';
+
 @Component({
   selector: 'app-root',
   standalone: true,
+  providers: [RedirectService],
   imports: [RouterOutlet, HeaderComponent, ToastComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   title = 'TrainingSystems';
@@ -20,7 +23,7 @@ export class AppComponent implements OnInit {
     private serviceWorkerService: ServiceWorkerService,
     private browserCheckService: BrowserCheckService,
     private mobileService: MobileService,
-    private router: Router,
+    private redirectService: RedirectService,
   ) {
     if (this.browserCheckService.isBrowser()) {
       this.serviceWorkerService.registerServiceWorker();
@@ -28,18 +31,10 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.router.events.subscribe((event) => {
-      if (this.browserCheckService.isBrowser() && event instanceof NavigationEnd) {
-        localStorage.setItem('lastRoute', event.urlAfterRedirects);
-      }
-    });
+    this.redirectService.initialize();
 
     if (this.mobileService.isMobileView()) {
-      const lastRoute = localStorage.getItem('lastRoute');
-
-      if (lastRoute && lastRoute !== '/' && this.router.url === '/') {
-        this.router.navigateByUrl(lastRoute);
-      }
+      this.redirectService.redirectToLastRoute();
     }
   }
 }
