@@ -22,8 +22,8 @@ export class InteractiveElementDirective {
   @Input() appInteractiveElement!: string;
 
   constructor(
-    private interactiveElementService: InteractiveElementService,
-    private formService: FormService,
+    protected interactiveElementService: InteractiveElementService,
+    protected formService: FormService,
   ) {}
 
   /**

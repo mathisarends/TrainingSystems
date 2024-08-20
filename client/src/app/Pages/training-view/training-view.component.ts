@@ -38,6 +38,7 @@ import { BrowserCheckService } from '../../browser-check.service';
 import { InteractiveElementDirective } from '../../../directives/interactive-element.directive';
 import { InteractiveElementService } from '../../../service/util/interactive-element.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { WeightInputDirective } from '../../../directives/weight-input.directive';
 
 /**
  * Component to manage and display the training view.
@@ -54,6 +55,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     IconButtonComponent,
     SkeletonTrainingTableComponent,
     InteractiveElementDirective,
+    WeightInputDirective,
   ],
   providers: [TrainingViewService],
   templateUrl: './training-view.component.html',
