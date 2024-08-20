@@ -35,7 +35,6 @@ import { HeadlineComponent } from '../../components/headline/headline.component'
 import { IconButtonComponent } from '../../components/icon-button/icon-button.component';
 import { SkeletonTrainingTableComponent } from '../../components/loaders/skeletons/skeleton-training-table/skeleton-training-table.component';
 import { BrowserCheckService } from '../../browser-check.service';
-import { InteractiveElementDirective } from '../../../directives/interactive-element.directive';
 import { InteractiveElementService } from '../../../service/util/interactive-element.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { WeightInputDirective } from '../../../directives/weight-input.directive';
@@ -55,7 +54,6 @@ import { ActualRpeInputDirective } from '../../../directives/rpe-input.directive
     HeadlineComponent,
     IconButtonComponent,
     SkeletonTrainingTableComponent,
-    InteractiveElementDirective,
     WeightInputDirective,
     ActualRpeInputDirective,
   ],
