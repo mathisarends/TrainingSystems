@@ -1,18 +1,24 @@
-import { Component, OnInit, AfterViewChecked, ViewChildren, ElementRef, QueryList, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewChecked,
+  ViewChildren,
+  ElementRef,
+  QueryList,
+  ViewChild,
+  DestroyRef,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TrainingViewService } from './training-view-service';
 import { FormService } from '../../../service/form/form.service';
-import { RpeService } from '../../../service/training/rpe.service';
 import { EstMaxService } from '../../../service/training/estmax.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoryPlaceholderService } from '../../../service/training/category-placeholder.service';
 import { ToastService } from '../../components/toast/toast.service';
-import { SpinnerComponent } from '../../components/loaders/spinner/spinner.component';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
 import { ExerciseDataDTO } from './exerciseDataDto';
 import { TrainingPlanDto } from './trainingPlanDto';
-import { AutoSaveService } from '../../../service/training/auto-save.service';
 import { TrainingViewNavigationService } from './training-view-navigation.service';
 import { forkJoin, BehaviorSubject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
@@ -29,6 +35,9 @@ import { HeadlineComponent } from '../../components/headline/headline.component'
 import { IconButtonComponent } from '../../components/icon-button/icon-button.component';
 import { SkeletonTrainingTableComponent } from '../../components/loaders/skeletons/skeleton-training-table/skeleton-training-table.component';
 import { BrowserCheckService } from '../../browser-check.service';
+import { InteractiveElementDirective } from '../../../directives/interactive-element.directive';
+import { InteractiveElementService } from '../../../service/util/interactive-element.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 /**
  * Component to manage and display the training view.
@@ -38,13 +47,13 @@ import { BrowserCheckService } from '../../browser-check.service';
   selector: 'app-training-view',
   standalone: true,
   imports: [
-    SpinnerComponent,
     CommonModule,
     FormsModule,
     PaginationComponent,
     HeadlineComponent,
     IconButtonComponent,
     SkeletonTrainingTableComponent,
+    InteractiveElementDirective,
   ],
   providers: [TrainingViewService],
   templateUrl: './training-view.component.html',
@@ -73,17 +82,17 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
     private route: ActivatedRoute,
     private trainingViewService: TrainingViewService,
     private formService: FormService,
-    private rpeService: RpeService,
     private estMaxService: EstMaxService,
     private toastService: ToastService,
     private categoryPlaceholderService: CategoryPlaceholderService,
-    private autoSaveService: AutoSaveService,
     private navigationService: TrainingViewNavigationService,
     private swipeService: SwipeService,
     private pauseTimeService: PauseTimeService,
     private mobileService: MobileService,
     private modalService: ModalService,
     private browserCheckService: BrowserCheckService,
+    private interactiveElementService: InteractiveElementService,
+    private destroyRef: DestroyRef,
   ) {}
 
   /**
@@ -102,6 +111,12 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
     });
 
     this.isMobile = this.mobileService.isMobileView();
+
+    this.interactiveElementService.inputChanged$
+      .pipe(takeUntilDestroyed(this.destroyRef)) // Automatically unsubscribe
+      .subscribe(() => {
+        this.saveTrainingData();
+      });
   }
 
   /**
@@ -115,9 +130,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
 
         this.categoryPlaceholderService.handlePlaceholderCategory();
 
-        this.rpeService.initializeRPEValidation();
         this.estMaxService.initializeEstMaxCalculation();
-        this.autoSaveService.initializeAutoSave();
         this.pauseTimeService.initializePauseTimers(this.exerciseData);
 
         this.automationContextInitialized = true;
@@ -194,7 +207,6 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
   onSubmit(event: Event): void {
     event.preventDefault();
     const changedData = this.formService.getChanges();
-    console.log('🚀 ~ TrainingViewComponent ~ onSubmit ~ changedData:', changedData);
 
     this.trainingViewService
       .submitTrainingPlan(this.planId, this.trainingWeekIndex, this.trainingDayIndex, changedData)
