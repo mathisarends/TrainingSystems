@@ -1,14 +1,10 @@
+import { RepSchemeByCategory } from './default-rep-scheme-by-category';
+
 export class ExerciseDataDTO {
   private _exerciseCategories: string[] = [];
   private _categoryPauseTimes: { [key: string]: number } = {};
   private _categorizedExercises: { [key: string]: string[] } = {};
-  private _defaultRepSchemeByCategory: {
-    [key: string]: {
-      defaultSets: number;
-      defaultReps: number;
-      defaultRPE: number;
-    };
-  } = {};
+  private _defaultRepSchemeByCategory: RepSchemeByCategory = {};
 
   constructor(data?: Partial<ExerciseDataDTO>) {
     if (data) {

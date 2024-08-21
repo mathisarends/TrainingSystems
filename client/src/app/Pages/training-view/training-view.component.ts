@@ -38,6 +38,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { WeightInputDirective } from '../../../directives/weight-input.directive';
 import { ActualRpeInputDirective } from '../../../directives/rpe-input.directive';
 import { CategorySelectDirective } from '../../../directives/category-select.directive';
+import { ExerciseDataService } from './exercise-data.service';
 
 /**
  * Component to manage and display the training view.
@@ -93,6 +94,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
     private modalService: ModalService,
     private browserCheckService: BrowserCheckService,
     private interactiveElementService: InteractiveElementService,
+    private exerciseDataService: ExerciseDataService,
     private destroyRef: DestroyRef,
   ) {}
 
@@ -183,6 +185,8 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
           this.trainingPlanData = trainingPlan;
 
           this.exerciseData = exerciseData;
+          this.exerciseDataService.exerciseData = exerciseData;
+
           this.title = trainingPlan?.title;
         }),
         tap(() => {
