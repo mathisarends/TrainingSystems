@@ -28,8 +28,6 @@ import { AutoProgressionComponent } from '../modal-pages/auto-progression/auto-p
 import { PauseTimeService } from '../../../service/training/pause-time.service';
 import { ModalService } from '../../../service/modal/modalService';
 import { RestTimerComponent } from '../modal-pages/rest-timer/rest-timer.component';
-import { TrainingViewNavigationComponent } from '../modal-pages/training-view-navigation/training-view-navigation.component';
-import { ModalSize } from '../../../service/modal/modalSize';
 import { BasicInfoComponent } from '../modal-pages/basic-info/basic-info.component';
 import { HeadlineComponent } from '../../components/headline/headline.component';
 import { IconButtonComponent } from '../../components/icon-button/icon-button.component';
@@ -39,6 +37,7 @@ import { InteractiveElementService } from '../../../service/util/interactive-ele
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { WeightInputDirective } from '../../../directives/weight-input.directive';
 import { ActualRpeInputDirective } from '../../../directives/rpe-input.directive';
+import { CategorySelectDirective } from '../../../directives/category-select.directive';
 
 /**
  * Component to manage and display the training view.
@@ -56,6 +55,7 @@ import { ActualRpeInputDirective } from '../../../directives/rpe-input.directive
     SkeletonTrainingTableComponent,
     WeightInputDirective,
     ActualRpeInputDirective,
+    CategorySelectDirective,
   ],
   providers: [TrainingViewService],
   templateUrl: './training-view.component.html',
@@ -128,8 +128,6 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
     if (this.browserCheckService.isBrowser() && !this.automationContextInitialized) {
       if (this.dataViewLoaded.getValue() && this.trainingTable) {
         this.initializeSwipeListener();
-
-        this.categoryPlaceholderService.handlePlaceholderCategory();
 
         this.estMaxService.initializeEstMaxCalculation();
         this.pauseTimeService.initializePauseTimers(this.exerciseData);
@@ -236,7 +234,6 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
    */
   onInputChange(event: Event): void {
     this.formService.trackChange(event);
-    this.categoryPlaceholderService.updatePlaceholderVisibility(event.target as HTMLSelectElement);
   }
 
   /**
@@ -311,16 +308,6 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
       component: RestTimerComponent,
       title: 'Pause Timer',
       buttonText: 'Abbrechen',
-      hasFooter: false,
-    });
-  }
-
-  openNavigationMenu() {
-    this.modalService.open({
-      component: TrainingViewNavigationComponent,
-      title: 'Navigationshinweise',
-      buttonText: 'Fertig',
-      size: ModalSize.MEDIUM,
       hasFooter: false,
     });
   }

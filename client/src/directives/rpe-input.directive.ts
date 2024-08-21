@@ -14,8 +14,6 @@ export class ActualRpeInputDirective {
   private readonly MIN_RPE = 5;
   private readonly MAX_RPE = 10;
 
-  @Input() rpeInput!: string;
-
   constructor(
     private interactiveElementService: InteractiveElementService,
     private formService: FormService,

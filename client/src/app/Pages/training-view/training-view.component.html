@@ -48,6 +48,7 @@
           <tr>
             <td data-cell="Category">
               <select
+                category-select
                 name="day{{ trainingDayIndex }}_exercise{{ k }}_category"
                 class="exercise-category-selector transparent-input w-100"
                 (change)="onCategoryChange($event)"
@@ -98,7 +99,6 @@
             </td>
             <td data-cell="Weight">
               <input
-                #weightInput
                 weightInput
                 [placeholder]="
                   previousTrainingDayExercise?.exercise && previousTrainingDayExercise.exercise === exercise?.exercise
@@ -109,7 +109,6 @@
                 class="transparent-input weight"
                 [name]="namePrefix + 'weight'"
                 [value]="exercise.weight || ''"
-                (input)="onInputChange($event)"
               />
             </td>
             <td data-cell="RPE">
@@ -128,7 +127,6 @@
                 class="transparent-input actualRPE"
                 [name]="namePrefix + 'actualRPE'"
                 [value]="exercise.actualRPE || ''"
-                (input)="onInputChange($event)"
               />
             </td>
             <td data-cell="Est. Max">

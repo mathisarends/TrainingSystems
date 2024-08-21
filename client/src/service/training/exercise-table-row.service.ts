@@ -33,6 +33,14 @@ export class ExerciseTableRowService {
     return this.getElementByType(element, ExerciseTableRowInputType.EXERCISE_SELECTOR) as HTMLSelectElement;
   }
 
+  getAllExerciseCategorySelectorsByElement(element: HTMLElement): NodeListOf<HTMLSelectElement> {
+    const tableRow = element.closest('tr');
+    const exerciseNameSelectors = tableRow?.querySelectorAll(
+      '.exercise-name-selector',
+    ) as NodeListOf<HTMLSelectElement>;
+    return exerciseNameSelectors;
+  }
+
   /**
    * Finds the `HTMLInputElement` for the weight input within the same table row as the provided element.
    *

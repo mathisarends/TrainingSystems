@@ -11,7 +11,6 @@ export class CategoryPlaceholderService {
   constructor(
     private formService: FormService,
     private rendererFactory: RendererFactory2,
-    private exerciseTableRowService: ExerciseTableRowService,
   ) {
     this.renderer = this.rendererFactory.createRenderer(null, null);
   }
@@ -19,24 +18,6 @@ export class CategoryPlaceholderService {
   /**
    * Handles the visibility of placeholder categories.
    */
-  handlePlaceholderCategory(): void {
-    const selectors = document.querySelectorAll('.exercise-category-selector') as NodeListOf<HTMLSelectElement>;
-
-    selectors.forEach((categorySelector) => {
-      const category = categorySelector.value;
-      if (category === '- Bitte Auswählen -' || category === undefined) {
-        this.renderer.setStyle(categorySelector, 'opacity', '0');
-      }
-    });
-  }
-
-  /**
-   * Updates the visibility of the placeholder based on the selected value.
-   * @param target The HTML select element.
-   */
-  updatePlaceholderVisibility(target: HTMLSelectElement): void {
-    this.renderer.setStyle(target, 'opacity', target.value !== '- Bitte Auswählen -' ? '1' : '0');
-  }
 
   /**
    * Handles category change events and updates the relevant UI elements and form values.
