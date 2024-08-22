@@ -134,7 +134,25 @@ function updateTrainingDay(
     }
 
     if (exercise) {
-      updateExercise(fieldName, fieldValue, exercise, trainingDay, exerciseIndex);
+      if (isWeightChanged(fieldName)) {
+        if (!trainingDay.recording) {
+          startRecording(trainingDay);
+        }
+
+        // Reset the inactivity timeout whenever a weight input is detected
+        if (trainingDay.inactivityTimeout) {
+          clearTimeout(trainingDay.inactivityTimeout);
+        }
+
+        trainingDay.inactivityTimeout = setTimeout(
+          () => {
+            stopRecording(trainingDay);
+          },
+          25 * 60 * 1000
+        ); // 25 minutes
+
+        updateExercise(fieldName, fieldValue, exercise, trainingDay, exerciseIndex);
+      }
     }
   }
 }
@@ -174,4 +192,35 @@ function propagateChangesToFutureWeeks(
 
     tempWeekIndex++;
   }
+}
+
+/**
+ * Starts the recording of a training session.
+ *
+ * @param trainingDay - The training day object to be updated.
+ */
+function startRecording(trainingDay: TrainingDay): void {
+  trainingDay.startTime = new Date();
+  trainingDay.recording = true;
+}
+
+/**
+ * Stops the recording of a training session, calculates the total duration,
+ * and adjusts the duration to exclude the final 25 minutes of inactivity.
+ *
+ */
+function stopRecording(trainingDay: TrainingDay): void {
+  trainingDay.endTime = new Date();
+  trainingDay.recording = false;
+
+  if (trainingDay.startTime && trainingDay.endTime) {
+    const duration = (trainingDay.endTime.getTime() - trainingDay.startTime.getTime()) / 6000 - 25; // Convert to minutes
+
+    trainingDay.durationInMinutes = Math.max(duration, 0);
+  }
+}
+
+// Dient als Indikator für eine Trainings Session um die zeit aufzuzeichenen
+function isWeightChanged(fieldName: string): boolean {
+  return fieldName.endsWith('weight');
 }
