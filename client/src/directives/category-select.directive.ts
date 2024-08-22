@@ -4,6 +4,7 @@ import { FormService } from '../service/form/form.service';
 import { ExerciseTableRowService } from '../service/training/exercise-table-row.service';
 import { ExerciseDataService } from '../app/Pages/training-view/exercise-data.service';
 import { RepSchemeByCategory } from '../app/Pages/training-view/default-rep-scheme-by-category';
+import { ExerciseInputs } from '../service/training/exercise-inputs';
 
 @Directive({
   selector: '[category-select]',
@@ -116,9 +117,6 @@ export class CategorySelectDirective {
     const setsInput = tableRow.querySelector('.sets') as HTMLInputElement;
     const repsInput = tableRow.querySelector('.reps') as HTMLInputElement;
     const targetRPEInput = tableRow.querySelector('.targetRPE') as HTMLInputElement;
-    const weightInput = tableRow.querySelector('.weight') as HTMLInputElement;
-    const rpeInput = tableRow.querySelector('.actualRPE') as HTMLInputElement;
-    const estMaxInput = tableRow.querySelector('.estMax') as HTMLInputElement;
 
     if (category !== '- Bitte Auswählen -') {
       const defaultValues = defaultRepSchemeByCategory[category];
@@ -135,22 +133,22 @@ export class CategorySelectDirective {
   }
 
   private resetInputs(exerciseSelect: HTMLSelectElement): void {
-    const inputs = this.exerciseTableRowService.getInputsByCategorySelector(exerciseSelect, true);
+    const inputs: ExerciseInputs = this.exerciseTableRowService.getInputsByCategorySelector(exerciseSelect, true);
 
     for (const key in inputs) {
       if (inputs.hasOwnProperty(key)) {
-        const element = inputs[key as keyof typeof inputs];
+        const element = inputs[key as keyof ExerciseInputs];
         element.value = '';
       }
     }
   }
 
   private updateFormService(exerciseSelect: HTMLSelectElement): void {
-    const inputs = this.exerciseTableRowService.getInputsByCategorySelector(exerciseSelect);
+    const inputs: ExerciseInputs = this.exerciseTableRowService.getInputsByCategorySelector(exerciseSelect);
 
     for (const key in inputs) {
       if (inputs.hasOwnProperty(key)) {
-        const element = inputs[key as keyof typeof inputs];
+        const element = inputs[key as keyof ExerciseInputs];
         this.formService.addChange(element.name, element.value);
       }
     }

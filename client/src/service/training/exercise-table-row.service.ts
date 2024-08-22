@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { InteractiveElement } from './interactive-element';
+import { ExerciseInputs } from './exercise-inputs';
 
 enum ExerciseTableRowInputType {
   CATEGORY_SELECTOR = '.exercise-category-selector',
@@ -67,12 +68,12 @@ export class ExerciseTableRowService {
    * @param categorySelector The HTMLSelectElement for the exercise category.
    * @returns An object containing all relevant input elements.
    */
-  getInputsByCategorySelector(categorySelector: HTMLSelectElement, resetMode = false) {
+  getInputsByCategorySelector(categorySelector: HTMLSelectElement, resetMode = false): ExerciseInputs {
     return {
       exerciseSelect: this.findClosestElementInRow(
         categorySelector,
         resetMode ? ExerciseTableRowInputType.EXERCISE_SELECTOR_GENERIC : ExerciseTableRowInputType.EXERCISE_SELECTOR,
-      ),
+      ) as HTMLSelectElement,
       setsInput: this.findClosestElementInRow(
         categorySelector,
         ExerciseTableRowInputType.SETS_INPUT,
