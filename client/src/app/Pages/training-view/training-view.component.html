@@ -50,7 +50,7 @@
               <select
                 name="day{{ trainingDayIndex }}_exercise{{ k }}_category"
                 class="exercise-category-selector transparent-input w-100"
-                (change)="onCategoryChange($event)"
+                category-select
                 [ngStyle]="{
                   opacity: exercise.category === '- Bitte Auswählen -' || !exercise.category ? 0 : 1,
                 }"

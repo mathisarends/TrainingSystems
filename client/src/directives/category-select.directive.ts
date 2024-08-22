@@ -22,35 +22,11 @@ export class CategorySelectDirective {
     this.renderer = this.rendererFactory.createRenderer(null, null);
   }
 
-  /**
-   * Handles the focus event of the interactive element.
-   * When the element gains focus, its value is stored by the InteractiveElementService.
-   *
-   * @param target - The HTML element that triggered the focus event.
-   */
   @HostListener('focus', ['$event.target'])
   onFocus(target: HTMLSelectElement): void {
     this.interactiveElementService.focus(target.value);
   }
 
-  /**
-   * Handles the blur event of the interactive element.
-   * When the element loses focus, its value is compared to the stored value to detect changes.
-   *
-   * @param target - The HTML element that triggered the blur event.
-   */
-  @HostListener('blur', ['$event.target'])
-  onBlur(target: HTMLSelectElement): void {
-    console.log('🚀 ~ CategorySelectDirective ~ onBlur ~ target:', target);
-    this.interactiveElementService.blur(target.value);
-  }
-
-  /**
-   * Handles the input event of the interactive element.
-   * When the value of the element changes, the new value is tracked by the FormService.
-   *
-   * @param event - The input event triggered by the element.
-   */
   @HostListener('input', ['$event'])
   onInputChange(event: Event): void {
     this.formService.trackChange(event);
@@ -59,60 +35,73 @@ export class CategorySelectDirective {
     const category = categorySelector.value;
     const tableRow = categorySelector.closest('tr')!;
 
-    const exerciseNameSelectors = this.exerciseTableRowService.getAllExerciseCategorySelectorsByElement(
-      event.target as HTMLSelectElement,
-    );
-
-    this.updateCategoryStyles(
-      categorySelector,
-      category,
-      exerciseNameSelectors,
-      this.exerciseDataService.getExerciseCategories(),
-    );
-
-    this.updateInputValues(tableRow, category, this.exerciseDataService.getDefaultRepSchemeByCategory());
+    const exerciseNameSelectors =
+      this.exerciseTableRowService.getAllExerciseCategorySelectorsByElement(categorySelector);
 
     if (category === '- Bitte Auswählen -') {
-      this.fillCategoryGaps(tableRow);
-    }
-  }
-
-  /**
-   * Updates the styles of category and exercise name selectors.
-   * @param target The HTML select element.
-   * @param category The selected category value.
-   * @param exerciseNameSelectors List of exercise name selectors in the row.
-   * @param exerciseCategories Array of exercise categories.
-   */
-  private updateCategoryStyles(
-    categorySelect: HTMLSelectElement,
-    category: string,
-    exerciseNameSelectors: NodeListOf<HTMLSelectElement>,
-    exerciseCategories: string[],
-  ): void {
-    if (category === '- Bitte Auswählen -') {
-      this.renderer.setStyle(categorySelect, 'opacity', '0');
-      exerciseNameSelectors.forEach((selector) => {
-        this.renderer.setStyle(selector, 'display', 'none');
-        selector.disabled = false;
-      });
+      this.handlePlaceholderCategory(categorySelector, exerciseNameSelectors, tableRow);
     } else {
-      this.renderer.setStyle(categorySelect, 'opacity', '1');
-      const index = exerciseCategories.indexOf(category);
-      exerciseNameSelectors.forEach((selector, i) => {
-        this.renderer.setStyle(selector, 'display', i === index ? 'block' : 'none');
-        this.renderer.setStyle(selector, 'opacity', i === index ? '1' : '0');
-        selector.disabled = i !== index;
-      });
+      this.handleSelectedCategory(categorySelector, exerciseNameSelectors, tableRow, category);
     }
+
+    this.interactiveElementService.blur(categorySelector.value);
   }
 
   /**
-   * Updates the input values in the form based on the selected category.
-   * @param tableRow The current table row element.
-   * @param category The selected category value.
-   * @param defaultRepSchemeByCategory Default rep scheme values by category.
+   * Handles the logic when the category is "- Bitte Auswählen -".
    */
+  private handlePlaceholderCategory(
+    categorySelector: HTMLSelectElement,
+    exerciseNameSelectors: NodeListOf<HTMLSelectElement>,
+    tableRow: Element,
+  ): void {
+    // Hide the category selector and reset exercise name selectors
+    this.renderer.setStyle(categorySelector, 'opacity', '0');
+    exerciseNameSelectors.forEach((selector) => {
+      this.renderer.setStyle(selector, 'display', 'none');
+      selector.disabled = false;
+    });
+
+    // Reset the input values
+    this.updateInputValues(tableRow, '- Bitte Auswählen -', this.exerciseDataService.getDefaultRepSchemeByCategory());
+
+    // Fill category gaps from subsequent rows
+    this.fillCategoryGaps(tableRow);
+  }
+
+  /**
+   * Handles the logic when a specific category is selected.
+   */
+  private handleSelectedCategory(
+    categorySelector: HTMLSelectElement,
+    exerciseNameSelectors: NodeListOf<HTMLSelectElement>,
+    tableRow: Element,
+    category: string,
+  ): void {
+    // Show the category selector
+    this.renderer.setStyle(categorySelector, 'opacity', '1');
+
+    // Determine the index of the selected category and update selectors visibility
+    const selectedCategoryIndex = this.getSelectedCategoryIndex(category);
+    exerciseNameSelectors.forEach((selector, index) => {
+      const isSelected = index === selectedCategoryIndex;
+      this.setSelectorVisibility(selector, isSelected);
+    });
+
+    // Update the input values based on the selected category
+    this.updateInputValues(tableRow, category, this.exerciseDataService.getDefaultRepSchemeByCategory());
+  }
+
+  private getSelectedCategoryIndex(category: string): number {
+    return this.exerciseDataService.getExerciseCategories().indexOf(category);
+  }
+
+  private setSelectorVisibility(selector: HTMLSelectElement, isVisible: boolean): void {
+    this.renderer.setStyle(selector, 'display', isVisible ? 'block' : 'none');
+    this.renderer.setStyle(selector, 'opacity', isVisible ? '1' : '0');
+    selector.disabled = !isVisible;
+  }
+
   private updateInputValues(
     tableRow: Element,
     category: string,
@@ -120,7 +109,6 @@ export class CategorySelectDirective {
   ): void {
     const exerciseNameSelectors = tableRow.querySelectorAll('.exercise-name-selector') as NodeListOf<HTMLSelectElement>;
 
-    // Finde den ersten sichtbaren und nicht deaktivierten selector
     const exerciseSelect = Array.from(exerciseNameSelectors).find(
       (selector) => window.getComputedStyle(selector).opacity === '1' && !selector.disabled,
     )!;
@@ -146,13 +134,6 @@ export class CategorySelectDirective {
     this.updateFormService(exerciseSelect, setsInput, repsInput, targetRPEInput, weightInput, rpeInput, estMaxInput);
   }
 
-  /**
-   * Resets the input values to default.
-   * @param exerciseSelect The exercise name selector.
-   * @param setsInput The sets input field.
-   * @param repsInput The reps input field.
-   * @param targetRPEInput The target RPE input field.
-   */
   private resetInputs(
     exerciseSelect: HTMLSelectElement,
     setsInput: HTMLInputElement,
@@ -171,13 +152,6 @@ export class CategorySelectDirective {
     estMaxInput.value = '';
   }
 
-  /**
-   * Updates the form service with the current values of the input fields.
-   * @param exerciseSelect The exercise name selector.
-   * @param setsInput The sets input field.
-   * @param repsInput The reps input field.
-   * @param targetRPEInput The target RPE input field.
-   */
   private updateFormService(
     exerciseSelect: HTMLSelectElement,
     setsInput: HTMLInputElement,
@@ -191,15 +165,11 @@ export class CategorySelectDirective {
     this.formService.addChange(setsInput.name, setsInput.value);
     this.formService.addChange(repsInput.name, repsInput.value);
     this.formService.addChange(targetRPEInput.name, targetRPEInput.value);
-    this.formService.addChange(weightInput.name, weightInput.value); // Added weightInput
-    this.formService.addChange(rpeInput.name, rpeInput.value); // Added rpeInput
+    this.formService.addChange(weightInput.name, weightInput.value);
+    this.formService.addChange(rpeInput.name, rpeInput.value);
     this.formService.addChange(estMaxInput.name, estMaxInput.value);
   }
 
-  /**
-   * Fills the category gaps by copying valid values from subsequent rows.
-   * @param tableRow The current table row element.
-   */
   private fillCategoryGaps(tableRow: Element): void {
     let nextRow = tableRow.nextElementSibling;
 
@@ -219,11 +189,6 @@ export class CategorySelectDirective {
     }
   }
 
-  /**
-   * Copies values from the next row to the current row.
-   * @param currentRow The current table row element.
-   * @param nextRow The next table row element.
-   */
   private copyValuesToPreviousRow(currentRow: Element, nextRow: Element): void {
     const exerciseCategorySelector = currentRow.querySelector('.exercise-category-selector') as HTMLSelectElement;
     const nextCategorySelector = nextRow.querySelector('.exercise-category-selector') as HTMLSelectElement;
@@ -242,11 +207,6 @@ export class CategorySelectDirective {
     }
   }
 
-  /**
-   * Gets the input elements from a table row.
-   * @param row The table row element.
-   * @returns An object containing the input elements.
-   */
   private getInputElements(row: Element) {
     return {
       exerciseNameSelect: row.querySelector('.exercise-name-selector') as HTMLSelectElement,
@@ -259,11 +219,6 @@ export class CategorySelectDirective {
     };
   }
 
-  /**
-   * Copies values from one set of input elements to another.
-   * @param currentInputs The current row's input elements.
-   * @param nextInputs The next row's input elements.
-   */
   private copyInputValues(currentInputs: any, nextInputs: any): void {
     for (const key in currentInputs) {
       if (currentInputs.hasOwnProperty(key) && nextInputs.hasOwnProperty(key)) {
@@ -272,11 +227,6 @@ export class CategorySelectDirective {
     }
   }
 
-  /**
-   * Updates the form service with the current values of the input elements.
-   * @param categorySelector The category selector.
-   * @param inputs The input elements.
-   */
   private updateFormServiceWithInputElements(categorySelector: HTMLSelectElement, inputs: any): void {
     this.formService.addChange(categorySelector.name, categorySelector.value);
 
@@ -287,11 +237,6 @@ export class CategorySelectDirective {
     }
   }
 
-  /**
-   * Resets the values of the next row's input elements.
-   * @param categorySelector The category selector of the next row.
-   * @param inputs The input elements of the next row.
-   */
   private resetNextRowValues(categorySelector: HTMLSelectElement, inputs: any): void {
     categorySelector.value = '- Bitte Auswählen -';
     categorySelector.dispatchEvent(new Event('change'));
