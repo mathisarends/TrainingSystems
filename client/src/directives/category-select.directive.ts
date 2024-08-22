@@ -128,46 +128,32 @@ export class CategorySelectDirective {
         targetRPEInput.value = defaultValues.defaultRPE.toString();
       }
     } else {
-      this.resetInputs(exerciseSelect, setsInput, repsInput, targetRPEInput, weightInput, rpeInput, estMaxInput);
+      this.resetInputs(exerciseSelect);
     }
 
-    this.updateFormService(exerciseSelect, setsInput, repsInput, targetRPEInput, weightInput, rpeInput, estMaxInput);
+    this.updateFormService(exerciseSelect);
   }
 
-  private resetInputs(
-    exerciseSelect: HTMLSelectElement,
-    setsInput: HTMLInputElement,
-    repsInput: HTMLInputElement,
-    targetRPEInput: HTMLInputElement,
-    weightInput: HTMLInputElement,
-    rpeInput: HTMLInputElement,
-    estMaxInput: HTMLInputElement,
-  ): void {
-    exerciseSelect.value = '';
-    setsInput.value = '';
-    repsInput.value = '';
-    targetRPEInput.value = '';
-    weightInput.value = '';
-    rpeInput.value = '';
-    estMaxInput.value = '';
+  private resetInputs(exerciseSelect: HTMLSelectElement): void {
+    const inputs = this.exerciseTableRowService.getInputsByCategorySelector(exerciseSelect, true);
+
+    for (const key in inputs) {
+      if (inputs.hasOwnProperty(key)) {
+        const element = inputs[key as keyof typeof inputs];
+        element.value = '';
+      }
+    }
   }
 
-  private updateFormService(
-    exerciseSelect: HTMLSelectElement,
-    setsInput: HTMLInputElement,
-    repsInput: HTMLInputElement,
-    targetRPEInput: HTMLInputElement,
-    weightInput: HTMLInputElement,
-    rpeInput: HTMLInputElement,
-    estMaxInput: HTMLInputElement,
-  ): void {
-    this.formService.addChange(exerciseSelect.name, exerciseSelect.value);
-    this.formService.addChange(setsInput.name, setsInput.value);
-    this.formService.addChange(repsInput.name, repsInput.value);
-    this.formService.addChange(targetRPEInput.name, targetRPEInput.value);
-    this.formService.addChange(weightInput.name, weightInput.value);
-    this.formService.addChange(rpeInput.name, rpeInput.value);
-    this.formService.addChange(estMaxInput.name, estMaxInput.value);
+  private updateFormService(exerciseSelect: HTMLSelectElement): void {
+    const inputs = this.exerciseTableRowService.getInputsByCategorySelector(exerciseSelect);
+
+    for (const key in inputs) {
+      if (inputs.hasOwnProperty(key)) {
+        const element = inputs[key as keyof typeof inputs];
+        this.formService.addChange(element.name, element.value);
+      }
+    }
   }
 
   private fillCategoryGaps(tableRow: Element): void {

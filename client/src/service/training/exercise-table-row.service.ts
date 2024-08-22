@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
+import { InteractiveElement } from './interactive-element';
 
 enum ExerciseTableRowInputType {
   CATEGORY_SELECTOR = '.exercise-category-selector',
+  EXERCISE_SELECTOR_GENERIC = '.exercise-name-selector',
   EXERCISE_SELECTOR = '.exercise-name-selector:not([disabled])[style*="display: block"]',
   SETS_INPUT = '.sets',
   REPS_INPUT = '.reps',
@@ -22,15 +24,6 @@ export class ExerciseTableRowService {
    */
   getExerciseCategorySelectorByElement(element: HTMLElement): HTMLSelectElement {
     return this.getElementByType(element, ExerciseTableRowInputType.CATEGORY_SELECTOR) as HTMLSelectElement;
-  }
-
-  /**
-   * Finds the `HTMLSelectElement` for the visible and enabled exercise name within the same table row as the provided element.
-   *
-   * @param element The reference element within the table row.
-   */
-  getExerciseSelectorByElement(element: HTMLElement): HTMLSelectElement {
-    return this.getElementByType(element, ExerciseTableRowInputType.EXERCISE_SELECTOR) as HTMLSelectElement;
   }
 
   getAllExerciseCategorySelectorsByElement(element: HTMLElement): NodeListOf<HTMLSelectElement> {
@@ -69,6 +62,45 @@ export class ExerciseTableRowService {
   }
 
   /**
+   * Finds all related input elements in the same table row as the provided category selector element.
+   *
+   * @param categorySelector The HTMLSelectElement for the exercise category.
+   * @returns An object containing all relevant input elements.
+   */
+  getInputsByCategorySelector(categorySelector: HTMLSelectElement, resetMode = false) {
+    return {
+      exerciseSelect: this.findClosestElementInRow(
+        categorySelector,
+        resetMode ? ExerciseTableRowInputType.EXERCISE_SELECTOR_GENERIC : ExerciseTableRowInputType.EXERCISE_SELECTOR,
+      ),
+      setsInput: this.findClosestElementInRow(
+        categorySelector,
+        ExerciseTableRowInputType.SETS_INPUT,
+      ) as HTMLInputElement,
+      repsInput: this.findClosestElementInRow(
+        categorySelector,
+        ExerciseTableRowInputType.REPS_INPUT,
+      ) as HTMLInputElement,
+      weightInput: this.findClosestElementInRow(
+        categorySelector,
+        ExerciseTableRowInputType.WEIGHT_INPUT,
+      ) as HTMLInputElement,
+      targetRPEInput: this.findClosestElementInRow(
+        categorySelector,
+        ExerciseTableRowInputType.TARGET_RPE_INPUT,
+      ) as HTMLInputElement,
+      rpeInput: this.findClosestElementInRow(
+        categorySelector,
+        ExerciseTableRowInputType.ACTUAL_RPE_INPUT,
+      ) as HTMLInputElement,
+      estMaxInput: this.findClosestElementInRow(
+        categorySelector,
+        ExerciseTableRowInputType.EST_MAX_INPUT,
+      ) as HTMLInputElement,
+    };
+  }
+
+  /**
    * Finds the input element or select element within the same table row as the provided element, based on the specified input type.
    *
    * @param element The reference element within the table row.
@@ -88,7 +120,7 @@ export class ExerciseTableRowService {
    * @throws Will throw an error if no matching element is found.
    */
 
-  private findClosestElementInRow(element: HTMLElement, selector: string): HTMLElement {
+  private findClosestElementInRow(element: HTMLElement, selector: string): InteractiveElement {
     const tableRow = element.closest('tr');
     if (!tableRow) {
       throw new Error('The element is not contained within a table row.');
@@ -99,6 +131,6 @@ export class ExerciseTableRowService {
       throw new Error(`No matching element found for selector: ${selector}`);
     }
 
-    return associatedElement as HTMLElement;
+    return associatedElement as InteractiveElement;
   }
 }
