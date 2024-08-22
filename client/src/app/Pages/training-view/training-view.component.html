@@ -84,7 +84,6 @@
                 class="transparent-input sets"
                 name="day{{ trainingDayIndex }}_exercise{{ k }}_sets"
                 [value]="exercise.sets || ''"
-                (input)="onInputChange($event)"
               />
             </td>
             <td data-cell="Reps">
@@ -93,7 +92,6 @@
                 class="transparent-input reps"
                 [name]="namePrefix + 'reps'"
                 [value]="exercise.reps || ''"
-                (input)="onInputChange($event)"
               />
             </td>
             <td data-cell="Weight">
@@ -116,7 +114,6 @@
                 class="transparent-input targetRPE"
                 [name]="namePrefix + 'targetRPE'"
                 [value]="exercise.targetRPE || ''"
-                (input)="onInputChange($event)"
               />
             </td>
             <td data-cell="@RPE">

@@ -14,7 +14,6 @@ import { FormService } from '../../../service/form/form.service';
 import { EstMaxService } from '../../../service/training/estmax.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CategoryPlaceholderService } from '../../../service/training/category-placeholder.service';
 import { ToastService } from '../../components/toast/toast.service';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
 import { ExerciseDataDTO } from './exerciseDataDto';
@@ -86,7 +85,6 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
     private formService: FormService,
     private estMaxService: EstMaxService,
     private toastService: ToastService,
-    private categoryPlaceholderService: CategoryPlaceholderService,
     private navigationService: TrainingViewNavigationService,
     private swipeService: SwipeService,
     private pauseTimeService: PauseTimeService,
@@ -238,19 +236,6 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
    */
   onInputChange(event: Event): void {
     this.formService.trackChange(event);
-  }
-
-  /**
-   * Handles category change events.
-   * Updates exercise categories and rep schemes based on the selected category.
-   * @param event - The category change event.
-   */
-  onCategoryChange(event: Event): void {
-    this.categoryPlaceholderService.onCategoryChange(
-      event,
-      this.exerciseData.exerciseCategories,
-      this.exerciseData.defaultRepSchemeByCategory,
-    );
   }
 
   /**
