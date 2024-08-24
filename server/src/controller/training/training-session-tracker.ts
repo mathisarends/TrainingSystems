@@ -1,20 +1,13 @@
-import { Request } from 'express';
 import { TrainingDay } from '../../models/training/trainingDay.js';
 
 export class TrainingSessionTracker {
-  request: Request;
   trainingDay: TrainingDay;
-
-  private inactivityTimeoutDuration: number = /* 25 * 60 * 1000; // 25 minutes in milliseconds */ 5 * 1000;
+  private inactivityTimeoutDuration: number = 10 * 1000; // 10 seconds for testing
   private inactivityTimeoutId: NodeJS.Timeout | null = null;
-
   private onTimeoutCallback: () => Promise<void>; // Callback to notify manager on timeout
-  private userId: string;
 
-  constructor(trainingDay: TrainingDay, request: Request, userId: string, onTimeoutCallback: () => Promise<void>) {
+  constructor(trainingDay: TrainingDay, onTimeoutCallback: () => Promise<void>) {
     this.trainingDay = trainingDay;
-    this.request = request;
-    this.userId = userId;
     this.onTimeoutCallback = onTimeoutCallback;
   }
 
@@ -22,10 +15,13 @@ export class TrainingSessionTracker {
    * Handles activity signals that should reset the inactivity timeout and start recording if not already started.
    */
   public handleActivitySignal(): void {
+    console.log('Activity detected');
+
     if (!this.trainingDay.recording) {
       this.startRecording();
     }
-    this.resetInactivityTimeout();
+
+    this.resetInactivityTimeout(); // Clear and reset the inactivity timeout
   }
 
   /**
@@ -51,6 +47,7 @@ export class TrainingSessionTracker {
   private startRecording(): void {
     this.trainingDay.startTime = new Date();
     this.trainingDay.recording = true;
+    console.log('Recording started');
 
     this.scheduleInactivityTimeout();
   }
@@ -64,7 +61,7 @@ export class TrainingSessionTracker {
     this.calculateSessionDuration();
     this.clearInactivityTimeout();
 
-    console.log('this.trainingDay', this.trainingDay);
+    console.log('Training session stopped:', this.trainingDay);
 
     // Notify the manager or any other part of the application
     this.onTimeoutCallback();
@@ -74,8 +71,9 @@ export class TrainingSessionTracker {
    * Resets the inactivity timeout for a training session.
    */
   private resetInactivityTimeout(): void {
-    this.clearInactivityTimeout();
-    this.scheduleInactivityTimeout();
+    console.log('Resetting inactivity timeout');
+    this.clearInactivityTimeout(); // Clear any existing timeout
+    this.scheduleInactivityTimeout(); // Schedule a new timeout
   }
 
   /**
@@ -83,6 +81,7 @@ export class TrainingSessionTracker {
    */
   private scheduleInactivityTimeout(): void {
     this.inactivityTimeoutId = setTimeout(() => this.stopRecording(), this.inactivityTimeoutDuration);
+    console.log('Inactivity timeout scheduled for:', this.inactivityTimeoutDuration / 1000, 'seconds');
   }
 
   /**
@@ -90,6 +89,7 @@ export class TrainingSessionTracker {
    */
   private clearInactivityTimeout(): void {
     if (this.inactivityTimeoutId) {
+      console.log('Clearing existing inactivity timeout');
       clearTimeout(this.inactivityTimeoutId);
       this.inactivityTimeoutId = null;
     }
@@ -101,7 +101,8 @@ export class TrainingSessionTracker {
   private calculateSessionDuration(): void {
     if (this.trainingDay.startTime && this.trainingDay.endTime) {
       const duration = (this.trainingDay.endTime.getTime() - this.trainingDay.startTime.getTime()) / 60000; // Convert to minutes
-      this.trainingDay.durationInMinutes = Math.max(duration - 25, 0); // Subtract 25 minutes for inactivity
+      this.trainingDay.durationInMinutes = Math.max(duration, 0);
+      console.log('Session duration calculated:', this.trainingDay.durationInMinutes, 'minutes');
     }
   }
 }

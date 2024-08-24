@@ -1,8 +1,9 @@
-import { Request } from 'express';
 import { TrainingSessionTracker } from './training-session-tracker.js';
 import { TrainingMetaData } from './training-meta-data.js';
 
 import { TrainingDay } from '../../models/training/trainingDay.js';
+import { MongoGenericDAO } from '../../models/dao/mongo-generic.dao.js';
+import { User } from '../../models/collections/user/user.js';
 
 /**
  * Manages multiple training session trackers for different users.
@@ -16,14 +17,21 @@ export class TrainingSessionManager {
    * @param userId - The unique user ID.
    * @param trainingDay - The training day object to track.
    */
-  async addTracker(req: Request, userId: string, trainingMetaData: TrainingMetaData): Promise<void> {
+  async addTrackerIfNotPresent(
+    userDAO: MongoGenericDAO<User>,
+    userId: string,
+    trainingMetaData: TrainingMetaData
+  ): Promise<void> {
     const trainingDay = this.getTrainingDayFromMetaData(trainingMetaData);
 
-    const onTimeoutCallback = () => this.handleSessionTimeout(userId, req, trainingMetaData);
+    const onTimeoutCallback = () => this.handleSessionTimeout(userId, userDAO, trainingMetaData);
 
-    const tracker = new TrainingSessionTracker(trainingDay, req, userId, onTimeoutCallback);
+    const tracker = this.getTracker(userId);
+    if (!tracker) {
+      const tracker = new TrainingSessionTracker(trainingDay, onTimeoutCallback);
 
-    this.trackers.set(userId, tracker);
+      this.trackers.set(userId, tracker);
+    }
   }
 
   /**
@@ -74,9 +82,11 @@ export class TrainingSessionManager {
    * Handles session timeout for a specific user.
    * @param userId - The unique user ID.
    */
-  private async handleSessionTimeout(userId: string, req: Request, trainingMetaData: TrainingMetaData): Promise<void> {
-    const userDAO = req.app.locals.userDAO;
-
+  private async handleSessionTimeout(
+    userId: string,
+    userDAO: MongoGenericDAO<User>,
+    trainingMetaData: TrainingMetaData
+  ): Promise<void> {
     const { user, trainingPlanIndex, trainingWeekIndex, trainingDayIndex } = trainingMetaData;
 
     user.trainingPlans[trainingPlanIndex].trainingWeeks[trainingWeekIndex].trainingDays[trainingDayIndex] =

@@ -96,7 +96,7 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
     trainingDayIndex
   };
 
-  await trainingSessionManager.addTracker(req, user.id, trainingMetaData);
+  await trainingSessionManager.addTrackerIfNotPresent(userDAO, user.id, trainingMetaData);
   trainingSessionManager.handleActivitySignals(user.id, changedData);
   await userDAO.update(user);
 
