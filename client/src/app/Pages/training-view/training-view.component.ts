@@ -35,7 +35,7 @@ import { BrowserCheckService } from '../../browser-check.service';
 import { InteractiveElementService } from '../../../service/util/interactive-element.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { WeightInputDirective } from '../../../directives/weight-input.directive';
-import { ActualRpeInputDirective } from '../../../directives/rpe-input.directive';
+import { RpeInputDirective } from '../../../directives/rpe-input.directive';
 import { CategorySelectDirective } from '../../../directives/category-select.directive';
 import { ExerciseDataService } from './exercise-data.service';
 import { InteractiveElementDirective } from '../../../directives/interactive-element.directive';
@@ -55,7 +55,7 @@ import { InteractiveElementDirective } from '../../../directives/interactive-ele
     IconButtonComponent,
     SkeletonTrainingTableComponent,
     WeightInputDirective,
-    ActualRpeInputDirective,
+    RpeInputDirective,
     CategorySelectDirective,
     InteractiveElementDirective,
   ],

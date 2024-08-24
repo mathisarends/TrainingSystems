@@ -2,15 +2,16 @@ import { Directive, HostListener, Input } from '@angular/core';
 import { InteractiveElementService } from '../service/util/interactive-element.service';
 import { FormService } from '../service/form/form.service';
 import { ExerciseTableRowService } from '../service/training/exercise-table-row.service';
+import { log } from 'console';
 
 /**
  * Directive that extends the InteractiveElementDirective to add additional functionality.
  */
 @Directive({
-  selector: '[actualRpeInput]',
+  selector: '[rpeInputDirective]',
   standalone: true,
 })
-export class ActualRpeInputDirective {
+export class RpeInputDirective {
   private readonly MIN_RPE = 5;
   private readonly MAX_RPE = 10;
 
@@ -39,14 +40,6 @@ export class ActualRpeInputDirective {
    */
   @HostListener('blur', ['$event.target'])
   handleBlurEvent(rpeInput: HTMLInputElement): void {
-    const rpeValues = this.parseRPEInput(rpeInput.value);
-
-    if (rpeValues.length === 1) {
-      this.validateSingleRPE(rpeValues[0], rpeInput);
-    } else {
-      this.validateMultipleRPEs(rpeInput, rpeValues);
-    }
-
     this.interactiveElementService.triggerChangeIfModified(rpeInput.value);
   }
 
@@ -58,6 +51,14 @@ export class ActualRpeInputDirective {
    */
   @HostListener('input', ['$event'])
   handleInputChange(event: Event): void {
+    const rpeInput = event.target as HTMLInputElement;
+    const rpeValues = this.parseRPEInput(rpeInput.value);
+
+    if (rpeValues.length === 1) {
+      this.validateSingleRPE(rpeValues[0], rpeInput);
+    } else {
+      this.validateMultipleRPEs(rpeInput, rpeValues);
+    }
     this.formService.trackChange(event);
   }
   /**
