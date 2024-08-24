@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   padding: 1rem;
-  padding-right: 1.65rem;
+  padding-right: 1.35rem;
   background-color: #ffffff;
   border: 1px solid #e0e0e0;
   border-radius: 0.5rem;
@@ -46,8 +46,8 @@
 }
 
 .skeleton-button {
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
   margin-left: auto;
 }
@@ -72,7 +72,6 @@
   animation: shimmer 1.5s infinite;
 }
 
-/* Shimmer Animation */
 @keyframes shimmer {
   100% {
     transform: translateX(100%);

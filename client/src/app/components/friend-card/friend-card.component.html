@@ -7,12 +7,12 @@
       width="50"
       height="50"
     />
-    <div class="flex-grow-1">
-      <h5 class="card-title mb-0">{{ friend.name }}</h5>
-      <p class="card-text text-muted">{{ friend.email }}</p>
+    <div class="content">
+      <h5 class="card-title mb-0 text-truncate">{{ friend.name }}</h5>
+      <p class="card-text text-muted text-truncate">{{ friend.email }}</p>
     </div>
-    <button type="button" class="btn btn-light btn-md m-1" (click)="onConfirm()">
-      <i [class]="getIconClass()"></i>
+    <button type="button" class="custom-button" (click)="onConfirm()">
+      <app-add-friend-icon [size]="15" />
     </button>
   </div>
 </div>

@@ -2,19 +2,31 @@
   background-color: #f0f0f0;
   color: #333;
   border: 1px solid #ccc;
-  border-radius: 20px;
-  padding: 0.375rem 1.5rem;
-  font-size: 1rem;
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  transition:
-    background-color 0.3s,
-    border-color 0.3s;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+  padding: 0;
+
+  cursor: pointer;
 }
 
-.custom-button i {
-  font-size: 1.2rem;
+.content {
+  flex-grow: 1;
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.text-truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .custom-button:hover {

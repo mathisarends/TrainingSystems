@@ -1,0 +1,7 @@
+:host {
+  display: inline-block; /* Or block depending on use case */
+  width: var(--size);
+  height: var(--size);
+  max-height: var(--size);
+  overflow: hidden; /* Prevents overflow and unwanted extra space */
+}
