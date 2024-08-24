@@ -38,6 +38,7 @@ import { WeightInputDirective } from '../../../directives/weight-input.directive
 import { ActualRpeInputDirective } from '../../../directives/rpe-input.directive';
 import { CategorySelectDirective } from '../../../directives/category-select.directive';
 import { ExerciseDataService } from './exercise-data.service';
+import { InteractiveElementDirective } from '../../../directives/interactive-element.directive';
 
 /**
  * Component to manage and display the training view.
@@ -56,6 +57,7 @@ import { ExerciseDataService } from './exercise-data.service';
     WeightInputDirective,
     ActualRpeInputDirective,
     CategorySelectDirective,
+    InteractiveElementDirective
   ],
   providers: [TrainingViewService],
   templateUrl: './training-view.component.html',

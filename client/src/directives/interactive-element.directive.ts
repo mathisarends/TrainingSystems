@@ -57,5 +57,9 @@ export class InteractiveElementDirective {
   @HostListener('input', ['$event'])
   onInputChange(event: Event): void {
     this.formService.trackChange(event);
+
+    if (event.target instanceof HTMLSelectElement) {
+      this.interactiveElementService.blur(event.target.value);
+    }
   }
 }
