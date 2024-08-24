@@ -1,12 +1,14 @@
 import { TrainingDay } from '../../models/training/trainingDay.js';
 
 export class TrainingSessionTracker {
-  private inactivityTimeoutDuration: number = 25 * 60 * 1000;
+  private inactivityTimeoutDuration: number = /* 25 * 60 * 1000; // 25 minutes in milliseconds */ 15 * 1000;
   private inactivityTimeoutId: NodeJS.Timeout | null = null;
   private trainingDay: TrainingDay;
+  private onTimeoutCallback: () => void; // Callback function to notify on timeout
 
-  constructor(trainingDay: TrainingDay) {
+  constructor(trainingDay: TrainingDay, onTimeoutCallback: () => void) {
     this.trainingDay = trainingDay;
+    this.onTimeoutCallback = onTimeoutCallback; // Set the callback function
   }
 
   /**
@@ -17,6 +19,13 @@ export class TrainingSessionTracker {
       this.startRecording();
     }
     this.resetInactivityTimeout();
+  }
+
+  /**
+   * Cleans up resources associated with this tracker.
+   */
+  public cleanup(): void {
+    this.clearInactivityTimeout();
   }
 
   /**
@@ -46,6 +55,9 @@ export class TrainingSessionTracker {
     this.trainingDay.recording = false;
     this.calculateSessionDuration();
     this.clearInactivityTimeout();
+
+    // Notify the manager or any other part of the application
+    this.onTimeoutCallback();
   }
 
   /**

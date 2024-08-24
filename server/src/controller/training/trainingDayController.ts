@@ -13,7 +13,9 @@ import { TrainingPlan } from '../../models/training/trainingPlan.js';
 
 import { findTrainingPlanById } from '../../service/trainingService.js';
 import { WeightRecommendationBase } from '../../models/training/weight-recommandation.enum.js';
-import { TrainingSessionTracker } from './training-session-tracker.js';
+import { TrainingSessionManager } from './training-session-manager.js';
+
+const trainingSessionManager = new TrainingSessionManager();
 
 /**
  * Updates an existing training plan based on user input. Adjustments can include changes
@@ -86,15 +88,8 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
   updateTrainingDay(trainingDay, changedData, trainingDayIndex);
   propagateChangesToFutureWeeks(trainingPlan, trainingWeekIndex, trainingDayIndex, changedData);
 
-  // Create an instance of TrainingSessionTracker
-  const sessionManager = new TrainingSessionTracker(trainingDay);
-
-  // Check if any field in changedData is an activity signal and handle accordingly
-  for (const fieldName of Object.keys(changedData)) {
-    if (sessionManager.isActivitySignal(fieldName)) {
-      sessionManager.handleActivitySignal();
-    }
-  }
+  trainingSessionManager.addTracker(user.id, trainingDay);
+  trainingSessionManager.handleActivitySignals(user.id, changedData);
 
   await userDAO.update(user);
 
