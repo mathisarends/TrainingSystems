@@ -39,6 +39,7 @@ import { RpeInputDirective } from '../../../directives/rpe-input.directive';
 import { CategorySelectDirective } from '../../../directives/category-select.directive';
 import { ExerciseDataService } from './exercise-data.service';
 import { InteractiveElementDirective } from '../../../directives/interactive-element.directive';
+import { ToastStatus } from '../../components/toast/toast-status';
 
 /**
  * Component to manage and display the training view.
@@ -215,11 +216,11 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
       .submitTrainingPlan(this.planId, this.trainingWeekIndex, this.trainingDayIndex, changedData)
       .pipe(
         tap(() => {
-          this.toastService.show('Erfolg', 'Daten gespeichert');
           this.formService.clearChanges();
         }),
         catchError((error) => {
-          this.toastService.show('Fehler', 'Daten konnten nicht gespeichtert werden');
+          this.toastService.show('Erfolg', 'Daten konnten nicht gespeichtert werden', ToastStatus.ERROR);
+
           console.error('Error updating training plan:', error);
           return [];
         }),

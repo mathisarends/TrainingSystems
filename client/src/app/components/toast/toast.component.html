@@ -1,8 +1,14 @@
 <div class="toast-container">
   @for (toast of toastService.toasts; track toast) {
-    <div class="toast" [class.active]="true" role="alert">
+    @let warningToast = toast.status === ToastStatus.ERROR;
+
+    <div class="toast" [ngClass]="{ error: warningToast }" [class.active]="true" role="alert">
       <div class="message">
-        <span id="toast-headline">{{ toast.title }}</span>
+        @if (warningToast) {
+          <app-warning-icon />
+        } @else {
+          <span id="toast-headline">{{ toast.title }}</span>
+        }
         <span class="info">{{ toast.text }}</span>
       </div>
       <div class="close-icon-container" (click)="remove(toast)">✖</div>

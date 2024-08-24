@@ -1,17 +1,22 @@
 import { Injectable } from '@angular/core';
+import { Toast } from './toast';
+import { ToastStatus } from './toast-status';
+import { stat } from 'fs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ToastService {
-  toasts: any[] = [];
+  toasts: Toast[] = [];
 
-  show(title: string, text: string) {
-    const delay = 5000;
-    const toast = { title, text };
+  show(title: string, text: string, status = ToastStatus.ERROR) {
+    const toast = { title, text, status };
+
+    toast.title = status === ToastStatus.SUCESS ? 'Erfolg' : 'Fehler';
+
     this.toasts.push(toast);
 
-    setTimeout(() => this.remove(toast), delay);
+    setTimeout(() => this.remove(toast), 5000);
   }
 
   remove(toast: any) {
