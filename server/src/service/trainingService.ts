@@ -12,6 +12,46 @@ export function findTrainingPlanById(trainingPlans: TrainingPlan[], planId: stri
   return plan;
 }
 
+export async function getNextTrainingDay(trainingPlan: TrainingPlan) {
+  let { weekIndex, dayIndex } = findLatestTrainingDayWithWeight(trainingPlan);
+
+  if (dayIndex < trainingPlan.trainingFrequency - 1) {
+    dayIndex += 1;
+  } else if (weekIndex < trainingPlan.trainingWeeks.length - 1) {
+    weekIndex += 1;
+    dayIndex = 0;
+  } else {
+    // last day
+    weekIndex = 0;
+    dayIndex = 0;
+  }
+
+  return { weekIndex, dayIndex };
+}
+
+export async function getPercentageOfTrainingPlanFinished(trainingPlan: TrainingPlan) {
+  const trainingFrequency = trainingPlan.trainingFrequency;
+
+  const totalAmountOfTrainingDays = trainingFrequency * trainingPlan.trainingWeeks.length;
+
+  const { weekIndex, dayIndex } = findLatestTrainingDayWithWeight(trainingPlan);
+
+  let amountOfTrainingDaysFinished;
+  if (isFirstTrainingDay(weekIndex, dayIndex)) {
+    amountOfTrainingDaysFinished = 0;
+  } else {
+    amountOfTrainingDaysFinished = weekIndex * trainingFrequency + dayIndex;
+  }
+
+  const percentageFinished = (amountOfTrainingDaysFinished / totalAmountOfTrainingDays) * 100;
+
+  return percentageFinished;
+}
+
+function isFirstTrainingDay(weekIndex: number, dayIndex: number) {
+  return weekIndex === 0 && dayIndex === 0;
+}
+
 export function findTrainingPlanIndexById(trainingPlans: TrainingPlan[], planId: string): number {
   const index = trainingPlans.findIndex(plan => plan.id === planId);
 

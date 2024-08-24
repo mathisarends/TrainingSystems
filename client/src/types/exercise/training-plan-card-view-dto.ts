@@ -3,6 +3,7 @@ export interface TrainingPlanCardView {
   title: string;
   trainingFrequency: number;
   lastUpdated: string;
-  pictureUrl?: string; // profile picture of user
   coverImageBase64?: string;
+  pictureUrl?: string; // profile picture of user
+  percentageFinished: number;
 }

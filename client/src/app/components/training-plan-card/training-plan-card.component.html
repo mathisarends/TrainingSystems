@@ -15,29 +15,35 @@
       {{ trainingPlan.lastUpdated }}
     </p>
   </div>
-  <div class="card-footer" style="background: inherit; border-color: inherit">
-    <app-icon-button
-      [tooltipTitle]="'Ansehen'"
-      [iconClass]="'bx bx-show'"
-      (buttonClick)="viewTrainingPlan(trainingPlan.id)"
-    ></app-icon-button>
+  <div
+    class="d-flex justify-content-between align-items-center pe-3"
+    style="background: inherit; border-color: inherit"
+  >
+    <div>
+      <app-icon-button
+        [tooltipTitle]="'Ansehen'"
+        [iconClass]="'bx bx-show'"
+        (buttonClick)="viewTrainingPlan(trainingPlan.id)"
+      ></app-icon-button>
 
-    <app-icon-button
-      [tooltipTitle]="'Statistiken'"
-      [iconClass]="'bx bx-chart'"
-      (buttonClick)="viewStatistics(trainingPlan.id)"
-    ></app-icon-button>
+      <app-icon-button
+        [tooltipTitle]="'Statistiken'"
+        [iconClass]="'bx bx-chart'"
+        (buttonClick)="viewStatistics(trainingPlan.id)"
+      ></app-icon-button>
 
-    <app-icon-button
-      [tooltipTitle]="'Bearbeiten'"
-      [iconClass]="'bx bx-edit'"
-      (buttonClick)="showEditTrainingPlanModal(trainingPlan.id)"
-    ></app-icon-button>
+      <app-icon-button
+        [tooltipTitle]="'Bearbeiten'"
+        [iconClass]="'bx bx-edit'"
+        (buttonClick)="showEditTrainingPlanModal(trainingPlan.id)"
+      ></app-icon-button>
 
-    <app-icon-button
-      [tooltipTitle]="'Löschen'"
-      [iconClass]="'bx bx-trash'"
-      (buttonClick)="showDeleteTrainingPlanModal()"
-    ></app-icon-button>
+      <app-icon-button
+        [tooltipTitle]="'Löschen'"
+        [iconClass]="'bx bx-trash'"
+        (buttonClick)="showDeleteTrainingPlanModal()"
+      ></app-icon-button>
+    </div>
+    <div>{{ trainingPlan.percentageFinished }} %</div>
   </div>
 </div>
