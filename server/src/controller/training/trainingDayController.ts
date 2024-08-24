@@ -14,6 +14,7 @@ import { TrainingPlan } from '../../models/training/trainingPlan.js';
 import { findTrainingPlanById } from '../../service/trainingService.js';
 import { WeightRecommendationBase } from '../../models/training/weight-recommandation.enum.js';
 import { TrainingSessionManager } from './training-session-manager.js';
+import { TrainingMetaData } from './training-meta-data.js';
 
 const trainingSessionManager = new TrainingSessionManager();
 
@@ -88,8 +89,16 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
   updateTrainingDay(trainingDay, changedData, trainingDayIndex);
   propagateChangesToFutureWeeks(trainingPlan, trainingWeekIndex, trainingDayIndex, changedData);
 
-  trainingSessionManager.addTracker(user.id, trainingDay);
+  const trainingMetaData: TrainingMetaData = {
+    trainingPlanId,
+    trainingWeekIndex,
+    trainingDayIndex
+  };
+
+  console.log('add tracker');
+  await trainingSessionManager.addTracker(req, user.id, trainingMetaData);
   trainingSessionManager.handleActivitySignals(user.id, changedData);
+  console.log('do');
 
   await userDAO.update(user);
 

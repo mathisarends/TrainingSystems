@@ -1,5 +1,8 @@
-import { TrainingDay } from '../../models/training/trainingDay.js';
+import { Request } from 'express';
 import { TrainingSessionTracker } from './training-session-tracker.js';
+import { TrainingMetaData } from './training-meta-data.js';
+
+import * as trainingService from '../../service/trainingService.js';
 
 /**
  * Manages multiple training session trackers for different users.
@@ -9,12 +12,17 @@ export class TrainingSessionManager {
 
   /**
    * Adds a new training day to be tracked for a specific user.
+   *    * @param req - request object in order to save data after timeout.
    * @param userId - The unique user ID.
    * @param trainingDay - The training day object to track.
    */
-  public addTracker(userId: string, trainingDay: TrainingDay): void {
-    const onTimeoutCallback = () => this.handleSessionTimeout(userId);
-    const tracker = new TrainingSessionTracker(trainingDay, onTimeoutCallback);
+  async addTracker(req: Request, userId: string, trainingMetaData: TrainingMetaData): Promise<void> {
+    const trainingDay = await this.getTrainingDayFromMetaData(req, userId, trainingMetaData);
+
+    const onTimeoutCallback = () => this.handleSessionTimeout(userId, req, trainingMetaData);
+
+    const tracker = new TrainingSessionTracker(trainingDay, req, userId, onTimeoutCallback);
+
     this.trackers.set(userId, tracker);
   }
 
@@ -23,7 +31,7 @@ export class TrainingSessionManager {
    * @param userId - The unique user ID.
    * @returns The TrainingSessionTracker instance or undefined if not found.
    */
-  public getTracker(userId: string): TrainingSessionTracker | undefined {
+  getTracker(userId: string): TrainingSessionTracker | undefined {
     return this.trackers.get(userId);
   }
 
@@ -31,7 +39,7 @@ export class TrainingSessionManager {
    * Removes the tracker for a given user.
    * @param userId - The unique user ID.
    */
-  public removeTracker(userId: string): void {
+  removeTracker(userId: string): void {
     const tracker = this.trackers.get(userId);
     if (tracker) {
       tracker.cleanup(); // Clean up the tracker before removing
@@ -44,7 +52,7 @@ export class TrainingSessionManager {
    * @param userId - The unique user ID.
    * @param changedData - The changed data object.
    */
-  public handleActivitySignals(userId: string, changedData: Record<string, string>): void {
+  handleActivitySignals(userId: string, changedData: Record<string, string>): void {
     const tracker = this.getTracker(userId);
     if (!tracker) {
       return;
@@ -57,14 +65,34 @@ export class TrainingSessionManager {
     }
   }
 
+  private async getTrainingDayFromMetaData(req: Request, userId: string, trainingMetaData: TrainingMetaData) {
+    const userDAO = req.app.locals.userDAO;
+    const user = await userDAO.findOne({ id: userId });
+
+    const { trainingPlanId, trainingWeekIndex, trainingDayIndex } = trainingMetaData;
+
+    const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
+    return trainingPlan.trainingWeeks[trainingWeekIndex].trainingDays[trainingDayIndex];
+  }
+
   /**
    * Handles session timeout for a specific user.
    * @param userId - The unique user ID.
    */
-  private async handleSessionTimeout(userId: string): Promise<void> {
-    console.log(`Session timeout for user: ${userId}`);
+  private async handleSessionTimeout(userId: string, req: Request, trainingMetaData: TrainingMetaData): Promise<void> {
+    const userDAO = req.app.locals.userDAO;
+    const user = await userDAO.findOne({ id: userId });
+    const trainingDay = await this.getTrainingDayFromMetaData(req, userId, trainingMetaData);
+
+    const tracker = this.getTracker(userId)!;
+    const trackerData = tracker.trainingDay;
+
+    trainingDay.recording = trackerData.recording;
+    trainingDay.endTime = trackerData.endTime;
+    trainingDay.durationInMinutes = trackerData.durationInMinutes;
+
+    await userDAO.update(user);
 
     this.removeTracker(userId);
-    // Additional logic to handle session timeout, such as persisting state to the database
   }
 }

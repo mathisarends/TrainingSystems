@@ -1,14 +1,21 @@
+import { Request } from 'express';
 import { TrainingDay } from '../../models/training/trainingDay.js';
 
 export class TrainingSessionTracker {
-  private inactivityTimeoutDuration: number = /* 25 * 60 * 1000; // 25 minutes in milliseconds */ 15 * 1000;
-  private inactivityTimeoutId: NodeJS.Timeout | null = null;
-  private trainingDay: TrainingDay;
-  private onTimeoutCallback: () => void; // Callback function to notify on timeout
+  request: Request;
+  trainingDay: TrainingDay;
 
-  constructor(trainingDay: TrainingDay, onTimeoutCallback: () => void) {
+  private inactivityTimeoutDuration: number = /* 25 * 60 * 1000; // 25 minutes in milliseconds */ 5 * 1000;
+  private inactivityTimeoutId: NodeJS.Timeout | null = null;
+
+  private onTimeoutCallback: () => Promise<void>; // Callback to notify manager on timeout
+  private userId: string;
+
+  constructor(trainingDay: TrainingDay, request: Request, userId: string, onTimeoutCallback: () => Promise<void>) {
     this.trainingDay = trainingDay;
-    this.onTimeoutCallback = onTimeoutCallback; // Set the callback function
+    this.request = request;
+    this.userId = userId;
+    this.onTimeoutCallback = onTimeoutCallback;
   }
 
   /**
@@ -44,6 +51,7 @@ export class TrainingSessionTracker {
   private startRecording(): void {
     this.trainingDay.startTime = new Date();
     this.trainingDay.recording = true;
+
     this.scheduleInactivityTimeout();
   }
 
@@ -55,6 +63,8 @@ export class TrainingSessionTracker {
     this.trainingDay.recording = false;
     this.calculateSessionDuration();
     this.clearInactivityTimeout();
+
+    console.log('this.trainingDay', this.trainingDay);
 
     // Notify the manager or any other part of the application
     this.onTimeoutCallback();
