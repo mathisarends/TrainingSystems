@@ -94,15 +94,14 @@ export class TrainingSessionManager {
     const { user, trainingPlanIndex, trainingWeekIndex, trainingDayIndex } = trainingDayDataLocator.getData();
 
     const trainingData = this.getTracker(trainingDayId)!.getTrainingDay();
-    console.log('🚀 ~ TrainingSessionManager ~ trainingData:', trainingData);
 
-    // TODO: check for real session
+    // CHECK FOR REAL SESSION NOT JUST MINOR CHANGES
+    if (trainingData.durationInMinutes! >= 30) {
+      user.trainingPlans[trainingPlanIndex].trainingWeeks[trainingWeekIndex].trainingDays[trainingDayIndex] =
+        trainingData;
 
-    // Update the training day data in the user's training plan
-    user.trainingPlans[trainingPlanIndex].trainingWeeks[trainingWeekIndex].trainingDays[trainingDayIndex] =
-      trainingData;
-
-    await userDAO.update(user);
+      await userDAO.update(user);
+    }
 
     this.removeTracker(trainingDayId); // Remove tracker with trainingDayId
   }
