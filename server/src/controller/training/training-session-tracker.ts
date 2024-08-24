@@ -82,7 +82,7 @@ export class TrainingSessionTracker {
   private stopRecording(): void {
     this.trainingDay.endTime = new Date();
     this.trainingDay.recording = false;
-    this.calculateSessionDuration();
+    this.calculateAndSetSessionDuration();
     this.clearInactivityTimeout();
 
     this.onTimeoutCallback();
@@ -117,11 +117,13 @@ export class TrainingSessionTracker {
   /**
    * Calculates the duration of the training session in minutes and stores it in the `TrainingDay` object.
    */
-  private calculateSessionDuration(): void {
+  private calculateAndSetSessionDuration(): void {
     if (this.trainingDay.startTime && this.trainingDay.endTime) {
-      const duration = (this.trainingDay.endTime.getTime() - this.trainingDay.startTime.getTime()) / 60000;
+      const duration =
+        (this.trainingDay.endTime.getTime() - this.trainingDay.startTime.getTime() - this.inactivityTimeoutDuration) /
+        60000;
+
       this.trainingDay.durationInMinutes = Math.max(duration, 0);
-      console.log('Session duration calculated:', this.trainingDay.durationInMinutes, 'minutes');
     }
   }
 }

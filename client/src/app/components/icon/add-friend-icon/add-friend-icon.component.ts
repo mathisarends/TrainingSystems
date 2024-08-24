@@ -8,6 +8,4 @@ import { BaseIconComponent } from '../base-icon.component';
   templateUrl: './add-friend-icon.component.html',
   styleUrls: ['./add-friend-icon.component.scss'],
 })
-export class AddFriendIcon extends BaseIconComponent {
-  viewBox = computed(() => `0 0 ${this.size()} ${this.size()}`);
-}
+export class AddFriendIcon extends BaseIconComponent {}

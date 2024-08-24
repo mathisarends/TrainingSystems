@@ -90,22 +90,15 @@ export class TrainingSessionManager {
   ): Promise<void> {
     const { user, trainingPlanIndex, trainingWeekIndex, trainingDayIndex } = trainingDayDataLocator.getData();
 
-    const trainingDuration = this.getTracker(userId)!.getTrainingDay().durationInMinutes!;
+    const trainingData = this.getTracker(userId)!.getTrainingDay();
 
-    if (trainingDuration >= 30) {
+    // DETECT ACTUAL SESSION (not just simple changes)
+    if (trainingData.durationInMinutes!) {
       user.trainingPlans[trainingPlanIndex].trainingWeeks[trainingWeekIndex].trainingDays[trainingDayIndex] =
         this.getTracker(userId)!.getTrainingDay();
-    } else {
-      const trainingDay =
-        user.trainingPlans[trainingPlanIndex].trainingWeeks[trainingWeekIndex].trainingDays[trainingDayIndex];
 
-      // Reset relevant data
-      trainingDay.startTime = undefined;
-      trainingDay.endTime = undefined;
-      trainingDay.durationInMinutes = undefined;
-      trainingDay.recording = false;
+      await userDAO.update(user);
     }
-    await userDAO.update(user);
 
     this.removeTracker(userId);
   }
