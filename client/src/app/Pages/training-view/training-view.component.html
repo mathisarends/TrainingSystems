@@ -6,7 +6,6 @@
       <app-headline [subHeading]="subHeading" [heading]="trainingPlanData.title" />
       @if (isMobile) {
         <div>
-          <app-icon-button [iconClass]="'bx bx-save'" (buttonClick)="saveTrainingData()" />
           <app-icon-button [iconClass]="'bx bx-timer'" (buttonClick)="switchToTimerView()" />
         </div>
       }
@@ -152,9 +151,6 @@
       ></app-pagination>
     </div>
 
-    @if (!isMobile) {
-      <input type="submit" class="btn btn-dark" />
-    }
     <button class="btn btn-outline-dark m-1" id="reset-btn" type="button" (click)="openAutoProgressionModal()">
       Options
     </button>
