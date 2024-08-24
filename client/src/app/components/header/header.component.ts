@@ -113,13 +113,4 @@ export class HeaderComponent implements OnInit {
       this.trainingPlanLink.nativeElement.classList.add('active');
     }
   }
-
-  /**
-   * Handles the login action.
-   * @param event - The login event
-   */
-  handleLogin(event: Event): void {
-    event.preventDefault();
-    this.router.navigate(['login']);
-  }
 }

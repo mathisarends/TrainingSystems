@@ -52,11 +52,11 @@
         </a>
         <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
           <li>
-            <a class="dropdown-item" href="profile" (click)="navigateTo($event)">Profile</a>
+            <a class="dropdown-item" #navLink href="profile" (click)="navigateTo($event)">Profile</a>
           </li>
           <li><hr class="dropdown-divider" /></li>
           <li>
-            <a class="dropdown-item" href="#" (click)="handleLogin($event)">Sign in</a>
+            <a class="dropdown-item" #navLink href="login" (click)="navigateTo($event)">Sign in</a>
           </li>
         </ul>
       </div>
