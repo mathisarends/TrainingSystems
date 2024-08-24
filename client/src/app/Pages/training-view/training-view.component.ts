@@ -57,7 +57,7 @@ import { InteractiveElementDirective } from '../../../directives/interactive-ele
     WeightInputDirective,
     ActualRpeInputDirective,
     CategorySelectDirective,
-    InteractiveElementDirective
+    InteractiveElementDirective,
   ],
   providers: [TrainingViewService],
   templateUrl: './training-view.component.html',
@@ -229,15 +229,6 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
 
   saveTrainingData() {
     this.onSubmit(new Event('submit'));
-  }
-
-  /**
-   * Handles input change events.
-   * Tracks changes in the form service and updates the visibility of exercise category placeholders.
-   * @param event - The input change event.
-   */
-  onInputChange(event: Event): void {
-    this.formService.trackChange(event);
   }
 
   /**
