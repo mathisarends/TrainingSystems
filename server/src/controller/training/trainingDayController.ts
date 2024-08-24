@@ -94,7 +94,7 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
   const trainingPlanIndex = trainingService.findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
   const trainingMetaData = new TrainingDayDataLocator(user, trainingPlanIndex, trainingWeekIndex, trainingDayIndex);
 
-  await trainingSessionManager.addTrackerIfNotPresent(userDAO, user.id, trainingMetaData);
+  await trainingSessionManager.addOrUpdateTracker(userDAO, user.id, trainingMetaData);
   trainingSessionManager.handleActivitySignals(user.id, changedData);
 
   res.status(200).json({ message: 'Trainingsplan erfolgreich aktualisiert', trainingDay });

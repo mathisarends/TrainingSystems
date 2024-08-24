@@ -12,28 +12,27 @@ export class TrainingSessionManager {
 
   /**
    * Adds a new training day to be tracked for a specific user if not already present.
-   * If a tracker for the user is already present, this function does nothing.
+   * If a tracker for the user is already present, this function updates the exercise data.
    * @param userDAO - The data access object for user operations.
    * @param userId - The unique user ID.
    * @param trainingDayDataLocator - The data locator object that provides access to the training day data.
    */
-  async addTrackerIfNotPresent(
+  async addOrUpdateTracker(
     userDAO: MongoGenericDAO<User>,
     userId: string,
-    TrainingDayDataLocator: TrainingDayDataLocator
+    trainingDayDataLocator: TrainingDayDataLocator
   ): Promise<void> {
     const tracker = this.getTracker(userId);
-    const trainingDay = TrainingDayDataLocator.getTrainingDay();
+    const trainingDay = trainingDayDataLocator.getTrainingDay();
 
-    if (!tracker) {
-      const onTimeoutCallback = () => this.handleSessionTimeout(userId, userDAO, TrainingDayDataLocator);
-
-      const tracker = new TrainingSessionTracker(trainingDay, onTimeoutCallback);
-
-      this.trackers.set(userId, tracker);
-    } else {
+    if (tracker) {
       tracker.updateTrainingDayExerciseData(trainingDay.exercises);
+      return;
     }
+    const onTimeoutCallback = () => this.handleSessionTimeout(userId, userDAO, trainingDayDataLocator);
+    const newTracker = new TrainingSessionTracker(trainingDay, onTimeoutCallback);
+
+    this.trackers.set(userId, newTracker);
   }
 
   /**
@@ -91,14 +90,12 @@ export class TrainingSessionManager {
   ): Promise<void> {
     const { user, trainingPlanIndex, trainingWeekIndex, trainingDayIndex } = trainingDayDataLocator.getData();
 
-    /* const trainingDuration = this.getTracker(userId)!.trainingDay.durationInMinutes!; */
+    const trainingDuration = this.getTracker(userId)!.getTrainingDay().durationInMinutes!;
 
-    /* if (trainingDuration >= 30) { */
-    user.trainingPlans[trainingPlanIndex].trainingWeeks[trainingWeekIndex].trainingDays[trainingDayIndex] =
-      this.getTracker(userId)!.getTrainingDay();
-
-    await userDAO.update(user);
-    /* } else {
+    if (trainingDuration >= 30) {
+      user.trainingPlans[trainingPlanIndex].trainingWeeks[trainingWeekIndex].trainingDays[trainingDayIndex] =
+        this.getTracker(userId)!.getTrainingDay();
+    } else {
       const trainingDay =
         user.trainingPlans[trainingPlanIndex].trainingWeeks[trainingWeekIndex].trainingDays[trainingDayIndex];
 
@@ -107,7 +104,8 @@ export class TrainingSessionManager {
       trainingDay.endTime = undefined;
       trainingDay.durationInMinutes = undefined;
       trainingDay.recording = false;
-    } */
+    }
+    await userDAO.update(user);
 
     this.removeTracker(userId);
   }
