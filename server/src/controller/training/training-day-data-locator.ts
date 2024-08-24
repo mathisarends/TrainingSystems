@@ -4,7 +4,7 @@ import { TrainingDay } from '../../models/training/trainingDay';
  * Class representing training metadata and providing utility methods
  * to access training-related data.
  */
-export class TrainingMetaData {
+export class TrainingDayDataLocator {
   private user: User;
   private trainingPlanIndex: number;
   private trainingWeekIndex: number;

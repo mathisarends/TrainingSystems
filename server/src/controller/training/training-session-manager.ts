@@ -1,40 +1,45 @@
 import { TrainingSessionTracker } from './training-session-tracker.js';
-import { TrainingMetaData } from './training-meta-data.js';
+import { TrainingDayDataLocator } from './training-day-data-locator.js';
 
 import { MongoGenericDAO } from '../../models/dao/mongo-generic.dao.js';
 import { User } from '../../models/collections/user/user.js';
 
 /**
- * Manages multiple training session trackers for different users.
+ * Manages multiple training session trackers for different users. A training session
  */
 export class TrainingSessionManager {
   private trackers: Map<string, TrainingSessionTracker> = new Map();
 
   /**
-   * Adds a new training day to be tracked for a specific user.
-   *    * @param req - request object in order to save data after timeout.
+   * Adds a new training day to be tracked for a specific user if not already present.
+   * If a tracker for the user is already present, this function does nothing.
+   * @param userDAO - The data access object for user operations.
    * @param userId - The unique user ID.
-   * @param trainingDay - The training day object to track.
+   * @param trainingDayDataLocator - The data locator object that provides access to the training day data.
    */
   async addTrackerIfNotPresent(
     userDAO: MongoGenericDAO<User>,
     userId: string,
-    trainingMetaData: TrainingMetaData
+    TrainingDayDataLocator: TrainingDayDataLocator
   ): Promise<void> {
     const tracker = this.getTracker(userId);
+    const trainingDay = TrainingDayDataLocator.getTrainingDay();
+
     if (!tracker) {
-      const trainingDay = trainingMetaData.getTrainingDay();
-      const onTimeoutCallback = () => this.handleSessionTimeout(userId, userDAO, trainingMetaData);
+      const onTimeoutCallback = () => this.handleSessionTimeout(userId, userDAO, TrainingDayDataLocator);
 
       const tracker = new TrainingSessionTracker(trainingDay, onTimeoutCallback);
+
       this.trackers.set(userId, tracker);
+    } else {
+      tracker.updateTrainingDayExerciseData(trainingDay.exercises);
     }
   }
 
   /**
    * Retrieves the tracker for a given user.
    * @param userId - The unique user ID.
-   * @returns The TrainingSessionTracker instance or undefined if not found.
+   * @returns The TrainingSessionTracker instance associated with the user ID, or undefined if not found.
    */
   getTracker(userId: string): TrainingSessionTracker | undefined {
     return this.trackers.get(userId);
@@ -53,9 +58,10 @@ export class TrainingSessionManager {
   }
 
   /**
-   * Checks if any field in changedData is an activity signal and handles it accordingly.
+   * Processes activity signals to determine if any changes require handling.
+   * If any fields in the changedData object correspond to activity signals, the associated tracker will reset its inactivity timeout.
    * @param userId - The unique user ID.
-   * @param changedData - The changed data object.
+   * @param changedData - The object containing changed data fields.
    */
   handleActivitySignals(userId: string, changedData: Record<string, string>): void {
     const tracker = this.getTracker(userId);
@@ -63,8 +69,8 @@ export class TrainingSessionManager {
       return;
     }
 
-    for (const fieldName of Object.keys(changedData)) {
-      if (tracker.isActivitySignal(fieldName)) {
+    for (const [fieldName, fieldValue] of Object.entries(changedData)) {
+      if (tracker.isActivitySignal(fieldName, fieldValue)) {
         tracker.handleActivitySignal();
       }
     }
@@ -72,19 +78,36 @@ export class TrainingSessionManager {
 
   /**
    * Handles session timeout for a specific user.
+   * This method is called when a user's training session exceeds the allowed inactivity period.
+   * It updates the user's training day data in the database and removes the associated tracker.
    * @param userId - The unique user ID.
+   * @param userDAO - The data access object for user operations.
+   * @param trainingDayDataLocator - The data locator object that provides access to the training day data.
    */
   private async handleSessionTimeout(
     userId: string,
     userDAO: MongoGenericDAO<User>,
-    trainingMetaData: TrainingMetaData
+    trainingDayDataLocator: TrainingDayDataLocator
   ): Promise<void> {
-    const { user, trainingPlanIndex, trainingWeekIndex, trainingDayIndex } = trainingMetaData.getData();
+    const { user, trainingPlanIndex, trainingWeekIndex, trainingDayIndex } = trainingDayDataLocator.getData();
 
+    /* const trainingDuration = this.getTracker(userId)!.trainingDay.durationInMinutes!; */
+
+    /* if (trainingDuration >= 30) { */
     user.trainingPlans[trainingPlanIndex].trainingWeeks[trainingWeekIndex].trainingDays[trainingDayIndex] =
-      this.getTracker(userId)!.trainingDay;
+      this.getTracker(userId)!.getTrainingDay();
 
     await userDAO.update(user);
+    /* } else {
+      const trainingDay =
+        user.trainingPlans[trainingPlanIndex].trainingWeeks[trainingWeekIndex].trainingDays[trainingDayIndex];
+
+      // Reset relevant data
+      trainingDay.startTime = undefined;
+      trainingDay.endTime = undefined;
+      trainingDay.durationInMinutes = undefined;
+      trainingDay.recording = false;
+    } */
 
     this.removeTracker(userId);
   }

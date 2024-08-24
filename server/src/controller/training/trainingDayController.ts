@@ -14,7 +14,7 @@ import { TrainingPlan } from '../../models/training/trainingPlan.js';
 import { findTrainingPlanById } from '../../service/trainingService.js';
 import { WeightRecommendationBase } from '../../models/training/weight-recommandation.enum.js';
 import { TrainingSessionManager } from './training-session-manager.js';
-import { TrainingMetaData } from './training-meta-data.js';
+import { TrainingDayDataLocator } from './training-day-data-locator.js';
 
 const trainingSessionManager = new TrainingSessionManager();
 
@@ -89,13 +89,13 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
   updateTrainingDay(trainingDay, changedData, trainingDayIndex);
   propagateChangesToFutureWeeks(trainingPlan, trainingWeekIndex, trainingDayIndex, changedData);
 
-  const trainingPlanIndex = trainingService.findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
+  await userDAO.update(user);
 
-  const trainingMetaData = new TrainingMetaData(user, trainingPlanIndex, trainingWeekIndex, trainingDayIndex);
+  const trainingPlanIndex = trainingService.findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
+  const trainingMetaData = new TrainingDayDataLocator(user, trainingPlanIndex, trainingWeekIndex, trainingDayIndex);
 
   await trainingSessionManager.addTrackerIfNotPresent(userDAO, user.id, trainingMetaData);
   trainingSessionManager.handleActivitySignals(user.id, changedData);
-  await userDAO.update(user);
 
   res.status(200).json({ message: 'Trainingsplan erfolgreich aktualisiert', trainingDay });
 }
