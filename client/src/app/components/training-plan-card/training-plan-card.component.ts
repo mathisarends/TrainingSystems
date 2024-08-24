@@ -38,10 +38,8 @@ export class TrainingPlanCardComponent {
     private trainingPlanService: TrainingPlanService,
   ) {}
 
-  getStrokeDasharray(percentage: number): string {
-    const circumference = 31.831 * 2;
-    const dashArray = (percentage / 100) * circumference;
-    return `${dashArray} ${circumference}`;
+  test() {
+    console.log('bs');
   }
 
   /**
