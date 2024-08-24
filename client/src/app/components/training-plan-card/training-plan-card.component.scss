@@ -1,9 +1,6 @@
-.card:hover {
-  scale: 1.005;
-}
-
 .card {
-  transition: transform 0.3s ease; /* Definiert die Dauer und die Art der Animation */
+  transition: transform 0.3s ease;
+  position: relative;
 }
 
 .card:hover {
@@ -54,4 +51,36 @@
 
 .bg-white {
   --bs-bg-opacity: 0.5;
+}
+
+.circular-progress {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  width: 35px;
+  height: 35px;
+  margin: 0 auto;
+}
+
+.circle-bg {
+  fill: none;
+  stroke: #e0e0e0;
+  stroke-width: 3.8;
+}
+
+.circle {
+  fill: none;
+  stroke: #4caf50;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.5s ease-in-out;
+}
+
+.percentage-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  color: #555;
 }
