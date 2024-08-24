@@ -89,12 +89,9 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
   updateTrainingDay(trainingDay, changedData, trainingDayIndex);
   propagateChangesToFutureWeeks(trainingPlan, trainingWeekIndex, trainingDayIndex, changedData);
 
-  const trainingMetaData: TrainingMetaData = {
-    user,
-    trainingPlanIndex: trainingService.findTrainingPlanIndexById(user.trainingPlans, trainingPlanId),
-    trainingWeekIndex,
-    trainingDayIndex
-  };
+  const trainingPlanIndex = trainingService.findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
+
+  const trainingMetaData = new TrainingMetaData(user, trainingPlanIndex, trainingWeekIndex, trainingDayIndex);
 
   await trainingSessionManager.addTrackerIfNotPresent(userDAO, user.id, trainingMetaData);
   trainingSessionManager.handleActivitySignals(user.id, changedData);
