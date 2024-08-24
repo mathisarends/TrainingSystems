@@ -7,11 +7,6 @@ export interface TrainingDay {
   id: string;
 
   /**
-   * The date of the training day.
-   */
-  date?: Date;
-
-  /**
    * The total duration of the training session in minutes.
    */
   durationInMinutes?: number;

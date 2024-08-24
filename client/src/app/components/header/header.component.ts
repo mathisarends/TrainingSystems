@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { catchError, filter } from 'rxjs/operators';
 import { ProfileService } from '../../Pages/profile/profileService';
@@ -14,7 +14,10 @@ import { of } from 'rxjs';
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent implements OnInit {
-  @ViewChildren('navLink') navLinks!: QueryList<ElementRef>; // QueryList to hold references to navigation links
+  @ViewChildren('navLink') navLinks!: QueryList<ElementRef>;
+
+  @ViewChild('trainingPlanLink') trainingPlanLink!: ElementRef;
+
   profile: User | null = null; // Holds user profile data
   isAuthenticated: boolean = false; // Tracks authentication status
 
@@ -45,26 +48,11 @@ export class HeaderComponent implements OnInit {
    */
   ngOnInit(): void {
     // Fetch and subscribe to user profile data
-    this.profileService
-      .getProfile()
-      .pipe(
-        catchError((error) => {
-          if (error.status === 401) {
-            // Handle 401 Unauthorized
-            console.error('Unauthorized access - Redirecting to login.');
-            this.router.navigate(['/login']); // Redirect to login page
-          } else {
-            console.error('An error occurred:', error);
-          }
-          return of(null); // Return a fallback value or empty observable
-        }),
-      )
-
-      .subscribe((data: any) => {
-        if (data) {
-          this.profile = data?.userDto;
-        }
-      });
+    this.profileService.getProfile().subscribe((data: any) => {
+      if (data) {
+        this.profile = data?.userDto;
+      }
+    });
   }
 
   /**
@@ -112,6 +100,7 @@ export class HeaderComponent implements OnInit {
   private updateActiveLink(): void {
     this.removeActiveState();
     const currentUrl = this.router.url;
+    console.log('🚀 ~ HeaderComponent ~ updateActiveLink ~ currentUrl:', currentUrl);
 
     this.navLinks.forEach((link) => {
       const linkElement = link.nativeElement as HTMLAnchorElement;
@@ -119,6 +108,10 @@ export class HeaderComponent implements OnInit {
         linkElement.classList.add('active');
       }
     });
+
+    if (currentUrl.includes('training/view?plan')) {
+      this.trainingPlanLink.nativeElement.classList.add('active');
+    }
   }
 
   /**

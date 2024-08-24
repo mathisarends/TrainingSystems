@@ -2,7 +2,6 @@ import { Directive, HostListener, Input } from '@angular/core';
 import { InteractiveElementService } from '../service/util/interactive-element.service';
 import { FormService } from '../service/form/form.service';
 import { ExerciseTableRowService } from '../service/training/exercise-table-row.service';
-import { log } from 'console';
 
 /**
  * Directive that extends the InteractiveElementDirective to add additional functionality.
@@ -100,7 +99,6 @@ export class RpeInputDirective {
    */
   private validateMultipleRPEs(rpeInput: HTMLInputElement, numbers: number[]): void {
     const setInput = this.exerciseTableRowService.getSetInputByElement(rpeInput);
-    console.log('🚀 ~ RpeInputDirective ~ validateMultipleRPEs ~ setInput:', setInput.value);
 
     if (numbers.length === Number(setInput.value)) {
       const averageRPE = this.calculateAverageRPE(numbers);
