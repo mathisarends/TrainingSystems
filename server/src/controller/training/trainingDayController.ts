@@ -17,6 +17,10 @@ import { TrainingSessionManager } from './training-session-manager.js';
 import { TrainingDayDataLocator } from './training-day-data-locator.js';
 import { ApiData } from '../../models/apiData.js';
 
+import { v4 as uuidv4 } from 'uuid';
+import { MongoGenericDAO } from '../../models/dao/mongo-generic.dao.js';
+import { User } from '../../models/collections/user/user.js';
+
 const trainingSessionManager = new TrainingSessionManager();
 
 /**
@@ -42,6 +46,19 @@ export async function getPlanForDay(req: Request, res: Response): Promise<void> 
   if (trainingDayIndex > trainingWeek.trainingDays.length) {
     throw new Error('Der angefragte Tag ist zu hoch für die angegebene Trainingsfrequenz');
   }
+
+  const userDAO = req.app.locals.userDAO as MongoGenericDAO<User>;
+
+  // TODO: TEMPORARY FOR MIGRATION PURPOSES TODO: REMOVE
+  for (const trainingWeek of trainingPlan.trainingWeeks) {
+    for (const trainingDay of trainingWeek.trainingDays) {
+      if (!trainingDay.id) {
+        trainingDay.id = uuidv4();
+      }
+    }
+  }
+
+  await userDAO.update(user);
 
   const trainingDay = trainingWeek.trainingDays[trainingDayIndex];
 
@@ -93,8 +110,8 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
   const trainingPlanIndex = trainingService.findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
   const trainingMetaData = new TrainingDayDataLocator(user, trainingPlanIndex, trainingWeekIndex, trainingDayIndex);
 
-  await trainingSessionManager.addOrUpdateTracker(userDAO, user.id, trainingMetaData);
-  trainingSessionManager.handleActivitySignals(user.id, changedData);
+  await trainingSessionManager.addOrUpdateTracker(userDAO, trainingMetaData);
+  trainingSessionManager.handleActivitySignals(trainingDay.id, changedData);
 
   res.status(200).json({ message: 'Trainingsplan erfolgreich aktualisiert', trainingDay });
 }

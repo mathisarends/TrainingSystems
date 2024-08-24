@@ -3,6 +3,8 @@ import { TrainingWeek } from '../models/training/trainingWeek.js';
 import { Exercise } from '../models/training/exercise.js';
 import { TrainingDay } from '../models/training/trainingDay.js';
 
+import { v4 as uuidv4 } from 'uuid';
+
 export function findTrainingPlanById(trainingPlans: TrainingPlan[], planId: string): TrainingPlan {
   const plan = trainingPlans.find(plan => plan.id === planId);
 
@@ -64,7 +66,7 @@ export function findTrainingPlanIndexById(trainingPlans: TrainingPlan[], planId:
 
 export function createNewTrainingPlanWithPlaceholders(weeks: number, daysPerWeek: number): TrainingWeek[] {
   return Array.from({ length: weeks }, () => ({
-    trainingDays: Array.from({ length: daysPerWeek }, () => ({ exercises: [] }))
+    trainingDays: Array.from({ length: daysPerWeek }, () => ({ id: uuidv4(), exercises: [] }))
   }));
 }
 
@@ -80,7 +82,7 @@ export function handleWeekDifference(trainingPlan: TrainingPlan, difference: num
 function addNewTrainingWeeks(trainingWeeks: TrainingWeek[], trainingFrequency: number, addedWeeks: number) {
   for (let j = 0; j < addedWeeks; j++) {
     trainingWeeks.push({
-      trainingDays: Array.from({ length: trainingFrequency }, () => ({ exercises: [] }))
+      trainingDays: Array.from({ length: trainingFrequency }, () => ({ id: uuidv4(), exercises: [] }))
     });
   }
 }
