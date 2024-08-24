@@ -10,14 +10,12 @@ import userRouter from './routes/userRoutes.js';
 import trainingRouter from './routes/trainingRoutes.js';
 import exerciseRouter from './routes/exerciseRoutes.js';
 import friendShipRouter from './routes/friendshipRoutes.js';
-import session from 'express-session';
 import { errorHandler } from './middleware/error-handler.js';
 dotenv.config();
 
 const PORT = process.env.port ? parseInt(process.env.port, 10) : 3000;
 
 async function configureApp(app: Express) {
-  app.use(session({ secret: process.env.jwt_secret!, resave: false, saveUninitialized: true }));
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
   app.use(express.json({ limit: '10mb' }));
   app.use(cookieParser());

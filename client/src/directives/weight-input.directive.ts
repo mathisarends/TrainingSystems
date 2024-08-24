@@ -46,6 +46,8 @@ export class WeightInputDirective {
       weightInput.value = roundedWeight.toString();
     }
 
+    this.formService.addChange(weightInput.name, weightInput.value);
+
     this.interactiveElementService.triggerChangeIfModified(weightInput.value);
   }
 

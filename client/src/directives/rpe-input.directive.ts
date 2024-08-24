@@ -40,6 +40,15 @@ export class RpeInputDirective {
    */
   @HostListener('blur', ['$event.target'])
   handleBlurEvent(rpeInput: HTMLInputElement): void {
+    const rpeValues = this.parseRPEInput(rpeInput.value);
+
+    if (rpeValues.length === 1) {
+      this.validateSingleRPE(rpeValues[0], rpeInput);
+    } else {
+      console.log('mul');
+      this.validateMultipleRPEs(rpeInput, rpeValues);
+    }
+
     this.interactiveElementService.triggerChangeIfModified(rpeInput.value);
   }
 
@@ -51,14 +60,6 @@ export class RpeInputDirective {
    */
   @HostListener('input', ['$event'])
   handleInputChange(event: Event): void {
-    const rpeInput = event.target as HTMLInputElement;
-    const rpeValues = this.parseRPEInput(rpeInput.value);
-
-    if (rpeValues.length === 1) {
-      this.validateSingleRPE(rpeValues[0], rpeInput);
-    } else {
-      this.validateMultipleRPEs(rpeInput, rpeValues);
-    }
     this.formService.trackChange(event);
   }
   /**
@@ -99,12 +100,11 @@ export class RpeInputDirective {
    */
   private validateMultipleRPEs(rpeInput: HTMLInputElement, numbers: number[]): void {
     const setInput = this.exerciseTableRowService.getSetInputByElement(rpeInput);
+    console.log('🚀 ~ RpeInputDirective ~ validateMultipleRPEs ~ setInput:', setInput.value);
 
     if (numbers.length === Number(setInput.value)) {
       const averageRPE = this.calculateAverageRPE(numbers);
       this.validateSingleRPE(averageRPE, rpeInput);
-    } else {
-      rpeInput.value = '';
     }
   }
 

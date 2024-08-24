@@ -24,7 +24,6 @@ export class TrainingSessionManager {
   ): Promise<void> {
     const trainingDay = trainingDayDataLocator.getTrainingDay();
     const trainingDayId = trainingDay.id;
-    console.log('🚀 ~ TrainingSessionManager ~ trainingDayId:', trainingDayId);
     const tracker = this.getTracker(trainingDayId); // Use trainingDayId for consistency
 
     if (tracker) {
