@@ -1,5 +1,8 @@
+import { User } from '../../models/collections/user/user';
+
 export interface TrainingMetaData {
-  trainingPlanId: string;
+  user: User;
+  trainingPlanIndex: number;
   trainingWeekIndex: number;
   trainingDayIndex: number;
 }

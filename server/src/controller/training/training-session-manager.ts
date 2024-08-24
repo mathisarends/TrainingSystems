@@ -2,7 +2,7 @@ import { Request } from 'express';
 import { TrainingSessionTracker } from './training-session-tracker.js';
 import { TrainingMetaData } from './training-meta-data.js';
 
-import * as trainingService from '../../service/trainingService.js';
+import { TrainingDay } from '../../models/training/trainingDay.js';
 
 /**
  * Manages multiple training session trackers for different users.
@@ -17,7 +17,7 @@ export class TrainingSessionManager {
    * @param trainingDay - The training day object to track.
    */
   async addTracker(req: Request, userId: string, trainingMetaData: TrainingMetaData): Promise<void> {
-    const trainingDay = await this.getTrainingDayFromMetaData(req, userId, trainingMetaData);
+    const trainingDay = this.getTrainingDayFromMetaData(trainingMetaData);
 
     const onTimeoutCallback = () => this.handleSessionTimeout(userId, req, trainingMetaData);
 
@@ -65,14 +65,9 @@ export class TrainingSessionManager {
     }
   }
 
-  private async getTrainingDayFromMetaData(req: Request, userId: string, trainingMetaData: TrainingMetaData) {
-    const userDAO = req.app.locals.userDAO;
-    const user = await userDAO.findOne({ id: userId });
-
-    const { trainingPlanId, trainingWeekIndex, trainingDayIndex } = trainingMetaData;
-
-    const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
-    return trainingPlan.trainingWeeks[trainingWeekIndex].trainingDays[trainingDayIndex];
+  private getTrainingDayFromMetaData(trainingMetaData: TrainingMetaData): TrainingDay {
+    const { user, trainingPlanIndex, trainingWeekIndex, trainingDayIndex } = trainingMetaData;
+    return user.trainingPlans[trainingPlanIndex].trainingWeeks[trainingWeekIndex].trainingDays[trainingDayIndex];
   }
 
   /**
@@ -81,15 +76,11 @@ export class TrainingSessionManager {
    */
   private async handleSessionTimeout(userId: string, req: Request, trainingMetaData: TrainingMetaData): Promise<void> {
     const userDAO = req.app.locals.userDAO;
-    const user = await userDAO.findOne({ id: userId });
-    const trainingDay = await this.getTrainingDayFromMetaData(req, userId, trainingMetaData);
 
-    const tracker = this.getTracker(userId)!;
-    const trackerData = tracker.trainingDay;
+    const { user, trainingPlanIndex, trainingWeekIndex, trainingDayIndex } = trainingMetaData;
 
-    trainingDay.recording = trackerData.recording;
-    trainingDay.endTime = trackerData.endTime;
-    trainingDay.durationInMinutes = trackerData.durationInMinutes;
+    user.trainingPlans[trainingPlanIndex].trainingWeeks[trainingWeekIndex].trainingDays[trainingDayIndex] =
+      this.getTracker(userId)!.trainingDay;
 
     await userDAO.update(user);
 
