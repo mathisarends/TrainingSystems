@@ -45,7 +45,7 @@ export class CategorySelectDirective {
       this.handleSelectedCategory(categorySelector, exerciseNameSelectors, tableRow, category);
     }
 
-    this.interactiveElementService.blur(categorySelector.value);
+    this.interactiveElementService.triggerChangeIfModified(categorySelector.value);
   }
 
   /**

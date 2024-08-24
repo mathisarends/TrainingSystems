@@ -47,7 +47,7 @@ export class ActualRpeInputDirective {
       this.validateMultipleRPEs(rpeInput, rpeValues);
     }
 
-    this.interactiveElementService.blur(rpeInput.value);
+    this.interactiveElementService.triggerChangeIfModified(rpeInput.value);
   }
 
   /**

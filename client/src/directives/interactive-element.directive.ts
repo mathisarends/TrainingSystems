@@ -45,7 +45,7 @@ export class InteractiveElementDirective {
    */
   @HostListener('blur', ['$event.target'])
   onBlur(target: HTMLInputElement | HTMLSelectElement): void {
-    this.interactiveElementService.blur(target.value);
+    this.interactiveElementService.triggerChangeIfModified(target.value);
   }
 
   /**
@@ -59,7 +59,7 @@ export class InteractiveElementDirective {
     this.formService.trackChange(event);
 
     if (event.target instanceof HTMLSelectElement) {
-      this.interactiveElementService.blur(event.target.value);
+      this.interactiveElementService.triggerChangeIfModified(event.target.value);
     }
   }
 }

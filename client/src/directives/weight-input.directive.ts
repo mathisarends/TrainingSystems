@@ -46,7 +46,7 @@ export class WeightInputDirective {
       weightInput.value = roundedWeight.toString();
     }
 
-    this.interactiveElementService.blur(weightInput.value);
+    this.interactiveElementService.triggerChangeIfModified(weightInput.value);
   }
 
   /**
