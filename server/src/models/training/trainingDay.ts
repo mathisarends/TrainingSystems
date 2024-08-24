@@ -15,11 +15,6 @@ export interface TrainingDay {
   durationInMinutes?: number;
 
   /**
-   * Holds the timeout ID for tracking inactivity during a session.
-   */
-  inactivityTimeout?: NodeJS.Timeout;
-
-  /**
    * The time when the training session started.
    */
   startTime?: Date;
