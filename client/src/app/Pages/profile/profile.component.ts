@@ -16,6 +16,7 @@ import { FriendCardMode } from '../../components/friend-card/friend-card-mode';
 import { FriendRequestComponent } from '../modal-pages/friend-request/friend-request.component';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
 import { ChangeProfilePictureConfirmationComponent } from '../modal-pages/change-profile-picture-confirmation/change-profile-picture-confirmation.component';
+import { FriendModalComponent } from '../friend-modal/friend-modal.component';
 
 @Component({
   selector: 'app-profile',
@@ -150,7 +151,7 @@ export class ProfileComponent implements OnInit {
 
   openAddFriendModal() {
     this.modalService.open({
-      component: FriendCardComponent,
+      component: FriendModalComponent,
       title: 'Freunde hinzufügen',
       buttonText: 'Fertig',
       size: ModalSize.LARGE,

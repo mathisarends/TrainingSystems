@@ -1,5 +1,4 @@
 <app-alert
-  alertType="light"
   alertText="Deine Anfrage muss erst angenommen werden, damit du die Freunde in deiner Kontaktliste sehen kannst!"
 ></app-alert>
 
@@ -11,12 +10,18 @@
   (input)="filterFriends($event)"
 />
 
-@if (loading$ | async) {
-  <app-spinner></app-spinner>
-} @else {
-  @for (friend of friends$ | async; track friend.id) {
-    <div class="col-12 mb-3">
+<div class="col-12 mb-3">
+  @if (loading$ | async) {
+    @for (i of [1, 2, 3, 4, 5]; track i) {
+      <app-friend-card-skeleton />
+    }
+  } @else {
+    @for (friend of friends$ | async; track friend.id) {
       <app-friend-card [friend]="friend" (confirmEvent)="onFriendRequestSend($event)"></app-friend-card>
-    </div>
+    }
+
+    @for (i of [1, 2, 3, 4, 5]; track i) {
+      <app-friend-card-skeleton />
+    }
   }
-}
+</div>

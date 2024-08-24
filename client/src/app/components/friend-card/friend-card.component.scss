@@ -1,23 +1,23 @@
 .custom-button {
-  background-color: #f0f0f0; /* Light grey background */
-  color: #333; /* Dark text color */
-  border: 1px solid #ccc; /* Light border */
-  border-radius: 20px; /* Rounded corners */
-  padding: 0.375rem 1.5rem; /* Padding for the button */
-  font-size: 1rem; /* Font size */
-  display: flex; /* Flex display for alignment */
-  align-items: center; /* Center items vertically */
-  gap: 0.5rem; /* Space between icon and text */
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 0.375rem 1.5rem;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   transition:
     background-color 0.3s,
     border-color 0.3s;
 }
 
 .custom-button i {
-  font-size: 1.2rem; /* Icon size */
+  font-size: 1.2rem;
 }
 
 .custom-button:hover {
-  background-color: #e0e0e0; /* Slightly darker on hover */
-  border-color: #bbb; /* Slightly darker border on hover */
+  background-color: #e0e0e0;
+  border-color: #bbb;
 }

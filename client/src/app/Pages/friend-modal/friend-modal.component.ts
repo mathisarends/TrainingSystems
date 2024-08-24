@@ -7,11 +7,12 @@ import { HttpService } from '../../../service/http/http-client.service';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { catchError, finalize } from 'rxjs/operators';
+import { FriendCardSkeletonComponent } from '../../friend-card-skeleton/friend-card-skeleton.component';
 
 @Component({
   selector: 'app-friend-modal',
   standalone: true,
-  imports: [FriendCardComponent, AlertComponent, SpinnerComponent, CommonModule],
+  imports: [FriendCardComponent, AlertComponent, SpinnerComponent, CommonModule, FriendCardSkeletonComponent],
   templateUrl: './friend-modal.component.html',
   styleUrls: ['./friend-modal.component.scss'],
 })
