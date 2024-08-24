@@ -15,6 +15,7 @@ import { findTrainingPlanById } from '../../service/trainingService.js';
 import { WeightRecommendationBase } from '../../models/training/weight-recommandation.enum.js';
 import { TrainingSessionManager } from './training-session-manager.js';
 import { TrainingDayDataLocator } from './training-day-data-locator.js';
+import { ApiData } from '../../models/apiData.js';
 
 const trainingSessionManager = new TrainingSessionManager();
 
@@ -75,16 +76,14 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
     return res.status(400).json({ error: 'Ungültige Woche oder Tag Index' });
   }
 
-  const changedData: Record<string, string> = req.body;
+  const changedData: ApiData = req.body;
 
   const user = await getUser(req, res);
+
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
+  trainingPlan.lastUpdated = new Date();
 
   const trainingDay = trainingPlan.trainingWeeks[trainingWeekIndex]?.trainingDays[trainingDayIndex];
-
-  if (!trainingDay) {
-    return res.status(400).json({ error: 'Ungültige Woche oder Tag Index' });
-  }
 
   updateTrainingDay(trainingDay, changedData, trainingDayIndex);
   propagateChangesToFutureWeeks(trainingPlan, trainingWeekIndex, trainingDayIndex, changedData);
@@ -122,11 +121,7 @@ export async function getLatestTrainingDay(req: Request, res: Response) {
  * @param changedData - The new data to be applied.
  * @param trainingDayIndex - The index of the day being updated.
  */
-function updateTrainingDay(
-  trainingDay: TrainingDay,
-  changedData: Record<string, string>,
-  trainingDayIndex: number
-): void {
+function updateTrainingDay(trainingDay: TrainingDay, changedData: ApiData, trainingDayIndex: number): void {
   for (const [fieldName, fieldValue] of Object.entries(changedData)) {
     const dayIndex = parseInt(fieldName.charAt(3));
 
@@ -161,7 +156,7 @@ function propagateChangesToFutureWeeks(
   trainingPlan: TrainingPlan,
   startWeekIndex: number,
   trainingDayIndex: number,
-  changedData: Record<string, string>
+  changedData: ApiData
 ): void {
   let tempWeekIndex = startWeekIndex + 1;
 

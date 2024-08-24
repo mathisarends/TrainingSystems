@@ -16,7 +16,6 @@ export class TrainingViewService {
   }
 
   submitTrainingPlan(planId: string, week: number, day: number, changedData: Record<string, string>): Observable<any> {
-    console.log('🚀 ~ TrainingViewService ~ submitTrainingPlan ~ changedData:', changedData);
     return this.httpClient.patch(`/training/plan/${planId}/${week}/${day}`, changedData);
   }
 }
