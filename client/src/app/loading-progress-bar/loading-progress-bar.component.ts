@@ -31,7 +31,9 @@ export class LoadingProgressBarComponent implements OnInit {
         () => {
           console.log('called when loading state changes:', this.loadingService.isLoading());
           if (this.loadingService.isLoading()) {
-            console.log('loading ');
+            this.isComplete.set(false);
+            this.progress.set(0);
+            this.showProgressBar();
             this.simulateLoading(); // Start progress animation if loading is active
           } else {
             this.completeLoading(); // Complete progress animation if no loading is active
@@ -49,6 +51,10 @@ export class LoadingProgressBarComponent implements OnInit {
 
     this.loadingInterval = setInterval(() => {
       if (progressValue < fastTarget && !this.isComplete()) {
+        console.log(
+          '🚀 ~ LoadingProgressBarComponent ~ this.loadingInterval=setInterval ~ progressValue:',
+          progressValue,
+        );
         const randomIncrement = 2 + Math.random() * 3;
         progressValue += randomIncrement;
         this.progress.set(progressValue);
@@ -69,6 +75,12 @@ export class LoadingProgressBarComponent implements OnInit {
     setTimeout(() => {
       this.hideProgressBar();
     }, 300);
+  }
+
+  showProgressBar() {
+    const progressBarElement = this.progressBar.nativeElement as HTMLElement;
+    progressBarElement.classList.remove('hidden'); // Remove the 'hidden' class to show the progress bar
+    progressBarElement.style.display = 'block'; // Ensure the progress bar is visible
   }
 
   hideProgressBar() {
