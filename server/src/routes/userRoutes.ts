@@ -3,7 +3,6 @@ import { authService } from '../service/authService.js';
 import * as userController from '../controller/userController.js';
 import { asyncHandler } from '../middleware/error-handler.js';
 import { getUser } from '../service/userService.js';
-import { auth } from 'google-auth-library';
 
 const router = express.Router();
 

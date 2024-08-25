@@ -4,6 +4,7 @@ import { Exercise } from '../models/training/exercise.js';
 import { TrainingDay } from '../models/training/trainingDay.js';
 
 import { v4 as uuidv4 } from 'uuid';
+import { TrainingDayIndexes } from './training-day-indexes.js';
 
 export function findTrainingPlanById(trainingPlans: TrainingPlan[], planId: string): TrainingPlan {
   const plan = trainingPlans.find(plan => plan.id === planId);
@@ -14,7 +15,7 @@ export function findTrainingPlanById(trainingPlans: TrainingPlan[], planId: stri
   return plan;
 }
 
-export async function getNextTrainingDay(trainingPlan: TrainingPlan) {
+export function getNextTrainingDay(trainingPlan: TrainingPlan): TrainingDayIndexes {
   let { weekIndex, dayIndex } = findLatestTrainingDayWithWeight(trainingPlan);
 
   if (dayIndex < trainingPlan.trainingFrequency - 1) {
@@ -31,7 +32,29 @@ export async function getNextTrainingDay(trainingPlan: TrainingPlan) {
   return { weekIndex, dayIndex };
 }
 
-export async function getPercentageOfTrainingPlanFinished(trainingPlan: TrainingPlan) {
+export function getAverageTrainingDuration(trainingPlan: TrainingPlan): number | undefined {
+  const trainingDurations: number[] = [];
+  for (const trainingWeek of trainingPlan.trainingWeeks) {
+    for (const trainingDay of trainingWeek.trainingDays) {
+      if (trainingDay.durationInMinutes) {
+        trainingDurations.push(trainingDay.durationInMinutes);
+      }
+    }
+  }
+
+  // If no training durations were found, return undefined
+  if (trainingDurations.length === 0) {
+    return undefined;
+  }
+
+  const totalDuration = trainingDurations.reduce((sum, duration) => sum + duration, 0);
+
+  const averageTrainingDuration = totalDuration / trainingDurations.length;
+
+  return averageTrainingDuration;
+}
+
+export function getPercentageOfTrainingPlanFinished(trainingPlan: TrainingPlan) {
   const trainingFrequency = trainingPlan.trainingFrequency;
 
   const totalAmountOfTrainingDays = trainingFrequency * trainingPlan.trainingWeeks.length;

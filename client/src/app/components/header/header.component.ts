@@ -100,7 +100,6 @@ export class HeaderComponent implements OnInit {
   private updateActiveLink(): void {
     this.removeActiveState();
     const currentUrl = this.router.url;
-    console.log('🚀 ~ HeaderComponent ~ updateActiveLink ~ currentUrl:', currentUrl);
 
     this.navLinks.forEach((link) => {
       const linkElement = link.nativeElement as HTMLAnchorElement;

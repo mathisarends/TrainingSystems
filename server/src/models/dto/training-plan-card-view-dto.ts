@@ -11,4 +11,6 @@ export interface TrainingPlanCardViewDto {
   lastUpdated: string;
   pictureUrl?: string;
   coverImageBase64?: string;
+  percentageFinished?: number;
+  averageTrainingDayDuration?: number;
 }

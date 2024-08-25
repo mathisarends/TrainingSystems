@@ -1,3 +1,5 @@
+import { TrainingDayIndexes } from './training-day-indexes';
+
 export interface TrainingPlanCardView {
   id: string;
   title: string;
@@ -6,4 +8,5 @@ export interface TrainingPlanCardView {
   coverImageBase64?: string;
   pictureUrl?: string; // profile picture of user
   percentageFinished: number;
+  averageTrainingDayDuration?: number;
 }

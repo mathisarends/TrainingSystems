@@ -22,13 +22,12 @@ import { ExerciseCategoryType } from '../../models/training/exercise-category-ty
 export async function getPlans(req: Request, res: Response): Promise<void> {
   const user = await getUser(req, res);
 
-  const trainingPlanCards: TrainingPlanCardViewDto[] = await Promise.all(
-    user.trainingPlans.map(async (plan: TrainingPlan) => ({
-      ...TrainingPlanDtoMapper.getCardView(plan),
-      pictureUrl: user.pictureUrl,
-      percentageFinished: await trainingService.getPercentageOfTrainingPlanFinished(plan)
-    }))
-  );
+  const trainingPlanCards: TrainingPlanCardViewDto[] = user.trainingPlans.map((plan: TrainingPlan) => ({
+    ...TrainingPlanDtoMapper.getCardView(plan),
+    pictureUrl: user.pictureUrl,
+    percentageFinished: trainingService.getPercentageOfTrainingPlanFinished(plan),
+    averageTrainingDayDuration: trainingService.getAverageTrainingDuration(plan)
+  }));
 
   res.status(200).json({ trainingPlanCards });
 }

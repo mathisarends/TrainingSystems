@@ -10,7 +10,7 @@
   (input)="filterFriends($event)"
 />
 
-<div class="col-12 mb-3">
+<div class="friend-card-container">
   @if (loading$ | async) {
     @for (i of [1, 2, 3, 4, 5]; track i) {
       <app-friend-card-skeleton />
