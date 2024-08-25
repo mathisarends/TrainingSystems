@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpService } from '../../../service/http/http-client.service';
-import { SpinnerComponent } from '../../components/loaders/spinner/spinner.component';
 import { TrainingExerciseTonnageDto } from './main-exercise-tonnage-dto';
 import { Tonnage } from './tonnage';
 import { MultiSelectComponent } from '../../components/multi-select/multi-select.component';
@@ -26,7 +24,6 @@ import { TrainingStatisticsService } from './training-statistics.service';
   selector: 'app-statistics',
   standalone: true,
   imports: [
-    SpinnerComponent,
     MultiSelectComponent,
     LineChartComponent,
     GroupedBarChartComponent,
@@ -42,7 +39,6 @@ export class StatisticsComponent implements OnInit {
   trainingPlanTitle: string = '';
 
   dataLoaded: boolean = false;
-  currentView: 'volume' | 'performance' = 'volume';
 
   selectedExercises!: string[];
   allExercises!: string[];
@@ -57,7 +53,6 @@ export class StatisticsComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private httpService: HttpService,
     private chartColorService: ChartColorService,
     private modalService: ModalService,
     private trainingStatisticService: TrainingStatisticsService,
@@ -79,10 +74,8 @@ export class StatisticsComponent implements OnInit {
   }
 
   showDrillThroughGraph(drillThroughData: ExerciseDrillThroughEvent) {
-    this.httpService
-      .get(
-        `/training/statistics/${this.id}/drilldown/${drillThroughData.exerciseName}/${drillThroughData.weekNumber - 1}`,
-      )
+    this.trainingStatisticService
+      .getDrillThroughForSpecificExerciseCategory(this.id, drillThroughData.exerciseName, drillThroughData.weekNumber)
       .subscribe((response: any) => {
         const data: number[] = response.exercises.map((exercise: any) => exercise.tonnage);
         const labels: string[] = response.exercises.map((exercise: any) => exercise.exercise);
@@ -187,13 +180,5 @@ export class StatisticsComponent implements OnInit {
 
   private formatCategoryLabel(category: string): string {
     return category.charAt(0).toUpperCase() + category.slice(1);
-  }
-
-  changeView(index: number) {
-    if (index == 0) {
-      this.currentView === 'volume';
-    } else {
-      this.currentView === 'performance';
-    }
   }
 }

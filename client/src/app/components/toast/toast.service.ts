@@ -16,7 +16,7 @@ export class ToastService {
 
     this.toasts.push(toast);
 
-    setTimeout(() => this.remove(toast), 5000);
+    setTimeout(() => this.remove(toast), status === ToastStatus.SUCESS ? 5000 : 15000);
   }
 
   remove(toast: any) {
