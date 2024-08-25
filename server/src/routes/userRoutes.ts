@@ -11,7 +11,11 @@ router.post('/login', asyncHandler(userController.login));
 router.post('/login/oauth2', asyncHandler(userController.loginOAuth2));
 router.get('/profile', authService.authenticationMiddleware, asyncHandler(userController.getProfile));
 
-router.get('/activity-calendar', authService.authenticationMiddleware, asyncHandler(userController.getProfile));
+router.get(
+  '/activity-calendar',
+  authService.authenticationMiddleware,
+  asyncHandler(userController.getActivityCalendar)
+);
 
 router.get(
   '/profile-picture',

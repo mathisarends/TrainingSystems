@@ -1,1 +1,11 @@
 <app-activity-calendar [trainingDays]="365" />
+
+@if (activityCalendarData$ | async; as activityData) {
+  <ul>
+    @for (entry of activityData; track entry) {
+      <li>Day Index: {{ entry[0] }}, Tonnage: {{ entry[1] }}</li>
+    }
+  </ul>
+} @else {
+  <app-spinner />
+}

@@ -17,10 +17,6 @@ import { TrainingSessionManager } from './training-session-manager.js';
 import { TrainingDayDataLocator } from './training-day-data-locator.js';
 import { ApiData } from '../../models/apiData.js';
 
-import { v4 as uuidv4 } from 'uuid';
-import { MongoGenericDAO } from '../../models/dao/mongo-generic.dao.js';
-import { User } from '../../models/collections/user/user.js';
-
 const trainingSessionManager = new TrainingSessionManager();
 
 /**

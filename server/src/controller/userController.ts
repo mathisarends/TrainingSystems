@@ -4,6 +4,7 @@ import { authService } from '../service/authService.js';
 
 import dotenv from 'dotenv';
 import { TrainingPlan } from '../models/training/trainingPlan.js';
+import { TrainingDay } from '../models/training/trainingDay.js';
 dotenv.config();
 
 export async function register(req: Request, res: Response): Promise<void> {
@@ -56,22 +57,82 @@ export async function getProfile(req: Request, res: Response): Promise<void> {
   res.status(200).json({ userDto });
 }
 
+/**
+ * Retrieves the activity calendar for a user, calculating the tonnage (total weight lifted)
+ * for each training day and returning a map of dates to tonnages.
+ *
+ * @param req - The HTTP request object.
+ * @param res - The HTTP response object.
+ * @returns A Promise that resolves to void. Sends a JSON response with the activity map.
+ */
 export async function getActivityCalendar(req: Request, res: Response): Promise<void> {
   const user = await userService.getUser(req, res);
 
   const sortedTrainingPlans = sortTrainingPlans(user.trainingPlans);
+  console.log('🚀 ~ getActivityCalendar ~ sortedTrainingPlans:', sortedTrainingPlans.length);
 
-  /* sortedTrainingPlans.
+  const activityMap = new Map<number, number>();
 
-  res.status(200).json(); */
+  for (const trainingPlan of sortedTrainingPlans) {
+    for (const trainingWeek of trainingPlan.trainingWeeks) {
+      for (const trainingDay of trainingWeek.trainingDays) {
+        if (trainingDay.endTime) {
+          const tonnagePerTrainingDay = getTonnagePerTrainingDay(trainingDay);
+
+          const dayIndex = getIndexOfDayPerYearFromDate(trainingDay.endTime);
+
+          activityMap.set(dayIndex, tonnagePerTrainingDay);
+        }
+      }
+    }
+  }
+
+  console.log('🚀 ~ getActivityCalendar ~ activityMap:', activityMap);
+
+  res.status(200).json(Array.from(activityMap.entries()));
 }
 
+function getIndexOfDayPerYearFromDate(date: Date): number {
+  const dateObj = new Date(date);
+
+  const startOfYear = new Date(dateObj.getFullYear(), 0, 1);
+  return Math.floor((dateObj.getTime() - startOfYear.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+/**
+ * Sorts an array of training plans by their 'lastUpdated' date in descending order.
+ *
+ * @param trainingPlans - An array of TrainingPlan objects to be sorted.
+ * @returns An array of TrainingPlan objects sorted by the 'lastUpdated' date in descending order.
+ */
 function sortTrainingPlans(trainingPlans: TrainingPlan[]): TrainingPlan[] {
   return trainingPlans.sort((a, b) => {
     const dateA = new Date(a.lastUpdated).getTime();
     const dateB = new Date(b.lastUpdated).getTime();
     return dateB - dateA;
   });
+}
+
+/**
+ * Calculates the total tonnage (weight lifted) for a given training day.
+ *
+ * @param trainingDay - A TrainingDay object containing the exercises for that day.
+ * @returns The total tonnage for the training day.
+ */
+function getTonnagePerTrainingDay(trainingDay: TrainingDay): number {
+  let tonnage = 0;
+  for (const exercise of trainingDay.exercises) {
+    const weight = Number(exercise.weight);
+
+    if (isNaN(weight)) {
+      continue;
+    }
+
+    const tonnagePerExercise = weight * exercise.sets * exercise.reps;
+    tonnage += tonnagePerExercise;
+  }
+
+  return tonnage;
 }
 
 export async function updateProfilePicture(req: Request, res: Response): Promise<Response> {
