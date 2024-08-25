@@ -29,14 +29,13 @@ export class LoadingProgressBarComponent implements OnInit {
       // Reactively listen to changes in the loading state using the computed signal
       effect(
         () => {
-          console.log('called when loading state changes:', this.loadingService.isLoading());
           if (this.loadingService.isLoading()) {
             this.isComplete.set(false);
             this.progress.set(0);
             this.showProgressBar();
-            this.simulateLoading(); // Start progress animation if loading is active
+            this.simulateLoading();
           } else {
-            this.completeLoading(); // Complete progress animation if no loading is active
+            this.completeLoading();
           }
         },
         { allowSignalWrites: true, injector: this.injector },
@@ -51,12 +50,9 @@ export class LoadingProgressBarComponent implements OnInit {
 
     this.loadingInterval = setInterval(() => {
       if (progressValue < fastTarget && !this.isComplete()) {
-        console.log(
-          '🚀 ~ LoadingProgressBarComponent ~ this.loadingInterval=setInterval ~ progressValue:',
-          progressValue,
-        );
-        const randomIncrement = 2 + Math.random() * 3;
+        const randomIncrement = 5 + Math.random() * 5;
         progressValue += randomIncrement;
+
         this.progress.set(progressValue);
       } else if (progressValue >= fastTarget && progressValue < slowTarget && !this.isComplete()) {
         const randomFactor = Math.random() * 0.1 + 0.9;
@@ -65,13 +61,14 @@ export class LoadingProgressBarComponent implements OnInit {
       } else if (progressValue >= slowTarget || this.isComplete()) {
         clearInterval(this.loadingInterval);
       }
-    }, 50);
+    }, 100);
   }
 
   completeLoading() {
     clearInterval(this.loadingInterval);
     this.progress.set(100);
     this.isComplete.set(true);
+
     setTimeout(() => {
       this.hideProgressBar();
     }, 300);
