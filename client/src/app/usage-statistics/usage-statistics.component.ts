@@ -5,6 +5,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { SpinnerComponent } from '../components/loaders/spinner/spinner.component';
 import { CommonModule } from '@angular/common';
+import { ActivityCalendarData } from './activity-calendar-data';
 
 @Component({
   selector: 'app-usage-statistics',
@@ -15,15 +16,15 @@ import { CommonModule } from '@angular/common';
 })
 export class UsageStatisticsComponent implements OnInit {
   /**
-   * Observable that emits the exercise data as an array of day index and tonnage pairs, ornull if there's an error or it's still loading.
+   * Observable that emits the exercise data as an object with day indices as keys and tonnage values, or null if there's an error or it's still loading.
    */
-  activityCalendarData$!: Observable<[number, number][] | null>;
+  activityCalendarData$!: Observable<ActivityCalendarData | null>;
 
   constructor(private httpClient: HttpService) {}
 
   ngOnInit(): void {
     // Assign the observable to activityCalendarData$ to be used in the template
-    this.activityCalendarData$ = this.httpClient.get<[number, number][]>('/user/activity-calendar').pipe(
+    this.activityCalendarData$ = this.httpClient.get<ActivityCalendarData>('/user/activity-calendar').pipe(
       map((response) => {
         console.log('🚀 ~ UsageStatisticsComponent ~ ngOnInit ~ response:', response);
         return response;

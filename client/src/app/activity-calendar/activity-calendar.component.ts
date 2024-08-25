@@ -1,8 +1,8 @@
-import { Component, input, OnInit } from '@angular/core';
+import { Component, input, Input, OnInit, signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TooltipDirective } from '../../service/tooltip/tooltip.directive';
-import { MobileService } from '../../service/util/mobile.service';
 import { ActivityCalendarEntry, Level } from './activity-calendar-entry';
+import { ActivityCalendarData } from '../usage-statistics/activity-calendar-data';
 
 @Component({
   selector: 'app-activity-calendar',
@@ -13,9 +13,12 @@ import { ActivityCalendarEntry, Level } from './activity-calendar-entry';
 })
 export class ActivityCalendar implements OnInit {
   /**
-   * The number of training days. This value is required.
+   * Input property to receive the training data from parent component.
+   * Expects an object mapping day indices to tonnage or activity values.
    */
-  trainingDays = input.required<number>();
+  activityData = input.required<ActivityCalendarData>();
+
+  trainingDays = signal<number>(0);
 
   /**
    * The grid containing the activity data for each day of the year.
@@ -23,22 +26,22 @@ export class ActivityCalendar implements OnInit {
    */
   grid: ActivityCalendarEntry[] = [];
 
-  constructor(private mobileService: MobileService) {}
-
-  /**
-   * Initialize the grid with simulated activity data.
-   * The grid is filled with 364 days, where each day has a random activity value
-   * and an initial level of 0.
-   */
   ngOnInit(): void {
-    this.grid = Array.from(
-      { length: 364 },
-      (_, day): ActivityCalendarEntry => ({
-        day: day as 0 | 363,
-        value: Math.floor(Math.random() * 1000),
-        level: 0,
-      }),
-    );
+    // Convert the input object into an array of entries for easier iteration
+    const dataEntries = Object.entries(this.activityData()).map(([day, value]) => ({
+      day: +day, // Convert day string to number
+      value: value as number,
+      level: 0 as Level,
+    }));
+
+    // Initialize the grid with data
+    this.grid = dataEntries.map((entry) => ({
+      day: entry.day as 0 | 363, // Ensure day is within bounds (0-363)
+      value: entry.value,
+      level: 0 as Level,
+    }));
+
+    this.trainingDays.set(this.grid.length);
 
     this.calculateLevels();
   }
@@ -50,8 +53,6 @@ export class ActivityCalendar implements OnInit {
    */
   calculateLevels() {
     const values = this.grid.map((item) => item.value);
-    const min = Math.min(...values);
-    const max = Math.max(...values);
 
     // Calculate quantiles
     const thresholds = this.calculateQuantiles(values, [0.25, 0.5, 0.75]);

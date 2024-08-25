@@ -18,6 +18,8 @@ export class HeaderComponent implements OnInit {
 
   @ViewChild('trainingPlanLink') trainingPlanLink!: ElementRef;
 
+  @ViewChild('statisticLink') statisticLink!: ElementRef;
+
   profile: User | null = null; // Holds user profile data
   isAuthenticated: boolean = false; // Tracks authentication status
 
@@ -110,6 +112,8 @@ export class HeaderComponent implements OnInit {
 
     if (currentUrl.includes('training/view?plan')) {
       this.trainingPlanLink.nativeElement.classList.add('active');
+    } else if (currentUrl.includes('statistics')) {
+      this.statisticLink.nativeElement.classList.add('active');
     }
   }
 }

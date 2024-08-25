@@ -23,9 +23,13 @@
           <div>Fri</div>
         </div>
         <div class="contribution-grid">
-          @for (day of grid; track day) {
-            <div class="day" [ngClass]="'level-' + day.level" [appTooltip]="day.value.toString()"></div>
-          }
+          <!-- Iterate over the grid to create calendar entries -->
+          <div
+            class="day"
+            *ngFor="let day of grid"
+            [ngClass]="'level-' + day.level"
+            [appTooltip]="day.value.toString()"
+          ></div>
         </div>
       </div>
     </div>

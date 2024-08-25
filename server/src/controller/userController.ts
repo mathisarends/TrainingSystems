@@ -87,9 +87,9 @@ export async function getActivityCalendar(req: Request, res: Response): Promise<
     }
   }
 
-  console.log('🚀 ~ getActivityCalendar ~ activityMap:', activityMap);
+  const activityObject = Object.fromEntries(activityMap);
 
-  res.status(200).json(Array.from(activityMap.entries()));
+  res.status(200).json(activityObject);
 }
 
 function getIndexOfDayPerYearFromDate(date: Date): number {
