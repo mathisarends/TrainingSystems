@@ -32,3 +32,24 @@
     padding-left: 1.5%;
   }
 }
+
+.profile-picture-dropdown-container {
+  position: relative;
+
+  .notification-badge {
+    position: absolute;
+    top: 5px;
+    right: 0;
+    transform: translate(50%, -50%);
+    background-color: $accent-color;
+    color: white;
+    border-radius: 50%;
+    width: 1.5em; // Ensure the width and height are the same
+    height: 1.5em; // Ensure the width and height are the same
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: bold;
+  }
+}
