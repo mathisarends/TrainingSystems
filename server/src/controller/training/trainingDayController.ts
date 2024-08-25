@@ -47,19 +47,6 @@ export async function getPlanForDay(req: Request, res: Response): Promise<void> 
     throw new Error('Der angefragte Tag ist zu hoch für die angegebene Trainingsfrequenz');
   }
 
-  const userDAO = req.app.locals.userDAO as MongoGenericDAO<User>;
-
-  // TODO: TEMPORARY FOR MIGRATION PURPOSES TODO: REMOVE
-  for (const trainingWeek of trainingPlan.trainingWeeks) {
-    for (const trainingDay of trainingWeek.trainingDays) {
-      if (!trainingDay.id) {
-        trainingDay.id = uuidv4();
-      }
-    }
-  }
-
-  await userDAO.update(user);
-
   const trainingDay = trainingWeek.trainingDays[trainingDayIndex];
 
   let previousTrainingDay = {};

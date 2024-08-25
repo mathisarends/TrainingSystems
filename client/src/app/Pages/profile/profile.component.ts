@@ -17,12 +17,20 @@ import { FriendRequestComponent } from '../modal-pages/friend-request/friend-req
 import { PaginationComponent } from '../../components/pagination/pagination.component';
 import { ChangeProfilePictureConfirmationComponent } from '../modal-pages/change-profile-picture-confirmation/change-profile-picture-confirmation.component';
 import { FriendModalComponent } from '../friend-modal/friend-modal.component';
+import { ActivityCalendar } from '../../activity-calendar/activity-calendar.component';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   standalone: true,
-  imports: [SpinnerComponent, FriendCardComponent, TooltipDirective, AlertComponent, PaginationComponent],
+  imports: [
+    SpinnerComponent,
+    FriendCardComponent,
+    TooltipDirective,
+    AlertComponent,
+    PaginationComponent,
+    ActivityCalendar,
+  ],
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {

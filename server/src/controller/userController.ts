@@ -3,6 +3,7 @@ import * as userService from '../service/userService.js';
 import { authService } from '../service/authService.js';
 
 import dotenv from 'dotenv';
+import { TrainingPlan } from '../models/training/trainingPlan.js';
 dotenv.config();
 
 export async function register(req: Request, res: Response): Promise<void> {
@@ -53,6 +54,24 @@ export async function getProfile(req: Request, res: Response): Promise<void> {
   };
 
   res.status(200).json({ userDto });
+}
+
+export async function getActivityCalendar(req: Request, res: Response): Promise<void> {
+  const user = await userService.getUser(req, res);
+
+  const sortedTrainingPlans = sortTrainingPlans(user.trainingPlans);
+
+  /* sortedTrainingPlans.
+
+  res.status(200).json(); */
+}
+
+function sortTrainingPlans(trainingPlans: TrainingPlan[]): TrainingPlan[] {
+  return trainingPlans.sort((a, b) => {
+    const dateA = new Date(a.lastUpdated).getTime();
+    const dateB = new Date(b.lastUpdated).getTime();
+    return dateB - dateA;
+  });
 }
 
 export async function updateProfilePicture(req: Request, res: Response): Promise<Response> {

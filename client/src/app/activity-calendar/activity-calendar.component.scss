@@ -16,6 +16,30 @@ $level-4-color: darken($accent-color, 10%);
     gap: 5px;
     max-width: 100vw;
     overflow-x: auto;
+
+    // Custom Scrollbar for WebKit Browsers
+    &::-webkit-scrollbar {
+      height: 8px; // Horizontal scrollbar height
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #e9ecef; // Track color
+      border-radius: 10px; // Rounded corners
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $accent-color; // Scroll thumb color
+      border-radius: 10px; // Rounded corners
+      border: 2px solid #e9ecef; // Space around the thumb
+    }
+
+    &::-webkit-scrollbar-button {
+      display: none;
+    }
+
+    // Custom Scrollbar for Firefox
+    scrollbar-width: thin; // Width of scrollbar
+    scrollbar-color: rgb(199, 199, 199) #e9ecef; // Thumb and track color
   }
 
   .months {
