@@ -1,0 +1,25 @@
+@import 'client/src/css/variables';
+
+.progress-container {
+  width: 100%;
+  background-color: inherit;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 4px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: $accent-color;
+  transition:
+    width 0.1s ease-in-out,
+    opacity 0.3s ease-in-out; /* Smooth transition for both width and opacity */
+}
+
+.hidden {
+  opacity: 0; /* Fade out effect */
+}
