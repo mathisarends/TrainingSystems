@@ -9,6 +9,7 @@ import { ProfileComponent } from './Pages/profile/profile.component';
 
 import { ExercisesComponent } from './Pages/exercises/exercises.component';
 import { TrainingViewComponent } from './Pages/training-view/training-view.component';
+import { SpinnerComponent } from './components/loaders/spinner/spinner.component';
 import { AuthGuard } from './auth-guard.service';
 
 import { UsageStatisticsComponent } from './usage-statistics/usage-statistics.component';
@@ -17,6 +18,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'user/usage', component: UsageStatisticsComponent },
+  { path: 'spinner', component: SpinnerComponent },
   {
     path: '',
     component: TrainingPlansComponent,

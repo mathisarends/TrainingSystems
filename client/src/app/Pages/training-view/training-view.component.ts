@@ -1,13 +1,4 @@
-import {
-  Component,
-  OnInit,
-  AfterViewChecked,
-  ViewChildren,
-  ElementRef,
-  QueryList,
-  ViewChild,
-  DestroyRef,
-} from '@angular/core';
+import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild, DestroyRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TrainingViewService } from './training-view-service';
 import { FormService } from '../../../service/form/form.service';
@@ -40,6 +31,7 @@ import { CategorySelectDirective } from '../../../directives/category-select.dir
 import { ExerciseDataService } from './exercise-data.service';
 import { InteractiveElementDirective } from '../../../directives/interactive-element.directive';
 import { ToastStatus } from '../../components/toast/toast-status';
+import { SpinnerComponent } from '../../components/loaders/spinner/spinner.component';
 
 /**
  * Component to manage and display the training view.
@@ -59,6 +51,7 @@ import { ToastStatus } from '../../components/toast/toast-status';
     RpeInputDirective,
     CategorySelectDirective,
     InteractiveElementDirective,
+    SpinnerComponent,
   ],
   providers: [TrainingViewService],
   templateUrl: './training-view.component.html',
