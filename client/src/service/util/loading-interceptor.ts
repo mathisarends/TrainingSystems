@@ -4,11 +4,24 @@ import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { LoadingService } from './loading.service';
 
+/**
+ * HTTP interceptor function to manage the loading state for HTTP requests.
+ *
+ * This interceptor listens to outgoing HTTP requests and triggers the loading
+ * state using the `LoadingService` unless the request meets certain exclusion criteria.
+ *
+ * @param req - The outgoing HTTP request to intercept.
+ * @param next - The next handler in the HTTP request chain.
+ * @returns An observable of the HTTP event stream.
+ */
 export function loadingInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
-  console.log('🚀 ~ loadingInterceptor ~ req:', req);
   const loadingService = inject(LoadingService);
 
-  if (req.url.includes('/user/auth-state') || req.method !== 'GET' || req.url.includes('latest')) {
+  const urlBlacklist: string[] = ['/user/auth-state', '/latest', 'skipLoading=true'];
+
+  const isBlacklisted = urlBlacklist.some((pattern) => req.url.includes(pattern));
+
+  if (isBlacklisted || req.method !== 'GET') {
     return next(req);
   }
 
