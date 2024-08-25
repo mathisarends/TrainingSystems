@@ -31,7 +31,7 @@ export class TrainingStatisticsService {
     title: string;
     data: Partial<TrainingExerciseTonnageDto>;
   }> {
-    const exercisesQueryParam = this.toExercisesQueryParam(exercises);
+    const exercisesQueryParam = this.toQueryParam(exercises);
     return this.httpService.get<any>(`/training/statistics/${id}?exercises=${exercisesQueryParam}`);
   }
 
@@ -39,7 +39,7 @@ export class TrainingStatisticsService {
    * Retrieves the set data for selected exercises in a specific training plan.
    */
   getSetDataForSelectedExercises(id: string, exercises: string[]) {
-    const exercisesQueryParam = this.toExercisesQueryParam(exercises);
+    const exercisesQueryParam = this.toQueryParam(exercises);
     return this.httpService.get<any>(`/training/statistics/${id}/sets?exercises=${exercisesQueryParam}`);
   }
 
@@ -56,8 +56,18 @@ export class TrainingStatisticsService {
    * Updates the list of categories that have been last viewed by the user in a specific training plan.
    */
   updateLastViewedCategories(id: string, exercises: string[]) {
-    const exercisesQueryParam = this.toExercisesQueryParam(exercises);
+    const exercisesQueryParam = this.toQueryParam(exercises);
     return this.httpService.post(`/training/statistics/${id}/viewedCategories?exercises=${exercisesQueryParam}`);
+  }
+
+  /**
+   * Retrieves time statistics for specific training days in a training plan.
+   */
+  getTimeStatsForTrainingDays(id: string, trainingDayIndexes: number[]): Observable<{ [key: number]: number[] }> {
+    const mappedTrainingDayIndexes = trainingDayIndexes.map((trainingDayIndex) => trainingDayIndex.toString());
+
+    const trainingDayIndexesParam = this.toQueryParam(mappedTrainingDayIndexes);
+    return this.httpService.post(`/training/statistics/${id}/time?trainingDays=${trainingDayIndexesParam}`);
   }
 
   /**
@@ -66,7 +76,7 @@ export class TrainingStatisticsService {
    * @param exercises - An array of exercise names.
    * @returns A string that represents the query parameter for exercises.
    */
-  private toExercisesQueryParam(exercises: string[]) {
+  private toQueryParam(exercises: string[]) {
     return exercises.join(',');
   }
 }
