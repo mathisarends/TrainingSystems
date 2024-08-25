@@ -169,6 +169,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
    * @param day - Index of the training day.
    */
   loadData(planId: string, week: number, day: number): void {
+    this.dataViewLoaded.next(false);
     forkJoin({
       trainingPlan: this.trainingViewService.loadTrainingPlan(planId, week, day),
       exerciseData: this.trainingViewService.loadExerciseData(),
