@@ -60,14 +60,13 @@ export class TrainingStatisticsService {
     return this.httpService.post(`/training/statistics/${id}/viewedCategories?exercises=${exercisesQueryParam}`);
   }
 
+  // TODO: diesen Fetch hier ach wirklich benutzen
+
   /**
    * Retrieves time statistics for specific training days in a training plan.
    */
-  getTimeStatsForTrainingDays(id: string, trainingDayIndexes: number[]): Observable<{ [key: number]: number[] }> {
-    const mappedTrainingDayIndexes = trainingDayIndexes.map((trainingDayIndex) => trainingDayIndex.toString());
-
-    const trainingDayIndexesParam = this.toQueryParam(mappedTrainingDayIndexes);
-    return this.httpService.post(`/training/statistics/${id}/time?trainingDays=${trainingDayIndexesParam}`);
+  getTimeStatsForTrainingDays(id: string): Observable<{ [key: number]: number[] }> {
+    return this.httpService.post(`/training/statistics/${id}/time`);
   }
 
   /**
