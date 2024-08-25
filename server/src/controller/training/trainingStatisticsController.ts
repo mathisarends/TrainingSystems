@@ -8,6 +8,7 @@ import { MongoGenericDAO } from '../../models/dao/mongo-generic.dao.js';
 import { User } from '../../models/collections/user/user.js';
 import { mapToExerciseCategory } from '../../utils/exerciseUtils.js';
 import { Exercise } from '../../models/training/exercise.js';
+import { TrainingWeek } from '../../models/training/trainingWeek.js';
 
 /**
  * Updates the list of recently viewed exercise categories for the statistics section of a specific training plan.
@@ -62,6 +63,46 @@ export async function getSetsForCategories(req: Request, res: Response): Promise
   });
 
   res.status(200).json(responseData);
+}
+
+/**
+ * Retrieves the training duration data for specific training days across multiple weeks in a training plan.
+ * The method takes a list of 0-based day indexes and returns the duration of training sessions for each day
+ * across different weeks.
+ */
+export async function getTimeExpenditureDataForTrainingDays(req: Request, res: Response): Promise<Response> {
+  const trainingPlanId = req.params.id;
+  const trainingDays = (req.query.trainingDays as string).split(',');
+
+  if (trainingDays.some(trainingDay => isNaN(Number(trainingDay)))) {
+    return res.status(400).json({ error: 'Invalid parameters ' });
+  }
+
+  // Contains all 0-based indexes of training days relevant to the query
+  const trainingDayIndexes = trainingDays.map(trainingDay => Number(trainingDay));
+
+  const user = await getUser(req, res);
+  const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
+
+  const weeklyTrainingDurations: { [key: number]: number[] } = {};
+
+  trainingPlan.trainingWeeks.forEach((trainingWeek: TrainingWeek, weekIndex: number) => {
+    if (!trainingDayIndexes.includes(weekIndex)) {
+      return;
+    }
+    trainingWeek.trainingDays.forEach((trainingDay: TrainingDay) => {
+      if (!trainingDay.durationInMinutes) {
+        return;
+      }
+
+      if (!weeklyTrainingDurations[weekIndex]) {
+        weeklyTrainingDurations[weekIndex] = [];
+      }
+      weeklyTrainingDurations[weekIndex].push(trainingDay.durationInMinutes);
+    });
+  });
+
+  return res.status(200).json(weeklyTrainingDurations);
 }
 
 /**

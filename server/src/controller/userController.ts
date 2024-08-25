@@ -69,7 +69,6 @@ export async function getActivityCalendar(req: Request, res: Response): Promise<
   const user = await userService.getUser(req, res);
 
   const sortedTrainingPlans = sortTrainingPlans(user.trainingPlans);
-  console.log('🚀 ~ getActivityCalendar ~ sortedTrainingPlans:', sortedTrainingPlans.length);
 
   const activityMap = new Map<number, number>();
 

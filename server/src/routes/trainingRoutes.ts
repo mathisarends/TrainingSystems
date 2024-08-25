@@ -58,6 +58,12 @@ router.get(
 );
 
 router.get(
+  '/statistics/:id/time',
+  authService.authenticationMiddleware,
+  asyncHandler(trainingStatisticsController.getTimeExpenditureDataForTrainingDays)
+);
+
+router.get(
   '/statitics/:id/performance',
   authService.authenticationMiddleware,
   asyncHandler(trainingStatisticsController.getPerformanceCharts)
