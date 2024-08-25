@@ -16,6 +16,7 @@ import { ModalService } from '../../../service/modal/modalService';
 import { PolarChartComponent } from '../../components/charts/polar-chart/polar-chart.component';
 import { HeadlineComponent } from '../../components/headline/headline.component';
 import { ChartSkeletonComponent } from '../../components/loaders/chart-skeleton/chart-skeleton.component';
+import { TrainingStatisticsService } from './training-statistics.service';
 
 /**
  * Component responsible for displaying training statistics in a line chart.
@@ -33,6 +34,7 @@ import { ChartSkeletonComponent } from '../../components/loaders/chart-skeleton/
     HeadlineComponent,
     ChartSkeletonComponent,
   ],
+  providers: [TrainingStatisticsService],
   templateUrl: './statistics.component.html',
   styleUrls: ['./statistics.component.scss'],
 })
@@ -58,6 +60,7 @@ export class StatisticsComponent implements OnInit {
     private httpService: HttpService,
     private chartColorService: ChartColorService,
     private modalService: ModalService,
+    private trainingStatisticService: TrainingStatisticsService,
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -68,7 +71,7 @@ export class StatisticsComponent implements OnInit {
   }
 
   async changeDisplayCategories(newExercises: string[]) {
-    this.updateLastViewedCategories(this.id, newExercises);
+    this.trainingStatisticService.updateLastViewedCategories(this.id, newExercises).subscribe(() => {});
 
     if (this.id) {
       await this.fetchStatistics(this.id, newExercises);
@@ -100,8 +103,8 @@ export class StatisticsComponent implements OnInit {
   private async fetchInitialData(id: string): Promise<void> {
     try {
       const [allExercisesResponse, selectedExercisesResponse] = await Promise.all([
-        firstValueFrom(this.httpService.get<any>(`/exercise/categories`)),
-        firstValueFrom(this.httpService.get<any>(`/training/statistics/${id}/viewedCategories`)),
+        firstValueFrom(this.trainingStatisticService.getAllCategories()),
+        firstValueFrom(this.trainingStatisticService.getSelectedCategories(id)),
       ]);
 
       this.allExercises = allExercisesResponse;
@@ -117,20 +120,13 @@ export class StatisticsComponent implements OnInit {
 
   private async fetchStatistics(id: string, exercises: string[]): Promise<void> {
     try {
-      const exercisesQuery = exercises.join(',');
-
       const [tonnageResponse, setsResponse] = await Promise.all([
-        firstValueFrom(
-          this.httpService.get<{
-            title: string;
-            data: Partial<TrainingExerciseTonnageDto>;
-          }>(`/training/statistics/${id}?exercises=${exercisesQuery}`),
-        ),
-        firstValueFrom(this.httpService.get<any>(`/training/statistics/${id}/sets?exercises=${exercisesQuery}`)),
+        firstValueFrom(this.trainingStatisticService.getTonnageDataForSelectedExercises(id, exercises)),
+        firstValueFrom(this.trainingStatisticService.getSetDataForSelectedExercises(id, exercises)),
       ]);
 
       this.dataLoaded = true;
-      this.initializeCharts(tonnageResponse.data, setsResponse, tonnageResponse.title);
+      this.initializeCharts(tonnageResponse.data!, setsResponse, tonnageResponse.title);
     } catch (error) {
       console.error('Error fetching training statistics:', error);
     }
@@ -191,15 +187,6 @@ export class StatisticsComponent implements OnInit {
 
   private formatCategoryLabel(category: string): string {
     return category.charAt(0).toUpperCase() + category.slice(1);
-  }
-
-  private updateLastViewedCategories(id: string, exericses: string[]) {
-    const exercisesQueryParam = exericses.join(',');
-
-    // Zuletzt besuchte Kategorien festse
-    this.httpService
-      .post(`/training/statistics/${id}/viewedCategories?exercises=${exercisesQueryParam}`)
-      .subscribe(() => {});
   }
 
   changeView(index: number) {
