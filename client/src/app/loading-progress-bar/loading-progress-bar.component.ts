@@ -1,6 +1,7 @@
-import { Component, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, effect, ElementRef, Injector, OnInit, signal, ViewChild } from '@angular/core';
 import { BrowserCheckService } from '../browser-check.service';
 import { Subject } from 'rxjs';
+import { LoadingService } from '../../service/util/loading.service';
 
 @Component({
   selector: 'app-loading-progress-bar',
@@ -17,21 +18,27 @@ export class LoadingProgressBarComponent implements OnInit {
 
   @ViewChild('progressBar', { static: true }) progressBar!: ElementRef; // Reference to the progress bar element
 
-  constructor(private browserCheckService: BrowserCheckService) {}
+  constructor(
+    private browserCheckService: BrowserCheckService,
+    private loadingService: LoadingService,
+    private injector: Injector,
+  ) {}
 
   ngOnInit() {
     if (this.browserCheckService.isBrowser()) {
-      this.simulateLoading();
-
-      // Automatically fire the loading complete event after 2 seconds for testing
-      setTimeout(() => {
-        this.notifyDataLoaded();
-      }, 2000);
-
-      // Subscribe to the loading complete event
-      this.loadingComplete$.subscribe(() => {
-        this.completeLoading();
-      });
+      // Reactively listen to changes in the loading state using the computed signal
+      effect(
+        () => {
+          console.log('called when loading state changes:', this.loadingService.isLoading());
+          if (this.loadingService.isLoading()) {
+            console.log('loading ');
+            this.simulateLoading(); // Start progress animation if loading is active
+          } else {
+            this.completeLoading(); // Complete progress animation if no loading is active
+          }
+        },
+        { allowSignalWrites: true, injector: this.injector },
+      );
     }
   }
 
