@@ -27,21 +27,28 @@ export class ActivityCalendar implements OnInit {
   grid: ActivityCalendarEntry[] = [];
 
   ngOnInit(): void {
-    // Convert the input object into an array of entries for easier iteration
+    this.grid = Array.from({ length: 364 }, (_, index) => ({
+      day: index as 0 | 363,
+      value: 0,
+      level: 0 as Level,
+    }));
+
     const dataEntries = Object.entries(this.activityData()).map(([day, value]) => ({
       day: +day, // Convert day string to number
       value: value as number,
       level: 0 as Level,
     }));
 
-    // Initialize the grid with data
-    this.grid = dataEntries.map((entry) => ({
-      day: entry.day as 0 | 363, // Ensure day is within bounds (0-363)
-      value: entry.value,
-      level: 0 as Level,
-    }));
+    // Populate the grid with provided data
+    dataEntries.forEach((entry) => {
+      this.grid[entry.day] = {
+        day: entry.day as 0 | 363, // Ensure day is within bounds
+        value: entry.value,
+        level: 0 as Level,
+      };
+    });
 
-    this.trainingDays.set(this.grid.length);
+    this.trainingDays.set(dataEntries.length);
 
     this.calculateLevels();
   }

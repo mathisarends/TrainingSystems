@@ -16,9 +16,13 @@
 #header .dropdown {
   z-index: 1000;
 
-  & .dropdown-item.active,
-  & .dropdown-item:active {
+  & .dropdown-item.active {
     background: $accent-color;
+  }
+
+  & .dropdown-item:active {
+    background: white;
+    color: black;
   }
 }
 

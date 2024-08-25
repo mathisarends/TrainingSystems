@@ -28,7 +28,7 @@
             class="day"
             *ngFor="let day of grid"
             [ngClass]="'level-' + day.level"
-            [appTooltip]="day.value.toString()"
+            [appTooltip]="day.value.toString() + ' KG'"
           ></div>
         </div>
       </div>
