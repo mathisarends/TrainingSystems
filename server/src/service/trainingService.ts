@@ -32,8 +32,10 @@ export function getNextTrainingDay(trainingPlan: TrainingPlan): TrainingDayIndex
   return { weekIndex, dayIndex };
 }
 
-export function getAverageTrainingDuration(trainingPlan: TrainingPlan): number | undefined {
+export function getAverageTrainingDuration(trainingPlan: TrainingPlan): string | undefined {
   const trainingDurations: number[] = [];
+
+  // Collect all training durations from the plan
   for (const trainingWeek of trainingPlan.trainingWeeks) {
     for (const trainingDay of trainingWeek.trainingDays) {
       if (trainingDay.durationInMinutes) {
@@ -47,11 +49,19 @@ export function getAverageTrainingDuration(trainingPlan: TrainingPlan): number |
     return undefined;
   }
 
+  // Calculate the sum of all training durations
   const totalDuration = trainingDurations.reduce((sum, duration) => sum + duration, 0);
 
   const averageTrainingDuration = totalDuration / trainingDurations.length;
 
-  return averageTrainingDuration;
+  const hours = Math.floor(averageTrainingDuration / 60);
+  const minutes = Math.round(averageTrainingDuration % 60);
+
+  if (hours > 0) {
+    return `${hours}h ${minutes}min`;
+  } else {
+    return `${minutes} Minuten`;
+  }
 }
 
 export function getPercentageOfTrainingPlanFinished(trainingPlan: TrainingPlan) {

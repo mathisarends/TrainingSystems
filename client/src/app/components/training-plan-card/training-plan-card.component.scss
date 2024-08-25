@@ -6,6 +6,10 @@
   transition: transform 0.3s ease; /* Definiert die Dauer und die Art der Animation */
 }
 
+.card-text {
+  margin-bottom: 0.5rem;
+}
+
 .card:hover {
   transform: scale(1.01); /* Transform anstelle von scale verwenden */
 }

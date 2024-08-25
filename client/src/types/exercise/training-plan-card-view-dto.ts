@@ -8,5 +8,5 @@ export interface TrainingPlanCardView {
   coverImageBase64?: string;
   pictureUrl?: string; // profile picture of user
   percentageFinished: number;
-  averageTrainingDayDuration?: number;
+  averageTrainingDayDuration?: string;
 }
