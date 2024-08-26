@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpService } from '../../../service/http/http-client.service';
 import { Observable } from 'rxjs';
 import { TrainingExerciseTonnageDto } from './main-exercise-tonnage-dto';
+import { TimeStats } from './time-stats';
 
 @Injectable()
 export class TrainingStatisticsService {
@@ -55,7 +56,7 @@ export class TrainingStatisticsService {
   /**
    * Updates the list of categories that have been last viewed by the user in a specific training plan.
    */
-  updateLastViewedCategories(id: string, exercises: string[]) {
+  updateLastViewedCategories(id: string, exercises: string[]): Observable<unknown> {
     const exercisesQueryParam = this.toQueryParam(exercises);
     return this.httpService.post(`/training/statistics/${id}/viewedCategories?exercises=${exercisesQueryParam}`);
   }
@@ -64,7 +65,7 @@ export class TrainingStatisticsService {
   /**
    * Retrieves time statistics for specific training days in a training plan.
    */
-  getTimeStatsForTrainingDays(id: string): Observable<{ [key: number]: number[] }> {
+  getTimeStatsForTrainingDays(id: string): Observable<TimeStats> {
     return this.httpService.get(`/training/statistics/${id}/time`);
   }
 

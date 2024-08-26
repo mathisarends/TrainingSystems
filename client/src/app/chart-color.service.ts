@@ -55,6 +55,7 @@ export class ChartColorService {
 
   /**
    * Retrieves the color settings (border color and background color) for a specific exercise category.
+   * If the category is not found, a random predefined color is returned.
    * @param category - The name of the exercise category.
    * @returns An object containing the borderColor and backgroundColor for the category.
    */
@@ -62,11 +63,22 @@ export class ChartColorService {
     borderColor: string;
     backgroundColor: string;
   } {
-    return (
-      this.colors[category] || {
-        borderColor: 'rgba(0, 0, 0, 1)',
-        backgroundColor: 'rgba(0, 0, 0, 0.2)',
-      }
-    );
+    if (this.colors[category]) {
+      return this.colors[category];
+    } else {
+      // Wenn die Kategorie nicht gefunden wird, eine zufällige Farbe auswählen
+      const randomKey = this.getRandomColorKey();
+      return this.colors[randomKey];
+    }
+  }
+
+  /**
+   * Returns a random key from the predefined colors.
+   * @returns A random key representing an exercise category.
+   */
+  private getRandomColorKey(): string {
+    const keys = Object.keys(this.colors);
+    const randomIndex = Math.floor(Math.random() * keys.length);
+    return keys[randomIndex];
   }
 }

@@ -7,12 +7,6 @@
  */
 export interface LineChartDataset {
   /**
-   * The label for the dataset, typically representing the exercise or category name.
-   * @example 'Squat'
-   */
-  label: string;
-
-  /**
    * The data points for the dataset, representing the values to be plotted on the chart.
    * Each value corresponds to a data point on the x-axis (e.g., weeks).
    * @example [30, 60, 90]

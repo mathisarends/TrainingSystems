@@ -21,12 +21,7 @@
     />
 
     <!-- Second Line chart for time -->
-    <app-line-chart
-      [data]="lineChartDatasets"
-      [labels]="lineChartLabels"
-      (drillThrough)="showDrillThroughGraph($event)"
-      yAxisTitle="Tonnage (kg)"
-    />
+    <app-line-chart [data]="timeChartData" [labels]="timeChartLabels" yAxisTitle="Trainingsdauer über Wochen" />
 
     <app-grouped-bar-chart [labels]="groupedBarChartLabels" [barChartDataSets]="groupedBarChartDatasets" />
   </main>

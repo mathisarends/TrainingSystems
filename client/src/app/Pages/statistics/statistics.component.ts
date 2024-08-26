@@ -15,6 +15,8 @@ import { PolarChartComponent } from '../../components/charts/polar-chart/polar-c
 import { HeadlineComponent } from '../../components/headline/headline.component';
 import { ChartSkeletonComponent } from '../../components/loaders/chart-skeleton/chart-skeleton.component';
 import { TrainingStatisticsService } from './training-statistics.service';
+import { TimeStats } from './time-stats';
+import { LineChartDataset } from '../../components/charts/line-chart/lilne-chart-data-set';
 
 /**
  * Component responsible for displaying training statistics in a line chart.
@@ -43,13 +45,14 @@ export class StatisticsComponent implements OnInit {
   selectedExercises!: string[];
   allExercises!: string[];
 
-  lineChartDatasets!: any[];
+  lineChartDatasets!: LineChartDataset[];
   lineChartLabels!: string[];
 
   groupedBarChartDatasets!: BarChartData[];
   groupedBarChartLabels!: string[];
 
-  timeChartLabels!: string[];
+  timeChartData!: LineChartDataset[];
+  timeChartLabels: string[] = [];
 
   id!: string;
 
@@ -96,20 +99,16 @@ export class StatisticsComponent implements OnInit {
   }
 
   private async fetchInitialData(id: string): Promise<void> {
-    try {
-      const [allExercisesResponse, selectedExercisesResponse] = await Promise.all([
-        firstValueFrom(this.trainingStatisticService.getAllCategories()),
-        firstValueFrom(this.trainingStatisticService.getSelectedCategories(id)),
-      ]);
+    const [allExercisesResponse, selectedExercisesResponse] = await Promise.all([
+      firstValueFrom(this.trainingStatisticService.getAllCategories()),
+      firstValueFrom(this.trainingStatisticService.getSelectedCategories(id)),
+    ]);
 
-      this.allExercises = allExercisesResponse;
-      this.selectedExercises = selectedExercisesResponse;
+    this.allExercises = allExercisesResponse;
+    this.selectedExercises = selectedExercisesResponse;
 
-      if (this.selectedExercises) {
-        await this.fetchStatistics(id, this.selectedExercises);
-      }
-    } catch (error) {
-      console.error('Error fetching initial data:', error);
+    if (this.selectedExercises) {
+      await this.fetchStatistics(id, this.selectedExercises);
     }
   }
 
@@ -123,22 +122,36 @@ export class StatisticsComponent implements OnInit {
     this.dataLoaded = true;
     console.log('🚀 ~ StatisticsComponent ~ fetchStatistics ~ timeResponse:', timeStats);
 
-    Object.entries(timeStats).forEach(([key, durations]) => {
-      const dayIndex = Number(key);
-      this.timeChartLabels = durations.map((duration: number, index: number) => 'Tag ' + (index + 1));
-      console.log('🚀 ~ StatisticsComponent ~ Object.entries ~ this.timeChartLabels:', this.timeChartLabels);
-    });
-
-    this.initializeCharts(tonnageResponse.data!, setsResponse, tonnageResponse.title);
+    this.initializeCharts(tonnageResponse.data!, setsResponse, tonnageResponse.title, timeStats);
   }
 
   private initializeCharts(
     tonnageData: Partial<TrainingExerciseTonnageDto>,
     setsResponse: { [key: string]: number[] },
-    title: string, // Neuer Parameter für den Titel
+    title: string,
+    timeStats: TimeStats,
   ): void {
     // Setze den Titel des Trainingsplans
     this.trainingPlanTitle = title;
+
+    // Verarbeite die TimeStats zu LineChartData
+    this.timeChartData = Object.entries(timeStats).map(([weekIndex, durations]) => {
+      const colors = this.chartColorService.getCategoryColor(`week-${weekIndex}`);
+
+      return {
+        label: `Trainings Woche ${Number(weekIndex) + 1}`,
+        data: durations,
+        borderColor: colors.borderColor,
+        backgroundColor: colors.backgroundColor,
+        fill: false,
+      };
+    });
+
+    // Erstelle Labels für das Zeitdiagramm basierend auf der Anzahl der Einträge
+    // Hier wird erwartet, dass timeStats[0], timeStats[1], ... alle gleich viele Elemente haben
+    // Falls dies nicht der Fall ist, sollte der Code angepasst werden
+    const maxLength = Math.max(...Object.values(timeStats).map((durations) => durations.length));
+    this.timeChartLabels = Array.from({ length: maxLength }, (_, i) => `Tag ${i + 1}`);
 
     // Setze Daten für das Liniendiagramm
     this.lineChartDatasets = Object.keys(tonnageData).map((categoryKey) => {
