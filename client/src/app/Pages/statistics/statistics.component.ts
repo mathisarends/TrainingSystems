@@ -4,7 +4,7 @@ import { TrainingExerciseTonnageDto } from './main-exercise-tonnage-dto';
 import { Tonnage } from './tonnage';
 import { MultiSelectComponent } from '../../components/multi-select/multi-select.component';
 import { ChartColorService } from '../../chart-color.service';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, timer } from 'rxjs';
 import { LineChartComponent } from '../../components/charts/line-chart/line-chart.component';
 import { GroupedBarChartComponent } from '../../components/charts/grouped-bar-chart/grouped-bar-chart.component';
 import { BarChartData } from '../../components/charts/grouped-bar-chart/bar-chart.-data';
@@ -48,6 +48,8 @@ export class StatisticsComponent implements OnInit {
 
   groupedBarChartDatasets!: BarChartData[];
   groupedBarChartLabels!: string[];
+
+  timeChartLabels!: string[];
 
   id!: string;
 
@@ -112,20 +114,22 @@ export class StatisticsComponent implements OnInit {
   }
 
   private async fetchStatistics(id: string, exercises: string[]): Promise<void> {
-    try {
-      const [tonnageResponse, setsResponse, timeResponse] = await Promise.all([
-        firstValueFrom(this.trainingStatisticService.getTonnageDataForSelectedExercises(id, exercises)),
-        firstValueFrom(this.trainingStatisticService.getSetDataForSelectedExercises(id, exercises)),
-        firstValueFrom(this.trainingStatisticService.getTimeStatsForTrainingDays(id)),
-      ]);
+    const [tonnageResponse, setsResponse, timeStats] = await Promise.all([
+      firstValueFrom(this.trainingStatisticService.getTonnageDataForSelectedExercises(id, exercises)),
+      firstValueFrom(this.trainingStatisticService.getSetDataForSelectedExercises(id, exercises)),
+      firstValueFrom(this.trainingStatisticService.getTimeStatsForTrainingDays(id)),
+    ]);
 
-      this.dataLoaded = true;
-      console.log('🚀 ~ StatisticsComponent ~ fetchStatistics ~ timeResponse:', timeResponse);
+    this.dataLoaded = true;
+    console.log('🚀 ~ StatisticsComponent ~ fetchStatistics ~ timeResponse:', timeStats);
 
-      this.initializeCharts(tonnageResponse.data!, setsResponse, tonnageResponse.title);
-    } catch (error) {
-      console.error('Error fetching training statistics:', error);
-    }
+    Object.entries(timeStats).forEach(([key, durations]) => {
+      const dayIndex = Number(key);
+      this.timeChartLabels = durations.map((duration: number, index: number) => 'Tag ' + (index + 1));
+      console.log('🚀 ~ StatisticsComponent ~ Object.entries ~ this.timeChartLabels:', this.timeChartLabels);
+    });
+
+    this.initializeCharts(tonnageResponse.data!, setsResponse, tonnageResponse.title);
   }
 
   private initializeCharts(

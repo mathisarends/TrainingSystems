@@ -20,6 +20,14 @@
       yAxisTitle="Tonnage (kg)"
     />
 
+    <!-- Second Line chart for time -->
+    <app-line-chart
+      [data]="lineChartDatasets"
+      [labels]="lineChartLabels"
+      (drillThrough)="showDrillThroughGraph($event)"
+      yAxisTitle="Tonnage (kg)"
+    />
+
     <app-grouped-bar-chart [labels]="groupedBarChartLabels" [barChartDataSets]="groupedBarChartDatasets" />
   </main>
 }

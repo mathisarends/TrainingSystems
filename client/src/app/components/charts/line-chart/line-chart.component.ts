@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import Chart, { ActiveElement, ChartEvent } from 'chart.js/auto';
 import { ExerciseDrillThroughEvent } from './exercise-drill-through-event';
+import { LineChartDataset } from './lilne-chart-data-set';
 
 @Component({
   selector: 'app-line-chart',
@@ -22,7 +23,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges {
   @ViewChild('canvas') canvas!: ElementRef;
 
   @Input() chartId: string = 'lineChart';
-  @Input() data: any[] = [];
+  @Input() data: LineChartDataset[] = [];
   @Input() labels: string[] = [];
   @Input() yAxisTitle: string = 'Value';
   @Input() maintainAspectRatio: boolean = false;
