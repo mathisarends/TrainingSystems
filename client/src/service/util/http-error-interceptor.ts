@@ -1,5 +1,5 @@
-import { HttpRequest, HttpEvent, HttpHandlerFn, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { HttpRequest, HttpEvent, HttpHandlerFn, HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { inject } from '@angular/core';
 import { ToastService } from '../../app/components/toast/toast.service';
@@ -41,9 +41,11 @@ export function httpErrorInterceptor(req: HttpRequest<unknown>, next: HttpHandle
 
       toastService.show('Fehler', errorMessage, ToastStatus.ERROR);
 
+      // Logge den Fehler zur Konsole
       console.error(errorMessage);
 
-      return throwError(() => new Error(errorMessage));
+      // Return a dummy HttpResponse to prevent the app from crashing
+      return of(new HttpResponse({ body: null }));
     }),
   );
 }

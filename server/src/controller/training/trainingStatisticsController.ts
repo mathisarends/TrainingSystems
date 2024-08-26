@@ -72,6 +72,7 @@ export async function getSetsForCategories(req: Request, res: Response): Promise
  */
 export async function getTimeExpenditureDataForTrainingDays(req: Request, res: Response): Promise<Response> {
   const trainingPlanId = req.params.id;
+  console.log('🚀 ~ getTimeExpenditureDataForTrainingDays ~ trainingPlanId:', trainingPlanId);
 
   const user = await getUser(req, res);
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);

@@ -61,12 +61,11 @@ export class TrainingStatisticsService {
   }
 
   // TODO: diesen Fetch hier ach wirklich benutzen
-
   /**
    * Retrieves time statistics for specific training days in a training plan.
    */
   getTimeStatsForTrainingDays(id: string): Observable<{ [key: number]: number[] }> {
-    return this.httpService.post(`/training/statistics/${id}/time`);
+    return this.httpService.get(`/training/statistics/${id}/time`);
   }
 
   /**

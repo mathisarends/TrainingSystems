@@ -113,12 +113,15 @@ export class StatisticsComponent implements OnInit {
 
   private async fetchStatistics(id: string, exercises: string[]): Promise<void> {
     try {
-      const [tonnageResponse, setsResponse] = await Promise.all([
+      const [tonnageResponse, setsResponse, timeResponse] = await Promise.all([
         firstValueFrom(this.trainingStatisticService.getTonnageDataForSelectedExercises(id, exercises)),
         firstValueFrom(this.trainingStatisticService.getSetDataForSelectedExercises(id, exercises)),
+        firstValueFrom(this.trainingStatisticService.getTimeStatsForTrainingDays(id)),
       ]);
 
       this.dataLoaded = true;
+      console.log('🚀 ~ StatisticsComponent ~ fetchStatistics ~ timeResponse:', timeResponse);
+
       this.initializeCharts(tonnageResponse.data!, setsResponse, tonnageResponse.title);
     } catch (error) {
       console.error('Error fetching training statistics:', error);
