@@ -215,6 +215,9 @@ export function updateExercise(
     case fieldName.endsWith('estMax'):
       exercise.estMax = Number(fieldValue);
       break;
+    case fieldName.endsWith('notes'):
+      exercise.notes = fieldValue;
+      break;
     default:
       console.log('Dieses Feld gibt es leider nicht!');
       break;

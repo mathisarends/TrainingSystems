@@ -22,6 +22,7 @@
           <th scope="col" class="text-center">RPE</th>
           <th scope="col" class="text-center">&#64;RPE</th>
           <th scope="col" class="text-center">Max</th>
+          <th scope="col" class="text-center">Notes</th>
         </tr>
       </thead>
       <tbody>
@@ -136,6 +137,15 @@
                 readonly
                 [name]="namePrefix + 'estMax'"
                 [value]="exercise.estMax || ''"
+              />
+            </td>
+            <td data-cell="Notes">
+              <input
+                type="text"
+                appInteractiveElement
+                class="transparent-input notes"
+                [name]="namePrefix + 'notes'"
+                [value]="exercise.notes || ''"
               />
             </td>
           </tr>
