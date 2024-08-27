@@ -1,5 +1,5 @@
 <div class="toast-container">
-  @for (toast of toastService.toasts; track toast) {
+  @if (toastService.currentToast; as toast) {
     @let warningToast = toast.status === ToastStatus.ERROR;
 
     <div class="toast" [ngClass]="{ error: warningToast }" [class.active]="true" role="alert">
@@ -11,7 +11,7 @@
         }
         <span class="info">{{ toast.text }}</span>
       </div>
-      <div class="close-icon-container" (click)="remove(toast)">✖</div>
+      <div class="close-icon-container" (click)="remove()">✖</div>
     </div>
   }
 </div>

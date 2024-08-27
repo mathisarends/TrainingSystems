@@ -16,7 +16,7 @@ export class ToastComponent {
 
   constructor(public toastService: ToastService) {}
 
-  remove(toast: any) {
-    this.toastService.remove(toast);
+  remove() {
+    this.toastService.remove();
   }
 }

@@ -7,19 +7,32 @@ import { stat } from 'fs';
   providedIn: 'root',
 })
 export class ToastService {
-  toasts: Toast[] = [];
+  private toast!: Toast | null;
 
   show(title: string, text: string, status = ToastStatus.ERROR) {
     const toast = { title, text, status };
 
     toast.title = status === ToastStatus.SUCESS ? 'Erfolg' : 'Fehler';
 
-    this.toasts.push(toast);
+    this.toast = toast;
 
-    setTimeout(() => this.remove(toast), status === ToastStatus.SUCESS ? 5000 : 10000);
+    setTimeout(() => this.remove(), status === ToastStatus.SUCESS ? 5000 : 10000);
   }
 
-  remove(toast: any) {
-    this.toasts = this.toasts.filter((t) => t !== toast);
+  /**
+   * Removes the current toast.
+   * Sets the toast property to null, indicating no active toast.
+   */
+  remove(): void {
+    this.toast = null;
+  }
+
+  /**
+   * Gets the current toast.
+   *
+   * @returns The current toast or null if no toast is active.
+   */
+  get currentToast(): Toast | null {
+    return this.toast;
   }
 }

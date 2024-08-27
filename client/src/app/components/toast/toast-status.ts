@@ -1,4 +1,4 @@
 export enum ToastStatus {
-  SUCESS = 'SUCESS',
+  SUCESS = 'SUCCESS',
   ERROR = 'ERROR',
 }
