@@ -5,6 +5,7 @@ import { TrainingDay } from '../models/training/trainingDay.js';
 
 import { v4 as uuidv4 } from 'uuid';
 import { TrainingDayIndexes } from './training-day-indexes.js';
+import { User } from '../models/collections/user/user.js';
 
 export function findTrainingPlanById(trainingPlans: TrainingPlan[], planId: string): TrainingPlan {
   const plan = trainingPlans.find(plan => plan.id === planId);
@@ -221,5 +222,26 @@ export function updateExercise(
     default:
       console.log('Dieses Feld gibt es leider nicht!');
       break;
+  }
+}
+
+/**
+ * Finds a training day by its ID for a given user.
+ *
+ * This function searches through all the training plans and their respective training weeks
+ * associated with a user to find a specific training day by its ID.
+ *
+ * @param user - The user object containing the training plans.
+ * @param trainingDayId - The ID of the training day to find.
+ * @returns The `TrainingDay` object if found; otherwise, `undefined`.
+ */
+export function findTrainingDayPerIdAndUser(user: User, trainingDayId: string) {
+  for (const trainingPlan of user.trainingPlans) {
+    for (const trainingWeek of trainingPlan.trainingWeeks) {
+      const trainingDay = trainingWeek.trainingDays.find(trainingDay => trainingDay.id === trainingDayId);
+      if (trainingDay) {
+        return trainingDay;
+      }
+    }
   }
 }

@@ -91,6 +91,17 @@ export async function getActivityCalendar(req: Request, res: Response): Promise<
   res.status(200).json(activityObject);
 }
 
+/**
+ * Retrieves training day notifications for a user.
+ */
+export async function getTrainingDayNotifications(req: Request, res: Response): Promise<Response> {
+  const user = await userService.getUser(req, res);
+
+  const trainingDayNotifications = user.trainingDayNotifications;
+
+  return res.status(200).json(trainingDayNotifications);
+}
+
 function getIndexOfDayPerYearFromDate(date: Date): number {
   const dateObj = new Date(date);
 

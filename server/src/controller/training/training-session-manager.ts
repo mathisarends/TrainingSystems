@@ -99,7 +99,7 @@ export class TrainingSessionManager {
       user.trainingPlans[trainingPlanIndex].trainingWeeks[trainingWeekIndex].trainingDays[trainingDayIndex] =
         trainingData;
 
-      user.trainingDayOverviewNotification.push(trainingData);
+      user.trainingDayNotifications.push(trainingData);
 
       await userDAO.update(user);
     }

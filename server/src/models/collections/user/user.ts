@@ -52,5 +52,5 @@ export interface User extends Entity {
    * This property is required and holds an array with  `TrainingDay` objects,
    * representing the summary of the user's previous training day.
    */
-  trainingDayOverviewNotification: TrainingDay[];
+  trainingDayNotifications: TrainingDay[];
 }

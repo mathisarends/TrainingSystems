@@ -18,6 +18,12 @@ router.get(
 );
 
 router.get(
+  '/training-notification',
+  authService.authenticationMiddleware,
+  asyncHandler(userController.getTrainingDayNotifications)
+);
+
+router.get(
   '/profile-picture',
   authService.authenticationMiddleware,
   asyncHandler(async (req, res) => {

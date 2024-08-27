@@ -12,6 +12,7 @@ import { TrainingViewComponent } from './Pages/training-view/training-view.compo
 import { AuthGuard } from './auth-guard.service';
 
 import { UsageStatisticsComponent } from './usage-statistics/usage-statistics.component';
+import { NotificationPageComponent } from './notification-page/notification-page.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -29,7 +30,8 @@ export const routes: Routes = [
     path: 'statistics/:planId',
     component: StatisticsComponent,
   },
-  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+  { path: 'profile', component: ProfileComponent },
+  { path: 'notifications', component: NotificationPageComponent },
   {
     path: 'exercises',
     component: ExercisesComponent,

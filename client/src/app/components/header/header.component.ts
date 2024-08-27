@@ -1,10 +1,21 @@
-import { Component, ElementRef, EventEmitter, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  OnInit,
+  Output,
+  QueryList,
+  signal,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { catchError, filter } from 'rxjs/operators';
 import { ProfileService } from '../../Pages/profile/profileService';
 import { User } from '../../types/user';
 import { SearchService } from '../../../service/util/search.service';
 import { of } from 'rxjs';
+import { ToastService } from '../toast/toast.service';
 
 @Component({
   selector: 'app-header',
@@ -25,6 +36,8 @@ export class HeaderComponent implements OnInit {
 
   @Output() searchInput: EventEmitter<string> = new EventEmitter<string>();
 
+  notifications = signal<any[]>(['1', '3']);
+
   /**
    * Creates an instance of HeaderComponent.
    * Subscribes to router events and initializes services.
@@ -37,6 +50,7 @@ export class HeaderComponent implements OnInit {
     private router: Router,
     private profileService: ProfileService,
     private searchService: SearchService,
+    private toastService: ToastService,
   ) {
     // Subscribe to router events to update active link on navigation end
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {

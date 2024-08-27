@@ -51,11 +51,16 @@
             height="26"
             class="rounded-circle"
           />
-          <!-- <span class="notification-badge">{{ 3 }}</span> -->
+          @if (notifications()) {
+            <span class="notification-badge">{{ notifications().length }}</span>
+          }
         </a>
         <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
           <li>
             <a class="dropdown-item" #navLink href="profile" (click)="navigateTo($event)">Profile</a>
+          </li>
+          <li>
+            <a class="dropdown-item" #navLink href="notifications" (click)="navigateTo($event)">Benachrichtigungen</a>
           </li>
           <li><hr class="dropdown-divider" /></li>
           <li>
