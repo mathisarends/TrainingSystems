@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivityCalendar } from '../activity-calendar/activity-calendar.component';
 import { HttpService } from '../../service/http/http-client.service';
-import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { SpinnerComponent } from '../components/loaders/spinner/spinner.component';
 import { CommonModule } from '@angular/common';
 import { ActivityCalendarData } from './activity-calendar-data';
 import { TrainingDay } from '../Pages/training-view/training-day';
 import { NotificationService } from '../notification-page/notification.service';
+import { SkeletonComponent } from '../skeleton/skeleton.component';
 
 @Component({
   selector: 'app-usage-statistics',
