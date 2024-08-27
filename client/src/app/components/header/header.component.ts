@@ -10,17 +10,20 @@ import {
   ViewChildren,
 } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
-import { catchError, filter } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { ProfileService } from '../../Pages/profile/profileService';
 import { User } from '../../types/user';
 import { SearchService } from '../../../service/util/search.service';
-import { of } from 'rxjs';
-import { ToastService } from '../toast/toast.service';
+import { TrainingDay } from '../../Pages/training-view/training-day';
+import { NotificationService } from '../../notification-page/notification.service';
+import { Observable } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterModule],
+  providers: [NotificationService],
+  imports: [RouterModule, CommonModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
@@ -36,7 +39,7 @@ export class HeaderComponent implements OnInit {
 
   @Output() searchInput: EventEmitter<string> = new EventEmitter<string>();
 
-  notifications = signal<any[]>(['1', '3']);
+  trainingDayNotifications$!: Observable<TrainingDay[]>;
 
   /**
    * Creates an instance of HeaderComponent.
@@ -50,7 +53,7 @@ export class HeaderComponent implements OnInit {
     private router: Router,
     private profileService: ProfileService,
     private searchService: SearchService,
-    private toastService: ToastService,
+    private notificationService: NotificationService,
   ) {
     // Subscribe to router events to update active link on navigation end
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
@@ -69,6 +72,8 @@ export class HeaderComponent implements OnInit {
         this.profile = data?.userDto;
       }
     });
+
+    this.trainingDayNotifications$ = this.notificationService.getTrainingDayNotifications();
   }
 
   /**

@@ -51,8 +51,8 @@
             height="26"
             class="rounded-circle"
           />
-          @if (notifications()) {
-            <span class="notification-badge">{{ notifications().length }}</span>
+          @if (trainingDayNotifications$ | async; as trainingDayNotifications) {
+            <span class="notification-badge">{{ trainingDayNotifications.length }}</span>
           }
         </a>
         <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
