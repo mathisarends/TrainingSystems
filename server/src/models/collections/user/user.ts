@@ -3,6 +3,7 @@ import { Entity } from '../entity.js';
 import { UserExercise } from './user-exercise.js';
 import { TrainingPlan } from '../../training/trainingPlan.js';
 import { ExerciseCategoryType } from '../../training/exercise-category-type.js';
+import { TrainingDay } from '../../training/trainingDay.js';
 
 /**
  * Represents a user with authentication details.
@@ -38,9 +39,18 @@ export interface User extends Entity {
   trainingPlans: TrainingPlan[];
 
   /**
-   * Shows whether the navigation tutorial at the training page was completed
+   * A record of exercises categorized by exercise type.
+   *
+   * This property is required and holds a mapping between `ExerciseCategoryType`
+   * and arrays of `UserExercise` objects. It organizes the user's exercises by category.
    */
-  navigationLectureComplete?: boolean;
-
   exercises: Record<ExerciseCategoryType, UserExercise[]>;
+
+  /**
+   * Shows information about the user's previous training session, such as duration.
+   *
+   * This property is required and holds an array with  `TrainingDay` objects,
+   * representing the summary of the user's previous training day.
+   */
+  trainingDayOverviewNotification: TrainingDay[];
 }
