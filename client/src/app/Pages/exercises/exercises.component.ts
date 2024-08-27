@@ -24,7 +24,7 @@ export class ExercisesComponent implements OnInit {
   /**
    * Observable that emits the exercise data or null if there's an error or it's still loading.
    */
-  exerciseData$!: Observable<ExerciseDataDTO | null>;
+  exerciseData$!: Observable<ExerciseDataDTO>;
 
   /**
    * Maximum number of exercises to display.
@@ -45,29 +45,13 @@ export class ExercisesComponent implements OnInit {
    * to save data automatically when an interactive element changes.
    */
   ngOnInit(): void {
-    this.exerciseData$ = this.loadExercises();
+    this.exerciseData$ = this.exerciseService.loadExerciseData();
 
     this.interactiveElementService.inputChanged$
       .pipe(takeUntilDestroyed(this.destroyRef)) // Automatically unsubscribe
       .subscribe(() => {
         this.saveExerciseData();
       });
-  }
-
-  /**
-   * Loads exercise data from the service and returns an Observable.
-   * In case of an error, it returns an Observable that emits null.
-   *
-   * @returns Observable of ExerciseDataDTO or null.
-   */
-  private loadExercises(): Observable<ExerciseDataDTO | null> {
-    return this.exerciseService.loadExerciseData().pipe(
-      map((exerciseData) => exerciseData),
-      catchError((error) => {
-        console.error('Error loading exercises:', error);
-        return of(null);
-      }),
-    );
   }
 
   saveExerciseData(): void {
@@ -93,7 +77,7 @@ export class ExercisesComponent implements OnInit {
     if (confirmed) {
       this.exerciseService.resetExercises().subscribe({
         next: () => {
-          this.exerciseData$ = this.loadExercises();
+          this.exerciseData$ = this.exerciseService.loadExerciseData();
           this.toastService.show('Erfolg', 'Übungskatalog zurückgesetzt!');
         },
         error: (error) => {

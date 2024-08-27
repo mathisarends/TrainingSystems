@@ -1,7 +1,7 @@
 import { Exercise } from './training-exercise';
 
 /**
- * * Represents a training day, which includes the date and a list of exercises performed.
+ * Represents a training day, which includes the date and a list of exercises performed.
  */
 export interface TrainingDay {
   id: string;

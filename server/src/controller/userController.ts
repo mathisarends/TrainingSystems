@@ -101,9 +101,15 @@ export async function getTrainingDayNotifications(req: Request, res: Response): 
 
   if (user.trainingDayNotifications === undefined) {
     user.trainingDayNotifications = [];
+
     await userDAO.update(user);
   }
   const trainingDayNotifications = user.trainingDayNotifications;
+
+  const mockTrainingDay = user.trainingPlans[0].trainingWeeks[0].trainingDays[0];
+  mockTrainingDay.durationInMinutes = 60;
+
+  trainingDayNotifications.push(mockTrainingDay);
 
   return res.status(200).json(trainingDayNotifications);
 }

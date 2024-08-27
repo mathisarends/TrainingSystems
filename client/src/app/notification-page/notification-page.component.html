@@ -1,1 +1,5 @@
-<p>notification-page works!</p>
+@if (trainingDayNotifications$ | async; as trainingDayNotifications) {
+  {{ trainingDayNotifications | json }}
+} @else {
+  <app-spinner />
+}
