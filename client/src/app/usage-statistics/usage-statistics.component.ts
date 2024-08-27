@@ -6,10 +6,13 @@ import { catchError, map } from 'rxjs/operators';
 import { SpinnerComponent } from '../components/loaders/spinner/spinner.component';
 import { CommonModule } from '@angular/common';
 import { ActivityCalendarData } from './activity-calendar-data';
+import { TrainingDay } from '../Pages/training-view/training-day';
+import { NotificationService } from '../notification-page/notification.service';
 
 @Component({
   selector: 'app-usage-statistics',
   standalone: true,
+  providers: [NotificationService],
   imports: [ActivityCalendar, SpinnerComponent, CommonModule],
   templateUrl: './usage-statistics.component.html',
   styleUrls: ['./usage-statistics.component.scss'], // Corrected to styleUrls
@@ -20,7 +23,15 @@ export class UsageStatisticsComponent implements OnInit {
    */
   activityCalendarData$!: Observable<ActivityCalendarData | null>;
 
-  constructor(private httpClient: HttpService) {}
+  /**
+   * Observable that emits the exercise data or null if there's an error or it's still loading.
+   */
+  trainingDayNotifications$!: Observable<TrainingDay[]>;
+
+  constructor(
+    private httpClient: HttpService,
+    private notificationService: NotificationService,
+  ) {}
 
   ngOnInit(): void {
     // Assign the observable to activityCalendarData$ to be used in the template
@@ -29,9 +40,12 @@ export class UsageStatisticsComponent implements OnInit {
         console.log('🚀 ~ UsageStatisticsComponent ~ ngOnInit ~ response:', response);
         return response;
       }),
-      catchError((error) => {
-        console.error('Error fetching activity calendar data:', error);
-        return of(null); // Return null in case of error
+    );
+
+    this.trainingDayNotifications$ = this.notificationService.getTrainingDayNotifications().pipe(
+      map((response) => {
+        console.log('🚀 ~ test ~ ngOnInit ~ response:', response);
+        return response;
       }),
     );
   }
