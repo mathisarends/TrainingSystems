@@ -14,7 +14,7 @@ import { SkeletonComponent } from '../skeleton/skeleton.component';
   selector: 'app-usage-statistics',
   standalone: true,
   providers: [NotificationService],
-  imports: [ActivityCalendar, SpinnerComponent, CommonModule],
+  imports: [ActivityCalendar, SpinnerComponent, CommonModule, SkeletonComponent],
   templateUrl: './usage-statistics.component.html',
   styleUrls: ['./usage-statistics.component.scss'], // Corrected to styleUrls
 })
@@ -35,19 +35,7 @@ export class UsageStatisticsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Assign the observable to activityCalendarData$ to be used in the template
-    this.activityCalendarData$ = this.httpClient.get<ActivityCalendarData>('/user/activity-calendar').pipe(
-      map((response) => {
-        console.log('🚀 ~ UsageStatisticsComponent ~ ngOnInit ~ response:', response);
-        return response;
-      }),
-    );
-
-    this.trainingDayNotifications$ = this.notificationService.getTrainingDayNotifications().pipe(
-      map((response) => {
-        console.log('🚀 ~ test ~ ngOnInit ~ response:', response);
-        return response;
-      }),
-    );
+    this.activityCalendarData$ = this.httpClient.get<ActivityCalendarData>('/user/activity-calendar');
+    this.trainingDayNotifications$ = this.notificationService.getTrainingDayNotifications();
   }
 }

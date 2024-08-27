@@ -1,9 +1,10 @@
 import { Component, input } from '@angular/core';
+import { SkeletonComponent } from '../../../skeleton/skeleton.component';
 
 @Component({
   selector: 'app-exercise-table-skeleton',
   standalone: true,
-  imports: [],
+  imports: [SkeletonComponent],
   templateUrl: './exercise-table-skeleton.component.html',
   styleUrl: './exercise-table-skeleton.component.scss',
 })

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -6,11 +6,9 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './skeleton.component.html',
-  styleUrl: './skeleton.component.scss',
+  styleUrls: ['./skeleton.component.scss'],
 })
 export class SkeletonComponent {
-  @Input() width: string = '100%';
-  @Input() height: string = '1.75rem';
-  @Input() borderRadius: string = '4px';
-  @Input() backgroundColor: string = '#e0e0e0';
+  width = input<string>('100%');
+  height = input<string>('1.75rem');
 }

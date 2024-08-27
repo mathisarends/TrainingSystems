@@ -1,23 +1,12 @@
-<div class="container">
-  @for (k of [1, 2, 3, 4]; track k) {
-    <div class="skeleton-table mb-5">
-      <div class="skeleton-row">
-        <div class="skeleton-header"></div>
-      </div>
-      @for (l of [1, 2, 3, 4, 5, 6, 7, 8]; track l) {
-        <div class="skeleton-row">
-          <div class="skeleton-cell"></div>
-        </div>
-      }
-
-      <div class="skeleton-row top-border">
-        <div class="skeleton-cell"></div>
-      </div>
-      @for (n of [1, 2, 3]; track n) {
-        <div class="skeleton-row">
-          <div class="skeleton-cell"></div>
-        </div>
-      }
-    </div>
-  }
-</div>
+@for (k of [1, 2, 3, 4]; track k) {
+  <div class="skeleton-table mb-5">
+    <app-skeleton [width]="'50%'" />
+    @for (l of [1, 2, 3, 4, 5, 6, 7, 8]; track l) {
+      <app-skeleton />
+    }
+    <div class="skeleton-row top-border mb-2"></div>
+    @for (n of [1, 2, 3, 4]; track n) {
+      <app-skeleton />
+    }
+  </div>
+}
