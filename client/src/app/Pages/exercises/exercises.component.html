@@ -1,6 +1,4 @@
 @if (exerciseData$ | async; as exerciseData) {
-  <app-exercise-table-skeleton />
-
   <div class="container">
     <form>
       @for (category of exerciseData.exerciseCategories; track category; let categoryIndex = $index) {
