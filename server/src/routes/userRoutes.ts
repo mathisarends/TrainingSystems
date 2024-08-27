@@ -18,7 +18,7 @@ router.get(
 );
 
 router.get(
-  '/training-notification',
+  '/training-notifications',
   authService.authenticationMiddleware,
   asyncHandler(userController.getTrainingDayNotifications)
 );

@@ -1,16 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { NotificationPageService } from './notification-page.service';
+import { NotificationService } from './notification.service';
 
 @Component({
   selector: 'app-notification-page',
   standalone: true,
-  providers: [NotificationPageService],
+  providers: [NotificationService],
   templateUrl: './notification-page.component.html',
   styleUrl: './notification-page.component.scss',
   imports: [],
 })
 export class NotificationPageComponent implements OnInit {
-  constructor() {}
+  constructor(private notificationService: NotificationService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.notificationService.getTrainingDayNotifications().subscribe((response) => {
+      console.log('response', response);
+    });
+  }
 }

@@ -95,8 +95,14 @@ export async function getActivityCalendar(req: Request, res: Response): Promise<
  * Retrieves training day notifications for a user.
  */
 export async function getTrainingDayNotifications(req: Request, res: Response): Promise<Response> {
+  const userDAO = req.app.locals.userDAO;
+
   const user = await userService.getUser(req, res);
 
+  if (user.trainingDayNotifications === undefined) {
+    user.trainingDayNotifications = [];
+    await userDAO.update(user);
+  }
   const trainingDayNotifications = user.trainingDayNotifications;
 
   return res.status(200).json(trainingDayNotifications);
