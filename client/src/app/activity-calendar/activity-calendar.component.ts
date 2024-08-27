@@ -27,24 +27,41 @@ export class ActivityCalendar implements OnInit {
   grid: ActivityCalendarEntry[] = [];
 
   ngOnInit(): void {
-    this.grid = Array.from({ length: 364 }, (_, index) => ({
-      day: index as 0 | 363,
-      value: 0,
-      level: 0 as Level,
-    }));
+    const startDayOfWeek = 0; // Assuming the year starts on a Monday (0 = Monday, 1 = Tuesday, ..., 6 = Sunday)
 
-    const dataEntries = Object.entries(this.activityData()).map(([day, value]) => ({
-      day: +day, // Convert day string to number
-      value: value as number,
-      level: 0 as Level,
-    }));
+    this.grid = Array.from({ length: 364 }, (_, index) => {
+      const dayOfWeek = (index + startDayOfWeek) % 7; // Calculate the day of the week
+      const weekIndex = Math.floor(index / 7); // Determine the week index
+      return {
+        day: index as 0 | 363,
+        value: 0,
+        level: 0 as Level,
+        dayOfWeek: dayOfWeek,
+        weekIndex: weekIndex, // Store the week index for alignment
+      };
+    });
+
+    const dataEntries = Object.entries(this.activityData()).map(([day, value]) => {
+      const dayIndex = +day; // Convert day string to number
+      const dayOfWeek = (dayIndex + startDayOfWeek) % 7; // Calculate correct day of the week
+      const weekIndex = Math.floor(dayIndex / 7); // Calculate correct week index
+      return {
+        day: dayIndex,
+        value: value as number,
+        level: 0 as Level,
+        dayOfWeek: dayOfWeek,
+        weekIndex: weekIndex,
+      };
+    });
 
     // Populate the grid with provided data
     dataEntries.forEach((entry) => {
       this.grid[entry.day] = {
-        day: entry.day as 0 | 363, // Ensure day is within bounds
+        day: entry.day as 0 | 363,
         value: entry.value,
         level: 0 as Level,
+        dayOfWeek: entry.dayOfWeek,
+        weekIndex: entry.weekIndex,
       };
     });
 

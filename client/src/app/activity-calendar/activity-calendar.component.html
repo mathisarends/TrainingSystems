@@ -22,14 +22,19 @@
           <div>Wed</div>
           <div>Fri</div>
         </div>
-        <div class="contribution-grid">
-          <!-- Iterate over the grid to create calendar entries -->
-          <div
-            class="day"
-            *ngFor="let day of grid"
-            [ngClass]="'level-' + day.level"
-            [appTooltip]="day.value.toString() + ' KG'"
-          ></div>
+        <div
+          class="contribution-grid"
+          style="display: grid; grid-template-columns: repeat(52, 1fr); grid-template-rows: repeat(7, 1fr)"
+        >
+          @for (day of grid; track day; let index = $index) {
+            <div
+              class="day"
+              [style.gridColumn]="day.weekIndex + 1"
+              [style.gridRow]="day.dayOfWeek + 1"
+              [ngClass]="'level-' + day.level"
+              [appTooltip]="day.value.toString() + ' KG ' + index"
+            ></div>
+          }
         </div>
       </div>
     </div>

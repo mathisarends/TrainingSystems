@@ -27,6 +27,10 @@ export interface ActivityCalendarEntry {
    */
   day: Day;
 
+  dayOfWeek: number;
+
+  weekIndex: number;
+
   /**
    * Activity level, represented as a number between 1 and 4.
    * 1 represents the lowest level, 4 the highest.
