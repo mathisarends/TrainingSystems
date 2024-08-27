@@ -106,10 +106,11 @@ export async function getTrainingDayNotifications(req: Request, res: Response): 
   }
   const trainingDayNotifications = user.trainingDayNotifications;
 
-  const mockTrainingDay = user.trainingPlans[0].trainingWeeks[0].trainingDays[0];
+  // TODO: hier weiter am mock arbeiten
+  /*   const mockTrainingDay = user.trainingPlans[0].trainingWeeks[0].trainingDays[0];
   mockTrainingDay.durationInMinutes = 60;
 
-  trainingDayNotifications.push(mockTrainingDay);
+  trainingDayNotifications.push(mockTrainingDay); */
 
   return res.status(200).json(trainingDayNotifications);
 }

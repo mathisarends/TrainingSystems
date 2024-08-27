@@ -14,7 +14,7 @@
 
 .progress-bar {
   height: 100%;
-  background-color: $accent-color;
+  background-color: rgb(168, 170, 173);
   transition:
     width 0.1s ease-in-out,
     opacity 0.3s ease-in-out; /* Smooth transition for both width and opacity */

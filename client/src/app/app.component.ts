@@ -1,5 +1,5 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 import { HeaderComponent } from './components/header/header.component';
 import { ToastComponent } from './components/toast/toast.component';
@@ -8,12 +8,13 @@ import { BrowserCheckService } from './browser-check.service';
 import { MobileService } from '../service/util/mobile.service';
 import { RedirectService } from '../service/util/redirect.service';
 import { SpinnerComponent } from './components/loaders/spinner/spinner.component';
+import { LoadingProgressBarComponent } from './loading-progress-bar/loading-progress-bar.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   providers: [RedirectService],
-  imports: [RouterOutlet, HeaderComponent, ToastComponent, SpinnerComponent],
+  imports: [RouterOutlet, HeaderComponent, ToastComponent, SpinnerComponent, LoadingProgressBarComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })

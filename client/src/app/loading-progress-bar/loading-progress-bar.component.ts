@@ -71,7 +71,7 @@ export class LoadingProgressBarComponent implements OnInit {
 
     setTimeout(() => {
       this.hideProgressBar();
-    }, 300);
+    }, 200);
   }
 
   showProgressBar() {
