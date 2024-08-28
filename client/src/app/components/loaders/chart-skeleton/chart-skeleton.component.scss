@@ -1,50 +1,12 @@
-.chart-skeleton {
+:host {
   position: relative;
   height: 450px;
   max-width: 100%;
-  background-color: #e0e0e0;
-  overflow: hidden;
-  animation: pulse 1.5s infinite ease-in-out;
 }
 
-.chart-skeleton .line {
+.line {
   position: absolute;
   height: 2px;
   width: 100%;
   background-color: rgba(255, 255, 255, 0.3);
-}
-
-.chart-skeleton .y-line {
-  width: 2px;
-  height: 100%;
-  left: 0;
-  top: 0;
-}
-
-.chart-skeleton .label {
-  position: absolute;
-  height: 16px;
-  width: 60px;
-  background-color: rgba(255, 255, 255, 0.6);
-  border-radius: 4px;
-}
-
-.chart-skeleton .x-label {
-  bottom: 0;
-}
-
-.chart-skeleton .y-label {
-  top: 0;
-}
-
-@keyframes pulse {
-  0% {
-    background-color: #e0e0e0;
-  }
-  50% {
-    background-color: #f0f0f0;
-  }
-  100% {
-    background-color: #e0e0e0;
-  }
 }
