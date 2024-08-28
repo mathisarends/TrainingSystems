@@ -1,18 +1,20 @@
-<div class="card border-0 mb-3">
-  <app-skeleton [height]="'175px'" [animationStyle]="pulse" />
-  <div class="card-custom-avatar"></div>
-  <div class="card-custom-avatar">
-    <div class="img-fluid skeleton-avatar"></div>
+<div class="card">
+  <app-skeleton height="175px" [animationStyle]="pulse" />
+
+  <div class="avatar-container">
+    <app-skeleton height="50px" width="50px" [animationStyle]="pulse" [isCircular]="true" />
   </div>
+
   <div class="card-body">
-    <app-skeleton [height]="'20px'" [width]="'70%'" [animationStyle]="pulse" />
-    <app-skeleton [height]="'15px'" [width]="'12rem'" [animationStyle]="pulse" />
-    <app-skeleton [height]="'15px'" [width]="'9.5rem'" [animationStyle]="pulse" />
+    <app-skeleton height="20px" width="70%" [animationStyle]="pulse" />
+    <app-skeleton height="15px" width="12rem" [animationStyle]="pulse" />
+    <app-skeleton height="15px" width="9.5rem" [animationStyle]="pulse" />
   </div>
+
   <div class="card-footer">
-    <app-skeleton [height]="'2rem'" [width]="'2rem'" [animationStyle]="pulse" />
-    <app-skeleton [height]="'2rem'" [width]="'2rem'" [animationStyle]="pulse" />
-    <app-skeleton [height]="'2rem'" [width]="'2rem'" [animationStyle]="pulse" />
-    <app-skeleton [height]="'2rem'" [width]="'2rem'" [animationStyle]="pulse" />
+    <app-skeleton height="2rem" width="2rem" [animationStyle]="pulse" />
+    <app-skeleton height="2rem" width="2rem" [animationStyle]="pulse" />
+    <app-skeleton height="2rem" width="2rem" [animationStyle]="pulse" />
+    <app-skeleton height="2rem" width="2rem" [animationStyle]="pulse" />
   </div>
 </div>
