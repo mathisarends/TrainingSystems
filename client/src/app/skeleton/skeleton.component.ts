@@ -1,5 +1,6 @@
 import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { SkeletonAnimationStyle } from './skeleton-animation-style';
 
 /**
  * @description
@@ -28,8 +29,12 @@ export class SkeletonComponent {
    * @description
    * Sets the height of the skeleton loader.
    * Accepts any valid CSS height value (e.g., `1.75rem`, `20px`).
-   *
-   * @default '1.75rem'
    */
   height = input<string>('1.75rem');
+
+  /**
+   * @description
+   * Sets the Animation style of the skeleton loader
+   */
+  animationStyle = input<SkeletonAnimationStyle>(SkeletonAnimationStyle.LOADING);
 }
