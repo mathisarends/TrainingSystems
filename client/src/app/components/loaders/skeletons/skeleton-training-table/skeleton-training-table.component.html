@@ -1,15 +1,7 @@
-@for (k of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track k) {
+@for (section of sections(); track section) {
   <div class="skeleton-section">
-    @for (m of [1, 2, 3, 4, 5, 6, 7, 8, 9]; track m) {
-      <div class="skeleton-row" style="display: flex; align-items: center">
-        <div style="flex: 0 0 12ch">
-          <app-skeleton width="12ch" height="1.75rem" [animationStyle]="PULSE"></app-skeleton>
-        </div>
-
-        <div style="flex: 1">
-          <app-skeleton height="1.75rem" [animationStyle]="PULSE"></app-skeleton>
-        </div>
-      </div>
+    @for (row of rowsPerSection(); track row) {
+      <app-skeleton height="1.75rem" [animationStyle]="PULSE"></app-skeleton>
     }
   </div>
 }
