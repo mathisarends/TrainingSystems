@@ -1,6 +1,8 @@
 @if (!(dataViewLoaded$ | async)) {
   <app-skeleton-training-table />
 } @else {
+  <app-skeleton-training-table />
+
   <form (submit)="onSubmit($event)" class="mt-4" id="form">
     <div class="headline-container" [ngClass]="{ 'background-image': isMobile }">
       <app-headline [subHeading]="subHeading" [heading]="trainingPlanData.title" />

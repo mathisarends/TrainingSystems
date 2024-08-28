@@ -1,12 +1,15 @@
-<div class="skeleton-container">
-  @for (k of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track k) {
-    <div class="skeleton-section">
-      @for (m of [1, 2, 3, 4, 5, 6, 7, 8]; track m) {
-        <div class="skeleton-row">
-          <div class="skeleton-line"></div>
-          <div class="skeleton-line skeleton-fill"></div>
+@for (k of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track k) {
+  <div class="skeleton-section">
+    @for (m of [1, 2, 3, 4, 5, 6, 7, 8, 9]; track m) {
+      <div class="skeleton-row" style="display: flex; align-items: center">
+        <div style="flex: 0 0 12ch">
+          <app-skeleton width="12ch" height="1.75rem" [animationStyle]="PULSE"></app-skeleton>
         </div>
-      }
-    </div>
-  }
-</div>
+
+        <div style="flex: 1">
+          <app-skeleton height="1.75rem" [animationStyle]="PULSE"></app-skeleton>
+        </div>
+      </div>
+    }
+  </div>
+}
