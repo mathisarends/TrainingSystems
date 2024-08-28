@@ -27,6 +27,11 @@
               ></app-alert>
             </div>
           } @else {
+            @for (k of [1, 2, 3]; track k) {
+              <div [ngClass]="columnClass">
+                <app-skeleton-card />
+              </div>
+            }
             @for (trainingPlan of filteredTrainingPlans; track trainingPlan) {
               <div [ngClass]="columnClass">
                 <app-training-plan-card

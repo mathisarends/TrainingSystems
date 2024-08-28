@@ -32,26 +32,6 @@
   min-height: 190px;
 }
 
-.skeleton-text {
-  width: 12rem;
-  height: 15px;
-  background-color: #e0e0e0;
-  border-radius: 4px;
-  animation: pulse 1.5s infinite ease-in-out;
-}
-
-.skeleton-text.short {
-  width: 9.5rem;
-}
-
-.skeleton-button {
-  width: 2rem;
-  height: 2rem;
-  background-color: #e0e0e0;
-  border-radius: 4px;
-  animation: pulse 1.5s infinite ease-in-out;
-}
-
 .card-footer {
   background-color: inherit;
   border-top: none;
