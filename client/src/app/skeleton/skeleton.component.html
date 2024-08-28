@@ -1,6 +1,6 @@
 <div
   class="skeleton"
-  [ngClass]="animationStyle()"
+  [ngClass]="[animationStyle(), isCircular() ? 'circular' : '']"
   [ngStyle]="{
     width: width(),
     height: height(),

@@ -34,6 +34,12 @@ export class SkeletonComponent {
 
   /**
    * @description
+   * Determines whether the Skeleton should be displayed in a circular fashion.
+   */
+  isCircular = input<boolean>(false);
+
+  /**
+   * @description
    * Sets the Animation style of the skeleton loader
    */
   animationStyle = input<SkeletonAnimationStyle>(SkeletonAnimationStyle.LOADING);

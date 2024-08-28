@@ -12,6 +12,10 @@
   &.pulse {
     animation: pulse 1.5s infinite ease-in-out;
   }
+
+  &.circular {
+    border-radius: 50%; // Makes the skeleton circular
+  }
 }
 
 @keyframes pulse {

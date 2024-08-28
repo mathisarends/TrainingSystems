@@ -19,14 +19,6 @@
   animation: pulse 1.5s infinite ease-in-out;
 }
 
-.skeleton-title {
-  width: 70%;
-  height: 20px;
-  background-color: #e0e0e0;
-  border-radius: 4px;
-  animation: pulse 1.5s infinite ease-in-out;
-}
-
 .card-body {
   padding-top: 2.75rem;
   min-height: 190px;
@@ -37,10 +29,11 @@
   border-top: none;
 }
 
-.card-footer.d-flex {
+.card-footer {
   display: flex;
+  flex-direction: row;
   justify-content: start;
-  gap: 12px; /* Or any other value */
+  gap: 12px;
 }
 
 @keyframes pulse {
