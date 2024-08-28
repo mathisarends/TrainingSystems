@@ -35,7 +35,7 @@ export interface Exercise {
   /**
    * The actual Rate of Perceived Exertion (RPE) experienced during the exercise.
    */
-  actualRPE: number;
+  actualRPE: string;
 
   /**
    * The estimated maximum weight that can be lifted for one repetition (1RM).

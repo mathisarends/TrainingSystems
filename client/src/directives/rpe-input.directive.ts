@@ -48,6 +48,8 @@ export class RpeInputDirective {
       this.validateMultipleRPEs(rpeInput, rpeValues);
     }
 
+    this.formService.addChange(rpeInput.name, rpeInput.value);
+
     this.interactiveElementService.triggerChangeIfModified(rpeInput.value);
   }
 

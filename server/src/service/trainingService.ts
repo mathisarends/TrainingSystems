@@ -169,7 +169,7 @@ export function createExerciseObject(fieldName: string, fieldValue: string): Exe
     reps: 0,
     weight: '',
     targetRPE: 0,
-    actualRPE: 0,
+    actualRPE: '',
     estMax: 0
   };
 }
@@ -211,7 +211,7 @@ export function updateExercise(
       exercise.targetRPE = Number(fieldValue);
       break;
     case fieldName.endsWith('actualRPE'):
-      exercise.actualRPE = Number(fieldValue);
+      exercise.actualRPE = fieldValue;
       break;
     case fieldName.endsWith('estMax'):
       exercise.estMax = Number(fieldValue);
