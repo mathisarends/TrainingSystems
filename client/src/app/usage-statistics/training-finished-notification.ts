@@ -1,5 +1,5 @@
 import { TrainingDay } from '../Pages/training-view/training-day';
 
-export interface TrainingDAyFinishedNotification extends TrainingDay {
+export interface TrainingDayFinishedNotification extends TrainingDay {
   trainingDayTonnage: number;
 }

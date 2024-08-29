@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from '../../service/http/http-client.service';
 import { Observable } from 'rxjs';
-import { TrainingDAyFinishedNotification } from '../usage-statistics/training-finished-notification';
+import { TrainingDayFinishedNotification } from '../usage-statistics/training-finished-notification';
 
 /**
  * Service for handling notification-related operations.
@@ -16,7 +16,7 @@ export class NotificationService {
   /**
    * Retrieves the list of training day notifications for the user.
    */
-  getTrainingDayNotifications(): Observable<TrainingDAyFinishedNotification[]> {
-    return this.httpService.get<TrainingDAyFinishedNotification[]>('/user/training-notifications');
+  getTrainingDayNotifications(): Observable<TrainingDayFinishedNotification[]> {
+    return this.httpService.get<TrainingDayFinishedNotification[]>('/user/training-notifications');
   }
 }

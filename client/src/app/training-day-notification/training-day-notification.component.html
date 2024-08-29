@@ -1,0 +1,27 @@
+@for (notification of notifications(); track notifications) {
+  <div class="training-notification-card">
+    <div class="training-notification-header">
+      <h5>Training Day Summary</h5>
+      <app-close-icon [size]="22" />
+    </div>
+    <div class="training-notification-body">
+      <p>
+        <strong>Date:</strong> {{ notification.startTime | date: 'medium' }}<br />
+        <strong>Duration:</strong> {{ notification.durationInMinutes }} minutes<br />
+        <strong>Total Tonnage:</strong> {{ notification.trainingDayTonnage }} kg
+      </p>
+      <h6>Exercises:</h6>
+      <div class="exercises-container">
+        <div class="exercise-card" *ngFor="let exercise of notification.exercises">
+          <strong>{{ exercise.exercise }}</strong>
+          <p>
+            Sets: {{ exercise.sets }}, Reps: {{ exercise.reps }}, Weight: {{ exercise.weight }} kg,<br />
+            @if (exercise.actualRPE) {
+              RPE: {{ exercise.actualRPE }}
+            }
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+}

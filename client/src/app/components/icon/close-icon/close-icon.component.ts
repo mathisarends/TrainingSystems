@@ -7,4 +7,4 @@ import { BaseIconComponent } from '../base-icon.component';
   imports: [],
   templateUrl: './close-icon.component.html',
 })
-export class ChevronUpIconComponent extends BaseIconComponent {}
+export class CloseIconComponent extends BaseIconComponent {}

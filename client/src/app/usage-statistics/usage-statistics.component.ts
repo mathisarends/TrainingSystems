@@ -2,19 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { ActivityCalendar } from '../activity-calendar/activity-calendar.component';
 import { HttpService } from '../../service/http/http-client.service';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { SpinnerComponent } from '../components/loaders/spinner/spinner.component';
 import { CommonModule } from '@angular/common';
 import { ActivityCalendarData } from './activity-calendar-data';
-import { TrainingDay } from '../Pages/training-view/training-day';
 import { NotificationService } from '../notification-page/notification.service';
 import { SkeletonComponent } from '../skeleton/skeleton.component';
-import { TrainingDAyFinishedNotification } from './training-finished-notification';
+import { TrainingDayFinishedNotification } from './training-finished-notification';
+import { TrainingDayNotificationComponent } from '../training-day-notification/training-day-notification.component';
 
 @Component({
   selector: 'app-usage-statistics',
   standalone: true,
-  imports: [ActivityCalendar, SpinnerComponent, CommonModule, SkeletonComponent],
+  imports: [ActivityCalendar, SpinnerComponent, CommonModule, SkeletonComponent, TrainingDayNotificationComponent],
   templateUrl: './usage-statistics.component.html',
   styleUrls: ['./usage-statistics.component.scss'], // Corrected to styleUrls
 })
@@ -27,7 +26,7 @@ export class UsageStatisticsComponent implements OnInit {
   /**
    * Observable that emits the exercise data or null if there's an error or it's still loading.
    */
-  trainingDayNotifications$!: Observable<TrainingDAyFinishedNotification[]>;
+  trainingDayNotifications$!: Observable<TrainingDayFinishedNotification[]>;
 
   constructor(
     private httpClient: HttpService,

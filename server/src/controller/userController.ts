@@ -5,7 +5,6 @@ import { authService } from '../service/authService.js';
 import dotenv from 'dotenv';
 import { TrainingPlan } from '../models/training/trainingPlan.js';
 import { getTonnagePerTrainingDay } from '../service/trainingService.js';
-import { mock } from 'node:test';
 dotenv.config();
 
 export async function register(req: Request, res: Response): Promise<void> {

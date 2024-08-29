@@ -1,0 +1,57 @@
+.training-notification-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  margin-bottom: 1rem;
+}
+
+.training-notification-header {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h5 {
+    margin: 0;
+    font-size: 1.2em;
+    color: #333;
+  }
+}
+
+.training-notification-body {
+  font-size: 0.95em;
+  color: #555;
+}
+
+.exercises-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.exercise-card {
+  background-color: #e9f5ff;
+  border: 1px solid #cce7ff;
+  border-radius: 6px;
+  padding: 10px;
+  flex: 1 1 calc(33% - 10px);
+  box-sizing: border-box;
+  min-width: 200px;
+
+  strong {
+    display: block;
+    font-size: 1em;
+    color: #007bff;
+    margin-bottom: 6px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #333;
+  }
+}
