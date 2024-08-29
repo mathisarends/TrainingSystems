@@ -14,4 +14,11 @@ export class TrainingDayNotificationComponent {
   notifications = input.required<TrainingDayFinishedNotification[]>();
 
   protected deleteNotification(notificationId: string): void {}
+
+  goToTrainingPlan(notificationId: string): void {
+    // Logic to navigate to the training plan
+    console.log('Navigating to training plan for notification ID:', notificationId);
+    // Implement your navigation logic here, e.g., using Angular's router
+    // this.router.navigate(['/training-plan', notificationId]);
+  }
 }
