@@ -9,11 +9,11 @@ import { ActivityCalendarData } from './activity-calendar-data';
 import { TrainingDay } from '../Pages/training-view/training-day';
 import { NotificationService } from '../notification-page/notification.service';
 import { SkeletonComponent } from '../skeleton/skeleton.component';
+import { TrainingDAyFinishedNotification } from './training-finished-notification';
 
 @Component({
   selector: 'app-usage-statistics',
   standalone: true,
-  providers: [NotificationService],
   imports: [ActivityCalendar, SpinnerComponent, CommonModule, SkeletonComponent],
   templateUrl: './usage-statistics.component.html',
   styleUrls: ['./usage-statistics.component.scss'], // Corrected to styleUrls
@@ -27,7 +27,7 @@ export class UsageStatisticsComponent implements OnInit {
   /**
    * Observable that emits the exercise data or null if there's an error or it's still loading.
    */
-  trainingDayNotifications$!: Observable<TrainingDay[]>;
+  trainingDayNotifications$!: Observable<TrainingDAyFinishedNotification[]>;
 
   constructor(
     private httpClient: HttpService,

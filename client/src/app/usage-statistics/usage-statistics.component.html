@@ -1,7 +1,7 @@
 @if (activityCalendarData$ | async; as activityData) {
   @if (trainingDayNotifications$ | async; as trainingDayNotifications) {
     <app-activity-calendar [activityData]="activityData" />
-    <div>
+    <div class="training-day-notifcation">
       {{ trainingDayNotifications | json }}
     </div>
   } @else {
