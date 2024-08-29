@@ -12,4 +12,6 @@ import { CloseIconComponent } from '../components/icon/close-icon/close-icon.com
 })
 export class TrainingDayNotificationComponent {
   notifications = input.required<TrainingDayFinishedNotification[]>();
+
+  protected deleteNotification(notificationId: string): void {}
 }

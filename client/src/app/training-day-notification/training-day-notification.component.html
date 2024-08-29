@@ -2,7 +2,7 @@
   <div class="training-notification-card">
     <div class="training-notification-header">
       <h5>Training Day Summary</h5>
-      <app-close-icon [size]="22" />
+      <app-close-icon [size]="22" (click)="deleteNotification(notification.id)" />
     </div>
     <div class="training-notification-body">
       <p>
