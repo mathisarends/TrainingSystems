@@ -5,7 +5,6 @@ import { TrainingDay } from '../models/training/trainingDay.js';
 
 import { v4 as uuidv4 } from 'uuid';
 import { TrainingDayIndexes } from './training-day-indexes.js';
-import { User } from '../models/collections/user/user.js';
 
 export function findTrainingPlanById(trainingPlans: TrainingPlan[], planId: string): TrainingPlan {
   const plan = trainingPlans.find(plan => plan.id === planId);
@@ -226,22 +225,23 @@ export function updateExercise(
 }
 
 /**
- * Finds a training day by its ID for a given user.
+ * Calculates the total tonnage (weight lifted) for a given training day.
  *
- * This function searches through all the training plans and their respective training weeks
- * associated with a user to find a specific training day by its ID.
- *
- * @param user - The user object containing the training plans.
- * @param trainingDayId - The ID of the training day to find.
- * @returns The `TrainingDay` object if found; otherwise, `undefined`.
+ * @param trainingDay - A TrainingDay object containing the exercises for that day.
+ * @returns The total tonnage for the training day.
  */
-export function findTrainingDayPerIdAndUser(user: User, trainingDayId: string) {
-  for (const trainingPlan of user.trainingPlans) {
-    for (const trainingWeek of trainingPlan.trainingWeeks) {
-      const trainingDay = trainingWeek.trainingDays.find(trainingDay => trainingDay.id === trainingDayId);
-      if (trainingDay) {
-        return trainingDay;
-      }
+export function getTonnagePerTrainingDay(trainingDay: TrainingDay): number {
+  let tonnage = 0;
+  for (const exercise of trainingDay.exercises) {
+    const weight = Number(exercise.weight);
+
+    if (isNaN(weight)) {
+      continue;
     }
+
+    const tonnagePerExercise = weight * exercise.sets * exercise.reps;
+    tonnage += tonnagePerExercise;
   }
+
+  return tonnage;
 }

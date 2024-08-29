@@ -4,7 +4,7 @@ import { authService } from '../service/authService.js';
 
 import dotenv from 'dotenv';
 import { TrainingPlan } from '../models/training/trainingPlan.js';
-import { TrainingDay } from '../models/training/trainingDay.js';
+import { getTonnagePerTrainingDay } from '../service/trainingService.js';
 dotenv.config();
 
 export async function register(req: Request, res: Response): Promise<void> {
@@ -134,28 +134,6 @@ function sortTrainingPlans(trainingPlans: TrainingPlan[]): TrainingPlan[] {
     const dateB = new Date(b.lastUpdated).getTime();
     return dateB - dateA;
   });
-}
-
-/**
- * Calculates the total tonnage (weight lifted) for a given training day.
- *
- * @param trainingDay - A TrainingDay object containing the exercises for that day.
- * @returns The total tonnage for the training day.
- */
-function getTonnagePerTrainingDay(trainingDay: TrainingDay): number {
-  let tonnage = 0;
-  for (const exercise of trainingDay.exercises) {
-    const weight = Number(exercise.weight);
-
-    if (isNaN(weight)) {
-      continue;
-    }
-
-    const tonnagePerExercise = weight * exercise.sets * exercise.reps;
-    tonnage += tonnagePerExercise;
-  }
-
-  return tonnage;
 }
 
 export async function updateProfilePicture(req: Request, res: Response): Promise<Response> {

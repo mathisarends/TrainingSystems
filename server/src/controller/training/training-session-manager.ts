@@ -3,6 +3,8 @@ import { TrainingDayDataLocator } from './training-day-data-locator.js';
 
 import { MongoGenericDAO } from '../../models/dao/mongo-generic.dao.js';
 import { User } from '../../models/collections/user/user.js';
+import { TrainingDAyFinishedNotification } from '../../models/collections/user/training-fninished-notifcation.js';
+import { getTonnagePerTrainingDay } from '../../service/trainingService.js';
 
 /**
  * Manages multiple training session trackers for different users.
@@ -94,12 +96,20 @@ export class TrainingSessionManager {
 
     const trainingData = this.getTracker(trainingDayId)!.getTrainingDay();
 
+    const trainingDay =
+      user.trainingPlans[trainingPlanIndex].trainingWeeks[trainingWeekIndex].trainingDays[trainingDayIndex];
+
     // CHECK FOR REAL SESSION NOT JUST MINOR CHANGES
     if (trainingData.durationInMinutes! >= 30) {
       user.trainingPlans[trainingPlanIndex].trainingWeeks[trainingWeekIndex].trainingDays[trainingDayIndex] =
         trainingData;
 
-      user.trainingDayNotifications.push(trainingData);
+      const trainingDayNotification: TrainingDAyFinishedNotification = {
+        ...trainingData,
+        trainingDayTonnage: getTonnagePerTrainingDay(trainingDay)
+      };
+
+      user.trainingDayNotifications.push(trainingDayNotification);
 
       await userDAO.update(user);
     }
