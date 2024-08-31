@@ -6,11 +6,13 @@ import { NotificationService } from '../notification-page/notification.service';
 import { ToastService } from '../components/toast/toast.service';
 import { ToastStatus } from '../components/toast/toast-status';
 import { Router } from '@angular/router';
+import { ChevronDownIconComponent } from '../components/icon/chevron-down-icon/chevron-down-icon.component';
+import { ChevronUpIconComponent } from '../components/icon/chevron-up-icon/chevron-up-icon.component';
 
 @Component({
   selector: 'app-training-day-notification',
   standalone: true,
-  imports: [CommonModule, CloseIconComponent],
+  imports: [CommonModule, CloseIconComponent, ChevronDownIconComponent, ChevronUpIconComponent],
   templateUrl: './training-day-notification.component.html',
   styleUrls: ['./training-day-notification.component.scss'],
 })
@@ -26,7 +28,17 @@ export class TrainingDayNotificationComponent implements OnInit {
 
   ngOnInit(): void {
     // Initialize the writable signal with the input value
+
+    const mappedNotifications = this.notifications().forEach((notification) => {
+      notification.exerciseTabCollapsed = true;
+    });
+
     this.notifications.set(this.notificationsInput());
+  }
+
+  protected toggleExerciseTab(notification: TrainingDayFinishedNotification) {
+    console.log('🚀 ~ TrainingDayNotificationComponent ~ toggleExerciseTab ~ notification:', notification);
+    notification.exerciseTabCollapsed = !notification.exerciseTabCollapsed;
   }
 
   protected deleteNotification(notificationId: string): void {

@@ -1,7 +1,7 @@
 .training-notification-card {
-  background-color: white;
+  background-color: inherit;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #cdcdcd;
   padding: 16px;
   margin-bottom: 1rem;
 
@@ -46,6 +46,13 @@
   flex-wrap: wrap;
   gap: 10px;
   margin-top: 10px;
+}
+
+.exercise-headline {
+  font-size: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .exercise-card {

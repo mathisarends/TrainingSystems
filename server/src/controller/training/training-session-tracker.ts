@@ -123,7 +123,9 @@ export class TrainingSessionTracker {
         (this.trainingDay.endTime.getTime() - this.trainingDay.startTime.getTime() - this.inactivityTimeoutDuration) /
         60000;
 
-      this.trainingDay.durationInMinutes = Math.max(duration, 0);
+      const roundedDuration = Math.round(duration / 5) * 5;
+
+      this.trainingDay.durationInMinutes = Math.max(roundedDuration, 0);
     }
   }
 }
