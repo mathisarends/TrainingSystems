@@ -1,4 +1,4 @@
-import { Component, input, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, input, OnInit, signal } from '@angular/core';
 import { TrainingDayFinishedNotification } from '../usage-statistics/training-finished-notification';
 import { CommonModule } from '@angular/common';
 import { CloseIconComponent } from '../components/icon/close-icon/close-icon.component';
@@ -8,6 +8,8 @@ import { ToastStatus } from '../components/toast/toast-status';
 import { Router } from '@angular/router';
 import { ChevronDownIconComponent } from '../components/icon/chevron-down-icon/chevron-down-icon.component';
 import { ChevronUpIconComponent } from '../components/icon/chevron-up-icon/chevron-up-icon.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-training-day-notification',
@@ -15,6 +17,14 @@ import { ChevronUpIconComponent } from '../components/icon/chevron-up-icon/chevr
   imports: [CommonModule, CloseIconComponent, ChevronDownIconComponent, ChevronUpIconComponent],
   templateUrl: './training-day-notification.component.html',
   styleUrls: ['./training-day-notification.component.scss'],
+  animations: [
+    // Define the animations
+    trigger('toggleCollapse', [
+      state('collapsed', style({ height: '0px', overflow: 'hidden', opacity: 0 })),
+      state('expanded', style({ height: '*', overflow: 'hidden', opacity: 1 })),
+      transition('collapsed <=> expanded', [animate('200ms ease-in-out')]),
+    ]),
+  ],
 })
 export class TrainingDayNotificationComponent implements OnInit {
   notificationsInput = input.required<TrainingDayFinishedNotification[]>();
@@ -28,12 +38,9 @@ export class TrainingDayNotificationComponent implements OnInit {
 
   ngOnInit(): void {
     // Initialize the writable signal with the input value
-
-    const mappedNotifications = this.notifications().forEach((notification) => {
-      notification.exerciseTabCollapsed = true;
-    });
-
-    this.notifications.set(this.notificationsInput());
+    this.notifications.set(
+      this.notificationsInput().map((notification) => ({ ...notification, exerciseTabCollapsed: true })),
+    );
   }
 
   protected toggleExerciseTab(notification: TrainingDayFinishedNotification) {

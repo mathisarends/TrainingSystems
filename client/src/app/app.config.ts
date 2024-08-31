@@ -6,10 +6,12 @@ import { provideClientHydration } from '@angular/platform-browser';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { httpErrorInterceptor } from '../service/util/http-error-interceptor';
 import { loadingInterceptor } from '../service/util/loading-interceptor';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
+    provideAnimations(),
     provideClientHydration(),
     provideHttpClient(withFetch()),
     provideHttpClient(withInterceptors([httpErrorInterceptor, loadingInterceptor])),
