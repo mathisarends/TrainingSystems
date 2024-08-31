@@ -8,7 +8,9 @@
     </div>
     <div class="training-notification-body">
       <p>
-        <strong>Date:</strong> {{ notification.startTime | formatDate }}<br />
+        @if (notification.startTime) {
+          <strong>Date:</strong> {{ notification.startTime | formatDate }}<br />
+        }
         <strong>Duration:</strong> {{ notification.durationInMinutes }} minutes<br />
         <strong>Total Tonnage:</strong> {{ notification.trainingDayTonnage }} kg
       </p>

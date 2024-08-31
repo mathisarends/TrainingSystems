@@ -9,11 +9,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true,
 })
 export class FormatDatePipe implements PipeTransform {
-  transform(value: Date | undefined): string {
-    if (!value) {
-      return '';
-    }
-
+  transform(value: Date): string {
     const options: Intl.DateTimeFormatOptions = {
       day: '2-digit',
       month: 'long',
