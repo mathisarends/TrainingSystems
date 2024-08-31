@@ -32,29 +32,4 @@ export class GymTicketComponent {
       });
     });
   }
-
-  handleDragOver(event: DragEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-    event.dataTransfer!.dropEffect = 'copy';
-  }
-
-  handleDragLeave(event: DragEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-  }
-
-  handleDrop(event: DragEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-
-    const files = event.dataTransfer?.files;
-    if (files && files.length > 0) {
-      this.handleImageUpload({ target: { files } } as any);
-    }
-  }
-
-  clearImage() {
-    this.uploadedImage = null;
-  }
 }

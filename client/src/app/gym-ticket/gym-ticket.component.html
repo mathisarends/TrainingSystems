@@ -1,11 +1,5 @@
 <div class="upload-container">
-  <div
-    class="upload-dropzone"
-    (dragover)="handleDragOver($event)"
-    (dragleave)="handleDragLeave($event)"
-    (drop)="handleDrop($event)"
-    (click)="fileInput.click()"
-  >
+  <div class="upload-dropzone" (click)="fileInput.click()">
     <p>Drag & Drop your gym ticket here, or click to select an image.</p>
     <input type="file" #fileInput (change)="handleImageUpload($event)" accept="image/*" hidden />
   </div>
