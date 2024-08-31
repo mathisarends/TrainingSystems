@@ -36,7 +36,7 @@ export class GymTicketComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.gymTicket$ = this.gymTicketService.getGymTicket();
+    this.loadGymTicket();
   }
 
   protected handleImageUpload(event: Event) {
@@ -56,7 +56,12 @@ export class GymTicketComponent implements OnInit {
 
       this.gymTicketService.uploadGymTicket(this.uploadedImage).subscribe(() => {
         this.toastService.show('Erfolg', 'Ticket hochgeladen', ToastStatus.SUCESS);
+        this.loadGymTicket();
       });
     });
+  }
+
+  private loadGymTicket() {
+    this.gymTicket$ = this.gymTicketService.getGymTicket();
   }
 }
