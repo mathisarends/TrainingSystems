@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { ApplicationRef, inject, Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
-import { Observable } from 'rxjs';
+import { first, Observable } from 'rxjs';
 import { environment } from '../config/environment';
 
 @Injectable({
@@ -11,7 +11,12 @@ export class SocketService {
   private socket: Socket;
 
   constructor() {
-    this.socket = io(this.url);
+    this.socket = io('http://localhost:3000', { autoConnect: false });
+    inject(ApplicationRef)
+      .isStable.pipe(first((isStable) => isStable))
+      .subscribe(() => {
+        this.socket.connect();
+      });
   }
 
   /**
