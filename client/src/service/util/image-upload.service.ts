@@ -7,57 +7,70 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ImageUploadService {
-  private maxSizeInBytes = 1_000_000; // 1 MB in bytes
-
-  constructor() {}
+  private maxSizeInBytes = 1_000_000;
+  private allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
 
   /**
    * Handles the image upload process, including optional resizing and cropping.
    * @param event - The file input change event.
    * @param callback - Callback function to handle the processed image result.
    * @param crop - Flag indicating whether to crop the image to a square.
-   * @param colorCallback - Optional callback function to handle the dominant colors.
    */
-  handleImageUpload(
-    event: any,
-    callback: (result: string) => void,
-    crop: boolean = false,
-    colorCallback?: (colors: string[]) => void,
-  ) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        const base64Str = e.target.result;
-        if (base64Str.length > this.maxSizeInBytes) {
-          this.resizeImage(base64Str, (resizedBase64) => {
-            if (colorCallback) {
-              this.extractDominantColors(resizedBase64, (colors) => {
-                colorCallback(colors);
-              });
-            }
-            callback(resizedBase64);
-          });
-        } else if (crop) {
-          this.resizeAndCropImage(base64Str, (resizedBase64) => {
-            if (colorCallback) {
-              this.extractDominantColors(resizedBase64, (colors) => {
-                colorCallback(colors);
-              });
-            }
-            callback(resizedBase64);
-          });
-        } else {
-          if (colorCallback) {
-            this.extractDominantColors(base64Str, (colors) => {
-              colorCallback(colors);
-            });
-          }
-          callback(base64Str);
-        }
-      };
-      reader.readAsDataURL(file);
+  handleImageUpload(event: Event, callback: (result: string) => void, crop: boolean = false): void {
+    const file = this.getFileFromEvent(event);
+    if (!file) return;
+
+    if (!this.isValidImageType(file.type)) {
+      console.error('Invalid file type. Please upload a valid image file.');
+      return;
     }
+
+    this.readFile(file, (base64Str) => {
+      if (base64Str.length > this.maxSizeInBytes) {
+        this.resizeImage(base64Str, callback);
+        return;
+      }
+
+      if (crop) {
+        this.resizeAndCropImage(base64Str, callback);
+        return;
+      }
+
+      callback(base64Str);
+    });
+  }
+
+  /**
+   * Extracts the file from the file input event.
+   * @param event - The file input change event.
+   * @returns The selected file or null if none is selected.
+   */
+  private getFileFromEvent(event: Event): File | null {
+    const input = event.target as HTMLInputElement;
+    return input?.files?.[0] || null;
+  }
+
+  /**
+   * Checks if the file type is a valid image type.
+   * @param fileType - The MIME type of the file.
+   * @returns True if the file type is valid, false otherwise.
+   */
+  private isValidImageType(fileType: string): boolean {
+    return this.allowedMimeTypes.includes(fileType);
+  }
+
+  /**
+   * Reads a file and converts it to a base64 string.
+   * @param file - The file to read.
+   * @param callback - Callback function to handle the base64 string.
+   */
+  private readFile(file: File, callback: (base64Str: string) => void): void {
+    const reader = new FileReader();
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+      const base64Str = e.target?.result as string;
+      callback(base64Str);
+    };
+    reader.readAsDataURL(file);
   }
 
   /**
@@ -65,7 +78,7 @@ export class ImageUploadService {
    * @param base64Str - The base64 string representation of the image.
    * @param callback - Callback function to handle the processed image result.
    */
-  private resizeAndCropImage(base64Str: string, callback: (result: string) => void) {
+  private resizeAndCropImage(base64Str: string, callback: (result: string) => void): void {
     const img = new Image();
     img.src = base64Str;
     img.onload = () => {
@@ -94,30 +107,17 @@ export class ImageUploadService {
    * @param base64Str - The base64 string representation of the image.
    * @param callback - Callback function to handle the processed image result.
    */
-  private resizeImage(base64Str: string, callback: (result: string) => void) {
+  private resizeImage(base64Str: string, callback: (result: string) => void): void {
     const img = new Image();
     img.src = base64Str;
     img.onload = () => {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d')!;
 
-      const maxWidth = 800; // Maximum width for resizing
-      const maxHeight = 800; // Maximum height for resizing
+      const maxWidth = 800;
+      const maxHeight = 800;
 
-      let width = img.width;
-      let height = img.height;
-
-      if (width > height) {
-        if (width > maxWidth) {
-          height = Math.round((height * maxWidth) / width);
-          width = maxWidth;
-        }
-      } else {
-        if (height > maxHeight) {
-          width = Math.round((width * maxHeight) / height);
-          height = maxHeight;
-        }
-      }
+      const { width, height } = this.calculateAspectRatioFit(img.width, img.height, maxWidth, maxHeight);
 
       canvas.width = width;
       canvas.height = height;
@@ -128,46 +128,15 @@ export class ImageUploadService {
   }
 
   /**
-   * Extracts the dominant colors from an image.
-   * @param base64Str - The base64 string representation of the image.
-   * @param callback - Callback function to handle the extracted colors.
+   * Calculates the new dimensions for an image while maintaining the aspect ratio.
+   * @param srcWidth - The original width of the image.
+   * @param srcHeight - The original height of the image.
+   * @param maxWidth - The maximum allowed width.
+   * @param maxHeight - The maximum allowed height.
+   * @returns An object containing the new width and height.
    */
-  private extractDominantColors(base64Str: string, callback: (colors: string[]) => void, numColors: number = 5) {
-    const img = new Image();
-    img.src = base64Str;
-    img.crossOrigin = 'Anonymous';
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = img.width;
-      canvas.height = img.height;
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        ctx.drawImage(img, 0, 0, img.width, img.height);
-        const imageData = ctx.getImageData(0, 0, img.width, img.height);
-        const colors = this.getDominantColorsFromData(imageData.data, numColors);
-        callback(colors);
-      }
-    };
-  }
-
-  /**
-   * Processes image data to find the dominant colors.
-   * @param data - The image data array.
-   * @param numColors - The number of dominant colors to extract.
-   * @returns An array of dominant colors in RGB format.
-   */
-  private getDominantColorsFromData(data: Uint8ClampedArray, numColors: number): string[] {
-    const colorMap: { [key: string]: number } = {};
-    for (let i = 0; i < data.length; i += 4) {
-      const rgb = `${data[i]},${data[i + 1]},${data[i + 2]}`;
-      if (colorMap[rgb]) {
-        colorMap[rgb]++;
-      } else {
-        colorMap[rgb] = 1;
-      }
-    }
-
-    const sortedColors = Object.keys(colorMap).sort((a, b) => colorMap[b] - colorMap[a]);
-    return sortedColors.slice(0, numColors).map((color) => `rgb(${color})`);
+  private calculateAspectRatioFit(srcWidth: number, srcHeight: number, maxWidth: number, maxHeight: number) {
+    const ratio = Math.min(maxWidth / srcWidth, maxHeight / srcHeight);
+    return { width: Math.round(srcWidth * ratio), height: Math.round(srcHeight * ratio) };
   }
 }
