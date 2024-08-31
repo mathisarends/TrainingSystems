@@ -6,6 +6,12 @@ dotenv.config();
 const algorithm = 'aes-256-gcm';
 const keyBase64 = process.env.ENCRYPTION_KEY_BASE64!;
 
+/**
+ * Encrypts a given text using AES-256-GCM.
+ *
+ * @param text - The plaintext to encrypt.
+ * @returns The encrypted text as a Base64-encoded string.
+ */
 export function encrypt(text: string) {
   if (!text) return '';
   const iv = crypto.randomBytes(16);
@@ -19,6 +25,13 @@ export function encrypt(text: string) {
   return encryptedData.toString('base64');
 }
 
+/**
+ * Decrypts a Base64-encoded encrypted text using AES-256-GCM.
+ *
+ * @param encryptedDataBase64 - The encrypted text as a Base64-encoded string.
+ * @returns The decrypted plaintext.
+ * @throws An error if decryption fails.
+ */
 export function decrypt(encryptedDataBase64: string) {
   if (!encryptedDataBase64) return '';
   const buffer = Buffer.from(encryptedDataBase64, 'base64');

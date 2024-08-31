@@ -17,6 +17,7 @@ import {
 } from '../ressources/exercises/exerciseCatalog.js';
 import { Request, Response } from 'express';
 import { ExerciseCategoryType } from '../models/training/exercise-category-type.js';
+import { encrypt } from '../utils/cryption.js';
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -42,7 +43,7 @@ export async function registerUser(userDAO: MongoGenericDAO<User>, userDetails: 
     password: await bcrypt.hash(password, 10),
     trainingPlans: [],
     trainingDayNotifications: [],
-    gymtTicket: 'noGymTicketAvailable',
+    gymtTicket: encrypt('noGymTicketAvailable'),
     exercises: {
       [ExerciseCategoryType.PLACEHOLDER]: placeHolderExercises,
       [ExerciseCategoryType.SQUAT]: squatExercises,
@@ -90,7 +91,7 @@ export async function loginOAuth2User(userDAO: MongoGenericDAO<User>, token: str
       pictureUrl: picture,
       trainingPlans: [],
       trainingDayNotifications: [],
-      gymtTicket: 'noGymTicketAvailable',
+      gymtTicket: encrypt('noGymTicketAvailable'),
       exercises: {
         [ExerciseCategoryType.PLACEHOLDER]: placeHolderExercises,
         [ExerciseCategoryType.SQUAT]: squatExercises,
