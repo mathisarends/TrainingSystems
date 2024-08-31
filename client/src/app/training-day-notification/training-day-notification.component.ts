@@ -8,23 +8,16 @@ import { ToastStatus } from '../components/toast/toast-status';
 import { Router } from '@angular/router';
 import { ChevronDownIconComponent } from '../components/icon/chevron-down-icon/chevron-down-icon.component';
 import { ChevronUpIconComponent } from '../components/icon/chevron-up-icon/chevron-up-icon.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { trigger, state, style, transition, animate } from '@angular/animations';
+import { toggleCollapseAnimation } from '../shared/animations';
+import { FormatDatePipe } from '../shared/pipes/format-date.pipe';
 
 @Component({
   selector: 'app-training-day-notification',
   standalone: true,
-  imports: [CommonModule, CloseIconComponent, ChevronDownIconComponent, ChevronUpIconComponent],
+  imports: [CommonModule, CloseIconComponent, ChevronDownIconComponent, ChevronUpIconComponent, FormatDatePipe],
   templateUrl: './training-day-notification.component.html',
   styleUrls: ['./training-day-notification.component.scss'],
-  animations: [
-    // Define the animations
-    trigger('toggleCollapse', [
-      state('collapsed', style({ height: '0px', overflow: 'hidden', opacity: 0 })),
-      state('expanded', style({ height: '*', overflow: 'hidden', opacity: 1 })),
-      transition('collapsed <=> expanded', [animate('200ms ease-in-out')]),
-    ]),
-  ],
+  animations: [toggleCollapseAnimation],
 })
 export class TrainingDayNotificationComponent implements OnInit {
   notificationsInput = input.required<TrainingDayFinishedNotification[]>();
@@ -44,7 +37,6 @@ export class TrainingDayNotificationComponent implements OnInit {
   }
 
   protected toggleExerciseTab(notification: TrainingDayFinishedNotification) {
-    console.log('🚀 ~ TrainingDayNotificationComponent ~ toggleExerciseTab ~ notification:', notification);
     notification.exerciseTabCollapsed = !notification.exerciseTabCollapsed;
   }
 
