@@ -17,7 +17,7 @@ import { LoadingService } from './loading.service';
 export function loadingInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
   const loadingService = inject(LoadingService);
 
-  const urlBlacklist: string[] = ['/user/auth-state', '/latest', 'skipLoading=true'];
+  const urlBlacklist: string[] = ['/latest', 'skipLoading=true'];
 
   const isBlacklisted = urlBlacklist.some((pattern) => req.url.includes(pattern));
 

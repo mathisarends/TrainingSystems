@@ -1,4 +1,6 @@
 import express, { Express } from 'express';
+import { Server as SocketIOServer } from 'socket.io';
+import http from 'http';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import startDB from './db.js';
@@ -11,6 +13,8 @@ import trainingRouter from './routes/trainingRoutes.js';
 import exerciseRouter from './routes/exerciseRoutes.js';
 import friendShipRouter from './routes/friendshipRoutes.js';
 import { errorHandler } from './middleware/error-handler.js';
+import { initializeWebSocket } from './websocket.js';
+
 dotenv.config();
 
 const PORT = process.env.port ? parseInt(process.env.port, 10) : 3000;
@@ -40,13 +44,20 @@ async function configureApp(app: Express) {
 
   app.use(errorHandler);
 }
+
 export async function start() {
   const app = express();
   await configureApp(app);
   await startDB(app);
 
-  app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`);
+  // Erstelle einen HTTP-Server, der sowohl von Express als auch von Socket.IO verwendet wird
+  const server = http.createServer(app);
+
+  initializeWebSocket(server);
+
+  // Starte den kombinierten HTTP und WebSocket-Server
+  server.listen(PORT, () => {
+    console.log(`Server läuft auf http://localhost:${PORT}`);
   });
 }
 
