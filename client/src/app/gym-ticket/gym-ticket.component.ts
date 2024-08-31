@@ -8,11 +8,13 @@ import { ToastStatus } from '../components/toast/toast-status';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { SpinnerComponent } from '../components/loaders/spinner/spinner.component';
+import { HeadlineComponent } from '../components/headline/headline.component';
+import { SkeletonComponent } from '../skeleton/skeleton.component';
 
 @Component({
   selector: 'app-gym-ticket',
   standalone: true,
-  imports: [CommonModule, SpinnerComponent],
+  imports: [CommonModule, SpinnerComponent, HeadlineComponent, SkeletonComponent],
   templateUrl: './gym-ticket.component.html',
   styleUrls: ['./gym-ticket.component.scss'],
 })

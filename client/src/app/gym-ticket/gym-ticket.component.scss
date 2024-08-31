@@ -1,8 +1,12 @@
 :host {
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
+}
+
+.picture-container {
+  display: flex;
   align-items: center;
-  padding: 20px;
   border: 2px dashed #cccccc;
   border-radius: 10px;
   cursor: pointer;
