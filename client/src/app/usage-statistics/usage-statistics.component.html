@@ -2,7 +2,7 @@
   @if (trainingDayNotifications$ | async; as trainingDayNotifications) {
     <app-activity-calendar [activityData]="activityData" />
 
-    <app-training-day-notification [notifications]="trainingDayNotifications" />
+    <app-training-day-notification [notificationsInput]="trainingDayNotifications" />
   } @else {
     <app-spinner />
   }

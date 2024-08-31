@@ -5,6 +5,7 @@ import { authService } from '../service/authService.js';
 import dotenv from 'dotenv';
 import { TrainingPlan } from '../models/training/trainingPlan.js';
 import { getTonnagePerTrainingDay } from '../service/trainingService.js';
+import { CodeChallengeMethod } from 'google-auth-library';
 dotenv.config();
 
 export async function register(req: Request, res: Response): Promise<void> {
@@ -91,28 +92,35 @@ export async function getActivityCalendar(req: Request, res: Response): Promise<
   res.status(200).json(activityObject);
 }
 
+let visits = 0;
+
 /**
  * Retrieves training day notifications for a user.
  */
 export async function getTrainingDayNotifications(req: Request, res: Response): Promise<Response> {
-  const userDAO = req.app.locals.userDAO;
+  const userDAO = userService.getUserGenericDAO(req);
 
   const user = await userService.getUser(req, res);
 
-  if (user.trainingDayNotifications === undefined) {
+  // MOCK
+  if (visits === 0) {
+    console.log('ye');
     user.trainingDayNotifications = [];
-
     await userDAO.update(user);
+    visits += 1;
+
+    const mockTrainingDay = user.trainingPlans[0].trainingWeeks[0].trainingDays[0];
+    mockTrainingDay.durationInMinutes = 60;
+
+    user.trainingDayNotifications.push({
+      ...mockTrainingDay,
+      trainingDayTonnage: getTonnagePerTrainingDay(mockTrainingDay)
+    });
   }
-  const trainingDayNotifications = user.trainingDayNotifications;
 
-  // TODO: hier weiter am mock arbeiten
-  const mockTrainingDay = user.trainingPlans[0].trainingWeeks[0].trainingDays[0];
-  mockTrainingDay.durationInMinutes = 60;
+  await userDAO.update(user);
 
-  trainingDayNotifications.push({ ...mockTrainingDay, trainingDayTonnage: getTonnagePerTrainingDay(mockTrainingDay) });
-
-  return res.status(200).json(trainingDayNotifications);
+  return res.status(200).json(user.trainingDayNotifications);
 }
 
 /**

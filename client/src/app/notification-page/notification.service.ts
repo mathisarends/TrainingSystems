@@ -19,4 +19,14 @@ export class NotificationService {
   getTrainingDayNotifications(): Observable<TrainingDayFinishedNotification[]> {
     return this.httpService.get<TrainingDayFinishedNotification[]>('/user/training-notifications');
   }
+
+  /**
+   * Deletes a training day notification by ID.
+   *
+   * @param id - The ID of the notification to delete.
+   * @returns An Observable representing the result of the delete operation.
+   */
+  deleteTrainingDayNotification(id: string): Observable<any> {
+    return this.httpService.delete(`/user/training-notification/${id}`);
+  }
 }
