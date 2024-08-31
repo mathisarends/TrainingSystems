@@ -232,6 +232,16 @@ export async function uploadGymTicket(req: Request, res: Response): Promise<Resp
   return res.status(200).json({ message: 'Your Gym Ticket was succesfully updated' });
 }
 
+export async function getGymTicket(req: Request, res: Response): Promise<Response> {
+  const user = await userService.getUser(req, res);
+  const gymTicket = user.gymtTicket;
+
+  if (!gymTicket) {
+    return res.status(404).json({ error: 'Gym Ticket was not found in request body' });
+  }
+  return res.status(200).json(gymTicket);
+}
+
 export function signOut(req: Request, res: Response): void {
   authService.removeToken(res);
   res.status(200).json({ message: 'Token erfolgreich entfernt' });

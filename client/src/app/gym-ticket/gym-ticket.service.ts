@@ -9,4 +9,8 @@ export class GymTicketService {
   uploadGymTicket(ticket: string): Observable<any> {
     return this.httpClient.put('/user/gym-ticket', { gymTicket: ticket });
   }
+
+  getGymTicket(): Observable<string> {
+    return this.httpClient.get('/user/gym-ticket');
+  }
 }

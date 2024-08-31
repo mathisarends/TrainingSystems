@@ -1,4 +1,14 @@
-<div class="upload-dropzone" (click)="fileInput.click()">
-  <p>Drag & Drop your gym ticket here, or click to select an image.</p>
-  <input type="file" #fileInput (change)="handleImageUpload($event)" accept="image/*" hidden />
-</div>
+@if (gymTicket$ | async; as gymTicket) {
+  @if (gymTicket) {
+    <div class="upload-container" (click)="fileInput.click()">
+      <img [src]="gymTicket" alt="Upload Image" class="w-100" />
+
+      <input type="file" #fileInput (change)="handleImageUpload($event)" accept="image/*" hidden />
+    </div>
+  } @else {
+    <div class="upload-dropzone" (click)="fileInput.click()">
+      <p>Drag & Drop your gym ticket here, or click to select an image.</p>
+      <input type="file" #fileInput (change)="handleImageUpload($event)" accept="image/*" hidden />
+    </div>
+  }
+}

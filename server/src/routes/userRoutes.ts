@@ -49,6 +49,8 @@ router.post(
 
 router.put('/gym-ticket', authService.authenticationMiddleware, asyncHandler(userController.uploadGymTicket));
 
+router.get('/gym-ticket', authService.authenticationMiddleware, asyncHandler(userController.getGymTicket));
+
 router.post('/logout', userController.signOut);
 
 router.get(
