@@ -1,7 +1,7 @@
 import { Component, input, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TooltipDirective } from '../../service/tooltip/tooltip.directive';
-import { ActivityCalendarEntry, Level } from './activity-calendar-entry';
+import { ActivityCalendarEntry, Day, Level } from './activity-calendar-entry';
 import { ActivityCalendarData } from '../usage-statistics/activity-calendar-data';
 
 @Component({
@@ -18,33 +18,61 @@ export class ActivityCalendar implements OnInit {
   trainingDays = computed(() => Object.keys(this.activityData()).length);
 
   ngOnInit(): void {
+    this.initializeGrid();
+
+    const dataEntries = this.mapActivityDataToEntries();
+    this.populateGrid(dataEntries);
+
+    this.calculateLevels();
+  }
+
+  /**
+   * Initializes the grid with default values for each day of the year.
+   */
+  private initializeGrid(): void {
     const startDayOfWeek = 0;
 
-    this.grid = Array.from({ length: 364 }, (_, index) => {
-      const dayOfWeek = (index + startDayOfWeek) % 7;
-      const weekIndex = Math.floor(index / 7);
+    this.grid = Array.from({ length: 364 }, (_, dayIndex) => {
+      const dayOfWeek = (dayIndex + startDayOfWeek) % 7;
+      const weekIndex = Math.floor(dayIndex / 7);
       return {
-        day: index as 0 | 363,
+        day: dayIndex as 0 | 363,
         value: 0,
         level: 0 as Level,
         dayOfWeek: dayOfWeek,
         weekIndex: weekIndex,
       };
     });
+  }
 
-    const dataEntries = Object.entries(this.activityData()).map(([day, value]) => {
+  /**
+   * Maps the activity data from input to an array of grid entries.
+   *
+   * @returns An array of ActivityCalendarEntry objects mapped from the input data.
+   */
+  private mapActivityDataToEntries(): ActivityCalendarEntry[] {
+    const startDayOfWeek = 0;
+
+    return Object.entries(this.activityData()).map(([day, value]) => {
       const dayIndex = +day;
       const dayOfWeek = (dayIndex + startDayOfWeek) % 7;
       const weekIndex = Math.floor(dayIndex / 7);
       return {
-        day: dayIndex,
+        day: dayIndex as Day,
         value: value as number,
         level: 0 as Level,
         dayOfWeek: dayOfWeek,
         weekIndex: weekIndex,
       };
     });
+  }
 
+  /**
+   * Populates the grid with activity data entries.
+   *
+   * @param dataEntries - The array of activity data entries to populate the grid.
+   */
+  private populateGrid(dataEntries: ActivityCalendarEntry[]): void {
     dataEntries.forEach((entry) => {
       this.grid[entry.day] = {
         day: entry.day as 0 | 363,
@@ -54,31 +82,21 @@ export class ActivityCalendar implements OnInit {
         weekIndex: entry.weekIndex,
       };
     });
-
-    this.calculateLevels();
   }
 
   private calculateLevels() {
     const values = this.grid.map((item) => item.value);
-    const filteredValues = values.filter((value) => value > 0);
+    const nonZeroValues = values.filter((value) => value > 0);
 
     // Handle cases where we have very few non-zero values
-    const thresholds =
-      filteredValues.length > 1 ? this.calculateQuantiles(filteredValues, [0.25, 0.5, 0.75]) : [0, 0, 0]; // Assign a default threshold
+    const quantileThresholds =
+      nonZeroValues.length > 1 ? this.calculateQuantiles(nonZeroValues, [0.25, 0.5, 0.75]) : [0, 0, 0]; // Assign a default threshold
 
     this.grid.forEach((item) => {
-      item.level = this.getLevelForValue(item.value, thresholds);
+      item.level = this.getLevelForValue(item.value, quantileThresholds);
     });
   }
 
-  /**
-   * Calculate the quantiles for a given array of values.
-   * This method sorts the values and determines the thresholds for the given quantiles.
-   *
-   * @param values - The array of numeric values to calculate the quantiles from.
-   * @param quantiles - The quantiles to calculate, e.g., [0.25, 0.5, 0.75].
-   * @returns An array of numbers representing the calculated quantile thresholds.
-   */
   private calculateQuantiles(values: number[], quantiles: number[]): number[] {
     const sortedValues = values.sort((a, b) => a - b);
 
@@ -88,16 +106,16 @@ export class ActivityCalendar implements OnInit {
       return this.handleFewValues(sortedValues);
     }
 
-    return quantiles.map((q) => this.calculateQuantile(sortedValues, q));
+    return quantiles.map((quantile) => this.calculateThresholdForQuantile(sortedValues, quantile));
   }
 
-  private getLevelForValue(value: number, thresholds: number[]): Level {
+  private getLevelForValue(value: number, quantileThresholds: number[]): Level {
     switch (true) {
-      case value > thresholds[2]:
+      case value > quantileThresholds[2]:
         return 4 as Level;
-      case value > thresholds[1]:
+      case value > quantileThresholds[1]:
         return 3 as Level;
-      case value > thresholds[0]:
+      case value > quantileThresholds[0]:
         return 2 as Level;
       case value > 0:
         return 1 as Level;
@@ -106,30 +124,18 @@ export class ActivityCalendar implements OnInit {
     }
   }
 
-  /**
-   * Calculate a specific quantile value from a sorted array.
-   *
-   * @param sortedValues - The sorted array of numeric values.
-   * @param quantile - The quantile to calculate (e.g., 0.25 for the first quartile).
-   * @returns The calculated quantile value.
-   */
-  private calculateQuantile(sortedValues: number[], quantile: number): number {
-    const pos = (sortedValues.length - 1) * quantile;
-    const base = Math.floor(pos);
-    const rest = pos - base;
+  private calculateThresholdForQuantile(sortedValues: number[], quantile: number): number {
+    const quantilePosition = (sortedValues.length - 1) * quantile;
+    const lowerIndex = Math.floor(quantilePosition);
+    const fractionalPart = quantilePosition - lowerIndex;
 
-    if (sortedValues[base + 1] !== undefined) {
-      return sortedValues[base] + rest * (sortedValues[base + 1] - sortedValues[base]);
+    if (sortedValues[lowerIndex + 1] !== undefined) {
+      return sortedValues[lowerIndex] + fractionalPart * (sortedValues[lowerIndex + 1] - sortedValues[lowerIndex]);
     } else {
-      return sortedValues[base];
+      return sortedValues[lowerIndex];
     }
   }
 
-  /**
-   * Handles cases where there are fewer than 4 values to calculate quantiles.
-   * @param sortedValues - The sorted array of values.
-   * @returns Thresholds based on the few available values.
-   */
   private handleFewValues(sortedValues: number[]): number[] {
     if (sortedValues.length === 1) {
       return [0, 0, sortedValues[0]];
