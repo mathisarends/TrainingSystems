@@ -23,6 +23,12 @@ router.get(
   asyncHandler(userController.getTrainingDayNotifications)
 );
 
+router.delete(
+  '/training-notification/:id',
+  authService.authenticationMiddleware,
+  asyncHandler(userController.deleteTrainingDayNotification)
+);
+
 router.get(
   '/profile-picture',
   authService.authenticationMiddleware,

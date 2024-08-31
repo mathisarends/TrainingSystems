@@ -120,6 +120,10 @@ export async function getUser(req: Request, res: Response): Promise<User> {
   return user;
 }
 
+export function getUserGenericDAO(req: Request): MongoGenericDAO<User> {
+  return req.app.locals.userDAO as MongoGenericDAO<User>;
+}
+
 function validateUsername(username: string): boolean {
   return username.length >= 3;
 }

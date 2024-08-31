@@ -107,12 +107,35 @@ export async function getTrainingDayNotifications(req: Request, res: Response): 
   const trainingDayNotifications = user.trainingDayNotifications;
 
   // TODO: hier weiter am mock arbeiten
-  /* const mockTrainingDay = user.trainingPlans[0].trainingWeeks[0].trainingDays[0];
+  const mockTrainingDay = user.trainingPlans[0].trainingWeeks[0].trainingDays[0];
   mockTrainingDay.durationInMinutes = 60;
 
   trainingDayNotifications.push({ ...mockTrainingDay, trainingDayTonnage: getTonnagePerTrainingDay(mockTrainingDay) });
- */
+
   return res.status(200).json(trainingDayNotifications);
+}
+
+/**
+ * Deletes a specific training day notification for a user.
+ */
+export async function deleteTrainingDayNotification(req: Request, res: Response): Promise<Response> {
+  const notificationId = req.params.id;
+
+  const userDAO = userService.getUserGenericDAO(req);
+
+  const user = await userService.getUser(req, res);
+
+  const notificationIndex = user.trainingDayNotifications.findIndex(notification => notification.id === notificationId);
+
+  if (notificationIndex === -1) {
+    return res.status(404).json({ error: 'Notification with id not found.' });
+  }
+
+  user.trainingDayNotifications.splice(notificationIndex, 1);
+
+  await userDAO.update(user);
+
+  return res.status(200).json({ message: 'Notification wurde erfolgreich entfernt' });
 }
 
 function getIndexOfDayPerYearFromDate(date: Date): number {
