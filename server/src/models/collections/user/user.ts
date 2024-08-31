@@ -28,6 +28,11 @@ export interface User extends Entity {
   pictureUrl?: string;
 
   /**
+   * The Gym-Ticket for the user.
+   */
+  gymtTicket?: string;
+
+  /**
    * The password of the user.
    * This field is optional and may not be required if logged in with Google.
    */

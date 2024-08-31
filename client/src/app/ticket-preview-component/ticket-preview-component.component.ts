@@ -8,11 +8,6 @@ import { AlertComponent } from '../components/alert/alert.component';
   templateUrl: './ticket-preview-component.component.html',
   styleUrls: ['./ticket-preview-component.component.scss'],
 })
-export class TicketPreviewComponentComponent implements OnInit {
+export class TicketPreviewComponentComponent {
   @Input({ required: true }) ticketImage!: string;
-
-  ngOnInit(): void {
-    // Accessing the value of the input signal correctly
-    console.log('🚀 ~ TicketPreviewComponentComponent ~ ticketImg:', this.ticketImage);
-  }
 }

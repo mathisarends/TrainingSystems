@@ -217,6 +217,21 @@ export async function updateProfilePicture(req: Request, res: Response): Promise
   return res.status(200).json({ message: 'Dein Profilbild wurde erfolgreich geupdated' });
 }
 
+export async function uploadGymTicket(req: Request, res: Response): Promise<Response> {
+  const userDAO = userService.getUserGenericDAO(req);
+  const user = await userService.getUser(req, res);
+  const gymTicket = req.body.gymTicket;
+
+  if (!gymTicket) {
+    return res.status(404).json({ error: 'Gym Ticket was not found in request body' });
+  }
+
+  user.gymtTicket = gymTicket;
+  await userDAO.update(user);
+
+  return res.status(200).json({ message: 'Your Gym Ticket was succesfully updated' });
+}
+
 export function signOut(req: Request, res: Response): void {
   authService.removeToken(res);
   res.status(200).json({ message: 'Token erfolgreich entfernt' });
