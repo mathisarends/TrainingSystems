@@ -7,15 +7,18 @@ import { ToastService } from '../components/toast/toast.service';
 import { ToastStatus } from '../components/toast/toast-status';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { SpinnerComponent } from '../components/loaders/spinner/spinner.component';
 
 @Component({
   selector: 'app-gym-ticket',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SpinnerComponent],
   templateUrl: './gym-ticket.component.html',
   styleUrls: ['./gym-ticket.component.scss'],
 })
 export class GymTicketComponent implements OnInit {
+  protected readonly NO_GYM_TICKET_AVAILABLE = 'noGymTicketAvailable';
+
   uploadedImage: string | null = null;
 
   /**

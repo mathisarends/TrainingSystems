@@ -234,12 +234,16 @@ export async function uploadGymTicket(req: Request, res: Response): Promise<Resp
 
 export async function getGymTicket(req: Request, res: Response): Promise<Response> {
   const user = await userService.getUser(req, res);
+
   const gymTicket = user.gymtTicket;
 
   if (!gymTicket) {
-    return res.status(404).json({ error: 'Gym Ticket was not found in request body' });
+    user.gymtTicket = 'noGymTicketAvailable';
+
+    const userDAO = userService.getUserGenericDAO(req);
+    userDAO.update(user);
   }
-  return res.status(200).json(gymTicket);
+  return res.status(200).json(user.gymtTicket);
 }
 
 export function signOut(req: Request, res: Response): void {
