@@ -5,6 +5,7 @@ import { MongoGenericDAO } from '../../models/dao/mongo-generic.dao.js';
 import { User } from '../../models/collections/user/user.js';
 import { TrainingDAyFinishedNotification } from '../../models/collections/user/training-fninished-notifcation.js';
 import { getTonnagePerTrainingDay } from '../../service/trainingService.js';
+import { sendReloadNotificationSignal } from '../../websocket.js';
 
 /**
  * Manages multiple training session trackers for different users.
@@ -112,6 +113,8 @@ export class TrainingSessionManager {
       user.trainingDayNotifications.push(trainingDayNotification);
 
       await userDAO.update(user);
+
+      sendReloadNotificationSignal();
     }
 
     this.removeTracker(trainingDayId); // Remove tracker with trainingDayId

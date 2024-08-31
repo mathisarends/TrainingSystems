@@ -1,14 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  OnInit,
-  Output,
-  QueryList,
-  signal,
-  ViewChild,
-  ViewChildren,
-} from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { ProfileService } from '../../Pages/profile/profileService';
@@ -18,6 +8,7 @@ import { TrainingDay } from '../../Pages/training-view/training-day';
 import { NotificationService } from '../../notification-page/notification.service';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { SocketService } from '../../socket.service';
 
 @Component({
   selector: 'app-header',
@@ -53,8 +44,8 @@ export class HeaderComponent implements OnInit {
     private profileService: ProfileService,
     private searchService: SearchService,
     private notificationService: NotificationService,
+    private socketService: SocketService,
   ) {
-    // Subscribe to router events to update active link on navigation end
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
       this.updateActiveLink();
     });
@@ -72,6 +63,15 @@ export class HeaderComponent implements OnInit {
       }
     });
 
+    this.socketService.onTrainingDayNotificationMessage().subscribe(() => {
+      this.loadTrainingDayNotifications();
+    });
+
+    // initially
+    this.loadTrainingDayNotifications();
+  }
+
+  private loadTrainingDayNotifications() {
     this.trainingDayNotifications$ = this.notificationService.getTrainingDayNotifications();
   }
 

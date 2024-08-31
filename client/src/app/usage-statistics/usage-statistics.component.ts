@@ -33,26 +33,10 @@ export class UsageStatisticsComponent implements OnInit {
   constructor(
     private httpClient: HttpService,
     private notificationService: NotificationService,
-    private socketService: SocketService,
-    private destroyRef: DestroyRef,
   ) {}
 
   ngOnInit(): void {
     this.activityCalendarData$ = this.httpClient.get<ActivityCalendarData>('/user/activity-calendar');
     this.trainingDayNotifications$ = this.notificationService.getTrainingDayNotifications();
-
-    this.socketService
-      .onMessage()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((message) => {
-        console.log(
-          '🚀 ~ UsageStatisticsComponent ~ this.messageSubscription=this.socketService.onMessage ~ message:',
-          message,
-        );
-      });
-  }
-
-  protected testWebSocket() {
-    this.socketService.sendMessage('king shit');
   }
 }

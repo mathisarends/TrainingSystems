@@ -92,8 +92,6 @@ export async function getActivityCalendar(req: Request, res: Response): Promise<
   res.status(200).json(activityObject);
 }
 
-/* let visits = 0; */
-
 /**
  * Retrieves training day notifications for a user.
  */
@@ -101,22 +99,6 @@ export async function getTrainingDayNotifications(req: Request, res: Response): 
   const userDAO = userService.getUserGenericDAO(req);
 
   const user = await userService.getUser(req, res);
-
-  // MOCK
-  /* if (visits === 0) {
-    console.log('ye');
-    user.trainingDayNotifications = [];
-    await userDAO.update(user);
-    visits += 1;
-
-    const mockTrainingDay = user.trainingPlans[0].trainingWeeks[0].trainingDays[0];
-    mockTrainingDay.durationInMinutes = 60;
-
-    user.trainingDayNotifications.push({
-      ...mockTrainingDay,
-      trainingDayTonnage: getTonnagePerTrainingDay(mockTrainingDay)
-    });
-  } */
 
   await userDAO.update(user);
 
