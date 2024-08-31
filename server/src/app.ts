@@ -1,5 +1,4 @@
 import express, { Express } from 'express';
-import { Server as SocketIOServer } from 'socket.io';
 import http from 'http';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
