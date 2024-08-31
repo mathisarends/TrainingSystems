@@ -30,7 +30,7 @@ export interface User extends Entity {
   /**
    * The Gym-Ticket for the user.
    */
-  gymtTicket?: string;
+  gymtTicket: string;
 
   /**
    * The password of the user.

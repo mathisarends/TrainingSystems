@@ -42,6 +42,7 @@ export async function registerUser(userDAO: MongoGenericDAO<User>, userDetails: 
     password: await bcrypt.hash(password, 10),
     trainingPlans: [],
     trainingDayNotifications: [],
+    gymtTicket: 'noGymTicketAvailable',
     exercises: {
       [ExerciseCategoryType.PLACEHOLDER]: placeHolderExercises,
       [ExerciseCategoryType.SQUAT]: squatExercises,
@@ -89,6 +90,7 @@ export async function loginOAuth2User(userDAO: MongoGenericDAO<User>, token: str
       pictureUrl: picture,
       trainingPlans: [],
       trainingDayNotifications: [],
+      gymtTicket: 'noGymTicketAvailable',
       exercises: {
         [ExerciseCategoryType.PLACEHOLDER]: placeHolderExercises,
         [ExerciseCategoryType.SQUAT]: squatExercises,

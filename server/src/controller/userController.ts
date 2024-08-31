@@ -5,6 +5,7 @@ import { authService } from '../service/authService.js';
 import dotenv from 'dotenv';
 import { TrainingPlan } from '../models/training/trainingPlan.js';
 import { getTonnagePerTrainingDay } from '../service/trainingService.js';
+import { encrypt, decrypt } from '../utils/cryption.js';
 dotenv.config();
 
 export async function register(req: Request, res: Response): Promise<void> {
@@ -221,12 +222,13 @@ export async function uploadGymTicket(req: Request, res: Response): Promise<Resp
   const userDAO = userService.getUserGenericDAO(req);
   const user = await userService.getUser(req, res);
   const gymTicket = req.body.gymTicket;
+  const encryptedGymTicket = encrypt(gymTicket);
 
   if (!gymTicket) {
     return res.status(404).json({ error: 'Gym Ticket was not found in request body' });
   }
 
-  user.gymtTicket = gymTicket;
+  user.gymtTicket = encryptedGymTicket;
   await userDAO.update(user);
 
   return res.status(200).json({ message: 'Your Gym Ticket was succesfully updated' });
@@ -235,15 +237,16 @@ export async function uploadGymTicket(req: Request, res: Response): Promise<Resp
 export async function getGymTicket(req: Request, res: Response): Promise<Response> {
   const user = await userService.getUser(req, res);
 
-  const gymTicket = user.gymtTicket;
+  let decryptedGymTicket;
 
-  if (!gymTicket) {
-    user.gymtTicket = 'noGymTicketAvailable';
-
-    const userDAO = userService.getUserGenericDAO(req);
-    userDAO.update(user);
+  // TODO: entfernen, da das nur temporär zum migrieren ist
+  try {
+    decryptedGymTicket = decrypt(user.gymtTicket);
+  } catch (error) {
+    return res.status(200).json(user.gymtTicket);
   }
-  return res.status(200).json(user.gymtTicket);
+
+  return res.status(200).json(decryptedGymTicket);
 }
 
 export function signOut(req: Request, res: Response): void {
