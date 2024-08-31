@@ -12,7 +12,7 @@ import trainingRouter from './routes/trainingRoutes.js';
 import exerciseRouter from './routes/exerciseRoutes.js';
 import friendShipRouter from './routes/friendshipRoutes.js';
 import { errorHandler } from './middleware/error-handler.js';
-import { initializeWebSocket } from './websocket.js';
+import { WebSocketService } from './web-socket.service.js';
 
 dotenv.config();
 
@@ -52,7 +52,7 @@ export async function start() {
   // Erstelle einen HTTP-Server, der sowohl von Express als auch von Socket.IO verwendet wird
   const server = http.createServer(app);
 
-  initializeWebSocket(server);
+  WebSocketService.initialize(server);
 
   // Starte den kombinierten HTTP und WebSocket-Server
   server.listen(PORT, () => {
