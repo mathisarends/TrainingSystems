@@ -12,12 +12,14 @@ import { TrainingViewComponent } from './Pages/training-view/training-view.compo
 
 import { UsageStatisticsComponent } from './usage-statistics/usage-statistics.component';
 import { GymTicketComponent } from './gym-ticket/gym-ticket.component';
+import { SpinnerComponent } from './components/loaders/spinner/spinner.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'user/usage', component: UsageStatisticsComponent },
   { path: 'user/ticket', component: GymTicketComponent },
+  { path: 'spinner', component: SpinnerComponent },
   {
     path: '',
     component: TrainingPlansComponent,
