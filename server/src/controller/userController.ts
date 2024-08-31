@@ -130,7 +130,6 @@ export async function deleteTrainingDayNotification(req: Request, res: Response)
   const notificationId = req.params.id;
 
   const userDAO = userService.getUserGenericDAO(req);
-
   const user = await userService.getUser(req, res);
 
   const notificationIndex = user.trainingDayNotifications.findIndex(notification => notification.id === notificationId);
@@ -144,6 +143,43 @@ export async function deleteTrainingDayNotification(req: Request, res: Response)
   await userDAO.update(user);
 
   return res.status(200).json({ message: 'Notification wurde erfolgreich entfernt' });
+}
+
+/**
+ * Retrieves a specific training day by its ID along with its plan, week, and day indices.
+ */
+export async function getTrainingDayById(req: Request, res: Response): Promise<Response> {
+  const trainingDayId = req.params.id; // Get the training day ID from the request parameters
+
+  const user = await userService.getUser(req, res); // Retrieve the user object
+
+  if (!user) {
+    return res.status(404).json({ error: 'User not found.' });
+  }
+
+  for (const trainingPlan of user.trainingPlans) {
+    const trainingPlanId = trainingPlan.id; // Store the current training plan ID
+
+    for (let weekIndex = 0; weekIndex < trainingPlan.trainingWeeks.length; weekIndex++) {
+      const trainingWeek = trainingPlan.trainingWeeks[weekIndex];
+
+      for (let dayIndex = 0; dayIndex < trainingWeek.trainingDays.length; dayIndex++) {
+        const trainingDay = trainingWeek.trainingDays[dayIndex];
+
+        if (trainingDay.id === trainingDayId) {
+          return res.status(200).json({
+            trainingPlanId,
+            weekIndex,
+            dayIndex,
+            trainingDay
+          });
+        }
+      }
+    }
+  }
+
+  // If no matching training day is found, return a 404 error
+  return res.status(404).json({ error: 'Training day with the specified ID not found.' });
 }
 
 function getIndexOfDayPerYearFromDate(date: Date): number {
