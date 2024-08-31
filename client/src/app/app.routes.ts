@@ -9,14 +9,15 @@ import { ProfileComponent } from './Pages/profile/profile.component';
 
 import { ExercisesComponent } from './Pages/exercises/exercises.component';
 import { TrainingViewComponent } from './Pages/training-view/training-view.component';
-import { AuthGuard } from './auth-guard.service';
 
 import { UsageStatisticsComponent } from './usage-statistics/usage-statistics.component';
+import { GymTicketComponent } from './gym-ticket/gym-ticket.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'user/usage', component: UsageStatisticsComponent },
+  { path: 'user/ticket', component: GymTicketComponent },
   {
     path: '',
     component: TrainingPlansComponent,
