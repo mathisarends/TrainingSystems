@@ -120,9 +120,8 @@ export class StatisticsComponent implements OnInit {
     ]);
 
     this.dataLoaded = true;
-    console.log('🚀 ~ StatisticsComponent ~ fetchStatistics ~ timeResponse:', timeStats);
 
-    this.initializeCharts(tonnageResponse.data!, setsResponse, tonnageResponse.title, timeStats);
+    this.initializeCharts(tonnageResponse.data, setsResponse, tonnageResponse.title, timeStats);
   }
 
   private initializeCharts(
