@@ -1,0 +1,29 @@
+@import 'client/src/css/variables';
+
+:host {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  padding-block: 0.5rem;
+}
+
+.tab {
+  cursor: pointer;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #b0b0b0;
+  transition:
+    color 0.3s ease,
+    border-bottom 0.3s ease;
+  position: relative;
+
+  &.active {
+    color: #007bff; // Farbe für den aktiven Tab
+    font-weight: bold;
+    border-bottom: 2px solid $accent-color; // Unterstreichung des aktiven Tabs
+  }
+
+  &:hover {
+    color: #007bff; // Hover-Effekt für inaktive Tabs
+  }
+}

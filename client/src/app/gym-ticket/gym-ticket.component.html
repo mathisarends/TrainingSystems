@@ -1,4 +1,5 @@
 <app-headline [subHeading]="'gym'" [heading]="'ticket'" />
+
 @if (gymTicket$ | async; as gymTicket) {
   <div class="picture-container">
     @if (gymTicket !== NO_GYM_TICKET_AVAILABLE) {
