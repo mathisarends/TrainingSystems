@@ -8,10 +8,10 @@
 
 .card-text {
   margin-bottom: 0.5rem;
-}
 
-.card:hover {
-  transform: scale(1.01); /* Transform anstelle von scale verwenden */
+  &:hover {
+    transform: scale(1.01); /* Transform anstelle von scale verwenden */
+  }
 }
 
 /* Define the custom grid system */
@@ -48,12 +48,13 @@
 
 .card-custom-avatar img {
   border-radius: 50%;
+  border: 5px solid rgb(248, 249, 250);
   box-shadow: 0 0 15px rgba(10, 10, 10, 0.3);
   position: absolute;
   top: 147.5px;
   left: 10px;
-  width: 50px;
-  height: 50px;
+  width: 55px;
+  height: 55px;
 }
 
 .bg-white {

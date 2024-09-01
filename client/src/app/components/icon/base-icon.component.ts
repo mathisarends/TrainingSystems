@@ -1,4 +1,4 @@
-import { Input, Directive, input } from '@angular/core';
+import { Directive, input } from '@angular/core';
 
 @Directive()
 export abstract class BaseIconComponent {
