@@ -8,7 +8,6 @@ import { MongoGenericDAO } from '../../models/dao/mongo-generic.dao.js';
 import { User } from '../../models/collections/user/user.js';
 import { mapToExerciseCategory } from '../../utils/exerciseUtils.js';
 import { Exercise } from '../../models/training/exercise.js';
-import { TrainingWeek } from '../../models/training/trainingWeek.js';
 
 /**
  * Updates the list of recently viewed exercise categories for the statistics section of a specific training plan.

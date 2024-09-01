@@ -60,14 +60,15 @@ export class WebSocketService {
    */
   private setupNamespaceListeners(): void {
     this.trainingDayNotificationNamespace.on('connection', (socket: Socket) => {
-      console.log('Ein Benutzer hat den Training Notification Namespace verbunden.');
+      const clientId = socket.handshake.query.clientId; // Assume clients send a unique client ID on connection
+      console.log(`Ein Benutzer (${clientId}) hat den Training Notification Namespace verbunden.`);
 
       socket.on('message', msg => {
         this.trainingDayNotificationNamespace.emit('message', msg);
       });
 
       socket.on('disconnect', () => {
-        console.log('Benutzer hat den Training Notification Namespace verlassen.');
+        console.log(`Benutzer (${clientId}) hat den Training Notification Namespace verlassen.`);
       });
     });
   }

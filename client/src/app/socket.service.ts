@@ -12,7 +12,12 @@ export class SocketService {
   private trainingDayNotificationSocket: Socket;
 
   constructor() {
-    this.trainingDayNotificationSocket = io(`${this.url}/training-notification`, { autoConnect: false });
+    this.trainingDayNotificationSocket = io(`${this.url}/training-notification`, {
+      autoConnect: false,
+      query: {
+        clientId: 'your-unique-client-id',
+      },
+    });
     inject(ApplicationRef)
       .isStable.pipe(first((isStable) => isStable))
       .subscribe(() => {
