@@ -18,6 +18,7 @@ import {
 import { Request, Response } from 'express';
 import { ExerciseCategoryType } from '../models/training/exercise-category-type.js';
 import { encrypt } from '../utils/cryption.js';
+import { NewUserParams } from './new-user-params.js';
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -37,28 +38,7 @@ export async function registerUser(userDAO: MongoGenericDAO<User>, userDetails: 
     throw new Error('Der Nutzername muss mindestens 3 Zeichen lang sein');
   }
 
-  const userObj: Omit<User, 'id' | 'createdAt'> = {
-    username,
-    email,
-    password: await bcrypt.hash(password, 10),
-    trainingPlans: [],
-    trainingDayNotifications: [],
-    gymtTicket: encrypt('noGymTicketAvailable'),
-    exercises: {
-      [ExerciseCategoryType.PLACEHOLDER]: placeHolderExercises,
-      [ExerciseCategoryType.SQUAT]: squatExercises,
-      [ExerciseCategoryType.BENCH]: benchExercises,
-      [ExerciseCategoryType.DEADLIFT]: deadliftExercises,
-      [ExerciseCategoryType.OVERHEADPRESS]: overheadpressExercises,
-      [ExerciseCategoryType.CHEST]: chestExercises,
-      [ExerciseCategoryType.BACK]: backExercises,
-      [ExerciseCategoryType.SHOULDER]: shoulderExercises,
-      [ExerciseCategoryType.TRICEPS]: tricepExercises,
-      [ExerciseCategoryType.BICEPS]: bicepsExercises,
-      [ExerciseCategoryType.LEGS]: legExercises
-    }
-  };
-
+  const userObj = await createNewUser({ username, email, password });
   return userDAO.create(userObj);
 }
 
@@ -81,31 +61,13 @@ export async function loginOAuth2User(userDAO: MongoGenericDAO<User>, token: str
     throw new Error('Invalid Google token');
   }
 
-  const { email, name, picture } = payload;
-  let user = await userDAO.findOne({ email });
+  const { email, name } = payload;
+  let user = await userDAO.findOne({ email: email });
+  console.log('🚀 ~ loginOAuth2User ~ user:', user);
 
   if (!user && name && email) {
-    const userObj: Omit<User, 'id' | 'createdAt'> = {
-      username: name,
-      email: email,
-      pictureUrl: picture,
-      trainingPlans: [],
-      trainingDayNotifications: [],
-      gymtTicket: encrypt('noGymTicketAvailable'),
-      exercises: {
-        [ExerciseCategoryType.PLACEHOLDER]: placeHolderExercises,
-        [ExerciseCategoryType.SQUAT]: squatExercises,
-        [ExerciseCategoryType.BENCH]: benchExercises,
-        [ExerciseCategoryType.DEADLIFT]: deadliftExercises,
-        [ExerciseCategoryType.OVERHEADPRESS]: overheadpressExercises,
-        [ExerciseCategoryType.CHEST]: chestExercises,
-        [ExerciseCategoryType.BACK]: backExercises,
-        [ExerciseCategoryType.SHOULDER]: shoulderExercises,
-        [ExerciseCategoryType.TRICEPS]: tricepExercises,
-        [ExerciseCategoryType.BICEPS]: bicepsExercises,
-        [ExerciseCategoryType.LEGS]: legExercises
-      }
-    };
+    const userObj = await createNewUser({ username: name, email: email });
+
     user = await userDAO.create(userObj);
   }
 
@@ -129,4 +91,35 @@ export function getUserGenericDAO(req: Request): MongoGenericDAO<User> {
 
 function validateUsername(username: string): boolean {
   return username.length >= 3;
+}
+
+async function createNewUser(userDetails: NewUserParams): Promise<Omit<User, 'id' | 'createdAt'>> {
+  const { username, email, password } = userDetails;
+
+  const userObj: Omit<User, 'id' | 'createdAt'> = {
+    username,
+    email,
+    trainingPlans: [],
+    trainingDayNotifications: [],
+    gymtTicket: encrypt('noGymTicketAvailable'),
+    exercises: {
+      [ExerciseCategoryType.PLACEHOLDER]: placeHolderExercises,
+      [ExerciseCategoryType.SQUAT]: squatExercises,
+      [ExerciseCategoryType.BENCH]: benchExercises,
+      [ExerciseCategoryType.DEADLIFT]: deadliftExercises,
+      [ExerciseCategoryType.OVERHEADPRESS]: overheadpressExercises,
+      [ExerciseCategoryType.CHEST]: chestExercises,
+      [ExerciseCategoryType.BACK]: backExercises,
+      [ExerciseCategoryType.SHOULDER]: shoulderExercises,
+      [ExerciseCategoryType.TRICEPS]: tricepExercises,
+      [ExerciseCategoryType.BICEPS]: bicepsExercises,
+      [ExerciseCategoryType.LEGS]: legExercises
+    }
+  };
+
+  if (password) {
+    userObj.password = await bcrypt.hash(password, 10);
+  }
+
+  return userObj;
 }
