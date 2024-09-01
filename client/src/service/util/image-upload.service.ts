@@ -10,7 +10,7 @@ import { ToastStatus } from '../../app/components/toast/toast-status';
 })
 export class ImageUploadService {
   private maxSizeInBytes = 1_000_000;
-  private allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+  private allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
   constructor(private toastService: ToastService) {}
 

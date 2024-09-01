@@ -55,7 +55,7 @@ export async function getProfile(req: Request, res: Response): Promise<void> {
     pictureUrl: user.pictureUrl
   };
 
-  res.status(200).json({ userDto });
+  res.status(200).json(userDto);
 }
 
 /**

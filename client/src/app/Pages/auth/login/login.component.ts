@@ -5,6 +5,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { DOCUMENT } from '@angular/common';
 import { ToastService } from '../../../components/toast/toast.service';
 import { BaisAuthComponent } from '../basic-auth.component';
+import { catchError, of, tap } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -37,21 +38,30 @@ export class LoginComponent extends BaisAuthComponent implements OnInit {
       password: formData.get('password') as string,
     };
 
-    this.httpClient.post('/user/login', data).subscribe({
-      next: () => {
-        this.router.navigate(['/']);
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Login error:', error);
-        if (error.status === 401) {
-          console.log('Unauthorized: Wrong credentials');
-          this.toastService.show('Ungültige Anmeldedaten', 'Die Kombination aus Nutzername und Passwort ist falsch');
-        } else if (error.status === 400) {
-          console.log('Bad request:', error.error);
-        } else {
-          console.log('An unknown error occurred');
-        }
-      },
-    });
+    this.httpClient
+      .post('/user/login', data)
+      .pipe(
+        tap(() => {
+          this.router.navigate(['/'], {
+            queryParams: { login: 'success' },
+          });
+        }),
+        catchError((error: HttpErrorResponse) => {
+          console.error('Login error:', error);
+
+          if (error.status === 401) {
+            console.log('Unauthorized: Wrong credentials');
+            this.toastService.show('Ungültige Anmeldedaten', 'Die Kombination aus Nutzername und Passwort ist falsch');
+          } else if (error.status === 400) {
+            console.log('Bad request:', error.error);
+          } else {
+            console.log('An unknown error occurred');
+          }
+
+          // Return an observable (empty in this case) to continue the stream
+          return of(null);
+        }),
+      )
+      .subscribe();
   }
 }

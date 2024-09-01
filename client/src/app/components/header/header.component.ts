@@ -59,8 +59,7 @@ export class HeaderComponent implements OnInit {
     // Fetch and subscribe to user profile data
     this.profileService.getProfile().subscribe((data: any) => {
       if (data) {
-        console.log('🚀 ~ HeaderComponent ~ this.profileService.getProfile ~ data:', data);
-        this.profile = data.userDto;
+        this.profile = data;
       }
     });
 

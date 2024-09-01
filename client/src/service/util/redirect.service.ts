@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { BrowserCheckService } from '../../app/browser-check.service';
+import { filter } from 'rxjs';
 
 /**
  * @service RedirectService
@@ -41,9 +42,9 @@ export class RedirectService {
    * users back to the login page after they have already logged in.
    */
   saveLastRoute(url: string): void {
-    if (url !== '/login') {
-      localStorage.setItem(this.LAST_ROUTE_KEY, url);
-    }
+    if (url === '/?login=success' || url === '/login') return;
+
+    localStorage.setItem(this.LAST_ROUTE_KEY, url);
   }
 
   /**
@@ -64,8 +65,13 @@ export class RedirectService {
    */
   redirectToLastRoute(): void {
     const lastRoute = this.getLastRoute();
-    if (this.router.url === '/' && lastRoute && lastRoute !== '/login') {
-      this.router.navigateByUrl(lastRoute);
-    }
+
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
+      const currentUrl = this.router.url;
+
+      if (currentUrl === '/' && lastRoute && lastRoute !== '/login') {
+        this.router.navigateByUrl(lastRoute);
+      }
+    });
   }
 }

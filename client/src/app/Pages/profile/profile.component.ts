@@ -60,19 +60,11 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    this.profileService.getProfile().subscribe({
-      next: (data) => {
-        if (data) {
-          this.profile = data.userDto;
-          this.isLoading = false;
-        }
-      },
-      error: (err) => {
-        console.error('Fehler beim Abrufen des Profils', err);
-      },
-      complete: () => {
-        console.log('Profil erfolgreich geladen');
-      },
+    this.profileService.getProfile().subscribe((data) => {
+      if (data) {
+        this.profile = data;
+        this.isLoading = false;
+      }
     });
 
     this.subscription.add(this.modalEventsService.confirmClick$.subscribe(() => this.uploadProfilePicture()));
