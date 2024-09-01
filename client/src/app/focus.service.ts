@@ -12,6 +12,8 @@ import { Injectable } from '@angular/core';
 export class FocusService {
   private focusedElementId: string | null = null;
 
+  private focusableElementClasses = ['weight', 'actualRPE', 'notes'];
+
   /**
    * Saves the ID of the currently focused element to local storage.
    *
@@ -21,7 +23,7 @@ export class FocusService {
    */
   saveFocusedElement() {
     const focusedElement = document.activeElement as HTMLElement;
-    if (focusedElement && focusedElement.id) {
+    if (focusedElement?.id) {
       this.focusedElementId = focusedElement.id;
       localStorage.setItem('focusedElementId', this.focusedElementId);
     }
@@ -32,13 +34,17 @@ export class FocusService {
    *
    * This method checks `localStorage` for a saved element ID. If an ID is found,
    * it attempts to find the corresponding element in the DOM and restores focus to it.
+   * If the element is not visible within the viewport, it scrolls it into view.
    */
   restoreFocusedElement() {
     const storedId = localStorage.getItem('focusedElementId');
     if (storedId) {
       const elementToFocus = document.getElementById(storedId);
-      if (elementToFocus) {
+
+      if (elementToFocus && this.hasFocusableClass(elementToFocus)) {
+        elementToFocus.scrollIntoView({ behavior: 'smooth', block: 'center' });
         elementToFocus.focus();
+        elementToFocus.click();
       }
     }
   }
@@ -50,5 +56,15 @@ export class FocusService {
    */
   clearFocusedElement() {
     localStorage.removeItem('focusedElementId');
+  }
+
+  /**
+   * Helper method to determine if an element has any of the focusable classes.
+   *
+   * @param element The HTML element to check.
+   * @returns True if the element has any class from the `focusableElementClasses` array; otherwise, false.
+   */
+  private hasFocusableClass(element: HTMLElement): boolean {
+    return this.focusableElementClasses.some((className) => element.classList.contains(className));
   }
 }
