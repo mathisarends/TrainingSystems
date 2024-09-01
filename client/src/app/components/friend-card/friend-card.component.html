@@ -2,7 +2,7 @@
   <div class="card-body d-flex align-items-center">
     <img
       [src]="friend.pictureUrl || '/images/profile-placeholder.webp'"
-      alt="Friend picture"
+      alt="Friend"
       class="rounded-circle me-3"
       width="50"
       height="50"
@@ -12,7 +12,7 @@
       <p class="card-text text-muted text-truncate">{{ friend.email }}</p>
     </div>
     <button type="button" class="custom-button" (click)="onConfirm()">
-      <app-add-friend-icon [size]="15" />
+      <app-icon [size]="15" [name]="IconName.FeatherUserPlus" />
     </button>
   </div>
 </div>

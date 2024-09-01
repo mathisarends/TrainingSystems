@@ -18,7 +18,8 @@
 
     @if (trainingPlan.averageTrainingDayDuration) {
       <p class="card-text d-flex gap-2">
-        <app-activity-icon [size]="15" />{{ trainingPlan.averageTrainingDayDuration }}
+        <app-icon [name]="IconName.Activity" [size]="15" />
+        {{ trainingPlan.averageTrainingDayDuration }}
       </p>
     }
   </div>

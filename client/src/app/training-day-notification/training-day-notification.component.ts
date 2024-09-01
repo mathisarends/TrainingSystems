@@ -1,25 +1,26 @@
 import { Component, input, OnInit, signal } from '@angular/core';
 import { TrainingDayFinishedNotification } from '../usage-statistics/training-finished-notification';
 import { CommonModule } from '@angular/common';
-import { CloseIconComponent } from '../components/icon/close-icon/close-icon.component';
+import { IconComponent } from '../shared/icon/icon.component';
 import { NotificationService } from '../notification-page/notification.service';
 import { ToastService } from '../components/toast/toast.service';
 import { ToastStatus } from '../components/toast/toast-status';
 import { Router } from '@angular/router';
-import { ChevronDownIconComponent } from '../components/icon/chevron-down-icon/chevron-down-icon.component';
-import { ChevronUpIconComponent } from '../components/icon/chevron-up-icon/chevron-up-icon.component';
 import { toggleCollapseAnimation } from '../shared/animations';
 import { FormatDatePipe } from '../shared/pipes/format-date.pipe';
+import { IconName } from '../shared/icon/icon-name';
 
 @Component({
   selector: 'app-training-day-notification',
   standalone: true,
-  imports: [CommonModule, CloseIconComponent, ChevronDownIconComponent, ChevronUpIconComponent, FormatDatePipe],
+  imports: [CommonModule, IconComponent, FormatDatePipe],
   templateUrl: './training-day-notification.component.html',
   styleUrls: ['./training-day-notification.component.scss'],
   animations: [toggleCollapseAnimation],
 })
 export class TrainingDayNotificationComponent implements OnInit {
+  protected IconName = IconName;
+
   notificationsInput = input.required<TrainingDayFinishedNotification[]>();
   notifications = signal<TrainingDayFinishedNotification[]>([]);
 

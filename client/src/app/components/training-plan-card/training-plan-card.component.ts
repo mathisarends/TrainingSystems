@@ -14,7 +14,8 @@ import { BasicInfoComponent } from '../../Pages/modal-pages/basic-info/basic-inf
 import { IconButtonComponent } from '../icon-button/icon-button.component';
 import { TrainingPlanService } from '../../../service/training/training-plan.service';
 import { HttpService } from '../../../service/http/http-client.service';
-import { ActivityIconComponent } from '../icon/activity-icon/activity-icon.component';
+import { IconComponent } from '../../shared/icon/icon.component';
+import { IconName } from '../../shared/icon/icon-name';
 
 /**
  * Component for displaying and managing a single training plan card.
@@ -22,11 +23,13 @@ import { ActivityIconComponent } from '../icon/activity-icon/activity-icon.compo
 @Component({
   selector: 'app-training-plan-card',
   standalone: true,
-  imports: [CommonModule, TooltipDirective, IconButtonComponent, ActivityIconComponent],
+  imports: [CommonModule, TooltipDirective, IconButtonComponent, IconComponent],
   templateUrl: './training-plan-card.component.html',
   styleUrls: ['./training-plan-card.component.scss'],
 })
 export class TrainingPlanCardComponent {
+  protected readonly IconName = IconName;
+
   @Input() trainingPlan!: TrainingPlanCardView;
   @Input() columnClass!: string;
   @Output() changedPlanConstellation = new EventEmitter<void>();

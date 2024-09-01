@@ -11,47 +11,47 @@
   class="feather feather-{{ name() }}"
 >
   @switch (name()) {
-    @case ('activity') {
+    @case (IconName.Activity) {
       <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
     }
-    @case ('alert-triangle') {
+    @case (IconName.AlertTriangle) {
       <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
       <line x1="12" y1="9" x2="12" y2="13"></line>
       <line x1="12" y1="17" x2="12.01" y2="17"></line>
     }
-    @case ('arrow-left') {
+    @case (IconName.ArrowLeft) {
       <line x1="19" y1="12" x2="5" y2="12"></line>
       <polyline points="12 19 5 12 12 5"></polyline>
     }
-    @case ('bell') {
+    @case (IconName.Bell) {
       <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
       <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
     }
-    @case ('book-open') {
+    @case (IconName.BookOpen) {
       <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
       <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
     }
-    @case ('chevron-down') {
+    @case (IconName.ChevronDown) {
       <polyline points="6 9 12 15 18 9"></polyline>
     }
-    @case ('chevron-up') {
+    @case (IconName.ChevronUp) {
       <polyline points="18 15 12 9 6 15"></polyline>
     }
-    @case ('feather-user-plus') {
+    @case (IconName.FeatherUserPlus) {
       <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
       <circle cx="8.5" cy="7" r="4"></circle>
       <line x1="20" y1="8" x2="20" y2="14"></line>
       <line x1="23" y1="11" x2="17" y2="11"></line>
     }
-    @case ('user') {
+    @case (IconName.User) {
       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
       <circle cx="12" cy="7" r="4"></circle>
     }
-    @case ('x') {
+    @case (IconName.X) {
       <line x1="18" y1="6" x2="6" y2="18"></line>
       <line x1="6" y1="6" x2="18" y2="18"></line>
     }
-    @case ('zap') {
+    @case (IconName.Zap) {
       <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
     }
     @default {

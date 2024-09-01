@@ -1,10 +1,5 @@
 <div class="dropdown" [class.show]="isOpen()" (click)="toggleDropdown()">
-  <div
-    role="button"
-    aria-haspopup="true"
-    aria-expanded="isOpen()"
-    style="display: flex; justify-content: space-between; align-items: center; width: 100%"
-  >
+  <div style="display: flex; justify-content: space-between; align-items: center; width: 100%">
     <div class="chip-container">
       @for (select of selected(); track select) {
         <div class="chip">{{ select }}</div>
@@ -14,9 +9,9 @@
       @if (isLoading()) {
         <app-multi-select-spinner />
       } @else if (isOpen()) {
-        <app-chevron-up-icon />
+        <app-icon [name]="IconName.ChevronUp" />
       } @else {
-        <app-chevron-down-icon />
+        <app-icon [name]="IconName.ChevronDown" />
       }
     </div>
   </div>

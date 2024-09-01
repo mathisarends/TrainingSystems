@@ -5,7 +5,7 @@
     <div class="toast" [ngClass]="{ error: warningToast }" [class.active]="true" role="alert">
       <div class="message">
         @if (warningToast) {
-          <app-warning-icon />
+          <app-icon [name]="IconName.AlertTriangle" />
         } @else {
           <span id="toast-headline">{{ toast.title }}</span>
         }

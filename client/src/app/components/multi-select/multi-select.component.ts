@@ -1,8 +1,8 @@
 import { Component, HostListener, output, signal, input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ChevronUpIconComponent } from '../icon/chevron-up-icon/chevron-up-icon.component';
-import { ChevronDownIconComponent } from '../icon/chevron-down-icon/chevron-down-icon.component';
 import { MultiSelectSpinnerComponent } from './multi-select-spinner/multi-select-spinner.component';
+import { IconComponent } from '../../shared/icon/icon.component';
+import { IconName } from '../../shared/icon/icon-name';
 
 /**
  * Represents a generic multi-select-dropdown
@@ -10,11 +10,13 @@ import { MultiSelectSpinnerComponent } from './multi-select-spinner/multi-select
 @Component({
   selector: 'app-multi-select',
   standalone: true,
-  imports: [FormsModule, ChevronUpIconComponent, ChevronDownIconComponent, MultiSelectSpinnerComponent],
+  imports: [FormsModule, MultiSelectSpinnerComponent, IconComponent],
   templateUrl: './multi-select.component.html',
   styleUrls: ['./multi-select.component.scss'],
 })
 export class MultiSelectComponent implements OnInit {
+  protected IconName = IconName;
+
   /**
    * The list of options available for selection.
    * This input is required and must be provided by the parent component.
