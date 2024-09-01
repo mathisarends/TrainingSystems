@@ -8,7 +8,7 @@ import { BrowserCheckService } from './browser-check.service';
 import { MobileService } from '../service/util/mobile.service';
 import { RedirectService } from '../service/util/redirect.service';
 import { SpinnerComponent } from './components/loaders/spinner/spinner.component';
-import { LoadingProgressBarComponent } from './loading-progress-bar/loading-progress-bar.component';
+import { LoadingProgressBarComponent } from './components/loaders/loading-progress-bar/loading-progress-bar.component';
 
 @Component({
   selector: 'app-root',
