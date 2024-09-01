@@ -1,9 +1,17 @@
 @import 'client/src/css/variables';
 
-$level-1-color: lighten($accent-color, 10%);
-$level-2-color: $accent-color;
-$level-3-color: darken($accent-color, 5%);
-$level-4-color: darken($accent-color, 10%);
+$level-colors: (
+  1: lighten($accent-color, 10%),
+  2: $accent-color,
+  3: darken($accent-color, 5%),
+  4: darken($accent-color, 10%),
+);
+
+$legend-color-size: 12px;
+
+@mixin set-level-color($level) {
+  background-color: map-get($level-colors, $level);
+}
 
 .calendar-container {
   padding: 1rem;
@@ -13,33 +21,29 @@ $level-4-color: darken($accent-color, 10%);
   .calendar-grid {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    max-width: 100vw;
     overflow-x: auto;
 
-    // Custom Scrollbar for WebKit Browsers
     &::-webkit-scrollbar {
-      height: 8px; // Horizontal scrollbar height
+      height: 8px;
     }
 
     &::-webkit-scrollbar-track {
-      background: #e9ecef; // Track color
-      border-radius: 10px; // Rounded corners
+      background: #e9ecef;
+      border-radius: 10px;
     }
 
     &::-webkit-scrollbar-thumb {
-      background-color: $accent-color; // Scroll thumb color
-      border-radius: 10px; // Rounded corners
-      border: 2px solid #e9ecef; // Space around the thumb
+      @include set-level-color(2);
+      border-radius: 10px;
+      border: 2px solid #e9ecef;
     }
 
     &::-webkit-scrollbar-button {
       display: none;
     }
 
-    // Custom Scrollbar for Firefox
-    scrollbar-width: thin; // Width of scrollbar
-    scrollbar-color: rgb(199, 199, 199) #e9ecef; // Thumb and track color
+    scrollbar-width: thin;
+    scrollbar-color: rgb(199, 199, 199) #e9ecef;
   }
 
   .months {
@@ -77,20 +81,10 @@ $level-4-color: darken($accent-color, 10%);
       background-color: #e9ecef;
       border-radius: 2px;
 
-      &.level-1 {
-        background-color: #e4e4e4;
-      }
-
-      &.level-2 {
-        background-color: $level-2-color;
-      }
-
-      &.level-3 {
-        background-color: $level-3-color;
-      }
-
-      &.level-4 {
-        background-color: $level-4-color;
+      @for $i from 1 through 4 {
+        &.level-#{$i} {
+          @include set-level-color($i);
+        }
       }
     }
   }
@@ -116,28 +110,18 @@ $level-4-color: darken($accent-color, 10%);
       align-items: center;
 
       .legend-color {
-        width: 12px;
-        height: 12px;
+        width: $legend-color-size;
+        height: $legend-color-size;
         background-color: #e9ecef;
         border-radius: 2px;
         display: flex;
         align-items: center;
         justify-content: center;
 
-        &.level-1 {
-          background-color: $level-1-color;
-        }
-
-        &.level-2 {
-          background-color: $level-2-color;
-        }
-
-        &.level-3 {
-          background-color: $level-3-color;
-        }
-
-        &.level-4 {
-          background-color: $level-4-color;
+        @for $i from 1 through 4 {
+          &.level-#{$i} {
+            @include set-level-color($i);
+          }
         }
       }
     }
