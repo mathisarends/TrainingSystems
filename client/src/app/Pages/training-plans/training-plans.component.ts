@@ -12,7 +12,6 @@ import { TooltipDirective } from '../../../service/tooltip/tooltip.directive';
 import { TrainingPlanCardComponent } from '../../components/training-plan-card/training-plan-card.component';
 import { ModalSize } from '../../../service/modal/modalSize';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MobileService } from '../../../service/util/mobile.service';
 import { HeadlineComponent } from '../../components/headline/headline.component';
 import { IconButtonComponent } from '../../components/icon-button/icon-button.component';
 import { SkeletonCardComponent } from '../../components/loaders/skeletons/skeleton-card/skeleton-card.component';
@@ -43,15 +42,12 @@ export class TrainingPlansComponent implements OnInit {
 
   columnClass!: string; // bestimmt in Abhängig der Anzahl der Pläne welches Grid System benutzt werden soll
 
-  isMobile = false;
-
   constructor(
     private modalService: ModalService,
     private httpClient: HttpService,
     private searchService: SearchService,
     private trainingPlanService: TrainingPlanService,
     private destroyRef: DestroyRef,
-    private mobileService: MobileService,
   ) {}
 
   /**
@@ -70,44 +66,24 @@ export class TrainingPlansComponent implements OnInit {
     });
 
     this.filteredTrainingPlans$.subscribe((plans) => {
-      const amountOfPlans = plans?.length!;
-
-      if (amountOfPlans % 3 === 0) {
-        this.columnClass = 'col-lg-4 col-md-6 col-sm-12';
-      } else if (amountOfPlans % 2 === 0) {
-        this.columnClass = 'col-lg-6 col-md-6 col-sm-12';
-      } else if (amountOfPlans === 1) {
-        this.columnClass = 'col-lg-12 col-md-12 col-sm-12';
-      } else {
-        this.columnClass = 'col-lg-4 col-md-6 col-sm-12';
-      }
+      this.updateColumnClass(plans?.length || 0);
     });
-
-    this.isMobile = this.mobileService.isMobileView();
   }
 
   /**
    * Loads training plans from the server.
    */
   protected async loadTrainingPlans(): Promise<void> {
-    try {
-      const response: any = await firstValueFrom(this.httpClient.get<any>('/training/plans'));
+    const response: any = await firstValueFrom(this.httpClient.get<any>('/training/plans'));
 
-      this.allTrainingPlans$.next(response?.trainingPlanCards);
-      this.filteredTrainingPlans$.next(response?.trainingPlanCards);
-
-      // Mark for change detection
-    } catch (error) {
-      console.error('Fehler beim Laden:', error);
-      this.allTrainingPlans$.next([]);
-      this.filteredTrainingPlans$.next([]);
-    }
+    this.allTrainingPlans$.next(response?.trainingPlanCards);
+    this.filteredTrainingPlans$.next(response?.trainingPlanCards);
   }
 
   /**
    * Opens the modal to create a new training plan.
    */
-  createNewPlan(): void {
+  protected createNewPlan(): void {
     this.modalService.open({
       component: CreateTrainingFormComponent,
       title: 'Trainingsplan erstellen',
@@ -126,5 +102,26 @@ export class TrainingPlansComponent implements OnInit {
     this.filteredTrainingPlans$.next(
       allPlans.filter((trainingPlan) => trainingPlan.title.toLowerCase().includes(searchText.toLowerCase())),
     );
+  }
+
+  /**
+   * Updates the column class based on the number of training plans.
+   * @param amountOfPlans - The number of training plans.
+   */
+  private updateColumnClass(amountOfPlans: number): void {
+    switch (true) {
+      case amountOfPlans === 1:
+        this.columnClass = 'col-lg-12 col-md-12 col-sm-12';
+        break;
+      case amountOfPlans % 3 === 0:
+        this.columnClass = 'col-lg-4 col-md-6 col-sm-12';
+        break;
+      case amountOfPlans % 2 === 0:
+        this.columnClass = 'col-lg-6 col-md-6 col-sm-12';
+        break;
+      default:
+        this.columnClass = 'col-lg-4 col-md-6 col-sm-12';
+        break;
+    }
   }
 }
