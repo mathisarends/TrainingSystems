@@ -80,7 +80,19 @@ export function getPercentageOfTrainingPlanFinished(trainingPlan: TrainingPlan) 
 
   const percentageFinished = (amountOfTrainingDaysFinished / totalAmountOfTrainingDays) * 100;
 
-  return percentageFinished;
+  const roundedPercentage = roundToNearestStep(percentageFinished, 2.5);
+
+  return roundedPercentage;
+}
+
+/**
+ * Rundet eine Zahl auf den nächsten Schritt.
+ * @param value Die zu rundende Zahl.
+ * @param step Die Schrittgröße, auf die gerundet werden soll.
+ * @returns Die gerundete Zahl.
+ */
+function roundToNearestStep(value: number, step: number): number {
+  return Math.round(value / step) * step;
 }
 
 function isFirstTrainingDay(weekIndex: number, dayIndex: number) {
