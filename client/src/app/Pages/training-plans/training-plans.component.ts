@@ -16,6 +16,8 @@ import { HeadlineComponent } from '../../components/headline/headline.component'
 import { IconButtonComponent } from '../../components/icon-button/icon-button.component';
 import { SkeletonCardComponent } from '../../components/loaders/skeletons/skeleton-card/skeleton-card.component';
 import { HttpService } from '../../../service/http/http-client.service';
+import { CurrentUserService } from '../../current-user.service';
+import { Router } from '@angular/router';
 
 /**
  * Component to manage and display training plans.
@@ -48,6 +50,8 @@ export class TrainingPlansComponent implements OnInit {
     private searchService: SearchService,
     private trainingPlanService: TrainingPlanService,
     private destroyRef: DestroyRef,
+    private currentUserService: CurrentUserService,
+    private router: Router,
   ) {}
 
   /**
@@ -68,6 +72,8 @@ export class TrainingPlansComponent implements OnInit {
     this.filteredTrainingPlans$.subscribe((plans) => {
       this.updateColumnClass(plans?.length || 0);
     });
+
+    console.log('urö', this.router.url);
   }
 
   /**

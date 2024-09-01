@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { BrowserCheckService } from '../../app/browser-check.service';
-import { filter } from 'rxjs';
+import { filter, take } from 'rxjs';
 
 /**
  * @service RedirectService
@@ -66,12 +66,17 @@ export class RedirectService {
   redirectToLastRoute(): void {
     const lastRoute = this.getLastRoute();
 
-    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
-      const currentUrl = this.router.url;
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        take(1), // one-time Subscription
+      )
+      .subscribe(() => {
+        const currentUrl = this.router.url;
 
-      if (currentUrl === '/' && lastRoute && lastRoute !== '/login') {
-        this.router.navigateByUrl(lastRoute);
-      }
-    });
+        if (currentUrl === '/' && lastRoute) {
+          this.router.navigateByUrl(lastRoute);
+        }
+      });
   }
 }

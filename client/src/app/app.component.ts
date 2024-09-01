@@ -55,6 +55,7 @@ export class AppComponent implements OnInit {
     this.mobileView.set(true);
 
     this.redirectService.initialize();
+
     this.redirectService.redirectToLastRoute();
   }
 }

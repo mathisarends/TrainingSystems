@@ -58,7 +58,6 @@ export class LoginComponent extends BaisAuthComponent implements OnInit {
             console.log('An unknown error occurred');
           }
 
-          // Return an observable (empty in this case) to continue the stream
           return of(null);
         }),
       )

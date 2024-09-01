@@ -23,7 +23,7 @@ export class FocusService {
    */
   saveFocusedElement() {
     const focusedElement = document.activeElement as HTMLElement;
-    if (focusedElement?.id) {
+    if (focusedElement?.id && this.hasFocusableClass(focusedElement)) {
       this.focusedElementId = focusedElement.id;
       localStorage.setItem('focusedElementId', this.focusedElementId);
     }
