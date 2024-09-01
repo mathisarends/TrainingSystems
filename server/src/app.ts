@@ -12,7 +12,7 @@ import trainingRouter from './routes/trainingRoutes.js';
 import exerciseRouter from './routes/exerciseRoutes.js';
 import friendShipRouter from './routes/friendshipRoutes.js';
 import { errorHandler } from './middleware/error-handler.js';
-import { WebSocketService } from './web-socket.service.js';
+import { WebSocketService } from './service/web-socket.service.js';
 
 dotenv.config();
 

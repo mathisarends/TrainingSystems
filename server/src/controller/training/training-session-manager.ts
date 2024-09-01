@@ -5,7 +5,7 @@ import { MongoGenericDAO } from '../../models/dao/mongo-generic.dao.js';
 import { User } from '../../models/collections/user/user.js';
 import { TrainingDAyFinishedNotification } from '../../models/collections/user/training-fninished-notifcation.js';
 import { getTonnagePerTrainingDay } from '../../service/trainingService.js';
-import { WebSocketService } from '../../web-socket.service.js';
+import { WebSocketService } from '../../service/web-socket.service.js';
 
 /**
  * Manages multiple training session trackers for different users.

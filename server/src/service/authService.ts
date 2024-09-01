@@ -29,7 +29,7 @@ class AuthService {
     res.cookie('jwt-token', token, {
       httpOnly: true,
       sameSite: isProduction ? 'none' : 'lax',
-      secure: isProduction ? true : false,
+      secure: !!isProduction,
       maxAge: 30 * 24 * 60 * 60 * 1000
     });
   }

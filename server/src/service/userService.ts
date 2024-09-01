@@ -25,14 +25,11 @@ const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 export async function registerUser(userDAO: MongoGenericDAO<User>, userDetails: Record<string, string>): Promise<User> {
   const { username, email, password, confirmPassword } = userDetails;
 
-  if (password !== confirmPassword) {
-    throw new Error('Die angegebenen Passwörter stimmen nicht überein');
-  }
+  if (password !== confirmPassword) throw new Error('Die angegebenen Passwörter stimmen nicht überein');
 
   const existingUser = await userDAO.findOne({ email });
-  if (existingUser) {
-    throw new Error('Es existiert bereits ein Benutzer mit diesem Namen');
-  }
+
+  if (existingUser) throw new Error('Es existiert bereits ein Benutzer mit diesem Namen');
 
   if (!validateUsername(username)) {
     throw new Error('Der Nutzername muss mindestens 3 Zeichen lang sein');
@@ -63,7 +60,6 @@ export async function loginOAuth2User(userDAO: MongoGenericDAO<User>, token: str
 
   const { email, name } = payload;
   let user = await userDAO.findOne({ email: email });
-  console.log('🚀 ~ loginOAuth2User ~ user:', user);
 
   if (!user && name && email) {
     const userObj = await createNewUser({ username: name, email: email });
