@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 import { HeaderComponent } from './components/header/header.component';
@@ -9,17 +9,27 @@ import { MobileService } from '../service/util/mobile.service';
 import { RedirectService } from '../service/util/redirect.service';
 import { SpinnerComponent } from './components/loaders/spinner/spinner.component';
 import { LoadingProgressBarComponent } from './components/loaders/loading-progress-bar/loading-progress-bar.component';
+import { MobileNavComponent } from './mobile-nav/mobile-nav.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   providers: [RedirectService],
-  imports: [RouterOutlet, HeaderComponent, ToastComponent, SpinnerComponent, LoadingProgressBarComponent],
+  imports: [
+    RouterOutlet,
+    HeaderComponent,
+    ToastComponent,
+    SpinnerComponent,
+    LoadingProgressBarComponent,
+    MobileNavComponent,
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   title = 'TrainingSystems';
+
+  mobileView = signal<boolean>(false);
 
   constructor(
     private serviceWorkerService: ServiceWorkerService,
@@ -41,6 +51,8 @@ export class AppComponent implements OnInit {
     if (!this.mobileService.isMobileView()) {
       return;
     }
+
+    this.mobileView.set(true);
 
     this.redirectService.initialize();
     this.redirectService.redirectToLastRoute();

@@ -1,0 +1,79 @@
+@import 'client/src/css/variables';
+
+:host {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 20px;
+  width: 95%;
+  max-width: 600px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  background-color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 25px;
+  z-index: 1000;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  height: 100%;
+  color: #6c757d;
+  position: relative;
+}
+
+.nav-item .nav-label {
+  margin-top: 5px;
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.nav-item.active .nav-label {
+  color: #e91e63; /* Farbe für aktives Label */
+  font-weight: bold;
+}
+
+.central {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.central-icon {
+  background-color: #e91e63; /* Pinkfarbe für den zentralen Button */
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  position: absolute;
+  top: -20px; /* Schwebt über der Leiste */
+  z-index: 100;
+}
+
+.central-icon app-plus-icon {
+  color: #ffffff;
+}
+
+.navbar::after {
+  content: '';
+  display: block;
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 4px;
+  background-color: rgba(0, 0, 0, 0.1); /* Grauer Unterstrich */
+  border-radius: 2px;
+}
