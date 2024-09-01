@@ -66,35 +66,6 @@ export async function getSetsForCategories(req: Request, res: Response): Promise
 }
 
 /**
- * Retrieves the training duration data for specific training days across multiple weeks in a training plan.
- * The method takes a list of 0-based day indexes and returns the duration of training sessions for each day
- * across different weeks.
- */
-export async function getTimeExpenditureDataForTrainingDays(req: Request, res: Response): Promise<Response> {
-  const trainingPlanId = req.params.id;
-
-  const user = await getUser(req, res);
-  const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
-
-  const weeklyTrainingDurations: { [key: number]: number[] } = {};
-
-  trainingPlan.trainingWeeks.forEach((trainingWeek: TrainingWeek, weekIndex: number) => {
-    trainingWeek.trainingDays.forEach((trainingDay: TrainingDay) => {
-      if (!trainingDay.durationInMinutes) {
-        return;
-      }
-
-      if (!weeklyTrainingDurations[weekIndex]) {
-        weeklyTrainingDurations[weekIndex] = [];
-      }
-      weeklyTrainingDurations[weekIndex].push(trainingDay.durationInMinutes);
-    });
-  });
-
-  return res.status(200).json(weeklyTrainingDurations);
-}
-
-/**
  * Retrieves tonnage data for specific exercise categories in a specific training plan.
  */
 export async function getTonnageForCategories(req: Request, res: Response): Promise<void> {

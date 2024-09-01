@@ -51,9 +51,6 @@ export class StatisticsComponent implements OnInit {
   groupedBarChartDatasets!: BarChartData[];
   groupedBarChartLabels!: string[];
 
-  timeChartData!: LineChartDataset[];
-  timeChartLabels: string[] = [];
-
   id!: string;
 
   constructor(
@@ -113,44 +110,23 @@ export class StatisticsComponent implements OnInit {
   }
 
   private async fetchStatistics(id: string, exercises: string[]): Promise<void> {
-    const [tonnageResponse, setsResponse, timeStats] = await Promise.all([
+    const [tonnageResponse, setsResponse] = await Promise.all([
       firstValueFrom(this.trainingStatisticService.getTonnageDataForSelectedExercises(id, exercises)),
       firstValueFrom(this.trainingStatisticService.getSetDataForSelectedExercises(id, exercises)),
-      firstValueFrom(this.trainingStatisticService.getTimeStatsForTrainingDays(id)),
     ]);
 
     this.dataLoaded = true;
 
-    this.initializeCharts(tonnageResponse.data, setsResponse, tonnageResponse.title, timeStats);
+    this.initializeCharts(tonnageResponse.data, setsResponse, tonnageResponse.title);
   }
 
   private initializeCharts(
     tonnageData: Partial<TrainingExerciseTonnageDto>,
     setsResponse: { [key: string]: number[] },
     title: string,
-    timeStats: TimeStats,
   ): void {
     // Setze den Titel des Trainingsplans
     this.trainingPlanTitle = title;
-
-    // Verarbeite die TimeStats zu LineChartData
-    this.timeChartData = Object.entries(timeStats).map(([weekIndex, durations]) => {
-      const colors = this.chartColorService.getCategoryColor(`week-${weekIndex}`);
-
-      return {
-        label: `Trainings Woche ${Number(weekIndex) + 1}`,
-        data: durations,
-        borderColor: colors.borderColor,
-        backgroundColor: colors.backgroundColor,
-        fill: false,
-      };
-    });
-
-    // Erstelle Labels für das Zeitdiagramm basierend auf der Anzahl der Einträge
-    // Hier wird erwartet, dass timeStats[0], timeStats[1], ... alle gleich viele Elemente haben
-    // Falls dies nicht der Fall ist, sollte der Code angepasst werden
-    const maxLength = Math.max(...Object.values(timeStats).map((durations) => durations.length));
-    this.timeChartLabels = Array.from({ length: maxLength }, (_, i) => `Tag ${i + 1}`);
 
     // Setze Daten für das Liniendiagramm
     this.lineChartDatasets = Object.keys(tonnageData).map((categoryKey) => {
