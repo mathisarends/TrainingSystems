@@ -39,6 +39,8 @@ export class RpeInputDirective {
    */
   @HostListener('blur', ['$event.target'])
   handleBlurEvent(rpeInput: HTMLInputElement): void {
+    if (!rpeInput.value) return;
+
     const rpeValues = this.parseRPEInput(rpeInput.value);
 
     if (rpeValues.length === 1) {
