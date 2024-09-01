@@ -1,4 +1,13 @@
-import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild, DestroyRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewChecked,
+  ElementRef,
+  ViewChild,
+  DestroyRef,
+  HostListener,
+  OnDestroy,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TrainingViewService } from './training-view-service';
 import { FormService } from '../../../service/form/form.service';
@@ -32,6 +41,7 @@ import { ExerciseDataService } from './exercise-data.service';
 import { InteractiveElementDirective } from '../../../directives/interactive-element.directive';
 import { ToastStatus } from '../../components/toast/toast-status';
 import { SpinnerComponent } from '../../components/loaders/spinner/spinner.component';
+import { FocusService } from '../../focus.service';
 
 /**
  * Component to manage and display the training view.
@@ -53,11 +63,11 @@ import { SpinnerComponent } from '../../components/loaders/spinner/spinner.compo
     InteractiveElementDirective,
     SpinnerComponent,
   ],
-  providers: [TrainingViewService],
+  providers: [TrainingViewService, FocusService],
   templateUrl: './training-view.component.html',
   styleUrls: ['./training-view.component.scss'],
 })
-export class TrainingViewComponent implements OnInit, AfterViewChecked {
+export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecked {
   title = '';
   trainingWeekIndex: number = 0;
   trainingDayIndex: number = 0;
@@ -89,6 +99,7 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
     private browserCheckService: BrowserCheckService,
     private interactiveElementService: InteractiveElementService,
     private exerciseDataService: ExerciseDataService,
+    private focusService: FocusService,
     private destroyRef: DestroyRef,
   ) {}
 
@@ -114,6 +125,16 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
       .subscribe(() => {
         this.saveTrainingData();
       });
+
+    if (this.browserCheckService.isBrowser()) {
+      document.addEventListener('visibilitychange', this.handleVisibilityChange.bind(this));
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.browserCheckService.isBrowser()) {
+      document.removeEventListener('visibilitychange', this.handleVisibilityChange.bind(this));
+    }
   }
 
   /**
@@ -150,6 +171,20 @@ export class TrainingViewComponent implements OnInit, AfterViewChecked {
           this.navigateWeek(1);
         },
       );
+    }
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  handleBeforeUnload(event: Event) {
+    this.focusService.saveFocusedElement();
+  }
+
+  handleVisibilityChange() {
+    if (document.visibilityState === 'hidden') {
+      this.focusService.saveFocusedElement();
+    } else if (document.visibilityState === 'visible') {
+      this.focusService.restoreFocusedElement();
+      this.focusService.clearFocusedElement();
     }
   }
 

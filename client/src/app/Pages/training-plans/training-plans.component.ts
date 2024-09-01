@@ -92,7 +92,6 @@ export class TrainingPlansComponent implements OnInit {
   protected async loadTrainingPlans(): Promise<void> {
     try {
       const response: any = await firstValueFrom(this.httpClient.get<any>('/training/plans'));
-      console.log('🚀 ~ TrainingPlansComponent ~ loadTrainingPlans ~ response:', response);
 
       this.allTrainingPlans$.next(response?.trainingPlanCards);
       this.filteredTrainingPlans$.next(response?.trainingPlanCards);
