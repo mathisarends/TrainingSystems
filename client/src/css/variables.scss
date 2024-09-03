@@ -4,3 +4,33 @@ $light-grey: #f0f0f0;
 $dark-grey: #222222;
 
 $border-color: #e2e8f0;
+
+/** 
+ * @desc Background color for default button state. 
+ * A very light grey that provides a subtle background contrast.
+ */
+$button-bg-color: #f8f9fa;
+
+/** 
+  * @desc Background color for hover state.
+  * Provides a subtle color change for better user experience.
+  */
+$button-hover-bg-color: #e2e6ea;
+
+/** 
+  * @desc Border color for hover state.
+  * A slightly darker grey than the default button border color.
+  */
+$button-hover-active-border-color: #dae0e5;
+
+/** 
+  * @desc Border color for active state.
+  * Used to visually indicate an active or pressed button.
+  */
+$button-active-border-color: #d3d9df;
+
+/** 
+  * @desc Focus shadow color.
+  * Used to indicate focus state for accessibility.
+  */
+$focus-shadow-color: rgba(108, 117, 125, 0.25);

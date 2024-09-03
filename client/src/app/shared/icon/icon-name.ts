@@ -14,6 +14,8 @@ export enum IconName {
   Edit = 'edit-2',
   BAR_CHART = 'bar-chart-2',
   EYE = 'eye',
+  EYE_OFF = 'eye-off',
   CLOCK = 'clock',
   PLUS = 'plus',
+  ARROW_RIGHT = 'arrow-right',
 }

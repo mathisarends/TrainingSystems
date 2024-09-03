@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, HostListener, input, output } from '@angular/core';
 import { TooltipDirective } from '../../../service/tooltip/tooltip.directive';
 import { CommonModule } from '@angular/common';
 import { IconComponent } from '../../shared/icon/icon.component';
@@ -12,12 +12,25 @@ import { IconName } from '../../shared/icon/icon-name';
   styleUrls: ['./icon-button.component.scss'],
 })
 export class IconButtonComponent {
-  tooltipTitle = input<string>('');
+  /**
+   * The name of the icon to be displayed inside the button.
+   * This input is required.
+   */
   iconName = input.required<IconName>();
 
+  /**
+   * The title to be displayed in the tooltip when hovering over the button.
+   *
+   */
+  tooltipTitle = input<string>();
+
+  /**
+   * Event emitted when the button is clicked.
+   */
   buttonClick = output<void>();
 
-  onClick() {
+  @HostListener('click')
+  onHostClick() {
     this.buttonClick.emit();
   }
 }
