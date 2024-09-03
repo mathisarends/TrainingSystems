@@ -49,19 +49,22 @@ export class LoadingProgressBarComponent implements OnInit {
     const slowTarget = 90;
 
     this.loadingInterval = setInterval(() => {
+      if (progressValue >= slowTarget || this.isComplete()) {
+        clearInterval(this.loadingInterval);
+        return;
+      }
+
       if (progressValue < fastTarget && !this.isComplete()) {
-        const randomIncrement = 5 + Math.random() * 5;
+        const randomIncrement = 5 + Math.random() * 10;
         progressValue += randomIncrement;
 
         this.progress.set(progressValue);
       } else if (progressValue >= fastTarget && progressValue < slowTarget && !this.isComplete()) {
         const randomFactor = Math.random() * 0.1 + 0.9;
         progressValue += ((slowTarget - progressValue) / 30) * randomFactor;
-        this.progress.set(progressValue); // Update the signal value
-      } else if (progressValue >= slowTarget || this.isComplete()) {
-        clearInterval(this.loadingInterval);
+        this.progress.set(progressValue);
       }
-    }, 100);
+    }, 50);
   }
 
   completeLoading() {
