@@ -10,4 +10,7 @@ export enum IconName {
   User = 'user',
   X = 'x',
   Zap = 'zap',
+  Trash = 'trash-2',
+  Edit = 'edit-2',
+  BAR_CHART = 'bar-chart-2',
 }
