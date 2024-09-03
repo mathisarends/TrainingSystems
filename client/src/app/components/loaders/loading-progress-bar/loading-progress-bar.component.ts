@@ -64,7 +64,7 @@ export class LoadingProgressBarComponent implements OnInit {
         progressValue += ((slowTarget - progressValue) / 30) * randomFactor;
         this.progress.set(progressValue);
       }
-    }, 50);
+    }, 75);
   }
 
   completeLoading() {

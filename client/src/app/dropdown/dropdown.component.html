@@ -1,0 +1,11 @@
+<div class="selection-panel" (click)="toggleDropdown()">
+  {{ selectedOption() || 'Select Item' }}
+  <app-icon [name]="IconName.ChevronDown" />
+</div>
+@if (isDropdownOpen()) {
+  <ul>
+    @for (option of options(); track option) {
+      <li>{{ option }}</li>
+    }
+  </ul>
+}
