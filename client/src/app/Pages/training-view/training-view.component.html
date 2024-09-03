@@ -6,7 +6,7 @@
       <app-headline [subHeading]="subHeading" [heading]="trainingPlanData.title" />
       @if (isMobile) {
         <div>
-          <app-icon-button [iconClass]="'bx bx-timer'" (buttonClick)="switchToTimerView()" />
+          <app-icon-button [iconName]="IconName.CLOCK" (buttonClick)="switchToTimerView()" />
         </div>
       }
     </div>

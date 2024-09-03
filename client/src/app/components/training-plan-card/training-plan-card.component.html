@@ -23,32 +23,29 @@
       </p>
     }
   </div>
-  <div
-    class="d-flex justify-content-between align-items-center pe-3"
-    style="background: inherit; border-color: inherit"
-  >
+  <div class="card-footer" style="background: inherit; border-color: inherit">
     <div>
       <app-icon-button
         [tooltipTitle]="'Ansehen'"
-        [iconClass]="'bx bx-show'"
+        [iconName]="IconName.EYE"
         (buttonClick)="viewTrainingPlan(trainingPlan.id)"
       ></app-icon-button>
 
       <app-icon-button
         [tooltipTitle]="'Statistiken'"
-        [iconClass]="'bx bx-chart'"
+        [iconName]="IconName.BAR_CHART"
         (buttonClick)="viewStatistics(trainingPlan.id)"
       ></app-icon-button>
 
       <app-icon-button
         [tooltipTitle]="'Bearbeiten'"
-        [iconClass]="'bx bx-edit'"
+        [iconName]="IconName.Edit"
         (buttonClick)="showEditTrainingPlanModal(trainingPlan.id)"
       ></app-icon-button>
 
       <app-icon-button
         [tooltipTitle]="'Löschen'"
-        [iconClass]="'bx bx-trash'"
+        [iconName]="IconName.Trash"
         (buttonClick)="showDeleteTrainingPlanModal()"
       ></app-icon-button>
     </div>

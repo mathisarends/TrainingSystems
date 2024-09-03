@@ -42,6 +42,7 @@ import { InteractiveElementDirective } from '../../../directives/interactive-ele
 import { ToastStatus } from '../../components/toast/toast-status';
 import { SpinnerComponent } from '../../components/loaders/spinner/spinner.component';
 import { FocusService } from '../../focus.service';
+import { IconName } from '../../shared/icon/icon-name';
 
 /**
  * Component to manage and display the training view.
@@ -68,6 +69,8 @@ import { FocusService } from '../../focus.service';
   styleUrls: ['./training-view.component.scss'],
 })
 export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecked {
+  protected readonly IconName = IconName;
+
   title = '';
   trainingWeekIndex: number = 0;
   trainingDayIndex: number = 0;

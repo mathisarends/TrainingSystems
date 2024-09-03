@@ -18,6 +18,7 @@ import { SkeletonCardComponent } from '../../components/loaders/skeletons/skelet
 import { HttpService } from '../../../service/http/http-client.service';
 import { CurrentUserService } from '../../current-user.service';
 import { Router } from '@angular/router';
+import { IconName } from '../../shared/icon/icon-name';
 
 /**
  * Component to manage and display training plans.
@@ -39,6 +40,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./training-plans.component.scss'],
 })
 export class TrainingPlansComponent implements OnInit {
+  protected readonly IconName = IconName;
+
   protected allTrainingPlans$ = new BehaviorSubject<TrainingPlanCardView[] | null>(null);
   protected filteredTrainingPlans$ = new BehaviorSubject<TrainingPlanCardView[] | null>(null);
 

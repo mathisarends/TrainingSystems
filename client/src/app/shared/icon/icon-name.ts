@@ -13,4 +13,7 @@ export enum IconName {
   Trash = 'trash-2',
   Edit = 'edit-2',
   BAR_CHART = 'bar-chart-2',
+  EYE = 'eye',
+  CLOCK = 'clock',
+  PLUS = 'plus',
 }

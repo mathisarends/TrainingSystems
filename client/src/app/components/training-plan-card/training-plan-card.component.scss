@@ -57,6 +57,17 @@
   height: 55px;
 }
 
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-block: 0.75rem;
+
+  & app-icon-button {
+    margin-right: 0.5rem;
+  }
+}
+
 .bg-white {
   --bs-bg-opacity: 0.5;
 }
