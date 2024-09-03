@@ -6,11 +6,12 @@ import { DOCUMENT } from '@angular/common';
 import { ToastService } from '../../../components/toast/toast.service';
 import { BaisAuthComponent } from '../basic-auth.component';
 import { catchError, of, tap } from 'rxjs';
+import { IconComponent } from '../../../shared/icon/icon.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [],
+  imports: [IconComponent],
   templateUrl: './login.component.html',
   styleUrls: ['../auth-shared.scss'],
 })

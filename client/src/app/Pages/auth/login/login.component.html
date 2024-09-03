@@ -8,7 +8,11 @@
         </div>
         <div class="field input-field">
           <input autocomplete="off" type="password" placeholder="Password" class="password" name="password" />
-          <i class="bx bx-hide eye-icon" (click)="togglePasswordVisibility($event)"></i>
+          @if (hidePasswordInput()) {
+            <app-icon class="eye-icon" [name]="IconName.EYE_OFF" (click)="togglePasswordVisibility($event)" />
+          } @else {
+            <app-icon class="eye-icon" [name]="IconName.EYE" (click)="togglePasswordVisibility($event)" />
+          }
         </div>
 
         <div class="field button-field">

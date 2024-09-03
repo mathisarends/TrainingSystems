@@ -12,11 +12,24 @@
         </div>
         <div class="field input-field">
           <input type="password" placeholder="Create password" name="password" class="password" />
-          <i class="bx bx-hide eye-icon" (click)="togglePasswordVisibility($event)"></i>
+          @if (hidePasswordInput()) {
+            <app-icon class="eye-icon" [name]="IconName.EYE_OFF" (click)="togglePasswordVisibility($event)" />
+          } @else {
+            <app-icon class="eye-icon" [name]="IconName.EYE" (click)="togglePasswordVisibility($event)" />
+          }
         </div>
         <div class="field input-field">
-          <input type="password" placeholder="Confirm password" name="confirmPassword" class="password" />
-          <i class="bx bx-hide eye-icon" (click)="togglePasswordVisibility($event)"></i>
+          <input
+            type="password"
+            placeholder="Confirm password"
+            name="confirmPassword"
+            class="password repeat-password"
+          />
+          @if (hideRepeatPasswordInput()) {
+            <app-icon class="eye-icon" [name]="IconName.EYE_OFF" (click)="togglePasswordVisibility($event)" />
+          } @else {
+            <app-icon class="eye-icon" [name]="IconName.EYE" (click)="togglePasswordVisibility($event)" />
+          }
         </div>
         <div class="field button-field">
           <button>Signup</button>

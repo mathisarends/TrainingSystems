@@ -1,13 +1,18 @@
 import { Router } from '@angular/router';
 import { HttpService } from '../../../service/http/http-client.service';
 import { DOCUMENT } from '@angular/common';
-import { Inject } from '@angular/core';
+import { Inject, signal, WritableSignal } from '@angular/core';
 import { ToastService } from '../../components/toast/toast.service';
+import { IconName } from '../../shared/icon/icon-name';
 
 declare const google: any;
 
 export abstract class BaisAuthComponent {
+  protected readonly IconName = IconName;
   protected oauthRoute: string;
+
+  hidePasswordInput: WritableSignal<boolean> = signal(false);
+  hideRepeatPasswordInput: WritableSignal<boolean> = signal(false);
 
   constructor(
     protected router: Router,
@@ -51,11 +56,21 @@ export abstract class BaisAuthComponent {
 
   protected togglePasswordVisibility(event: Event): void {
     const eyeIcon = event.target as HTMLElement;
-    const pwField = eyeIcon.parentElement?.querySelector('.password') as HTMLInputElement;
+    const pwField = eyeIcon.parentElement?.parentElement?.querySelector('.password') as HTMLInputElement;
+
+    if (this.isRepeatPassword(pwField)) {
+      console.log('yeh');
+      this.hideRepeatPasswordInput.set(!this.hideRepeatPasswordInput());
+    } else {
+      this.hidePasswordInput.set(!this.hidePasswordInput());
+    }
+
     if (pwField) {
       pwField.type = pwField.type === 'password' ? 'text' : 'password';
-      eyeIcon.classList.toggle('bx-show');
-      eyeIcon.classList.toggle('bx-hide');
     }
+  }
+
+  private isRepeatPassword(passwordInput: HTMLInputElement) {
+    return passwordInput.classList.contains('repeat-password');
   }
 }

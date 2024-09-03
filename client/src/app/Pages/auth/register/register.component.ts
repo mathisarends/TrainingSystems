@@ -6,11 +6,12 @@ import { DOCUMENT } from '@angular/common';
 import { Inject } from '@angular/core';
 import { ToastService } from '../../../components/toast/toast.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { IconComponent } from '../../../shared/icon/icon.component';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [],
+  imports: [IconComponent],
   templateUrl: './register.component.html',
   styleUrls: ['../auth-shared.scss'],
 })
