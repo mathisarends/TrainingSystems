@@ -26,6 +26,10 @@
   min-height: 90vh;
 }
 
+app-icon-button {
+  margin-right: 0.25rem;
+}
+
 ::ng-deep .outlet-wrapper {
   @media screen and (max-width: 768px) {
     padding-inline: 0% !important;

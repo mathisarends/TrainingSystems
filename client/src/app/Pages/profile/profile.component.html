@@ -52,22 +52,9 @@
             aria-label="Search"
             (input)="filterFriends($event)"
           />
-          <button
-            type="button"
-            class="btn btn-light btn-md me-1"
-            appTooltip="Freunde hinzufügen"
-            (click)="openAddFriendModal()"
-          >
-            <i class="bx bx-user-plus"></i>
-          </button>
-          <button
-            type="button"
-            class="btn btn-light btn-md"
-            appTooltip="Friend Requests"
-            (click)="openFriendRequestsModal()"
-          >
-            <i class="bx bx-envelope"></i>
-          </button>
+
+          <app-icon-button [iconName]="IconName.FeatherUserPlus" (click)="openAddFriendModal()" />
+          <app-icon-button [iconName]="IconName.MAIL" (click)="openFriendRequestsModal()" />
         </div>
 
         <div class="row">

@@ -18,4 +18,5 @@ export enum IconName {
   CLOCK = 'clock',
   PLUS = 'plus',
   ARROW_RIGHT = 'arrow-right',
+  MAIL = 'mail',
 }

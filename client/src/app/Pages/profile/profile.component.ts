@@ -18,6 +18,9 @@ import { PaginationComponent } from '../../components/pagination/pagination.comp
 import { ChangeProfilePictureConfirmationComponent } from '../modal-pages/change-profile-picture-confirmation/change-profile-picture-confirmation.component';
 import { FriendModalComponent } from '../friend-modal/friend-modal.component';
 import { ActivityCalendar } from '../../activity-calendar/activity-calendar.component';
+import { IconComponent } from '../../shared/icon/icon.component';
+import { IconName } from '../../shared/icon/icon-name';
+import { IconButtonComponent } from '../../components/icon-button/icon-button.component';
 
 @Component({
   selector: 'app-profile',
@@ -30,10 +33,14 @@ import { ActivityCalendar } from '../../activity-calendar/activity-calendar.comp
     AlertComponent,
     PaginationComponent,
     ActivityCalendar,
+    IconComponent,
+    IconButtonComponent,
   ],
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
+  protected readonly IconName = IconName;
+
   profile!: User;
   isLoading = true;
 

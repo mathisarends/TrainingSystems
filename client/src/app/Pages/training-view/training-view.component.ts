@@ -43,6 +43,7 @@ import { ToastStatus } from '../../components/toast/toast-status';
 import { SpinnerComponent } from '../../components/loaders/spinner/spinner.component';
 import { FocusService } from '../../focus.service';
 import { IconName } from '../../shared/icon/icon-name';
+import { IconComponent } from '../../shared/icon/icon.component';
 
 /**
  * Component to manage and display the training view.
@@ -63,6 +64,7 @@ import { IconName } from '../../shared/icon/icon-name';
     CategorySelectDirective,
     InteractiveElementDirective,
     SpinnerComponent,
+    IconComponent,
   ],
   providers: [TrainingViewService, FocusService],
   templateUrl: './training-view.component.html',
