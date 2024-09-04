@@ -38,6 +38,10 @@ export class TooltipDirective implements OnDestroy {
    * Creates and displays the tooltip element.
    */
   @HostListener('mouseenter') onMouseEnter() {
+    if (!this.tooltipMessage) {
+      return;
+    }
+
     if (!this.tooltipElement) {
       this.tooltipElement = this.renderer.createElement('div');
       this.renderer.addClass(this.tooltipElement, 'tooltip-container');

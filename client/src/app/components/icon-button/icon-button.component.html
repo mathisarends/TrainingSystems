@@ -1,9 +1,3 @@
-@if (tooltipTitle()) {
-  <button class="icon-button" [appTooltip]="tooltipTitle()!">
-    <app-icon [name]="iconName()" [size]="15" />
-  </button>
-} @else {
-  <button class="icon-button">
-    <app-icon [name]="iconName()" [size]="15" />
-  </button>
-}
+<button class="icon-button" [appTooltip]="tooltipTitle() ?? ''">
+  <app-icon [name]="iconName()" [size]="15" />
+</button>
