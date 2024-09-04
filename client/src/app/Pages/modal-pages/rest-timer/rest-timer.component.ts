@@ -64,7 +64,8 @@ export class RestTimerComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   skipTimer() {
-    this.sendMessageToServiceWorker('skipTimer');
+    this.sendMessageToServiceWorker('stop');
+    this.playTimerFinishedAudio();
 
     this.modalService.close();
   }

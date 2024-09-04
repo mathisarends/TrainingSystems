@@ -8,7 +8,6 @@ import { TrainingDay } from '../../Pages/training-view/training-day';
 import { NotificationService } from '../../notification-page/notification.service';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { SocketService } from '../../socket.service';
 
 @Component({
   selector: 'app-header',
@@ -44,7 +43,6 @@ export class HeaderComponent implements OnInit {
     private profileService: ProfileService,
     private searchService: SearchService,
     private notificationService: NotificationService,
-    private socketService: SocketService,
   ) {
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
       this.updateActiveLink();
@@ -61,10 +59,6 @@ export class HeaderComponent implements OnInit {
       if (data) {
         this.profile = data;
       }
-    });
-
-    this.socketService.onTrainingDayNotificationMessage().subscribe(() => {
-      this.loadTrainingDayNotifications();
     });
 
     // initially

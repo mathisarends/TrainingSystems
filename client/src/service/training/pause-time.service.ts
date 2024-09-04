@@ -27,8 +27,10 @@ export class PauseTimeService {
 
     if (this.browserCheckService.isBrowser()) {
       this.serviceWorkerService.listenForMessages((event: MessageEvent) => {
-        if (event.data && event.data.command === 'currentTime') {
+        if (event.data?.command === 'currentTime') {
           this.handleCurrentTimeUpdate(event.data.currentTime);
+        } else if (event.data?.command === 'stopTimerSignal') {
+          this.stopTimer();
         }
       });
 
@@ -42,13 +44,14 @@ export class PauseTimeService {
     }
   };
 
+  // TODO: auch in die DIREKTIVE?
   initializePauseTimers(exerciseData: ExerciseDataDTO) {
     const weightInputs = document.querySelectorAll('.weight') as NodeListOf<HTMLInputElement>;
 
     weightInputs.forEach((weightInput) => {
       weightInput.addEventListener('change', () => {
         const categoryValue = this.exerciseTableRowService.getExerciseCategorySelectorByElement(weightInput).value;
-        const setInput = this.exerciseTableRowService.getSetInputByElement(weightInput) as HTMLInputElement;
+        const setInput = this.exerciseTableRowService.getSetInputByElement(weightInput);
 
         const weightValues = this.parseWeightInputValues(weightInput);
 
@@ -89,6 +92,19 @@ export class PauseTimeService {
         });
       }
     }, 10000);
+  }
+
+  /**
+   * Stops the timer by resetting remaining time, clearing the interval, and emitting a final event.
+   */
+  private stopTimer() {
+    this.initialTime = 0;
+    this.remainingTime = 0;
+    if (this.keepAliveIntervalId) {
+      clearInterval(this.keepAliveIntervalId);
+      this.keepAliveIntervalId = null;
+    }
+    this.countdownEmitter.emit(0);
   }
 
   private handleCurrentTimeUpdate(currentTime: number) {

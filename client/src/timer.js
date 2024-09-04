@@ -75,6 +75,14 @@ class Timer {
   stopTimer() {
     clearInterval(this.timer);
     this.remainingTime = 0;
+
+    self.clients.matchAll().then((clients) => {
+      clients.forEach((client) => {
+        client.postMessage({
+          command: 'stopTimerSignal',
+        });
+      });
+    });
   }
 
   /**
