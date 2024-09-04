@@ -114,8 +114,8 @@
             </td>
             <td data-cell="RPE">
               <input
-                type="number"
-                rpeInputDirective
+                appInteractiveElement
+                type="string"
                 [id]="namePrefix + 'targetRPE'"
                 class="transparent-input targetRPE"
                 [name]="namePrefix + 'targetRPE'"
@@ -173,7 +173,7 @@
 
 @if (!isMobile) {
   <div class="fixed-bottom-bar">
-    <app-icon [name]="IconName.ArrowLeft" [size]="24" (click)="navigateWeek(-1)"/>
+    <app-icon [name]="IconName.ArrowLeft" [size]="24" (click)="navigateWeek(-1)" />
     <app-icon [name]="IconName.ARROW_RIGHT" [size]="24" (click)="navigateWeek(1)" />
   </div>
 }

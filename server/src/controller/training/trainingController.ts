@@ -174,8 +174,8 @@ function handleDeloadWeek(trainingPlan: TrainingPlan, weekIndex: number): void {
       const exerciseBeforeDeload = trainingDayBeforeDeload.exercises[exerciseIndex];
 
       if (exercise.exercise === exerciseBeforeDeload.exercise) {
-        exercise.sets = Math.max(exerciseBeforeDeload.sets - 1, 0); // Prevents negative sets
-        exercise.targetRPE = isMainCategory(exercise.category) ? 6 : 7;
+        exercise.sets = Math.max(exerciseBeforeDeload.sets - 1, 0);
+        exercise.targetRPE = isMainCategory(exercise.category) ? '6' : '7';
       }
     });
   });
@@ -193,12 +193,24 @@ function adjustRPEForWeek(trainingPlan: TrainingPlan, weekIndex: number, rpeIncr
     trainingDay.exercises.forEach((exercise, exerciseIndex) => {
       const previousWeekExercise = previousWeekTrainingDay?.exercises[exerciseIndex];
 
-      if (exercise.exercise === previousWeekExercise?.exercise) {
+      // Use the utility function to check if the target RPE is parsable as a number
+      if (exercise.exercise === previousWeekExercise?.exercise && isParsableAsNumber(previousWeekExercise.targetRPE)) {
         const rpeMax = isMainCategory(exercise.category) ? 9 : 10;
-        exercise.targetRPE = Math.min(previousWeekExercise?.targetRPE + rpeIncrease, rpeMax);
+        const parsedRPE = Number(previousWeekExercise.targetRPE);
+        exercise.targetRPE = Math.min(parsedRPE + rpeIncrease, rpeMax).toString();
       }
     });
   });
+}
+
+/**
+ * Checks if a given value can be parsed as a number.
+ * @param value The value to check.
+ * @returns True if the value is parsable as a number, false otherwise.
+ */
+function isParsableAsNumber(value: string): boolean {
+  const parsedNumber = Number(value);
+  return !isNaN(parsedNumber);
 }
 
 /**

@@ -30,7 +30,7 @@ export interface Exercise {
   /**
    * The target Rate of Perceived Exertion (RPE) for the exercise.
    */
-  targetRPE: number;
+  targetRPE: string;
 
   /**
    * The actual Rate of Perceived Exertion (RPE) experienced during the exercise.
