@@ -1,6 +1,6 @@
-import { Directive, ElementRef, HostListener, Input, Renderer2, OnDestroy } from '@angular/core';
+import { Directive, ElementRef, HostListener, Input, Renderer2, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, NavigationEnd } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 /**
@@ -10,53 +10,82 @@ import { filter } from 'rxjs/operators';
   selector: '[appTooltip]',
   standalone: true,
 })
-export class TooltipDirective implements OnDestroy {
+export class TooltipDirective {
   @Input('appTooltip') tooltipMessage: string = '';
   tooltipElement!: HTMLElement;
-  private routerSubscription: Subscription;
 
-  /**
-   * Constructor to create an instance of TooltipDirective.
-   * @param el - Reference to the element this directive is applied to.
-   * @param renderer - Renderer2 instance to manipulate DOM elements.
-   * @param router - Router instance to listen for route changes.
-   */
   constructor(
     private el: ElementRef,
     private renderer: Renderer2,
     private router: Router,
+    private destroyRef: DestroyRef,
   ) {
-    this.routerSubscription = this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        takeUntilDestroyed(this.destroyRef),
+      )
       .subscribe(() => {
         this.hideTooltip();
       });
+
+    this.destroyRef.onDestroy(() => {
+      if (this.tooltipElement) {
+        this.renderer.removeChild(document.body, this.tooltipElement);
+      }
+    });
   }
 
   /**
    * Event listener for mouseenter event.
    * Creates and displays the tooltip element.
    */
+  /**
+   * Event listener for mouseenter event.
+   * Creates and displays the tooltip element.
+   */
   @HostListener('mouseenter') onMouseEnter() {
-    if (!this.tooltipMessage) {
-      return;
-    }
+    if (!this.tooltipMessage) return; // Do nothing if tooltip message is empty
 
     if (!this.tooltipElement) {
-      this.tooltipElement = this.renderer.createElement('div');
-      this.renderer.addClass(this.tooltipElement, 'tooltip-container');
-
-      const arrow = this.renderer.createElement('div');
-      this.renderer.addClass(arrow, 'tooltip-arrow');
-      this.renderer.appendChild(this.tooltipElement, arrow);
-
-      const text = this.renderer.createElement('span');
-      this.renderer.addClass(text, 'tooltip-text');
-      this.renderer.appendChild(text, this.renderer.createText(this.tooltipMessage));
-      this.renderer.appendChild(this.tooltipElement, text);
-
-      this.renderer.appendChild(document.body, this.tooltipElement);
+      this.createTooltipElement();
     }
+    this.showTooltip();
+  }
+
+  /**
+   * Event listener for mouseleave event.
+   * Hides the tooltip element.
+   */
+  @HostListener('mouseleave') onMouseLeave() {
+    this.hideTooltip();
+  }
+
+  /**
+   * Creates the tooltip element and appends it to the body.
+   */
+  private createTooltipElement() {
+    this.tooltipElement = this.renderer.createElement('div');
+    this.renderer.addClass(this.tooltipElement, 'tooltip-container');
+
+    const arrow = this.renderer.createElement('div');
+    this.renderer.addClass(arrow, 'tooltip-arrow');
+    this.renderer.appendChild(this.tooltipElement, arrow);
+
+    const text = this.renderer.createElement('span');
+    this.renderer.addClass(text, 'tooltip-text');
+    this.renderer.appendChild(text, this.renderer.createText(this.tooltipMessage));
+    this.renderer.appendChild(this.tooltipElement, text);
+
+    this.renderer.appendChild(document.body, this.tooltipElement);
+  }
+
+  /**
+   * Shows the tooltip element by setting its position and visibility.
+   */
+  private showTooltip() {
+    if (!this.tooltipElement) return;
+
     const rect = this.el.nativeElement.getBoundingClientRect();
     this.renderer.setStyle(
       this.tooltipElement,
@@ -73,31 +102,12 @@ export class TooltipDirective implements OnDestroy {
   }
 
   /**
-   * Event listener for mouseleave event.
-   * Hides the tooltip element.
-   */
-  @HostListener('mouseleave') onMouseLeave() {
-    this.hideTooltip();
-  }
-
-  /**
    * Hides the tooltip element.
    */
   private hideTooltip() {
     if (this.tooltipElement) {
       this.renderer.setStyle(this.tooltipElement, 'visibility', 'hidden');
       this.renderer.setStyle(this.tooltipElement, 'opacity', '0');
-    }
-  }
-
-  /**
-   * Lifecycle hook that runs when the directive is destroyed.
-   * Unsubscribes from the router events to avoid memory leaks.
-   */
-  ngOnDestroy() {
-    this.routerSubscription.unsubscribe();
-    if (this.tooltipElement) {
-      this.renderer.removeChild(document.body, this.tooltipElement);
     }
   }
 }
