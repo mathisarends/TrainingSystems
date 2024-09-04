@@ -52,7 +52,7 @@ export async function start() {
   // Erstelle einen HTTP-Server, der sowohl von Express als auch von Socket.IO verwendet wird
   const server = http.createServer(app);
 
-  WebSocketService.initialize(server);
+  /* WebSocketService.initialize(server); */
 
   // Starte den kombinierten HTTP und WebSocket-Server
   server.listen(PORT, () => {

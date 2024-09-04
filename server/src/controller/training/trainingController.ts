@@ -195,12 +195,10 @@ function adjustRPEForWeek(trainingPlan: TrainingPlan, weekIndex: number, rpeIncr
 
       if (exercise.exercise === previousWeekExercise?.exercise) {
         if (isNumber(previousWeekExercise.targetRPE)) {
-          // Handle single numeric value
           const rpeMax = isMainCategory(exercise.category) ? 9 : 10;
           const parsedRPE = Number(previousWeekExercise.targetRPE);
           exercise.targetRPE = Math.min(parsedRPE + rpeIncrease, rpeMax).toString();
         } else {
-          // Handle potential numeric array
           const rpeArray = parseStringToNumberArray(previousWeekExercise.targetRPE);
 
           if (rpeArray) {
