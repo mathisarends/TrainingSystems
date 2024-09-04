@@ -193,22 +193,47 @@ function adjustRPEForWeek(trainingPlan: TrainingPlan, weekIndex: number, rpeIncr
     trainingDay.exercises.forEach((exercise, exerciseIndex) => {
       const previousWeekExercise = previousWeekTrainingDay?.exercises[exerciseIndex];
 
-      // Use the utility function to check if the target RPE is parsable as a number
-      if (exercise.exercise === previousWeekExercise?.exercise && isParsableAsNumber(previousWeekExercise.targetRPE)) {
-        const rpeMax = isMainCategory(exercise.category) ? 9 : 10;
-        const parsedRPE = Number(previousWeekExercise.targetRPE);
-        exercise.targetRPE = Math.min(parsedRPE + rpeIncrease, rpeMax).toString();
+      if (exercise.exercise === previousWeekExercise?.exercise) {
+        if (isNumber(previousWeekExercise.targetRPE)) {
+          // Handle single numeric value
+          const rpeMax = isMainCategory(exercise.category) ? 9 : 10;
+          const parsedRPE = Number(previousWeekExercise.targetRPE);
+          exercise.targetRPE = Math.min(parsedRPE + rpeIncrease, rpeMax).toString();
+        } else {
+          // Handle potential numeric array
+          const rpeArray = parseStringToNumberArray(previousWeekExercise.targetRPE);
+
+          if (rpeArray) {
+            const rpeMax = isMainCategory(exercise.category) ? 9 : 10;
+            const adjustedRpeArray = rpeArray.map(rpe => Math.min(rpe + rpeIncrease, rpeMax));
+            exercise.targetRPE = adjustedRpeArray.join(';');
+          } else {
+            console.warn(`Cannot parse targetRPE for exercise: ${exercise.exercise}`);
+          }
+        }
       }
     });
   });
 }
 
 /**
- * Checks if a given value can be parsed as a number.
- * @param value The value to check.
- * @returns True if the value is parsable as a number, false otherwise.
+ * Attempts to parse a string into an array of numbers if it can be split by a delimiter and parsed.
+
  */
-function isParsableAsNumber(value: string): boolean {
+function parseStringToNumberArray(value: string, delimiter: string = ';'): number[] | null {
+  const parts = value.split(delimiter);
+  const numbers = parts.map(part => Number(part.trim()));
+
+  if (numbers.every(num => !isNaN(num))) {
+    return numbers;
+  }
+  return null;
+}
+
+/**
+ * Checks if a given value can be parsed as a number.
+ */
+function isNumber(value: string): boolean {
   const parsedNumber = Number(value);
   return !isNaN(parsedNumber);
 }
