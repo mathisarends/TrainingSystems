@@ -6,25 +6,25 @@ import { Percentage } from './percentage.type';
   standalone: true,
   imports: [],
   templateUrl: './percentage-circle-visualisation.component.html',
-  styleUrls: ['./percentage-circle-visualisation.component.scss',
+  styleUrls: ['./percentage-circle-visualisation.component.scss'],
 })
 export class PercentageCircleVisualisationComponent implements AfterViewInit {
   @ViewChild('progressRing') progressRing!: ElementRef;
 
   /**
-   * The percentage value to visualize. 
+   * The percentage value to visualize.
    * This is a required input and should be a valid percentage (0-100).
    */
-  percentage = input.required<Percentage>();
+  percentage = input.required<number>();
 
   /**
-   * The size of the visualized circle in pixels. 
+   * The size of the visualized circle in pixels.
    * Default value is 100 if not provided.
    */
   size = input<number>(100);
 
   /**
-   * Flag to show or hide the percentage text inside the circle. 
+   * Flag to show or hide the percentage text inside the circle.
    * Default is false, meaning the percentage text is hidden.
    */
   showPercentageText = input<boolean>(false);

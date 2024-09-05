@@ -49,6 +49,10 @@
         (buttonClick)="showDeleteTrainingPlanModal()"
       ></app-icon-button>
     </div>
-    <div>{{ trainingPlan.percentageFinished }} %</div>
+    <app-percentage-circle-visualisation
+      [size]="37.5"
+      [showPercentageText]="true"
+      [percentage]="trainingPlan.percentageFinished"
+    />
   </div>
 </div>
