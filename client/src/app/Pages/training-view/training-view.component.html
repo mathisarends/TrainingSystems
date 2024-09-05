@@ -2,9 +2,9 @@
   <app-skeleton-training-table />
 } @else {
   <form (submit)="onSubmit($event)" class="mt-4" id="form">
-    <div class="headline-container" [ngClass]="{ 'background-image': isMobile }">
+    <div class="headline-container" [ngClass]="{ 'background-image': mobileService.isMobileView }">
       <app-headline [subHeading]="subHeading" [heading]="trainingPlanData.title" />
-      @if (isMobile) {
+      @if (mobileService.isMobileView) {
         <div>
           <app-icon-button [iconName]="IconName.CLOCK" (buttonClick)="switchToTimerView()" />
         </div>
@@ -171,7 +171,7 @@
   </form>
 }
 
-@if (!isMobile) {
+@if (!mobileService.isMobileView) {
   <div class="fixed-bottom-bar">
     <app-icon [name]="IconName.ArrowLeft" [size]="24" (click)="navigateWeek(-1)" />
     <app-icon [name]="IconName.ARROW_RIGHT" [size]="24" (click)="navigateWeek(1)" />

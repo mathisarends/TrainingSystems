@@ -84,7 +84,6 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
   dataViewLoaded$ = this.dataViewLoaded.asObservable();
 
   private automationContextInitialized = false;
-  isMobile = false;
 
   subHeading: string = '';
 
@@ -99,13 +98,13 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
     private navigationService: TrainingViewNavigationService,
     private swipeService: SwipeService,
     private pauseTimeService: PauseTimeService,
-    private mobileService: MobileService,
     private modalService: ModalService,
     private browserCheckService: BrowserCheckService,
     private interactiveElementService: InteractiveElementService,
     private exerciseDataService: ExerciseDataService,
     private focusService: FocusService,
     private destroyRef: DestroyRef,
+    protected mobileService: MobileService,
   ) {}
 
   /**
@@ -122,8 +121,6 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
 
       this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
     });
-
-    this.isMobile = this.mobileService.isMobileView();
 
     this.interactiveElementService.inputChanged$
       .pipe(takeUntilDestroyed(this.destroyRef)) // Automatically unsubscribe

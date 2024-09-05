@@ -26,10 +26,8 @@ import { MobileNavComponent } from './mobile-nav/mobile-nav.component';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'TrainingSystems';
-
-  mobileView = signal<boolean>(false);
 
   constructor(
     private serviceWorkerService: ServiceWorkerService,
@@ -39,23 +37,14 @@ export class AppComponent implements OnInit {
   ) {
     if (this.browserCheckService.isBrowser()) {
       this.serviceWorkerService.registerServiceWorker();
+
+      if (!this.mobileService.isMobileView) {
+        return;
+      }
+
+      this.redirectService.initialize();
+
+      this.redirectService.redirectToLastRoute();
     }
-  }
-
-  /**
-   * This method initializes the redirection service to start tracking the user's route navigation.
-   * It also checks if the app is being viewed on a mobile device and attempts to redirect the user
-   * to their last visited route if applicable.
-   */
-  ngOnInit(): void {
-    if (!this.mobileService.isMobileView()) {
-      return;
-    }
-
-    this.mobileView.set(true);
-
-    this.redirectService.initialize();
-
-    this.redirectService.redirectToLastRoute();
   }
 }

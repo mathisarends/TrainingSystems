@@ -73,10 +73,8 @@ export class TrainingPlansComponent implements OnInit {
     });
 
     this.filteredTrainingPlans$.subscribe((plans) => {
-      this.updateColumnClass(plans?.length || 0);
+      this.updateColumnClass(plans?.length ?? 0);
     });
-
-    console.log('urö', this.router.url);
   }
 
   /**

@@ -1,20 +1,34 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal, WritableSignal } from '@angular/core';
 import { BrowserCheckService } from '../../app/browser-check.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MobileService {
-  constructor(private browserCheckService: BrowserCheckService) {}
+  private readonly isMobileSignal!: WritableSignal<boolean>;
+
+  constructor(private browserCheckService: BrowserCheckService) {
+    if (this.browserCheckService.isBrowser()) {
+      this.isMobileSignal = signal(this.checkIsMobileView());
+
+      window.addEventListener('resize', () => {
+        console.log('resize');
+        this.isMobileSignal.set(this.checkIsMobileView());
+      });
+    }
+  }
 
   /**
-   * Checks if the current view is on a mobile device.
-   * @returns true if the view is mobile, false otherwise.
+   * Read-only signal exposing the mobile view state.
    */
-  isMobileView(): boolean {
-    if (this.browserCheckService.isBrowser()) {
-      return window.innerWidth <= 768;
-    }
-    return false;
+  get isMobileView(): boolean {
+    return this.isMobileSignal();
+  }
+
+  /**
+   * Helper function to determine if the view is on a mobile device.
+   */
+  private checkIsMobileView(): boolean {
+    return window.innerWidth <= 768;
   }
 }
