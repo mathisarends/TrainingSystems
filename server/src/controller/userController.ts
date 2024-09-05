@@ -46,16 +46,9 @@ export async function loginOAuth2(req: Request, res: Response): Promise<void> {
 
 export async function getProfile(req: Request, res: Response): Promise<void> {
   const user = await userService.getUser(req, res);
-  const formattedCreatedAt = new Date(user.createdAt).toLocaleDateString('de-DE', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-
   const userDto = {
     username: user.username,
     email: user.email,
-    createdAt: formattedCreatedAt,
     pictureUrl: user.pictureUrl
   };
 

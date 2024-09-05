@@ -27,22 +27,6 @@ export class AuthService {
   }
 
   /**
-   * Checks if the user is currently authenticated.
-   * @returns A boolean value indicating the current authentication status.
-   */
-  isAuthenticated(): boolean {
-    return this.isAuthenticatedSignal();
-  }
-
-  /**
-   * Sets the authentication status of the user.
-   * @param authStatus - A boolean indicating the authentication status to set.
-   */
-  setAuthenticationStatus(authStatus: boolean) {
-    this.isAuthenticatedSignal.set(authStatus);
-  }
-
-  /**
    * Checks the initial authentication status of the user by making a request to the backend.
    * @returns An Observable that completes when the authentication status check is done.
    */
@@ -57,6 +41,22 @@ export class AuthService {
         return of();
       }),
     );
+  }
+
+  /**
+   * Checks if the user is currently authenticated.
+   * @returns A boolean value indicating the current authentication status.
+   */
+  isAuthenticated(): boolean {
+    return this.isAuthenticatedSignal();
+  }
+
+  /**
+   * Sets the authentication status of the user.
+   * @param authStatus - A boolean indicating the authentication status to set.
+   */
+  setAuthenticationStatus(authStatus: boolean) {
+    this.isAuthenticatedSignal.set(authStatus);
   }
 
   /**

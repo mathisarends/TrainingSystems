@@ -1,7 +1,5 @@
 import { Component, OnInit, ElementRef, ViewChild, Renderer2 } from '@angular/core';
-import { ProfileService } from './profileService';
 import { SpinnerComponent } from '../../components/loaders/spinner/spinner.component';
-import { User } from '../../types/user';
 import { ImageUploadService } from '../../../service/util/image-upload.service';
 import { ModalService } from '../../../service/modal/modalService';
 import { ModalSize } from '../../../service/modal/modalSize';
@@ -21,6 +19,8 @@ import { ActivityCalendar } from '../../activity-calendar/activity-calendar.comp
 import { IconComponent } from '../../shared/icon/icon.component';
 import { IconName } from '../../shared/icon/icon-name';
 import { IconButtonComponent } from '../../components/icon-button/icon-button.component';
+import { UserData } from '../../../service/user-data-service/user-data';
+import { UserDataService } from '../../../service/user-data-service/user-data.service';
 
 @Component({
   selector: 'app-profile',
@@ -41,8 +41,7 @@ import { IconButtonComponent } from '../../components/icon-button/icon-button.co
 export class ProfileComponent implements OnInit {
   protected readonly IconName = IconName;
 
-  profile!: User;
-  isLoading = true;
+  profile!: UserData;
 
   @ViewChild('profileImage', { static: false })
   profileImageElement!: ElementRef;
@@ -58,21 +57,16 @@ export class ProfileComponent implements OnInit {
   pendingFriendCardMode = FriendCardMode.ADD;
 
   constructor(
-    private profileService: ProfileService,
     private imageUploadService: ImageUploadService,
     private renderer: Renderer2,
     private modalService: ModalService,
     private modalEventsService: ModalEventsService,
     private httpService: HttpService,
+    protected userDataService: UserDataService,
   ) {}
 
   async ngOnInit(): Promise<void> {
-    this.profileService.getProfile().subscribe((data) => {
-      if (data) {
-        this.profile = data;
-        this.isLoading = false;
-      }
-    });
+    this.profile = this.userDataService.userData;
 
     this.subscription.add(this.modalEventsService.confirmClick$.subscribe(() => this.uploadProfilePicture()));
 
