@@ -5,7 +5,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { ToastComponent } from './components/toast/toast.component';
 import { ServiceWorkerService } from './service-worker.service';
 import { BrowserCheckService } from './browser-check.service';
-import { MobileDeviceDetectionService } from '../service/util/mobile-device-detection.service';
+import { MobileDeviceDetectionService } from '../service/mobile-device-detection.service';
 import { RedirectService } from '../service/util/redirect.service';
 import { SpinnerComponent } from './components/loaders/spinner/spinner.component';
 import { LoadingProgressBarComponent } from './components/loaders/loading-progress-bar/loading-progress-bar.component';
@@ -38,7 +38,7 @@ export class AppComponent {
     if (this.browserCheckService.isBrowser()) {
       this.serviceWorkerService.registerServiceWorker();
 
-      if (!this.mobileDeviceDetectionService.isMobileView) {
+      if (!this.mobileDeviceDetectionService.isMobileDevice) {
         return;
       }
 

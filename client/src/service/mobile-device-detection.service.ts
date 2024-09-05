@@ -1,5 +1,5 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
-import { BrowserCheckService } from '../../app/browser-check.service';
+import { BrowserCheckService } from '../app/browser-check.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,10 +15,10 @@ export class MobileDeviceDetectionService {
    */
   constructor(private browserCheckService: BrowserCheckService) {
     if (this.browserCheckService.isBrowser()) {
-      this.isMobileSignal = signal(this.checkIsMobileView());
+      this.isMobileSignal = signal(this.checkForMobileDevice());
 
       window.addEventListener('resize', () => {
-        this.isMobileSignal.set(this.checkIsMobileView());
+        this.isMobileSignal.set(this.checkForMobileDevice());
       });
     }
   }
@@ -28,7 +28,7 @@ export class MobileDeviceDetectionService {
    *
    * @returns `true` if the view is on a mobile device, `false` otherwise.
    */
-  get isMobileView(): boolean {
+  get isMobileDevice(): boolean {
     return this.isMobileSignal();
   }
 
@@ -37,7 +37,11 @@ export class MobileDeviceDetectionService {
    *
    * @returns `true` if the window width is 768 pixels or less, `false` otherwise.
    */
-  private checkIsMobileView(): boolean {
-    return window.innerWidth <= 768;
+  private checkForMobileDevice(): boolean {
+    const userAgentCheck = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const touchCheck = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const widthCheck = window.innerWidth <= 768;
+
+    return userAgentCheck || (touchCheck && widthCheck);
   }
 }
