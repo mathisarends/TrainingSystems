@@ -20,7 +20,7 @@
     <circle
       class="progress-ring__background"
       stroke="url(#backgroundGradient)"
-      stroke-width="10"
+      [attr.stroke-width]="size() / 17.5"
       fill="transparent"
       [attr.r]="size() / 2 - 5"
       [attr.cx]="size() / 2"
@@ -31,7 +31,7 @@
     <circle
       class="progress-ring__circle"
       stroke="url(#progressGradient)"
-      stroke-width="10"
+      [attr.stroke-width]="size() / 17.5"
       fill="transparent"
       [attr.r]="size() / 2 - 5"
       [attr.cx]="size() / 2"

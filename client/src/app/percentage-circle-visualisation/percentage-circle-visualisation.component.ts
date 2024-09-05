@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, input, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, input, ViewChild } from '@angular/core';
 import { Percentage } from './percentage.type';
 
 @Component({
