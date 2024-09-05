@@ -30,17 +30,20 @@ export class AuthService {
    * Checks the initial authentication status of the user by making a request to the backend.
    * @returns An Observable that completes when the authentication status check is done.
    */
-  checkInitialAuthenticationStatus(): Observable<void> {
-    return this.httpService.get('/user/auth-state').pipe(
-      map(() => {
-        this.isAuthenticatedSignal.set(true);
-      }),
-      catchError((error) => {
-        console.error('Error during authentication check:', error);
-        this.isAuthenticatedSignal.set(false);
-        return of();
-      }),
-    );
+  checkInitialAuthenticationStatus(): void {
+    this.httpService
+      .get('/user/auth-state')
+      .pipe(
+        map(() => {
+          this.isAuthenticatedSignal.set(true);
+        }),
+        catchError((error) => {
+          console.error('Error during authentication check:', error);
+          this.isAuthenticatedSignal.set(false);
+          return of();
+        }),
+      )
+      .subscribe();
   }
 
   /**

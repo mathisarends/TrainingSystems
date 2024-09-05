@@ -42,12 +42,12 @@ export class AppComponent {
     if (this.browserCheckService.isBrowser()) {
       this.serviceWorkerService.registerServiceWorker();
 
+      this.authService.checkInitialAuthenticationStatus(); // called to prevent ts-warnings
+      this.userDataService.fetchUserData();
+
       if (!this.mobileDeviceDetectionService.isMobileDevice) {
         return;
       }
-
-      this.authService.checkInitialAuthenticationStatus(); // called to prevent ts-warnings
-      this.userDataService.fetchUserData();
 
       this.redirectService.initialize();
       this.redirectService.redirectToLastRoute();

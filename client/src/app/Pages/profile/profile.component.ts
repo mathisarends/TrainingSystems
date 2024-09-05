@@ -43,6 +43,8 @@ export class ProfileComponent implements OnInit {
 
   profile!: UserData;
 
+  loading = true;
+
   @ViewChild('profileImage', { static: false })
   profileImageElement!: ElementRef;
 
@@ -66,7 +68,12 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    this.profile = this.userDataService.userData;
+    if (this.userDataService.userData) {
+      this.profile = this.userDataService.userData;
+      this.loading = false;
+    } else {
+      this.userDataService.fetchUserData();
+    }
 
     this.subscription.add(this.modalEventsService.confirmClick$.subscribe(() => this.uploadProfilePicture()));
 
@@ -121,8 +128,8 @@ export class ProfileComponent implements OnInit {
     );
   }
 
-  showProfilePictureChangeDialog(newProfilePicture: string) {
-    this.modalService.open({
+  async showProfilePictureChangeDialog(newProfilePicture: string) {
+    const response = await this.modalService.open({
       component: ChangeProfilePictureConfirmationComponent,
       title: 'Profilbild ändern',
       buttonText: 'Bestäigen',
@@ -132,6 +139,10 @@ export class ProfileComponent implements OnInit {
         newProfilePicture: newProfilePicture,
       },
     });
+
+    if (response) {
+      console.log('yeh');
+    }
   }
 
   filterFriends(event: Event) {
