@@ -1,5 +1,7 @@
+<div>{{ size() }}</div>
+
 <div class="timer-display">
-  <svg #progressRing class="progress-ring" width="300" height="300">
+  <svg #progressRing class="progress-ring" [attr.width]="size()" [attr.height]="size()">
     <defs>
       <!-- Gradient for the background ring -->
       <linearGradient id="backgroundGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -20,9 +22,9 @@
       stroke="url(#backgroundGradient)"
       stroke-width="10"
       fill="transparent"
-      r="135"
-      cx="150"
-      cy="150"
+      [attr.r]="size() / 2 - 5"
+      [attr.cx]="size() / 2"
+      [attr.cy]="size() / 2"
     />
 
     <!-- Progress ring -->
@@ -31,9 +33,9 @@
       stroke="url(#progressGradient)"
       stroke-width="10"
       fill="transparent"
-      r="135"
-      cx="150"
-      cy="150"
+      [attr.r]="size() / 2 - 5"
+      [attr.cx]="size() / 2"
+      [attr.cy]="size() / 2"
     />
   </svg>
 </div>

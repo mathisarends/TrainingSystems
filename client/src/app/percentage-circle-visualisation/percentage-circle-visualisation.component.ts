@@ -12,8 +12,7 @@ export class PercentageCircleVisualisationComponent implements AfterViewInit {
   @ViewChild('progressRing') progressRing!: ElementRef;
 
   percentage = input.required<Percentage>();
-
-  constructor(private renderer2: Renderer2) {}
+  size = input<number>(100);
 
   ngAfterViewInit(): void {
     const circle = this.progressRing.nativeElement.querySelector('.progress-ring__circle');
