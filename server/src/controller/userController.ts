@@ -37,6 +37,10 @@ export async function loginOAuth2(req: Request, res: Response): Promise<void> {
       ? 'http://localhost:4200?login=success'
       : 'https://trainingsystemsre.onrender.com?login=success';
 
+  res.cookie('authTemp', 'some-temp-value', {
+    maxAge: 30000
+  });
+
   res.redirect(redirectUrl);
 }
 

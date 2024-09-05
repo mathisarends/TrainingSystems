@@ -7,6 +7,7 @@ import { ToastService } from '../../../components/toast/toast.service';
 import { BaisAuthComponent } from '../basic-auth.component';
 import { catchError, of, tap } from 'rxjs';
 import { IconComponent } from '../../../shared/icon/icon.component';
+import { AuthService } from '../../../../service/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -20,6 +21,7 @@ export class LoginComponent extends BaisAuthComponent implements OnInit {
     router: Router,
     httpClient: HttpService,
     toastService: ToastService,
+    private authService: AuthService,
     @Inject(DOCUMENT) document: Document,
   ) {
     super(router, httpClient, toastService, document);
@@ -43,12 +45,13 @@ export class LoginComponent extends BaisAuthComponent implements OnInit {
       .post('/user/login', data)
       .pipe(
         tap(() => {
-          this.router.navigate(['/'], {
-            queryParams: { login: 'success' },
-          });
+          this.authService.setAuthenticationStatus(true);
+
+          this.router.navigate(['/']);
         }),
         catchError((error: HttpErrorResponse) => {
           console.error('Login error:', error);
+          this.authService.setAuthenticationStatus(false);
 
           if (error.status === 401) {
             console.log('Unauthorized: Wrong credentials');

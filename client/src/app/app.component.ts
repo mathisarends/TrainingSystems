@@ -10,6 +10,7 @@ import { RedirectService } from '../service/util/redirect.service';
 import { SpinnerComponent } from './components/loaders/spinner/spinner.component';
 import { LoadingProgressBarComponent } from './components/loaders/loading-progress-bar/loading-progress-bar.component';
 import { MobileNavComponent } from './mobile-nav/mobile-nav.component';
+import { AuthService } from '../service/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -34,6 +35,7 @@ export class AppComponent {
     private browserCheckService: BrowserCheckService,
     private mobileDeviceDetectionService: MobileDeviceDetectionService,
     private redirectService: RedirectService,
+    private authService: AuthService,
   ) {
     if (this.browserCheckService.isBrowser()) {
       this.serviceWorkerService.registerServiceWorker();
@@ -42,8 +44,8 @@ export class AppComponent {
         return;
       }
 
+      this.authService.checkInitialAuthenticationStatus();
       this.redirectService.initialize();
-
       this.redirectService.redirectToLastRoute();
     }
   }
