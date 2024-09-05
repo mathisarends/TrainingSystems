@@ -1,41 +1,41 @@
-<div>{{ size() }}</div>
+@if (showPercentageText()) {
+  {{ percentage() }}%
+}
 
-<div class="timer-display">
-  <svg #progressRing class="progress-ring" [attr.width]="size()" [attr.height]="size()">
-    <defs>
-      <!-- Gradient for the background ring -->
-      <linearGradient id="backgroundGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color: #007bff; stop-opacity: 1" />
-        <stop offset="100%" style="stop-color: #00c6ff; stop-opacity: 1" />
-      </linearGradient>
+<svg #progressRing class="progress-ring" [attr.width]="size()" [attr.height]="size()">
+  <defs>
+    <!-- Gradient for the background ring -->
+    <linearGradient id="backgroundGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color: #007bff; stop-opacity: 1" />
+      <stop offset="100%" style="stop-color: #00c6ff; stop-opacity: 1" />
+    </linearGradient>
 
-      <!-- Gradient for the progress ring -->
-      <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" style="stop-color: #ffffff; stop-opacity: 1" />
-        <stop offset="100%" style="stop-color: #f8f9fa; stop-opacity: 1" />
-      </linearGradient>
-    </defs>
+    <!-- Gradient for the progress ring -->
+    <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color: #ffffff; stop-opacity: 1" />
+      <stop offset="100%" style="stop-color: #f8f9fa; stop-opacity: 1" />
+    </linearGradient>
+  </defs>
 
-    <!-- Background ring -->
-    <circle
-      class="progress-ring__background"
-      stroke="url(#backgroundGradient)"
-      [attr.stroke-width]="size() / 17.5"
-      fill="transparent"
-      [attr.r]="size() / 2 - 5"
-      [attr.cx]="size() / 2"
-      [attr.cy]="size() / 2"
-    />
+  <!-- Background ring -->
+  <circle
+    class="progress-ring__background"
+    stroke="url(#backgroundGradient)"
+    [attr.stroke-width]="size() / 17.5"
+    fill="transparent"
+    [attr.r]="size() / 2 - 5"
+    [attr.cx]="size() / 2"
+    [attr.cy]="size() / 2"
+  />
 
-    <!-- Progress ring -->
-    <circle
-      class="progress-ring__circle"
-      stroke="url(#progressGradient)"
-      [attr.stroke-width]="size() / 17.5"
-      fill="transparent"
-      [attr.r]="size() / 2 - 5"
-      [attr.cx]="size() / 2"
-      [attr.cy]="size() / 2"
-    />
-  </svg>
-</div>
+  <!-- Progress ring -->
+  <circle
+    class="progress-ring__circle"
+    stroke="url(#progressGradient)"
+    [attr.stroke-width]="size() / 17.5"
+    fill="transparent"
+    [attr.r]="size() / 2 - 5"
+    [attr.cx]="size() / 2"
+    [attr.cy]="size() / 2"
+  />
+</svg>

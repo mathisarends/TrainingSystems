@@ -1,4 +1,11 @@
+:host {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+
+  color: #333;
+}
+
 .progress-ring {
-  position: absolute;
   transform: rotate(180deg);
 }
