@@ -15,7 +15,7 @@ export class PercentageCircleVisualisationComponent implements AfterViewInit {
    * The percentage value to visualize.
    * This is a required input and should be a valid percentage (0-100).
    */
-  percentage = input.required<number>();
+  percentage = input.required<Percentage>();
 
   /**
    * The size of the visualized circle in pixels.

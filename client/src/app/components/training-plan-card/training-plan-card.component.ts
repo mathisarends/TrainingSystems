@@ -16,7 +16,7 @@ import { TrainingPlanService } from '../../../service/training/training-plan.ser
 import { HttpService } from '../../../service/http/http-client.service';
 import { IconComponent } from '../../shared/icon/icon.component';
 import { IconName } from '../../shared/icon/icon-name';
-import { PercentageCircleVisualisationComponent } from '../../percentage-circle-visualisation/percentage-circle-visualisation.component';
+import {} from '../../percentage-circle-visualisation/percentage-circle-visualisation.component';
 
 /**
  * Component for displaying and managing a single training plan card.
@@ -24,7 +24,7 @@ import { PercentageCircleVisualisationComponent } from '../../percentage-circle-
 @Component({
   selector: 'app-training-plan-card',
   standalone: true,
-  imports: [CommonModule, TooltipDirective, IconButtonComponent, IconComponent, PercentageCircleVisualisationComponent],
+  imports: [CommonModule, TooltipDirective, IconButtonComponent, IconComponent],
   templateUrl: './training-plan-card.component.html',
   styleUrls: ['./training-plan-card.component.scss'],
 })
