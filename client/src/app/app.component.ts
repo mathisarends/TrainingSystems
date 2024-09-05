@@ -11,7 +11,6 @@ import { SpinnerComponent } from './components/loaders/spinner/spinner.component
 import { LoadingProgressBarComponent } from './components/loaders/loading-progress-bar/loading-progress-bar.component';
 import { MobileNavComponent } from './mobile-nav/mobile-nav.component';
 import { AuthService } from '../service/auth.service';
-import { UserDataService } from '../service/user-data-service/user-data.service';
 
 @Component({
   selector: 'app-root',
@@ -37,14 +36,12 @@ export class AppComponent {
     private mobileDeviceDetectionService: MobileDeviceDetectionService,
     private redirectService: RedirectService,
     private authService: AuthService,
-    private userDataService: UserDataService,
   ) {
     if (this.browserCheckService.isBrowser()) {
       this.serviceWorkerService.registerServiceWorker();
 
       // called to prevent ts-warnings
       this.authService.checkAuthenticationStatus().subscribe();
-      this.userDataService.fetchUserData().subscribe();
 
       if (!this.mobileDeviceDetectionService.isMobileDevice) {
         return;

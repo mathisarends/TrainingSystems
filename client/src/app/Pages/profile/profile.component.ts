@@ -18,14 +18,14 @@ import { ActivityCalendar } from '../../activity-calendar/activity-calendar.comp
 import { IconComponent } from '../../shared/icon/icon.component';
 import { IconName } from '../../shared/icon/icon-name';
 import { IconButtonComponent } from '../../components/icon-button/icon-button.component';
-import { UserData } from '../../../service/user-data-service/user-data';
-import { UserDataService } from '../../../service/user-data-service/user-data.service';
 import { ProfileService } from './profileService';
 import { CommonModule } from '@angular/common';
+import { UserData } from './user-data';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
+  providers: [ProfileService],
   imports: [
     SpinnerComponent,
     FriendCardComponent,
@@ -62,7 +62,6 @@ export class ProfileComponent implements OnInit {
     private modalService: ModalService,
     private profileService: ProfileService,
     private httpService: HttpService,
-    protected userDataService: UserDataService,
   ) {}
 
   async ngOnInit(): Promise<void> {

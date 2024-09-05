@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../../service/http/http-client.service';
-import { UserData } from '../../../service/user-data-service/user-data';
+import { UserData } from './user-data';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class ProfileService {
   constructor(private httpClientService: HttpService) {}
 
