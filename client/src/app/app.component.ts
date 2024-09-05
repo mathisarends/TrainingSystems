@@ -1,11 +1,11 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 import { HeaderComponent } from './components/header/header.component';
 import { ToastComponent } from './components/toast/toast.component';
 import { ServiceWorkerService } from './service-worker.service';
 import { BrowserCheckService } from './browser-check.service';
-import { MobileService } from '../service/util/mobile.service';
+import { MobileDeviceDetectionService } from '../service/util/mobile-device-detection.service';
 import { RedirectService } from '../service/util/redirect.service';
 import { SpinnerComponent } from './components/loaders/spinner/spinner.component';
 import { LoadingProgressBarComponent } from './components/loaders/loading-progress-bar/loading-progress-bar.component';
@@ -32,13 +32,13 @@ export class AppComponent {
   constructor(
     private serviceWorkerService: ServiceWorkerService,
     private browserCheckService: BrowserCheckService,
-    private mobileService: MobileService,
+    private mobileDeviceDetectionService: MobileDeviceDetectionService,
     private redirectService: RedirectService,
   ) {
     if (this.browserCheckService.isBrowser()) {
       this.serviceWorkerService.registerServiceWorker();
 
-      if (!this.mobileService.isMobileView) {
+      if (!this.mobileDeviceDetectionService.isMobileView) {
         return;
       }
 

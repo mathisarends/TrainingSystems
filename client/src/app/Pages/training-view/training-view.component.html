@@ -1,10 +1,12 @@
 @if (!(dataViewLoaded$ | async)) {
   <app-skeleton-training-table />
 } @else {
+  @let mobileView = mobileDeviceDetectionService.isMobileView;
+
   <form (submit)="onSubmit($event)" class="mt-4" id="form">
-    <div class="headline-container" [ngClass]="{ 'background-image': mobileService.isMobileView }">
+    <div class="headline-container" [ngClass]="{ 'background-image': mobileView }">
       <app-headline [subHeading]="subHeading" [heading]="trainingPlanData.title" />
-      @if (mobileService.isMobileView) {
+      @if (mobileView) {
         <div>
           <app-icon-button [iconName]="IconName.CLOCK" (buttonClick)="switchToTimerView()" />
         </div>
@@ -169,11 +171,11 @@
       Options
     </button>
   </form>
-}
 
-@if (!mobileService.isMobileView) {
-  <div class="fixed-bottom-bar">
-    <app-icon [name]="IconName.ArrowLeft" [size]="24" (click)="navigateWeek(-1)" />
-    <app-icon [name]="IconName.ARROW_RIGHT" [size]="24" (click)="navigateWeek(1)" />
-  </div>
+  @if (!mobileView) {
+    <div class="fixed-bottom-bar">
+      <app-icon [name]="IconName.ArrowLeft" [size]="24" (click)="navigateWeek(-1)" />
+      <app-icon [name]="IconName.ARROW_RIGHT" [size]="24" (click)="navigateWeek(1)" />
+    </div>
+  }
 }
