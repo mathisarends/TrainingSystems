@@ -17,8 +17,4 @@ export class ChangeProfilePictureConfirmationComponent {
   @Input() newProfilePicture: string = '';
 
   constructor(private modalEventService: ModalEventsService) {}
-
-  onSubmit(): void {
-    this.modalEventService.emitConfirmClick();
-  }
 }

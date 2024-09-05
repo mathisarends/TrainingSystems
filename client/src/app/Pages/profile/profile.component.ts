@@ -75,10 +75,6 @@ export class ProfileComponent implements OnInit {
       this.userDataService.fetchUserData();
     }
 
-    this.subscription.add(this.modalEventsService.confirmClick$.subscribe(() => this.uploadProfilePicture()));
-
-    this.subscription.add(this.modalEventsService.abortClick$.subscribe(() => this.restoreOriginalProfilePicture()));
-
     const response = await firstValueFrom(this.httpService.get<any>('/friendship'));
 
     this.friends = response?.friends;
@@ -93,23 +89,6 @@ export class ProfileComponent implements OnInit {
       'src',
       this.profile.pictureUrl ?? '/images/profile-placeholder.webp',
     );
-  }
-
-  uploadProfilePicture() {
-    const currentProfileImageUrl = this.profileImageElement.nativeElement.src;
-
-    this.httpService
-      .post<any>('/user/update-profile-picture', {
-        profilePicture: currentProfileImageUrl,
-      })
-      .subscribe({
-        next: () => {
-          this.modalService.close();
-        },
-        error: () => {
-          this.modalService.close();
-        },
-      });
   }
 
   triggerFileInput() {
@@ -141,8 +120,27 @@ export class ProfileComponent implements OnInit {
     });
 
     if (response) {
-      console.log('yeh');
+      this.uploadProfilePicture();
+    } else {
+      this.restoreOriginalProfilePicture();
     }
+  }
+
+  uploadProfilePicture() {
+    const currentProfileImageUrl = this.profileImageElement.nativeElement.src;
+
+    this.httpService
+      .post<any>('/user/update-profile-picture', {
+        profilePicture: currentProfileImageUrl,
+      })
+      .subscribe({
+        next: () => {
+          this.modalService.close();
+        },
+        error: () => {
+          this.modalService.close();
+        },
+      });
   }
 
   filterFriends(event: Event) {
