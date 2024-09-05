@@ -42,8 +42,9 @@ export class AppComponent {
     if (this.browserCheckService.isBrowser()) {
       this.serviceWorkerService.registerServiceWorker();
 
-      this.authService.checkInitialAuthenticationStatus(); // called to prevent ts-warnings
-      this.userDataService.fetchUserData();
+      // called to prevent ts-warnings
+      this.authService.checkAuthenticationStatus().subscribe();
+      this.userDataService.fetchUserData().subscribe();
 
       if (!this.mobileDeviceDetectionService.isMobileDevice) {
         return;

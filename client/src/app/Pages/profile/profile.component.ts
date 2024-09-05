@@ -3,8 +3,7 @@ import { SpinnerComponent } from '../../components/loaders/spinner/spinner.compo
 import { ImageUploadService } from '../../../service/util/image-upload.service';
 import { ModalService } from '../../../service/modal/modalService';
 import { ModalSize } from '../../../service/modal/modalSize';
-import { ModalEventsService } from '../../../service/modal/modal-events.service';
-import { firstValueFrom, Subscription } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { HttpService } from '../../../service/http/http-client.service';
 import { FriendCardComponent } from '../../components/friend-card/friend-card.component';
 import { TooltipDirective } from '../../../service/tooltip/tooltip.directive';
@@ -21,10 +20,11 @@ import { IconName } from '../../shared/icon/icon-name';
 import { IconButtonComponent } from '../../components/icon-button/icon-button.component';
 import { UserData } from '../../../service/user-data-service/user-data';
 import { UserDataService } from '../../../service/user-data-service/user-data.service';
+import { ProfileService } from './profileService';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-profile',
-  templateUrl: './profile.component.html',
   standalone: true,
   imports: [
     SpinnerComponent,
@@ -35,22 +35,20 @@ import { UserDataService } from '../../../service/user-data-service/user-data.se
     ActivityCalendar,
     IconComponent,
     IconButtonComponent,
+    CommonModule,
   ],
+  templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
   protected readonly IconName = IconName;
 
-  profile!: UserData;
-
-  loading = true;
+  profile$!: Observable<UserData>;
 
   @ViewChild('profileImage', { static: false })
   profileImageElement!: ElementRef;
 
   @ViewChild('fileInput', { static: false }) fileInputElement!: ElementRef;
-
-  private subscription: Subscription = new Subscription();
 
   filteredFriends: Friend[] = [];
   friends: Friend[] = [];
@@ -62,18 +60,13 @@ export class ProfileComponent implements OnInit {
     private imageUploadService: ImageUploadService,
     private renderer: Renderer2,
     private modalService: ModalService,
-    private modalEventsService: ModalEventsService,
+    private profileService: ProfileService,
     private httpService: HttpService,
     protected userDataService: UserDataService,
   ) {}
 
   async ngOnInit(): Promise<void> {
-    if (this.userDataService.userData) {
-      this.profile = this.userDataService.userData;
-      this.loading = false;
-    } else {
-      this.userDataService.fetchUserData();
-    }
+    this.profile$ = this.profileService.getProfile();
 
     const response = await firstValueFrom(this.httpService.get<any>('/friendship'));
 
@@ -83,11 +76,13 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  restoreOriginalProfilePicture() {
+  async restoreOriginalProfilePicture() {
+    const profile = await firstValueFrom(this.profile$);
+
     this.renderer.setAttribute(
       this.profileImageElement.nativeElement,
       'src',
-      this.profile.pictureUrl ?? '/images/profile-placeholder.webp',
+      profile.pictureUrl ?? '/images/profile-placeholder.webp',
     );
   }
 
@@ -108,13 +103,15 @@ export class ProfileComponent implements OnInit {
   }
 
   async showProfilePictureChangeDialog(newProfilePicture: string) {
+    const profile = await firstValueFrom(this.profile$);
+
     const response = await this.modalService.open({
       component: ChangeProfilePictureConfirmationComponent,
       title: 'Profilbild ändern',
       buttonText: 'Bestäigen',
       size: ModalSize.LARGE,
       componentData: {
-        oldProfilePicture: this.profile.pictureUrl,
+        oldProfilePicture: profile.pictureUrl,
         newProfilePicture: newProfilePicture,
       },
     });

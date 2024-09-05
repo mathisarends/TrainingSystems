@@ -8,14 +8,14 @@ import { BrowserCheckService } from '../app/browser-check.service';
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly isAuthenticatedSignal: WritableSignal<boolean> = signal(false);
+  private readonly isAuthenticatedSignal: WritableSignal<boolean | undefined> = signal(undefined);
 
   constructor(
     private httpService: HttpService,
     private activatedRoute: ActivatedRoute,
     private browserCheckService: BrowserCheckService,
   ) {
-    const isBrowserEnv = this.browserCheckService.isBrowser(); // prevent warning that service is not used
+    const isBrowserEnv = this.browserCheckService.isBrowser(); // Prevent warning that service is not used
 
     if (isBrowserEnv) {
       this.activatedRoute.queryParams.subscribe((params) => {
@@ -30,27 +30,25 @@ export class AuthService {
    * Checks the initial authentication status of the user by making a request to the backend.
    * @returns An Observable that completes when the authentication status check is done.
    */
-  checkInitialAuthenticationStatus(): void {
-    this.httpService
-      .get('/user/auth-state')
-      .pipe(
-        map(() => {
-          this.isAuthenticatedSignal.set(true);
-        }),
-        catchError((error) => {
-          console.error('Error during authentication check:', error);
-          this.isAuthenticatedSignal.set(false);
-          return of();
-        }),
-      )
-      .subscribe();
+  checkAuthenticationStatus(): Observable<void> {
+    return this.httpService.get('/user/auth-state').pipe(
+      map(() => {
+        console.log('Authentication check completed - user is authenticated');
+        this.isAuthenticatedSignal.set(true);
+      }),
+      catchError((error) => {
+        console.error('Error during authentication check:', error);
+        this.isAuthenticatedSignal.set(false);
+        return of();
+      }),
+    );
   }
 
   /**
    * Checks if the user is currently authenticated.
    * @returns A boolean value indicating the current authentication status.
    */
-  isAuthenticated(): boolean {
+  isAuthenticated(): boolean | undefined {
     return this.isAuthenticatedSignal();
   }
 
@@ -64,7 +62,7 @@ export class AuthService {
 
   /**
    * Checks for the presence of a temporary authentication cookie.
-   * The Cookie is send to validate teh redirection from google-oauth-2
+   * The cookie is sent to validate the redirection from google-oauth-2
    * @returns A boolean indicating if the 'authTemp' cookie is present.
    */
   private checkTempAuthCookie(): boolean {
