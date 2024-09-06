@@ -97,8 +97,8 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
     if (isTrainingActivitySignal(fieldName, fieldValue)) {
       const trainingMetaData = new TrainingDayDataLocator(user, trainingPlanIndex, trainingWeekIndex, trainingDayIndex);
 
-      await trainingSessionManager.addOrUpdateTracker(userDAO, trainingMetaData);
-      trainingSessionManager.handleActivitySignals(trainingDay.id);
+      const trainingSessionTracker = await trainingSessionManager.addOrUpdateTracker(userDAO, trainingMetaData);
+      trainingSessionTracker.handleActivitySignal();
       break;
     }
   }

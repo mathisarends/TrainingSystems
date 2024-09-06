@@ -7,6 +7,11 @@ import { TrainingDay } from '../../models/training/trainingDay.js';
  * and automatically stops the session after a period of inactivity (25 minutes by default).
  */
 export class TrainingSessionTracker {
+  /**
+   * Represents the time when this tracker was last accessed so it can be cleaned up during garbage collection.
+   */
+  lastActivity: Date;
+
   private trainingDay: TrainingDay;
 
   private inactivityTimeoutId: NodeJS.Timeout | null = null;
@@ -16,6 +21,8 @@ export class TrainingSessionTracker {
 
   constructor(trainingDay: TrainingDay, onTimeoutCallback: () => Promise<void>) {
     this.trainingDay = trainingDay;
+    this.lastActivity = new Date();
+
     this.onTimeoutCallback = onTimeoutCallback;
   }
 

@@ -14,6 +14,10 @@ import { WebSocketService } from '../../service/web-socket.service.js';
 export class TrainingSessionManager {
   private trackers: Map<string, TrainingSessionTracker> = new Map();
 
+  /* constructor() {
+    setInterval(() => this.cleanupInactiveTrackers(), this.cleanupInterval);
+  } */
+
   /**
    * Adds or updates a training day tracker for a specific training day.
    * If a tracker for the training day is already present, this function updates the exercise data.
@@ -24,21 +28,40 @@ export class TrainingSessionManager {
   async addOrUpdateTracker(
     userDAO: MongoGenericDAO<User>,
     trainingDayDataLocator: TrainingDayDataLocator
-  ): Promise<void> {
+  ): Promise<TrainingSessionTracker> {
     const trainingDay = trainingDayDataLocator.getTrainingDay();
     const trainingDayId = trainingDay.id;
     const tracker = this.getTracker(trainingDayId); // Use trainingDayId for consistency
 
     if (tracker) {
       tracker.updateTrainingDayExerciseData(trainingDay.exercises);
-      return;
+      return tracker;
     }
 
     const onTimeoutCallback = () => this.handleSessionTimeout(trainingDayId, userDAO, trainingDayDataLocator);
     const newTracker = new TrainingSessionTracker(trainingDay, onTimeoutCallback);
 
     this.trackers.set(trainingDayId, newTracker); // Store tracker with trainingDayId as the key
+
+    return newTracker;
   }
+
+  /**
+   * Periodically checks and removes trackers that have been inactive for too long.
+   */
+  /* private cleanupInactiveTrackers(): void {
+    const now = Date.now();
+
+    this.trackers.forEach((entry, trainingDayId) => {
+        entry.lastActivity
+
+      if (now - entry.lastActivity > this.maxInactivityDuration) {
+        console.log(`Removing inactive tracker for trainingDayId: ${trainingDayId}`);
+        entry.tracker.cleanup();
+        this.trackers.delete(trainingDayId);
+      }
+    });
+  } */
 
   /**
    * Retrieves the tracker for a given training day ID.
