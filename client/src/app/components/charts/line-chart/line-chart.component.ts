@@ -26,7 +26,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges {
   @Input() data: LineChartDataset[] = [];
   @Input() labels: string[] = [];
   @Input() yAxisTitle: string = 'Value';
-  @Input() maintainAspectRatio: boolean = false;
+  @Input() maintainAspectRatio: boolean = true;
 
   @Output() drillThrough = new EventEmitter<ExerciseDrillThroughEvent>();
 

@@ -4,7 +4,7 @@ import { TrainingExerciseTonnageDto } from './main-exercise-tonnage-dto';
 import { Tonnage } from './tonnage';
 import { MultiSelectComponent } from '../../components/multi-select/multi-select.component';
 import { ChartColorService } from '../../chart-color.service';
-import { firstValueFrom, timer } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { LineChartComponent } from '../../components/charts/line-chart/line-chart.component';
 import { GroupedBarChartComponent } from '../../components/charts/grouped-bar-chart/grouped-bar-chart.component';
 import { BarChartData } from '../../components/charts/grouped-bar-chart/bar-chart.-data';
@@ -15,7 +15,6 @@ import { PolarChartComponent } from '../../components/charts/polar-chart/polar-c
 import { HeadlineComponent } from '../../components/headline/headline.component';
 import { ChartSkeletonComponent } from '../../components/loaders/chart-skeleton/chart-skeleton.component';
 import { TrainingStatisticsService } from './training-statistics.service';
-import { TimeStats } from './time-stats';
 import { LineChartDataset } from '../../components/charts/line-chart/lilne-chart-data-set';
 
 /**

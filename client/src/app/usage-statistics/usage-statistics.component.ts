@@ -9,11 +9,19 @@ import { NotificationService } from '../notification-page/notification.service';
 import { SkeletonComponent } from '../skeleton/skeleton.component';
 import { TrainingDayFinishedNotification } from './training-finished-notification';
 import { TrainingDayNotificationComponent } from '../training-day-notification/training-day-notification.component';
+import { LineChartComponent } from '../components/charts/line-chart/line-chart.component';
 
 @Component({
   selector: 'app-usage-statistics',
   standalone: true,
-  imports: [ActivityCalendar, SpinnerComponent, CommonModule, SkeletonComponent, TrainingDayNotificationComponent],
+  imports: [
+    ActivityCalendar,
+    SpinnerComponent,
+    CommonModule,
+    SkeletonComponent,
+    TrainingDayNotificationComponent,
+    LineChartComponent,
+  ],
   templateUrl: './usage-statistics.component.html',
   styleUrls: ['./usage-statistics.component.scss'], // Corrected to styleUrls
 })
