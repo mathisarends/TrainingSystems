@@ -59,6 +59,7 @@
 
 .card-footer {
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
   padding-block: 0.75rem;
