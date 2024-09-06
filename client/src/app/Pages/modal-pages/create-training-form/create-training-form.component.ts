@@ -22,6 +22,8 @@ import { AlertComponent } from '../../../components/alert/alert.component';
   styleUrls: ['./create-training-form.component.scss'],
 })
 export class CreateTrainingFormComponent {
+  private readonly placeholderCoverImage = '/images/training/training_3.jpg';
+
   @ViewChild('coverImage') coverImage!: ElementRef<HTMLImageElement>;
 
   @Input() existingPlans: TrainingPlanCardView[] = [];
@@ -59,7 +61,8 @@ export class CreateTrainingFormComponent {
       trainingFrequency: ['4', Validators.required],
       trainingWeeks: ['4', Validators.required],
       weightPlaceholders: ['lastWeek', Validators.required],
-      coverImage: ['//via.placeholder.com/150'],
+      coverImage: [this.placeholderCoverImage],
+      referencePlanId: undefined,
     });
   }
 
@@ -73,11 +76,12 @@ export class CreateTrainingFormComponent {
       trainingFrequency: plan.trainingFrequency,
       trainingWeeks: plan.blockLength,
       weightPlaceholders: plan.weightRecomamndationBase,
-      coverImage: plan.coverImageBase64 ?? '//via.placeholder.com/150',
+      coverImage: plan.coverImageBase64 ?? this.placeholderCoverImage,
+      referencePlanId: plan.id,
     });
 
     if (this.coverImage) {
-      this.coverImage.nativeElement.src = plan.coverImageBase64 ?? '//via.placeholder.com/150';
+      this.coverImage.nativeElement.src = plan.coverImageBase64 ?? this.placeholderCoverImage;
     }
   }
 
@@ -101,9 +105,9 @@ export class CreateTrainingFormComponent {
   }
 
   onSecondaryButtonClick() {
-    // display exisiting plans
     if (this.showCreatePlanBasedOnExistingOne()) {
       this.showCreatePlanBasedOnExistingOne.set(false);
+      this.initializeForm();
       return;
     }
 
