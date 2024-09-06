@@ -14,6 +14,13 @@ export interface ModalOptions {
   title: string;
 
   /**
+   * Determines whether the modal's main action is destructive (e.g., delete).
+   * If set to true, the modal will be styled accordingly.
+   * Optional.
+   */
+  isDestructiveAction?: boolean;
+
+  /**
    * The text to display on the modal's button.
    */
   buttonText?: string;

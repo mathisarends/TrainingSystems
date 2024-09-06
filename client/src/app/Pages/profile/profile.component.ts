@@ -21,6 +21,9 @@ import { IconButtonComponent } from '../../components/icon-button/icon-button.co
 import { ProfileService } from './profileService';
 import { CommonModule } from '@angular/common';
 import { UserData } from './user-data';
+import { BasicInfoComponent } from '../modal-pages/basic-info/basic-info.component';
+import { Router } from '@angular/router';
+import { ToastService } from '../../components/toast/toast.service';
 
 @Component({
   selector: 'app-profile',
@@ -62,6 +65,8 @@ export class ProfileComponent implements OnInit {
     private modalService: ModalService,
     private profileService: ProfileService,
     private httpService: HttpService,
+    private toastService: ToastService,
+    private router: Router,
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -174,6 +179,25 @@ export class ProfileComponent implements OnInit {
       this.filteredFriends = this.friends; // hier bitte einmal kombinieren
     } catch (error) {
       console.error('Error while deleting friend', error);
+    }
+  }
+
+  async handleAccountDeletion() {
+    const response = await this.modalService.open({
+      component: BasicInfoComponent,
+      title: 'Account löschen',
+      buttonText: 'Löschen',
+      isDestructiveAction: true,
+      componentData: {
+        text: 'Diese Aktion ist nicht umkehrbar. Bist du dir sicher, dass du deinen Account löschen willst?',
+      },
+    });
+
+    if (response) {
+      this.httpService.delete('/user/delete-account').subscribe((response) => {
+        this.toastService.success('Account erfolgreich gelöscht');
+        this.router.navigate(['register']);
+      });
     }
   }
 }

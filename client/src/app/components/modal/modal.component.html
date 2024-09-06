@@ -17,7 +17,9 @@
               (clicked)="secondaryButtonClick()"
             />
           }
-          <app-button [variant]="'PRIMARY'" [textContent]="confirmButtonText" (clicked)="confirm()" />
+
+          @let buttonVariant = isDestructiveAction ? 'DESTRUCTIVE' : 'PRIMARY';
+          <app-button [variant]="buttonVariant" [textContent]="confirmButtonText" (clicked)="confirm()" />
         </div>
       }
     </div>

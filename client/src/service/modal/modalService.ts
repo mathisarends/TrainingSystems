@@ -60,6 +60,10 @@ export class ModalService {
       this.modalComponentRef.instance.footer = options.hasFooter ?? true;
       this.modalComponentRef.instance.confirmationRequired = options.confirmationRequired ?? false;
 
+      if (options.isDestructiveAction) {
+        this.modalComponentRef.instance.isDestructiveAction = true;
+      }
+
       if (options.buttonText) {
         this.modalComponentRef.instance.confirmButtonText = options.buttonText;
       }
