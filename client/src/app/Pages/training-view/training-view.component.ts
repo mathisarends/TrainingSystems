@@ -39,7 +39,6 @@ import { RpeInputDirective } from '../../../directives/rpe-input.directive';
 import { CategorySelectDirective } from '../../../directives/category-select.directive';
 import { ExerciseDataService } from './exercise-data.service';
 import { InteractiveElementDirective } from '../../../directives/interactive-element.directive';
-import { ToastStatus } from '../../components/toast/toast-status';
 import { SpinnerComponent } from '../../components/loaders/spinner/spinner.component';
 import { FocusService } from '../../focus.service';
 import { IconName } from '../../shared/icon/icon-name';

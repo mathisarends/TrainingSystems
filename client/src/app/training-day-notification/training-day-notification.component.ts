@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { IconComponent } from '../shared/icon/icon.component';
 import { NotificationService } from '../notification-page/notification.service';
 import { ToastService } from '../components/toast/toast.service';
-import { ToastStatus } from '../components/toast/toast-status';
 import { Router } from '@angular/router';
 import { toggleCollapseAnimation } from '../shared/animations';
 import { FormatDatePipe } from '../shared/pipes/format-date.pipe';
