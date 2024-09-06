@@ -1,16 +1,16 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, DestroyRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { ModalEventsService } from '../../../../service/modal/modal-events.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpService } from '../../../../service/http/http-client.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { TrainingPlanService } from '../../../../service/training/training-plan.service';
 import { ImageUploadService } from '../../../../service/util/image-upload.service';
 import { ModalService } from '../../../../service/modal/modalService';
 import { ToastService } from '../../../components/toast/toast.service';
 import { TrainingPlanCardView } from '../../../../types/exercise/training-plan-card-view-dto';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 /**
  * Component for creating a training form.
@@ -22,7 +22,7 @@ import { TrainingPlanCardView } from '../../../../types/exercise/training-plan-c
   templateUrl: './create-training-form.component.html',
   styleUrls: ['./create-training-form.component.scss'],
 })
-export class CreateTrainingFormComponent implements OnInit, OnDestroy {
+export class CreateTrainingFormComponent implements OnInit {
   @Input() existingPlans: TrainingPlanCardView[] = [];
 
   @ViewChild('coverImage') coverImage!: ElementRef<HTMLImageElement>;
@@ -45,6 +45,7 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
     private imageUploadService: ImageUploadService,
     private modalService: ModalService,
     private toastService: ToastService,
+    private destroyRef: DestroyRef,
   ) {
     this.trainingForm = this.fb.group({
       title: ['', Validators.required],
@@ -59,14 +60,9 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
    * Lifecycle hook to handle initialization tasks.
    */
   ngOnInit() {
-    this.subscription.add(this.modalEventsService.confirmClick$.subscribe(() => this.onSubmit()));
-  }
-
-  /**
-   * Lifecycle hook to handle cleanup tasks.
-   */
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.subscription.add(
+      this.modalEventsService.confirmClick$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.onSubmit()),
+    );
   }
 
   /**
@@ -76,18 +72,12 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
     if (this.trainingForm.valid) {
       const formData = this.trainingForm.value;
 
-      try {
-        const response = await firstValueFrom(this.httpClient.post('/training/create', formData));
+      await firstValueFrom(this.httpClient.post('/training/create', formData));
 
-        this.toastService.show('Erfolg', 'Plan erstellt!');
+      this.toastService.show('Erfolg', 'Plan erstellt!');
 
-        this.trainingPlanService.trainingPlanChanged();
-        this.modalService.close(); // Close modal on successful submission
-      } catch (error) {
-        if (error instanceof HttpErrorResponse) {
-          // Handle error (show user feedback)
-        }
-      }
+      this.trainingPlanService.trainingPlanChanged();
+      this.modalService.close(); // Close modal on successful submission
     } else {
       this.trainingForm.markAllAsTouched();
     }
@@ -98,12 +88,7 @@ export class CreateTrainingFormComponent implements OnInit, OnDestroy {
    * @param event - The file input change event.
    */
   handleImageUpload(event: any) {
-    console.log('🚀 ~ CreateTrainingFormComponent ~ handleImageUpload ~ event:', event);
     this.imageUploadService.handleImageUpload(event, (result: string) => {
-      console.log(
-        '🚀 ~ CreateTrainingFormComponent ~ this.imageUploadService.handleImageUpload ~ this.coverImage:',
-        this.coverImage,
-      );
       if (this.coverImage) {
         this.coverImage.nativeElement.src = result;
       }
