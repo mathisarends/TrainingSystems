@@ -115,6 +115,21 @@ export function createNewTrainingPlanWithPlaceholders(weeks: number, daysPerWeek
   }));
 }
 
+export function createNewTrainingPlanBasedOnTemplate(trainingPlan: TrainingPlan): TrainingWeek[] {
+  for (const trainingWeek of trainingPlan.trainingWeeks) {
+    for (const trainingDay of trainingWeek.trainingDays) {
+      for (const exercise of trainingDay.exercises) {
+        exercise.weight = '';
+        exercise.actualRPE = '';
+        exercise.estMax = 0;
+        exercise.notes = '';
+      }
+    }
+  }
+
+  return trainingPlan.trainingWeeks;
+}
+
 export function handleWeekDifference(trainingPlan: TrainingPlan, difference: number) {
   const absoluteDifference = Math.abs(difference);
   if (difference < 0) {
