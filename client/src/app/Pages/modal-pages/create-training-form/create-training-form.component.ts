@@ -81,8 +81,15 @@ export class CreateTrainingFormComponent {
 
   onSecondaryButtonClick() {
     // display exisiting plans
+    if (this.showCreatePlanBasedOnExistingOne()) {
+      this.showCreatePlanBasedOnExistingOne.set(false);
+      return;
+    }
+
     this.showCreatePlanBasedOnExistingOne.set(true);
     this.selectedPlan.set(this.existingPlans[0] ?? undefined);
+
+    console.log('🚀 ~ CreateTrainingFormComponent ~ onSecondaryButtonClick ~ this.selectedPlan:', this.selectedPlan());
   }
 
   selectTrainingPlan(event: Event) {
@@ -90,6 +97,7 @@ export class CreateTrainingFormComponent {
     const selectedPlanId = selectElement.value;
 
     const selectedPlan = this.existingPlans.find((plan) => plan.id === selectedPlanId);
+    console.log('🚀 ~ CreateTrainingFormComponent ~ selectTrainingPlan ~ selectedPlan:', selectedPlan);
     this.selectedPlan.set(selectedPlan);
   }
 
