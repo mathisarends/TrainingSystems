@@ -37,7 +37,7 @@
           <div class="form-group text-center mb-4 position-relative">
             <img
               #coverImage
-              [src]="trainingForm.get('coverImage')?.value"
+              [src]="trainingForm.get('coverImage')?.value ?? 'https://placehold.jp/150x150.png'"
               alt="Cover Bild Platzhalter"
               id="cover-image"
               class="img-fluid mb-2"

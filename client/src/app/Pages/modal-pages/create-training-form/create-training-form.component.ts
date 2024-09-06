@@ -59,7 +59,7 @@ export class CreateTrainingFormComponent {
       trainingFrequency: ['4', Validators.required],
       trainingWeeks: ['4', Validators.required],
       weightPlaceholders: ['lastWeek', Validators.required],
-      coverImage: [''],
+      coverImage: ['//via.placeholder.com/150'],
     });
   }
 
