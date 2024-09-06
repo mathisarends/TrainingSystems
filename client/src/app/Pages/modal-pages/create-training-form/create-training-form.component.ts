@@ -1,7 +1,6 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, DestroyRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { firstValueFrom, Subscription } from 'rxjs';
-import { ModalEventsService } from '../../../../service/modal/modal-events.service';
+import { firstValueFrom } from 'rxjs';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpService } from '../../../../service/http/http-client.service';
@@ -10,7 +9,6 @@ import { ImageUploadService } from '../../../../service/util/image-upload.servic
 import { ModalService } from '../../../../service/modal/modalService';
 import { ToastService } from '../../../components/toast/toast.service';
 import { TrainingPlanCardView } from '../../../../types/exercise/training-plan-card-view-dto';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 /**
  * Component for creating a training form.
@@ -22,11 +20,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './create-training-form.component.html',
   styleUrls: ['./create-training-form.component.scss'],
 })
-export class CreateTrainingFormComponent implements OnInit {
-  @Input() existingPlans: TrainingPlanCardView[] = [];
-
+export class CreateTrainingFormComponent {
   @ViewChild('coverImage') coverImage!: ElementRef<HTMLImageElement>;
-  private subscription: Subscription = new Subscription();
+
+  existingPlans = input<TrainingPlanCardView[]>([]);
+
   trainingForm: FormGroup;
 
   /**
@@ -39,13 +37,11 @@ export class CreateTrainingFormComponent implements OnInit {
    */
   constructor(
     private fb: FormBuilder,
-    private modalEventsService: ModalEventsService,
     private trainingPlanService: TrainingPlanService,
     private httpClient: HttpService,
     private imageUploadService: ImageUploadService,
     private modalService: ModalService,
     private toastService: ToastService,
-    private destroyRef: DestroyRef,
   ) {
     this.trainingForm = this.fb.group({
       title: ['', Validators.required],
@@ -54,15 +50,6 @@ export class CreateTrainingFormComponent implements OnInit {
       weightPlaceholders: ['lastWeek', Validators.required],
       coverImage: [''],
     });
-  }
-
-  /**
-   * Lifecycle hook to handle initialization tasks.
-   */
-  ngOnInit() {
-    this.subscription.add(
-      this.modalEventsService.confirmClick$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.onSubmit()),
-    );
   }
 
   /**

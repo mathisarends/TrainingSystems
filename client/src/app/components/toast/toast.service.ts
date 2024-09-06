@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Toast } from './toast';
 import { ToastStatus } from './toast-status';
-import { stat } from 'fs';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +8,7 @@ import { stat } from 'fs';
 export class ToastService {
   private toast!: Toast | null;
 
-  show(title: string, text: string, status = ToastStatus.ERROR) {
+  show(title: string, text: string, status = ToastStatus.SUCESS) {
     const toast = { title, text, status };
 
     toast.title = status === ToastStatus.SUCESS ? 'Erfolg' : 'Fehler';
