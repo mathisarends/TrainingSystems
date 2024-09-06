@@ -2,6 +2,8 @@
   <div class="d-flex justify-content-between align-items-center">
     <app-headline [subHeading]="'own'" [heading]="'plans'" />
 
+    <app-icon [name]="IconName.PLUS" (clicked)="createNewPlan()" />
+
     <app-icon-button
       [iconName]="IconName.PLUS"
       (buttonClick)="createNewPlan()"

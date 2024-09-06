@@ -17,6 +17,7 @@ import { IconButtonComponent } from '../../components/icon-button/icon-button.co
 import { SkeletonCardComponent } from '../../components/loaders/skeletons/skeleton-card/skeleton-card.component';
 import { HttpService } from '../../../service/http/http-client.service';
 import { IconName } from '../../shared/icon/icon-name';
+import { IconComponent } from '../../shared/icon/icon.component';
 
 /**
  * Component to manage and display training plans.
@@ -33,6 +34,7 @@ import { IconName } from '../../shared/icon/icon-name';
     HeadlineComponent,
     IconButtonComponent,
     SkeletonCardComponent,
+    IconComponent,
   ],
   templateUrl: './training-plans.component.html',
   styleUrls: ['./training-plans.component.scss'],
