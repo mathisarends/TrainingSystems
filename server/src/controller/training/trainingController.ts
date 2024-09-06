@@ -14,6 +14,9 @@ import { WeightRecommendationBase } from '../../models/training/weight-recommand
 import { v4 as uuidv4 } from 'uuid';
 import { TrainingPlan } from '../../models/training/trainingPlan.js';
 import { ExerciseCategoryType } from '../../models/training/exercise-category-type.js';
+
+import transporter from '../../config/mailerConfig.js';
+
 import _ from 'lodash';
 /**
  * Retrieves the list of training plans for the user, summarizing them into card views.
