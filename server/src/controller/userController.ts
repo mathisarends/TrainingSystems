@@ -232,3 +232,12 @@ export function signOut(req: Request, res: Response): void {
   authService.removeToken(res);
   res.status(200).json({ message: 'Token erfolgreich entfernt' });
 }
+
+export async function deleteAccount(req: Request, res: Response): Promise<Response> {
+  const userDAO = userService.getUserGenericDAO(req);
+  const user = await userService.getUser(req, res);
+
+  await userDAO.delete(user.id);
+
+  return res.status(200).json({ message: 'Account successfully deleted' });
+}
