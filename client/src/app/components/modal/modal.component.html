@@ -11,13 +11,13 @@
       @if (footer) {
         <div class="modal-footer">
           @if (secondaryButtonText) {
-            <button type="button" class="btn btn-primary" (click)="secondaryButtonClick()">
-              {{ secondaryButtonText }}
-            </button>
+            <app-button
+              [variant]="'SECONDARY'"
+              [textContent]="secondaryButtonText"
+              (clicked)="secondaryButtonClick()"
+            />
           }
-          <button type="button" class="btn btn-primary" (click)="confirm()">
-            {{ confirmButtonText }}
-          </button>
+          <app-button [variant]="'PRIMARY'" [textContent]="confirmButtonText" (clicked)="confirm()" />
         </div>
       }
     </div>

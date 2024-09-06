@@ -13,9 +13,12 @@ import {
 import { ModalService } from '../../../service/modal/modalService';
 import { ModalSize } from '../../../service/modal/modalSize';
 import { ModalEventsService } from '../../../service/modal/modal-events.service';
+import { ButtonComponent } from '../../button/button.component';
 
 @Component({
   selector: 'app-modal',
+  standalone: true,
+  imports: [ButtonComponent],
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
 })
