@@ -13,7 +13,7 @@ export class ButtonComponent {
    * Enum-like variant input that controls the button style.
    * Accepts 'PRIMARY' or 'SECONDARY'. Defaults to 'PRIMARY'.
    */
-  variant = input<'PRIMARY' | 'SECONDARY'>('PRIMARY');
+  variant = input<'PRIMARY' | 'SECONDARY' | 'DESTRUCTIVE'>('PRIMARY');
 
   /**
    * The text content displayed inside the button.

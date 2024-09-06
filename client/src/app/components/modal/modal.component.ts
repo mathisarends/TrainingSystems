@@ -27,6 +27,7 @@ export class ModalComponent implements AfterViewInit {
   @Output() cancelled = new EventEmitter<void>();
 
   @Input() title: string = 'Default Title';
+  @Input() isDestructiveAction: boolean = false;
   @Input() secondaryButtonText: string = '';
   @Input() confirmButtonText: string = 'Bestätigen';
   @Input() childComponentType!: any;

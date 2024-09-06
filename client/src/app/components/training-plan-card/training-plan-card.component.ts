@@ -89,6 +89,7 @@ export class TrainingPlanCardComponent {
       component: BasicInfoComponent,
       title: 'Trainingsplan löschen',
       buttonText: 'Löschen',
+      isDestructiveAction: true,
       componentData: {
         text: 'Bist du dir sicher, dass du dieses Element löschen willst? Diese Änderung kann nicht mehr rückgängig gemacht werden!',
       },
