@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, input } from '@angular/core';
+import { Component, ViewChild, ElementRef, input, signal, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -9,6 +9,7 @@ import { ImageUploadService } from '../../../../service/util/image-upload.servic
 import { ModalService } from '../../../../service/modal/modalService';
 import { ToastService } from '../../../components/toast/toast.service';
 import { TrainingPlanCardView } from '../../../../types/exercise/training-plan-card-view-dto';
+import { AlertComponent } from '../../../components/alert/alert.component';
 
 /**
  * Component for creating a training form.
@@ -16,14 +17,15 @@ import { TrainingPlanCardView } from '../../../../types/exercise/training-plan-c
 @Component({
   selector: 'app-create-training-form',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, AlertComponent],
   templateUrl: './create-training-form.component.html',
   styleUrls: ['./create-training-form.component.scss'],
 })
 export class CreateTrainingFormComponent {
   @ViewChild('coverImage') coverImage!: ElementRef<HTMLImageElement>;
 
-  existingPlans = input<TrainingPlanCardView[]>([]);
+  @Input() existingPlans: TrainingPlanCardView[] = [];
+  showCreatePlanBasedOnExistingOne = signal(false);
 
   trainingForm: FormGroup;
 
@@ -52,6 +54,10 @@ export class CreateTrainingFormComponent {
     });
   }
 
+  ngOnInit(): void {
+    console.log('🚀 ~ CreateTrainingFormComponent ~ existingPlans:', this.existingPlans);
+  }
+
   /**
    * Handles form submission.
    */
@@ -73,6 +79,7 @@ export class CreateTrainingFormComponent {
 
   onSecondaryButtonClick() {
     // display exisiting plans
+    this.showCreatePlanBasedOnExistingOne.set(true);
   }
 
   /**
