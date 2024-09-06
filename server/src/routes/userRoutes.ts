@@ -18,6 +18,12 @@ router.get(
 );
 
 router.get(
+  '/recent-training-durations',
+  authService.authenticationMiddleware,
+  asyncHandler(userController.getRecentTrainingDurations)
+);
+
+router.get(
   '/training-notifications',
   authService.authenticationMiddleware,
   asyncHandler(userController.getTrainingDayNotifications)

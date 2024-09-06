@@ -74,8 +74,11 @@
             }
           }
         </div>
-        <app-icon-button [iconName]="IconName.Trash" (buttonClick)="handleAccountDeletion()" />
-        Account löschen
+        <app-icon-button
+          [iconName]="IconName.Trash"
+          [text]="'Account löschen'"
+          (buttonClick)="handleAccountDeletion()"
+        />
       </div>
     </div>
   </div>

@@ -1,13 +1,17 @@
 @if (activityCalendarData$ | async; as activityData) {
-  @if (trainingDayNotifications$ | async; as trainingDayNotifications) {
-    <app-activity-calendar [activityData]="activityData" />
+  <app-activity-calendar [activityData]="activityData" />
 
-    <app-training-day-notification [notificationsInput]="trainingDayNotifications" />
+  @if (recentTrainingDurations$ | async; as recentTrainingDurations) {
+    {{ recentTrainingDurations | json }}
+
+    @if (trainingDayNotifications$ | async; as trainingDayNotifications) {
+      <app-training-day-notification [notificationsInput]="trainingDayNotifications" />
+    } @else {
+      <app-spinner />
+    }
   } @else {
     <app-spinner />
   }
 } @else {
   <app-spinner />
 }
-
-<app-percentage-circle-visualisation [percentage]="75" />

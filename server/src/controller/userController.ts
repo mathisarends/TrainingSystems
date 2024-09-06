@@ -3,7 +3,6 @@ import * as userService from '../service/userService.js';
 import { authService } from '../service/authService.js';
 
 import dotenv from 'dotenv';
-import { TrainingPlan } from '../models/training/trainingPlan.js';
 import { getTonnagePerTrainingDay } from '../service/trainingService.js';
 import { encrypt, decrypt } from '../utils/cryption.js';
 dotenv.config();
@@ -65,28 +64,37 @@ export async function getProfile(req: Request, res: Response): Promise<void> {
  */
 export async function getActivityCalendar(req: Request, res: Response): Promise<void> {
   const user = await userService.getUser(req, res);
-
-  const sortedTrainingPlans = sortTrainingPlans(user.trainingPlans);
-
-  const activityMap = new Map<number, number>();
-
-  for (const trainingPlan of sortedTrainingPlans) {
-    for (const trainingWeek of trainingPlan.trainingWeeks) {
-      for (const trainingDay of trainingWeek.trainingDays) {
-        if (trainingDay.endTime) {
-          const tonnagePerTrainingDay = getTonnagePerTrainingDay(trainingDay);
-
-          const dayIndex = getIndexOfDayPerYearFromDate(trainingDay.endTime);
-
-          activityMap.set(dayIndex, tonnagePerTrainingDay);
-        }
-      }
-    }
-  }
+  const activityMap = user.trainingPlans
+    .flatMap(plan => plan.trainingWeeks)
+    .flatMap(week => week.trainingDays)
+    .filter(day => !!day.endTime)
+    .reduce((map, day) => {
+      const tonnagePerTrainingDay = getTonnagePerTrainingDay(day);
+      const dayIndex = getIndexOfDayPerYearFromDate(day.endTime!);
+      map.set(dayIndex, tonnagePerTrainingDay);
+      return map;
+    }, new Map<number, number>());
 
   const activityObject = Object.fromEntries(activityMap);
-
   res.status(200).json(activityObject);
+}
+
+/**
+ * Retrieves the recent training durations for a user and returns an array of the durations.
+ *
+ * @param req - The HTTP request object.
+ * @param res - The HTTP response object.
+ * @returns A Promise that resolves to void. Sends a JSON response with the durations array.
+ */
+export async function getRecentTrainingDurations(req: Request, res: Response): Promise<void> {
+  const user = await userService.getUser(req, res);
+  const trainingDurationsArr = user.trainingPlans
+    .flatMap(plan => plan.trainingWeeks)
+    .flatMap(week => week.trainingDays)
+    .filter(day => !!day.durationInMinutes)
+    .map(day => day.durationInMinutes!);
+
+  res.status(200).json(trainingDurationsArr);
 }
 
 /**
@@ -168,20 +176,6 @@ function getIndexOfDayPerYearFromDate(date: Date): number {
   return Math.floor((dateObj.getTime() - startOfYear.getTime()) / (1000 * 60 * 60 * 24));
 }
 
-/**
- * Sorts an array of training plans by their 'lastUpdated' date in descending order.
- *
- * @param trainingPlans - An array of TrainingPlan objects to be sorted.
- * @returns An array of TrainingPlan objects sorted by the 'lastUpdated' date in descending order.
- */
-function sortTrainingPlans(trainingPlans: TrainingPlan[]): TrainingPlan[] {
-  return trainingPlans.sort((a, b) => {
-    const dateA = new Date(a.lastUpdated).getTime();
-    const dateB = new Date(b.lastUpdated).getTime();
-    return dateB - dateA;
-  });
-}
-
 export async function updateProfilePicture(req: Request, res: Response): Promise<Response> {
   const userDAO = req.app.locals.userDAO;
   const user = await userService.getUser(req, res);
@@ -216,14 +210,7 @@ export async function uploadGymTicket(req: Request, res: Response): Promise<Resp
 export async function getGymTicket(req: Request, res: Response): Promise<Response> {
   const user = await userService.getUser(req, res);
 
-  let decryptedGymTicket;
-
-  // TODO: entfernen, da das nur temporär zum migrieren ist
-  try {
-    decryptedGymTicket = decrypt(user.gymtTicket);
-  } catch (error) {
-    return res.status(200).json(user.gymtTicket);
-  }
+  const decryptedGymTicket = decrypt(user.gymtTicket);
 
   return res.status(200).json(decryptedGymTicket);
 }
