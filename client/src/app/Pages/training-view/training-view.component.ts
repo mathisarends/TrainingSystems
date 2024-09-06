@@ -249,7 +249,7 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
           this.formService.clearChanges();
         }),
         catchError((error) => {
-          this.toastService.show('Erfolg', 'Daten konnten nicht gespeichtert werden', ToastStatus.ERROR);
+          this.toastService.success('Daten konnten nicht gespeichtert werden');
 
           console.error('Error updating training plan:', error);
           return [];

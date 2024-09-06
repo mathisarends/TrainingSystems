@@ -92,7 +92,6 @@ export class TrainingPlansComponent implements OnInit {
    */
   protected async createNewPlan(): Promise<void> {
     const trainingPlans = await firstValueFrom(this.allTrainingPlans$);
-    console.log('🚀 ~ TrainingPlansComponent ~ createNewPlan ~ trainingPlans:', trainingPlans);
 
     this.modalService.open({
       component: CreateTrainingFormComponent,

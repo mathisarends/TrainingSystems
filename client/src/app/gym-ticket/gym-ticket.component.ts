@@ -55,7 +55,7 @@ export class GymTicketComponent implements OnInit {
       if (!response) return;
 
       this.gymTicketService.uploadGymTicket(this.uploadedImage).subscribe(() => {
-        this.toastService.show('Erfolg', 'Ticket hochgeladen', ToastStatus.SUCESS);
+        this.toastService.success('Ticket hochgeladen');
         this.loadGymTicket();
       });
     });

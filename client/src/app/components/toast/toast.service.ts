@@ -8,14 +8,28 @@ import { ToastStatus } from './toast-status';
 export class ToastService {
   private toast!: Toast | null;
 
-  show(title: string, text: string, status = ToastStatus.SUCESS) {
-    const toast = { title, text, status };
-
-    toast.title = status === ToastStatus.SUCESS ? 'Erfolg' : 'Fehler';
+  success(infoText: string) {
+    const toast: Toast = {
+      status: ToastStatus.SUCCESS,
+      title: 'Erfolg',
+      text: infoText,
+    };
 
     this.toast = toast;
 
-    setTimeout(() => this.remove(), status === ToastStatus.SUCESS ? 5000 : 10000);
+    setTimeout(() => this.remove(), 5000);
+  }
+
+  error(infoText: string) {
+    const toast: Toast = {
+      status: ToastStatus.ERROR,
+      title: 'Fehler',
+      text: infoText,
+    };
+
+    this.toast = toast;
+
+    setTimeout(() => this.remove(), 10000);
   }
 
   /**

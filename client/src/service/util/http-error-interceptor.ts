@@ -39,7 +39,7 @@ export function httpErrorInterceptor(req: HttpRequest<unknown>, next: HttpHandle
         }
       }
 
-      toastService.show('Fehler', errorMessage, ToastStatus.ERROR);
+      toastService.error(errorMessage);
 
       // Logge den Fehler zur Konsole
       console.error(errorMessage);

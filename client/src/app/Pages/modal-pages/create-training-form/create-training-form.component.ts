@@ -61,7 +61,7 @@ export class CreateTrainingFormComponent {
 
       await firstValueFrom(this.httpClient.post('/training/create', formData));
 
-      this.toastService.show('Erfolg', 'Plan erstellt!');
+      this.toastService.success('Plan erstellt!');
 
       this.trainingPlanService.trainingPlanChanged();
       this.modalService.close(); // Close modal on successful submission

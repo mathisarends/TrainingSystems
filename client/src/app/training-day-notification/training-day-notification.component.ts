@@ -45,7 +45,7 @@ export class TrainingDayNotificationComponent implements OnInit {
     this.notificationService.deleteTrainingDayNotification(notificationId).subscribe((response) => {
       this.notifications.set(this.notifications().filter((notification) => notification.id !== notificationId));
 
-      this.toastService.show('Erfolg', 'Benachrichtigung gelöscht', ToastStatus.SUCESS);
+      this.toastService.success('Benachrichtigung gelöscht');
     });
   }
 

@@ -36,12 +36,12 @@ export class AutoProgressionComponent {
 
       this.httpService.post(url).subscribe({
         next: () => {
-          this.toastService.show('Erfolg', 'Progression geplant');
+          this.toastService.success('Progression geplant');
         },
         error: (error) => {
           console.error('Subscription error:', error);
           if (error.status === 500) {
-            this.toastService.show('Fehler', 'Interner Serverfehler, bitte versuchen Sie es später erneut.');
+            this.toastService.error('Interner Serverfehler, bitte versuchen Sie es später erneut.');
           }
         },
       });
