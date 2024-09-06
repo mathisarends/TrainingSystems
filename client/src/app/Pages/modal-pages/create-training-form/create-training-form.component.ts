@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { ModalEventsService } from '../../../../service/modal/modal-events.service';
@@ -10,6 +10,7 @@ import { TrainingPlanService } from '../../../../service/training/training-plan.
 import { ImageUploadService } from '../../../../service/util/image-upload.service';
 import { ModalService } from '../../../../service/modal/modalService';
 import { ToastService } from '../../../components/toast/toast.service';
+import { TrainingPlanCardView } from '../../../../types/exercise/training-plan-card-view-dto';
 
 /**
  * Component for creating a training form.
@@ -22,6 +23,8 @@ import { ToastService } from '../../../components/toast/toast.service';
   styleUrls: ['./create-training-form.component.scss'],
 })
 export class CreateTrainingFormComponent implements OnInit, OnDestroy {
+  @Input() existingPlans: TrainingPlanCardView[] = [];
+
   @ViewChild('coverImage') coverImage!: ElementRef<HTMLImageElement>;
   private subscription: Subscription = new Subscription();
   trainingForm: FormGroup;

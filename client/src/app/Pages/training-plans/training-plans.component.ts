@@ -90,13 +90,19 @@ export class TrainingPlansComponent implements OnInit {
   /**
    * Opens the modal to create a new training plan.
    */
-  protected createNewPlan(): void {
+  protected async createNewPlan(): Promise<void> {
+    const trainingPlans = await firstValueFrom(this.allTrainingPlans$);
+    console.log('🚀 ~ TrainingPlansComponent ~ createNewPlan ~ trainingPlans:', trainingPlans);
+
     this.modalService.open({
       component: CreateTrainingFormComponent,
       title: 'Trainingsplan erstellen',
       buttonText: 'Erstellen',
       size: ModalSize.LARGE,
       confirmationRequired: true,
+      componentData: {
+        existingPlans: trainingPlans,
+      },
     });
   }
 

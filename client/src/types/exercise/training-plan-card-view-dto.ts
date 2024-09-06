@@ -1,5 +1,3 @@
-import { TrainingDayIndexes } from './training-day-indexes';
-
 export interface TrainingPlanCardView {
   id: string;
   title: string;
