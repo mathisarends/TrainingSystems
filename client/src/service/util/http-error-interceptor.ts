@@ -22,9 +22,12 @@ export function httpErrorInterceptor(req: HttpRequest<unknown>, next: HttpHandle
       let userFriendlyMessage;
 
       if (error.error instanceof ErrorEvent) {
+        // Client-side error
         errorMessage = `Client Error: ${error.error.message}`;
         userFriendlyMessage = 'Bitte versuchen Sie es erneut.';
       } else {
+        // Server-side error
+
         switch (error.status) {
           case 400:
             errorMessage = 'Server Error Code: 400\nMessage: Bad Request';
@@ -33,6 +36,7 @@ export function httpErrorInterceptor(req: HttpRequest<unknown>, next: HttpHandle
           case 401:
             errorMessage = 'Server Error Code: 401\nMessage: Unauthorized';
             userFriendlyMessage = 'Nicht autorisiert. Bitte melden Sie sich erneut an.';
+            router.navigate(['/login']);
             break;
           case 403:
             errorMessage = 'Server Error Code: 403\nMessage: Forbidden';

@@ -13,7 +13,6 @@ import { TrainingViewComponent } from './Pages/training-view/training-view.compo
 import { UsageStatisticsComponent } from './usage-statistics/usage-statistics.component';
 import { GymTicketComponent } from './gym-ticket/gym-ticket.component';
 import { SpinnerComponent } from './components/loaders/spinner/spinner.component';
-import { AuthGuard } from '../service/auth-guard.service';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -33,7 +32,7 @@ export const routes: Routes = [
     path: 'statistics/:planId',
     component: StatisticsComponent,
   },
-  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+  { path: 'profile', component: ProfileComponent },
   {
     path: 'exercises',
     component: ExercisesComponent,
