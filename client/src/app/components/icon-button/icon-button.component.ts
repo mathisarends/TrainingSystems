@@ -25,6 +25,12 @@ export class IconButtonComponent {
   tooltipTitle = input<string>();
 
   /**
+   * The Text that is optionally displayed next to the button.
+   *
+   */
+  text = input<string>();
+
+  /**
    * Event emitted when the button is clicked.
    */
   buttonClick = output<void>();
