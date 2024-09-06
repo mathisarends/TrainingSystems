@@ -1,10 +1,17 @@
+enum WeightRecommendationBase {
+  LASTWEEK = 'lastWeek',
+  OFF = 'off',
+}
+
 export interface TrainingPlanCardView {
   id: string;
   title: string;
   trainingFrequency: number;
+  blockLength: number;
+  weightRecomamndationBase: WeightRecommendationBase;
   lastUpdated: string;
+  pictureUrl?: string;
   coverImageBase64?: string;
-  pictureUrl?: string; // profile picture of user
-  percentageFinished: number;
+  percentageFinished?: number;
   averageTrainingDayDuration?: string;
 }

@@ -29,7 +29,7 @@ export class CreateTrainingFormComponent {
   showCreatePlanBasedOnExistingOne = signal(false);
   selectedPlan = signal<TrainingPlanCardView | undefined>(undefined);
 
-  trainingForm: FormGroup;
+  trainingForm!: FormGroup;
 
   /**
    * Constructor to initialize the form and inject dependencies.
@@ -47,6 +47,13 @@ export class CreateTrainingFormComponent {
     private modalService: ModalService,
     private toastService: ToastService,
   ) {
+    this.initializeForm();
+  }
+
+  /**
+   * Initializes the form with empty/default values.
+   */
+  initializeForm(): void {
     this.trainingForm = this.fb.group({
       title: ['', Validators.required],
       trainingFrequency: ['4', Validators.required],
@@ -56,8 +63,22 @@ export class CreateTrainingFormComponent {
     });
   }
 
-  ngOnInit(): void {
-    console.log('🚀 ~ CreateTrainingFormComponent ~ existingPlans:', this.existingPlans);
+  /**
+   * Populates the form with data from an existing plan.
+   * @param plan - The training plan to pre-fill the form with.
+   */
+  populateFormWithPlan(plan: TrainingPlanCardView): void {
+    this.trainingForm.patchValue({
+      title: plan.title + ' RE',
+      trainingFrequency: plan.trainingFrequency,
+      trainingWeeks: plan.blockLength,
+      weightPlaceholders: plan.weightRecomamndationBase,
+      coverImage: plan.coverImageBase64 ?? '//via.placeholder.com/150',
+    });
+
+    if (this.coverImage) {
+      this.coverImage.nativeElement.src = plan.coverImageBase64 ?? '//via.placeholder.com/150';
+    }
   }
 
   /**
@@ -89,7 +110,9 @@ export class CreateTrainingFormComponent {
     this.showCreatePlanBasedOnExistingOne.set(true);
     this.selectedPlan.set(this.existingPlans[0] ?? undefined);
 
-    console.log('🚀 ~ CreateTrainingFormComponent ~ onSecondaryButtonClick ~ this.selectedPlan:', this.selectedPlan());
+    if (this.selectedPlan() !== undefined) {
+      this.populateFormWithPlan(this.selectedPlan()!);
+    }
   }
 
   selectTrainingPlan(event: Event) {
@@ -97,8 +120,9 @@ export class CreateTrainingFormComponent {
     const selectedPlanId = selectElement.value;
 
     const selectedPlan = this.existingPlans.find((plan) => plan.id === selectedPlanId);
-    console.log('🚀 ~ CreateTrainingFormComponent ~ selectTrainingPlan ~ selectedPlan:', selectedPlan);
     this.selectedPlan.set(selectedPlan);
+
+    this.populateFormWithPlan(selectedPlan!);
   }
 
   /**
