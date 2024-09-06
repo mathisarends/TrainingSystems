@@ -11,6 +11,7 @@ import { SpinnerComponent } from './components/loaders/spinner/spinner.component
 import { LoadingProgressBarComponent } from './components/loaders/loading-progress-bar/loading-progress-bar.component';
 import { MobileNavComponent } from './mobile-nav/mobile-nav.component';
 import { AuthService } from '../service/auth.service';
+import { FooterComponent } from './footer/footer.component';
 
 @Component({
   selector: 'app-root',
@@ -23,6 +24,7 @@ import { AuthService } from '../service/auth.service';
     SpinnerComponent,
     LoadingProgressBarComponent,
     MobileNavComponent,
+    FooterComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
