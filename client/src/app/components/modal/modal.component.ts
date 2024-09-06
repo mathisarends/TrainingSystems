@@ -24,7 +24,7 @@ export class ModalComponent implements AfterViewInit {
   @Output() cancelled = new EventEmitter<void>();
 
   @Input() title: string = 'Default Title';
-  @Input() alternativeButtonText: string = 'Optionen';
+  @Input() secondaryButtonText: string = '';
   @Input() confirmButtonText: string = 'Bestätigen';
   @Input() childComponentType!: any;
   @Input() childComponentData: any;
@@ -78,5 +78,11 @@ export class ModalComponent implements AfterViewInit {
     }
 
     this.confirmed.emit();
+  }
+
+  secondaryButtonClick() {
+    if (this.childComponentRef.instance.onSecondaryButtonClick) {
+      this.childComponentRef.instance.onSecondaryButtonClick();
+    }
   }
 }

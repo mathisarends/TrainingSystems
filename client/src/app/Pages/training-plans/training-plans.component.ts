@@ -97,6 +97,7 @@ export class TrainingPlansComponent implements OnInit {
       component: CreateTrainingFormComponent,
       title: 'Trainingsplan erstellen',
       buttonText: 'Erstellen',
+      secondaryButtonText: 'Optionen',
       size: ModalSize.LARGE,
       confirmationRequired: true,
       componentData: {

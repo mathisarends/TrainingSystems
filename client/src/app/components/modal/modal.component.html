@@ -10,7 +10,11 @@
       </div>
       @if (footer) {
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" (click)="confirm()">{{ alternativeButtonText }}</button>
+          @if (secondaryButtonText) {
+            <button type="button" class="btn btn-primary" (click)="secondaryButtonClick()">
+              {{ secondaryButtonText }}
+            </button>
+          }
           <button type="button" class="btn btn-primary" (click)="confirm()">
             {{ confirmButtonText }}
           </button>

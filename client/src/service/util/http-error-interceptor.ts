@@ -1,9 +1,8 @@
 import { HttpRequest, HttpEvent, HttpHandlerFn, HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { inject } from '@angular/core';
 import { ToastService } from '../../app/components/toast/toast.service';
-import { ToastStatus } from '../../app/components/toast/toast-status';
 import { Router } from '@angular/router';
 
 /**
@@ -19,32 +18,49 @@ export function httpErrorInterceptor(req: HttpRequest<unknown>, next: HttpHandle
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      let errorMessage = 'An unknown error occurred!';
+      let errorMessage;
+      let userFriendlyMessage;
 
       if (error.error instanceof ErrorEvent) {
-        // Client-side error
         errorMessage = `Client Error: ${error.error.message}`;
+        userFriendlyMessage = 'Bitte versuchen Sie es erneut.';
       } else {
-        // Server-side error
-        errorMessage = `Server Error Code: ${error.status}\nMessage: ${error.message}`;
-
-        // Spezifische Behandlung für 401 Unauthorized
-        if (error.status === 401) {
-          errorMessage = 'Unauthorized access. Please log in again.';
-          router.navigate(['/login']);
-        }
-        // Weitere spezifische Statuscode-Behandlungen können hier hinzugefügt werden
-        if (error.status === 404) {
-          errorMessage = 'Resource not found. Please check the URL.';
+        switch (error.status) {
+          case 400:
+            errorMessage = 'Server Error Code: 400\nMessage: Bad Request';
+            userFriendlyMessage = 'Ungültige Anfrage. Bitte überprüfen Sie Ihre Eingaben und versuchen Sie es erneut.';
+            break;
+          case 401:
+            errorMessage = 'Server Error Code: 401\nMessage: Unauthorized';
+            userFriendlyMessage = 'Nicht autorisiert. Bitte melden Sie sich erneut an.';
+            break;
+          case 403:
+            errorMessage = 'Server Error Code: 403\nMessage: Forbidden';
+            userFriendlyMessage =
+              'Zugriff verweigert. Sie haben nicht die nötigen Berechtigungen, um diese Aktion durchzuführen.';
+            break;
+          case 404:
+            errorMessage = 'Server Error Code: 404\nMessage: Not Found';
+            userFriendlyMessage = 'Ressource nicht gefunden. Überprüfen Sie die URL und versuchen Sie es erneut.';
+            break;
+          case 500:
+            errorMessage = 'Server Error Code: 500\nMessage: Internal Server Error';
+            userFriendlyMessage = 'Es ist ein Fehler auf dem Server aufgetreten. Bitte versuchen Sie es später erneut.';
+            break;
+          case 503:
+            errorMessage = 'Server Error Code: 503\nMessage: Service Unavailable';
+            userFriendlyMessage = 'Der Dienst ist momentan nicht verfügbar. Bitte versuchen Sie es später erneut.';
+            break;
+          default:
+            errorMessage = `Server Error Code: ${error.status}\nMessage: ${error.message}`;
+            userFriendlyMessage = 'Es gab ein unerwartetes Problem. Bitte versuchen Sie es später erneut.';
         }
       }
 
-      toastService.error(errorMessage);
+      toastService.error(userFriendlyMessage);
 
-      // Logge den Fehler zur Konsole
       console.error(errorMessage);
 
-      // Return a dummy HttpResponse to prevent the app from crashing
       return of(new HttpResponse({ body: null }));
     }),
   );

@@ -56,18 +56,23 @@ export class CreateTrainingFormComponent {
    * Handles form submission.
    */
   async onSubmit() {
-    if (this.trainingForm.valid) {
-      const formData = this.trainingForm.value;
-
-      await firstValueFrom(this.httpClient.post('/training/create', formData));
-
-      this.toastService.success('Plan erstellt!');
-
-      this.trainingPlanService.trainingPlanChanged();
-      this.modalService.close(); // Close modal on successful submission
-    } else {
+    if (!this.trainingForm.valid) {
       this.trainingForm.markAllAsTouched();
+      return;
     }
+
+    const formData = this.trainingForm.value;
+
+    await firstValueFrom(this.httpClient.post('/training/create', formData));
+
+    this.toastService.success('Plan erstellt!');
+
+    this.trainingPlanService.trainingPlanChanged();
+    this.modalService.close(); // Close modal on successful submission
+  }
+
+  onSecondaryButtonClick() {
+    // display exisiting plans
   }
 
   /**
