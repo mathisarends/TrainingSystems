@@ -7,7 +7,7 @@
 
   @if (existingPlans.length > 0) {
     <div class="form-floating mb-4">
-      <select id="existing_plan_selector" class="form-control">
+      <select id="existing_plan_selector" class="form-control" (change)="selectTrainingPlan($event)">
         @for (trainingPlan of existingPlans; track trainingPlan.id) {
           <option [value]="trainingPlan.id">{{ trainingPlan.title }}</option>
         }

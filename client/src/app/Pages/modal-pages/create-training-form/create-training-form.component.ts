@@ -25,7 +25,9 @@ export class CreateTrainingFormComponent {
   @ViewChild('coverImage') coverImage!: ElementRef<HTMLImageElement>;
 
   @Input() existingPlans: TrainingPlanCardView[] = [];
+
   showCreatePlanBasedOnExistingOne = signal(false);
+  selectedPlan = signal<TrainingPlanCardView | undefined>(undefined);
 
   trainingForm: FormGroup;
 
@@ -80,6 +82,15 @@ export class CreateTrainingFormComponent {
   onSecondaryButtonClick() {
     // display exisiting plans
     this.showCreatePlanBasedOnExistingOne.set(true);
+    this.selectedPlan.set(this.existingPlans[0] ?? undefined);
+  }
+
+  selectTrainingPlan(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedPlanId = selectElement.value;
+
+    const selectedPlan = this.existingPlans.find((plan) => plan.id === selectedPlanId);
+    this.selectedPlan.set(selectedPlan);
   }
 
   /**
