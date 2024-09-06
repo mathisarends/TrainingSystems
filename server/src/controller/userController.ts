@@ -3,7 +3,6 @@ import * as userService from '../service/userService.js';
 import { authService } from '../service/authService.js';
 
 import dotenv from 'dotenv';
-import { TrainingPlan } from '../models/training/trainingPlan.js';
 import { getTonnagePerTrainingDay } from '../service/trainingService.js';
 import { encrypt, decrypt } from '../utils/cryption.js';
 dotenv.config();
@@ -177,20 +176,6 @@ function getIndexOfDayPerYearFromDate(date: Date): number {
   return Math.floor((dateObj.getTime() - startOfYear.getTime()) / (1000 * 60 * 60 * 24));
 }
 
-/**
- * Sorts an array of training plans by their 'lastUpdated' date in descending order.
- *
- * @param trainingPlans - An array of TrainingPlan objects to be sorted.
- * @returns An array of TrainingPlan objects sorted by the 'lastUpdated' date in descending order.
- */
-function sortTrainingPlans(trainingPlans: TrainingPlan[]): TrainingPlan[] {
-  return trainingPlans.sort((a, b) => {
-    const dateA = new Date(a.lastUpdated).getTime();
-    const dateB = new Date(b.lastUpdated).getTime();
-    return dateB - dateA;
-  });
-}
-
 export async function updateProfilePicture(req: Request, res: Response): Promise<Response> {
   const userDAO = req.app.locals.userDAO;
   const user = await userService.getUser(req, res);
@@ -225,14 +210,7 @@ export async function uploadGymTicket(req: Request, res: Response): Promise<Resp
 export async function getGymTicket(req: Request, res: Response): Promise<Response> {
   const user = await userService.getUser(req, res);
 
-  let decryptedGymTicket;
-
-  // TODO: entfernen, da das nur temporär zum migrieren ist
-  try {
-    decryptedGymTicket = decrypt(user.gymtTicket);
-  } catch (error) {
-    return res.status(200).json(user.gymtTicket);
-  }
+  const decryptedGymTicket = decrypt(user.gymtTicket);
 
   return res.status(200).json(decryptedGymTicket);
 }

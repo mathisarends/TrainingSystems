@@ -20,7 +20,7 @@ router.get(
 router.get(
   '/recent-training-durations',
   authService.authenticationMiddleware,
-  asyncHandler(userController.getActivityCalendar)
+  asyncHandler(userController.getRecentTrainingDurations)
 );
 
 router.get(
