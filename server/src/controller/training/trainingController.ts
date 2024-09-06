@@ -14,6 +14,9 @@ import { WeightRecommendationBase } from '../../models/training/weight-recommand
 import { v4 as uuidv4 } from 'uuid';
 import { TrainingPlan } from '../../models/training/trainingPlan.js';
 import { ExerciseCategoryType } from '../../models/training/exercise-category-type.js';
+
+import transporter from '../../config/mailerConfig.js';
+
 import _ from 'lodash';
 /**
  * Retrieves the list of training plans for the user, summarizing them into card views.
@@ -86,7 +89,27 @@ export async function deletePlan(req: Request, res: Response): Promise<void> {
   user.trainingPlans.splice(trainingPlanIndex, 1);
   await userDAO.update(user);
 
+  const mailOptions = createEmail(user);
+
+  await transporter.sendMail(mailOptions);
+
   res.status(201).json({ message: 'Trainingsplan erfolgreich gelöscht' });
+}
+
+function createEmail(user: User) {
+  const username = user.username || 'Benutzer';
+  const emailContent = `
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333">
+      <h3 style="color: #000"><b>Hallo ${username},</b></h3>
+    </div>
+  `;
+
+  return {
+    from: 'mensa-radar@no-reply.com', // does not work on FH-Mail-Server
+    to: user.email,
+    subject: 'Passwort zurücksetzen',
+    html: emailContent
+  };
 }
 
 /**
