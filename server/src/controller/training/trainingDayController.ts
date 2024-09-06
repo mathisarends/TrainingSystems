@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getUser } from '../../service/userService.js';
+import { getUser, getUserGenericDAO } from '../../service/userService.js';
 import * as trainingService from '../../service/trainingService.js';
 import { TrainingDay } from '../../models/training/trainingDay.js';
 
@@ -26,6 +26,7 @@ const trainingSessionManager = new TrainingSessionManager();
  */
 export async function getPlanForDay(req: Request, res: Response): Promise<void> {
   const { id, week, day } = req.params;
+  const userDAO = getUserGenericDAO(req);
 
   const trainingWeekIndex = Number(week);
   const trainingDayIndex = Number(day);
@@ -59,6 +60,10 @@ export async function getPlanForDay(req: Request, res: Response): Promise<void> 
     previousTrainingDay
   };
 
+  const trainingPlanIndex = trainingService.findTrainingPlanIndexById(user.trainingPlans, id);
+  const trainingMetaData = new TrainingDayDataLocator(user, trainingPlanIndex, trainingWeekIndex, trainingDayIndex);
+  trainingSessionManager.addOrUpdateTracker(userDAO, trainingMetaData);
+
   res.status(200).json(trainingPlanForTrainingDay);
 }
 
@@ -90,11 +95,10 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
 
   await userDAO.update(user);
 
-  const trainingPlanIndex = trainingService.findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
-
   // check for activity data and only when add tracker
   for (const [fieldName, fieldValue] of Object.entries(changedData)) {
     if (isTrainingActivitySignal(fieldName, fieldValue)) {
+      const trainingPlanIndex = trainingService.findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
       const trainingMetaData = new TrainingDayDataLocator(user, trainingPlanIndex, trainingWeekIndex, trainingDayIndex);
 
       const trainingSessionTracker = await trainingSessionManager.addOrUpdateTracker(userDAO, trainingMetaData);

@@ -12,6 +12,12 @@ export class TrainingSessionTracker {
    */
   lastActivity: Date;
 
+  /**
+   * Time inbetween the users first interaction with the plan (e.g. viewing) and starting an exercise.
+   * Is added to the training Duration at the end to improve accuracy of estimation.
+   */
+  timeInBetweenWarmUpAndFirstSet: number | undefined = undefined;
+
   private trainingDay: TrainingDay;
 
   private inactivityTimeoutId: NodeJS.Timeout | null = null;
@@ -31,13 +37,13 @@ export class TrainingSessionTracker {
    * If the session is not already recording, it starts the session. Otherwise, it resets the inactivity timeout.
    */
   handleActivitySignal(): void {
-    this.lastActivity = new Date();
-
     if (!this.trainingDay.recording) {
       this.startRecording();
     } else {
       this.resetInactivityTimeout();
     }
+
+    this.lastActivity = new Date();
   }
 
   /**
@@ -79,8 +85,12 @@ export class TrainingSessionTracker {
    * Schedules the inactivity timeout to automatically stop the session if no activity occurs.
    */
   private startRecording(): void {
-    this.trainingDay.startTime = new Date();
+    const currentTime = new Date();
+
+    this.trainingDay.startTime = currentTime;
     this.trainingDay.recording = true;
+
+    this.timeInBetweenWarmUpAndFirstSet = currentTime.getTime() - this.lastActivity.getTime();
 
     this.scheduleInactivityTimeout();
   }
@@ -130,7 +140,10 @@ export class TrainingSessionTracker {
   private calculateAndSetSessionDuration(): void {
     if (this.trainingDay.startTime && this.trainingDay.endTime) {
       const duration =
-        (this.trainingDay.endTime.getTime() - this.trainingDay.startTime.getTime() - this.inactivityTimeoutDuration) /
+        (this.trainingDay.endTime.getTime() -
+          this.trainingDay.startTime.getTime() +
+          this.timeInBetweenWarmUpAndFirstSet! -
+          this.inactivityTimeoutDuration) /
         60000;
 
       const roundedDuration = Math.round(duration / 5) * 5;

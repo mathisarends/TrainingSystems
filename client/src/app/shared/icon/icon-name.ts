@@ -19,4 +19,5 @@ export enum IconName {
   PLUS = 'plus',
   ARROW_RIGHT = 'arrow-right',
   MAIL = 'mail',
+  PLAY = 'play',
 }
