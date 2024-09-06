@@ -65,28 +65,37 @@ export async function getProfile(req: Request, res: Response): Promise<void> {
  */
 export async function getActivityCalendar(req: Request, res: Response): Promise<void> {
   const user = await userService.getUser(req, res);
-
-  const sortedTrainingPlans = sortTrainingPlans(user.trainingPlans);
-
-  const activityMap = new Map<number, number>();
-
-  for (const trainingPlan of sortedTrainingPlans) {
-    for (const trainingWeek of trainingPlan.trainingWeeks) {
-      for (const trainingDay of trainingWeek.trainingDays) {
-        if (trainingDay.endTime) {
-          const tonnagePerTrainingDay = getTonnagePerTrainingDay(trainingDay);
-
-          const dayIndex = getIndexOfDayPerYearFromDate(trainingDay.endTime);
-
-          activityMap.set(dayIndex, tonnagePerTrainingDay);
-        }
-      }
-    }
-  }
+  const activityMap = user.trainingPlans
+    .flatMap(plan => plan.trainingWeeks)
+    .flatMap(week => week.trainingDays)
+    .filter(day => !!day.endTime)
+    .reduce((map, day) => {
+      const tonnagePerTrainingDay = getTonnagePerTrainingDay(day);
+      const dayIndex = getIndexOfDayPerYearFromDate(day.endTime!);
+      map.set(dayIndex, tonnagePerTrainingDay);
+      return map;
+    }, new Map<number, number>());
 
   const activityObject = Object.fromEntries(activityMap);
-
   res.status(200).json(activityObject);
+}
+
+/**
+ * Retrieves the recent training durations for a user and returns an array of the durations.
+ *
+ * @param req - The HTTP request object.
+ * @param res - The HTTP response object.
+ * @returns A Promise that resolves to void. Sends a JSON response with the durations array.
+ */
+export async function getRecentTrainingDurations(req: Request, res: Response): Promise<void> {
+  const user = await userService.getUser(req, res);
+  const trainingDurationsArr = user.trainingPlans
+    .flatMap(plan => plan.trainingWeeks)
+    .flatMap(week => week.trainingDays)
+    .filter(day => !!day.durationInMinutes)
+    .map(day => day.durationInMinutes!);
+
+  res.status(200).json(trainingDurationsArr);
 }
 
 /**
