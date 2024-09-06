@@ -44,6 +44,18 @@ export class AuthService {
     );
   }
 
+  logout(): Observable<void> {
+    return this.httpService.post('/user/logout').pipe(
+      map(() => {
+        this.isAuthenticatedSignal.set(false);
+      }),
+      catchError(() => {
+        this.isAuthenticatedSignal.set(false);
+        return of();
+      }),
+    );
+  }
+
   /**
    * Checks if the user is currently authenticated.
    * @returns A boolean value indicating the current authentication status.

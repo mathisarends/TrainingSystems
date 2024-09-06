@@ -66,9 +66,16 @@
           </li>
 
           <li><hr class="dropdown-divider" /></li>
-          <li>
-            <a class="dropdown-item" #navLink href="login" (click)="navigateTo($event)">Sign in</a>
-          </li>
+
+          @if (authService.isAuthenticated()) {
+            <li>
+              <a class="dropdown-item" #navLink (click)="handleSignOut()">Abmelden</a>
+            </li>
+          } @else {
+            <li>
+              <a class="dropdown-item" #navLink href="login" (click)="navigateTo($event)">Anmelden</a>
+            </li>
+          }
         </ul>
       </div>
     </div>
