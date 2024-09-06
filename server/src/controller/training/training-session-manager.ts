@@ -67,17 +67,13 @@ export class TrainingSessionManager {
    * @param trainingDayId - The unique training day ID.
    * @param changedData - The object containing changed data fields.
    */
-  handleActivitySignals(trainingDayId: string, changedData: Record<string, string>): void {
+  handleActivitySignals(trainingDayId: string): void {
     const tracker = this.getTracker(trainingDayId);
     if (!tracker) {
       return;
     }
 
-    for (const [fieldName, fieldValue] of Object.entries(changedData)) {
-      if (tracker.isActivitySignal(fieldName, fieldValue)) {
-        tracker.handleActivitySignal();
-      }
-    }
+    tracker.handleActivitySignal();
   }
 
   /**

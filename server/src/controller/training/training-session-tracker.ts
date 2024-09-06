@@ -8,6 +8,7 @@ import { TrainingDay } from '../../models/training/trainingDay.js';
  */
 export class TrainingSessionTracker {
   private trainingDay: TrainingDay;
+
   private inactivityTimeoutId: NodeJS.Timeout | null = null;
   private onTimeoutCallback: () => Promise<void>;
 

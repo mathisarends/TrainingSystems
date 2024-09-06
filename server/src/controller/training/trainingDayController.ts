@@ -91,12 +91,23 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
   await userDAO.update(user);
 
   const trainingPlanIndex = trainingService.findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
-  const trainingMetaData = new TrainingDayDataLocator(user, trainingPlanIndex, trainingWeekIndex, trainingDayIndex);
 
-  await trainingSessionManager.addOrUpdateTracker(userDAO, trainingMetaData);
-  trainingSessionManager.handleActivitySignals(trainingDay.id, changedData);
+  // check for activity data and only when add tracker
+  for (const [fieldName, fieldValue] of Object.entries(changedData)) {
+    if (isTrainingActivitySignal(fieldName, fieldValue)) {
+      const trainingMetaData = new TrainingDayDataLocator(user, trainingPlanIndex, trainingWeekIndex, trainingDayIndex);
+
+      await trainingSessionManager.addOrUpdateTracker(userDAO, trainingMetaData);
+      trainingSessionManager.handleActivitySignals(trainingDay.id);
+      break;
+    }
+  }
 
   res.status(200).json({ message: 'Trainingsplan erfolgreich aktualisiert', trainingDay });
+}
+
+function isTrainingActivitySignal(fieldName: string, fieldValue: string): boolean {
+  return (fieldName.endsWith('weight') && !!fieldValue) || (fieldName.endsWith('actualRPE') && !!fieldValue);
 }
 
 /**
@@ -161,13 +172,11 @@ function propagateChangesToFutureWeeks(
   let tempWeekIndex = startWeekIndex + 1;
 
   while (tempWeekIndex < trainingPlan.trainingWeeks.length) {
-    const trainingDayInLaterWeek = trainingPlan.trainingWeeks[tempWeekIndex].trainingDays[
-      trainingDayIndex
-    ] as TrainingDay;
+    const trainingDayInLaterWeek = trainingPlan.trainingWeeks[tempWeekIndex].trainingDays[trainingDayIndex];
 
     for (const [fieldName, fieldValue] of Object.entries(changedData)) {
       const exerciseIndex = parseInt(fieldName.charAt(13));
-      const exerciseInLaterWeek = trainingDayInLaterWeek.exercises[exerciseIndex - 1] as Exercise;
+      const exerciseInLaterWeek = trainingDayInLaterWeek.exercises[exerciseIndex - 1];
 
       if (!exerciseInLaterWeek) {
         const newExercise = createExerciseObject(fieldName, fieldValue) as Exercise;
