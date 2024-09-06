@@ -14,9 +14,12 @@ import { WebSocketService } from '../../service/web-socket.service.js';
 export class TrainingSessionManager {
   private trackers: Map<string, TrainingSessionTracker> = new Map();
 
-  /* constructor() {
+  private readonly cleanupInterval = 30 * 60 * 1000;
+  private readonly maxInactivityDuration = 30 * 60 * 1000;
+
+  constructor() {
     setInterval(() => this.cleanupInactiveTrackers(), this.cleanupInterval);
-  } */
+  }
 
   /**
    * Adds or updates a training day tracker for a specific training day.
@@ -45,23 +48,6 @@ export class TrainingSessionManager {
 
     return newTracker;
   }
-
-  /**
-   * Periodically checks and removes trackers that have been inactive for too long.
-   */
-  /* private cleanupInactiveTrackers(): void {
-    const now = Date.now();
-
-    this.trackers.forEach((entry, trainingDayId) => {
-        entry.lastActivity
-
-      if (now - entry.lastActivity > this.maxInactivityDuration) {
-        console.log(`Removing inactive tracker for trainingDayId: ${trainingDayId}`);
-        entry.tracker.cleanup();
-        this.trackers.delete(trainingDayId);
-      }
-    });
-  } */
 
   /**
    * Retrieves the tracker for a given training day ID.
@@ -97,6 +83,21 @@ export class TrainingSessionManager {
     }
 
     tracker.handleActivitySignal();
+  }
+
+  /**
+   * Periodically checks and removes trackers that have been inactive for too long.
+   */
+  private cleanupInactiveTrackers(): void {
+    const now = Date.now();
+
+    this.trackers.forEach((sessionTracker, trainingDayId) => {
+      if (now - sessionTracker.lastActivity.getTime() > this.maxInactivityDuration) {
+        console.log(`Removing inactive tracker for trainingDayId: ${trainingDayId}`);
+        sessionTracker.cleanup();
+        this.trackers.delete(trainingDayId);
+      }
+    });
   }
 
   /**

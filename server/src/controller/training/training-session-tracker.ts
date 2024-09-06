@@ -31,6 +31,8 @@ export class TrainingSessionTracker {
    * If the session is not already recording, it starts the session. Otherwise, it resets the inactivity timeout.
    */
   handleActivitySignal(): void {
+    this.lastActivity = new Date();
+
     if (!this.trainingDay.recording) {
       this.startRecording();
     } else {
