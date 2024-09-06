@@ -16,7 +16,12 @@ export interface ModalOptions {
   /**
    * The text to display on the modal's button.
    */
-  buttonText: string;
+  buttonText?: string;
+
+  /**
+   * The text to display on the modal's secondary button.
+   */
+  secondaryButtonText?: string;
 
   /**
    * The size of the modal. Optional.

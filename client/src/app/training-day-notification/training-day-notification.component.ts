@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { IconComponent } from '../shared/icon/icon.component';
 import { NotificationService } from '../notification-page/notification.service';
 import { ToastService } from '../components/toast/toast.service';
-import { ToastStatus } from '../components/toast/toast-status';
 import { Router } from '@angular/router';
 import { toggleCollapseAnimation } from '../shared/animations';
 import { FormatDatePipe } from '../shared/pipes/format-date.pipe';
@@ -45,7 +44,7 @@ export class TrainingDayNotificationComponent implements OnInit {
     this.notificationService.deleteTrainingDayNotification(notificationId).subscribe((response) => {
       this.notifications.set(this.notifications().filter((notification) => notification.id !== notificationId));
 
-      this.toastService.show('Erfolg', 'Benachrichtigung gelöscht', ToastStatus.SUCESS);
+      this.toastService.success('Benachrichtigung gelöscht');
     });
   }
 

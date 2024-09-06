@@ -55,7 +55,7 @@ export class LoginComponent extends BaisAuthComponent implements OnInit {
 
           if (error.status === 401) {
             console.log('Unauthorized: Wrong credentials');
-            this.toastService.show('Ungültige Anmeldedaten', 'Die Kombination aus Nutzername und Passwort ist falsch');
+            this.toastService.error('Die Kombination aus Nutzername und Passwort ist falsch');
           } else if (error.status === 400) {
             console.log('Bad request:', error.error);
           } else {

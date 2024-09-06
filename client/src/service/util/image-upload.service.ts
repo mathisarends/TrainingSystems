@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { ToastService } from '../../app/components/toast/toast.service';
-import { ToastStatus } from '../../app/components/toast/toast-status';
 
 /**
  * Service to handle image uploads, resizing, and cropping.
@@ -25,7 +24,7 @@ export class ImageUploadService {
     if (!file) return;
 
     if (!this.isValidImageType(file.type)) {
-      this.toastService.show('Fehler', 'Unerlaubtes Datenformat', ToastStatus.ERROR);
+      this.toastService.error('Unerlaubtes Datenformat');
       console.error('Invalid file type. Please upload a valid image file.');
       return;
     }

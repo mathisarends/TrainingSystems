@@ -1,90 +1,123 @@
-<div class="row no-gutters">
-  <div class="col-md-12">
-    <div class="card-body">
-      <form [formGroup]="trainingForm" (ngSubmit)="onSubmit()">
-        <div class="form-group text-center mb-4 position-relative" style="position: relative">
-          <img
-            #coverImage
-            src="https://via.placeholder.com/150"
-            alt="Cover Bild Platzhalter"
-            id="cover-image"
-            class="img-fluid mb-2"
-            style="width: 150px; height: 150px; cursor: pointer"
-          />
-          <input
-            type="file"
-            id="cover-image-input"
-            class="form-control-file position-absolute"
-            style="opacity: 0; width: 100%; height: 100%; top: 0; left: 0; cursor: pointer"
-            (change)="handleImageUpload($event)"
-          />
-        </div>
+@if (showCreatePlanBasedOnExistingOne()) {
+  <app-alert
+    [alertText]="
+      'Hier kannst du einen bestehenden Plan als Vorlage nutzen. Die generelle Struktur wird übernommen aber Einträge wie Gewichte oder RPEs entfernt.'
+    "
+  />
 
-        <!-- Rest of the form remains unchanged -->
+  @if (existingPlans.length > 0) {
+    <div class="form-floating mb-4">
+      <select id="existing_plan_selector" class="form-control" (change)="selectTrainingPlan($event)">
+        @for (trainingPlan of existingPlans; track trainingPlan.id) {
+          <option [value]="trainingPlan.id">{{ trainingPlan.title }}</option>
+        }
+      </select>
+      <label for="existing_plan_selector">Existierenden Plan wählen</label>
+    </div>
 
-        <div class="form-floating mb-4">
-          <input
-            type="text"
-            class="form-control"
-            id="training_title"
-            formControlName="title"
-            placeholder="Titel"
-            required
-          />
-          <label for="training_title">Titel</label>
-          <div *ngIf="trainingForm.get('title')?.invalid && trainingForm.get('title')?.touched" class="text-danger">
-            Title is required
+    <!-- Common form fields -->
+    <ng-container *ngIf="selectedPlan(); else emptyForm">
+      <ng-container *ngTemplateOutlet="commonForm"></ng-container>
+    </ng-container>
+
+    <ng-template #emptyForm>
+      <!-- Fallback content when no plan is selected -->
+      <p>No existing plan selected. Please choose an existing plan or create a new one.</p>
+    </ng-template>
+  }
+} @else {
+  <ng-container *ngTemplateOutlet="commonForm"></ng-container>
+}
+
+<ng-template #commonForm>
+  <div class="row no-gutters">
+    <div class="col-md-12">
+      <div class="card-body">
+        <form [formGroup]="trainingForm" (ngSubmit)="onSubmit()">
+          <div class="form-group text-center mb-4 position-relative">
+            <img
+              #coverImage
+              [src]="trainingForm.get('coverImage')?.value ?? 'https://placehold.jp/150x150.png'"
+              alt="Cover Bild Platzhalter"
+              id="cover-image"
+              class="img-fluid mb-2"
+              style="width: 150px; height: 150px; cursor: pointer"
+            />
+            <input
+              type="file"
+              id="cover-image-input"
+              class="form-control-file position-absolute"
+              style="opacity: 0; width: 100%; height: 100%; top: 0; left: 0; cursor: pointer"
+              (change)="handleImageUpload($event)"
+            />
           </div>
-        </div>
 
-        <div class="form-floating mb-4">
-          <select id="training_frequency" class="form-control" formControlName="trainingFrequency" required>
-            <option value="" disabled hidden></option>
-            <option value="3">3</option>
-            <option value="4" selected>4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-          </select>
-          <label for="training_frequency">Trainings / Woche</label>
-          <div
-            *ngIf="trainingForm.get('trainingFrequency')?.invalid && trainingForm.get('trainingFrequency')?.touched"
-            class="text-danger"
-          >
-            Training frequency is required
-          </div>
-        </div>
+          <!-- Rest of the form remains unchanged -->
 
-        <div class="form-floating mb-4">
-          <select id="training_weeks" class="form-control" formControlName="trainingWeeks" required>
-            <option value="" disabled hidden></option>
-            <option value="3">3</option>
-            <option value="4" selected>4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-          </select>
-          <label for="training_weeks">Blocklänge (Wochen)</label>
-          <div
-            *ngIf="trainingForm.get('trainingWeeks')?.invalid && trainingForm.get('trainingWeeks')?.touched"
-            class="text-danger"
-          >
-            Training weeks are required
+          <div class="form-floating mb-4">
+            <input
+              type="text"
+              class="form-control"
+              id="training_title"
+              formControlName="title"
+              placeholder="Titel"
+              required
+            />
+            <label for="training_title">Titel</label>
+            <div *ngIf="trainingForm.get('title')?.invalid && trainingForm.get('title')?.touched" class="text-danger">
+              Title is required
+            </div>
           </div>
-        </div>
 
-        <div class="form-floating mb-4">
-          <select formControlName="weightPlaceholders" class="form-control" required>
-            <option value="lastWeek" selected>basierend auf letzter Woche</option>
-            <option value="off">keine Gewichtsempfehlungen</option>
-          </select>
-          <label for="weightPlaceholders">Gewichtsempfehlungen</label>
-          <div
-            *ngIf="trainingForm.get('weightPlaceholders')?.invalid && trainingForm.get('weightPlaceholders')?.touched"
-            class="text-danger"
-          >
-            Weight recommendations are required
+          <div class="form-floating mb-4">
+            <select id="training_frequency" class="form-control" formControlName="trainingFrequency" required>
+              <option value="" disabled hidden></option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+            </select>
+            <label for="training_frequency">Trainings / Woche</label>
+            <div
+              *ngIf="trainingForm.get('trainingFrequency')?.invalid && trainingForm.get('trainingFrequency')?.touched"
+              class="text-danger"
+            >
+              Training frequency is required
+            </div>
           </div>
-        </div>
-      </form>
+
+          <div class="form-floating mb-4">
+            <select id="training_weeks" class="form-control" formControlName="trainingWeeks" required>
+              <option value="" disabled hidden></option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+            </select>
+            <label for="training_weeks">Blocklänge (Wochen)</label>
+            <div
+              *ngIf="trainingForm.get('trainingWeeks')?.invalid && trainingForm.get('trainingWeeks')?.touched"
+              class="text-danger"
+            >
+              Training weeks are required
+            </div>
+          </div>
+
+          <div class="form-floating mb-4">
+            <select formControlName="weightPlaceholders" class="form-control" required>
+              <option value="lastWeek" selected>basierend auf letzter Woche</option>
+              <option value="off">keine Gewichtsempfehlungen</option>
+            </select>
+            <label for="weightPlaceholders">Gewichtsempfehlungen</label>
+            <div
+              *ngIf="trainingForm.get('weightPlaceholders')?.invalid && trainingForm.get('weightPlaceholders')?.touched"
+              class="text-danger"
+            >
+              Weight recommendations are required
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-</div>
+</ng-template>

@@ -138,7 +138,7 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy, AfterViewCh
         this.trainingPlanService.trainingPlanChanged();
         this.modalService.close();
 
-        this.toastService.show('Erfolg', 'Plan bearbeitet');
+        this.toastService.success('Plan bearbeitet');
       } catch (error) {
         const httpError = error as HttpErrorResponse;
 

@@ -1,0 +1,10 @@
+@import 'client/src/css/variables';
+
+:host {
+  display: grid;
+  place-items: center;
+  background: #eeeeee;
+  height: 2.25rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+}

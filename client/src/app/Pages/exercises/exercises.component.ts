@@ -57,7 +57,7 @@ export class ExercisesComponent implements OnInit {
   saveExerciseData(): void {
     this.exerciseService.updateExercises(this.formService.getChanges()).subscribe({
       error: (error) => {
-        this.toastService.show('Fehler', 'Speichern war nicht erfolgreich');
+        this.toastService.error('Speichern war nicht erfolgreich');
         console.error('Error updating user exercises:', error);
       },
     });
@@ -78,10 +78,10 @@ export class ExercisesComponent implements OnInit {
       this.exerciseService.resetExercises().subscribe({
         next: () => {
           this.exerciseData$ = this.exerciseService.loadExerciseData();
-          this.toastService.show('Erfolg', 'Übungskatalog zurückgesetzt!');
+          this.toastService.success('Übungskatalog zurückgesetzt!');
         },
         error: (error) => {
-          this.toastService.show('Fehler', 'Übungskatalog nicht zurückgesetzt!');
+          this.toastService.success('Übungskatalog nicht zurückgesetzt!');
           console.error('Error resetting exercises:', error);
         },
       });

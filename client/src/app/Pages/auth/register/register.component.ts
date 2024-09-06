@@ -42,13 +42,13 @@ export class RegisterComponent extends BaisAuthComponent implements OnInit {
     };
     this.httpClient.post<any>('/user/register', data).subscribe({
       next: () => {
-        this.toastService.show('Erfolg', 'Account erfolgreich erstellt');
+        this.toastService.success('Account erfolgreich erstellt');
         this.router.navigate(['login']);
       },
       error: (error: HttpErrorResponse) => {
         console.error('Registration error:', error);
         if (error.status === 409) {
-          this.toastService.show('Fehler', 'Es gibt bereits einen Nutzer mit dieser Email');
+          this.toastService.error('Es gibt bereits einen Nutzer mit dieser Email');
         } else if (error.status === 400) {
           console.log('Fehler', 'Bad request');
         } else {

@@ -17,6 +17,8 @@ import { IconButtonComponent } from '../../components/icon-button/icon-button.co
 import { SkeletonCardComponent } from '../../components/loaders/skeletons/skeleton-card/skeleton-card.component';
 import { HttpService } from '../../../service/http/http-client.service';
 import { IconName } from '../../shared/icon/icon-name';
+import { IconComponent } from '../../shared/icon/icon.component';
+import { CircularIconButtonComponent } from '../../circular-icon-button/circular-icon-button.component';
 
 /**
  * Component to manage and display training plans.
@@ -33,6 +35,8 @@ import { IconName } from '../../shared/icon/icon-name';
     HeadlineComponent,
     IconButtonComponent,
     SkeletonCardComponent,
+    IconComponent,
+    CircularIconButtonComponent,
   ],
   templateUrl: './training-plans.component.html',
   styleUrls: ['./training-plans.component.scss'],
@@ -86,13 +90,19 @@ export class TrainingPlansComponent implements OnInit {
   /**
    * Opens the modal to create a new training plan.
    */
-  protected createNewPlan(): void {
+  protected async createNewPlan(): Promise<void> {
+    const trainingPlans = await firstValueFrom(this.allTrainingPlans$);
+
     this.modalService.open({
       component: CreateTrainingFormComponent,
       title: 'Trainingsplan erstellen',
       buttonText: 'Erstellen',
+      secondaryButtonText: 'Optionen',
       size: ModalSize.LARGE,
       confirmationRequired: true,
+      componentData: {
+        existingPlans: trainingPlans,
+      },
     });
   }
 

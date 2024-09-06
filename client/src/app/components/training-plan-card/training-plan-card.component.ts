@@ -109,7 +109,7 @@ export class TrainingPlanCardComponent {
         await firstValueFrom(this.httpService.delete(`/training/delete/${id}`));
 
         this.modalService.close();
-        this.toastService.show('Erfolg', 'Plan gelöscht');
+        this.toastService.success('Plan gelöscht');
 
         this.trainingPlanService.trainingPlanChanged();
 

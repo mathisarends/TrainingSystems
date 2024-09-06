@@ -14,7 +14,7 @@ import { WeightRecommendationBase } from '../../models/training/weight-recommand
 import { v4 as uuidv4 } from 'uuid';
 import { TrainingPlan } from '../../models/training/trainingPlan.js';
 import { ExerciseCategoryType } from '../../models/training/exercise-category-type.js';
-
+import _ from 'lodash';
 /**
  * Retrieves the list of training plans for the user, summarizing them into card views.
  * The result is intended to be a lightweight representation of the user's training plans.
@@ -46,7 +46,15 @@ export async function createPlan(req: Request, res: Response): Promise<void> {
   const weightRecommandation = req.body.weightPlaceholders as WeightRecommendationBase;
   const coverImage = req.body.coverImage;
 
-  const trainingWeeksArr = createNewTrainingPlanWithPlaceholders(trainingWeeks, trainingFrequency);
+  const referencePlanId = req.body.referencePlanId;
+  let trainingWeeksArr;
+  if (referencePlanId) {
+    const trainingPlan = _.cloneDeep(findTrainingPlanById(user.trainingPlans, referencePlanId));
+
+    trainingWeeksArr = trainingService.createNewTrainingPlanBasedOnTemplate(trainingPlan);
+  } else {
+    trainingWeeksArr = createNewTrainingPlanWithPlaceholders(trainingWeeks, trainingFrequency);
+  }
 
   const newTrainingPlan: TrainingPlan = {
     id: uuidv4(),

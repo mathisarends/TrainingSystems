@@ -56,10 +56,17 @@ export class ModalService {
       // Pass options to the modal component instance
       this.modalComponentRef.instance.childComponentType = options.component;
       this.modalComponentRef.instance.title = options.title;
-      this.modalComponentRef.instance.confirmButtonText = options.buttonText;
       this.modalComponentRef.instance.size = options.size ?? ModalSize.MEDIUM;
       this.modalComponentRef.instance.footer = options.hasFooter ?? true;
       this.modalComponentRef.instance.confirmationRequired = options.confirmationRequired ?? false;
+
+      if (options.buttonText) {
+        this.modalComponentRef.instance.confirmButtonText = options.buttonText;
+      }
+
+      if (options.secondaryButtonText) {
+        this.modalComponentRef.instance.secondaryButtonText = options.secondaryButtonText;
+      }
 
       if (options.componentData) {
         this.modalComponentRef.instance.childComponentData = options.componentData;

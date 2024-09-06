@@ -4,7 +4,6 @@ import { ModalService } from '../../service/modal/modalService';
 import { TicketPreviewComponentComponent } from '../ticket-preview-component/ticket-preview-component.component';
 import { GymTicketService } from './gym-ticket.service';
 import { ToastService } from '../components/toast/toast.service';
-import { ToastStatus } from '../components/toast/toast-status';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { SpinnerComponent } from '../components/loaders/spinner/spinner.component';
@@ -55,7 +54,7 @@ export class GymTicketComponent implements OnInit {
       if (!response) return;
 
       this.gymTicketService.uploadGymTicket(this.uploadedImage).subscribe(() => {
-        this.toastService.show('Erfolg', 'Ticket hochgeladen', ToastStatus.SUCESS);
+        this.toastService.success('Ticket hochgeladen');
         this.loadGymTicket();
       });
     });

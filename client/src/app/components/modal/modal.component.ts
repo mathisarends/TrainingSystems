@@ -13,9 +13,12 @@ import {
 import { ModalService } from '../../../service/modal/modalService';
 import { ModalSize } from '../../../service/modal/modalSize';
 import { ModalEventsService } from '../../../service/modal/modal-events.service';
+import { ButtonComponent } from '../../button/button.component';
 
 @Component({
   selector: 'app-modal',
+  standalone: true,
+  imports: [ButtonComponent],
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
 })
@@ -24,7 +27,8 @@ export class ModalComponent implements AfterViewInit {
   @Output() cancelled = new EventEmitter<void>();
 
   @Input() title: string = 'Default Title';
-  @Input() confirmButtonText: string = 'Submit';
+  @Input() secondaryButtonText: string = '';
+  @Input() confirmButtonText: string = 'Bestätigen';
   @Input() childComponentType!: any;
   @Input() childComponentData: any;
   @Input() size: ModalSize = ModalSize.MEDIUM;
@@ -77,5 +81,11 @@ export class ModalComponent implements AfterViewInit {
     }
 
     this.confirmed.emit();
+  }
+
+  secondaryButtonClick() {
+    if (this.childComponentRef.instance.onSecondaryButtonClick) {
+      this.childComponentRef.instance.onSecondaryButtonClick();
+    }
   }
 }

@@ -39,7 +39,6 @@ import { RpeInputDirective } from '../../../directives/rpe-input.directive';
 import { CategorySelectDirective } from '../../../directives/category-select.directive';
 import { ExerciseDataService } from './exercise-data.service';
 import { InteractiveElementDirective } from '../../../directives/interactive-element.directive';
-import { ToastStatus } from '../../components/toast/toast-status';
 import { SpinnerComponent } from '../../components/loaders/spinner/spinner.component';
 import { FocusService } from '../../focus.service';
 import { IconName } from '../../shared/icon/icon-name';
@@ -249,7 +248,7 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
           this.formService.clearChanges();
         }),
         catchError((error) => {
-          this.toastService.show('Erfolg', 'Daten konnten nicht gespeichtert werden', ToastStatus.ERROR);
+          this.toastService.success('Daten konnten nicht gespeichtert werden');
 
           console.error('Error updating training plan:', error);
           return [];

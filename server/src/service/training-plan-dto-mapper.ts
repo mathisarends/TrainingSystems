@@ -12,6 +12,8 @@ export class TrainingPlanDtoMapper {
     return {
       id: plan.id,
       title: plan.title,
+      blockLength: plan.trainingWeeks.length,
+      weightRecomamndationBase: plan.weightRecommandationBase,
       trainingFrequency: plan.trainingFrequency,
       lastUpdated: this.formatDate(new Date(plan.lastUpdated)),
       coverImageBase64: plan.coverImageBase64 ?? ''

@@ -30,13 +30,13 @@ export class AuthGuard implements CanActivate {
             return true;
           } else {
             this.router.navigate(['/login']);
-            this.toastService.show('Fehler', 'Nicht angemeldet');
+            this.toastService.error('Nicht angemeldet');
             return false;
           }
         }),
         catchError(() => {
           this.router.navigate(['/login']);
-          this.toastService.show('Fehler', 'Nicht angemeldet');
+          this.toastService.error('Nicht angemeldet');
           return of(false);
         }),
       );
