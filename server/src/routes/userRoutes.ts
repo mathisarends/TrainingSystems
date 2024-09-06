@@ -53,7 +53,7 @@ router.get('/gym-ticket', authService.authenticationMiddleware, asyncHandler(use
 
 router.post('/logout', userController.signOut);
 
-router.delete('delete-account', authService.authenticationMiddleware, asyncHandler(userController.deleteAccount));
+router.delete('/delete-account', authService.authenticationMiddleware, asyncHandler(userController.deleteAccount));
 
 router.get(
   '/auth-state',
