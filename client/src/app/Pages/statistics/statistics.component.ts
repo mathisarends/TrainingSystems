@@ -142,7 +142,7 @@ export class StatisticsComponent implements OnInit {
     this.groupedBarChartLabels = this.lineChartLabels;
   }
 
-  private createTonnageDataSet(category: string, data: Tonnage[]): any {
+  private createTonnageDataSet(category: string, data: Tonnage[]): LineChartDataset {
     const colors = this.chartColorService.getCategoryColor(category);
     return {
       label: this.formatCategoryLabel(category),
