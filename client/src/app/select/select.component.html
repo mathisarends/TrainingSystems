@@ -1,0 +1,9 @@
+<select [name]="name()" (change)="onChange($event)" appInteractiveElement class="transparent-input">
+  @for (option of options(); track option) {
+    <option [value]="option" [selected]="option === selectedValue()">
+      {{ option }}
+    </option>
+  } @empty {
+    <option>No Options Available</option>
+  }
+</select>
