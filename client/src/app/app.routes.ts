@@ -14,10 +14,13 @@ import { UsageStatisticsComponent } from './usage-statistics/usage-statistics.co
 import { GymTicketComponent } from './gym-ticket/gym-ticket.component';
 import { SpinnerComponent } from './components/loaders/spinner/spinner.component';
 
+import { ResetPasswordComponent } from './Pages/auth/reset-password/reset-password.component';
+
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'user/usage', component: UsageStatisticsComponent },
+  { path: 'user/reset-password', component: ResetPasswordComponent },
   { path: 'user/ticket', component: GymTicketComponent },
   { path: 'spinner', component: SpinnerComponent },
   {
