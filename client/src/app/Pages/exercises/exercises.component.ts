@@ -46,6 +46,29 @@ export class ExercisesComponent implements OnInit {
     '5 Minuten',
   ]);
 
+  amountOfSetsOptions = signal([1, 2, 3, 4, 5, 6, 7, 8]);
+  amountofSetsLabels = signal(['1 Set', '2 Sets', '3 Sets', '4 Sets', '5 Sets', '6 Sets', '7 Sets', '8 Sets']);
+
+  rpeOptions = signal([6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10]);
+  rpeOptionsLabels = signal(['RPE 6', 'RPE 6.5', 'RPE 7', 'RPE 7.5', 'RPE 8', 'RPE 8.5', 'RPE 9', 'RPE 9.5', 'RPE 10']);
+
+  repsOptions = signal([3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+  repsOptionsLabels = signal([
+    '3 Reps',
+    '4 Reps',
+    '5 Reps',
+    '6 Reps',
+    '7 Reps',
+    '8 Reps',
+    '9 Reps',
+    '10 Reps',
+    '11 Reps',
+    '12 Reps',
+    '13 Reps',
+    '14 Reps',
+    '15 Reps',
+  ]);
+
   constructor(
     private toastService: ToastService,
     private modalService: ModalService,
