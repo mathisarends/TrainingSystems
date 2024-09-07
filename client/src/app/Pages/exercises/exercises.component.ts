@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ModalService } from '../../../service/modal/modalService';
@@ -11,11 +11,12 @@ import { InteractiveElementService } from '../../../service/util/interactive-ele
 import { InteractiveElementDirective } from '../../../directives/interactive-element.directive';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ExerciseService } from '../training-view/exercise.service.';
+import { SelectComponent } from '../../select/select.component';
 
 @Component({
   selector: 'app-exercises',
   standalone: true,
-  imports: [CommonModule, ExerciseTableSkeletonComponent, InteractiveElementDirective],
+  imports: [CommonModule, ExerciseTableSkeletonComponent, InteractiveElementDirective, SelectComponent],
   providers: [ExerciseService],
   templateUrl: './exercises.component.html',
   styleUrls: ['./exercises.component.scss', '../../../css/tables.scss'],
@@ -30,6 +31,20 @@ export class ExercisesComponent implements OnInit {
    * Maximum number of exercises to display.
    */
   maxExercises = 8;
+
+  pauseTimeOptions = signal([60, 90, 120, 150, 180, 210, 240, 270, 300]);
+
+  pauseTimeLabels = signal([
+    '1 Minute',
+    '1.5 Minuten',
+    '2 Minuten',
+    '2.5 Minuten',
+    '3 Minuten',
+    '3.5 Minuten',
+    '4 Minuten',
+    '4.5 Minuten',
+    '5 Minuten',
+  ]);
 
   constructor(
     private toastService: ToastService,

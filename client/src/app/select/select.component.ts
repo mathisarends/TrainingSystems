@@ -1,5 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { InteractiveElementDirective } from '../../directives/interactive-element.directive';
+import { DetermineSelectOptionValuePipe } from './determine-select-option-value.pipe';
 
 /**
  * A wrapper component for a `<select>` HTML element.
@@ -10,7 +11,7 @@ import { InteractiveElementDirective } from '../../directives/interactive-elemen
 @Component({
   selector: 'app-select',
   standalone: true,
-  imports: [InteractiveElementDirective],
+  imports: [InteractiveElementDirective, DetermineSelectOptionValuePipe],
   templateUrl: './select.component.html',
   styleUrls: ['./select.component.scss'],
 })
@@ -25,13 +26,18 @@ export class SelectComponent {
    * The currently selected value for the select dropdown.
    * This input is required and is used to indicate which option should be selected by default.
    */
-  selectedValue = input.required<string>();
+  selectedValue = input.required<string | number>();
 
   /**
-   * The list of options to display in the select dropdown.
-   * This input can accept an array of strings or numbers and is optional.
+   * The list of option that are displayed in the user interface.
    */
-  options = input<(string | number)[]>();
+  options = input.required<(string | number)[]>();
+
+  /**
+   * The list of option values that are emitted.
+   * Not required and if not given the options will be used instead.
+   */
+  optionLabels = input<(string | number)[]>([]);
 
   /**
    * Emits the value of the selected option whenever the user changes their selection.

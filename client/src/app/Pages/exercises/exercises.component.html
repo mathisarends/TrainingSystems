@@ -31,19 +31,12 @@
               <!-- Always show the following rows for each category -->
               <tr class="top-border">
                 <td [attr.data-cell]="'Rest-time'">
-                  <div>
-                    <select
-                      [name]="categoryIndex + '_categoryPauseTimeSelect'"
-                      appInteractiveElement
-                      class="transparent-input"
-                    >
-                      @for (time of [60, 90, 120, 150, 180, 210, 240, 270, 300]; track time) {
-                        <option [value]="time" [selected]="exerciseData.categoryPauseTimes[category] === time">
-                          {{ time / 60 }} Minuten
-                        </option>
-                      }
-                    </select>
-                  </div>
+                  <app-select
+                    [name]="categoryIndex + '_categoryPauseTimeSelect'"
+                    [options]="pauseTimeOptions()"
+                    [optionLabels]="pauseTimeLabels()"
+                    [selectedValue]="exerciseData.categoryPauseTimes[category]"
+                  />
                 </td>
               </tr>
               <tr>
