@@ -1,10 +1,12 @@
 import { Request, Response } from 'express';
+import bcrypt from 'bcryptjs';
 import * as userService from '../service/userService.js';
 import { authService } from '../service/authService.js';
 
 import dotenv from 'dotenv';
 import { getTonnagePerTrainingDay } from '../service/trainingService.js';
 import { encrypt, decrypt } from '../utils/cryption.js';
+import transporter from '../config/mailerConfig.js';
 dotenv.config();
 
 export async function register(req: Request, res: Response): Promise<void> {
@@ -41,6 +43,78 @@ export async function loginOAuth2(req: Request, res: Response): Promise<void> {
   });
 
   res.redirect(redirectUrl);
+}
+
+/**
+ * Sends a password reset email to the user.
+ */
+/*  export async function sendPasswordResetEmail(req: Request, res: Response) {
+    const userDAO = userService.getUserGenericDAO(req);
+
+    const email = req.body.email;
+
+    if (!email) {
+      return res.status(400).json({ error: 'Keine Email übergeben' });
+    }
+
+    // FGind user by email
+    const user = 
+
+
+    // check for user if no user then throw errro;
+
+
+    // check in old implementation
+
+      const token = authService.createToken({ id: user.id }, req);
+
+      user.resetToken = token;
+      user.resetTokenExpiration = Date.now() + 10 * 60 * 10000;
+
+      await userDAO.update(user);
+
+      const clientUrl = config.ENVIRONMENT === 'PRODUCTION' ? config.urls.clientUrlProd : config.urls.clientUrl;
+
+      const resetUrl = `${clientUrl}/user/reset/password/${token}`;
+      const decryptedEmail = decrypt(user.email);
+      const mailOptions = this.createResetPasswordEmail(user, decryptedEmail, resetUrl);
+
+      await transporter.sendMail(mailOptions);
+      res.status(200).json({ message: 'Die Email wurde versandt' });
+  } */
+
+/**
+ * Authenticates the password reset page using the token.
+ */
+/* export async authenticatePasswordResetPage(req: Request, res: Response): Promise<Response>{
+
+  } */
+
+/**
+ * Resets the user's password using the token.
+ */
+export async function resetPassword(req: Request, res: Response): Promise<Response> {
+  const user = await userService.getUser(req, res);
+  const userDAO = userService.getUserGenericDAO(req);
+
+  if (req.body.password !== req.body.repeatPassword) {
+    return res.status(400).json({ error: 'Die angegebenen Passwörter stimmen nicht überein' });
+  }
+
+  if (!user.password) {
+    return res.status(400).json({ error: 'Google Nutzer können ihre Passwort nicht über diesen Wege zurücksetzen' });
+  }
+
+  if (await bcrypt.compare(req.body.password, user.password)) {
+    return res.status(400).json({ error: 'Die angegebenen Passwörter stimmen nicht überein' });
+  }
+
+  user.password = await bcrypt.hash(req.body.password, 10);
+  await userDAO.update(user);
+
+  authService.removeToken(res);
+
+  return res.status(200).json({ message: 'Dein Passwort wurde erfolgreich zurückgesetzt' });
 }
 
 export async function getProfile(req: Request, res: Response): Promise<void> {

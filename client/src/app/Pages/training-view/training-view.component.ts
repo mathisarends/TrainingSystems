@@ -43,6 +43,7 @@ import { SpinnerComponent } from '../../components/loaders/spinner/spinner.compo
 import { FocusService } from '../../focus.service';
 import { IconName } from '../../shared/icon/icon-name';
 import { IconComponent } from '../../shared/icon/icon.component';
+import { SelectComponent } from '../../select/select.component';
 
 /**
  * Component to manage and display the training view.
@@ -64,8 +65,9 @@ import { IconComponent } from '../../shared/icon/icon.component';
     InteractiveElementDirective,
     SpinnerComponent,
     IconComponent,
+    SelectComponent,
   ],
-  providers: [TrainingViewService, FocusService],
+  providers: [TrainingViewService, FocusService, SelectComponent],
   templateUrl: './training-view.component.html',
   styleUrls: ['./training-view.component.scss'],
 })
