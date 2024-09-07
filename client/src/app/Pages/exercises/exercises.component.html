@@ -31,79 +31,42 @@
               <!-- Always show the following rows for each category -->
               <tr class="top-border">
                 <td [attr.data-cell]="'Rest-time'">
-                  <div>
-                    <select
-                      [name]="categoryIndex + '_categoryPauseTimeSelect'"
-                      appInteractiveElement
-                      class="transparent-input"
-                    >
-                      @for (time of [60, 90, 120, 150, 180, 210, 240, 270, 300]; track time) {
-                        <option [value]="time" [selected]="exerciseData.categoryPauseTimes[category] === time">
-                          {{ time / 60 }} Minuten
-                        </option>
-                      }
-                    </select>
-                  </div>
+                  <app-select
+                    [name]="categoryIndex + '_categoryPauseTimeSelect'"
+                    [options]="pauseTimeOptions()"
+                    [optionLabels]="pauseTimeLabels()"
+                    [selectedValue]="exerciseData.categoryPauseTimes[category]"
+                  />
                 </td>
               </tr>
               <tr>
                 <td [attr.data-cell]="'sets'">
-                  <div>
-                    <select
-                      [name]="categoryIndex + '_categoryDefaultSetSelect'"
-                      appInteractiveElement
-                      class="transparent-input"
-                    >
-                      @for (sets of [2, 3, 4, 5, 6]; track sets) {
-                        <option
-                          [value]="sets"
-                          [selected]="exerciseData.defaultRepSchemeByCategory[category].defaultSets === sets"
-                        >
-                          {{ sets }} Sets
-                        </option>
-                      }
-                    </select>
-                  </div>
+                  <app-select
+                    [name]="categoryIndex + '_categoryDefaultSetSelect'"
+                    [options]="amountOfSetsOptions()"
+                    [optionLabels]="amountofSetsLabels()"
+                    [selectedValue]="exerciseData.defaultRepSchemeByCategory[category].defaultSets"
+                  />
                 </td>
               </tr>
               <tr>
                 <td [attr.data-cell]="'reps'">
-                  <div>
-                    <select
-                      [name]="categoryIndex + '_categoryDefaultRepSelect'"
-                      appInteractiveElement
-                      class="transparent-input"
-                    >
-                      @for (reps of [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]; track reps) {
-                        <option
-                          [value]="reps"
-                          [selected]="exerciseData.defaultRepSchemeByCategory[category].defaultReps === reps"
-                        >
-                          {{ reps }} Reps
-                        </option>
-                      }
-                    </select>
-                  </div>
+                  <app-select
+                    [name]="categoryIndex + '_categoryDefaultRepSelect'"
+                    [options]="repsOptions()"
+                    [optionLabels]="repsOptionsLabels()"
+                    [selectedValue]="exerciseData.defaultRepSchemeByCategory[category].defaultReps"
+                  />
                 </td>
               </tr>
               <tr>
                 <td [attr.data-cell]="'RPE'">
-                  <div>
-                    <select
-                      [name]="categoryIndex + '_categoryDefaultRPESelect'"
-                      appInteractiveElement
-                      class="transparent-input"
-                    >
-                      @for (rpe of [6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10]; track rpe) {
-                        <option
-                          [value]="rpe"
-                          [selected]="exerciseData.defaultRepSchemeByCategory[category].defaultRPE === rpe"
-                        >
-                          RPE {{ rpe }}
-                        </option>
-                      }
-                    </select>
-                  </div>
+                  <app-select
+                    [name]="categoryIndex + '_categoryDefaultRPESelect'"
+                    [options]="rpeOptions()"
+                    [optionLabels]="rpeOptionsLabels()"
+                    [selectedValue]="exerciseData.defaultRepSchemeByCategory[category].defaultRPE"
+                  />
                 </td>
               </tr>
             </tbody>

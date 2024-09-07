@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ModalService } from '../../../service/modal/modalService';
@@ -11,11 +11,12 @@ import { InteractiveElementService } from '../../../service/util/interactive-ele
 import { InteractiveElementDirective } from '../../../directives/interactive-element.directive';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ExerciseService } from '../training-view/exercise.service.';
+import { SelectComponent } from '../../select/select.component';
 
 @Component({
   selector: 'app-exercises',
   standalone: true,
-  imports: [CommonModule, ExerciseTableSkeletonComponent, InteractiveElementDirective],
+  imports: [CommonModule, ExerciseTableSkeletonComponent, InteractiveElementDirective, SelectComponent],
   providers: [ExerciseService],
   templateUrl: './exercises.component.html',
   styleUrls: ['./exercises.component.scss', '../../../css/tables.scss'],
@@ -30,6 +31,43 @@ export class ExercisesComponent implements OnInit {
    * Maximum number of exercises to display.
    */
   maxExercises = 8;
+
+  pauseTimeOptions = signal([60, 90, 120, 150, 180, 210, 240, 270, 300]);
+
+  pauseTimeLabels = signal([
+    '1 Minute',
+    '1.5 Minuten',
+    '2 Minuten',
+    '2.5 Minuten',
+    '3 Minuten',
+    '3.5 Minuten',
+    '4 Minuten',
+    '4.5 Minuten',
+    '5 Minuten',
+  ]);
+
+  amountOfSetsOptions = signal([1, 2, 3, 4, 5, 6, 7, 8]);
+  amountofSetsLabels = signal(['1 Set', '2 Sets', '3 Sets', '4 Sets', '5 Sets', '6 Sets', '7 Sets', '8 Sets']);
+
+  rpeOptions = signal([6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10]);
+  rpeOptionsLabels = signal(['RPE 6', 'RPE 6.5', 'RPE 7', 'RPE 7.5', 'RPE 8', 'RPE 8.5', 'RPE 9', 'RPE 9.5', 'RPE 10']);
+
+  repsOptions = signal([3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+  repsOptionsLabels = signal([
+    '3 Reps',
+    '4 Reps',
+    '5 Reps',
+    '6 Reps',
+    '7 Reps',
+    '8 Reps',
+    '9 Reps',
+    '10 Reps',
+    '11 Reps',
+    '12 Reps',
+    '13 Reps',
+    '14 Reps',
+    '15 Reps',
+  ]);
 
   constructor(
     private toastService: ToastService,
