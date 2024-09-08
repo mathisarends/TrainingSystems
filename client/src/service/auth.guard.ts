@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate } from '@angular/router';
 import { map, Observable, of } from 'rxjs';
-import { AuthService } from './auth.service'; // Import AuthService
+import { AuthService } from './auth.service';
 import { BrowserCheckService } from '../app/browser-check.service';
 
 @Injectable({
@@ -27,6 +27,7 @@ export class AuthGuard implements CanActivate {
       return of(false);
     }
 
+    // intially the authentication status may be undefined because it is fetched from the api, so we have to wait for the response
     return this.authService.checkAuthenticationStatus().pipe(
       map(() => {
         const isAuthenticated = this.authService.isAuthenticated();
