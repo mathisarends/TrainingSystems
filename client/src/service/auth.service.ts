@@ -1,5 +1,5 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
-import { catchError, defaultIfEmpty, map, Observable, of } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { HttpService } from './http/http-client.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BrowserCheckService } from '../app/browser-check.service';

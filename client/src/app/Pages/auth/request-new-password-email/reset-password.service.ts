@@ -38,7 +38,7 @@ export class ResetPasswordService {
    * - `POST /user/reset-password`
    *
    */
-  resetPassword(): Observable<void> {
-    return this.httpService.post('/user/reset-password');
+  resetPassword(password: string, repeatPassword: string): Observable<void> {
+    return this.httpService.post('/user/reset-password', { password, repeatPassword });
   }
 }

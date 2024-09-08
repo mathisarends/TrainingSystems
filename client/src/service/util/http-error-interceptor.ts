@@ -14,6 +14,14 @@ import { ToastService } from '../../app/components/toast/toast.service';
 export function httpErrorInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
   const toastService = inject(ToastService);
 
+  const excludedRoutes = ['/user/authenticate-password-request'];
+
+  const isExcluded = excludedRoutes.some((route) => req.url.includes(route));
+
+  if (isExcluded) {
+    return next(req);
+  }
+
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       let errorMessage;
