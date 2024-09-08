@@ -22,7 +22,7 @@ class AuthService {
   };
 
   createAndSetToken(userClaimSet: Record<string, unknown>, res: Response) {
-    const token = jwt.sign(userClaimSet, SECRET, { algorithm: 'HS256', expiresIn: '30d' });
+    const token = this.createToken(userClaimSet, '30d');
 
     const isProduction = process.env.NODE_ENV === 'production';
 
@@ -34,8 +34,22 @@ class AuthService {
     });
   }
 
+  createToken(userClaimSet: Record<string, unknown>, expiresIn: string) {
+    return jwt.sign(userClaimSet, SECRET, { algorithm: 'HS256', expiresIn: expiresIn });
+  }
+
   verifyToken(token: string) {
     return jwt.verify(token, SECRET);
+  }
+
+  getTokenExpirationDate(token: string) {
+    try {
+      const decoded = jwt.verify(token, SECRET) as { exp: number };
+      const expirationDate = new Date(decoded.exp * 1000); // 'exp' is in seconds, so convert to milliseconds
+      return expirationDate;
+    } catch (error) {
+      throw new Error('Invalid or expired token');
+    }
   }
 
   removeToken(res: Response) {

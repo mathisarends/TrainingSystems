@@ -17,6 +17,9 @@ dotenv.config();
 
 const PORT = process.env.port ? parseInt(process.env.port, 10) : 3000;
 
+const DEV_BASE_URL = process.env.DEV_BASE_URL!;
+const PROD_BASE_URL = process.env.PROD_BASE_URL!;
+
 async function configureApp(app: Express) {
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
   app.use(express.json({ limit: '10mb' }));
@@ -24,11 +27,7 @@ async function configureApp(app: Express) {
 
   app.use(
     cors({
-      origin: [
-        'http://localhost:4200',
-        'https://trainingsystemsre.onrender.com',
-        'http://trainingsystemsre.onrender.com'
-      ],
+      origin: [DEV_BASE_URL, PROD_BASE_URL],
       credentials: true,
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
       allowedHeaders: 'Content-Type, Authorization'
@@ -51,9 +50,6 @@ export async function start() {
   // Erstelle einen HTTP-Server, der sowohl von Express als auch von Socket.IO verwendet wird
   const server = http.createServer(app);
 
-  /* WebSocketService.initialize(server); */
-
-  // Starte den kombinierten HTTP und WebSocket-Server
   server.listen(PORT, () => {
     console.log(`Server läuft auf http://localhost:${PORT}`);
   });

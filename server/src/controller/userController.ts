@@ -48,40 +48,35 @@ export async function loginOAuth2(req: Request, res: Response): Promise<void> {
 /**
  * Sends a password reset email to the user.
  */
-/*  export async function sendPasswordResetEmail(req: Request, res: Response) {
-    const userDAO = userService.getUserGenericDAO(req);
+export async function sendPasswordResetEmail(req: Request, res: Response) {
+  const userDAO = userService.getUserGenericDAO(req);
 
-    const email = req.body.email;
+  const email = req.body.email;
 
-    if (!email) {
-      return res.status(400).json({ error: 'Keine Email übergeben' });
-    }
+  if (!email) {
+    return res.status(400).json({ error: 'Keine Email übergeben' });
+  }
 
-    // FGind user by email
-    const user = 
+  // FGind user by email
+  const user = await userDAO.findOne({ email: email });
 
+  if (!user) {
+    return res.status(400).json({ error: 'Kein User mit der Email gefunden!' });
+  }
 
-    // check for user if no user then throw errro;
+  const token = authService.createToken({ id: user.id }, '10min');
 
+  /* const resetPasswordUrl = process.env.NODE_ENV === "PRODUCTION"
 
-    // check in old implementation
+  const clientUrl = config.ENVIRONMENT === 'PRODUCTION' ? config.urls.clientUrlProd : config.urls.clientUrl;
 
-      const token = authService.createToken({ id: user.id }, req);
+  const resetUrl = `${clientUrl}/user/reset/password/${token}`;
+  const decryptedEmail = decrypt(user.email);
+  const mailOptions = this.createResetPasswordEmail(user, decryptedEmail, resetUrl);
 
-      user.resetToken = token;
-      user.resetTokenExpiration = Date.now() + 10 * 60 * 10000;
-
-      await userDAO.update(user);
-
-      const clientUrl = config.ENVIRONMENT === 'PRODUCTION' ? config.urls.clientUrlProd : config.urls.clientUrl;
-
-      const resetUrl = `${clientUrl}/user/reset/password/${token}`;
-      const decryptedEmail = decrypt(user.email);
-      const mailOptions = this.createResetPasswordEmail(user, decryptedEmail, resetUrl);
-
-      await transporter.sendMail(mailOptions);
-      res.status(200).json({ message: 'Die Email wurde versandt' });
-  } */
+  await transporter.sendMail(mailOptions); */
+  res.status(200).json({ message: 'Die Email wurde versandt' });
+}
 
 /**
  * Authenticates the password reset page using the token.
