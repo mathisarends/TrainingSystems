@@ -42,16 +42,6 @@ class AuthService {
     return jwt.verify(token, SECRET);
   }
 
-  getTokenExpirationDate(token: string) {
-    try {
-      const decoded = jwt.verify(token, SECRET) as { exp: number };
-      const expirationDate = new Date(decoded.exp * 1000); // 'exp' is in seconds, so convert to milliseconds
-      return expirationDate;
-    } catch (error) {
-      throw new Error('Invalid or expired token');
-    }
-  }
-
   removeToken(res: Response) {
     res.clearCookie('jwt-token');
   }
