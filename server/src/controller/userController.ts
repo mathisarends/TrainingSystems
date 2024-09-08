@@ -58,7 +58,6 @@ export async function sendPasswordResetEmail(req: Request, res: Response) {
     return res.status(400).json({ error: 'Keine Email übergeben' });
   }
 
-  // FGind user by email
   const user = await userDAO.findOne({ email: email });
 
   if (!user) {
