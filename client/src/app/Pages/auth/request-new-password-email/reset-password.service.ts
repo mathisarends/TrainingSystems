@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpService } from '../../../../service/http/http-client.service';
 import { Observable } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
+import { BasicConfirmationResponse } from '../../../types/dto/basic-confirmation-response';
 
 @Injectable()
 export class ResetPasswordService {
@@ -28,7 +29,7 @@ export class ResetPasswordService {
    *
    */
   authenticatePasswordResetPage(token: string): Observable<void> {
-    return this.httpService.post(`/user/authenticate-password-request/${token}`);
+    return this.httpService.get(`/user/authenticate-password-request/${token}`);
   }
 
   /**
@@ -38,7 +39,7 @@ export class ResetPasswordService {
    * - `POST /user/reset-password`
    *
    */
-  resetPassword(password: string, repeatPassword: string): Observable<void> {
-    return this.httpService.post('/user/reset-password', { password, repeatPassword });
+  resetPassword(password: string, repeatPassword: string, token: string): Observable<BasicConfirmationResponse> {
+    return this.httpService.post(`/user/reset-password/${token}`, { password, repeatPassword });
   }
 }

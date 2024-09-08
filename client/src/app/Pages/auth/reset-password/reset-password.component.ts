@@ -23,6 +23,8 @@ export class ResetPasswordComponent extends BaisAuthComponent implements OnInit 
   password = signal('');
   repeatPassword = signal('');
 
+  token = signal('');
+
   pageAuthenticated$!: Observable<void>;
 
   constructor(
@@ -39,12 +41,13 @@ export class ResetPasswordComponent extends BaisAuthComponent implements OnInit 
 
   async ngOnInit(): Promise<void> {
     const token = this.activatedRoute.snapshot.paramMap.get('token')!;
+    this.token.set(token);
 
     this.restPasswordService
-      .authenticatePasswordResetPage(token)
+      .authenticatePasswordResetPage(this.token())
       .pipe(
         catchError(async (error) => {
-          if (error.status >= 400 && error.status < 500) {
+          if (error.status >= 400 && error.status < 500 && error.status !== 401) {
             const response = await this.modalService.open({
               component: BasicInfoComponent,
               title: 'Zurücksetzungs-Token abgelaufen oder ungültig',
@@ -65,9 +68,25 @@ export class ResetPasswordComponent extends BaisAuthComponent implements OnInit 
       .subscribe();
   }
 
-  setNewPassword(event: Event) {
+  resetPassword(event: Event): void {
     event.preventDefault();
-    this.restPasswordService.resetPassword(this.password(), this.repeatPassword());
+
+    this.restPasswordService
+      .resetPassword(this.password(), this.repeatPassword(), this.token())
+      .pipe(
+        catchError((error) => {
+          if (error.status === 400) {
+            this.toastService.error(error.error.message || 'Es ist ein Fehler aufgetreten.');
+          }
+          return of(null);
+        }),
+      )
+      .subscribe((response) => {
+        if (response && response.message) {
+          this.toastService.success(response.message);
+          this.router.navigate(['/login']);
+        }
+      });
   }
 
   onPasswordChange(event: Event) {

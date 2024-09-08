@@ -80,9 +80,11 @@ export async function sendPasswordResetEmail(req: Request, res: Response) {
  */
 export async function authenticatePasswordResetPage(req: Request, res: Response): Promise<Response> {
   const token = req.params.token;
+  console.log('🚀 ~ authenticatePasswordResetPage ~ token:', token);
 
   try {
     res.locals.user = authService.verifyToken(token);
+    console.log('🚀 ~ authenticatePasswordResetPage ~ res.locals.user:', res.locals.user);
   } catch (error) {
     const err = error as Error;
     if (err.name === 'TokenExpiredError') {
@@ -95,26 +97,35 @@ export async function authenticatePasswordResetPage(req: Request, res: Response)
   }
 
   await userService.getUser(req, res);
-  return res.status(200);
+  return res.status(200).json({ success: 'Du kannst dein Passwort jetzt zurücksetzen!' });
 }
 
 /**
  * Resets the user's password using the token.
  */
 export async function resetPassword(req: Request, res: Response): Promise<Response> {
+  const token = req.params.token;
+  res.locals.user = authService.verifyToken(token);
+
   const user = await userService.getUser(req, res);
   const userDAO = userService.getUserGenericDAO(req);
 
+  const newPassword = req.body.password;
+  console.log('🚀 ~ resetPassword ~ newPassword:', newPassword);
+
   if (req.body.password !== req.body.repeatPassword) {
+    console.log('2');
     return res.status(400).json({ error: 'Die angegebenen Passwörter stimmen nicht überein' });
   }
 
   if (!user.password) {
+    console.log('3');
     return res.status(400).json({ error: 'Google Nutzer können ihre Passwort nicht über diesen Wege zurücksetzen' });
   }
 
   if (await bcrypt.compare(req.body.password, user.password)) {
-    return res.status(400).json({ error: 'Die angegebenen Passwörter stimmen nicht überein' });
+    console.log('4');
+    return res.status(400).json({ error: 'Dein neues Passwort darf nicht gleichzeitig dein altes sein.' });
   }
 
   user.password = await bcrypt.hash(req.body.password, 10);

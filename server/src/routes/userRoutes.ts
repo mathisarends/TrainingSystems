@@ -13,7 +13,7 @@ router.get('/profile', authService.authenticationMiddleware, asyncHandler(userCo
 
 router.post('/send-reset-password-email', asyncHandler(userController.sendPasswordResetEmail));
 router.get('/authenticate-password-request/:token', asyncHandler(userController.authenticatePasswordResetPage));
-router.post('/reset-password', asyncHandler(userController.resetPassword));
+router.post('/reset-password/:token', asyncHandler(userController.resetPassword));
 
 router.get(
   '/activity-calendar',
