@@ -58,4 +58,6 @@ export interface User extends Entity {
    * representing the summary of the user's previous training day.
    */
   trainingDayNotifications: TrainingDAyFinishedNotification[];
+
+  passwordResetToken?: string;
 }
