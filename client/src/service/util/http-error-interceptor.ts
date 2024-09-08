@@ -30,6 +30,7 @@ export function httpErrorInterceptor(req: HttpRequest<unknown>, next: HttpHandle
 
         switch (error.status) {
           case 400:
+            console.log('here');
             errorMessage = 'Server Error Code: 400\nMessage: Bad Request';
             userFriendlyMessage = 'Ungültige Anfrage. Bitte überprüfen Sie Ihre Eingaben und versuchen Sie es erneut.';
             break;

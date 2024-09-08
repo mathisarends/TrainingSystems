@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from '../../../../service/http/http-client.service';
 import { Observable } from 'rxjs';
+import { HttpResponse } from '@angular/common/http';
 
 @Injectable()
 export class ResetPasswordService {
@@ -15,8 +16,8 @@ export class ResetPasswordService {
    * Example Usage:
    * - Sends a password reset link to the provided email address.
    */
-  requestPasswordResetLink(body: { email: string }): Observable<void> {
-    return this.httpService.post('/user/send-reset-password-email', body);
+  requestPasswordResetLink(email: string): Observable<HttpResponse<any>> {
+    return this.httpService.post('/user/send-reset-password-email', { email });
   }
 
   /**
