@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy, Input, Renderer2, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ModalEventsService } from '../../../service/modal/modal-events.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { HttpService } from '../../../service/http/http-client.service';
@@ -42,7 +41,6 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy, AfterViewCh
    */
   constructor(
     private fb: FormBuilder,
-    private modalEventsService: ModalEventsService,
     private modalService: ModalService,
     private toastService: ToastService,
     private trainingPlanService: TrainingPlanService,
@@ -67,8 +65,6 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy, AfterViewCh
     if (this.id) {
       await this.fetchTrainingPlan(this.id);
     }
-
-    this.subscription.add(this.modalEventsService.confirmClick$.subscribe(() => this.onSubmit()));
   }
 
   /**

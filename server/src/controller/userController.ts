@@ -66,7 +66,7 @@ export async function sendPasswordResetEmail(req: Request, res: Response) {
 
   const token = authService.createToken({ id: user.id }, '10min');
 
-  const baseURL = process.env.NODE_ENV === 'DEVELOPMENT' ? process.env.DEV_BASE_URL : process.env.PROD_BASE_URL;
+  const baseURL = process.env.NODE_ENV === 'development' ? process.env.DEV_BASE_URL : process.env.PROD_BASE_URL;
 
   const resetUrl = `${baseURL}/user/reset/password/${token}`;
   const mailOptions = createResetPasswordEmail(user, email, resetUrl);

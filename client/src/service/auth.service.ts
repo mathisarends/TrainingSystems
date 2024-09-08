@@ -1,8 +1,10 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
-import { catchError, map, Observable, of } from 'rxjs';
+import { catchError, defaultIfEmpty, map, Observable, of } from 'rxjs';
 import { HttpService } from './http/http-client.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BrowserCheckService } from '../app/browser-check.service';
+import { ModalService } from './modal/modalService';
+import { BasicInfoComponent } from '../app/Pages/modal-pages/basic-info/basic-info.component';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +16,8 @@ export class AuthService {
     private httpService: HttpService,
     private activatedRoute: ActivatedRoute,
     private browserCheckService: BrowserCheckService,
+    private modalService: ModalService,
+    private router: Router,
   ) {
     const isBrowserEnv = this.browserCheckService.isBrowser(); // Prevent warning that service is not used
 
@@ -26,20 +30,35 @@ export class AuthService {
     }
   }
 
+  async showLoginModalDialog() {
+    const response = await this.modalService.open({
+      component: BasicInfoComponent,
+      title: 'Anmeldung erforderlich',
+      buttonText: 'Anmelden',
+      componentData: {
+        text: 'Um diese Seite besuchen zu können musst du angemeldet sein!',
+      },
+    });
+
+    if (response) {
+      this.router.navigate(['login']);
+    }
+  }
+
   /**
    * Checks the initial authentication status of the user by making a request to the backend.
    * @returns An Observable that completes when the authentication status check is done.
    */
-  checkAuthenticationStatus(): Observable<void> {
+  checkAuthenticationStatus(): Observable<boolean> {
     return this.httpService.get('/user/auth-state').pipe(
       map(() => {
-        console.log('Authentication check completed - user is authenticated');
         this.isAuthenticatedSignal.set(true);
+        return true;
       }),
       catchError((error) => {
         console.error('Error during authentication check:', error);
         this.isAuthenticatedSignal.set(false);
-        return of();
+        return of(false);
       }),
     );
   }

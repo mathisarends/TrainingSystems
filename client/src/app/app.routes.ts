@@ -15,33 +15,42 @@ import { GymTicketComponent } from './gym-ticket/gym-ticket.component';
 import { SpinnerComponent } from './components/loaders/spinner/spinner.component';
 
 import { RequestNewPasswordEmail } from './Pages/auth/request-new-password-email/request-new-password-email.component';
+import { ResetPasswordComponent } from './Pages/auth/reset-password/reset-password.component';
+
+import { AuthGuard } from '../service/auth.guard';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'user/usage', component: UsageStatisticsComponent },
+  { path: 'user/usage', component: UsageStatisticsComponent, canActivate: [AuthGuard] },
   { path: 'user/reset-password', component: RequestNewPasswordEmail },
-  { path: 'user/ticket', component: GymTicketComponent },
+  { path: 'user/reset/password/:token', component: ResetPasswordComponent },
+  { path: 'user/ticket', component: GymTicketComponent, canActivate: [AuthGuard] },
   { path: 'spinner', component: SpinnerComponent },
   {
     path: '',
     component: TrainingPlansComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'training/view',
     component: TrainingViewComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'statistics/:planId',
     component: StatisticsComponent,
+    canActivate: [AuthGuard],
   },
-  { path: 'profile', component: ProfileComponent },
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
   {
     path: 'exercises',
     component: ExercisesComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'training/:planId/:week/:day',
     component: TrainingViewComponent,
+    canActivate: [AuthGuard],
   },
 ];
