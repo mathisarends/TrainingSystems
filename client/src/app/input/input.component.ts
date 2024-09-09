@@ -23,6 +23,11 @@ export class InputComponent<T extends string | number> {
   type = input.required<'text' | 'number'>();
 
   /**
+   * The placeholder of the input.
+   */
+  placeholder = input<string>('');
+
+  /**
    * The value of the input field. Can be either a string or a number.
    * This input is required and reflects the current value of the input field.
    */
