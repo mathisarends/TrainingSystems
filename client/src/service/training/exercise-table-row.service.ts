@@ -54,6 +54,10 @@ export class ExerciseTableRowService {
     return this.getElementByType(element, ExerciseTableRowInputType.SETS_INPUT) as HTMLInputElement;
   }
 
+  getRepsInputByElement(element: HTMLElement): HTMLInputElement {
+    return this.getElementByType(element, ExerciseTableRowInputType.REPS_INPUT) as HTMLInputElement;
+  }
+
   /**
    * Finds the `HTMLInputElement` for the number of sets within the same table row as the provided element.
    *
@@ -61,6 +65,14 @@ export class ExerciseTableRowService {
    */
   getPlanedRpeByElement(element: HTMLElement): HTMLInputElement {
     return this.getElementByType(element, ExerciseTableRowInputType.TARGET_RPE_INPUT) as HTMLInputElement;
+  }
+
+  getActualRPEByElement(element: HTMLElement): HTMLInputElement {
+    return this.getElementByType(element, ExerciseTableRowInputType.ACTUAL_RPE_INPUT) as HTMLInputElement;
+  }
+
+  getEstMaxByElement(element: HTMLElement): HTMLInputElement {
+    return this.getElementByType(element, ExerciseTableRowInputType.EST_MAX_INPUT) as HTMLInputElement;
   }
 
   /**
