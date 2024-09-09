@@ -69,7 +69,7 @@ export class TrainingPlanCardComponent {
     this.modalService.open({
       component: EditTrainingPlanComponent,
       title: 'Trainingsplan bearbeiten',
-      buttonText: '*Übernehmen',
+      buttonText: 'Übernehmen',
       size: ModalSize.LARGE,
       componentData: { id },
     });

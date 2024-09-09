@@ -1,5 +1,11 @@
 @if (loading) {
-  <app-spinner></app-spinner>
+  <!-- <app-spinner></app-spinner> -->
+
+  <app-skeleton [height]="'12rem'" />
+
+  @for (k of [1, 2, 3]; track k) {
+    <app-skeleton [height]="'4.25rem'" />
+  }
 } @else {
   <div class="row no-gutters">
     <div class="col-md-12">

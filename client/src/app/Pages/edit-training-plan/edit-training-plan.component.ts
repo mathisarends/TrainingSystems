@@ -5,11 +5,11 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { firstValueFrom, Subscription } from 'rxjs';
 import { HttpService } from '../../../service/http/http-client.service';
 import { CommonModule } from '@angular/common';
-import { SpinnerComponent } from '../../components/loaders/spinner/spinner.component';
 import { ModalService } from '../../../service/modal/modalService';
 import { TrainingPlanService } from '../../../service/training/training-plan.service';
 import { ImageUploadService } from '../../../service/util/image-upload.service';
 import { ToastService } from '../../components/toast/toast.service';
+import { SkeletonComponent } from '../../skeleton/skeleton.component';
 
 /**
  * Component for editing a training plan.
@@ -17,7 +17,7 @@ import { ToastService } from '../../components/toast/toast.service';
 @Component({
   selector: 'app-edit-training-plan',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, SpinnerComponent],
+  imports: [ReactiveFormsModule, CommonModule, SkeletonComponent],
   templateUrl: './edit-training-plan.component.html',
   styleUrls: ['./edit-training-plan.component.scss'],
 })
