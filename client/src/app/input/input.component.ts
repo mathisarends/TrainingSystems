@@ -26,7 +26,7 @@ export class InputComponent<T extends string | number> {
    * The value of the input field. Can be either a string or a number.
    * This input is required and reflects the current value of the input field.
    */
-  value = input.required<T>();
+  value = input<T>();
 
   /**
    * Emits the new value whenever the input field changes.
@@ -39,6 +39,11 @@ export class InputComponent<T extends string | number> {
    * This input is optional, with a default value of 'center' if not provided.
    */
   alignText = input<'left' | 'center'>('center');
+
+  setValue(value: T) {
+    console.log('🚀 ~ InputComponent<T ~ setValue ~ value:', value);
+    this.valueChange.emit(value);
+  }
 
   /**
    * Handles the `change` event from the input element.

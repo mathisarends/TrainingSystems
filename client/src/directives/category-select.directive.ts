@@ -107,9 +107,12 @@ export class CategorySelectDirective {
       (selector) => window.getComputedStyle(selector).opacity === '1' && !selector.disabled,
     )!;
 
-    const setsInput = tableRow.querySelector('.sets') as HTMLInputElement;
-    const repsInput = tableRow.querySelector('.reps') as HTMLInputElement;
-    const targetRPEInput = tableRow.querySelector('.targetRPE') as HTMLInputElement;
+    const appInputWrappers = Array.from(tableRow.querySelectorAll('app-input'));
+    const inputElements = appInputWrappers.flatMap((input) => Array.from(input.querySelectorAll('input')));
+
+    const setsInput = inputElements[0];
+    const repsInput = inputElements[1];
+    const targetRPEInput = inputElements[2];
 
     if (category !== '- Bitte Auswählen -') {
       const defaultValues = defaultRepSchemeByCategory[category];

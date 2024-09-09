@@ -6,12 +6,13 @@ enum ExerciseTableRowInputType {
   CATEGORY_SELECTOR = '.exercise-category-selector',
   EXERCISE_SELECTOR_GENERIC = '.exercise-name-selector',
   EXERCISE_SELECTOR = '.exercise-name-selector:not([disabled])[style*="display: block"]',
-  SETS_INPUT = '.sets',
-  REPS_INPUT = '.reps',
+  SETS_INPUT = 'app-input.sets input',
+  REPS_INPUT = 'app-input.reps input',
   WEIGHT_INPUT = '.weight',
-  TARGET_RPE_INPUT = '.targetRPE',
+  TARGET_RPE_INPUT = 'app-input.targetRPE input',
   ACTUAL_RPE_INPUT = '.actualRPE',
-  EST_MAX_INPUT = '.estMax',
+  EST_MAX_INPUT = 'app-input.estMax input',
+  NOTES = 'app-input.notes input',
 }
 
 @Injectable({
@@ -121,7 +122,7 @@ export class ExerciseTableRowService {
    * @throws Will throw an error if no matching element is found.
    */
 
-  private findClosestElementInRow(element: HTMLElement, selector: string): InteractiveElement {
+  findClosestElementInRow(element: HTMLElement, selector: string): InteractiveElement {
     const tableRow = element.closest('tr');
     if (!tableRow) {
       throw new Error('The element is not contained within a table row.');

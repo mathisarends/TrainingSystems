@@ -30,7 +30,7 @@
       <tbody>
         @for (k of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track k; let i = $index) {
           @let exercise =
-            trainingPlanData.trainingDay.exercises[i] || {
+            trainingPlanData.trainingDay.exercises![i] || {
               category: '',
               exercise: '',
               sets: '',
@@ -82,29 +82,15 @@
               }
             </td>
             <td data-cell="Sets">
-              <!-- <app-input
-              [type]="'text'"
-              [name]="categoryIndex + '_' + exerciseIndex + '_exercise'"
-              [value]="exercise ?? ''"
-              [alignText]="'left'"
-            /> -->
-
-              <input
-                type="number"
-                appInteractiveElement
-                class="transparent-input sets"
-                name="day{{ trainingDayIndex }}_exercise{{ k }}_sets"
-                [value]="exercise.sets || ''"
+              <app-input
+                class="sets"
+                [type]="'number'"
+                [name]="'day' + trainingDayIndex + '_exercise' + k + '_sets'"
+                [value]="exercise.sets"
               />
             </td>
             <td data-cell="Reps">
-              <input
-                type="number"
-                appInteractiveElement
-                class="transparent-input reps"
-                [name]="namePrefix + 'reps'"
-                [value]="exercise.reps || ''"
-              />
+              <app-input class="reps" [type]="'number'" [name]="namePrefix + 'reps'" [value]="exercise.reps" />
             </td>
             <td data-cell="Weight">
               <input
@@ -122,13 +108,11 @@
               />
             </td>
             <td data-cell="RPE">
-              <input
-                appInteractiveElement
-                type="string"
-                [id]="namePrefix + 'targetRPE'"
-                class="transparent-input targetRPE"
+              <app-input
+                class="targetRPE"
+                [type]="'text'"
                 [name]="namePrefix + 'targetRPE'"
-                [value]="exercise.targetRPE || ''"
+                [value]="exercise.targetRPE"
               />
             </td>
             <td data-cell="@RPE">
@@ -142,24 +126,18 @@
               />
             </td>
             <td data-cell="Est. Max">
-              <input
+              <app-input class="estMax" [type]="'number'" [name]="namePrefix + 'estMax'" [value]="exercise.estMax" />
+              <!-- <input
                 type="number"
                 appInteractiveElement
                 class="transparent-input estMax"
                 readonly
                 [name]="namePrefix + 'estMax'"
                 [value]="exercise.estMax || ''"
-              />
+              /> -->
             </td>
             <td data-cell="Notes">
-              <input
-                type="text"
-                appInteractiveElement
-                [id]="namePrefix + 'notes'"
-                class="transparent-input notes"
-                [name]="namePrefix + 'notes'"
-                [value]="exercise.notes || ''"
-              />
+              <app-input class="notes" [type]="'text'" [name]="namePrefix + 'notes'" [value]="exercise.notes ?? ''" />
             </td>
           </tr>
         }

@@ -4,10 +4,8 @@ export class TrainingPlanDto {
   title!: string;
   trainingFrequency!: number;
   trainingBlockLength!: number;
-  trainingDay!: TrainingDay;
+  trainingDay!: Partial<TrainingDay>;
   previousTrainingDay?: TrainingDay;
-
-  constructor() {}
 
   setData(data: TrainingPlanDto) {
     this.title = data.title;
