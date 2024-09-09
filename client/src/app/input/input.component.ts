@@ -1,11 +1,11 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { InputType } from './input-type';
+import { InteractiveElementDirective } from '../../directives/interactive-element.directive';
 
 @Component({
   selector: 'app-input',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, InteractiveElementDirective],
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss',
 })
@@ -20,7 +20,7 @@ export class InputComponent {
    * The type of input control (e.g., 'text', 'number', 'password').
    * This input is required and determines the type of input field.
    */
-  type = input.required<InputType>();
+  type = input.required<'text' | 'number'>();
 
   /**
    * The value of the input field. Can be either a string or a number.

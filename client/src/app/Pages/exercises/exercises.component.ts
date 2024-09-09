@@ -12,11 +12,12 @@ import { InteractiveElementDirective } from '../../../directives/interactive-ele
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ExerciseService } from '../training-view/exercise.service.';
 import { SelectComponent } from '../../select/select.component';
+import { InputComponent } from '../../input/input.component';
 
 @Component({
   selector: 'app-exercises',
   standalone: true,
-  imports: [CommonModule, ExerciseTableSkeletonComponent, InteractiveElementDirective, SelectComponent],
+  imports: [CommonModule, ExerciseTableSkeletonComponent, InteractiveElementDirective, SelectComponent, InputComponent],
   providers: [ExerciseService],
   templateUrl: './exercises.component.html',
   styleUrls: ['./exercises.component.scss', '../../../css/tables.scss'],
