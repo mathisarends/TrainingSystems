@@ -11,6 +11,7 @@ import { IconName } from './icon-name';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './icon.component.html',
+  styleUrl: './icon.component.scss',
 })
 export class IconComponent {
   /**

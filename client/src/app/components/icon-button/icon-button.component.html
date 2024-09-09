@@ -1,6 +1,8 @@
 <button class="icon-button" [appTooltip]="tooltipTitle() ?? ''">
   <app-icon [name]="iconName()" [size]="15" />
-  <span>
-    {{ text() }}
-  </span>
+  @if (text()) {
+    <span>
+      {{ text() }}
+    </span>
+  }
 </button>
