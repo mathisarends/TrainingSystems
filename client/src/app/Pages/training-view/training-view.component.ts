@@ -44,6 +44,7 @@ import { FocusService } from '../../focus.service';
 import { IconName } from '../../shared/icon/icon-name';
 import { IconComponent } from '../../shared/icon/icon.component';
 import { SelectComponent } from '../../select/select.component';
+import { InputComponent } from '../../input/input.component';
 
 /**
  * Component to manage and display the training view.
@@ -66,6 +67,7 @@ import { SelectComponent } from '../../select/select.component';
     SpinnerComponent,
     IconComponent,
     SelectComponent,
+    InputComponent,
   ],
   providers: [TrainingViewService, FocusService, SelectComponent],
   templateUrl: './training-view.component.html',

@@ -9,7 +9,7 @@ import { InteractiveElementDirective } from '../../directives/interactive-elemen
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss',
 })
-export class InputComponent {
+export class InputComponent<T extends string | number> {
   /**
    * The name of the input field, used to uniquely identify the control.
    * This input is required and must be provided by the parent component.
@@ -26,13 +26,13 @@ export class InputComponent {
    * The value of the input field. Can be either a string or a number.
    * This input is required and reflects the current value of the input field.
    */
-  value = input.required<string | number>();
+  value = input.required<T>();
 
   /**
    * Emits the new value whenever the input field changes.
    * This output is used to inform the parent component when the input value changes.
    */
-  valueChange = output<string | number>();
+  valueChange = output<T>();
 
   /**
    * Determines how the text within the input field is aligned.
@@ -48,7 +48,7 @@ export class InputComponent {
    * @param {Event} event - The change event triggered by the input field.
    */
   onChange(event: Event) {
-    const newValue = (event.target as HTMLSelectElement).value;
+    const newValue = (event.target as HTMLInputElement).value as unknown as T;
     this.valueChange.emit(newValue);
   }
 }
