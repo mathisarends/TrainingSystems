@@ -1,8 +1,6 @@
 import { Request, Response } from 'express';
-import { MongoGenericDAO } from '../models/dao/mongo-generic.dao.js';
-import { User } from '../models/collections/user/user.js';
 import { ApiData } from '../models/apiData.js';
-import { getUser } from '../service/userService.js';
+import { getUser, getUserGenericDAO } from '../service/userService.js';
 import {
   getExerciseFieldByCategory,
   mapChangedDataToCategories,
@@ -58,40 +56,34 @@ export async function getExercises(req: Request, res: Response): Promise<void> {
  * Updates exercises for the user based on provided data.
  */
 export async function updateExercises(req: Request, res: Response): Promise<void> {
-  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
-  try {
-    const changedData: ApiData = req.body;
-    const user = await getUser(req, res);
-    const changedCategoriesMap = mapChangedDataToCategories(changedData);
+  const userDAO = getUserGenericDAO(req);
 
-    Object.entries(changedCategoriesMap).forEach(([category, { fieldNames, newValues }]) => {
-      const userExerciseField = getExerciseFieldByCategory(category as ExerciseCategoryType, user);
+  const changedData: ApiData = req.body;
+  const user = await getUser(req, res);
+  const changedCategoriesMap = mapChangedDataToCategories(changedData);
 
-      for (let index = 0; index < fieldNames.length; index++) {
-        processExerciseChanges(fieldNames[index], index, newValues, userExerciseField);
-      }
-    });
+  Object.entries(changedCategoriesMap).forEach(([category, { fieldNames, newValues }]) => {
+    const userExerciseField = getExerciseFieldByCategory(category as ExerciseCategoryType, user);
 
-    await userDAO.update(user);
-    res.status(200).json({ message: 'Erfolgreich aktualisiert.' });
-  } catch (error) {
-    console.error('An error occurred while updating user exercises', error);
-    res.status(500).json({ message: 'Interner Serverfehler beim Aktualisieren der Benutzerübungen.' });
-  }
+    for (let index = 0; index < fieldNames.length; index++) {
+      processExerciseChanges(fieldNames[index], index, newValues, userExerciseField);
+    }
+  });
+
+  await userDAO.update(user);
+  res.status(200).json({ message: 'Erfolgreich aktualisiert.' });
 }
 
 /**
  * Resets the user's exercise catalog to default values.
  */
 export async function resetExercises(req: Request, res: Response): Promise<void> {
-  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
-  try {
-    const user = await getUser(req, res);
-    resetUserExercises(user);
-    await userDAO.update(user);
-    res.status(200).json({ message: 'Übungskatalog zurückgesetzt!' });
-  } catch (error) {
-    console.error('An error occurred while resetting user exercises', error);
-    res.status(500).json({ message: 'Interner Serverfehler beim Zurücksetzen der Benutzerübungen.' });
-  }
+  const userDAO = getUserGenericDAO(req);
+
+  const user = await getUser(req, res);
+  resetUserExercises(user);
+
+  await userDAO.update(user);
+
+  res.status(200).json({ message: 'Übungskatalog zurückgesetzt!' });
 }
