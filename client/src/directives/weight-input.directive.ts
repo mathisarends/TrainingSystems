@@ -11,22 +11,47 @@ import { ExerciseTableRowService } from '../service/training/exercise-table-row.
   standalone: true,
 })
 export class WeightInputDirective implements AfterViewInit {
+  /**
+   * Input property to bind the weight input value from the parent component.
+   */
   @Input() weightInput!: string;
+
+  /**
+   * Reference to the host input element.
+   */
   private inputElement!: HTMLInputElement;
 
   constructor(
-    private el: ElementRef, // Inject ElementRef to access the wrapper element
+    private elementRef: ElementRef,
     private interactiveElementService: InteractiveElementService,
     private formService: FormService,
     private exerciseTableRowService: ExerciseTableRowService,
   ) {}
 
+  /**
+   * Lifecycle hook that runs after the view is initialized.
+   * It assigns the host element to the inputElement property.
+   */
   ngAfterViewInit(): void {
-    // Find the actual input element inside the wrapper
-    this.inputElement = this.el.nativeElement.querySelector('input') as HTMLInputElement;
-    if (!this.inputElement) {
-      throw new Error('No input element found inside the wrapper');
+    this.inputElement = this.elementRef.nativeElement as HTMLInputElement;
+  }
+
+  /**
+   * Handles the double-click event on the input element.
+   * On double-click, the last entered weight value is duplicated to fill in
+   * the remaining sets, if any sets are left unfilled.
+   */
+  @HostListener('dblclick', ['$event'])
+  onDoubleClick(): void {
+    const weightValues = this.parseWeightInputValues(this.inputElement);
+    const amountOfSets = this.getAmountOfSets();
+
+    const isSetLeft = weightValues.length < amountOfSets;
+    if (!isSetLeft) {
+      return;
     }
+
+    this.duplicateLastWeightInput(weightValues);
   }
 
   /**
@@ -35,9 +60,7 @@ export class WeightInputDirective implements AfterViewInit {
    */
   @HostListener('focus', ['$event.target'])
   handleFocusEvent(): void {
-    if (this.inputElement) {
-      this.interactiveElementService.focus(this.inputElement.value);
-    }
+    this.interactiveElementService.focus(this.inputElement.value);
   }
 
   /**
@@ -46,14 +69,13 @@ export class WeightInputDirective implements AfterViewInit {
    */
   @HostListener('blur', ['$event.target'])
   handleBlurEvent(): void {
-    if (this.inputElement) {
-      const weightValues = this.parseWeightInputValues(this.inputElement);
-      const amountOfSets = Number(this.exerciseTableRowService.getSetInputByElement(this.inputElement).value);
+    const weightValues = this.parseWeightInputValues(this.inputElement);
+    const amountOfSets = this.getAmountOfSets();
 
-      if (weightValues.length === amountOfSets) {
-        const roundedWeight = this.calculateRoundedWeight(weightValues);
-        this.inputElement.value = roundedWeight.toString();
-      }
+    const setsFinished = weightValues.length === amountOfSets;
+    if (setsFinished) {
+      const roundedWeight = this.calculateRoundedWeight(weightValues);
+      this.inputElement.value = roundedWeight.toString();
 
       this.formService.addChange(this.inputElement.name, this.inputElement.value);
       this.interactiveElementService.triggerChangeIfModified(this.inputElement.value);
@@ -61,21 +83,42 @@ export class WeightInputDirective implements AfterViewInit {
   }
 
   /**
-   * Handles the input event of the interactive element.
-   * When the value of the element changes, the new value is tracked by the FormService.
+   * Handles the input event of the input element.
+   * On each input change, the new value is tracked via the FormService.
    */
   @HostListener('input', ['$event'])
   handleInputChange(event: Event): void {
     this.formService.trackChange(event);
   }
 
-  // Helper methods...
+  /**
+   * Retrieves the total number of sets from the ExerciseTableRowService.
+   */
+  private getAmountOfSets(): number {
+    return Number(this.exerciseTableRowService.getSetInputByElement(this.inputElement).value);
+  }
 
+  /**
+   * Duplicates the last entered weight input to fill any remaining sets.
+   */
+  private duplicateLastWeightInput(weightValues: number[]): void {
+    const lastWeightInput = weightValues[weightValues.length - 1];
+    this.inputElement.value = `${this.inputElement.value};${lastWeightInput}`;
+  }
+
+  /**
+   * Calculates the rounded average weight from the entered values.
+   * The rounding is done to the nearest 2.5 units (standard for weight increments).
+   */
   private calculateRoundedWeight(weightValues: number[]): number {
     const averageWeight = weightValues.reduce((acc, curr) => acc + curr, 0) / weightValues.length;
     return Math.round(averageWeight / 2.5) * 2.5;
   }
 
+  /**
+   * Parses the weight input values entered in the input field.
+   * The values are expected to be separated by semicolons (';') and may include commas (',') which are replaced with dots ('.') for parsing.
+   */
   private parseWeightInputValues(weightInput: HTMLInputElement): number[] {
     return weightInput.value.split(';').map((value) => parseFloat(value.trim().replace(',', '.')));
   }
