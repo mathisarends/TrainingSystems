@@ -93,12 +93,11 @@
               <app-input class="reps" [type]="'number'" [name]="namePrefix + 'reps'" [value]="exercise.reps" />
             </td>
             <td data-cell="Weight">
+              @let exerciseThisWeek = exercise?.exercise;
+              @let previousWeekExercise = previousTrainingDayExercise?.exercise;
               <app-input
-                weightInput
                 [placeholder]="
-                  previousTrainingDayExercise?.exercise && previousTrainingDayExercise.exercise === exercise?.exercise
-                    ? previousTrainingDayExercise?.weight?.toString() || ''
-                    : ''
+                  exerciseThisWeek && previousWeekExercise ? previousTrainingDayExercise?.weight || '' : ''
                 "
                 [type]="'text'"
                 [name]="namePrefix + 'weight'"
@@ -115,12 +114,10 @@
               />
             </td>
             <td data-cell="@RPE">
-              <input
-                type="string"
-                rpeInputDirective
-                [id]="namePrefix + 'actualRPE'"
-                class="transparent-input actualRPE"
+              <app-input
+                [type]="'text'"
                 [name]="namePrefix + 'actualRPE'"
+                [directiveUsed]="'rpeInputDirective'"
                 [value]="exercise.actualRPE || ''"
               />
             </td>

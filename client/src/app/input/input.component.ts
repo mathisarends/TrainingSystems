@@ -2,11 +2,12 @@ import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InteractiveElementDirective } from '../../directives/interactive-element.directive';
 import { WeightInputDirective } from '../../directives/weight-input.directive';
+import { RpeInputDirective } from '../../directives/rpe-input.directive';
 
 @Component({
   selector: 'app-input',
   standalone: true,
-  imports: [CommonModule, InteractiveElementDirective, WeightInputDirective],
+  imports: [CommonModule, InteractiveElementDirective, WeightInputDirective, RpeInputDirective],
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss',
 })
@@ -53,7 +54,9 @@ export class InputComponent<T extends string | number> {
    * - 'weightInputDirective': Adds weight input specific behavior.
    * By default, the 'interactiveElementDirective' is applied.
    */
-  directiveUsed = input<'interactiveElementDirective' | 'weightInputDirective'>('interactiveElementDirective');
+  directiveUsed = input<'interactiveElementDirective' | 'weightInputDirective' | 'rpeInputDirective'>(
+    'interactiveElementDirective',
+  );
 
   /**
    * Handles the `change` event from the input element.

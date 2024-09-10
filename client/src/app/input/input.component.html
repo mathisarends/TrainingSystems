@@ -13,7 +13,19 @@
 
   @case ('weightInputDirective') {
     <input
-      weightInput=""
+      weightInput
+      type="type()"
+      class="transparent-input"
+      [name]="name()"
+      [placeholder]="placeholder()"
+      [value]="value()"
+      [ngStyle]="{ 'text-align': alignText(), padding: alignText() === 'center' ? '0' : '0' }"
+    />
+  }
+
+  @case ('rpeInputDirective') {
+    <input
+      rpeInputDirective
       type="type()"
       class="transparent-input"
       [name]="name()"

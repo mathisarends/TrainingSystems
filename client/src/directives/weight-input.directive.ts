@@ -43,17 +43,15 @@ export class WeightInputDirective implements AfterViewInit {
    */
   @HostListener('dblclick', ['$event'])
   onDoubleClick(): void {
-    if (this.inputElement?.value) {
-      const weightValues = this.parseWeightInputValues();
-      const amountOfSets = this.getAmountOfSets();
+    const weightValues = this.parseWeightInputValues();
+    const amountOfSets = this.getAmountOfSets();
 
-      const isSetLeft = weightValues.length < amountOfSets;
-      if (!isSetLeft) {
-        return;
-      }
-
-      this.duplicateLastWeightInput(weightValues);
+    const isSetLeft = weightValues.length < amountOfSets;
+    if (!isSetLeft) {
+      return;
     }
+
+    this.duplicateLastWeightInput(weightValues);
   }
 
   /**
