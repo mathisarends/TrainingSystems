@@ -11,6 +11,10 @@ router.post('/login', asyncHandler(userController.login));
 router.post('/login/oauth2', asyncHandler(userController.loginOAuth2));
 router.get('/profile', authService.authenticationMiddleware, asyncHandler(userController.getProfile));
 
+router.post('/send-reset-password-email', asyncHandler(userController.sendPasswordResetEmail));
+router.get('/authenticate-password-request/:token', asyncHandler(userController.authenticatePasswordResetPage));
+router.post('/reset-password/:token', asyncHandler(userController.resetPassword));
+
 router.get(
   '/activity-calendar',
   authService.authenticationMiddleware,

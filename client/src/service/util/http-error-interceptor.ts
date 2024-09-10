@@ -1,9 +1,8 @@
 import { HttpRequest, HttpEvent, HttpHandlerFn, HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { inject } from '@angular/core';
 import { ToastService } from '../../app/components/toast/toast.service';
-import { Router } from '@angular/router';
 
 /**
  * Intercepts HTTP requests to handle errors globally.
@@ -14,7 +13,14 @@ import { Router } from '@angular/router';
  */
 export function httpErrorInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
   const toastService = inject(ToastService);
-  const router = inject(Router);
+
+  const excludedRoutes = ['/user/authenticate-password-request'];
+
+  const isExcluded = excludedRoutes.some((route) => req.url.includes(route));
+
+  if (isExcluded) {
+    return next(req);
+  }
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
@@ -30,14 +36,12 @@ export function httpErrorInterceptor(req: HttpRequest<unknown>, next: HttpHandle
 
         switch (error.status) {
           case 400:
+            console.log('here');
             errorMessage = 'Server Error Code: 400\nMessage: Bad Request';
             userFriendlyMessage = 'Ungültige Anfrage. Bitte überprüfen Sie Ihre Eingaben und versuchen Sie es erneut.';
             break;
           case 401:
-            errorMessage = 'Server Error Code: 401\nMessage: Unauthorized';
-            userFriendlyMessage = 'Nicht autorisiert. Bitte melden Sie sich erneut an.';
-            router.navigate(['/login']);
-            break;
+            return throwError(() => error);
           case 403:
             errorMessage = 'Server Error Code: 403\nMessage: Forbidden';
             userFriendlyMessage =
