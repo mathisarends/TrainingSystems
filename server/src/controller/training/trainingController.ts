@@ -103,7 +103,7 @@ export async function getPlanForEdit(req: Request, res: Response): Promise<void>
 
   const trainingPlanEditView = TrainingPlanDtoMapper.getEditView(trainingPlan);
 
-  res.status(200).json({ trainingPlanEditView });
+  res.status(200).json(trainingPlanEditView);
 }
 
 /**
