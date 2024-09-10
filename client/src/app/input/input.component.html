@@ -1,9 +1,25 @@
-<input
-  type="type()"
-  class="transparent-input"
-  appInteractiveElement
-  [name]="name()"
-  [placeholder]="placeholder()"
-  [value]="value()"
-  [ngStyle]="{ 'text-align: left; padding: 0': alignText() === 'left' }"
-/>
+@switch (directiveUsed()) {
+  @case ('interactiveElementDirective') {
+    <input
+      appInteractiveElement
+      type="type()"
+      class="transparent-input"
+      [name]="name()"
+      [placeholder]="placeholder()"
+      [value]="value()"
+      [ngStyle]="{ 'text-align': alignText(), padding: alignText() === 'center' ? '0' : '0' }"
+    />
+  }
+
+  @case ('weightInputDirective') {
+    <input
+      weightInput=""
+      type="type()"
+      class="transparent-input"
+      [name]="name()"
+      [placeholder]="placeholder()"
+      [value]="value()"
+      [ngStyle]="{ 'text-align': alignText(), padding: alignText() === 'center' ? '0' : '0' }"
+    />
+  }
+}

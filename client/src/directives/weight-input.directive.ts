@@ -30,10 +30,10 @@ export class WeightInputDirective implements AfterViewInit {
 
   /**
    * Lifecycle hook that runs after the view is initialized.
-   * It assigns the host element to the inputElement property.
+   * It assigns the inner input element inside the wrapper to the inputElement property.
    */
   ngAfterViewInit(): void {
-    this.inputElement = this.elementRef.nativeElement as HTMLInputElement;
+    this.inputElement = this.elementRef.nativeElement;
   }
 
   /**
@@ -43,15 +43,17 @@ export class WeightInputDirective implements AfterViewInit {
    */
   @HostListener('dblclick', ['$event'])
   onDoubleClick(): void {
-    const weightValues = this.parseWeightInputValues(this.inputElement);
-    const amountOfSets = this.getAmountOfSets();
+    if (this.inputElement?.value) {
+      const weightValues = this.parseWeightInputValues();
+      const amountOfSets = this.getAmountOfSets();
 
-    const isSetLeft = weightValues.length < amountOfSets;
-    if (!isSetLeft) {
-      return;
+      const isSetLeft = weightValues.length < amountOfSets;
+      if (!isSetLeft) {
+        return;
+      }
+
+      this.duplicateLastWeightInput(weightValues);
     }
-
-    this.duplicateLastWeightInput(weightValues);
   }
 
   /**
@@ -69,7 +71,7 @@ export class WeightInputDirective implements AfterViewInit {
    */
   @HostListener('blur', ['$event.target'])
   handleBlurEvent(): void {
-    const weightValues = this.parseWeightInputValues(this.inputElement);
+    const weightValues = this.parseWeightInputValues();
     const amountOfSets = this.getAmountOfSets();
 
     const setsFinished = weightValues.length === amountOfSets;
@@ -119,7 +121,7 @@ export class WeightInputDirective implements AfterViewInit {
    * Parses the weight input values entered in the input field.
    * The values are expected to be separated by semicolons (';') and may include commas (',') which are replaced with dots ('.') for parsing.
    */
-  private parseWeightInputValues(weightInput: HTMLInputElement): number[] {
-    return weightInput.value.split(';').map((value) => parseFloat(value.trim().replace(',', '.')));
+  private parseWeightInputValues(): number[] {
+    return this.inputElement.value.split(';').map((value) => parseFloat(value.trim().replace(',', '.')));
   }
 }

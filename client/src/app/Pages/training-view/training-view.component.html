@@ -93,18 +93,16 @@
               <app-input class="reps" [type]="'number'" [name]="namePrefix + 'reps'" [value]="exercise.reps" />
             </td>
             <td data-cell="Weight">
-              <!-- TODO: weight input noch austauschen-->
-              <input
+              <app-input
                 weightInput
-                [id]="namePrefix + 'weight'"
                 [placeholder]="
                   previousTrainingDayExercise?.exercise && previousTrainingDayExercise.exercise === exercise?.exercise
-                    ? previousTrainingDayExercise?.weight
+                    ? previousTrainingDayExercise?.weight?.toString() || ''
                     : ''
                 "
-                type="text"
-                class="transparent-input weight"
+                [type]="'text'"
                 [name]="namePrefix + 'weight'"
+                [directiveUsed]="'weightInputDirective'"
                 [value]="exercise.weight || ''"
               />
             </td>

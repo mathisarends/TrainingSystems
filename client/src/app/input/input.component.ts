@@ -1,11 +1,12 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InteractiveElementDirective } from '../../directives/interactive-element.directive';
+import { WeightInputDirective } from '../../directives/weight-input.directive';
 
 @Component({
   selector: 'app-input',
   standalone: true,
-  imports: [CommonModule, InteractiveElementDirective],
+  imports: [CommonModule, InteractiveElementDirective, WeightInputDirective],
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss',
 })
@@ -45,10 +46,14 @@ export class InputComponent<T extends string | number> {
    */
   alignText = input<'left' | 'center'>('center');
 
-  setValue(value: T) {
-    console.log('🚀 ~ InputComponent<T ~ setValue ~ value:', value);
-    this.valueChange.emit(value);
-  }
+  /**
+   * Selects which directive to use on the input field.
+   * Possible values are:
+   * - 'interactiveElementDirective': Adds interactivity behavior.
+   * - 'weightInputDirective': Adds weight input specific behavior.
+   * By default, the 'interactiveElementDirective' is applied.
+   */
+  directiveUsed = input<'interactiveElementDirective' | 'weightInputDirective'>('interactiveElementDirective');
 
   /**
    * Handles the `change` event from the input element.
