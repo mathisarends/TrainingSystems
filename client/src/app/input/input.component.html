@@ -7,7 +7,10 @@
       [name]="name()"
       [placeholder]="placeholder()"
       [value]="value()"
-      [ngStyle]="{ 'text-align': alignText(), padding: alignText() === 'center' ? '0' : '0' }"
+      [ngClass]="{
+        'text-left': mobileDetectionService.isMobileDevice,
+        'text-center': !mobileDetectionService.isMobileDevice && alignText() === 'center',
+      }"
     />
   }
 
@@ -19,7 +22,10 @@
       [name]="name()"
       [placeholder]="placeholder()"
       [value]="value()"
-      [ngStyle]="{ 'text-align': alignText(), padding: alignText() === 'center' ? '0' : '0' }"
+      [ngClass]="{
+        'text-left': mobileDetectionService.isMobileDevice,
+        'text-center': !mobileDetectionService.isMobileDevice && alignText() === 'center',
+      }"
     />
   }
 
@@ -31,7 +37,10 @@
       [name]="name()"
       [placeholder]="placeholder()"
       [value]="value()"
-      [ngStyle]="{ 'text-align': alignText(), padding: alignText() === 'center' ? '0' : '0' }"
+      [ngClass]="{
+        'text-left': mobileDetectionService.isMobileDevice,
+        'text-center': !mobileDetectionService.isMobileDevice && alignText() === 'center',
+      }"
     />
   }
 }

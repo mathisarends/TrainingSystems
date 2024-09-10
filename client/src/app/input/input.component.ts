@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { InteractiveElementDirective } from '../../directives/interactive-element.directive';
 import { WeightInputDirective } from '../../directives/weight-input.directive';
 import { RpeInputDirective } from '../../directives/rpe-input.directive';
+import { MobileDeviceDetectionService } from '../../service/mobile-device-detection.service';
 
 @Component({
   selector: 'app-input',
@@ -12,6 +13,8 @@ import { RpeInputDirective } from '../../directives/rpe-input.directive';
   styleUrl: './input.component.scss',
 })
 export class InputComponent<T extends string | number> {
+  constructor(protected mobileDetectionService: MobileDeviceDetectionService) {}
+
   /**
    * The name of the input field, used to uniquely identify the control.
    * This input is required and must be provided by the parent component.

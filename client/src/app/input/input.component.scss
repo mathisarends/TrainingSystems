@@ -9,6 +9,14 @@
   outline: none;
 }
 
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
 /* Hide up and down arrows from number inputs */
 input[type='number'] {
   -moz-appearance: textfield; /* Firefox */
