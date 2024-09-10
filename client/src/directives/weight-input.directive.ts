@@ -52,6 +52,9 @@ export class WeightInputDirective implements AfterViewInit {
     }
 
     this.duplicateLastWeightInput(weightValues);
+
+    // Dismiss the keyboard on mobile devices by removing focus from the input element
+    this.inputElement.blur();
   }
 
   /**
