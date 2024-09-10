@@ -18,14 +18,14 @@ export interface LineChartDataset {
    * This color is used to draw the line connecting the data points.
    * @example 'rgba(255, 99, 132, 1)'
    */
-  borderColor: string;
+  borderColor?: string;
 
   /**
    * The background color used to fill the area beneath the line on the chart.
    * This property is used when the 'fill' option is enabled.
    * @example 'rgba(255, 99, 132, 0.2)'
    */
-  backgroundColor: string;
+  backgroundColor?: string;
 
   /**
    * Determines whether the area under the line should be filled with the background color.
@@ -33,4 +33,6 @@ export interface LineChartDataset {
    * @example false
    */
   fill: boolean;
+
+  label: string;
 }
