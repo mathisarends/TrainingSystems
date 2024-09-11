@@ -15,9 +15,9 @@ export class EstMaxService {
    * Initializes the event listeners for weight, actual RPE, and reps inputs to calculate estimated max.
    */
   initializeEstMaxCalculation(): void {
-    const weightInputs = document.querySelectorAll('.weight');
-    const actualRpeInputs = document.querySelectorAll('app-input.actualRPE input');
-    const repsInputs = document.querySelectorAll('app-input.reps input');
+    const weightInputs = document.querySelectorAll('.weight-data-cell input');
+    const actualRpeInputs = document.querySelectorAll('.actualRPE input');
+    const repsInputs = document.querySelectorAll('.reps input');
 
     weightInputs.forEach((input) => input.addEventListener('change', (e) => this.handleInputChange(e)));
     actualRpeInputs.forEach((input) => input.addEventListener('change', (e) => this.handleInputChange(e)));
@@ -31,49 +31,42 @@ export class EstMaxService {
   private handleInputChange(event: Event): void {
     const target = event.target as HTMLInputElement;
 
-    if (
-      target &&
-      (target.classList.contains('weight') ||
-        target.classList.contains('actualRPE') ||
-        target.classList.contains('reps'))
-    ) {
-      const parentRow = target.closest('tr');
-      if (!parentRow) {
-        console.error('Parent row not found');
-        return;
-      }
+    const parentRow = target.closest('tr');
+    if (!parentRow) {
+      console.error('Parent row not found');
+      return;
+    }
 
-      const category = (parentRow.querySelector('.exercise-category-selector') as HTMLInputElement)?.value;
+    const category = (parentRow.querySelector('.exercise-category-selector') as HTMLInputElement)?.value;
 
-      if (category === 'Squat' || category === 'Bench' || category === 'Deadlift') {
-        const weight = parseFloat(this.exerciseTableRowService.getWeightInputByElement(target).value);
-        const reps = parseInt(this.exerciseTableRowService.getRepsInputByElement(target).value);
-        const rpe = parseFloat(this.exerciseTableRowService.getActualRPEByElement(target).value);
-        if (weight && reps && rpe) {
-          const estMax = this.calcEstMax(weight, reps, rpe, category);
-          const estMaxInput = this.exerciseTableRowService.getEstMaxByElement(target);
+    if (category === 'Squat' || category === 'Bench' || category === 'Deadlift') {
+      const weight = parseFloat(this.exerciseTableRowService.getWeightInputByElement(target).value);
+      const reps = parseInt(this.exerciseTableRowService.getRepsInputByElement(target).value);
+      const rpe = parseFloat(this.exerciseTableRowService.getActualRPEByElement(target).value);
+      if (weight && reps && rpe) {
+        const estMax = this.calcEstMax(weight, reps, rpe, category);
+        const estMaxInput = this.exerciseTableRowService.getEstMaxByElement(target);
 
-          estMaxInput.value = estMax.toString();
-          this.formService.addChange(estMaxInput.name, estMaxInput.value);
+        estMaxInput.value = estMax.toString();
+        this.formService.addChange(estMaxInput.name, estMaxInput.value);
 
-          const nextRow = parentRow.nextElementSibling as HTMLElement;
-          const exercise = (
-            parentRow.querySelector('.exercise-name-selector:not([style*="display: none"])') as HTMLInputElement
-          )?.value;
-          const nextExercise = (
-            nextRow.querySelector('.exercise-name-selector:not([style*="display: none"])') as HTMLInputElement
-          )?.value;
-          const nextWeightInputValue = this.exerciseTableRowService.getWeightInputByElement(nextRow).value;
+        const nextRow = parentRow.nextElementSibling as HTMLElement;
+        const exercise = (
+          parentRow.querySelector('.exercise-name-selector:not([style*="display: none"])') as HTMLInputElement
+        )?.value;
+        const nextExercise = (
+          nextRow.querySelector('.exercise-name-selector:not([style*="display: none"])') as HTMLInputElement
+        )?.value;
+        const nextWeightInputValue = this.exerciseTableRowService.getWeightInputByElement(nextRow).value;
 
-          if (nextRow && exercise === nextExercise && estMax && !nextWeightInputValue) {
-            const nextRowReps = parseInt(this.exerciseTableRowService.getRepsInputByElement(nextRow).value);
-            const nextRowRPE = parseFloat(this.exerciseTableRowService.getPlanedRpeByElement(nextRow).value);
+        if (nextRow && exercise === nextExercise && estMax && !nextWeightInputValue) {
+          const nextRowReps = parseInt(this.exerciseTableRowService.getRepsInputByElement(nextRow).value);
+          const nextRowRPE = parseFloat(this.exerciseTableRowService.getPlanedRpeByElement(nextRow).value);
 
-            if (nextRowReps && nextRowRPE) {
-              const backoffWeight = this.calcBackoff(nextRowReps, nextRowRPE, estMax);
-              const nextRowWeightInput = nextRow.querySelector('.weight') as HTMLInputElement;
-              nextRowWeightInput.placeholder = backoffWeight.toString();
-            }
+          if (nextRowReps && nextRowRPE) {
+            const backoffWeight = this.calcBackoff(nextRowReps, nextRowRPE, estMax);
+            const nextRowWeightInput = nextRow.querySelector('.weight') as HTMLInputElement;
+            nextRowWeightInput.placeholder = backoffWeight.toString();
           }
         }
       }

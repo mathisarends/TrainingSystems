@@ -96,6 +96,7 @@
               @let exerciseThisWeek = exercise?.exercise;
               @let previousWeekExercise = previousTrainingDayExercise?.exercise;
               <app-input
+                class="weight"
                 [placeholder]="
                   exerciseThisWeek && previousWeekExercise ? previousTrainingDayExercise?.weight || '' : ''
                 "
@@ -113,8 +114,9 @@
                 [value]="exercise.targetRPE"
               />
             </td>
-            <td data-cell="@RPE">
+            <td class="actual-rpe-data-cell" data-cell="@RPE">
               <app-input
+                class="actualRPE"
                 [type]="'text'"
                 [name]="namePrefix + 'actualRPE'"
                 [directiveUsed]="'rpeInputDirective'"

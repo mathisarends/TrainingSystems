@@ -8,9 +8,9 @@ enum ExerciseTableRowInputType {
   EXERCISE_SELECTOR = '.exercise-name-selector:not([disabled])[style*="display: block"]',
   SETS_INPUT = 'app-input.sets input',
   REPS_INPUT = 'app-input.reps input',
-  WEIGHT_INPUT = '.weight',
+  WEIGHT_INPUT = 'app-input.weight input',
   TARGET_RPE_INPUT = 'app-input.targetRPE input',
-  ACTUAL_RPE_INPUT = '.actualRPE',
+  ACTUAL_RPE_INPUT = 'app-input.actualRPE input',
   EST_MAX_INPUT = 'app-input.estMax input',
   NOTES = 'app-input.notes input',
 }
