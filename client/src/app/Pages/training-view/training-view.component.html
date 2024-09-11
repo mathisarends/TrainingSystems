@@ -92,7 +92,7 @@
             <td data-cell="Reps">
               <app-input class="reps" [type]="'number'" [name]="namePrefix + 'reps'" [value]="exercise.reps" />
             </td>
-            <td data-cell="Weight">
+            <td class="weight-data-cell" data-cell="Weight">
               @let exerciseThisWeek = exercise?.exercise;
               @let previousWeekExercise = previousTrainingDayExercise?.exercise;
               <app-input

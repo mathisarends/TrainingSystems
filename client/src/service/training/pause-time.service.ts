@@ -33,20 +33,12 @@ export class PauseTimeService {
           this.stopTimer();
         }
       });
-
-      document.addEventListener('visibilitychange', this.handleVisibilityChange);
     }
   }
 
-  handleVisibilityChange = () => {
-    if (this.currentSetNotLastSet && this.remainingTime === 0 && this.restartTimerOnDisplayOnlock) {
-      console.log('timer shall start again');
-    }
-  };
-
   // TODO: auch in die DIREKTIVE?
   initializePauseTimers(exerciseData: ExerciseDataDTO) {
-    const weightInputs = document.querySelectorAll('.weight') as NodeListOf<HTMLInputElement>;
+    const weightInputs = document.querySelectorAll('.weight-data-cell input') as NodeListOf<HTMLInputElement>;
 
     weightInputs.forEach((weightInput) => {
       weightInput.addEventListener('change', () => {
