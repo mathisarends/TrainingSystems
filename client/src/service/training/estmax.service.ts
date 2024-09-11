@@ -31,11 +31,7 @@ export class EstMaxService {
   private handleInputChange(event: Event): void {
     const target = event.target as HTMLInputElement;
 
-    const parentRow = target.closest('tr');
-    if (!parentRow) {
-      console.error('Parent row not found');
-      return;
-    }
+    const parentRow = target.closest('tr')!;
 
     const category = (parentRow.querySelector('.exercise-category-selector') as HTMLInputElement)?.value;
 
@@ -43,7 +39,7 @@ export class EstMaxService {
       const weight = parseFloat(this.exerciseTableRowService.getWeightInputByElement(target).value);
       const reps = parseInt(this.exerciseTableRowService.getRepsInputByElement(target).value);
       const rpe = parseFloat(this.exerciseTableRowService.getActualRPEByElement(target).value);
-      if (weight && reps && rpe) {
+      if (weight > 0 && reps && rpe) {
         const estMax = this.calcEstMax(weight, reps, rpe, category);
         const estMaxInput = this.exerciseTableRowService.getEstMaxByElement(target);
 

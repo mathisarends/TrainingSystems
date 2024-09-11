@@ -110,9 +110,10 @@ export class CategorySelectDirective {
     const appInputWrappers = Array.from(tableRow.querySelectorAll('app-input'));
     const inputElements = appInputWrappers.flatMap((input) => Array.from(input.querySelectorAll('input')));
 
+    // ziemlich fehleranfällig
     const setsInput = inputElements[0];
     const repsInput = inputElements[1];
-    const targetRPEInput = inputElements[2];
+    const targetRPEInput = inputElements[3];
 
     if (category !== '- Bitte Auswählen -') {
       const defaultValues = defaultRepSchemeByCategory[category];
@@ -123,9 +124,9 @@ export class CategorySelectDirective {
       }
     } else {
       this.resetInputs(exerciseSelect);
+      this.updateFormService(exerciseSelect, true);
     }
-
-    this.updateFormService(exerciseSelect);
+    this.updateFormService(exerciseSelect, false);
   }
 
   private resetInputs(exerciseSelect: HTMLSelectElement): void {
@@ -139,8 +140,8 @@ export class CategorySelectDirective {
     }
   }
 
-  private updateFormService(exerciseSelect: HTMLSelectElement): void {
-    const inputs: ExerciseInputs = this.exerciseTableRowService.getInputsByCategorySelector(exerciseSelect);
+  private updateFormService(exerciseSelect: HTMLSelectElement, resetMode: boolean): void {
+    const inputs: ExerciseInputs = this.exerciseTableRowService.getInputsByCategorySelector(exerciseSelect, resetMode);
 
     for (const key in inputs) {
       if (inputs.hasOwnProperty(key)) {
