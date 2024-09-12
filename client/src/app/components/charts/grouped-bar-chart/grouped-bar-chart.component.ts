@@ -14,6 +14,7 @@ export class GroupedBarChartComponent implements AfterViewInit, OnChanges {
 
   @Input() labels!: string[];
   @Input() barChartDataSets!: BarChartData[];
+  @Input() yAxisLabel: string = '';
 
   chart!: Chart<'bar'>;
 
@@ -58,7 +59,7 @@ export class GroupedBarChartComponent implements AfterViewInit, OnChanges {
             beginAtZero: true,
             title: {
               display: true,
-              text: 'Sätze',
+              text: this.yAxisLabel,
             },
           },
         },

@@ -11,6 +11,7 @@ import { TrainingDayFinishedNotification } from './training-finished-notificatio
 import { TrainingDayNotificationComponent } from '../training-day-notification/training-day-notification.component';
 import { GroupedBarChartComponent } from '../components/charts/grouped-bar-chart/grouped-bar-chart.component';
 import { BarChartData } from '../components/charts/grouped-bar-chart/bar-chart.-data';
+import { RecentTrainingDurationsData } from './recent-training-durations-data';
 
 @Component({
   selector: 'app-usage-statistics',
@@ -32,7 +33,10 @@ export class UsageStatisticsComponent implements OnInit {
    */
   activityCalendarData$!: Observable<ActivityCalendarData | null>;
 
-  recentTrainingDurations$!: Observable<BarChartData[]>;
+  /**
+   * Observable that emits both the BarChartData and labels.
+   */
+  recentTrainingDurations$!: Observable<{ chartData: BarChartData[]; labels: string[] }>;
 
   /**
    * Observable that emits the exercise data or null if there's an error or it's still loading.
@@ -46,20 +50,34 @@ export class UsageStatisticsComponent implements OnInit {
 
   ngOnInit(): void {
     this.activityCalendarData$ = this.httpClient.get<ActivityCalendarData>('/user/activity-calendar');
-    this.recentTrainingDurations$ = this.httpClient.get<number[]>('/user/recent-training-durations').pipe(
-      map((trainingDurations: number[]) => {
-        const groupedBarChartData: BarChartData[] = [
-          {
-            label: 'Trainingsdauer (Minuten)',
-            data: trainingDurations, // Ensure this is of type number[]
-            borderColor: 'rgba(54, 162, 235, 1)',
-            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-            borderWidth: 1,
-          },
-        ];
-        return groupedBarChartData;
-      }),
-    );
+
+    this.recentTrainingDurations$ = this.httpClient
+      .get<RecentTrainingDurationsData[]>('/user/recent-training-durations')
+      .pipe(
+        map((trainingDurations: RecentTrainingDurationsData[]) => {
+          // Extrahiere die Daten und Labels
+          const dateLabels = trainingDurations.map((duration) => duration.date);
+          const data = trainingDurations.map((duration) => duration.durationInMinutes);
+
+          const groupedBarChartData: BarChartData[] = [
+            {
+              label: 'Trainingsdauer (Minuten)',
+              data: data, // Extrahiere die Trainingsdauern
+              borderColor: 'rgba(54, 162, 235, 1)',
+              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              borderWidth: 1,
+            },
+          ];
+
+          console.log('🚀 ~ UsageStatisticsComponent ~ map ~ { chartData: groupedBarChartData, labels: dateLabels }:', {
+            chartData: groupedBarChartData,
+            labels: dateLabels,
+          });
+
+          return { chartData: groupedBarChartData, labels: dateLabels };
+        }),
+      );
+
     this.trainingDayNotifications$ = this.notificationService.getTrainingDayNotifications();
   }
 }

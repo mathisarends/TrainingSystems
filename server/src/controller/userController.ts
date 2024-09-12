@@ -8,6 +8,8 @@ import { getTonnagePerTrainingDay } from '../service/trainingService.js';
 import { encrypt, decrypt } from '../utils/cryption.js';
 import transporter from '../config/mailerConfig.js';
 import { createResetPasswordEmail } from '../service/userService.js';
+
+import { format } from 'date-fns';
 dotenv.config();
 
 export async function register(req: Request, res: Response): Promise<void> {
@@ -175,7 +177,7 @@ export async function getActivityCalendar(req: Request, res: Response): Promise<
 }
 
 /**
- * Retrieves the recent training durations for a user and returns an array of the durations.
+ * Retrieves the recent training durations for a user and returns an array of the last 14 durations.
  *
  * @param req - The HTTP request object.
  * @param res - The HTTP response object.
@@ -183,15 +185,20 @@ export async function getActivityCalendar(req: Request, res: Response): Promise<
  */
 export async function getRecentTrainingDurations(req: Request, res: Response): Promise<void> {
   const user = await userService.getUser(req, res);
-  const trainingDurationsArr = user.trainingPlans
+
+  const trainingDurationsWithDate = user.trainingPlans
     .flatMap(plan => plan.trainingWeeks)
     .flatMap(week => week.trainingDays)
     .filter(day => !!day.durationInMinutes)
-    .map(day => day.durationInMinutes!);
+    .map(day => ({
+      durationInMinutes: day.durationInMinutes!,
+      date: format(new Date(day.endTime!), 'dd.MM.yyyy')
+    }))
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 14);
 
-  res.status(200).json([60, 55, 45, 35, 25]);
+  res.status(200).json(trainingDurationsWithDate);
 }
-
 /**
  * Retrieves training day notifications for a user.
  */

@@ -2,10 +2,12 @@
   <app-activity-calendar [activityData]="activityData" />
 
   @if (recentTrainingDurations$ | async; as recentTrainingDurations) {
-    {{ recentTrainingDurations | json }}
-
     <!-- Map the recentTrainingDurations to the LineChartDataset structure -->
-    <app-grouped-bar-chart [labels]="['2', '1']" [barChartDataSets]="recentTrainingDurations" />
+    <app-grouped-bar-chart
+      [yAxisLabel]="'Trainingsdauer (in Minuten)'"
+      [labels]="recentTrainingDurations.labels"
+      [barChartDataSets]="recentTrainingDurations.chartData"
+    />
 
     @if (trainingDayNotifications$ | async; as trainingDayNotifications) {
       <app-training-day-notification [notificationsInput]="trainingDayNotifications" />
