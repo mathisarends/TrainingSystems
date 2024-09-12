@@ -5,11 +5,7 @@
     {{ recentTrainingDurations | json }}
 
     <!-- Map the recentTrainingDurations to the LineChartDataset structure -->
-    <!-- <app-line-chart
-      [yAxisTitle]="'Trainingsdauer in Minuten'"
-      [labels]="['Trainingsdauer (in Minuten)']"
-      [data]="[{ data: recentTrainingDurations }]"
-    /> -->
+    <app-grouped-bar-chart [labels]="['2', '1']" [barChartDataSets]="recentTrainingDurations" />
 
     @if (trainingDayNotifications$ | async; as trainingDayNotifications) {
       <app-training-day-notification [notificationsInput]="trainingDayNotifications" />

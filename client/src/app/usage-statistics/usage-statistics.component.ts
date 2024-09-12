@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivityCalendar } from '../activity-calendar/activity-calendar.component';
 import { HttpService } from '../../service/http/http-client.service';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { SpinnerComponent } from '../components/loaders/spinner/spinner.component';
 import { CommonModule } from '@angular/common';
 import { ActivityCalendarData } from './activity-calendar-data';
@@ -9,7 +9,8 @@ import { NotificationService } from '../notification-page/notification.service';
 import { SkeletonComponent } from '../skeleton/skeleton.component';
 import { TrainingDayFinishedNotification } from './training-finished-notification';
 import { TrainingDayNotificationComponent } from '../training-day-notification/training-day-notification.component';
-import { LineChartComponent } from '../components/charts/line-chart/line-chart.component';
+import { GroupedBarChartComponent } from '../components/charts/grouped-bar-chart/grouped-bar-chart.component';
+import { BarChartData } from '../components/charts/grouped-bar-chart/bar-chart.-data';
 
 @Component({
   selector: 'app-usage-statistics',
@@ -20,7 +21,7 @@ import { LineChartComponent } from '../components/charts/line-chart/line-chart.c
     CommonModule,
     SkeletonComponent,
     TrainingDayNotificationComponent,
-    LineChartComponent,
+    GroupedBarChartComponent,
   ],
   templateUrl: './usage-statistics.component.html',
   styleUrls: ['./usage-statistics.component.scss'], // Corrected to styleUrls
@@ -31,7 +32,7 @@ export class UsageStatisticsComponent implements OnInit {
    */
   activityCalendarData$!: Observable<ActivityCalendarData | null>;
 
-  recentTrainingDurations$!: Observable<number[]>;
+  recentTrainingDurations$!: Observable<BarChartData[]>;
 
   /**
    * Observable that emits the exercise data or null if there's an error or it's still loading.
@@ -45,8 +46,20 @@ export class UsageStatisticsComponent implements OnInit {
 
   ngOnInit(): void {
     this.activityCalendarData$ = this.httpClient.get<ActivityCalendarData>('/user/activity-calendar');
-    this.recentTrainingDurations$ = this.httpClient.get<number[]>('/user/recent-training-durations');
-
+    this.recentTrainingDurations$ = this.httpClient.get<number[]>('/user/recent-training-durations').pipe(
+      map((trainingDurations: number[]) => {
+        const groupedBarChartData: BarChartData[] = [
+          {
+            label: 'Trainingsdauer (Minuten)',
+            data: trainingDurations, // Ensure this is of type number[]
+            borderColor: 'rgba(54, 162, 235, 1)',
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderWidth: 1,
+          },
+        ];
+        return groupedBarChartData;
+      }),
+    );
     this.trainingDayNotifications$ = this.notificationService.getTrainingDayNotifications();
   }
 }

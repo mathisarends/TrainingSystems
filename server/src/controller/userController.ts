@@ -189,7 +189,7 @@ export async function getRecentTrainingDurations(req: Request, res: Response): P
     .filter(day => !!day.durationInMinutes)
     .map(day => day.durationInMinutes!);
 
-  res.status(200).json(trainingDurationsArr);
+  res.status(200).json([60, 55, 45, 35, 25]);
 }
 
 /**
