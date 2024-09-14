@@ -1,4 +1,4 @@
-import { Directive, HostListener, Input } from '@angular/core';
+import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 import { InteractiveElementService } from '../service/util/interactive-element.service';
 import { FormService } from '../service/form/form.service';
 import { ExerciseTableRowService } from '../service/training/exercise-table-row.service';
@@ -14,11 +14,73 @@ export class RpeInputDirective {
   private readonly MIN_RPE = 5;
   private readonly MAX_RPE = 10;
 
+  /**
+   * Reference to the host input element.
+   */
+  private inputElement!: HTMLInputElement;
+
+  /**
+   * Stores the timestamp of the last click event.
+   * Used to calculate the time difference between clicks for double-click detection.
+   */
+  private lastClickTime: number = 0;
+
+  /**
+   * Time threshold (in milliseconds) to detect a double-click event.
+   * If two clicks occur within this time frame, it is considered a double-click.
+   */
+  private doubleClickThreshold: number = 300;
+
   constructor(
     private interactiveElementService: InteractiveElementService,
     private formService: FormService,
+    private elementRef: ElementRef,
     private exerciseTableRowService: ExerciseTableRowService,
   ) {}
+
+  /**
+   * Lifecycle hook that runs after the view is initialized.
+   * It assigns the inner input element inside the wrapper to the inputElement property.
+   */
+  ngAfterViewInit(): void {
+    this.inputElement = this.elementRef.nativeElement;
+  }
+
+  /**
+   * Handles the single-click event on the input element.
+   * Detects if two clicks occur within a threshold time and treats it as a double-click.
+   */
+  @HostListener('click', ['$event'])
+  onClick(): void {
+    const currentTime = new Date().getTime();
+    const timeSinceLastClick = currentTime - this.lastClickTime;
+
+    if (timeSinceLastClick < this.doubleClickThreshold) {
+      this.onDoubleClick();
+    }
+
+    this.lastClickTime = currentTime;
+  }
+
+  /**
+   * Custom double-click handler.
+   * On double-click, the last entered weight value is duplicated to fill in
+   * the remaining sets, if any sets are left unfilled.
+   */
+  private onDoubleClick(): void {
+    const rpeValues = this.parseInputValues();
+    const amountOfSets = this.getAmountOfSets();
+
+    const isSetLeft = rpeValues.length < amountOfSets;
+    if (!isSetLeft) {
+      return;
+    }
+
+    this.duplicateLastInput();
+
+    this.inputElement.blur();
+    this.inputElement.dispatchEvent(new Event('change'));
+  }
 
   /**
    * Handles the focus event of the interactive element.
@@ -46,7 +108,6 @@ export class RpeInputDirective {
     if (rpeValues.length === 1) {
       this.validateSingleRPE(rpeValues[0], rpeInput);
     } else {
-      console.log('mul');
       this.validateMultipleRPEs(rpeInput, rpeValues);
     }
 
@@ -120,5 +181,29 @@ export class RpeInputDirective {
     const sum = numbers.reduce((acc, num) => acc + num, 0);
     const average = sum / numbers.length;
     return Math.ceil(average / 0.5) * 0.5;
+  }
+
+  /**
+   * Retrieves the total number of sets from the ExerciseTableRowService.
+   */
+  private getAmountOfSets(): number {
+    return Number(this.exerciseTableRowService.getSetInputByElement(this.inputElement).value);
+  }
+
+  /**
+   * Duplicates the last entered weight input to fill any remaining sets.
+   */
+  private duplicateLastInput(): void {
+    const weightValues = this.parseInputValues();
+    const lastWeightInput = weightValues[weightValues.length - 1];
+    this.inputElement.value = `${this.inputElement.value};${lastWeightInput}`;
+  }
+
+  /**
+   * Parses the weight input values entered in the input field.
+   * The values are expected to be separated by semicolons (';') and may include commas (',') which are replaced with dots ('.') for parsing.
+   */
+  private parseInputValues(): number[] {
+    return this.inputElement.value.split(';').map((value) => parseFloat(value.trim().replace(',', '.')));
   }
 }
