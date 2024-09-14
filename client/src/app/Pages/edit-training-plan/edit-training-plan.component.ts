@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy, Input, Renderer2, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
-import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom, Observable, Subscription } from 'rxjs';
 import { HttpService } from '../../../service/http/http-client.service';

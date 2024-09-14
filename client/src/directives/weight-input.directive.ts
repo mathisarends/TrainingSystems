@@ -21,6 +21,9 @@ export class WeightInputDirective implements AfterViewInit {
    */
   private inputElement!: HTMLInputElement;
 
+  private lastClickTime: number = 0;
+  private doubleClickThreshold: number = 300;
+
   constructor(
     private elementRef: ElementRef,
     private interactiveElementService: InteractiveElementService,
@@ -37,24 +40,19 @@ export class WeightInputDirective implements AfterViewInit {
   }
 
   /**
-   * Handles the double-click event on the input element.
-   * On double-click, the last entered weight value is duplicated to fill in
-   * the remaining sets, if any sets are left unfilled.
+   * Handles the single-click event on the input element.
+   * Detects if two clicks occur within a threshold time and treats it as a double-click.
    */
-  @HostListener('dblclick', ['$event'])
-  onDoubleClick(): void {
-    const weightValues = this.parseWeightInputValues();
-    const amountOfSets = this.getAmountOfSets();
+  @HostListener('click', ['$event'])
+  onClick(): void {
+    const currentTime = new Date().getTime();
+    const timeSinceLastClick = currentTime - this.lastClickTime;
 
-    const isSetLeft = weightValues.length < amountOfSets;
-    if (!isSetLeft) {
-      return;
+    if (timeSinceLastClick < this.doubleClickThreshold) {
+      this.onDoubleClick();
     }
 
-    this.duplicateLastWeightInput(weightValues);
-
-    // Dismiss the keyboard on mobile devices by removing focus from the input element
-    this.inputElement.blur();
+    this.lastClickTime = currentTime;
   }
 
   /**
@@ -92,6 +90,27 @@ export class WeightInputDirective implements AfterViewInit {
   @HostListener('input', ['$event'])
   handleInputChange(event: Event): void {
     this.formService.trackChange(event);
+  }
+
+  /**
+   * Custom double-click handler.
+   * On double-click, the last entered weight value is duplicated to fill in
+   * the remaining sets, if any sets are left unfilled.
+   */
+  private onDoubleClick(): void {
+    const weightValues = this.parseWeightInputValues();
+    const amountOfSets = this.getAmountOfSets();
+
+    const isSetLeft = weightValues.length < amountOfSets;
+    if (!isSetLeft) {
+      return;
+    }
+
+    this.duplicateLastWeightInput(weightValues);
+
+    // Dismiss the keyboard on mobile devices by removing focus from the input element
+    this.inputElement.blur();
+    this.inputElement.dispatchEvent(new Event('change'));
   }
 
   /**
