@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ExerciseDataDTO } from './exerciseDataDto';
-import { RepScheme, RepSchemeByCategory } from './default-rep-scheme-by-category';
+import { RepSchemeByCategory } from './default-rep-scheme-by-category';
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +10,10 @@ export class ExerciseDataService {
 
   set exerciseData(exerciseData: ExerciseDataDTO) {
     this._exerciseData = exerciseData;
+  }
+
+  getExerciseData(): ExerciseDataDTO {
+    return this._exerciseData;
   }
 
   getExerciseCategories(): string[] {

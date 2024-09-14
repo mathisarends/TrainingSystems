@@ -152,7 +152,6 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
         this.initializeSwipeListener();
 
         this.estMaxService.initializeEstMaxCalculation();
-        this.pauseTimeService.initializePauseTimers(this.exerciseData);
 
         this.automationContextInitialized = true;
       }

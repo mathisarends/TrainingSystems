@@ -1,7 +1,11 @@
-import { Directive, HostListener, Input, ElementRef, AfterViewInit } from '@angular/core';
+import { Directive, HostListener, ElementRef, AfterViewInit } from '@angular/core';
 import { InteractiveElementService } from '../service/util/interactive-element.service';
 import { FormService } from '../service/form/form.service';
 import { ExerciseTableRowService } from '../service/training/exercise-table-row.service';
+import { PauseTimeService } from '../service/training/pause-time.service';
+import { ExerciseDataService } from '../app/Pages/training-view/exercise-data.service';
+import { BrowserCheckService } from '../app/browser-check.service';
+import { RepScheme } from '../app/Pages/training-view/default-rep-scheme-by-category';
 
 /**
  * Directive that extends the InteractiveElementDirective to add additional functionality.
@@ -12,16 +16,20 @@ import { ExerciseTableRowService } from '../service/training/exercise-table-row.
 })
 export class WeightInputDirective implements AfterViewInit {
   /**
-   * Input property to bind the weight input value from the parent component.
-   */
-  @Input() weightInput!: string;
-
-  /**
    * Reference to the host input element.
    */
   private inputElement!: HTMLInputElement;
 
+  /**
+   * Stores the timestamp of the last click event.
+   * Used to calculate the time difference between clicks for double-click detection.
+   */
   private lastClickTime: number = 0;
+
+  /**
+   * Time threshold (in milliseconds) to detect a double-click event.
+   * If two clicks occur within this time frame, it is considered a double-click.
+   */
   private doubleClickThreshold: number = 300;
 
   constructor(
@@ -29,6 +37,8 @@ export class WeightInputDirective implements AfterViewInit {
     private interactiveElementService: InteractiveElementService,
     private formService: FormService,
     private exerciseTableRowService: ExerciseTableRowService,
+    private exerciseDataService: ExerciseDataService,
+    private pauseTimeService: PauseTimeService,
   ) {}
 
   /**
@@ -81,6 +91,14 @@ export class WeightInputDirective implements AfterViewInit {
       this.formService.addChange(this.inputElement.name, this.inputElement.value);
       this.interactiveElementService.triggerChangeIfModified(this.inputElement.value);
     }
+  }
+
+  @HostListener('change', ['$event'])
+  startPauseTimert(): void {
+    const categoryValue = this.exerciseTableRowService.getExerciseCategorySelectorByElement(this.inputElement).value;
+    const pauseTime = this.exerciseDataService.getExerciseData().categoryPauseTimes[categoryValue];
+
+    this.pauseTimeService.startPauseTimer(pauseTime);
   }
 
   /**

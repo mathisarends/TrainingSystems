@@ -1,14 +1,10 @@
 import { Injectable, Renderer2, RendererFactory2, EventEmitter } from '@angular/core';
-import { ExerciseDataDTO } from '../../app/Pages/training-view/exerciseDataDto';
-import { ExerciseTableRowService } from './exercise-table-row.service';
-import { BrowserCheckService } from '../../app/browser-check.service';
 import { ServiceWorkerService } from '../../app/service-worker.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PauseTimeService {
-  currentSetNotLastSet: boolean = true;
   restartTimerOnDisplayOnlock = false;
 
   private renderer: Renderer2;
@@ -19,56 +15,34 @@ export class PauseTimeService {
 
   constructor(
     rendererFactory: RendererFactory2,
-    private exerciseTableRowService: ExerciseTableRowService,
-    private browserCheckService: BrowserCheckService,
     private serviceWorkerService: ServiceWorkerService,
   ) {
     this.renderer = rendererFactory.createRenderer(null, null);
 
-    if (this.browserCheckService.isBrowser()) {
-      this.serviceWorkerService.listenForMessages((event: MessageEvent) => {
-        if (event.data?.command === 'currentTime') {
-          this.handleCurrentTimeUpdate(event.data.currentTime);
-        } else if (event.data?.command === 'stopTimerSignal') {
-          this.stopTimer();
-        }
-      });
-    }
-  }
-
-  // TODO: auch in die DIREKTIVE?
-  initializePauseTimers(exerciseData: ExerciseDataDTO) {
-    const weightInputs = document.querySelectorAll('.weight-data-cell input') as NodeListOf<HTMLInputElement>;
-
-    weightInputs.forEach((weightInput) => {
-      weightInput.addEventListener('change', () => {
-        const categoryValue = this.exerciseTableRowService.getExerciseCategorySelectorByElement(weightInput).value;
-        const setInput = this.exerciseTableRowService.getSetInputByElement(weightInput);
-
-        const weightValues = this.parseWeightInputValues(weightInput);
-
-        const pauseTime = exerciseData.categoryPauseTimes[categoryValue];
-        this.initialTime = pauseTime;
-        this.remainingTime = pauseTime;
-
-        if (Number(setInput.value) > weightValues.length) {
-          this.currentSetNotLastSet = true;
-          this.restartTimerOnDisplayOnlock = true;
-        } else {
-          this.currentSetNotLastSet = false;
-        }
-
-        this.serviceWorkerService.sendMessageToServiceWorker({
-          command: 'start',
-          duration: pauseTime,
-        });
-        this.startKeepAlive(); // Start the keep-alive process
-      });
+    // Message handling from the service worker
+    this.serviceWorkerService.listenForMessages((event: MessageEvent) => {
+      if (event.data.command === 'currentTime') {
+        this.handleCurrentTimeUpdate(event.data.currentTime);
+      } else if (event.data?.command === 'stopTimerSignal') {
+        this.stopTimer();
+      }
     });
   }
 
-  private parseWeightInputValues(weightInput: HTMLInputElement): number[] {
-    return weightInput.value.split(';').map((value) => parseFloat(value.trim().replace(',', '.')));
+  /**
+   * Starts the pause timer with the given duration.
+   * Sends a message to the service worker and starts the keep-alive interval.
+   */
+  startPauseTimer(pauseTime: number): void {
+    this.initialTime = pauseTime;
+    this.remainingTime = pauseTime;
+
+    this.serviceWorkerService.sendMessageToServiceWorker({
+      command: 'start',
+      duration: pauseTime,
+    });
+
+    this.startKeepAlive(); // Start the keep-alive process
   }
 
   private startKeepAlive() {
@@ -83,25 +57,25 @@ export class PauseTimeService {
           duration: this.remainingTime,
         });
       }
-    }, 10000);
+    }, 10000); // Send keep-alive every 10 seconds
   }
 
   /**
    * Stops the timer by resetting remaining time, clearing the interval, and emitting a final event.
    */
-  private stopTimer() {
+  private stopTimer(): void {
     this.initialTime = 0;
     this.remainingTime = 0;
     if (this.keepAliveIntervalId) {
       clearInterval(this.keepAliveIntervalId);
       this.keepAliveIntervalId = null;
     }
-    this.countdownEmitter.emit(0);
+    this.countdownEmitter.emit(0); // Emit 0 when the timer stops
   }
 
-  private handleCurrentTimeUpdate(currentTime: number) {
+  private handleCurrentTimeUpdate(currentTime: number): void {
     this.remainingTime = currentTime;
-    this.countdownEmitter.emit(currentTime); // Emit countdown event for the component
+    this.countdownEmitter.emit(currentTime); // Emit the updated current time
   }
 
   getCurrentTime(): number {
