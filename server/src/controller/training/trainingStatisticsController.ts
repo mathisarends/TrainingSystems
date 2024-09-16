@@ -155,7 +155,7 @@ export async function getPerformanceCharts(req: Request, res: Response): Promise
 
   const performanceData = mappedExerciseCategories.reduce(
     (result, category) => {
-      result[category] = getBestPerformanceByExercise(trainingPlan, category as ExerciseCategoryType);
+      result[category] = getBestPerformanceByExercise(trainingPlan, category);
       return result;
     },
     {} as Record<ExerciseCategoryType, { bestPerformance: number }[]>
@@ -174,7 +174,7 @@ function getBestPerformanceByExercise(
 
       week.trainingDays.forEach(trainingDay => {
         trainingDay.exercises.forEach((exercise: Exercise) => {
-          if (exercise.category === exerciseCategory) {
+          if (exercise.category === exerciseCategory && exercise.estMax) {
             bestPerformance = Math.max(bestPerformance, exercise.estMax);
           }
         });

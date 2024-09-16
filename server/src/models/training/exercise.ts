@@ -39,8 +39,9 @@ export interface Exercise {
 
   /**
    * The estimated maximum weight that can be lifted for one repetition (1RM).
+   * Only calculated for Squat, Bench and Deadlift so can be undefined.
    */
-  estMax: number;
+  estMax?: number;
 
   /**
    * Notes associated with the current day
