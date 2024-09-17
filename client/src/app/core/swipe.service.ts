@@ -8,6 +8,16 @@ import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
   providedIn: 'root',
 })
 export class SwipeService {
+  /**
+   * Threshold for horizontal swipe detection
+   */
+  private swipeThreshold = 125;
+
+  /**
+   * Threshold for detecting a diagonal or vertical swipe
+   */
+  private verticalThreshold = 100;
+
   private renderer: Renderer2;
   private listeners: (() => void)[] = [];
 
@@ -40,9 +50,6 @@ export class SwipeService {
     let touchEndX = 0;
     let touchEndY = 0;
 
-    const swipeThreshold = 125; // Threshold for horizontal swipe detection
-    const verticalThreshold = 100; // Threshold for detecting a diagonal or vertical swipe
-
     const handleTouchStart = (event: TouchEvent) => {
       touchStartX = event.changedTouches[0].screenX;
       touchStartY = event.changedTouches[0].screenY;
@@ -55,30 +62,22 @@ export class SwipeService {
       touchEndY = event.changedTouches[0].screenY;
     };
 
-    //TOOD: horicontal swipes implementieren
-
     const handleTouchEnd = () => {
       const deltaX = touchStartX - touchEndX;
       const deltaY = touchStartY - touchEndY;
 
-      const isHorizontalSwipe = Math.abs(deltaX) > swipeThreshold && Math.abs(deltaY) < verticalThreshold;
+      if (this.isHorizontalSwipe(deltaX, deltaY)) {
+        this.handleHorizontalSwipe(deltaX, swipeLeftCallback, swipeRightCallback);
+      }
 
-      // Der hier ist gefixt fixe den anderen auch
-      const isDiagonalSwipeTopLeftToBottomRight =
-        Math.abs(deltaX) > swipeThreshold && Math.abs(deltaY) > verticalThreshold && deltaX < 0 && deltaY < 0;
+      // when vertical swipes are not allowed
+      if (!swipeDiagonalTopLeftToBottomRightCallback || !swipeDiagonalTopRightToBottomLeftCallback) {
+        return;
+      }
 
-      const isDiagonalSwipeTopRightToBottomLeft =
-        deltaX > swipeThreshold && Math.abs(deltaY) > verticalThreshold && deltaX > 0 && deltaY < 0;
-
-      if (isHorizontalSwipe) {
-        if (deltaX > 0) {
-          swipeLeftCallback();
-        } else {
-          swipeRightCallback();
-        }
-      } else if (isDiagonalSwipeTopLeftToBottomRight && swipeDiagonalTopLeftToBottomRightCallback) {
+      if (this.isDiagonalSwipeTopLeftToBottomRight(deltaX, deltaY)) {
         swipeDiagonalTopLeftToBottomRightCallback();
-      } else if (isDiagonalSwipeTopRightToBottomLeft && swipeDiagonalTopRightToBottomLeftCallback) {
+      } else if (this.isDiagonalSwipeTopRightToBottomLeft(deltaX, deltaY)) {
         swipeDiagonalTopRightToBottomLeftCallback();
       }
     };
@@ -86,6 +85,62 @@ export class SwipeService {
     this.registerListener(element, 'touchstart', handleTouchStart as EventListener);
     this.registerListener(element, 'touchmove', handleTouchMove as EventListener);
     this.registerListener(element, 'touchend', handleTouchEnd as EventListener);
+  }
+
+  /**
+   * Handles horizontal swipe direction (left or right).
+   * @param deltaX - Difference between start and end X coordinates.
+   * @param swipeLeftCallback - Callback function for left swipe.
+   * @param swipeRightCallback - Callback function for right swipe.
+   */
+  private handleHorizontalSwipe(deltaX: number, swipeLeftCallback: () => void, swipeRightCallback: () => void) {
+    if (this.isSwipeToLeft(deltaX)) {
+      swipeLeftCallback();
+    } else {
+      swipeRightCallback();
+    }
+  }
+
+  /**
+   * Determines if the swipe is a horizontal swipe.
+   */
+  private isHorizontalSwipe(deltaX: number, deltaY: number): boolean {
+    return this.isOverSwipeThreshold(deltaX) && Math.abs(deltaY) < this.verticalThreshold;
+  }
+
+  /**
+   * Determines whether the swipe is to the left.
+   */
+  private isSwipeToLeft(deltaX: number): boolean {
+    return deltaX > 0;
+  }
+
+  /**
+   * Determines if the swipe is a diagonal swipe from top left to bottom right.
+   */
+  private isDiagonalSwipeTopLeftToBottomRight(deltaX: number, deltaY: number): boolean {
+    return this.isOverSwipeThreshold(deltaX) && this.isOverVerticalThreshold(deltaY) && deltaX < 0 && deltaY < 0;
+  }
+
+  /**
+   * Determines if the swipe is a diagonal swipe from top right to bottom left.
+   */
+  private isDiagonalSwipeTopRightToBottomLeft(deltaX: number, deltaY: number): boolean {
+    return this.isOverSwipeThreshold(deltaX) && this.isOverVerticalThreshold(deltaY) && deltaX > 0 && deltaY < 0;
+  }
+
+  /**
+   * Determines if the deltaX exceeds the swipe threshold.
+   */
+  private isOverSwipeThreshold(deltaX: number): boolean {
+    return Math.abs(deltaX) > this.swipeThreshold;
+  }
+
+  /**
+   * Determines if the deltaY exceeds the vertical threshold.
+   */
+  private isOverVerticalThreshold(deltaY: number): boolean {
+    return Math.abs(deltaY) > this.verticalThreshold;
   }
 
   /**

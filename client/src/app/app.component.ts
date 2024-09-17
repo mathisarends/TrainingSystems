@@ -3,14 +3,14 @@ import { RouterOutlet } from '@angular/router';
 
 import { HeaderComponent } from './components/header/header.component';
 import { ToastComponent } from './components/toast/toast.component';
-import { ServiceWorkerService } from './service-worker.service';
-import { BrowserCheckService } from './browser-check.service';
-import { MobileDeviceDetectionService } from './core/mobile-device-detection.service';
+import { ServiceWorkerService } from './platform/service-worker.service';
+import { BrowserCheckService } from './core/browser-check.service';
 import { RedirectService } from './core/redirect.service';
 import { SpinnerComponent } from './components/loaders/spinner/spinner.component';
 import { LoadingProgressBarComponent } from './components/loaders/loading-progress-bar/loading-progress-bar.component';
 import { AuthService } from './core/auth.service';
 import { MobileNavComponent } from './components/mobile-nav/mobile-nav.component';
+import { MobileDeviceDetectionService } from './platform/mobile-device-detection.service';
 
 @Component({
   selector: 'app-root',

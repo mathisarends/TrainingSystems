@@ -1,5 +1,5 @@
 import { Component, effect, ElementRef, Injector, OnInit, signal, ViewChild } from '@angular/core';
-import { BrowserCheckService } from '../../../browser-check.service';
+import { BrowserCheckService } from '../../../core/browser-check.service';
 import { Subject } from 'rxjs';
 import { LoadingService } from '../../../core/loading.service';
 

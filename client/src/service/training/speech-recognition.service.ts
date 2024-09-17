@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
-import { BrowserCheckService } from '../../app/browser-check.service';
+import { BrowserCheckService } from '../../app/core/browser-check.service';
 
 @Injectable({
   providedIn: 'root',

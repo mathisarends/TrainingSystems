@@ -1,7 +1,7 @@
 import { ApplicationRef, inject, Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { first, Observable } from 'rxjs';
-import { environment } from './environment/environment';
+import { environment } from '../environment/environment';
 
 @Injectable({
   providedIn: 'root',

@@ -38,9 +38,6 @@ export interface ModalOptions {
   /**
    * Additional data to pass to the component. Optional.
    */
-  /**
-   * Additional data to pass to the component. Optional.
-   */
   componentData?: Record<string, unknown>;
 
   /**

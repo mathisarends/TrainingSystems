@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CanActivate } from '@angular/router';
 import { map, Observable, of } from 'rxjs';
 import { AuthService } from '../auth.service';
-import { BrowserCheckService } from '../../browser-check.service';
+import { BrowserCheckService } from '../browser-check.service';
 
 @Injectable({
   providedIn: 'root',

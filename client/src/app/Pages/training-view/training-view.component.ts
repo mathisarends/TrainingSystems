@@ -22,14 +22,13 @@ import { TrainingViewNavigationService } from './training-view-navigation.servic
 import { forkJoin, BehaviorSubject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { SwipeService } from '../../core/swipe.service';
-import { MobileDeviceDetectionService } from '../../core/mobile-device-detection.service';
 import { AutoProgressionComponent } from '../modal-pages/auto-progression/auto-progression.component';
 import { RestTimerComponent } from '../modal-pages/rest-timer/rest-timer.component';
 import { BasicInfoComponent } from '../modal-pages/basic-info/basic-info.component';
 import { HeadlineComponent } from '../../components/headline/headline.component';
 import { IconButtonComponent } from '../../components/icon-button/icon-button.component';
 import { SkeletonTrainingTableComponent } from '../../components/loaders/skeletons/skeleton-training-table/skeleton-training-table.component';
-import { BrowserCheckService } from '../../browser-check.service';
+import { BrowserCheckService } from '../../core/browser-check.service';
 import { InteractiveElementService } from '../../../service/util/interactive-element.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { WeightInputDirective } from '../../../directives/weight-input.directive';
@@ -44,6 +43,7 @@ import { IconComponent } from '../../shared/icon/icon.component';
 import { InputComponent } from '../../components/input/input.component';
 import { SelectComponent } from '../../components/select/select.component';
 import { ModalService } from '../../core/services/modal/modalService';
+import { MobileDeviceDetectionService } from '../../platform/mobile-device-detection.service';
 /**
  * Component to manage and display the training view.
  * Handles loading of training data, swipe gestures, and form submissions.

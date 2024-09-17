@@ -33,7 +33,7 @@ export class TrainingSessionManager {
   ): Promise<TrainingSessionTracker> {
     const trainingDay = trainingDayDataLocator.getTrainingDay();
     const trainingDayId = trainingDay.id;
-    const tracker = this.getTracker(trainingDayId); // Use trainingDayId for consistency
+    const tracker = this.getTracker(trainingDayId);
 
     if (tracker) {
       tracker.updateTrainingDayExerciseData(trainingDay.exercises);

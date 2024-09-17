@@ -1,5 +1,5 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
-import { BrowserCheckService } from '../browser-check.service';
+import { BrowserCheckService } from '../core/browser-check.service';
 
 @Injectable({
   providedIn: 'root',
