@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ExerciseDataDTO } from './exerciseDataDto';
 import { Observable } from 'rxjs';
-import { HttpService } from '../../../service/http/http-client.service';
+import { HttpService } from '../../core/http-client.service';
 
 @Injectable()
 export class ExerciseService {

@@ -1,6 +1,6 @@
 import { Directive, HostListener, Renderer2, RendererFactory2 } from '@angular/core';
 import { InteractiveElementService } from '../service/util/interactive-element.service';
-import { FormService } from '../service/form/form.service';
+import { FormService } from '../app/core/form.service';
 import { ExerciseTableRowService } from '../service/training/exercise-table-row.service';
 import { ExerciseDataService } from '../app/Pages/training-view/exercise-data.service';
 import { RepSchemeByCategory } from '../app/Pages/training-view/default-rep-scheme-by-category';

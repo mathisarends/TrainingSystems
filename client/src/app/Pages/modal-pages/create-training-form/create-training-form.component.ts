@@ -3,13 +3,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpService } from '../../../../service/http/http-client.service';
+import { HttpService } from '../../../core/http-client.service';
 import { TrainingPlanService } from '../../../../service/training/training-plan.service';
 import { ImageUploadService } from '../../../../service/util/image-upload.service';
-import { ModalService } from '../../../../service/modal/modalService';
 import { ToastService } from '../../../components/toast/toast.service';
 import { TrainingPlanCardView } from '../../../../types/exercise/training-plan-card-view-dto';
 import { AlertComponent } from '../../../components/alert/alert.component';
+import { ModalService } from '../../../core/services/modal/modalService';
 
 /**
  * Component for creating a training form.

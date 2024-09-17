@@ -76,7 +76,6 @@ export class SwipeService {
         } else {
           swipeRightCallback();
         }
-        // TODO: nur der hier wird gehitten unabhängig
       } else if (isDiagonalSwipeTopLeftToBottomRight && swipeDiagonalTopLeftToBottomRightCallback) {
         swipeDiagonalTopLeftToBottomRightCallback();
       } else if (isDiagonalSwipeTopRightToBottomLeft && swipeDiagonalTopRightToBottomLeftCallback) {

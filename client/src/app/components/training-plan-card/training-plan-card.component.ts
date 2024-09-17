@@ -3,20 +3,20 @@ import { CommonModule } from '@angular/common';
 import { TrainingPlanCardView } from '../../../types/exercise/training-plan-card-view-dto';
 import { firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
-import { ModalService } from '../../../service/modal/modalService';
 import { EditTrainingPlanComponent } from '../../Pages/edit-training-plan/edit-training-plan.component';
-import { ModalSize } from '../../../service/modal/modalSize';
 import { HttpErrorResponse } from '@angular/common/http';
 
-import { TooltipDirective } from '../../../service/tooltip/tooltip.directive';
+import { TooltipDirective } from '../../shared/directives/tooltip.directive';
 import { ToastService } from '../toast/toast.service';
 import { BasicInfoComponent } from '../../Pages/modal-pages/basic-info/basic-info.component';
 import { IconButtonComponent } from '../icon-button/icon-button.component';
 import { TrainingPlanService } from '../../../service/training/training-plan.service';
-import { HttpService } from '../../../service/http/http-client.service';
+import { HttpService } from '../../core/http-client.service';
 import { IconComponent } from '../../shared/icon/icon.component';
 import { IconName } from '../../shared/icon/icon-name';
 import {} from '../percentage-circle-visualisation/percentage-circle-visualisation.component';
+import { ModalService } from '../../core/services/modal/modalService';
+import { ModalSize } from '../../core/services/modal/modalSize';
 
 /**
  * Component for displaying and managing a single training plan card.

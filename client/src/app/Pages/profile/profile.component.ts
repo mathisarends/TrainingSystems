@@ -1,12 +1,10 @@
 import { Component, OnInit, ElementRef, ViewChild, Renderer2 } from '@angular/core';
 import { SpinnerComponent } from '../../components/loaders/spinner/spinner.component';
 import { ImageUploadService } from '../../../service/util/image-upload.service';
-import { ModalService } from '../../../service/modal/modalService';
-import { ModalSize } from '../../../service/modal/modalSize';
 import { firstValueFrom, Observable } from 'rxjs';
-import { HttpService } from '../../../service/http/http-client.service';
+import { HttpService } from '../../core/http-client.service';
 import { FriendCardComponent } from '../../components/friend-card/friend-card.component';
-import { TooltipDirective } from '../../../service/tooltip/tooltip.directive';
+import { TooltipDirective } from '../../shared/directives/tooltip.directive';
 import { Friend } from '../../components/friend-card/friend';
 import { AlertComponent } from '../../components/alert/alert.component';
 import { FriendCardMode } from '../../components/friend-card/friend-card-mode';
@@ -24,6 +22,8 @@ import { BasicInfoComponent } from '../modal-pages/basic-info/basic-info.compone
 import { Router } from '@angular/router';
 import { ToastService } from '../../components/toast/toast.service';
 import { ActivityCalendar } from '../../components/activity-calendar/activity-calendar.component';
+import { ModalService } from '../../core/services/modal/modalService';
+import { ModalSize } from '../../core/services/modal/modalSize';
 
 @Component({
   selector: 'app-profile',
@@ -61,8 +61,8 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private imageUploadService: ImageUploadService,
-    private renderer: Renderer2,
     private modalService: ModalService,
+    private renderer: Renderer2,
     private profileService: ProfileService,
     private httpService: HttpService,
     private toastService: ToastService,

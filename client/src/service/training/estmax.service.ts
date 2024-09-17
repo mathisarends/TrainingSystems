@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormService } from '../form/form.service';
+import { FormService } from '../../app/core/form.service';
 import { ExerciseTableRowService } from './exercise-table-row.service';
 
 @Injectable({

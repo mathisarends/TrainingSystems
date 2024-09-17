@@ -2,7 +2,7 @@ import { Component, input, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivityCalendarEntry, Day, Level } from './activity-calendar-entry';
 import { ActivityCalendarData } from '../../Pages/usage-statistics/activity-calendar-data';
-import { TooltipDirective } from '../../../service/tooltip/tooltip.directive';
+import { TooltipDirective } from '../../shared/directives/tooltip.directive';
 
 @Component({
   selector: 'app-activity-calendar',

@@ -4,12 +4,12 @@ import { IconComponent } from '../../../shared/icon/icon.component';
 import { SpinnerComponent } from '../../../components/loaders/spinner/spinner.component';
 import { BaisAuthComponent } from '../basic-auth.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpService } from '../../../../service/http/http-client.service';
+import { HttpService } from '../../../core/http-client.service';
 import { ToastService } from '../../../components/toast/toast.service';
 import { DOCUMENT } from '@angular/common';
 import { catchError, Observable, of } from 'rxjs';
-import { ModalService } from '../../../../service/modal/modalService';
 import { BasicInfoComponent } from '../../modal-pages/basic-info/basic-info.component';
+import { ModalService } from '../../../core/services/modal/modalService';
 
 @Component({
   standalone: true,

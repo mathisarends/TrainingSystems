@@ -1,15 +1,15 @@
 import { Component, OnInit, OnDestroy, Input, Renderer2, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom, Observable, Subscription } from 'rxjs';
-import { HttpService } from '../../../service/http/http-client.service';
+import { HttpService } from '../../core/http-client.service';
 import { CommonModule } from '@angular/common';
-import { ModalService } from '../../../service/modal/modalService';
 import { TrainingPlanService } from '../../../service/training/training-plan.service';
 import { ImageUploadService } from '../../../service/util/image-upload.service';
 import { ToastService } from '../../components/toast/toast.service';
 import { SkeletonComponent } from '../../skeleton/skeleton.component';
 import { TrainingPlanEditViewDto } from './training-plan-edit-view-dto';
 import { EditTrainingPlanService } from './edit-training-plan.service';
+import { ModalService } from '../../core/services/modal/modalService';
 
 /**
  * Component for editing a training plan.

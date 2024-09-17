@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TrainingViewService } from './training-view-service';
-import { FormService } from '../../../service/form/form.service';
+import { FormService } from '../../core/form.service';
 import { EstMaxService } from '../../../service/training/estmax.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -21,11 +21,9 @@ import { TrainingPlanDto } from './trainingPlanDto';
 import { TrainingViewNavigationService } from './training-view-navigation.service';
 import { forkJoin, BehaviorSubject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { SwipeService } from '../../../service/swipe/swipe.service';
+import { SwipeService } from '../../core/swipe.service';
 import { MobileDeviceDetectionService } from '../../../service/mobile-device-detection.service';
 import { AutoProgressionComponent } from '../modal-pages/auto-progression/auto-progression.component';
-import { PauseTimeService } from '../../../service/training/pause-time.service';
-import { ModalService } from '../../../service/modal/modalService';
 import { RestTimerComponent } from '../modal-pages/rest-timer/rest-timer.component';
 import { BasicInfoComponent } from '../modal-pages/basic-info/basic-info.component';
 import { HeadlineComponent } from '../../components/headline/headline.component';
@@ -45,6 +43,7 @@ import { IconName } from '../../shared/icon/icon-name';
 import { IconComponent } from '../../shared/icon/icon.component';
 import { InputComponent } from '../../components/input/input.component';
 import { SelectComponent } from '../../components/select/select.component';
+import { ModalService } from '../../core/services/modal/modalService';
 /**
  * Component to manage and display the training view.
  * Handles loading of training data, swipe gestures, and form submissions.
@@ -99,7 +98,6 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
     private toastService: ToastService,
     private navigationService: TrainingViewNavigationService,
     private swipeService: SwipeService,
-    private pauseTimeService: PauseTimeService,
     private modalService: ModalService,
     private browserCheckService: BrowserCheckService,
     private interactiveElementService: InteractiveElementService,

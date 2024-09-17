@@ -1,10 +1,10 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
-import { HttpService } from './http/http-client.service';
+import { HttpService } from '../app/core/http-client.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BrowserCheckService } from '../app/browser-check.service';
-import { ModalService } from './modal/modalService';
 import { BasicInfoComponent } from '../app/Pages/modal-pages/basic-info/basic-info.component';
+import { ModalService } from '../app/core/services/modal/modalService';
 
 @Injectable({
   providedIn: 'root',

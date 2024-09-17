@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { ModalEventsService } from '../../../../service/modal/modal-events.service';
 import { IconComponent } from '../../../shared/icon/icon.component';
 import { IconName } from '../../../shared/icon/icon-name';
 
@@ -15,6 +14,4 @@ export class ChangeProfilePictureConfirmationComponent {
 
   @Input() oldProfilePicture: string = '';
   @Input() newProfilePicture: string = '';
-
-  constructor(private modalEventService: ModalEventsService) {}
 }

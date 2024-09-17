@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpService } from '../../core/http-client.service';
+import { HttpService } from '../core/http-client.service';
 import { map, Observable } from 'rxjs';
-import { SpinnerComponent } from '../../components/loaders/spinner/spinner.component';
+import { SpinnerComponent } from '../components/loaders/spinner/spinner.component';
 import { CommonModule } from '@angular/common';
 import { ActivityCalendarData } from './activity-calendar-data';
-import { SkeletonComponent } from '../../skeleton/skeleton.component';
+import { SkeletonComponent } from '../skeleton/skeleton.component';
 import { TrainingDayFinishedNotification } from './training-finished-notification';
-import { TrainingDayNotificationComponent } from '../../components/training-day-notification/training-day-notification.component';
-import { GroupedBarChartComponent } from '../../components/charts/grouped-bar-chart/grouped-bar-chart.component';
-import { BarChartData } from '../../components/charts/grouped-bar-chart/bar-chart.-data';
+import { TrainingDayNotificationComponent } from '../components/training-day-notification/training-day-notification.component';
+import { GroupedBarChartComponent } from '../components/charts/grouped-bar-chart/grouped-bar-chart.component';
+import { BarChartData } from '../components/charts/grouped-bar-chart/bar-chart.-data';
 import { RecentTrainingDurationsData } from './recent-training-durations-data';
-import { ActivityCalendar } from '../../components/activity-calendar/activity-calendar.component';
-import { NotificationService } from '../notification-page/notification.service';
+import { ActivityCalendar } from '../components/activity-calendar/activity-calendar.component';
+import { NotificationService } from '../Pages/notification-page/notification.service';
 
 @Component({
   selector: 'app-usage-statistics',

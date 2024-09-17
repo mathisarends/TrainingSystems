@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpService } from '../../../service/http/http-client.service';
+import { HttpService } from '../../core/http-client.service';
 import { Observable } from 'rxjs';
 import { TrainingPlanEditViewDto } from './training-plan-edit-view-dto';
 

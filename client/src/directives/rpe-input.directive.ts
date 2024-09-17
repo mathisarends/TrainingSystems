@@ -1,6 +1,6 @@
 import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 import { InteractiveElementService } from '../service/util/interactive-element.service';
-import { FormService } from '../service/form/form.service';
+import { FormService } from '../app/core/form.service';
 import { ExerciseTableRowService } from '../service/training/exercise-table-row.service';
 
 /**

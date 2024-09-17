@@ -1,5 +1,4 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
-import { ModalService } from '../../../service/modal/modalService';
 import { CreateTrainingFormComponent } from '../modal-pages/create-training-form/create-training-form.component';
 import { AlertComponent } from '../../components/alert/alert.component';
 import { SpinnerComponent } from '../../components/loaders/spinner/spinner.component';
@@ -8,17 +7,18 @@ import { firstValueFrom, BehaviorSubject } from 'rxjs';
 import { SearchService } from '../../../service/util/search.service';
 import { TrainingPlanService } from '../../../service/training/training-plan.service';
 import { CommonModule } from '@angular/common';
-import { TooltipDirective } from '../../../service/tooltip/tooltip.directive';
+import { TooltipDirective } from '../../shared/directives/tooltip.directive';
 import { TrainingPlanCardComponent } from '../../components/training-plan-card/training-plan-card.component';
-import { ModalSize } from '../../../service/modal/modalSize';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HeadlineComponent } from '../../components/headline/headline.component';
 import { IconButtonComponent } from '../../components/icon-button/icon-button.component';
 import { SkeletonCardComponent } from '../../components/loaders/skeletons/skeleton-card/skeleton-card.component';
-import { HttpService } from '../../../service/http/http-client.service';
+import { HttpService } from '../../core/http-client.service';
 import { IconName } from '../../shared/icon/icon-name';
 import { IconComponent } from '../../shared/icon/icon.component';
 import { CircularIconButtonComponent } from '../../components/circular-icon-button/circular-icon-button.component';
+import { ModalService } from '../../core/services/modal/modalService';
+import { ModalSize } from '../../core/services/modal/modalSize';
 
 /**
  * Component to manage and display training plans.

@@ -6,10 +6,10 @@ import {
   EnvironmentInjector,
   createComponent,
 } from '@angular/core';
-import { ModalComponent } from '../../app/components/modal/modal.component';
-import { ModalOverlayComponent } from '../../app/components/modal/modal-overlay/modal-overlay.component';
 import { ModalSize } from './modalSize';
 import { ModalOptions } from './modal-options';
+import { ModalComponent } from '../../../components/modal/modal.component';
+import { ModalOverlayComponent } from '../../../components/modal/modal-overlay/modal-overlay.component';
 
 @Injectable({
   providedIn: 'root',

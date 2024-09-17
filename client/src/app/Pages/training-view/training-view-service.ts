@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ExerciseDataDTO } from './exerciseDataDto';
 import { TrainingPlanDto } from './trainingPlanDto';
-import { HttpService } from '../../../service/http/http-client.service';
+import { HttpService } from '../../core/http-client.service';
 
 @Injectable()
 export class TrainingViewService {

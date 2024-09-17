@@ -1,5 +1,5 @@
 import { Directive, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { SwipeService } from '../service/swipe/swipe.service';
+import { SwipeService } from '../app/core/swipe.service';
 
 @Directive({
   selector: '[appSwipeListener]',

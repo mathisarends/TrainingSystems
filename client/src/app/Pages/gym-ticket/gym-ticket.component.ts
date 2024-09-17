@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ImageUploadService } from '../../../service/util/image-upload.service';
-import { ModalService } from '../../../service/modal/modalService';
 import { TicketPreviewComponentComponent } from '../ticket-preview-component/ticket-preview-component.component';
 import { GymTicketService } from './gym-ticket.service';
 import { ToastService } from '../../components/toast/toast.service';
@@ -9,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { SpinnerComponent } from '../../components/loaders/spinner/spinner.component';
 import { HeadlineComponent } from '../../components/headline/headline.component';
 import { SkeletonComponent } from '../../skeleton/skeleton.component';
+import { ModalService } from '../../core/services/modal/modalService';
 
 @Component({
   selector: 'app-gym-ticket',

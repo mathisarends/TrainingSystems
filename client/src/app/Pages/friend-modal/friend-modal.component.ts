@@ -3,7 +3,7 @@ import { Friend } from '../../components/friend-card/friend';
 import { FriendCardComponent } from '../../components/friend-card/friend-card.component';
 import { SpinnerComponent } from '../../components/loaders/spinner/spinner.component';
 import { AlertComponent } from '../../components/alert/alert.component';
-import { HttpService } from '../../../service/http/http-client.service';
+import { HttpService } from '../../core/http-client.service';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { catchError, finalize } from 'rxjs/operators';

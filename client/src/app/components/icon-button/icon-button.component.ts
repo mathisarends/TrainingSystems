@@ -1,5 +1,5 @@
 import { Component, HostListener, input, output } from '@angular/core';
-import { TooltipDirective } from '../../../service/tooltip/tooltip.directive';
+import { TooltipDirective } from '../../shared/directives/tooltip.directive';
 import { CommonModule } from '@angular/common';
 import { IconComponent } from '../../shared/icon/icon.component';
 import { IconName } from '../../shared/icon/icon-name';

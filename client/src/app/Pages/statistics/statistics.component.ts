@@ -10,12 +10,12 @@ import { GroupedBarChartComponent } from '../../components/charts/grouped-bar-ch
 import { BarChartData } from '../../components/charts/grouped-bar-chart/bar-chart.-data';
 import { PaginationComponent } from '../../components/pagination/pagination.component';
 import { ExerciseDrillThroughEvent } from '../../components/charts/line-chart/exercise-drill-through-event';
-import { ModalService } from '../../../service/modal/modalService';
 import { PolarChartComponent } from '../../components/charts/polar-chart/polar-chart.component';
 import { HeadlineComponent } from '../../components/headline/headline.component';
 import { ChartSkeletonComponent } from '../../components/loaders/chart-skeleton/chart-skeleton.component';
 import { TrainingStatisticsService } from './training-statistics.service';
 import { LineChartDataset } from '../../components/charts/line-chart/lilne-chart-data-set';
+import { ModalService } from '../../core/services/modal/modalService';
 
 /**
  * Component responsible for displaying training statistics in a line chart.
