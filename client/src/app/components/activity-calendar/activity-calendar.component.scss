@@ -1,4 +1,4 @@
-@import 'client/src/css/variables';
+$accent-color: #a78bfa;
 
 $level-colors: (
   1: lighten($accent-color, 10%),
@@ -7,6 +7,7 @@ $level-colors: (
   4: darken($accent-color, 10%),
 );
 
+$legend-color-size: 12px;
 $legend-color-size: 12px;
 
 @mixin set-level-color($level) {
