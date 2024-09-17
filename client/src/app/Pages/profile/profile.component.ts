@@ -1,29 +1,29 @@
-import { Component, OnInit, ElementRef, ViewChild, Renderer2 } from '@angular/core';
-import { SpinnerComponent } from '../../components/loaders/spinner/spinner.component';
-import { ImageUploadService } from '../../../service/util/image-upload.service';
-import { firstValueFrom, Observable } from 'rxjs';
-import { HttpService } from '../../core/http-client.service';
-import { FriendCardComponent } from '../../components/friend-card/friend-card.component';
-import { TooltipDirective } from '../../shared/directives/tooltip.directive';
-import { Friend } from '../../components/friend-card/friend';
-import { AlertComponent } from '../../components/alert/alert.component';
-import { FriendCardMode } from '../../components/friend-card/friend-card-mode';
-import { FriendRequestComponent } from '../modal-pages/friend-request/friend-request.component';
-import { PaginationComponent } from '../../components/pagination/pagination.component';
-import { ChangeProfilePictureConfirmationComponent } from '../modal-pages/change-profile-picture-confirmation/change-profile-picture-confirmation.component';
-import { FriendModalComponent } from '../friend-modal/friend-modal.component';
-import { IconComponent } from '../../shared/icon/icon.component';
-import { IconName } from '../../shared/icon/icon-name';
-import { IconButtonComponent } from '../../components/icon-button/icon-button.component';
-import { ProfileService } from './profileService';
 import { CommonModule } from '@angular/common';
-import { UserData } from './user-data';
-import { BasicInfoComponent } from '../modal-pages/basic-info/basic-info.component';
+import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastService } from '../../components/toast/toast.service';
+import { firstValueFrom, Observable } from 'rxjs';
+import { ImageUploadService } from '../../../service/util/image-upload.service';
 import { ActivityCalendar } from '../../components/activity-calendar/activity-calendar.component';
+import { AlertComponent } from '../../components/alert/alert.component';
+import { Friend } from '../../components/friend-card/friend';
+import { FriendCardMode } from '../../components/friend-card/friend-card-mode';
+import { FriendCardComponent } from '../../components/friend-card/friend-card.component';
+import { IconButtonComponent } from '../../components/icon-button/icon-button.component';
+import { SpinnerComponent } from '../../components/loaders/spinner/spinner.component';
+import { PaginationComponent } from '../../components/pagination/pagination.component';
+import { ToastService } from '../../components/toast/toast.service';
+import { HttpService } from '../../core/http-client.service';
 import { ModalService } from '../../core/services/modal/modalService';
 import { ModalSize } from '../../core/services/modal/modalSize';
+import { TooltipDirective } from '../../shared/directives/tooltip.directive';
+import { IconName } from '../../shared/icon/icon-name';
+import { IconComponent } from '../../shared/icon/icon.component';
+import { FriendModalComponent } from '../friend-modal/friend-modal.component';
+import { BasicInfoComponent } from '../modal-pages/basic-info/basic-info.component';
+import { ChangeProfilePictureConfirmationComponent } from '../modal-pages/change-profile-picture-confirmation/change-profile-picture-confirmation.component';
+import { FriendRequestComponent } from '../modal-pages/friend-request/friend-request.component';
+import { ProfileService } from './profileService';
+import { UserData } from './user-data';
 
 @Component({
   selector: 'app-profile',
@@ -94,16 +94,16 @@ export class ProfileComponent implements OnInit {
     this.fileInputElement.nativeElement.click();
   }
 
-  handleImageUpload(event: Event) {
-    this.imageUploadService.handleImageUpload(
-      event,
-      (result: string) => {
-        this.renderer.setAttribute(this.profileImageElement.nativeElement, 'src', result);
+  async handleImageUpload(event: Event) {
+    const uploadedPictureBase64Str = await this.imageUploadService.handleImageUpload(event, true);
 
-        this.showProfilePictureChangeDialog(result);
-      },
-      true,
-    );
+    if (!uploadedPictureBase64Str) {
+      return;
+    }
+
+    this.renderer.setAttribute(this.profileImageElement.nativeElement, 'src', uploadedPictureBase64Str);
+
+    this.showProfilePictureChangeDialog(uploadedPictureBase64Str);
   }
 
   async showProfilePictureChangeDialog(newProfilePicture: string) {

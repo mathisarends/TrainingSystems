@@ -1,15 +1,15 @@
-import { Component, OnInit, OnDestroy, Input, Renderer2, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom, Observable, Subscription } from 'rxjs';
-import { HttpService } from '../../core/http-client.service';
-import { CommonModule } from '@angular/common';
 import { TrainingPlanService } from '../../../service/training/training-plan.service';
 import { ImageUploadService } from '../../../service/util/image-upload.service';
 import { ToastService } from '../../components/toast/toast.service';
-import { SkeletonComponent } from '../../skeleton/skeleton.component';
-import { TrainingPlanEditViewDto } from './training-plan-edit-view-dto';
-import { EditTrainingPlanService } from './edit-training-plan.service';
+import { HttpService } from '../../core/http-client.service';
 import { ModalService } from '../../core/services/modal/modalService';
+import { SkeletonComponent } from '../../skeleton/skeleton.component';
+import { EditTrainingPlanService } from './edit-training-plan.service';
+import { TrainingPlanEditViewDto } from './training-plan-edit-view-dto';
 
 /**
  * Component for editing a training plan.
@@ -138,12 +138,16 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy, AfterViewCh
    * Handles image upload and updates the form control.
    * @param event - The file input change event.
    */
-  protected handleImageUpload(event: any): void {
-    this.imageUploadService.handleImageUpload(event, (result: string) => {
-      if (this.coverImageElement) {
-        this.renderer.setAttribute(this.coverImageElement.nativeElement, 'src', result);
-      }
-      this.trainingForm.patchValue({ coverImage: result });
-    });
+  protected async handleImageUpload(event: any): Promise<void> {
+    const uploadedImageBase64Str = await this.imageUploadService.handleImageUpload(event);
+
+    if (!uploadedImageBase64Str) {
+      return;
+    }
+
+    if (this.coverImageElement) {
+      this.renderer.setAttribute(this.coverImageElement.nativeElement, 'src', uploadedImageBase64Str);
+    }
+    this.trainingForm.patchValue({ coverImage: uploadedImageBase64Str });
   }
 }

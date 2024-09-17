@@ -16,32 +16,34 @@ export class ImageUploadService {
   /**
    * Handles the image upload process, including optional resizing and cropping.
    * @param event - The file input change event.
-   * @param callback - Callback function to handle the processed image result.
    * @param crop - Flag indicating whether to crop the image to a square.
+   * @returns A Promise that resolves to the processed Base64 string or null if the process failed.
    */
-  handleImageUpload(event: Event, callback: (result: string) => void, crop: boolean = false): void {
+  async handleImageUpload(event: Event, crop: boolean = false): Promise<string | null> {
     const file = this.getFileFromEvent(event);
-    if (!file) return;
+    if (!file) return null;
 
     if (!this.isValidImageType(file.type)) {
       this.toastService.error('Unerlaubtes Datenformat');
       console.error('Invalid file type. Please upload a valid image file.');
-      return;
+      return null;
     }
 
-    this.readFile(file, (base64Str) => {
+    try {
+      const base64Str = await this.readFile(file);
       if (base64Str.length > this.maxSizeInBytes) {
-        this.resizeImage(base64Str, callback);
-        return;
+        return await this.resizeImage(base64Str);
       }
 
       if (crop) {
-        this.resizeAndCropImage(base64Str, callback);
-        return;
+        return await this.resizeAndCropImage(base64Str);
       }
 
-      callback(base64Str);
-    });
+      return base64Str;
+    } catch (error) {
+      console.error('Error processing image:', error);
+      return null;
+    }
   }
 
   /**
@@ -64,71 +66,75 @@ export class ImageUploadService {
   }
 
   /**
-   * Reads a file and converts it to a base64 string.
+   * Reads a file and converts it to a Base64 string.
    * @param file - The file to read.
-   * @param callback - Callback function to handle the base64 string.
+   * @returns A Promise that resolves to the Base64 string.
    */
-  private readFile(file: File, callback: (base64Str: string) => void): void {
-    const reader = new FileReader();
-    reader.onload = (e: ProgressEvent<FileReader>) => {
-      const base64Str = e.target?.result as string;
-      callback(base64Str);
-    };
-    reader.readAsDataURL(file);
+  private readFile(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+      reader.readAsDataURL(file);
+    });
   }
 
   /**
    * Resizes and crops an image to a square based on the smallest dimension.
    * @param base64Str - The base64 string representation of the image.
-   * @param callback - Callback function to handle the processed image result.
+   * @returns A Promise that resolves to the processed Base64 string.
    */
-  private resizeAndCropImage(base64Str: string, callback: (result: string) => void): void {
-    const img = new Image();
-    img.src = base64Str;
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      const maxSize = Math.min(img.width, img.height);
-      canvas.width = maxSize;
-      canvas.height = maxSize;
-      const ctx = canvas.getContext('2d')!;
-      ctx.drawImage(
-        img,
-        (img.width - maxSize) / 2,
-        (img.height - maxSize) / 2,
-        maxSize,
-        maxSize,
-        0,
-        0,
-        maxSize,
-        maxSize,
-      );
-      callback(canvas.toDataURL());
-    };
+  private resizeAndCropImage(base64Str: string): Promise<string> {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = base64Str;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const maxSize = Math.min(img.width, img.height);
+        canvas.width = maxSize;
+        canvas.height = maxSize;
+        const ctx = canvas.getContext('2d')!;
+        ctx.drawImage(
+          img,
+          (img.width - maxSize) / 2,
+          (img.height - maxSize) / 2,
+          maxSize,
+          maxSize,
+          0,
+          0,
+          maxSize,
+          maxSize,
+        );
+        resolve(canvas.toDataURL());
+      };
+    });
   }
 
   /**
    * Resizes an image to fit within a maximum width and height, maintaining aspect ratio.
    * @param base64Str - The base64 string representation of the image.
-   * @param callback - Callback function to handle the processed image result.
+   * @returns A Promise that resolves to the processed Base64 string.
    */
-  private resizeImage(base64Str: string, callback: (result: string) => void): void {
-    const img = new Image();
-    img.src = base64Str;
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d')!;
+  private resizeImage(base64Str: string): Promise<string> {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = base64Str;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d')!;
 
-      const maxWidth = 800;
-      const maxHeight = 800;
+        const maxWidth = 800;
+        const maxHeight = 800;
 
-      const { width, height } = this.calculateAspectRatioFit(img.width, img.height, maxWidth, maxHeight);
+        const { width, height } = this.calculateAspectRatioFit(img.width, img.height, maxWidth, maxHeight);
 
-      canvas.width = width;
-      canvas.height = height;
+        canvas.width = width;
+        canvas.height = height;
 
-      ctx.drawImage(img, 0, 0, width, height);
-      callback(canvas.toDataURL());
-    };
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL());
+      };
+    });
   }
 
   /**

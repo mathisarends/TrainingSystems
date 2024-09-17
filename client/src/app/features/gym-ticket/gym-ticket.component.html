@@ -4,7 +4,7 @@
   <div class="picture-container">
     @if (gymTicket !== NO_GYM_TICKET_AVAILABLE) {
       <div class="upload-container" (click)="fileInput.click()">
-        <img [src]="gymTicket" alt="Upload Image" class="w-100" />
+        <img [src]="gymTicket" alt="Upload Ticket" class="w-100" />
 
         <input type="file" #fileInput (change)="handleImageUpload($event)" accept="image/*" hidden />
       </div>

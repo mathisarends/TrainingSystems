@@ -1,10 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { AlertComponent } from '../../components/alert/alert.component';
 
 @Component({
   selector: 'app-ticket-preview-component',
   standalone: true,
-  imports: [AlertComponent],
+  imports: [],
   templateUrl: './ticket-preview-component.component.html',
   styleUrls: ['./ticket-preview-component.component.scss'],
 })

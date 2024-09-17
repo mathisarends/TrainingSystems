@@ -11,13 +11,13 @@ import { ExercisesComponent } from './features/exercise-page/components/exercise
 import { TrainingViewComponent } from './Pages/training-view/training-view.component';
 
 import { SpinnerComponent } from './components/loaders/spinner/spinner.component';
-import { GymTicketComponent } from './Pages/gym-ticket/gym-ticket.component';
 import { UsageStatisticsComponent } from './Pages/usage-statistics/usage-statistics.component';
 
 import { RequestNewPasswordEmail } from './Pages/auth/request-new-password-email/request-new-password-email.component';
 import { ResetPasswordComponent } from './Pages/auth/reset-password/reset-password.component';
 
 import { AuthGuard } from './core/guards/auth.guard';
+import { GymTicketComponent } from './features/gym-ticket/gym-ticket.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },

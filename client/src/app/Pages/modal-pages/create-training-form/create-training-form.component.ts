@@ -1,14 +1,13 @@
-import { Component, ViewChild, ElementRef, input, signal, Input } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { firstValueFrom } from 'rxjs';
-import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpService } from '../../../core/http-client.service';
+import { Component, ElementRef, Input, signal, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { firstValueFrom } from 'rxjs';
 import { TrainingPlanService } from '../../../../service/training/training-plan.service';
 import { ImageUploadService } from '../../../../service/util/image-upload.service';
-import { ToastService } from '../../../components/toast/toast.service';
 import { TrainingPlanCardView } from '../../../../types/exercise/training-plan-card-view-dto';
 import { AlertComponent } from '../../../components/alert/alert.component';
+import { ToastService } from '../../../components/toast/toast.service';
+import { HttpService } from '../../../core/http-client.service';
 import { ModalService } from '../../../core/services/modal/modalService';
 
 /**
@@ -133,12 +132,16 @@ export class CreateTrainingFormComponent {
    * Handles image upload and updates the form control.
    * @param event - The file input change event.
    */
-  handleImageUpload(event: any) {
-    this.imageUploadService.handleImageUpload(event, (result: string) => {
-      if (this.coverImage) {
-        this.coverImage.nativeElement.src = result;
-      }
-      this.trainingForm.patchValue({ coverImage: result });
-    });
+  async handleImageUpload(event: any) {
+    const uploadedImageBase64Str = await this.imageUploadService.handleImageUpload(event);
+
+    if (!uploadedImageBase64Str) {
+      return;
+    }
+
+    if (this.coverImage) {
+      this.coverImage.nativeElement.src = uploadedImageBase64Str;
+    }
+    this.trainingForm.patchValue({ coverImage: uploadedImageBase64Str });
   }
 }
