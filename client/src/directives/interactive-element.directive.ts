@@ -1,11 +1,7 @@
 import { Directive, HostListener, Input } from '@angular/core';
 import { InteractiveElementService } from '../service/util/interactive-element.service';
 import { FormService } from '../service/form/form.service';
-
-/**
- * Defines the types of elements this directive can be applied to.
- */
-type InteractiveElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+import { InteractiveElement } from './interactive-element.types';
 
 /**
  * Directive to handle interactive form elements by tracking focus, blur, and input events.
@@ -33,8 +29,8 @@ export class InteractiveElementDirective {
    * @param target - The HTML element that triggered the focus event.
    */
   @HostListener('focus', ['$event.target'])
-  onFocus(target: HTMLInputElement | HTMLSelectElement): void {
-    this.interactiveElementService.focus(target.value);
+  onFocus(interactiveElement: InteractiveElement): void {
+    this.interactiveElementService.focus(interactiveElement.value);
   }
 
   /**
@@ -44,9 +40,9 @@ export class InteractiveElementDirective {
    * @param target - The HTML element that triggered the blur event.
    */
   @HostListener('blur', ['$event.target'])
-  onBlur(target: HTMLInputElement | HTMLSelectElement): void {
-    if (!(target instanceof HTMLSelectElement)) {
-      this.interactiveElementService.triggerChangeIfModified(target.value);
+  onBlur(interactiveElement: InteractiveElement): void {
+    if (!(interactiveElement instanceof HTMLSelectElement)) {
+      this.interactiveElementService.triggerChangeIfModified(interactiveElement.value);
     }
   }
 

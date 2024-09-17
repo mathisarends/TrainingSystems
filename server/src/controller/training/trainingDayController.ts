@@ -60,16 +60,6 @@ export async function getPlanForDay(req: Request, res: Response): Promise<void> 
     previousTrainingDay
   };
 
-  for (const trainingWeek of trainingPlan.trainingWeeks) {
-    for (const trainingDay of trainingWeek.trainingDays) {
-      for (const exercise of trainingDay.exercises) {
-        if (exercise.estMax === 0) {
-          exercise.estMax = undefined;
-        }
-      }
-    }
-  }
-
   const trainingPlanIndex = trainingService.findTrainingPlanIndexById(user.trainingPlans, id);
   const trainingMetaData = new TrainingDayDataLocator(user, trainingPlanIndex, trainingWeekIndex, trainingDayIndex);
   trainingSessionManager.addOrUpdateTracker(userDAO, trainingMetaData);
