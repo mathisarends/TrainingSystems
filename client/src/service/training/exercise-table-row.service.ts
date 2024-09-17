@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { ExerciseInputs } from './exercise-inputs';
 import { InteractiveElement } from '../../app/shared/types/interactive-element.types';
+import { ExerciseInputs } from './exercise-inputs';
 
 enum ExerciseTableRowInputType {
-  CATEGORY_SELECTOR = '.exercise-category-selector',
-  EXERCISE_SELECTOR_GENERIC = '.exercise-name-selector',
-  EXERCISE_SELECTOR = '.exercise-name-selector:not([disabled])[style*="display: block"]',
+  CATEGORY_SELECTOR = '.exercise-category-selector select',
+  EXERCISE_SELECTOR_GENERIC = '.exercise-name-selector select',
+  EXERCISE_SELECTOR = '.exercise-name-selector[style*="display: block"] select',
   SETS_INPUT = 'app-input.sets input',
   REPS_INPUT = 'app-input.reps input',
   WEIGHT_INPUT = 'app-input.weight input',
@@ -82,6 +82,8 @@ export class ExerciseTableRowService {
    * @returns An object containing all relevant input elements.
    */
   getInputsByCategorySelector(categorySelector: HTMLSelectElement, resetMode = false): ExerciseInputs {
+    console.log('🚀 ~ ExerciseTableRowService ~ getInputsByCategorySelector ~ resetMode:', resetMode);
+
     return {
       exerciseSelect: this.findClosestElementInRow(
         categorySelector,

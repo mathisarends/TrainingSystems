@@ -1,10 +1,10 @@
 import { Directive, HostListener, Renderer2, RendererFactory2 } from '@angular/core';
-import { InteractiveElementService } from '../service/util/interactive-element.service';
 import { FormService } from '../app/core/form.service';
-import { ExerciseTableRowService } from '../service/training/exercise-table-row.service';
-import { ExerciseDataService } from '../app/Pages/training-view/exercise-data.service';
 import { RepSchemeByCategory } from '../app/Pages/training-view/default-rep-scheme-by-category';
+import { ExerciseDataService } from '../app/Pages/training-view/exercise-data.service';
 import { ExerciseInputs } from '../service/training/exercise-inputs';
+import { ExerciseTableRowService } from '../service/training/exercise-table-row.service';
+import { InteractiveElementService } from '../service/util/interactive-element.service';
 
 @Directive({
   selector: '[category-select]',
@@ -101,7 +101,10 @@ export class CategorySelectDirective {
     category: string,
     defaultRepSchemeByCategory: RepSchemeByCategory,
   ): void {
-    const exerciseNameSelectors = tableRow.querySelectorAll('.exercise-name-selector') as NodeListOf<HTMLSelectElement>;
+    const exerciseNameSelectorWrappers = Array.from(tableRow.querySelectorAll('.exercise-name-selector'));
+    const exerciseNameSelectors = exerciseNameSelectorWrappers.map(
+      (wrapper) => wrapper.querySelector('select') as HTMLSelectElement,
+    );
 
     const exerciseSelect = Array.from(exerciseNameSelectors).find(
       (selector) => window.getComputedStyle(selector).opacity === '1' && !selector.disabled,
@@ -122,15 +125,17 @@ export class CategorySelectDirective {
         repsInput.value = defaultValues.defaultReps.toString();
         targetRPEInput.value = defaultValues.defaultRPE.toString();
       }
+
+      this.updateFormService(exerciseSelect, false);
     } else {
       this.resetInputs(exerciseSelect);
       this.updateFormService(exerciseSelect, true);
     }
-    this.updateFormService(exerciseSelect, false);
   }
 
   private resetInputs(exerciseSelect: HTMLSelectElement): void {
     const inputs: ExerciseInputs = this.exerciseTableRowService.getInputsByCategorySelector(exerciseSelect, true);
+    console.log('🚀 ~ CategorySelectDirective ~ resetInputs ~ inputs:', inputs);
 
     for (const key in inputs) {
       if (inputs.hasOwnProperty(key)) {
