@@ -1,17 +1,19 @@
 import { Injectable } from '@angular/core';
+import { InteractiveElement } from '../shared/types/interactive-element.types';
+import { DataMap } from '../shared/types/api-data';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FormService {
-  private changedData: { [key: string]: any } = {};
+  private changedData: DataMap = {};
 
   /**
    * Tracks changes from form inputs and stores the changed value.
    * @param event - The event triggered by the form input.
    */
   trackChange(event: Event): void {
-    const target = event.target as HTMLInputElement | HTMLSelectElement;
+    const target = event.target as InteractiveElement;
     this.changedData[target.name] = target.value;
   }
 

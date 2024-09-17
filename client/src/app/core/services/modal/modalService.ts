@@ -7,9 +7,10 @@ import {
   createComponent,
 } from '@angular/core';
 import { ModalSize } from './modalSize';
-import { ModalOptions } from './modal-options';
+import { BasicInfoModalOptions, ModalOptions } from './modal-options';
 import { ModalComponent } from '../../../components/modal/modal.component';
 import { ModalOverlayComponent } from '../../../components/modal/modal-overlay/modal-overlay.component';
+import { BasicInfoComponent } from '../../../Pages/modal-pages/basic-info/basic-info.component';
 
 @Injectable({
   providedIn: 'root',
@@ -90,6 +91,23 @@ export class ModalService {
         resolve(false); // Resolve the promise with false if cancelled
         this.close();
       });
+    });
+  }
+
+  /**
+   * Opens a basic info modal with predefined options.
+   *
+   * @param options - The specific options for the basic info modal.
+   * @returns A promise that resolves when the modal is confirmed or rejected.
+   */
+  openBasicInfoModal(options: BasicInfoModalOptions): Promise<boolean> {
+    return this.open({
+      component: BasicInfoComponent,
+      title: options.title,
+      buttonText: options.buttonText,
+      componentData: {
+        text: options.infoText,
+      },
     });
   }
 

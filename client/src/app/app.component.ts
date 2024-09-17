@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
 
 import { HeaderComponent } from './components/header/header.component';
 import { ToastComponent } from './components/toast/toast.component';
@@ -27,7 +27,7 @@ import { MobileDeviceDetectionService } from './platform/mobile-device-detection
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'TrainingSystems';
 
   constructor(
@@ -35,8 +35,17 @@ export class AppComponent {
     private browserCheckService: BrowserCheckService,
     private mobileDeviceDetectionService: MobileDeviceDetectionService,
     private redirectService: RedirectService,
+    private activatedRoute: ActivatedRoute,
     private authService: AuthService,
-  ) {
+  ) {}
+
+  ngOnInit() {
+    this.activatedRoute.queryParams.subscribe((params) => {
+      if (params['login'] === 'success' && this.authService.checkTempAuthCookie()) {
+        this.authService.setAuthenticationStatus(true);
+      }
+    });
+
     if (this.browserCheckService.isBrowser()) {
       this.serviceWorkerService.registerServiceWorker();
 

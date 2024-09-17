@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { CanActivate } from '@angular/router';
+import { CanActivate, Router } from '@angular/router';
 import { map, Observable, of } from 'rxjs';
 import { AuthService } from '../auth.service';
 import { BrowserCheckService } from '../browser-check.service';
+import { ModalService } from '../services/modal/modalService';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,8 @@ export class AuthGuard implements CanActivate {
   constructor(
     private authService: AuthService,
     private browserCheckService: BrowserCheckService,
+    private router: Router,
+    private modalService: ModalService,
   ) {}
 
   /**
@@ -30,7 +33,7 @@ export class AuthGuard implements CanActivate {
       return of(false);
     }
 
-    // During app initializaton the authentication status may be undefined because it is fetched from the api, in that case we have to wait for the response
+    // If the authentication status is still undefined (e.g., during app initialization), wait for the API response
     return this.authService.checkAuthenticationStatus().pipe(
       map(() => {
         const isAuthenticated = this.authService.isAuthenticated();

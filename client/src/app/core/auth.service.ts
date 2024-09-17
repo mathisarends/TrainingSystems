@@ -1,10 +1,9 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { catchError, map, Observable, of } from 'rxjs';
 import { HttpService } from './http-client.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { BrowserCheckService } from './browser-check.service';
-import { BasicInfoComponent } from '../Pages/modal-pages/basic-info/basic-info.component';
 import { ModalService } from './services/modal/modalService';
+import { Router } from '@angular/router';
+import { setThrowInvalidWriteToSignalError } from '@angular/core/primitives/signals';
 
 @Injectable({
   providedIn: 'root',
@@ -14,36 +13,9 @@ export class AuthService {
 
   constructor(
     private httpService: HttpService,
-    private activatedRoute: ActivatedRoute,
-    private browserCheckService: BrowserCheckService,
     private modalService: ModalService,
     private router: Router,
-  ) {
-    const isBrowserEnv = this.browserCheckService.isBrowser(); // Prevent warning that service is not used
-
-    if (isBrowserEnv) {
-      this.activatedRoute.queryParams.subscribe((params) => {
-        if (params['login'] === 'success' && this.checkTempAuthCookie()) {
-          this.setAuthenticationStatus(true);
-        }
-      });
-    }
-  }
-
-  async showLoginModalDialog() {
-    const response = await this.modalService.open({
-      component: BasicInfoComponent,
-      title: 'Anmeldung erforderlich',
-      buttonText: 'Anmelden',
-      componentData: {
-        text: 'Um diese Seite besuchen zu können musst du angemeldet sein!',
-      },
-    });
-
-    if (response) {
-      this.router.navigate(['login']);
-    }
-  }
+  ) {}
 
   /**
    * Checks the initial authentication status of the user by making a request to the backend.
@@ -62,16 +34,28 @@ export class AuthService {
     );
   }
 
-  logout(): Observable<void> {
-    return this.httpService.post('/user/logout').pipe(
-      map(() => {
-        this.isAuthenticatedSignal.set(false);
-      }),
-      catchError(() => {
-        this.isAuthenticatedSignal.set(false);
-        return of();
-      }),
-    );
+  /**
+   * Displays the login modal dialog if user is not authenticated.
+   */
+  async showLoginModalDialog(): Promise<void> {
+    const response = await this.modalService.openBasicInfoModal({
+      title: 'Anmeldung erforderlich',
+      buttonText: 'Anmelden',
+      infoText: 'Um diese Seite besuchen zu können musst du angemeldet sein!',
+    });
+
+    if (response) {
+      this.router.navigate(['login']);
+    }
+  }
+
+  /**
+   * Logs out the user
+   */
+  logout(): void {
+    this.httpService.post('/user/logout').subscribe(() => {
+      this.isAuthenticatedSignal.set(false);
+    });
   }
 
   /**
@@ -95,7 +79,7 @@ export class AuthService {
    * The cookie is sent to validate the redirection from google-oauth-2
    * @returns A boolean indicating if the 'authTemp' cookie is present.
    */
-  private checkTempAuthCookie(): boolean {
+  checkTempAuthCookie(): boolean {
     return !!this.getCookie('authTemp');
   }
 
