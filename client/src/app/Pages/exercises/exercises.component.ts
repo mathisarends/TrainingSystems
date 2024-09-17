@@ -3,14 +3,14 @@ import { Component, DestroyRef, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
 import { InteractiveElementDirective } from '../../../directives/interactive-element.directive';
-import { InteractiveElementService } from '../../../service/util/interactive-element.service';
-import { DropdownComponent } from '../../components/dropdown/dropdown.component';
-import { InputComponent } from '../../components/input/input.component';
 import { ToastService } from '../../components/toast/toast.service';
 import { FormService } from '../../core/form.service';
 import { ModalService } from '../../core/services/modal/modalService';
 import { ExerciseTableSkeletonComponent } from '../../features/exercise-page/exercises/exercise-table-skeleton/exercise-table-skeleton.component';
 import { ExerciseService } from '../../features/exercise-page/service/exercise.service.';
+import { DropdownComponent } from '../../shared/components/dropdown/dropdown.component';
+import { InputComponent } from '../../shared/components/input/input.component';
+import { InteractiveElementService } from '../../shared/service/interactive-element.service';
 import { ExerciseDataDTO } from '../training-view/exerciseDataDto';
 
 /**

@@ -1,6 +1,6 @@
 import { Component, HostListener, input, output } from '@angular/core';
-import { IconComponent } from '../../shared/icon/icon.component';
-import { IconName } from '../../shared/icon/icon-name';
+import { IconName } from '../../icon/icon-name';
+import { IconComponent } from '../../icon/icon.component';
 
 @Component({
   selector: 'app-circular-icon-button',

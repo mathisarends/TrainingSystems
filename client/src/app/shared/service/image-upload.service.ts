@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ToastService } from '../../app/components/toast/toast.service';
+import { ToastService } from '../../components/toast/toast.service';
 
 /**
  * Service to handle image uploads, resizing, and cropping.

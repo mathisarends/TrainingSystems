@@ -3,10 +3,10 @@ import { AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, Rend
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom, Observable, Subscription } from 'rxjs';
 import { TrainingPlanService } from '../../../service/training/training-plan.service';
-import { ImageUploadService } from '../../../service/util/image-upload.service';
 import { ToastService } from '../../components/toast/toast.service';
 import { HttpService } from '../../core/http-client.service';
 import { ModalService } from '../../core/services/modal/modalService';
+import { ImageUploadService } from '../../shared/service/image-upload.service';
 import { SkeletonComponent } from '../../skeleton/skeleton.component';
 import { EditTrainingPlanService } from './edit-training-plan.service';
 import { TrainingPlanEditViewDto } from './training-plan-edit-view-dto';

@@ -3,12 +3,12 @@ import { Component, ElementRef, Input, signal, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { TrainingPlanService } from '../../../../service/training/training-plan.service';
-import { ImageUploadService } from '../../../../service/util/image-upload.service';
 import { TrainingPlanCardView } from '../../../../types/exercise/training-plan-card-view-dto';
-import { AlertComponent } from '../../../components/alert/alert.component';
 import { ToastService } from '../../../components/toast/toast.service';
 import { HttpService } from '../../../core/http-client.service';
 import { ModalService } from '../../../core/services/modal/modalService';
+import { AlertComponent } from '../../../shared/components/alert/alert.component';
+import { ImageUploadService } from '../../../shared/service/image-upload.service';
 
 /**
  * Component for creating a training form.

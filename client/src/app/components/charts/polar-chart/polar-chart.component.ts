@@ -1,5 +1,5 @@
-import { AlertComponent } from '../../alert/alert.component';
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { AlertComponent } from '../../../shared/components/alert/alert.component';
 
 import Chart from 'chart.js/auto';
 

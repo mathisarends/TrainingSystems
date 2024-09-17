@@ -1,8 +1,8 @@
-import { Component, HostListener, input, output } from '@angular/core';
-import { TooltipDirective } from '../../shared/directives/tooltip.directive';
 import { CommonModule } from '@angular/common';
-import { IconComponent } from '../../shared/icon/icon.component';
-import { IconName } from '../../shared/icon/icon-name';
+import { Component, HostListener, input, output } from '@angular/core';
+import { TooltipDirective } from '../../directives/tooltip.directive';
+import { IconName } from '../../icon/icon-name';
+import { IconComponent } from '../../icon/icon.component';
 
 @Component({
   selector: 'app-icon-button',

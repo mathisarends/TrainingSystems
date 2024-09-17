@@ -1,9 +1,9 @@
-import { Directive, HostListener, ElementRef, AfterViewInit } from '@angular/core';
-import { InteractiveElementService } from '../service/util/interactive-element.service';
+import { AfterViewInit, Directive, ElementRef, HostListener } from '@angular/core';
 import { FormService } from '../app/core/form.service';
+import { ExerciseDataService } from '../app/Pages/training-view/exercise-data.service';
+import { InteractiveElementService } from '../app/shared/service/interactive-element.service';
 import { ExerciseTableRowService } from '../service/training/exercise-table-row.service';
 import { PauseTimeService } from '../service/training/pause-time.service';
-import { ExerciseDataService } from '../app/Pages/training-view/exercise-data.service';
 
 /**
  * Directive that extends the InteractiveElementDirective to add additional functionality.

@@ -1,6 +1,6 @@
 import { Directive, HostListener, Input } from '@angular/core';
-import { InteractiveElementService } from '../service/util/interactive-element.service';
 import { FormService } from '../app/core/form.service';
+import { InteractiveElementService } from '../app/shared/service/interactive-element.service';
 import { InteractiveElement } from '../app/shared/types/interactive-element.types';
 
 /**

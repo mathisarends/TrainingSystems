@@ -1,12 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
-import { CommonModule } from '@angular/common';
 import { catchError, finalize } from 'rxjs/operators';
-import { AlertComponent } from '../../../components/alert/alert.component';
-import { SpinnerComponent } from '../../../components/loaders/spinner/spinner.component';
-import { FriendCardComponent } from '../../../components/friend-card/friend-card.component';
 import { Friend } from '../../../components/friend-card/friend';
+import { FriendCardComponent } from '../../../components/friend-card/friend-card.component';
+import { SpinnerComponent } from '../../../components/loaders/spinner/spinner.component';
 import { HttpService } from '../../../core/http-client.service';
+import { AlertComponent } from '../../../shared/components/alert/alert.component';
 
 @Component({
   selector: 'app-friend-modal',

@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
-import { CategorySelectDirective } from '../../../directives/category-select.directive';
-import { InteractiveElementDirective } from '../../../directives/interactive-element.directive';
+import { CategorySelectDirective } from '../../../../directives/category-select.directive';
+import { InteractiveElementDirective } from '../../../../directives/interactive-element.directive';
 import { DetermineSelectOptionValuePipe } from './determine-select-option-value.pipe';
 
 /**

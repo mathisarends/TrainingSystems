@@ -1,18 +1,18 @@
 import {
+  AfterViewInit,
   Component,
+  ComponentRef,
+  EnvironmentInjector,
+  EventEmitter,
   Input,
+  Output,
   ViewChild,
   ViewContainerRef,
-  AfterViewInit,
-  EnvironmentInjector,
   createComponent,
-  ComponentRef,
-  EventEmitter,
-  Output,
 } from '@angular/core';
-import { ButtonComponent } from '../button/button.component';
 import { ModalService } from '../../core/services/modal/modalService';
 import { ModalSize } from '../../core/services/modal/modalSize';
+import { ButtonComponent } from '../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-modal',

@@ -1,21 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
+import { ChartColorService } from '../../chart-color.service';
+import { BarChartData } from '../../components/charts/grouped-bar-chart/bar-chart.-data';
+import { GroupedBarChartComponent } from '../../components/charts/grouped-bar-chart/grouped-bar-chart.component';
+import { ExerciseDrillThroughEvent } from '../../components/charts/line-chart/exercise-drill-through-event';
+import { LineChartDataset } from '../../components/charts/line-chart/lilne-chart-data-set';
+import { LineChartComponent } from '../../components/charts/line-chart/line-chart.component';
+import { PolarChartComponent } from '../../components/charts/polar-chart/polar-chart.component';
+import { ChartSkeletonComponent } from '../../components/loaders/chart-skeleton/chart-skeleton.component';
+import { MultiSelectComponent } from '../../components/multi-select/multi-select.component';
+import { PaginationComponent } from '../../components/pagination/pagination.component';
+import { ModalService } from '../../core/services/modal/modalService';
+import { HeadlineComponent } from '../../shared/components/headline/headline.component';
 import { TrainingExerciseTonnageDto } from './main-exercise-tonnage-dto';
 import { Tonnage } from './tonnage';
-import { MultiSelectComponent } from '../../components/multi-select/multi-select.component';
-import { ChartColorService } from '../../chart-color.service';
-import { firstValueFrom } from 'rxjs';
-import { LineChartComponent } from '../../components/charts/line-chart/line-chart.component';
-import { GroupedBarChartComponent } from '../../components/charts/grouped-bar-chart/grouped-bar-chart.component';
-import { BarChartData } from '../../components/charts/grouped-bar-chart/bar-chart.-data';
-import { PaginationComponent } from '../../components/pagination/pagination.component';
-import { ExerciseDrillThroughEvent } from '../../components/charts/line-chart/exercise-drill-through-event';
-import { PolarChartComponent } from '../../components/charts/polar-chart/polar-chart.component';
-import { HeadlineComponent } from '../../components/headline/headline.component';
-import { ChartSkeletonComponent } from '../../components/loaders/chart-skeleton/chart-skeleton.component';
 import { TrainingStatisticsService } from './training-statistics.service';
-import { LineChartDataset } from '../../components/charts/line-chart/lilne-chart-data-set';
-import { ModalService } from '../../core/services/modal/modalService';
 
 /**
  * Component responsible for displaying training statistics in a line chart.

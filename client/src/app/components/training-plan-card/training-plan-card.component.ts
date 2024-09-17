@@ -1,22 +1,22 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TrainingPlanCardView } from '../../../types/exercise/training-plan-card-view-dto';
-import { firstValueFrom } from 'rxjs';
-import { Router } from '@angular/router';
-import { EditTrainingPlanComponent } from '../../Pages/edit-training-plan/edit-training-plan.component';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
+import { TrainingPlanCardView } from '../../../types/exercise/training-plan-card-view-dto';
+import { EditTrainingPlanComponent } from '../../Pages/edit-training-plan/edit-training-plan.component';
 
-import { TooltipDirective } from '../../shared/directives/tooltip.directive';
-import { ToastService } from '../toast/toast.service';
-import { BasicInfoComponent } from '../../Pages/modal-pages/basic-info/basic-info.component';
-import { IconButtonComponent } from '../icon-button/icon-button.component';
 import { TrainingPlanService } from '../../../service/training/training-plan.service';
 import { HttpService } from '../../core/http-client.service';
-import { IconComponent } from '../../shared/icon/icon.component';
-import { IconName } from '../../shared/icon/icon-name';
-import {} from '../percentage-circle-visualisation/percentage-circle-visualisation.component';
 import { ModalService } from '../../core/services/modal/modalService';
 import { ModalSize } from '../../core/services/modal/modalSize';
+import { BasicInfoComponent } from '../../Pages/modal-pages/basic-info/basic-info.component';
+import { IconButtonComponent } from '../../shared/components/icon-button/icon-button.component';
+import { TooltipDirective } from '../../shared/directives/tooltip.directive';
+import { IconName } from '../../shared/icon/icon-name';
+import { IconComponent } from '../../shared/icon/icon.component';
+import {} from '../percentage-circle-visualisation/percentage-circle-visualisation.component';
+import { ToastService } from '../toast/toast.service';
 
 /**
  * Component for displaying and managing a single training plan card.

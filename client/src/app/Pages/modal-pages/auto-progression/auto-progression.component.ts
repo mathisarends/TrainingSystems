@@ -1,9 +1,8 @@
 import { Component, input } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { AlertComponent } from '../../../components/alert/alert.component';
-import { HttpService } from '../../../core/http-client.service';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToastService } from '../../../components/toast/toast.service';
+import { HttpService } from '../../../core/http-client.service';
+import { AlertComponent } from '../../../shared/components/alert/alert.component';
 
 @Component({
   selector: 'app-auto-progression',

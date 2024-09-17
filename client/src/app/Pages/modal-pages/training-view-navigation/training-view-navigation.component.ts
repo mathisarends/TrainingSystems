@@ -1,6 +1,6 @@
 import { Component, ElementRef, QueryList, ViewChildren } from '@angular/core';
-import { AlertComponent } from '../../../components/alert/alert.component';
 import { PaginationComponent } from '../../../components/pagination/pagination.component';
+import { AlertComponent } from '../../../shared/components/alert/alert.component';
 
 @Component({
   selector: 'app-training-view-navigation',
