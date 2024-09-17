@@ -1,7 +1,21 @@
-<select [name]="name()" (change)="onChange($event)" class="transparent-input" appInteractiveElement>
-  @for (option of options(); track option; let index = $index) {
-    <option [value]="option" [selected]="option === selectedValue()">
-      {{ option | determineSelectOptionValue: optionLabels() : index }}
-    </option>
+@switch (directiveUsed()) {
+  @case ('interactiveElementDirective') {
+    <select [name]="name()" (change)="onChange($event)" class="transparent-input" appInteractiveElement>
+      @for (option of options(); track option; let index = $index) {
+        <option [value]="option" [selected]="option === selectedValue()">
+          {{ option | determineSelectOptionValue: optionLabels() : index }}
+        </option>
+      }
+    </select>
   }
-</select>
+
+  @case ('category-select') {
+    <select [name]="name()" (change)="onChange($event)" class="transparent-input" category-select>
+      @for (option of options(); track option; let index = $index) {
+        <option [value]="option" [selected]="option === selectedValue()">
+          {{ option | determineSelectOptionValue: optionLabels() : index }}
+        </option>
+      }
+    </select>
+  }
+}

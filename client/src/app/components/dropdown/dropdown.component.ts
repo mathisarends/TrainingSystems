@@ -1,4 +1,5 @@
 import { Component, input, output } from '@angular/core';
+import { CategorySelectDirective } from '../../../directives/category-select.directive';
 import { InteractiveElementDirective } from '../../../directives/interactive-element.directive';
 import { DetermineSelectOptionValuePipe } from './determine-select-option-value.pipe';
 
@@ -11,7 +12,7 @@ import { DetermineSelectOptionValuePipe } from './determine-select-option-value.
 @Component({
   selector: 'app-dropdown',
   standalone: true,
-  imports: [InteractiveElementDirective, DetermineSelectOptionValuePipe],
+  imports: [InteractiveElementDirective, CategorySelectDirective, DetermineSelectOptionValuePipe],
   templateUrl: './dropdown.component.html',
   styleUrls: ['./dropdown.component.scss'],
 })
@@ -38,6 +39,11 @@ export class DropdownComponent {
    * Not required and if not given the options will be used instead.
    */
   optionLabels = input<(string | number)[]>([]);
+
+  /**
+   * Selects which directive to use on the select element.
+   */
+  directiveUsed = input<'interactiveElementDirective' | 'category-select'>('interactiveElementDirective');
 
   /**
    * Emits the value of the selected option whenever the user changes their selection.

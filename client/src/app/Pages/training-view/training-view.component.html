@@ -49,20 +49,15 @@
 
           <tr>
             <td data-cell="Category">
-              <select
+              <app-dropdown
                 name="day{{ trainingDayIndex }}_exercise{{ k }}_category"
-                class="exercise-category-selector transparent-input w-100"
-                category-select
+                [options]="exerciseData.exerciseCategories"
+                [directiveUsed]="'category-select'"
+                [selectedValue]="exercise.category"
                 [ngStyle]="{
                   opacity: exercise.category === '- Bitte Auswählen -' || !exercise.category ? 0 : 1,
                 }"
-              >
-                @for (category of exerciseData.exerciseCategories; track category) {
-                  <option [value]="category" [selected]="exercise.category === category">
-                    {{ category }}
-                  </option>
-                }
-              </select>
+              />
             </td>
             <td data-cell="Exercise">
               @for (category of exerciseData.exerciseCategories; track category) {
