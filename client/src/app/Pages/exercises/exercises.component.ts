@@ -10,10 +10,13 @@ import { ExerciseTableSkeletonComponent } from '../../components/loaders/exercis
 import { ToastService } from '../../components/toast/toast.service';
 import { FormService } from '../../core/form.service';
 import { ModalService } from '../../core/services/modal/modalService';
-import { BasicInfoComponent } from '../modal-pages/basic-info/basic-info.component';
 import { ExerciseService } from '../training-view/exercise.service.';
 import { ExerciseDataDTO } from '../training-view/exerciseDataDto';
 
+/**
+ * Component responsible for displaying and managing exercises in the training view.
+ * Provides functionality for configuring exercises, managing sets, reps, RPE, and pause times.
+ */
 @Component({
   selector: 'app-exercises',
   standalone: true,
@@ -26,21 +29,27 @@ import { ExerciseDataDTO } from '../training-view/exerciseDataDto';
   ],
   providers: [ExerciseService],
   templateUrl: './exercises.component.html',
-  styleUrls: ['./exercises.component.scss', '../../../css/tables.scss'],
+  styleUrls: ['./exercises.component.scss'],
 })
 export class ExercisesComponent implements OnInit {
   /**
-   * Observable that emits the exercise data or null if there's an error or it's still loading.
+   * Observable that emits the exercise data or `null` if there's an error or the data is still loading.
    */
   exerciseData$!: Observable<ExerciseDataDTO>;
 
   /**
-   * Maximum number of exercises to display.
+   * Maximum number of exercises that can be displayed.
    */
   maxExercises = 8;
 
+  /**
+   * Signal containing the available pause time options in seconds.
+   */
   pauseTimeOptions = signal([60, 90, 120, 150, 180, 210, 240, 270, 300]);
 
+  /**
+   * Signal containing the labels for pause time options.
+   */
   pauseTimeLabels = signal([
     '1 Minute',
     '1.5 Minuten',
@@ -53,13 +62,34 @@ export class ExercisesComponent implements OnInit {
     '5 Minuten',
   ]);
 
+  /**
+   * Signal containing the options for the number of sets.
+   */
   amountOfSetsOptions = signal([1, 2, 3, 4, 5, 6, 7, 8]);
+
+  /**
+   * Signal containing the labels for the number of sets.
+   */
   amountofSetsLabels = signal(['1 Set', '2 Sets', '3 Sets', '4 Sets', '5 Sets', '6 Sets', '7 Sets', '8 Sets']);
 
+  /**
+   * Signal containing the available RPE (Rate of Perceived Exertion) options.
+   */
   rpeOptions = signal([6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10]);
+
+  /**
+   * Signal containing the labels for RPE options.
+   */
   rpeOptionsLabels = signal(['RPE 6', 'RPE 6.5', 'RPE 7', 'RPE 7.5', 'RPE 8', 'RPE 8.5', 'RPE 9', 'RPE 9.5', 'RPE 10']);
 
+  /**
+   * Signal containing the options for the number of repetitions.
+   */
   repsOptions = signal([3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+
+  /**
+   * Signal containing the labels for repetition options.
+   */
   repsOptionsLabels = signal([
     '3 Reps',
     '4 Reps',
@@ -92,43 +122,27 @@ export class ExercisesComponent implements OnInit {
   ngOnInit(): void {
     this.exerciseData$ = this.exerciseService.loadExerciseData();
 
-    this.interactiveElementService.inputChanged$
-      .pipe(takeUntilDestroyed(this.destroyRef)) // Automatically unsubscribe
-      .subscribe(() => {
-        this.saveExerciseData();
-      });
-  }
-
-  saveExerciseData(): void {
-    this.exerciseService.updateExercises(this.formService.getChanges()).subscribe({
-      error: (error) => {
-        this.toastService.error('Speichern war nicht erfolgreich');
-        console.error('Error updating user exercises:', error);
-      },
+    this.interactiveElementService.inputChanged$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.exerciseService.updateExercises(this.formService.getChanges()).subscribe();
     });
   }
 
+  /**
+   * Resets the exercises to their default settings after confirming via a modal dialog.
+   */
   async onReset(event: Event): Promise<void> {
     event.preventDefault();
-    const confirmed = await this.modalService.open({
-      component: BasicInfoComponent,
+    const confirmed = await this.modalService.openBasicInfoModal({
       title: 'Übungen zurücksetzen',
       buttonText: 'Zurücksetzen',
-      componentData: {
-        text: '  Bist du dir sicher, dass du die Übungen auf die Standarteinstellungen zurücksetzen willst? Die Änderungen können danach nicht wieder rückgängig gemacht werden!',
-      },
+      infoText:
+        'Bist du dir sicher, dass du die Übungen auf die Standarteinstellungen zurücksetzen willst? Die Änderungen können danach nicht wieder rückgängig gemacht werden!',
     });
 
     if (confirmed) {
-      this.exerciseService.resetExercises().subscribe({
-        next: () => {
-          this.exerciseData$ = this.exerciseService.loadExerciseData();
-          this.toastService.success('Übungskatalog zurückgesetzt!');
-        },
-        error: (error) => {
-          this.toastService.success('Übungskatalog nicht zurückgesetzt!');
-          console.error('Error resetting exercises:', error);
-        },
+      this.exerciseService.resetExercises().subscribe(() => {
+        this.exerciseData$ = this.exerciseService.loadExerciseData();
+        this.toastService.success('Übungskatalog zurückgesetzt!');
       });
     }
   }

@@ -1,3 +1,7 @@
 .top-border {
   border-top: 3px solid rgb(224, 224, 224);
 }
+
+.table > :not(caption) > * > * {
+  background-color: inherit;
+}

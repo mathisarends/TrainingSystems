@@ -1,7 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 @import './css/tooltip.scss';
-@import './css/input.scss';
-@import './css/variables.scss';
+
+:root {
+  --accent-color: #a78bfa;
+  --light-grey: #f0f0f0;
+  --dark-grey: #222222;
+  --border-color: #e2e8f0;
+}
 
 * {
   box-sizing: border-box;

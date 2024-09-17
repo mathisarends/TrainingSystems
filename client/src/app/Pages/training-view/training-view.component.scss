@@ -5,6 +5,10 @@
   margin-bottom: 1rem;
 }
 
+.table > :not(caption) > * > * {
+  background-color: inherit;
+}
+
 .training-table tr td input[type='number'] {
   text-align: center;
 }

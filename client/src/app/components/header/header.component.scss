@@ -1,5 +1,3 @@
-@import 'client/src/css/variables';
-
 #header {
   position: fixed;
   left: 0;
@@ -17,7 +15,7 @@
   z-index: 1000;
 
   & .dropdown-item.active {
-    background: $accent-color;
+    background: var(--accent-color);
   }
 
   & .dropdown-item:active {
@@ -44,7 +42,7 @@
     top: 5px;
     right: 0;
     transform: translate(50%, -50%);
-    background-color: $accent-color;
+    /*     background-color: $accent-color; */
     color: white;
     border-radius: 50%;
     width: 1.5em; // Ensure the width and height are the same

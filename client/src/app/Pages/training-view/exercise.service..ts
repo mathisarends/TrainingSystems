@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ExerciseDataDTO } from './exerciseDataDto';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../core/http-client.service';
+import { DataMap } from '../../shared/types/api-data';
+import { ExerciseDataDTO } from './exerciseDataDto';
 
 @Injectable()
 export class ExerciseService {
@@ -31,7 +32,7 @@ export class ExerciseService {
    * @param changes - An object representing the changes to be applied to the exercises.
    * @returns An `Observable` that completes when the update operation is finished.
    */
-  updateExercises(changes: { [key: string]: any }): Observable<void> {
+  updateExercises(changes: DataMap): Observable<void> {
     return this.httpClient.patch('/exercise', changes);
   }
 }
