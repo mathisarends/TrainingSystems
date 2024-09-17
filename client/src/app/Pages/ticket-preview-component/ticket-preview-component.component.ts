@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { AlertComponent } from '../components/alert/alert.component';
+import { AlertComponent } from '../../components/alert/alert.component';
 
 @Component({
   selector: 'app-ticket-preview-component',

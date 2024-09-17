@@ -11,8 +11,8 @@ import { InteractiveElementService } from '../../../service/util/interactive-ele
 import { InteractiveElementDirective } from '../../../directives/interactive-element.directive';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ExerciseService } from '../training-view/exercise.service.';
-import { SelectComponent } from '../../select/select.component';
-import { InputComponent } from '../../input/input.component';
+import { InputComponent } from '../../components/input/input.component';
+import { SelectComponent } from '../../components/select/select.component';
 
 @Component({
   selector: 'app-exercises',

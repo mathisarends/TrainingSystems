@@ -14,7 +14,6 @@ import { FriendRequestComponent } from '../modal-pages/friend-request/friend-req
 import { PaginationComponent } from '../../components/pagination/pagination.component';
 import { ChangeProfilePictureConfirmationComponent } from '../modal-pages/change-profile-picture-confirmation/change-profile-picture-confirmation.component';
 import { FriendModalComponent } from '../friend-modal/friend-modal.component';
-import { ActivityCalendar } from '../../activity-calendar/activity-calendar.component';
 import { IconComponent } from '../../shared/icon/icon.component';
 import { IconName } from '../../shared/icon/icon-name';
 import { IconButtonComponent } from '../../components/icon-button/icon-button.component';
@@ -24,6 +23,7 @@ import { UserData } from './user-data';
 import { BasicInfoComponent } from '../modal-pages/basic-info/basic-info.component';
 import { Router } from '@angular/router';
 import { ToastService } from '../../components/toast/toast.service';
+import { ActivityCalendar } from '../../components/activity-calendar/activity-calendar.component';
 
 @Component({
   selector: 'app-profile',

@@ -9,9 +9,9 @@ import { MobileDeviceDetectionService } from '../service/mobile-device-detection
 import { RedirectService } from '../service/util/redirect.service';
 import { SpinnerComponent } from './components/loaders/spinner/spinner.component';
 import { LoadingProgressBarComponent } from './components/loaders/loading-progress-bar/loading-progress-bar.component';
-import { MobileNavComponent } from './mobile-nav/mobile-nav.component';
 import { AuthService } from '../service/auth.service';
-import { FooterComponent } from './footer/footer.component';
+import { FooterComponent } from './partials/footer/footer.component';
+import { MobileNavComponent } from './components/mobile-nav/mobile-nav.component';
 
 @Component({
   selector: 'app-root',

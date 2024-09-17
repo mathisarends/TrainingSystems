@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
-import { InteractiveElementDirective } from '../../directives/interactive-element.directive';
 import { DetermineSelectOptionValuePipe } from './determine-select-option-value.pipe';
+import { InteractiveElementDirective } from '../../../directives/interactive-element.directive';
 
 /**
  * A wrapper component for a `<select>` HTML element.

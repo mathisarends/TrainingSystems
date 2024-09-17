@@ -1,13 +1,13 @@
 import { Component, input, OnInit, signal } from '@angular/core';
-import { TrainingDayFinishedNotification } from '../usage-statistics/training-finished-notification';
+import { TrainingDayFinishedNotification } from '../../Pages/usage-statistics/training-finished-notification';
 import { CommonModule } from '@angular/common';
-import { IconComponent } from '../shared/icon/icon.component';
-import { NotificationService } from '../notification-page/notification.service';
-import { ToastService } from '../components/toast/toast.service';
+import { IconComponent } from '../../shared/icon/icon.component';
+import { ToastService } from '../toast/toast.service';
 import { Router } from '@angular/router';
-import { toggleCollapseAnimation } from '../shared/animations/animations';
-import { FormatDatePipe } from '../shared/pipes/format-date.pipe';
-import { IconName } from '../shared/icon/icon-name';
+import { toggleCollapseAnimation } from '../../shared/animations/animations';
+import { FormatDatePipe } from '../../shared/pipes/format-date.pipe';
+import { IconName } from '../../shared/icon/icon-name';
+import { NotificationService } from '../../Pages/notification-page/notification.service';
 
 @Component({
   selector: 'app-training-day-notification',

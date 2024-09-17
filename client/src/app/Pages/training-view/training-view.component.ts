@@ -43,9 +43,8 @@ import { SpinnerComponent } from '../../components/loaders/spinner/spinner.compo
 import { FocusService } from '../../focus.service';
 import { IconName } from '../../shared/icon/icon-name';
 import { IconComponent } from '../../shared/icon/icon.component';
-import { SelectComponent } from '../../select/select.component';
-import { InputComponent } from '../../input/input.component';
-
+import { InputComponent } from '../../components/input/input.component';
+import { SelectComponent } from '../../components/select/select.component';
 /**
  * Component to manage and display the training view.
  * Handles loading of training data, swipe gestures, and form submissions.
