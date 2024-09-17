@@ -1,16 +1,15 @@
 import { Routes } from '@angular/router';
 
-import { LoginComponent } from './Pages/auth/login/login.component';
-import { RegisterComponent } from './Pages/auth/register/register.component';
-
 import { ExercisesComponent } from './features/exercise-page/components/exercise/exercises.component';
 
 import { SpinnerComponent } from './shared/components/spinner/spinner.component';
 
-import { RequestNewPasswordEmail } from './Pages/auth/request-new-password-email/request-new-password-email.component';
-import { ResetPasswordComponent } from './Pages/auth/reset-password/reset-password.component';
+import { ResetPasswordComponent } from './features/auth/reset-password/reset-password.component';
 
 import { AuthGuard } from './core/guards/auth.guard';
+import { LoginComponent } from './features/auth/login/login.component';
+import { RegisterComponent } from './features/auth/register/register.component';
+import { RequestNewPasswordEmail } from './features/auth/request-new-password-email/request-new-password-email.component';
 import { GymTicketComponent } from './features/gym-ticket/gym-ticket.component';
 import { ProfileComponent } from './features/profile/profile.component';
 import { StatisticsComponent } from './features/training-plans/statistics/statistics.component';

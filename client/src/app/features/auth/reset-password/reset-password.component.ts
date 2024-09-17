@@ -3,8 +3,6 @@ import { Component, Inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, Observable, of } from 'rxjs';
 import { HttpService } from '../../../core/http-client.service';
-import { ModalService } from '../../../core/services/modal/modalService';
-import { BasicInfoComponent } from '../../../shared/components/modal/basic-info/basic-info.component';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
 import { ToastService } from '../../../shared/components/toast/toast.service';
 import { IconComponent } from '../../../shared/icon/icon.component';
@@ -31,7 +29,6 @@ export class ResetPasswordComponent extends BaisAuthComponent implements OnInit 
     router: Router,
     httpClient: HttpService,
     toastService: ToastService,
-    private modalService: ModalService,
     private restPasswordService: ResetPasswordService,
     private activatedRoute: ActivatedRoute,
     @Inject(DOCUMENT) document: Document,
@@ -45,26 +42,7 @@ export class ResetPasswordComponent extends BaisAuthComponent implements OnInit 
 
     this.restPasswordService
       .authenticatePasswordResetPage(this.token())
-      .pipe(
-        catchError(async (error) => {
-          if (error.status >= 400 && error.status < 500 && error.status !== 401) {
-            const response = await this.modalService.open({
-              component: BasicInfoComponent,
-              title: 'Zurücksetzungs-Token abgelaufen oder ungültig',
-              buttonText: 'Neuen Token anfordern',
-              componentData: {
-                text: 'Der Zurücksetzungs-Token ist abgelaufen oder ungültig. Tokens sind nur für 10 Minuten gültig. Um fortzufahren, fordere bitte einen neuen Zurücksetzungs-Link an.',
-              },
-            });
 
-            if (response) {
-              this.router.navigate(['user/reset-password']);
-            } else {
-              this.router.navigate(['login']);
-            }
-          }
-        }),
-      )
       .subscribe();
   }
 

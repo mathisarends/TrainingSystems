@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, input, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { TrainingDayFinishedNotification } from '../../Pages/usage-statistics/training-finished-notification';
+import { TrainingDayFinishedNotification } from '../../features/usage-statistics/training-finished-notification';
 import { toggleCollapseAnimation } from '../../shared/animations/toggle-collapse';
 import { ToastService } from '../../shared/components/toast/toast.service';
 import { IconName } from '../../shared/icon/icon-name';
