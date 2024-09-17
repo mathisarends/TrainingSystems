@@ -4,8 +4,6 @@ import { FormService } from '../service/form/form.service';
 import { ExerciseTableRowService } from '../service/training/exercise-table-row.service';
 import { PauseTimeService } from '../service/training/pause-time.service';
 import { ExerciseDataService } from '../app/Pages/training-view/exercise-data.service';
-import { BrowserCheckService } from '../app/browser-check.service';
-import { RepScheme } from '../app/Pages/training-view/default-rep-scheme-by-category';
 
 /**
  * Directive that extends the InteractiveElementDirective to add additional functionality.

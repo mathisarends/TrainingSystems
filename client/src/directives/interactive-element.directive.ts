@@ -1,7 +1,7 @@
 import { Directive, HostListener, Input } from '@angular/core';
 import { InteractiveElementService } from '../service/util/interactive-element.service';
 import { FormService } from '../service/form/form.service';
-import { InteractiveElement } from './interactive-element.types';
+import { InteractiveElement } from '../app/shared/types/interactive-element.types';
 
 /**
  * Directive to handle interactive form elements by tracking focus, blur, and input events.
