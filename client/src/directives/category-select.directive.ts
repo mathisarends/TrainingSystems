@@ -125,17 +125,17 @@ export class CategorySelectDirective {
         repsInput.value = defaultValues.defaultReps.toString();
         targetRPEInput.value = defaultValues.defaultRPE.toString();
       }
-
-      this.updateFormService(exerciseSelect, false);
     } else {
       this.resetInputs(exerciseSelect);
       this.updateFormService(exerciseSelect, true);
+      return;
     }
+
+    this.updateFormService(exerciseSelect, false);
   }
 
   private resetInputs(exerciseSelect: HTMLSelectElement): void {
     const inputs: ExerciseInputs = this.exerciseTableRowService.getInputsByCategorySelector(exerciseSelect, true);
-    console.log('🚀 ~ CategorySelectDirective ~ resetInputs ~ inputs:', inputs);
 
     for (const key in inputs) {
       if (inputs.hasOwnProperty(key)) {

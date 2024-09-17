@@ -82,8 +82,6 @@ export class ExerciseTableRowService {
    * @returns An object containing all relevant input elements.
    */
   getInputsByCategorySelector(categorySelector: HTMLSelectElement, resetMode = false): ExerciseInputs {
-    console.log('🚀 ~ ExerciseTableRowService ~ getInputsByCategorySelector ~ resetMode:', resetMode);
-
     return {
       exerciseSelect: this.findClosestElementInRow(
         categorySelector,
