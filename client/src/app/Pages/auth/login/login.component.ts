@@ -7,7 +7,7 @@ import { ToastService } from '../../../components/toast/toast.service';
 import { BaisAuthComponent } from '../basic-auth.component';
 import { catchError, of, tap } from 'rxjs';
 import { IconComponent } from '../../../shared/icon/icon.component';
-import { AuthService } from '../../../../service/auth.service';
+import { AuthService } from '../../../core/auth.service';
 
 @Component({
   selector: 'app-login',

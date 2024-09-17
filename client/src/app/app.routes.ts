@@ -17,7 +17,7 @@ import { SpinnerComponent } from './components/loaders/spinner/spinner.component
 import { RequestNewPasswordEmail } from './Pages/auth/request-new-password-email/request-new-password-email.component';
 import { ResetPasswordComponent } from './Pages/auth/reset-password/reset-password.component';
 
-import { AuthGuard } from '../service/auth.guard';
+import { AuthGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },

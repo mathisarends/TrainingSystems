@@ -2,7 +2,7 @@ import { HttpRequest, HttpEvent, HttpHandlerFn, HttpErrorResponse, HttpResponse 
 import { Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { inject } from '@angular/core';
-import { ToastService } from '../../app/components/toast/toast.service';
+import { ToastService } from '../../components/toast/toast.service';
 
 /**
  * Intercepts HTTP requests to handle errors globally.

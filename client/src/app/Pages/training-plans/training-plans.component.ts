@@ -4,7 +4,7 @@ import { AlertComponent } from '../../components/alert/alert.component';
 import { SpinnerComponent } from '../../components/loaders/spinner/spinner.component';
 import { TrainingPlanCardView } from '../../../types/exercise/training-plan-card-view-dto';
 import { firstValueFrom, BehaviorSubject } from 'rxjs';
-import { SearchService } from '../../../service/util/search.service';
+import { SearchService } from '../../core/search.service';
 import { TrainingPlanService } from '../../../service/training/training-plan.service';
 import { CommonModule } from '@angular/common';
 import { TooltipDirective } from '../../shared/directives/tooltip.directive';

@@ -3,11 +3,11 @@ import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { ProfileService } from '../../Pages/profile/profileService';
 import { User } from '../../shared/types/user';
-import { SearchService } from '../../../service/util/search.service';
+import { SearchService } from '../../core/search.service';
 import { TrainingDay } from '../../Pages/training-view/training-day';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../../service/auth.service';
+import { AuthService } from '../../core/auth.service';
 import { NotificationService } from '../../Pages/notification-page/notification.service';
 
 @Component({

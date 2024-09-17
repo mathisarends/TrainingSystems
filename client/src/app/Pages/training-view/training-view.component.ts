@@ -22,7 +22,7 @@ import { TrainingViewNavigationService } from './training-view-navigation.servic
 import { forkJoin, BehaviorSubject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { SwipeService } from '../../core/swipe.service';
-import { MobileDeviceDetectionService } from '../../../service/mobile-device-detection.service';
+import { MobileDeviceDetectionService } from '../../core/mobile-device-detection.service';
 import { AutoProgressionComponent } from '../modal-pages/auto-progression/auto-progression.component';
 import { RestTimerComponent } from '../modal-pages/rest-timer/rest-timer.component';
 import { BasicInfoComponent } from '../modal-pages/basic-info/basic-info.component';

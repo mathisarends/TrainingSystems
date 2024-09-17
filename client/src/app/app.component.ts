@@ -5,12 +5,11 @@ import { HeaderComponent } from './components/header/header.component';
 import { ToastComponent } from './components/toast/toast.component';
 import { ServiceWorkerService } from './service-worker.service';
 import { BrowserCheckService } from './browser-check.service';
-import { MobileDeviceDetectionService } from '../service/mobile-device-detection.service';
-import { RedirectService } from '../service/util/redirect.service';
+import { MobileDeviceDetectionService } from './core/mobile-device-detection.service';
+import { RedirectService } from './core/redirect.service';
 import { SpinnerComponent } from './components/loaders/spinner/spinner.component';
 import { LoadingProgressBarComponent } from './components/loaders/loading-progress-bar/loading-progress-bar.component';
-import { AuthService } from '../service/auth.service';
-import { FooterComponent } from './partials/footer/footer.component';
+import { AuthService } from './core/auth.service';
 import { MobileNavComponent } from './components/mobile-nav/mobile-nav.component';
 
 @Component({
@@ -24,7 +23,6 @@ import { MobileNavComponent } from './components/mobile-nav/mobile-nav.component
     SpinnerComponent,
     LoadingProgressBarComponent,
     MobileNavComponent,
-    FooterComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],

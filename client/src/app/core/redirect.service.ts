@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { BrowserCheckService } from '../../app/browser-check.service';
+import { BrowserCheckService } from '../browser-check.service';
 import { filter, take } from 'rxjs';
 
 /**

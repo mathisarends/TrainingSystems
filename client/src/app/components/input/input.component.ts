@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RpeInputDirective } from '../../../directives/rpe-input.directive';
 import { InteractiveElementDirective } from '../../../directives/interactive-element.directive';
 import { WeightInputDirective } from '../../../directives/weight-input.directive';
-import { MobileDeviceDetectionService } from '../../../service/mobile-device-detection.service';
+import { MobileDeviceDetectionService } from '../../core/mobile-device-detection.service';
 
 @Component({
   selector: 'app-input',
