@@ -1,14 +1,9 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { environment } from '../environment/environment';
 import { BrowserCheckService } from './browser-check.service';
 
-/**
- * @description
- * HttpClientService abstracts HTTP requests and provides methods to perform GET, POST, PUT, DELETE, PATCH, HEAD, and OPTIONS requests.
- * It also manages the base URL so that only the endpoint path needs to be specified in the request.
- */
 @Injectable({
   providedIn: 'root',
 })
@@ -30,12 +25,7 @@ export class HttpService {
    * @returns An Observable of type T with the HTTP response.
    */
   get<T>(url: string, params?: HttpParams, headers?: HttpHeaders): Observable<T> {
-    if (this.browserCheckService.isBrowser()) {
-      const { fullUrl, options } = this.buildRequestOptions(url, params, headers);
-      return this.http.get<T>(fullUrl, options);
-    } else {
-      return of(null as unknown as T);
-    }
+    return this.handleRequest<T>('GET', url, null, params, headers);
   }
 
   /**
@@ -48,13 +38,8 @@ export class HttpService {
    * @param headers - The HTTP headers to include in the request.
    * @returns An Observable of type T with the HTTP response.
    */
-  post<T>(url: string, body?: Record<string, string>, params?: HttpParams, headers?: HttpHeaders): Observable<T> {
-    if (this.browserCheckService.isBrowser()) {
-      const { fullUrl, options } = this.buildRequestOptions(url, params, headers, body);
-      return this.http.post<T>(fullUrl, options.body, options);
-    } else {
-      return of(null as unknown as T);
-    }
+  post<T>(url: string, body?: any, params?: HttpParams, headers?: HttpHeaders): Observable<T> {
+    return this.handleRequest<T>('POST', url, body, params, headers);
   }
 
   /**
@@ -67,13 +52,8 @@ export class HttpService {
    * @param headers - The HTTP headers to include in the request.
    * @returns An Observable of type T with the HTTP response.
    */
-  put<T>(url: string, body: Record<string, string>, params?: HttpParams, headers?: HttpHeaders): Observable<T> {
-    if (this.browserCheckService.isBrowser()) {
-      const { fullUrl, options } = this.buildRequestOptions(url, params, headers, body);
-      return this.http.put<T>(fullUrl, options.body, options);
-    } else {
-      return of(null as unknown as T);
-    }
+  put<T>(url: string, body: any, params?: HttpParams, headers?: HttpHeaders): Observable<T> {
+    return this.handleRequest<T>('PUT', url, body, params, headers);
   }
 
   /**
@@ -86,12 +66,7 @@ export class HttpService {
    * @returns An Observable of type T with the HTTP response.
    */
   delete<T>(url: string, params?: HttpParams, headers?: HttpHeaders): Observable<T> {
-    if (this.browserCheckService.isBrowser()) {
-      const { fullUrl, options } = this.buildRequestOptions(url, params, headers);
-      return this.http.delete<T>(fullUrl, options);
-    } else {
-      return of(null as unknown as T);
-    }
+    return this.handleRequest<T>('DELETE', url, null, params, headers);
   }
 
   /**
@@ -104,12 +79,47 @@ export class HttpService {
    * @param headers - The HTTP headers to include in the request.
    * @returns An Observable of type T with the HTTP response.
    */
-  patch<T>(url: string, body: Record<string, string>, params?: HttpParams, headers?: HttpHeaders): Observable<T> {
-    if (this.browserCheckService.isBrowser()) {
-      const { fullUrl, options } = this.buildRequestOptions(url, params, headers, body);
-      return this.http.patch<T>(fullUrl, options.body, options);
-    } else {
+  patch<T>(url: string, body: any, params?: HttpParams, headers?: HttpHeaders): Observable<T> {
+    return this.handleRequest<T>('PATCH', url, body, params, headers);
+  }
+
+  /**
+   * Handles HTTP requests, abstracts the common functionality for all methods.
+   *
+   * @template T The expected response type.
+   * @param method - The HTTP method to use (GET, POST, PUT, DELETE, PATCH).
+   * @param url - The endpoint URL (relative to the base URL).
+   * @param body - The request body for POST, PUT, PATCH methods.
+   * @param params - The HTTP parameters to include in the request.
+   * @param headers - The HTTP headers to include in the request.
+   * @returns An Observable of type T with the HTTP response.
+   */
+  private handleRequest<T>(
+    method: string,
+    url: string,
+    body?: any,
+    params?: HttpParams,
+    headers?: HttpHeaders,
+  ): Observable<T> {
+    if (!this.browserCheckService.isBrowser()) {
       return of(null as unknown as T);
+    }
+
+    const { fullUrl, options } = this.buildRequestOptions(url, params, headers, body);
+
+    switch (method) {
+      case 'GET':
+        return this.http.get<T>(fullUrl, options);
+      case 'POST':
+        return this.http.post<T>(fullUrl, options.body, options);
+      case 'PUT':
+        return this.http.put<T>(fullUrl, options.body, options);
+      case 'DELETE':
+        return this.http.delete<T>(fullUrl, options);
+      case 'PATCH':
+        return this.http.patch<T>(fullUrl, options.body, options);
+      default:
+        throw new Error(`Unsupported HTTP method: ${method}`);
     }
   }
 
@@ -126,8 +136,8 @@ export class HttpService {
     const fullUrl = `${this.baseUrl}${url}`;
     const options = {
       body,
-      params,
-      headers,
+      params: params || new HttpParams(),
+      headers: headers || new HttpHeaders(),
       withCredentials: true,
     };
     return { fullUrl, options };

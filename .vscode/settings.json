@@ -1,0 +1,9 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  },
+  "javascript.preferences.organizeImports": {},
+  "typescript.preferences.organizeImports": {
+    "sortOrder": "alphabetical"
+  }
+}

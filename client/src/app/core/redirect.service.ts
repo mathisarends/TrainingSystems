@@ -69,7 +69,7 @@ export class RedirectService {
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
-        take(1), // one-time Subscription
+        take(1),
       )
       .subscribe(() => {
         const currentUrl = this.router.url;
