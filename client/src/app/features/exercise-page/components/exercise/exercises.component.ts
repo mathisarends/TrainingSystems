@@ -2,16 +2,16 @@ import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
-import { InteractiveElementDirective } from '../../../directives/interactive-element.directive';
-import { InteractiveElementService } from '../../../service/util/interactive-element.service';
-import { DropdownComponent } from '../../components/dropdown/dropdown.component';
-import { InputComponent } from '../../components/input/input.component';
-import { ToastService } from '../../components/toast/toast.service';
-import { FormService } from '../../core/form.service';
-import { ModalService } from '../../core/services/modal/modalService';
-import { ExerciseTableSkeletonComponent } from '../../features/exercise-page/exercises/exercise-table-skeleton/exercise-table-skeleton.component';
-import { ExerciseService } from '../../features/exercise-page/service/exercise.service.';
-import { ExerciseDataDTO } from '../training-view/exerciseDataDto';
+import { InteractiveElementDirective } from '../../../../../directives/interactive-element.directive';
+import { InteractiveElementService } from '../../../../../service/util/interactive-element.service';
+import { DropdownComponent } from '../../../../components/dropdown/dropdown.component';
+import { InputComponent } from '../../../../components/input/input.component';
+import { ToastService } from '../../../../components/toast/toast.service';
+import { FormService } from '../../../../core/form.service';
+import { ModalService } from '../../../../core/services/modal/modalService';
+import { ExerciseDataDTO } from '../../../../Pages/training-view/exerciseDataDto';
+import { ExerciseService } from '../../service/exercise.service.';
+import { ExerciseTableSkeletonComponent } from '../exercise-table-skeleton/exercise-table-skeleton.component';
 
 /**
  * Component responsible for displaying and managing exercises in the training view.

@@ -3,16 +3,16 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './Pages/auth/login/login.component';
 import { RegisterComponent } from './Pages/auth/register/register.component';
 
-import { TrainingPlansComponent } from './Pages/training-plans/training-plans.component';
-import { StatisticsComponent } from './Pages/statistics/statistics.component';
 import { ProfileComponent } from './Pages/profile/profile.component';
+import { StatisticsComponent } from './Pages/statistics/statistics.component';
+import { TrainingPlansComponent } from './Pages/training-plans/training-plans.component';
 
-import { ExercisesComponent } from './Pages/exercises/exercises.component';
+import { ExercisesComponent } from './features/exercise-page/components/exercise/exercises.component';
 import { TrainingViewComponent } from './Pages/training-view/training-view.component';
 
-import { UsageStatisticsComponent } from './Pages/usage-statistics/usage-statistics.component';
-import { GymTicketComponent } from './Pages/gym-ticket/gym-ticket.component';
 import { SpinnerComponent } from './components/loaders/spinner/spinner.component';
+import { GymTicketComponent } from './Pages/gym-ticket/gym-ticket.component';
+import { UsageStatisticsComponent } from './Pages/usage-statistics/usage-statistics.component';
 
 import { RequestNewPasswordEmail } from './Pages/auth/request-new-password-email/request-new-password-email.component';
 import { ResetPasswordComponent } from './Pages/auth/reset-password/reset-password.component';
