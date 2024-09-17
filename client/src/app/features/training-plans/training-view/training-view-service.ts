@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { HttpService } from '../../../core/http-client.service';
 import { ExerciseDataDTO } from './exerciseDataDto';
 import { TrainingPlanDto } from './trainingPlanDto';
-import { HttpService } from '../../core/http-client.service';
 
 @Injectable()
 export class TrainingViewService {

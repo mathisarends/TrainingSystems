@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ExerciseDataDTO } from './exerciseDataDto';
-import { RepSchemeByCategory } from './default-rep-scheme-by-category';
+import { RepSchemeByCategory } from './models/default-rep-scheme-by-category';
 
 @Injectable({
   providedIn: 'root',

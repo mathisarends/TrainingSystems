@@ -2,23 +2,22 @@ import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
-import { TrainingPlanService } from '../../../service/training/training-plan.service';
-import { TrainingPlanCardView } from '../../../types/exercise/training-plan-card-view-dto';
-import { SkeletonCardComponent } from '../../components/loaders/skeletons/skeleton-card/skeleton-card.component';
-import { TrainingPlanCardComponent } from '../../components/training-plan-card/training-plan-card.component';
-import { HttpService } from '../../core/http-client.service';
-import { SearchService } from '../../core/search.service';
-import { ModalService } from '../../core/services/modal/modalService';
-import { ModalSize } from '../../core/services/modal/modalSize';
-import { AlertComponent } from '../../shared/components/alert/alert.component';
-import { CircularIconButtonComponent } from '../../shared/components/circular-icon-button/circular-icon-button.component';
-import { HeadlineComponent } from '../../shared/components/headline/headline.component';
-import { IconButtonComponent } from '../../shared/components/icon-button/icon-button.component';
-import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
-import { TooltipDirective } from '../../shared/directives/tooltip.directive';
-import { IconName } from '../../shared/icon/icon-name';
-import { IconComponent } from '../../shared/icon/icon.component';
-import { CreateTrainingFormComponent } from '../modal-pages/create-training-form/create-training-form.component';
+import { TrainingPlanService } from '../../../../service/training/training-plan.service';
+import { TrainingPlanCardView } from '../../../../types/exercise/training-plan-card-view-dto';
+import { CreateTrainingFormComponent } from '../../../Pages/modal-pages/create-training-form/create-training-form.component';
+import { SkeletonCardComponent } from '../../../components/loaders/skeletons/skeleton-card/skeleton-card.component';
+import { TrainingPlanCardComponent } from '../../../components/training-plan-card/training-plan-card.component';
+import { HttpService } from '../../../core/http-client.service';
+import { SearchService } from '../../../core/search.service';
+import { ModalService } from '../../../core/services/modal/modalService';
+import { ModalSize } from '../../../core/services/modal/modalSize';
+import { AlertComponent } from '../../../shared/components/alert/alert.component';
+import { CircularIconButtonComponent } from '../../../shared/components/circular-icon-button/circular-icon-button.component';
+import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
+import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
+import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
+import { IconName } from '../../../shared/icon/icon-name';
+import { IconComponent } from '../../../shared/icon/icon.component';
 
 /**
  * Component to manage and display training plans.
@@ -28,7 +27,6 @@ import { CreateTrainingFormComponent } from '../modal-pages/create-training-form
   standalone: true,
   imports: [
     AlertComponent,
-    SpinnerComponent,
     CommonModule,
     TooltipDirective,
     TrainingPlanCardComponent,

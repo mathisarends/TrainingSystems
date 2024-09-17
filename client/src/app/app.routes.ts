@@ -5,10 +5,8 @@ import { RegisterComponent } from './Pages/auth/register/register.component';
 
 import { ProfileComponent } from './Pages/profile/profile.component';
 import { StatisticsComponent } from './Pages/statistics/statistics.component';
-import { TrainingPlansComponent } from './Pages/training-plans/training-plans.component';
 
 import { ExercisesComponent } from './features/exercise-page/components/exercise/exercises.component';
-import { TrainingViewComponent } from './Pages/training-view/training-view.component';
 
 import { UsageStatisticsComponent } from './Pages/usage-statistics/usage-statistics.component';
 import { SpinnerComponent } from './shared/components/spinner/spinner.component';
@@ -18,6 +16,8 @@ import { ResetPasswordComponent } from './Pages/auth/reset-password/reset-passwo
 
 import { AuthGuard } from './core/guards/auth.guard';
 import { GymTicketComponent } from './features/gym-ticket/gym-ticket.component';
+import { TrainingPlansComponent } from './features/training-plans/training-plans/training-plans.component';
+import { TrainingViewComponent } from './features/training-plans/training-view/training-view.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -32,11 +32,7 @@ export const routes: Routes = [
     component: TrainingPlansComponent,
     canActivate: [AuthGuard],
   },
-  {
-    path: 'training/view',
-    component: TrainingViewComponent,
-    canActivate: [AuthGuard],
-  },
+
   {
     path: 'statistics/:planId',
     component: StatisticsComponent,

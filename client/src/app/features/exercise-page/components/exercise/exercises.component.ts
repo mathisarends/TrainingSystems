@@ -5,11 +5,11 @@ import { Observable } from 'rxjs';
 import { InteractiveElementDirective } from '../../../../../directives/interactive-element.directive';
 import { FormService } from '../../../../core/form.service';
 import { ModalService } from '../../../../core/services/modal/modalService';
-import { ExerciseDataDTO } from '../../../../Pages/training-view/exerciseDataDto';
 import { DropdownComponent } from '../../../../shared/components/dropdown/dropdown.component';
 import { InputComponent } from '../../../../shared/components/input/input.component';
 import { ToastService } from '../../../../shared/components/toast/toast.service';
 import { InteractiveElementService } from '../../../../shared/service/interactive-element.service';
+import { ExerciseDataDTO } from '../../../training-plans/training-view/exerciseDataDto';
 import { ExerciseService } from '../../service/exercise.service.';
 import { ExerciseTableSkeletonComponent } from '../exercise-table-skeleton/exercise-table-skeleton.component';
 

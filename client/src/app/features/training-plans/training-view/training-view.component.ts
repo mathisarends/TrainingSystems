@@ -14,31 +14,29 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, forkJoin } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { CategorySelectDirective } from '../../../directives/category-select.directive';
-import { InteractiveElementDirective } from '../../../directives/interactive-element.directive';
-import { RpeInputDirective } from '../../../directives/rpe-input.directive';
-import { WeightInputDirective } from '../../../directives/weight-input.directive';
-import { EstMaxService } from '../../../service/training/estmax.service';
-import { SkeletonTrainingTableComponent } from '../../components/loaders/skeletons/skeleton-training-table/skeleton-training-table.component';
-import { BrowserCheckService } from '../../core/browser-check.service';
-import { FormService } from '../../core/form.service';
-import { ModalService } from '../../core/services/modal/modalService';
-import { SwipeService } from '../../core/swipe.service';
-import { FocusService } from '../../focus.service';
-import { MobileDeviceDetectionService } from '../../platform/mobile-device-detection.service';
-import { DropdownComponent } from '../../shared/components/dropdown/dropdown.component';
-import { HeadlineComponent } from '../../shared/components/headline/headline.component';
-import { IconButtonComponent } from '../../shared/components/icon-button/icon-button.component';
-import { InputComponent } from '../../shared/components/input/input.component';
-import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
-import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
-import { ToastService } from '../../shared/components/toast/toast.service';
-import { IconName } from '../../shared/icon/icon-name';
-import { IconComponent } from '../../shared/icon/icon.component';
-import { InteractiveElementService } from '../../shared/service/interactive-element.service';
-import { AutoProgressionComponent } from '../modal-pages/auto-progression/auto-progression.component';
-import { BasicInfoComponent } from '../modal-pages/basic-info/basic-info.component';
-import { RestTimerComponent } from '../modal-pages/rest-timer/rest-timer.component';
+import { CategorySelectDirective } from '../../../../directives/category-select.directive';
+import { InteractiveElementDirective } from '../../../../directives/interactive-element.directive';
+import { RpeInputDirective } from '../../../../directives/rpe-input.directive';
+import { WeightInputDirective } from '../../../../directives/weight-input.directive';
+import { EstMaxService } from '../../../../service/training/estmax.service';
+import { SkeletonTrainingTableComponent } from '../../../components/loaders/skeletons/skeleton-training-table/skeleton-training-table.component';
+import { BrowserCheckService } from '../../../core/browser-check.service';
+import { FormService } from '../../../core/form.service';
+import { ModalService } from '../../../core/services/modal/modalService';
+import { SwipeService } from '../../../core/swipe.service';
+import { FocusService } from '../../../focus.service';
+import { AutoProgressionComponent } from '../../../Pages/modal-pages/auto-progression/auto-progression.component';
+import { RestTimerComponent } from '../../../Pages/modal-pages/rest-timer/rest-timer.component';
+import { MobileDeviceDetectionService } from '../../../platform/mobile-device-detection.service';
+import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
+import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
+import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
+import { InputComponent } from '../../../shared/components/input/input.component';
+import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+import { ToastService } from '../../../shared/components/toast/toast.service';
+import { IconName } from '../../../shared/icon/icon-name';
+import { IconComponent } from '../../../shared/icon/icon.component';
+import { InteractiveElementService } from '../../../shared/service/interactive-element.service';
 import { ExerciseDataService } from './exercise-data.service';
 import { ExerciseDataDTO } from './exerciseDataDto';
 import { TrainingViewNavigationService } from './training-view-navigation.service';
@@ -62,7 +60,6 @@ import { TrainingPlanDto } from './trainingPlanDto';
     RpeInputDirective,
     CategorySelectDirective,
     InteractiveElementDirective,
-    SpinnerComponent,
     IconComponent,
     InputComponent,
     DropdownComponent,
@@ -267,13 +264,10 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
    */
   async onPageChanged(day: number): Promise<void> {
     if (this.formService.hasUnsavedChanges()) {
-      const confirmed = await this.modalService.open({
-        component: BasicInfoComponent,
+      const confirmed = await this.modalService.openBasicInfoModal({
         title: 'Ungespeicherte Änderungen',
         buttonText: 'Änderungen verwerfen',
-        componentData: {
-          text: 'Es gibt ungespeicherte Änderungen. Möchtest du wirklich fortfahren und die Änderungen verwerfen?',
-        },
+        infoText: 'Es gibt ungespeicherte Änderungen. Möchtest du wirklich fortfahren und die Änderungen verwerfen?',
       });
 
       if (confirmed) this.navigateDay(day);

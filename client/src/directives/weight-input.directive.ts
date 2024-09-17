@@ -1,6 +1,6 @@
 import { AfterViewInit, Directive, ElementRef, HostListener } from '@angular/core';
 import { FormService } from '../app/core/form.service';
-import { ExerciseDataService } from '../app/Pages/training-view/exercise-data.service';
+import { ExerciseDataService } from '../app/features/training-plans/training-view/exercise-data.service';
 import { InteractiveElementService } from '../app/shared/service/interactive-element.service';
 import { ExerciseTableRowService } from '../service/training/exercise-table-row.service';
 import { PauseTimeService } from '../service/training/pause-time.service';

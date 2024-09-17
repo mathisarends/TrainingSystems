@@ -9,7 +9,7 @@ class Timer {
     this.timer = null;
     this.isTimerPaused = false;
     this.pausedTime = 0;
-    this.notificationManager = notificationManager; // Use the passed NotificationManager instance
+    this.notificationManager = notificationManager;
   }
 
   /**
@@ -30,17 +30,15 @@ class Timer {
       if (this.remainingTime <= 0) {
         clearInterval(this.timer);
         this.notifyTimerExpired();
-      } else {
-        this.remainingTime--;
-
-        const minutes = Math.floor(this.remainingTime / 60);
-        const seconds = this.remainingTime % 60;
-        let formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-
-        this.notificationManager.showNotification('TTS', `Remaining time: ${formattedTime}`);
-
-        this.updateTimerDisplay(this.remainingTime);
+        return;
       }
+      this.remainingTime--;
+
+      const minutes = Math.floor(this.remainingTime / 60);
+      const seconds = this.remainingTime % 60;
+      let formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+      this.notificationManager.showNotification('TTS', `Remaining time: ${formattedTime}`);
     }, 1000);
   }
 

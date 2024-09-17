@@ -1,4 +1,4 @@
-import { WeightRecommendationBase } from '../../../types/trainingPlan/weight-recommandation-base';
+import { WeightRecommendationBase } from '../../../../types/trainingPlan/weight-recommandation-base';
 
 export interface TrainingPlanEditViewDto {
   id: string;

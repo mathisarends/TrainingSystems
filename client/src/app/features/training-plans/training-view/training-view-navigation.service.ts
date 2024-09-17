@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { FormService } from '../../../core/form.service';
 import { TrainingPlanDto } from './trainingPlanDto';
-import { FormService } from '../../core/form.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,8 +14,6 @@ export class TrainingViewNavigationService {
 
   navigateDay(trainingDayIndex: number, trainingFrequency: number, week: number): number {
     if (trainingDayIndex >= 0 && trainingDayIndex <= trainingFrequency - 1) {
-      trainingDayIndex = trainingDayIndex;
-
       this.router.navigate([], {
         queryParams: {
           week: week,
@@ -61,7 +59,7 @@ export class TrainingViewNavigationService {
     for (const name in changedData) {
       if (changedData.hasOwnProperty(name)) {
         const inputElement = document.querySelector(`[name="${name}"]`) as HTMLInputElement | HTMLSelectElement;
-        if (inputElement && inputElement.classList.contains('exercise-category-selector')) {
+        if (inputElement?.classList.contains('exercise-category-selector')) {
           inputElement.value = '- Bitte Auswählen -';
           inputElement.dispatchEvent(new Event('change'));
         } else if (inputElement) {

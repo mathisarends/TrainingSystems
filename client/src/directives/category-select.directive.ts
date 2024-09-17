@@ -1,7 +1,7 @@
 import { Directive, HostListener, Renderer2, RendererFactory2 } from '@angular/core';
 import { FormService } from '../app/core/form.service';
-import { RepSchemeByCategory } from '../app/Pages/training-view/default-rep-scheme-by-category';
-import { ExerciseDataService } from '../app/Pages/training-view/exercise-data.service';
+import { ExerciseDataService } from '../app/features/training-plans/training-view/exercise-data.service';
+import { RepSchemeByCategory } from '../app/features/training-plans/training-view/models/default-rep-scheme-by-category';
 import { InteractiveElementService } from '../app/shared/service/interactive-element.service';
 import { ExerciseInputs } from '../service/training/exercise-inputs';
 import { ExerciseTableRowService } from '../service/training/exercise-table-row.service';

@@ -1,14 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { Component, ElementRef, EventEmitter, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
-import { filter } from 'rxjs/operators';
-import { ProfileService } from '../../Pages/profile/profileService';
-import { User } from '../../shared/types/user';
-import { SearchService } from '../../core/search.service';
-import { TrainingDay } from '../../Pages/training-view/training-day';
 import { Observable } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { filter } from 'rxjs/operators';
 import { AuthService } from '../../core/auth.service';
+import { SearchService } from '../../core/search.service';
 import { NotificationService } from '../../Pages/notification-page/notification.service';
+import { ProfileService } from '../../Pages/profile/profileService';
+import { TrainingDayFinishedNotification } from '../../Pages/usage-statistics/training-finished-notification';
+import { User } from '../../shared/types/user';
 
 @Component({
   selector: 'app-header',
@@ -30,7 +30,7 @@ export class HeaderComponent implements OnInit {
 
   @Output() searchInput: EventEmitter<string> = new EventEmitter<string>();
 
-  trainingDayNotifications$!: Observable<TrainingDay[]>;
+  trainingDayNotifications$!: Observable<TrainingDayFinishedNotification[]>;
 
   /**
    * Creates an instance of HeaderComponent.

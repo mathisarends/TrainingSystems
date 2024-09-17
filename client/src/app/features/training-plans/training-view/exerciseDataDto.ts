@@ -1,4 +1,4 @@
-import { RepSchemeByCategory } from './default-rep-scheme-by-category';
+import { RepSchemeByCategory } from './models/default-rep-scheme-by-category';
 
 export class ExerciseDataDTO {
   private _exerciseCategories: string[] = [];

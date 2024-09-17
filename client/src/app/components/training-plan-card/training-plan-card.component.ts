@@ -4,12 +4,12 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { TrainingPlanCardView } from '../../../types/exercise/training-plan-card-view-dto';
-import { EditTrainingPlanComponent } from '../../Pages/edit-training-plan/edit-training-plan.component';
 
 import { TrainingPlanService } from '../../../service/training/training-plan.service';
 import { HttpService } from '../../core/http-client.service';
 import { ModalService } from '../../core/services/modal/modalService';
 import { ModalSize } from '../../core/services/modal/modalSize';
+import { EditTrainingPlanComponent } from '../../features/training-plans/edit-training-plan/edit-training-plan.component';
 import { BasicInfoComponent } from '../../Pages/modal-pages/basic-info/basic-info.component';
 import { IconButtonComponent } from '../../shared/components/icon-button/icon-button.component';
 import { ToastService } from '../../shared/components/toast/toast.service';
