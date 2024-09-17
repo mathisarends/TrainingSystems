@@ -13,6 +13,9 @@ export class AuthGuard implements CanActivate {
     private browserCheckService: BrowserCheckService,
   ) {}
 
+  /**
+   * Determines whether the user can activate the requested route.
+   */
   canActivate(): Observable<boolean> {
     if (!this.browserCheckService.isBrowser()) {
       return of(false);
@@ -27,7 +30,7 @@ export class AuthGuard implements CanActivate {
       return of(false);
     }
 
-    // intially the authentication status may be undefined because it is fetched from the api, so we have to wait for the response
+    // During app initializaton the authentication status may be undefined because it is fetched from the api, in that case we have to wait for the response
     return this.authService.checkAuthenticationStatus().pipe(
       map(() => {
         const isAuthenticated = this.authService.isAuthenticated();

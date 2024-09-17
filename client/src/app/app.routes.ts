@@ -22,9 +22,9 @@ import { AuthGuard } from './core/guards/auth.guard';
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'user/usage', component: UsageStatisticsComponent, canActivate: [AuthGuard] },
   { path: 'user/reset-password', component: RequestNewPasswordEmail },
   { path: 'user/reset/password/:token', component: ResetPasswordComponent },
+  { path: 'user/usage', component: UsageStatisticsComponent, canActivate: [AuthGuard] },
   { path: 'user/ticket', component: GymTicketComponent, canActivate: [AuthGuard] },
   { path: 'spinner', component: SpinnerComponent },
   {
