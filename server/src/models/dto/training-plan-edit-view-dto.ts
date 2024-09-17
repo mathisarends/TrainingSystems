@@ -1,5 +1,4 @@
 import { WeightRecommendationBase } from '../training/weight-recommandation.enum.js';
-import { TrainingWeek } from '../training/trainingWeek.js';
 
 /**
  * Represents the data structure for editing a training plan.
@@ -12,6 +11,6 @@ export interface TrainingPlanEditViewDto {
   title: string;
   trainingFrequency: number;
   weightRecommandationBase: WeightRecommendationBase;
-  trainingWeeks: TrainingWeek[];
+  trainingBlockLength: number;
   coverImageBase64: string;
 }

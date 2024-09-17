@@ -7,9 +7,6 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
  * its content. It changes from a fully visible state (`expanded`) to a hidden state (`collapsed`)
  * and vice versa, with a sliding and fading effect.
  *
- * @constant
- * @type {AnimationTriggerMetadata}
- * @name toggleCollapseAnimation
  */
 export const toggleCollapseAnimation = trigger('toggleCollapse', [
   state('collapsed', style({ height: '0px', overflow: 'hidden', opacity: 0 })),

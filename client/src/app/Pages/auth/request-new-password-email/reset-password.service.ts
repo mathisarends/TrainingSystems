@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpService } from '../../../../service/http/http-client.service';
 import { Observable } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
-import { BasicConfirmationResponse } from '../../../types/dto/basic-confirmation-response';
+import { BasicConfirmationResponse } from '../../../shared/dto/basic-confirmation-response';
 
 @Injectable()
 export class ResetPasswordService {

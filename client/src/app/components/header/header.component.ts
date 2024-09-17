@@ -2,7 +2,7 @@ import { Component, ElementRef, EventEmitter, OnInit, Output, QueryList, ViewChi
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { ProfileService } from '../../Pages/profile/profileService';
-import { User } from '../../types/user';
+import { User } from '../../shared/types/user';
 import { SearchService } from '../../../service/util/search.service';
 import { TrainingDay } from '../../Pages/training-view/training-day';
 import { NotificationService } from '../../notification-page/notification.service';

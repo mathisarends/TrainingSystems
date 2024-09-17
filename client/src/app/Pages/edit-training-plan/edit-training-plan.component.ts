@@ -97,7 +97,7 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy, AfterViewCh
     this.trainingForm.patchValue({
       title: response.title,
       trainingFrequency: response.trainingFrequency,
-      trainingWeeks: response.trainingWeeks.length,
+      trainingWeeks: response.trainingBlockLength,
       weightPlaceholders: response.weightRecommandationBase,
       coverImage: response.coverImageBase64 || '',
     });

@@ -26,7 +26,7 @@ export class TrainingPlanDtoMapper {
       title: plan.title,
       trainingFrequency: plan.trainingFrequency,
       weightRecommandationBase: plan.weightRecommandationBase,
-      trainingWeeks: plan.trainingWeeks,
+      trainingBlockLength: plan.trainingWeeks.length,
       coverImageBase64: plan.coverImageBase64 ?? ''
     };
   }
