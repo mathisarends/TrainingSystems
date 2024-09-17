@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
-import { DetermineSelectOptionValuePipe } from './determine-select-option-value.pipe';
 import { InteractiveElementDirective } from '../../../directives/interactive-element.directive';
+import { DetermineSelectOptionValuePipe } from './determine-select-option-value.pipe';
 
 /**
  * A wrapper component for a `<select>` HTML element.
@@ -9,13 +9,13 @@ import { InteractiveElementDirective } from '../../../directives/interactive-ele
  * options passed via inputs, and the ability to emit the selected value upon change.
  */
 @Component({
-  selector: 'app-select',
+  selector: 'app-dropdown',
   standalone: true,
   imports: [InteractiveElementDirective, DetermineSelectOptionValuePipe],
-  templateUrl: './select.component.html',
-  styleUrls: ['./select.component.scss'],
+  templateUrl: './dropdown.component.html',
+  styleUrls: ['./dropdown.component.scss'],
 })
-export class SelectComponent {
+export class DropdownComponent {
   /**
    * The name of the select input, used to uniquely identify the control.
    * This input is required and must be provided by the parent component.

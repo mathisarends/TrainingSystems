@@ -1,21 +1,21 @@
 import { Request, Response } from 'express';
-import { getUser, getUserGenericDAO } from '../../service/userService.js';
-import * as trainingService from '../../service/trainingService.js';
 import { TrainingDay } from '../../models/training/trainingDay.js';
+import * as trainingService from '../../service/trainingService.js';
+import { getUser, getUserGenericDAO } from '../../service/userService.js';
 
+import { Exercise } from '../../models/training/exercise.js';
+import { TrainingPlan } from '../../models/training/trainingPlan.js';
 import {
   createExerciseObject,
   findLatestTrainingDayWithWeight,
+  findTrainingPlanById,
   updateExercise
 } from '../../service/trainingService.js';
-import { Exercise } from '../../models/training/exercise.js';
-import { TrainingPlan } from '../../models/training/trainingPlan.js';
 
-import { findTrainingPlanById } from '../../service/trainingService.js';
-import { WeightRecommendationBase } from '../../models/training/weight-recommandation.enum.js';
-import { TrainingSessionManager } from './training-session-manager.js';
-import { TrainingDayDataLocator } from './training-day-data-locator.js';
 import { ApiData } from '../../models/apiData.js';
+import { WeightRecommendationBase } from '../../models/training/weight-recommandation.enum.js';
+import { TrainingDayDataLocator } from './training-day-data-locator.js';
+import { TrainingSessionManager } from './training-session-manager.js';
 
 const trainingSessionManager = new TrainingSessionManager();
 

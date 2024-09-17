@@ -1,23 +1,29 @@
-import { Component, DestroyRef, OnInit, signal } from '@angular/core';
-import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ToastService } from '../../components/toast/toast.service';
-import { BasicInfoComponent } from '../modal-pages/basic-info/basic-info.component';
-import { ExerciseTableSkeletonComponent } from '../../components/loaders/exercise-table-skeleton/exercise-table-skeleton.component';
-import { ExerciseDataDTO } from '../training-view/exerciseDataDto';
-import { FormService } from '../../core/form.service';
-import { InteractiveElementService } from '../../../service/util/interactive-element.service';
-import { InteractiveElementDirective } from '../../../directives/interactive-element.directive';
+import { Component, DestroyRef, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ExerciseService } from '../training-view/exercise.service.';
+import { Observable } from 'rxjs';
+import { InteractiveElementDirective } from '../../../directives/interactive-element.directive';
+import { InteractiveElementService } from '../../../service/util/interactive-element.service';
+import { DropdownComponent } from '../../components/dropdown/dropdown.component';
 import { InputComponent } from '../../components/input/input.component';
-import { SelectComponent } from '../../components/select/select.component';
+import { ExerciseTableSkeletonComponent } from '../../components/loaders/exercise-table-skeleton/exercise-table-skeleton.component';
+import { ToastService } from '../../components/toast/toast.service';
+import { FormService } from '../../core/form.service';
 import { ModalService } from '../../core/services/modal/modalService';
+import { BasicInfoComponent } from '../modal-pages/basic-info/basic-info.component';
+import { ExerciseService } from '../training-view/exercise.service.';
+import { ExerciseDataDTO } from '../training-view/exerciseDataDto';
 
 @Component({
   selector: 'app-exercises',
   standalone: true,
-  imports: [CommonModule, ExerciseTableSkeletonComponent, InteractiveElementDirective, SelectComponent, InputComponent],
+  imports: [
+    CommonModule,
+    ExerciseTableSkeletonComponent,
+    InteractiveElementDirective,
+    InputComponent,
+    DropdownComponent,
+  ],
   providers: [ExerciseService],
   templateUrl: './exercises.component.html',
   styleUrls: ['./exercises.component.scss', '../../../css/tables.scss'],

@@ -1,49 +1,49 @@
+import { CommonModule } from '@angular/common';
 import {
-  Component,
-  OnInit,
   AfterViewChecked,
-  ElementRef,
-  ViewChild,
+  Component,
   DestroyRef,
+  ElementRef,
   HostListener,
   OnDestroy,
+  OnInit,
+  ViewChild,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { TrainingViewService } from './training-view-service';
-import { FormService } from '../../core/form.service';
-import { EstMaxService } from '../../../service/training/estmax.service';
-import { CommonModule } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { ToastService } from '../../components/toast/toast.service';
-import { PaginationComponent } from '../../components/pagination/pagination.component';
-import { ExerciseDataDTO } from './exerciseDataDto';
-import { TrainingPlanDto } from './trainingPlanDto';
-import { TrainingViewNavigationService } from './training-view-navigation.service';
-import { forkJoin, BehaviorSubject } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject, forkJoin } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { SwipeService } from '../../core/swipe.service';
-import { AutoProgressionComponent } from '../modal-pages/auto-progression/auto-progression.component';
-import { RestTimerComponent } from '../modal-pages/rest-timer/rest-timer.component';
-import { BasicInfoComponent } from '../modal-pages/basic-info/basic-info.component';
+import { CategorySelectDirective } from '../../../directives/category-select.directive';
+import { InteractiveElementDirective } from '../../../directives/interactive-element.directive';
+import { RpeInputDirective } from '../../../directives/rpe-input.directive';
+import { WeightInputDirective } from '../../../directives/weight-input.directive';
+import { EstMaxService } from '../../../service/training/estmax.service';
+import { InteractiveElementService } from '../../../service/util/interactive-element.service';
+import { DropdownComponent } from '../../components/dropdown/dropdown.component';
 import { HeadlineComponent } from '../../components/headline/headline.component';
 import { IconButtonComponent } from '../../components/icon-button/icon-button.component';
+import { InputComponent } from '../../components/input/input.component';
 import { SkeletonTrainingTableComponent } from '../../components/loaders/skeletons/skeleton-training-table/skeleton-training-table.component';
-import { BrowserCheckService } from '../../core/browser-check.service';
-import { InteractiveElementService } from '../../../service/util/interactive-element.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { WeightInputDirective } from '../../../directives/weight-input.directive';
-import { RpeInputDirective } from '../../../directives/rpe-input.directive';
-import { CategorySelectDirective } from '../../../directives/category-select.directive';
-import { ExerciseDataService } from './exercise-data.service';
-import { InteractiveElementDirective } from '../../../directives/interactive-element.directive';
 import { SpinnerComponent } from '../../components/loaders/spinner/spinner.component';
+import { PaginationComponent } from '../../components/pagination/pagination.component';
+import { ToastService } from '../../components/toast/toast.service';
+import { BrowserCheckService } from '../../core/browser-check.service';
+import { FormService } from '../../core/form.service';
+import { ModalService } from '../../core/services/modal/modalService';
+import { SwipeService } from '../../core/swipe.service';
 import { FocusService } from '../../focus.service';
+import { MobileDeviceDetectionService } from '../../platform/mobile-device-detection.service';
 import { IconName } from '../../shared/icon/icon-name';
 import { IconComponent } from '../../shared/icon/icon.component';
-import { InputComponent } from '../../components/input/input.component';
-import { SelectComponent } from '../../components/select/select.component';
-import { ModalService } from '../../core/services/modal/modalService';
-import { MobileDeviceDetectionService } from '../../platform/mobile-device-detection.service';
+import { AutoProgressionComponent } from '../modal-pages/auto-progression/auto-progression.component';
+import { BasicInfoComponent } from '../modal-pages/basic-info/basic-info.component';
+import { RestTimerComponent } from '../modal-pages/rest-timer/rest-timer.component';
+import { ExerciseDataService } from './exercise-data.service';
+import { ExerciseDataDTO } from './exerciseDataDto';
+import { TrainingViewNavigationService } from './training-view-navigation.service';
+import { TrainingViewService } from './training-view-service';
+import { TrainingPlanDto } from './trainingPlanDto';
 /**
  * Component to manage and display the training view.
  * Handles loading of training data, swipe gestures, and form submissions.
@@ -64,10 +64,10 @@ import { MobileDeviceDetectionService } from '../../platform/mobile-device-detec
     InteractiveElementDirective,
     SpinnerComponent,
     IconComponent,
-    SelectComponent,
     InputComponent,
+    DropdownComponent,
   ],
-  providers: [TrainingViewService, FocusService, SelectComponent],
+  providers: [TrainingViewService, FocusService],
   templateUrl: './training-view.component.html',
   styleUrls: ['./training-view.component.scss'],
 })

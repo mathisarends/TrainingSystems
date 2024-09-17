@@ -29,7 +29,7 @@
               <!-- Always show the following rows for each category -->
               <tr class="top-border">
                 <td [attr.data-cell]="'Rest-time'">
-                  <app-select
+                  <app-dropdown
                     [name]="categoryIndex + '_categoryPauseTimeSelect'"
                     [options]="pauseTimeOptions()"
                     [optionLabels]="pauseTimeLabels()"
@@ -39,7 +39,7 @@
               </tr>
               <tr>
                 <td [attr.data-cell]="'sets'">
-                  <app-select
+                  <app-dropdown
                     [name]="categoryIndex + '_categoryDefaultSetSelect'"
                     [options]="amountOfSetsOptions()"
                     [optionLabels]="amountofSetsLabels()"
@@ -49,7 +49,7 @@
               </tr>
               <tr>
                 <td [attr.data-cell]="'reps'">
-                  <app-select
+                  <app-dropdown
                     [name]="categoryIndex + '_categoryDefaultRepSelect'"
                     [options]="repsOptions()"
                     [optionLabels]="repsOptionsLabels()"
@@ -59,7 +59,7 @@
               </tr>
               <tr>
                 <td [attr.data-cell]="'RPE'">
-                  <app-select
+                  <app-dropdown
                     [name]="categoryIndex + '_categoryDefaultRPESelect'"
                     [options]="rpeOptions()"
                     [optionLabels]="rpeOptionsLabels()"
