@@ -55,8 +55,7 @@ export class AuthService {
         this.isAuthenticatedSignal.set(true);
         return true;
       }),
-      catchError((error) => {
-        console.error('Error during authentication check:', error);
+      catchError(() => {
         this.isAuthenticatedSignal.set(false);
         return of(false);
       }),

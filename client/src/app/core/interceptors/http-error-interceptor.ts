@@ -3,6 +3,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { inject } from '@angular/core';
 import { ToastService } from '../../components/toast/toast.service';
+import { ErrorResponseDto } from '../../shared/dto/error-response-dto';
 
 /**
  * Intercepts HTTP requests to handle errors globally.
@@ -14,62 +15,31 @@ import { ToastService } from '../../components/toast/toast.service';
 export function httpErrorInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
   const toastService = inject(ToastService);
 
-  const excludedRoutes = ['/user/authenticate-password-request'];
-
-  const isExcluded = excludedRoutes.some((route) => req.url.includes(route));
-
-  if (isExcluded) {
-    return next(req);
-  }
-
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      let errorMessage;
-      let userFriendlyMessage;
-
-      if (error.error instanceof ErrorEvent) {
-        // Client-side error
-        errorMessage = `Client Error: ${error.error.message}`;
-        userFriendlyMessage = 'Bitte versuchen Sie es erneut.';
-      } else {
-        // Server-side error
-
-        switch (error.status) {
-          case 400:
-            console.log('here');
-            errorMessage = 'Server Error Code: 400\nMessage: Bad Request';
-            userFriendlyMessage = 'Ungültige Anfrage. Bitte überprüfen Sie Ihre Eingaben und versuchen Sie es erneut.';
-            break;
-          case 401:
-            return throwError(() => error);
-          case 403:
-            errorMessage = 'Server Error Code: 403\nMessage: Forbidden';
-            userFriendlyMessage =
-              'Zugriff verweigert. Sie haben nicht die nötigen Berechtigungen, um diese Aktion durchzuführen.';
-            break;
-          case 404:
-            errorMessage = 'Server Error Code: 404\nMessage: Not Found';
-            userFriendlyMessage = 'Ressource nicht gefunden. Überprüfen Sie die URL und versuchen Sie es erneut.';
-            break;
-          case 500:
-            errorMessage = 'Server Error Code: 500\nMessage: Internal Server Error';
-            userFriendlyMessage = 'Es ist ein Fehler auf dem Server aufgetreten. Bitte versuchen Sie es später erneut.';
-            break;
-          case 503:
-            errorMessage = 'Server Error Code: 503\nMessage: Service Unavailable';
-            userFriendlyMessage = 'Der Dienst ist momentan nicht verfügbar. Bitte versuchen Sie es später erneut.';
-            break;
-          default:
-            errorMessage = `Server Error Code: ${error.status}\nMessage: ${error.message}`;
-            userFriendlyMessage = 'Es gab ein unerwartetes Problem. Bitte versuchen Sie es später erneut.';
-        }
+      if (isAuthenticationError(error)) {
+        return throwError(() => error);
       }
 
-      toastService.error(userFriendlyMessage);
+      const serverError: ErrorResponseDto = error.error || { error: 'Ein unerwarteter Fehler ist aufgetreten.' };
+      const errorMessage = `Client Error Code: ${error.status}\nMessage: ${serverError.error || error.message}`;
 
+      toastService.error(serverError.error);
       console.error(errorMessage);
 
       return of(new HttpResponse({ body: null }));
     }),
   );
+}
+
+/**
+ * Determines if the error is an authentication error (HTTP 401 Unauthorized).
+ *
+ * This check is necessary because 401 Unauthorized errors are typically handled
+ * by the authentication guard, which will manage the redirection to a login page
+ * or trigger other authentication flows.
+ *
+ */
+function isAuthenticationError(httpError: HttpErrorResponse): boolean {
+  return httpError.status === 401;
 }

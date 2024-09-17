@@ -82,7 +82,7 @@ export class ResetPasswordComponent extends BaisAuthComponent implements OnInit 
         }),
       )
       .subscribe((response) => {
-        if (response && response.message) {
+        if (response?.message) {
           this.toastService.success(response.message);
           this.router.navigate(['/login']);
         }
