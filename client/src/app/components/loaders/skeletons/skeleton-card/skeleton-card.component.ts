@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { SkeletonComponent } from '../../../../skeleton/skeleton.component';
-import { SkeletonAnimationStyle } from '../../../../skeleton/skeleton-animation-style';
+import { SkeletonAnimationStyle } from '../../../../shared/components/skeleton/skeleton-animation-style';
+import { SkeletonComponent } from '../../../../shared/components/skeleton/skeleton.component';
 
 @Component({
   selector: 'app-skeleton-card',

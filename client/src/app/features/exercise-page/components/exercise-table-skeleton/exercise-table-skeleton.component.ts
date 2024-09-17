@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { SkeletonComponent } from '../../../../skeleton/skeleton.component';
+import { SkeletonComponent } from '../../../../shared/components/skeleton/skeleton.component';
 
 @Component({
   selector: 'app-exercise-table-skeleton',

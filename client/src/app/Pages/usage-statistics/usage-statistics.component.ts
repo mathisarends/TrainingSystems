@@ -6,8 +6,8 @@ import { BarChartData } from '../../components/charts/grouped-bar-chart/bar-char
 import { GroupedBarChartComponent } from '../../components/charts/grouped-bar-chart/grouped-bar-chart.component';
 import { TrainingDayNotificationComponent } from '../../components/training-day-notification/training-day-notification.component';
 import { HttpService } from '../../core/http-client.service';
+import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
-import { SkeletonComponent } from '../../skeleton/skeleton.component';
 import { NotificationService } from '../notification-page/notification.service';
 import { ActivityCalendarData } from './activity-calendar-data';
 import { RecentTrainingDurationsData } from './recent-training-durations-data';

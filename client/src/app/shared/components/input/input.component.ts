@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, input, output } from '@angular/core';
-import { InteractiveElementDirective } from '../../../../directives/interactive-element.directive';
 import { RpeInputDirective } from '../../../../directives/rpe-input.directive';
 import { WeightInputDirective } from '../../../../directives/weight-input.directive';
 import { MobileDeviceDetectionService } from '../../../platform/mobile-device-detection.service';
+import { InteractiveElementDirective } from '../../directives/interactive-element.directive';
 
 @Component({
   selector: 'app-input',

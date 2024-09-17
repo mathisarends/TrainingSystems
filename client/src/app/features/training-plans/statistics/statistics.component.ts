@@ -1,18 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { ChartColorService } from '../../chart-color.service';
-import { BarChartData } from '../../components/charts/grouped-bar-chart/bar-chart.-data';
-import { GroupedBarChartComponent } from '../../components/charts/grouped-bar-chart/grouped-bar-chart.component';
-import { ExerciseDrillThroughEvent } from '../../components/charts/line-chart/exercise-drill-through-event';
-import { LineChartDataset } from '../../components/charts/line-chart/lilne-chart-data-set';
-import { LineChartComponent } from '../../components/charts/line-chart/line-chart.component';
-import { PolarChartComponent } from '../../components/charts/polar-chart/polar-chart.component';
-import { ChartSkeletonComponent } from '../../components/loaders/chart-skeleton/chart-skeleton.component';
-import { ModalService } from '../../core/services/modal/modalService';
-import { HeadlineComponent } from '../../shared/components/headline/headline.component';
-import { MultiSelectComponent } from '../../shared/components/multi-select/multi-select.component';
-import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
+import { ChartColorService } from '../../../chart-color.service';
+import { BarChartData } from '../../../components/charts/grouped-bar-chart/bar-chart.-data';
+import { GroupedBarChartComponent } from '../../../components/charts/grouped-bar-chart/grouped-bar-chart.component';
+import { ExerciseDrillThroughEvent } from '../../../components/charts/line-chart/exercise-drill-through-event';
+import { LineChartDataset } from '../../../components/charts/line-chart/lilne-chart-data-set';
+import { LineChartComponent } from '../../../components/charts/line-chart/line-chart.component';
+import { PolarChartComponent } from '../../../components/charts/polar-chart/polar-chart.component';
+import { ChartSkeletonComponent } from '../../../components/loaders/chart-skeleton/chart-skeleton.component';
+import { ModalService } from '../../../core/services/modal/modalService';
+import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
+import { MultiSelectComponent } from '../../../shared/components/multi-select/multi-select.component';
 import { TrainingExerciseTonnageDto } from './main-exercise-tonnage-dto';
 import { Tonnage } from './tonnage';
 import { TrainingStatisticsService } from './training-statistics.service';
@@ -28,7 +27,6 @@ import { TrainingStatisticsService } from './training-statistics.service';
     MultiSelectComponent,
     LineChartComponent,
     GroupedBarChartComponent,
-    PaginationComponent,
     HeadlineComponent,
     ChartSkeletonComponent,
   ],

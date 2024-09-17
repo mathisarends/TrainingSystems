@@ -5,9 +5,9 @@ import { firstValueFrom, Observable, Subscription } from 'rxjs';
 import { TrainingPlanService } from '../../../../service/training/training-plan.service';
 import { HttpService } from '../../../core/http-client.service';
 import { ModalService } from '../../../core/services/modal/modalService';
+import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
 import { ToastService } from '../../../shared/components/toast/toast.service';
 import { ImageUploadService } from '../../../shared/service/image-upload.service';
-import { SkeletonComponent } from '../../../skeleton/skeleton.component';
 import { EditTrainingPlanService } from './edit-training-plan.service';
 import { TrainingPlanEditViewDto } from './training-plan-edit-view-dto';
 

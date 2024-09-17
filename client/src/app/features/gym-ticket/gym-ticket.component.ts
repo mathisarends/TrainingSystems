@@ -3,9 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ModalService } from '../../core/services/modal/modalService';
 import { HeadlineComponent } from '../../shared/components/headline/headline.component';
+import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
 import { ToastService } from '../../shared/components/toast/toast.service';
 import { ImageUploadService } from '../../shared/service/image-upload.service';
-import { SkeletonComponent } from '../../skeleton/skeleton.component';
 import { GymTicketService } from './gym-ticket.service';
 import { TicketPreviewComponentComponent } from './ticket-preview-component/ticket-preview-component.component';
 
