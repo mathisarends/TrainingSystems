@@ -6,7 +6,7 @@ import {
   Injector,
   createComponent,
 } from '@angular/core';
-import { BasicInfoComponent } from '../../../Pages/modal-pages/basic-info/basic-info.component';
+import { BasicInfoComponent } from '../../../shared/components/modal/basic-info/basic-info.component';
 import { ModalOverlayComponent } from '../../../shared/components/modal/modal-overlay/modal-overlay.component';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
 import { BasicInfoModalOptions, ModalOptions } from './modal-options';

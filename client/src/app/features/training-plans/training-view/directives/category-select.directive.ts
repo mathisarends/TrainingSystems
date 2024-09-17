@@ -1,10 +1,10 @@
 import { Directive, HostListener, Renderer2, RendererFactory2 } from '@angular/core';
-import { ExerciseInputs } from '../../../../../service/training/exercise-inputs';
-import { ExerciseTableRowService } from '../../../../../service/training/exercise-table-row.service';
 import { FormService } from '../../../../core/form.service';
 import { InteractiveElementService } from '../../../../shared/service/interactive-element.service';
 import { ExerciseDataService } from '../exercise-data.service';
 import { RepSchemeByCategory } from '../models/default-rep-scheme-by-category';
+import { ExerciseInputs } from '../models/exercise-inputs';
+import { ExerciseTableRowService } from '../services/exercise-table-row.service';
 
 @Directive({
   selector: '[category-select]',

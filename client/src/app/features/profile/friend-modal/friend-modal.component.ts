@@ -2,12 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
-import { Friend } from '../../components/friend-card/friend';
-import { FriendCardSkeletonComponent } from '../../components/friend-card/friend-card-skeleton/friend-card-skeleton.component';
-import { FriendCardComponent } from '../../components/friend-card/friend-card.component';
-import { HttpService } from '../../core/http-client.service';
-import { AlertComponent } from '../../shared/components/alert/alert.component';
-import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
+import { Friend } from '../../../components/friend-card/friend';
+import { FriendCardSkeletonComponent } from '../../../components/friend-card/friend-card-skeleton/friend-card-skeleton.component';
+import { FriendCardComponent } from '../../../components/friend-card/friend-card.component';
+import { HttpService } from '../../../core/http-client.service';
+import { AlertComponent } from '../../../shared/components/alert/alert.component';
+import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
 
 @Component({
   selector: 'app-friend-modal',
@@ -57,7 +57,7 @@ export class FriendModalComponent implements OnInit {
 
   async onFriendRequestSend(friendId: string) {
     try {
-      const response = await firstValueFrom(this.httpService.post(`/friendship/request/${friendId}`));
+      await firstValueFrom(this.httpService.post(`/friendship/request/${friendId}`));
     } catch (error) {
       console.error('Error while adding user with id ' + friendId + '. ' + error);
     }
@@ -65,9 +65,5 @@ export class FriendModalComponent implements OnInit {
     const currentFriends = this.friendsSubject.value;
     const updatedFriends = currentFriends.filter((friend) => friendId !== friend.id);
     this.friendsSubject.next(updatedFriends);
-  }
-
-  onSubmit(): void {
-    console.log('called by service? ');
   }
 }

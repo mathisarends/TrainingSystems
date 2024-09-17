@@ -2,13 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Input, signal, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
-import { TrainingPlanService } from '../../../../service/training/training-plan.service';
-import { TrainingPlanCardView } from '../../../../types/exercise/training-plan-card-view-dto';
-import { HttpService } from '../../../core/http-client.service';
-import { ModalService } from '../../../core/services/modal/modalService';
-import { AlertComponent } from '../../../shared/components/alert/alert.component';
-import { ToastService } from '../../../shared/components/toast/toast.service';
-import { ImageUploadService } from '../../../shared/service/image-upload.service';
+import { HttpService } from '../../../../core/http-client.service';
+import { ModalService } from '../../../../core/services/modal/modalService';
+import { AlertComponent } from '../../../../shared/components/alert/alert.component';
+import { ToastService } from '../../../../shared/components/toast/toast.service';
+import { ImageUploadService } from '../../../../shared/service/image-upload.service';
+import { TrainingPlanCardView } from '../models/exercise/training-plan-card-view-dto';
+import { TrainingPlanService } from '../services/training-plan.service';
 
 /**
  * Component for creating a training form.

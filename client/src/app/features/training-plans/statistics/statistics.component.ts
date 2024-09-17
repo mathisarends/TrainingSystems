@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { ChartColorService } from '../../../chart-color.service';
 import { BarChartData } from '../../../components/charts/grouped-bar-chart/bar-chart.-data';
 import { GroupedBarChartComponent } from '../../../components/charts/grouped-bar-chart/grouped-bar-chart.component';
 import { ExerciseDrillThroughEvent } from '../../../components/charts/line-chart/exercise-drill-through-event';
@@ -12,6 +11,7 @@ import { ChartSkeletonComponent } from '../../../components/loaders/chart-skelet
 import { ModalService } from '../../../core/services/modal/modalService';
 import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
 import { MultiSelectComponent } from '../../../shared/components/multi-select/multi-select.component';
+import { ChartColorService } from '../training-view/services/chart-color.service';
 import { TrainingExerciseTonnageDto } from './main-exercise-tonnage-dto';
 import { Tonnage } from './tonnage';
 import { TrainingStatisticsService } from './training-statistics.service';

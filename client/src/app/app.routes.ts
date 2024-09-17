@@ -3,11 +3,8 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './Pages/auth/login/login.component';
 import { RegisterComponent } from './Pages/auth/register/register.component';
 
-import { ProfileComponent } from './Pages/profile/profile.component';
-
 import { ExercisesComponent } from './features/exercise-page/components/exercise/exercises.component';
 
-import { UsageStatisticsComponent } from './Pages/usage-statistics/usage-statistics.component';
 import { SpinnerComponent } from './shared/components/spinner/spinner.component';
 
 import { RequestNewPasswordEmail } from './Pages/auth/request-new-password-email/request-new-password-email.component';
@@ -15,9 +12,11 @@ import { ResetPasswordComponent } from './Pages/auth/reset-password/reset-passwo
 
 import { AuthGuard } from './core/guards/auth.guard';
 import { GymTicketComponent } from './features/gym-ticket/gym-ticket.component';
+import { ProfileComponent } from './features/profile/profile.component';
 import { StatisticsComponent } from './features/training-plans/statistics/statistics.component';
 import { TrainingPlansComponent } from './features/training-plans/training-plans/training-plans.component';
 import { TrainingViewComponent } from './features/training-plans/training-view/training-view.component';
+import { UsageStatisticsComponent } from './features/usage-statistics/usage-statistics.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },

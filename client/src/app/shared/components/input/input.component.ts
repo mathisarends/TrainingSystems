@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, input, output } from '@angular/core';
-import { RpeInputDirective } from '../../../../directives/rpe-input.directive';
-import { WeightInputDirective } from '../../../../directives/weight-input.directive';
+import { RpeInputDirective } from '../../../features/training-plans/training-view/directives/rpe-input.directive';
+import { WeightInputDirective } from '../../../features/training-plans/training-view/directives/weight-input.directive';
 import { MobileDeviceDetectionService } from '../../../platform/mobile-device-detection.service';
 import { InteractiveElementDirective } from '../../directives/interactive-element.directive';
 

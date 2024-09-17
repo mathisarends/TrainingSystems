@@ -1,5 +1,3 @@
-import { WeightRecommendationBase } from '../../../../types/trainingPlan/weight-recommandation-base';
-
 export interface TrainingPlanEditViewDto {
   id: string;
   title: string;
@@ -7,4 +5,12 @@ export interface TrainingPlanEditViewDto {
   weightRecommandationBase: WeightRecommendationBase;
   trainingBlockLength: number;
   coverImageBase64: string;
+}
+
+/**
+ * Enum for weight recommendation base.
+ */
+enum WeightRecommendationBase {
+  LASTWEEK = 'lastWeek',
+  OFF = 'off',
 }

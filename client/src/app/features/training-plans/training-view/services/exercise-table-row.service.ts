@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { InteractiveElement } from '../../app/shared/types/interactive-element.types';
-import { ExerciseInputs } from './exercise-inputs';
+import { InteractiveElement } from '../../../../shared/types/interactive-element.types';
+import { ExerciseInputs } from '../models/exercise-inputs';
 
 enum ExerciseTableRowInputType {
   CATEGORY_SELECTOR = '.exercise-category-selector select',

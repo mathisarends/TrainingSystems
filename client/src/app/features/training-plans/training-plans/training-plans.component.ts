@@ -2,9 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
-import { TrainingPlanService } from '../../../../service/training/training-plan.service';
-import { TrainingPlanCardView } from '../../../../types/exercise/training-plan-card-view-dto';
-import { CreateTrainingFormComponent } from '../../../Pages/modal-pages/create-training-form/create-training-form.component';
 import { SkeletonCardComponent } from '../../../components/loaders/skeletons/skeleton-card/skeleton-card.component';
 import { TrainingPlanCardComponent } from '../../../components/training-plan-card/training-plan-card.component';
 import { HttpService } from '../../../core/http-client.service';
@@ -18,6 +15,9 @@ import { IconButtonComponent } from '../../../shared/components/icon-button/icon
 import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
 import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
+import { CreateTrainingFormComponent } from '../training-view/create-training-form/create-training-form.component';
+import { TrainingPlanCardView } from '../training-view/models/exercise/training-plan-card-view-dto';
+import { TrainingPlanService } from '../training-view/services/training-plan.service';
 
 /**
  * Component to manage and display training plans.

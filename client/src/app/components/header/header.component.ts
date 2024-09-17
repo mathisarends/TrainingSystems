@@ -5,9 +5,9 @@ import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { AuthService } from '../../core/auth.service';
 import { SearchService } from '../../core/search.service';
-import { NotificationService } from '../../Pages/notification-page/notification.service';
-import { ProfileService } from '../../Pages/profile/profileService';
-import { TrainingDayFinishedNotification } from '../../Pages/usage-statistics/training-finished-notification';
+import { ProfileService } from '../../features/profile/profileService';
+import { TrainingDayFinishedNotification } from '../../features/usage-statistics/training-finished-notification';
+import { NotificationService } from '../../shared/service/notification.service';
 import { User } from '../../shared/types/user';
 
 @Component({

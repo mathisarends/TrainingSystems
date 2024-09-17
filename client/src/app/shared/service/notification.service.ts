@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../core/http-client.service';
-import { TrainingDayFinishedNotification } from '../usage-statistics/training-finished-notification';
+import { TrainingDayFinishedNotification } from '../../features/usage-statistics/training-finished-notification';
 
 /**
  * Service for handling notification-related operations.

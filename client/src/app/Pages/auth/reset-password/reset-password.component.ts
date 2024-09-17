@@ -4,10 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, Observable, of } from 'rxjs';
 import { HttpService } from '../../../core/http-client.service';
 import { ModalService } from '../../../core/services/modal/modalService';
+import { BasicInfoComponent } from '../../../shared/components/modal/basic-info/basic-info.component';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
 import { ToastService } from '../../../shared/components/toast/toast.service';
 import { IconComponent } from '../../../shared/icon/icon.component';
-import { BasicInfoComponent } from '../../modal-pages/basic-info/basic-info.component';
 import { BaisAuthComponent } from '../basic-auth.component';
 import { ResetPasswordService } from '../request-new-password-email/reset-password.service';
 

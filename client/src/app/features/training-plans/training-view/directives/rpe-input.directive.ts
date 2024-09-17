@@ -1,7 +1,7 @@
 import { Directive, ElementRef, HostListener } from '@angular/core';
-import { FormService } from '../app/core/form.service';
-import { InteractiveElementService } from '../app/shared/service/interactive-element.service';
-import { ExerciseTableRowService } from '../service/training/exercise-table-row.service';
+import { FormService } from '../../../../core/form.service';
+import { InteractiveElementService } from '../../../../shared/service/interactive-element.service';
+import { ExerciseTableRowService } from '../services/exercise-table-row.service';
 
 /**
  * Directive that extends the InteractiveElementDirective to add additional functionality.

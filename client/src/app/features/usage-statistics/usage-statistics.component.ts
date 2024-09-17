@@ -8,7 +8,7 @@ import { TrainingDayNotificationComponent } from '../../components/training-day-
 import { HttpService } from '../../core/http-client.service';
 import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
-import { NotificationService } from '../notification-page/notification.service';
+import { NotificationService } from '../../shared/service/notification.service';
 import { ActivityCalendarData } from './activity-calendar-data';
 import { RecentTrainingDurationsData } from './recent-training-durations-data';
 import { TrainingDayFinishedNotification } from './training-finished-notification';

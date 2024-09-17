@@ -3,15 +3,15 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { TrainingPlanCardView } from '../../../types/exercise/training-plan-card-view-dto';
+import { TrainingPlanCardView } from '../../features/training-plans/training-view/models/exercise/training-plan-card-view-dto';
 
-import { TrainingPlanService } from '../../../service/training/training-plan.service';
 import { HttpService } from '../../core/http-client.service';
 import { ModalService } from '../../core/services/modal/modalService';
 import { ModalSize } from '../../core/services/modal/modalSize';
 import { EditTrainingPlanComponent } from '../../features/training-plans/edit-training-plan/edit-training-plan.component';
-import { BasicInfoComponent } from '../../Pages/modal-pages/basic-info/basic-info.component';
+import { TrainingPlanService } from '../../features/training-plans/training-view/services/training-plan.service';
 import { IconButtonComponent } from '../../shared/components/icon-button/icon-button.component';
+import { BasicInfoComponent } from '../../shared/components/modal/basic-info/basic-info.component';
 import { ToastService } from '../../shared/components/toast/toast.service';
 import { TooltipDirective } from '../../shared/directives/tooltip.directive';
 import { IconName } from '../../shared/icon/icon-name';

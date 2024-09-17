@@ -2,12 +2,12 @@ import { CommonModule } from '@angular/common';
 import { AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom, Observable, Subscription } from 'rxjs';
-import { TrainingPlanService } from '../../../../service/training/training-plan.service';
 import { HttpService } from '../../../core/http-client.service';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
 import { ToastService } from '../../../shared/components/toast/toast.service';
 import { ImageUploadService } from '../../../shared/service/image-upload.service';
+import { TrainingPlanService } from '../training-view/services/training-plan.service';
 import { EditTrainingPlanService } from './edit-training-plan.service';
 import { TrainingPlanEditViewDto } from './training-plan-edit-view-dto';
 

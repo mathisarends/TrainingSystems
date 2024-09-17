@@ -1,5 +1,5 @@
-import { Injectable, Renderer2, RendererFactory2, EventEmitter } from '@angular/core';
-import { ServiceWorkerService } from '../../app/platform/service-worker.service';
+import { EventEmitter, Injectable, Renderer2, RendererFactory2 } from '@angular/core';
+import { ServiceWorkerService } from '../../../../platform/service-worker.service';
 
 @Injectable({
   providedIn: 'root',
