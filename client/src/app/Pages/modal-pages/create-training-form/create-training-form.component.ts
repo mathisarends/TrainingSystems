@@ -4,10 +4,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { firstValueFrom } from 'rxjs';
 import { TrainingPlanService } from '../../../../service/training/training-plan.service';
 import { TrainingPlanCardView } from '../../../../types/exercise/training-plan-card-view-dto';
-import { ToastService } from '../../../components/toast/toast.service';
 import { HttpService } from '../../../core/http-client.service';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
+import { ToastService } from '../../../shared/components/toast/toast.service';
 import { ImageUploadService } from '../../../shared/service/image-upload.service';
 
 /**

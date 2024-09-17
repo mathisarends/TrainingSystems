@@ -1,12 +1,12 @@
-import { Component, Inject, signal } from '@angular/core';
-import { BaisAuthComponent } from '../basic-auth.component';
-import { Router } from '@angular/router';
-import { HttpService } from '../../../core/http-client.service';
-import { ToastService } from '../../../components/toast/toast.service';
 import { DOCUMENT } from '@angular/common';
-import { ResetPasswordService } from './reset-password.service';
-import { catchError, filter, of, tap } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
+import { Component, Inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
+import { catchError, filter, of, tap } from 'rxjs';
+import { HttpService } from '../../../core/http-client.service';
+import { ToastService } from '../../../shared/components/toast/toast.service';
+import { BaisAuthComponent } from '../basic-auth.component';
+import { ResetPasswordService } from './reset-password.service';
 
 @Component({
   selector: 'app-reset-password',

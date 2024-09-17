@@ -1,15 +1,15 @@
-import { Component, Inject, OnInit, signal } from '@angular/core';
-import { ResetPasswordService } from '../request-new-password-email/reset-password.service';
-import { IconComponent } from '../../../shared/icon/icon.component';
-import { SpinnerComponent } from '../../../components/loaders/spinner/spinner.component';
-import { BaisAuthComponent } from '../basic-auth.component';
-import { ActivatedRoute, Router } from '@angular/router';
-import { HttpService } from '../../../core/http-client.service';
-import { ToastService } from '../../../components/toast/toast.service';
 import { DOCUMENT } from '@angular/common';
+import { Component, Inject, OnInit, signal } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, Observable, of } from 'rxjs';
-import { BasicInfoComponent } from '../../modal-pages/basic-info/basic-info.component';
+import { HttpService } from '../../../core/http-client.service';
 import { ModalService } from '../../../core/services/modal/modalService';
+import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
+import { ToastService } from '../../../shared/components/toast/toast.service';
+import { IconComponent } from '../../../shared/icon/icon.component';
+import { BasicInfoComponent } from '../../modal-pages/basic-info/basic-info.component';
+import { BaisAuthComponent } from '../basic-auth.component';
+import { ResetPasswordService } from '../request-new-password-email/reset-password.service';
 
 @Component({
   standalone: true,

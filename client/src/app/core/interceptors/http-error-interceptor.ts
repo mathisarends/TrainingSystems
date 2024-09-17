@@ -1,8 +1,8 @@
-import { HttpRequest, HttpEvent, HttpHandlerFn, HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpRequest, HttpResponse } from '@angular/common/http';
+import { inject } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { inject } from '@angular/core';
-import { ToastService } from '../../components/toast/toast.service';
+import { ToastService } from '../../shared/components/toast/toast.service';
 import { ErrorResponseDto } from '../../shared/dto/error-response-dto';
 
 /**

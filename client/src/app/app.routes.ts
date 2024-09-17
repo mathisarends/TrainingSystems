@@ -10,8 +10,8 @@ import { TrainingPlansComponent } from './Pages/training-plans/training-plans.co
 import { ExercisesComponent } from './features/exercise-page/components/exercise/exercises.component';
 import { TrainingViewComponent } from './Pages/training-view/training-view.component';
 
-import { SpinnerComponent } from './components/loaders/spinner/spinner.component';
 import { UsageStatisticsComponent } from './Pages/usage-statistics/usage-statistics.component';
+import { SpinnerComponent } from './shared/components/spinner/spinner.component';
 
 import { RequestNewPasswordEmail } from './Pages/auth/request-new-password-email/request-new-password-email.component';
 import { ResetPasswordComponent } from './Pages/auth/reset-password/reset-password.component';

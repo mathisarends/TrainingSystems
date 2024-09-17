@@ -4,10 +4,10 @@ import { Router } from '@angular/router';
 import { NotificationService } from '../../Pages/notification-page/notification.service';
 import { TrainingDayFinishedNotification } from '../../Pages/usage-statistics/training-finished-notification';
 import { toggleCollapseAnimation } from '../../shared/animations/toggle-collapse';
+import { ToastService } from '../../shared/components/toast/toast.service';
 import { IconName } from '../../shared/icon/icon-name';
 import { IconComponent } from '../../shared/icon/icon.component';
 import { FormatDatePipe } from '../../shared/pipes/format-date.pipe';
-import { ToastService } from '../toast/toast.service';
 
 @Component({
   selector: 'app-training-day-notification',

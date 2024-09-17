@@ -1,13 +1,13 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { HttpService } from '../../../core/http-client.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { DOCUMENT } from '@angular/common';
-import { ToastService } from '../../../components/toast/toast.service';
-import { BaisAuthComponent } from '../basic-auth.component';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, Inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { catchError, of, tap } from 'rxjs';
-import { IconComponent } from '../../../shared/icon/icon.component';
 import { AuthService } from '../../../core/auth.service';
+import { HttpService } from '../../../core/http-client.service';
+import { ToastService } from '../../../shared/components/toast/toast.service';
+import { IconComponent } from '../../../shared/icon/icon.component';
+import { BaisAuthComponent } from '../basic-auth.component';
 
 @Component({
   selector: 'app-login',

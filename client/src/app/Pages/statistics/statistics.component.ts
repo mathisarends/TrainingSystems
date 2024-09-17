@@ -9,10 +9,10 @@ import { LineChartDataset } from '../../components/charts/line-chart/lilne-chart
 import { LineChartComponent } from '../../components/charts/line-chart/line-chart.component';
 import { PolarChartComponent } from '../../components/charts/polar-chart/polar-chart.component';
 import { ChartSkeletonComponent } from '../../components/loaders/chart-skeleton/chart-skeleton.component';
-import { MultiSelectComponent } from '../../components/multi-select/multi-select.component';
-import { PaginationComponent } from '../../components/pagination/pagination.component';
 import { ModalService } from '../../core/services/modal/modalService';
 import { HeadlineComponent } from '../../shared/components/headline/headline.component';
+import { MultiSelectComponent } from '../../shared/components/multi-select/multi-select.component';
+import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { TrainingExerciseTonnageDto } from './main-exercise-tonnage-dto';
 import { Tonnage } from './tonnage';
 import { TrainingStatisticsService } from './training-statistics.service';

@@ -12,11 +12,11 @@ import { ModalService } from '../../core/services/modal/modalService';
 import { ModalSize } from '../../core/services/modal/modalSize';
 import { BasicInfoComponent } from '../../Pages/modal-pages/basic-info/basic-info.component';
 import { IconButtonComponent } from '../../shared/components/icon-button/icon-button.component';
+import { ToastService } from '../../shared/components/toast/toast.service';
 import { TooltipDirective } from '../../shared/directives/tooltip.directive';
 import { IconName } from '../../shared/icon/icon-name';
 import { IconComponent } from '../../shared/icon/icon.component';
 import {} from '../percentage-circle-visualisation/percentage-circle-visualisation.component';
-import { ToastService } from '../toast/toast.service';
 
 /**
  * Component for displaying and managing a single training plan card.

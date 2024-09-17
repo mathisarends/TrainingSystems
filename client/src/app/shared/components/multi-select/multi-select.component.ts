@@ -1,8 +1,8 @@
-import { Component, HostListener, output, signal, input, OnInit } from '@angular/core';
+import { Component, HostListener, input, OnInit, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { IconName } from '../../icon/icon-name';
+import { IconComponent } from '../../icon/icon.component';
 import { MultiSelectSpinnerComponent } from './multi-select-spinner/multi-select-spinner.component';
-import { IconComponent } from '../../shared/icon/icon.component';
-import { IconName } from '../../shared/icon/icon-name';
 
 /**
  * Represents a generic multi-select-dropdown

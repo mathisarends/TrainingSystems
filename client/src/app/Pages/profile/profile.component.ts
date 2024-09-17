@@ -6,14 +6,14 @@ import { ActivityCalendar } from '../../components/activity-calendar/activity-ca
 import { Friend } from '../../components/friend-card/friend';
 import { FriendCardMode } from '../../components/friend-card/friend-card-mode';
 import { FriendCardComponent } from '../../components/friend-card/friend-card.component';
-import { SpinnerComponent } from '../../components/loaders/spinner/spinner.component';
-import { PaginationComponent } from '../../components/pagination/pagination.component';
-import { ToastService } from '../../components/toast/toast.service';
 import { HttpService } from '../../core/http-client.service';
 import { ModalService } from '../../core/services/modal/modalService';
 import { ModalSize } from '../../core/services/modal/modalSize';
 import { AlertComponent } from '../../shared/components/alert/alert.component';
 import { IconButtonComponent } from '../../shared/components/icon-button/icon-button.component';
+import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
+import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
+import { ToastService } from '../../shared/components/toast/toast.service';
 import { TooltipDirective } from '../../shared/directives/tooltip.directive';
 import { IconName } from '../../shared/icon/icon-name';
 import { IconComponent } from '../../shared/icon/icon.component';

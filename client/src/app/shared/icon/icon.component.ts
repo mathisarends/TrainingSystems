@@ -1,5 +1,5 @@
-import { Component, HostListener, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, HostListener, input, output } from '@angular/core';
 import { IconName } from './icon-name';
 
 /**

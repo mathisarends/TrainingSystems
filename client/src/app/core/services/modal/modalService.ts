@@ -1,16 +1,16 @@
 import {
-  Injectable,
   ApplicationRef,
-  Injector,
   ComponentRef,
   EnvironmentInjector,
+  Injectable,
+  Injector,
   createComponent,
 } from '@angular/core';
-import { ModalSize } from './modalSize';
-import { BasicInfoModalOptions, ModalOptions } from './modal-options';
-import { ModalComponent } from '../../../components/modal/modal.component';
-import { ModalOverlayComponent } from '../../../components/modal/modal-overlay/modal-overlay.component';
 import { BasicInfoComponent } from '../../../Pages/modal-pages/basic-info/basic-info.component';
+import { ModalOverlayComponent } from '../../../shared/components/modal/modal-overlay/modal-overlay.component';
+import { ModalComponent } from '../../../shared/components/modal/modal.component';
+import { BasicInfoModalOptions, ModalOptions } from './modal-options';
+import { ModalSize } from './modalSize';
 
 @Injectable({
   providedIn: 'root',

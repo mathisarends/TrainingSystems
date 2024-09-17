@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
-import { ToastService } from './toast.service';
-import { ToastStatus } from './toast-status';
 import { CommonModule } from '@angular/common';
-import { IconComponent } from '../../shared/icon/icon.component';
-import { IconName } from '../../shared/icon/icon-name';
+import { Component } from '@angular/core';
+import { IconName } from '../../icon/icon-name';
+import { IconComponent } from '../../icon/icon.component';
+import { ToastStatus } from './toast-status';
+import { ToastService } from './toast.service';
 
 @Component({
   selector: 'app-toast',

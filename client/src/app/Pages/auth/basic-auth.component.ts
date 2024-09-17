@@ -1,8 +1,8 @@
-import { Router } from '@angular/router';
-import { HttpService } from '../../core/http-client.service';
 import { DOCUMENT } from '@angular/common';
 import { Inject, signal, WritableSignal } from '@angular/core';
-import { ToastService } from '../../components/toast/toast.service';
+import { Router } from '@angular/router';
+import { HttpService } from '../../core/http-client.service';
+import { ToastService } from '../../shared/components/toast/toast.service';
 import { IconName } from '../../shared/icon/icon-name';
 
 declare const google: any;
