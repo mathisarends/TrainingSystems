@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, computed, ElementRef, input, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivityCalendarData } from '../../features/usage-statistics/activity-calendar-data';
 import { TooltipDirective } from '../../shared/directives/tooltip.directive';
 import { ActivityCalendarEntry, Day, Level } from './activity-calendar-entry';
@@ -11,7 +11,8 @@ import { ActivityCalendarEntry, Day, Level } from './activity-calendar-entry';
   templateUrl: './activity-calendar.component.html',
   styleUrls: ['./activity-calendar.component.scss'],
 })
-export class ActivityCalendar implements OnInit {
+export class ActivityCalendar implements OnInit, AfterViewInit {
+  @ViewChildren('month') months!: QueryList<ElementRef>;
   activityData = input.required<ActivityCalendarData>();
   grid: ActivityCalendarEntry[] = [];
 
@@ -24,6 +25,20 @@ export class ActivityCalendar implements OnInit {
     this.populateGrid(dataEntries);
 
     this.calculateLevels();
+  }
+
+  ngAfterViewInit(): void {
+    this.scrollToCurrentMonth();
+  }
+
+  scrollToCurrentMonth(): void {
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth();
+    const monthElement = this.months.get(currentMonth)!;
+    monthElement.nativeElement.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+    });
   }
 
   /**

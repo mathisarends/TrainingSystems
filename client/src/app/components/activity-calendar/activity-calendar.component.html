@@ -2,18 +2,18 @@
   <div class="calendar-grid">
     <div class="contributions-wrapper">
       <div class="months">
-        <div>Jan</div>
-        <div>Feb</div>
-        <div>Mar</div>
-        <div>Apr</div>
-        <div>May</div>
-        <div>Jun</div>
-        <div>Jul</div>
-        <div>Aug</div>
-        <div>Sep</div>
-        <div>Okt</div>
-        <div>Nov</div>
-        <div>Dec</div>
+        <div #month>Jan</div>
+        <div #month>Feb</div>
+        <div #month>Mar</div>
+        <div #month>Apr</div>
+        <div #month>May</div>
+        <div #month>Jun</div>
+        <div #month>Jul</div>
+        <div #month>Aug</div>
+        <div #month>Sep</div>
+        <div #month>Okt</div>
+        <div #month>Nov</div>
+        <div #month>Dec</div>
       </div>
 
       <div class="day-and-grid-wrapper">
@@ -27,13 +27,22 @@
           style="display: grid; grid-template-columns: repeat(52, 1fr); grid-template-rows: repeat(7, 1fr)"
         >
           @for (day of grid; track day; let index = $index) {
-            <div
-              class="day"
-              [style.gridColumn]="day.weekIndex + 1"
-              [style.gridRow]="day.dayOfWeek + 1"
-              [ngClass]="'level-' + day.level"
-              [appTooltip]="day.value.toString() + ' KG ' + index"
-            ></div>
+            @if (day.value) {
+              <div
+                class="day"
+                [style.gridColumn]="day.weekIndex + 1"
+                [style.gridRow]="day.dayOfWeek + 1"
+                [ngClass]="'level-' + day.level"
+                [appTooltip]="day.value.toString() + ' KG '"
+              ></div>
+            } @else {
+              <div
+                class="day"
+                [style.gridColumn]="day.weekIndex + 1"
+                [style.gridRow]="day.dayOfWeek + 1"
+                [ngClass]="'level-' + day.level"
+              ></div>
+            }
           }
         </div>
       </div>

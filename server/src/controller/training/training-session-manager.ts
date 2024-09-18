@@ -1,9 +1,9 @@
-import { TrainingSessionTracker } from './training-session-tracker.js';
 import { TrainingDayDataLocator } from './training-day-data-locator.js';
+import { TrainingSessionTracker } from './training-session-tracker.js';
 
-import { MongoGenericDAO } from '../../models/dao/mongo-generic.dao.js';
-import { User } from '../../models/collections/user/user.js';
 import { TrainingDAyFinishedNotification } from '../../models/collections/user/training-fninished-notifcation.js';
+import { User } from '../../models/collections/user/user.js';
+import { MongoGenericDAO } from '../../models/dao/mongo-generic.dao.js';
 import { getTonnagePerTrainingDay } from '../../service/trainingService.js';
 
 /**
@@ -134,6 +134,6 @@ export class TrainingSessionManager {
       await userDAO.update(user);
     }
 
-    this.removeTracker(trainingDayId); // Remove tracker with trainingDayId
+    this.removeTracker(trainingDayId);
   }
 }
