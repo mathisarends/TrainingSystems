@@ -50,9 +50,6 @@ export class CategorySelectDirective extends InteractiveElementDirective {
     categorySelector: HTMLSelectElement,
     defaultRepSchemeByCategory: RepSchemeByCategory,
   ): void {
-    const { exerciseSelect, setsInput, repsInput, targetRPEInput } =
-      this.exerciseTableRowService.getInputsByElement(categorySelector);
-
     const category = categorySelector.value;
 
     if (this.isPlaceholderCategory(category)) {
@@ -60,12 +57,31 @@ export class CategorySelectDirective extends InteractiveElementDirective {
       return;
     }
 
+    this.setDefaultValuesForCategory(categorySelector, defaultRepSchemeByCategory);
+
+    this.updateFormService(categorySelector);
+  }
+
+  /**
+   * Sets default values for the input fields (sets, reps, RPE, etc.) based on the selected exercise category.
+   * Resets other fields like weight, RPE, estimated max, and notes to empty values.
+   */
+  private setDefaultValuesForCategory(
+    categorySelector: HTMLSelectElement,
+    defaultRepSchemeByCategory: RepSchemeByCategory,
+  ) {
+    const { setsInput, repsInput, weightInput, rpeInput, targetRPEInput, estMaxInput, noteInput } =
+      this.exerciseTableRowService.getInputsByElement(categorySelector);
+    const category = categorySelector.value;
+
     const defaultValues = defaultRepSchemeByCategory[category];
     setsInput.value = defaultValues.defaultSets.toString();
     repsInput.value = defaultValues.defaultReps.toString();
+    weightInput.value = '';
+    rpeInput.value = '';
+    estMaxInput.value = '';
+    noteInput.value = '';
     targetRPEInput.value = defaultValues.defaultRPE.toString();
-
-    this.updateFormService(exerciseSelect);
   }
 
   /**
@@ -81,7 +97,6 @@ export class CategorySelectDirective extends InteractiveElementDirective {
    */
   private resetInputs(exerciseSelect: HTMLSelectElement): void {
     const inputs: ExerciseInputs = this.exerciseTableRowService.getInputsByElement(exerciseSelect);
-    console.log('🚀 ~ CategorySelectDirective ~ resetInputs ~ inputs:', inputs);
 
     this.forEachInput(inputs, (input) => (input.value = ''));
   }
