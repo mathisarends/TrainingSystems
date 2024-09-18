@@ -1,7 +1,8 @@
-import { Directive } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, HostListener } from '@angular/core';
 import { FormService } from '../../../../core/form.service';
 import { InteractiveElementDirective } from '../../../../shared/directives/interactive-element.directive';
 import { AutoSaveService } from '../../../../shared/service/auto-save.service';
+import { ExerciseTableRowService } from '../services/exercise-table-row.service';
 
 /**
  * Abstract Directive that extends the InteractiveElementDirective
@@ -9,7 +10,7 @@ import { AutoSaveService } from '../../../../shared/service/auto-save.service';
  * methods to parse and duplicate input values.
  */
 @Directive()
-export abstract class AbstractDoubleClickDirective extends InteractiveElementDirective {
+export abstract class AbstractDoubleClickDirective extends InteractiveElementDirective implements AfterViewInit {
   protected inputElement!: HTMLInputElement;
 
   /**
@@ -27,8 +28,68 @@ export abstract class AbstractDoubleClickDirective extends InteractiveElementDir
   constructor(
     protected override autoSaveService: AutoSaveService,
     protected override formService: FormService,
+    protected exerciseTableRowService: ExerciseTableRowService,
+    protected elementRef: ElementRef,
   ) {
     super(autoSaveService, formService);
+  }
+
+  /**
+   * Lifecycle hook that runs after the view is initialized.
+   * It assigns the inner input element inside the wrapper to the inputElement property.
+   */
+  ngAfterViewInit(): void {
+    this.inputElement = this.elementRef.nativeElement;
+  }
+
+  /**
+   * Handles the single-click event on the input element.
+   * Detects if two clicks occur within a threshold time and treats it as a double-click.
+   */
+  @HostListener('click', ['$event'])
+  onClick(): void {
+    const currentTime = new Date().getTime();
+    const timeSinceLastClick = currentTime - this.lastClickTime;
+
+    if (timeSinceLastClick < this.doubleClickThreshold) {
+      this.handleDoubleClick();
+    }
+
+    this.lastClickTime = currentTime;
+  }
+
+  /**
+   * Shared logic for handling a double-click event.
+   * This method is shared between weight and RPE input logic.
+   */
+  protected handleDoubleClick(): void {
+    const inputValues = this.parseInputValues();
+    const amountOfSets = this.getAmountOfSets();
+
+    const isSetLeft = inputValues.length < amountOfSets;
+    if (!isSetLeft) {
+      return;
+    }
+
+    this.duplicateLastInput(inputValues);
+
+    // Dismiss the keyboard on mobile devices by removing focus from the input element
+    this.inputElement.blur();
+    this.inputElement.dispatchEvent(new Event('change'));
+  }
+
+  protected getRoundedAverageWithStep(roundingStep: number): number {
+    const inputValues = this.parseInputValues();
+
+    const average = inputValues.reduce((acc, curr) => acc + curr, 0) / inputValues.length;
+
+    return Math.round(average / roundingStep) * roundingStep;
+  }
+
+  protected isLastSet(): boolean {
+    const inputValues = this.parseInputValues();
+
+    return inputValues.length === this.getAmountOfSets();
   }
 
   /**
@@ -45,5 +106,12 @@ export abstract class AbstractDoubleClickDirective extends InteractiveElementDir
   protected duplicateLastInput(values: number[]): void {
     const lastInput = values[values.length - 1];
     this.inputElement.value = `${this.inputElement.value};${lastInput}`;
+  }
+
+  /**
+   * Retrieves the total number of sets from the ExerciseTableRowService.
+   */
+  protected getAmountOfSets(): number {
+    return Number(this.exerciseTableRowService.getSetInputByElement(this.inputElement).value);
   }
 }
