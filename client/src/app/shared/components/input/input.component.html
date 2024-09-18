@@ -10,7 +10,6 @@
       [ngClass]="{
         'text-left': mobileDetectionService.isMobileDevice,
         'text-center': !mobileDetectionService.isMobileDevice && alignText() === 'center',
-        'opacity-0': type() === 'number' && value() === undefined,
       }"
     />
   }

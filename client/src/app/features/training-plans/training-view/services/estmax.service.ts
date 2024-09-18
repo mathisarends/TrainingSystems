@@ -31,9 +31,8 @@ export class EstMaxService {
   private handleInputChange(event: Event): void {
     const target = event.target as HTMLInputElement;
 
+    const category = this.exerciseTableRowService.getExerciseCategorySelectorByElement(target).value;
     const parentRow = target.closest('tr')!;
-
-    const category = (parentRow.querySelector('.exercise-category-selector') as HTMLInputElement)?.value;
 
     if (category === 'Squat' || category === 'Bench' || category === 'Deadlift') {
       const weight = parseFloat(this.exerciseTableRowService.getWeightInputByElement(target).value);

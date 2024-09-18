@@ -51,6 +51,7 @@
             <td data-cell="Category">
               <app-dropdown
                 name="day{{ trainingDayIndex }}_exercise{{ k }}_category"
+                class="exercise-category-selector"
                 [options]="exerciseData.exerciseCategories"
                 [directiveUsed]="'category-select'"
                 [(selectedValue)]="exercise.category"
@@ -65,6 +66,9 @@
                 class="exercise-name-selector"
                 [options]="exerciseData.categorizedExercises[exercise.category]"
                 [(selectedValue)]="exercise.exercise"
+                [ngStyle]="{
+                  opacity: exercise.category === '- Bitte Auswählen -' || !exercise.category ? 0 : 1,
+                }"
               />
             </td>
             <td data-cell="Sets">
@@ -111,7 +115,13 @@
               />
             </td>
             <td data-cell="Est. Max">
-              <app-input class="estMax" [type]="'number'" [name]="namePrefix + 'estMax'" [value]="exercise.estMax" />
+              <app-input
+                class="estMax"
+                [type]="'number'"
+                [name]="namePrefix + 'estMax'"
+                [(value)]="exercise.estMax"
+                [ngClass]="{ 'opacity-0': exercise.estMax === undefined || exercise.estMax === 0 }"
+              />
             </td>
             <td data-cell="Notes">
               <app-input class="notes" [type]="'text'" [name]="namePrefix + 'notes'" [value]="exercise.notes ?? ''" />

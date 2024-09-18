@@ -11,6 +11,8 @@ import { ExerciseTableRowService } from '../services/exercise-table-row.service'
   standalone: true,
 })
 export class CategorySelectDirective {
+  private readonly PLACEHOLDER_CATEGROY = '- Bitte Auswählen -';
+
   private renderer: Renderer2;
 
   constructor(
@@ -34,78 +36,45 @@ export class CategorySelectDirective {
 
     const categorySelector = event.target as HTMLSelectElement;
     const category = categorySelector.value;
-    const tableRow = categorySelector.closest('tr')!;
 
-    const exerciseNameSelectors =
-      this.exerciseTableRowService.getAllExerciseCategorySelectorsByElement(categorySelector);
-
-    if (category === '- Bitte Auswählen -') {
-      this.handlePlaceholderCategory(categorySelector, exerciseNameSelectors, tableRow);
+    if (category === this.PLACEHOLDER_CATEGROY) {
+      this.updateInputValues(
+        categorySelector,
+        this.PLACEHOLDER_CATEGROY,
+        this.exerciseDataService.getDefaultRepSchemeByCategory(),
+      );
     } else {
-      this.handleSelectedCategory(categorySelector, exerciseNameSelectors, tableRow, category);
+      this.updateInputValues(categorySelector, category, this.exerciseDataService.getDefaultRepSchemeByCategory());
     }
 
     this.interactiveElementService.triggerChangeIfModified(categorySelector.value);
   }
 
-  /**
-   * Handles the logic when the category is "- Bitte Auswählen -".
-   */
-  private handlePlaceholderCategory(
-    categorySelector: HTMLSelectElement,
-    exerciseNameSelectors: NodeListOf<HTMLSelectElement>,
-    tableRow: Element,
-  ): void {
-    this.renderer.setStyle(categorySelector, 'opacity', '0');
-    exerciseNameSelectors.forEach((selector) => {
-      this.renderer.setStyle(selector, 'display', 'none');
-      selector.disabled = false;
-    });
-
-    this.updateInputValues(tableRow, '- Bitte Auswählen -', this.exerciseDataService.getDefaultRepSchemeByCategory());
-  }
-
-  /**
-   * Handles the logic when a specific category is selected.
-   */
-  private handleSelectedCategory(
-    categorySelector: HTMLSelectElement,
-    exerciseNameSelectors: NodeListOf<HTMLSelectElement>,
-    tableRow: Element,
-    category: string,
-  ): void {
-    this.updateInputValues(tableRow, category, this.exerciseDataService.getDefaultRepSchemeByCategory());
-  }
-
   private updateInputValues(
-    tableRow: Element,
+    categorySelector: HTMLSelectElement,
     category: string,
     defaultRepSchemeByCategory: RepSchemeByCategory,
   ): void {
-    const exerciseNameSelector = tableRow.querySelector('.exercise-name-selector select') as HTMLSelectElement;
+    const { exerciseSelect, setsInput, repsInput, targetRPEInput } =
+      this.exerciseTableRowService.getInputsByCategorySelector(categorySelector);
 
-    const appInputWrappers = Array.from(tableRow.querySelectorAll('app-input'));
-    const inputElements = appInputWrappers.flatMap((input) => Array.from(input.querySelectorAll('input')));
+    // Get the computed style of the exerciseSelect element
+    const computedStyles = window.getComputedStyle(exerciseSelect).display;
+    console.log('🚀 ~ CategorySelectDirective ~ computedStyles:', computedStyles);
 
-    // ziemlich fehleranfällig
-    const setsInput = inputElements[0];
-    const repsInput = inputElements[1];
-    const targetRPEInput = inputElements[3];
-
-    if (category !== '- Bitte Auswählen -') {
+    if (category !== this.PLACEHOLDER_CATEGROY) {
       const defaultValues = defaultRepSchemeByCategory[category];
-      if (defaultValues) {
-        setsInput.value = defaultValues.defaultSets.toString();
-        repsInput.value = defaultValues.defaultReps.toString();
-        targetRPEInput.value = defaultValues.defaultRPE.toString();
-      }
+      exerciseSelect.value = exerciseSelect.options[0]?.value;
+      setsInput.value = defaultValues.defaultSets.toString();
+      repsInput.value = defaultValues.defaultReps.toString();
+      targetRPEInput.value = defaultValues.defaultRPE.toString();
     } else {
-      this.resetInputs(exerciseNameSelector);
-      this.updateFormService(exerciseNameSelector);
+      this.resetInputs(exerciseSelect);
+      this.updateFormService(exerciseSelect);
       return;
     }
 
-    this.updateFormService(exerciseNameSelector);
+    this.updateFormService(exerciseSelect);
   }
 
   private resetInputs(exerciseSelect: HTMLSelectElement): void {

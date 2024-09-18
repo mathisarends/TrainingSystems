@@ -4,8 +4,7 @@ import { ExerciseInputs } from '../models/exercise-inputs';
 
 enum ExerciseTableRowInputType {
   CATEGORY_SELECTOR = '.exercise-category-selector select',
-  EXERCISE_SELECTOR_GENERIC = '.exercise-name-selector select',
-  EXERCISE_SELECTOR = '.exercise-name-selector[style*="display: block"] select',
+  EXERCISE_SELECTOR = '.exercise-name-selector select',
   SETS_INPUT = 'app-input.sets input',
   REPS_INPUT = 'app-input.reps input',
   WEIGHT_INPUT = 'app-input.weight input',
@@ -28,12 +27,13 @@ export class ExerciseTableRowService {
     return this.getElementByType(element, ExerciseTableRowInputType.CATEGORY_SELECTOR) as HTMLSelectElement;
   }
 
-  getAllExerciseCategorySelectorsByElement(element: HTMLElement): NodeListOf<HTMLSelectElement> {
-    const tableRow = element.closest('tr');
-    const exerciseNameSelectors = tableRow?.querySelectorAll(
-      '.exercise-name-selector',
-    ) as NodeListOf<HTMLSelectElement>;
-    return exerciseNameSelectors;
+  /**
+   * Finds the `HTMLSelectElement` for the exercise name within the same table row as the provided element.
+   *
+   * @param element The reference element within the table row.
+   */
+  getExerciseNameSelectorByElement(element: HTMLElement): HTMLSelectElement {
+    return this.getElementByType(element, ExerciseTableRowInputType.EXERCISE_SELECTOR) as HTMLSelectElement;
   }
 
   /**
@@ -85,7 +85,7 @@ export class ExerciseTableRowService {
     return {
       exerciseSelect: this.findClosestElementInRow(
         categorySelector,
-        ExerciseTableRowInputType.EXERCISE_SELECTOR_GENERIC,
+        ExerciseTableRowInputType.EXERCISE_SELECTOR,
       ) as HTMLSelectElement,
       setsInput: this.findClosestElementInRow(
         categorySelector,
