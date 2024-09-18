@@ -122,7 +122,7 @@ export class RpeInputDirective {
 
     this.formService.addChange(rpeInput.name, rpeInput.value);
 
-    this.interactiveElementService.triggerChangeIfModified(rpeInput.value);
+    this.interactiveElementService.triggerChange(rpeInput.value);
   }
 
   /**

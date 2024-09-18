@@ -89,7 +89,7 @@ export class WeightInputDirective implements AfterViewInit {
       this.inputElement.value = roundedWeight.toString();
 
       this.formService.addChange(this.inputElement.name, this.inputElement.value);
-      this.interactiveElementService.triggerChangeIfModified(this.inputElement.value);
+      this.interactiveElementService.triggerChange(this.inputElement.value);
     }
   }
 

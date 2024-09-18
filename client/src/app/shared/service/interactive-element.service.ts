@@ -28,7 +28,7 @@ export class InteractiveElementService {
    *
    * @param value - The current value of the input element.
    */
-  triggerChangeIfModified(value: string): void {
+  triggerChange(value: string): void {
     if (value !== this.momentaryInput) {
       this.inputChangedSubject.next(); // Notifies that the input value has changed
     }

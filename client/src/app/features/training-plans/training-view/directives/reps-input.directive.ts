@@ -2,7 +2,6 @@ import { Directive, HostListener } from '@angular/core';
 import { FormService } from '../../../../core/form.service';
 import { InteractiveElementDirective } from '../../../../shared/directives/interactive-element.directive';
 import { InteractiveElementService } from '../../../../shared/service/interactive-element.service';
-import { InteractiveElement } from '../../../../shared/types/interactive-element.types';
 import { EstMaxService } from '../services/estmax.service';
 
 /**
@@ -22,10 +21,10 @@ export class RepInputDirective extends InteractiveElementDirective {
     super(interactiveElementService, formService);
   }
 
-  @HostListener('change', ['$event.target'])
-  override onFocus(interactiveElement: InteractiveElement): void {
-    super.onFocus(interactiveElement);
+  @HostListener('change', ['$event'])
+  override onChange(event: Event): void {
+    super.onChange(event);
 
-    this.estMaxService.calculateMaxAfterInputChange(interactiveElement as HTMLInputElement);
+    this.estMaxService.calculateMaxAfterInputChange(event.target as HTMLInputElement);
   }
 }

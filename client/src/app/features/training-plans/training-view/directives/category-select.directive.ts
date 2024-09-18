@@ -48,7 +48,7 @@ export class CategorySelectDirective {
 
     this.updateInputValues(categorySelector, this.exerciseDataService.getDefaultRepSchemeByCategory());
 
-    this.interactiveElementService.triggerChangeIfModified(categorySelector.value);
+    this.interactiveElementService.triggerChange(categorySelector.value);
   }
 
   /**
