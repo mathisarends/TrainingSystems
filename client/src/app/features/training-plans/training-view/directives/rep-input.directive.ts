@@ -4,6 +4,9 @@ import { InteractiveElementDirective } from '../../../../shared/directives/inter
 import { AutoSaveService } from '../../../../shared/service/auto-save.service';
 import { EstMaxService } from '../services/estmax.service';
 
+/**
+ * Directive for handling input changes on repetition fields.
+ */
 @Directive({
   selector: '[repInputDirective]',
   standalone: true,
@@ -17,6 +20,9 @@ export class RepInputDirective extends InteractiveElementDirective {
     super(autoSaveService, formService);
   }
 
+  /**
+   * Listens for the 'change' event and triggers auto-save and estimated max calculation.
+   */
   @HostListener('change', ['$event'])
   override onChange(event: Event): void {
     super.onChange(event);
