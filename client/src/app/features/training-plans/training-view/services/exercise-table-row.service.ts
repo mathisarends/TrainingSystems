@@ -11,7 +11,7 @@ enum ExerciseTableRowInputType {
   TARGET_RPE_INPUT = 'app-input.targetRPE input',
   ACTUAL_RPE_INPUT = 'app-input.actualRPE input',
   EST_MAX_INPUT = 'app-input.estMax input',
-  NOTES = 'app-input.notes input',
+  NOTES_INPUT = 'app-input.notes input',
 }
 
 @Injectable({
@@ -96,6 +96,7 @@ export class ExerciseTableRowService {
       ) as HTMLInputElement,
       rpeInput: this.findClosestElementInRow(element, ExerciseTableRowInputType.ACTUAL_RPE_INPUT) as HTMLInputElement,
       estMaxInput: this.findClosestElementInRow(element, ExerciseTableRowInputType.EST_MAX_INPUT) as HTMLInputElement,
+      noteInput: this.findClosestElementInRow(element, ExerciseTableRowInputType.NOTES_INPUT) as HTMLInputElement,
     };
   }
 

@@ -5,7 +5,7 @@
 
   <form (submit)="onSubmit($event)" class="mt-4" id="form">
     <div class="headline-container" [ngClass]="{ 'background-image': mobileView }">
-      <app-headline [subHeading]="subHeading" [heading]="trainingPlanData.title" />
+      <app-headline [subHeading]="subHeading" [heading]="trainingDataService.trainingPlanData.title" />
       @if (mobileView) {
         <div>
           <app-icon-button [iconName]="IconName.CLOCK" (buttonClick)="switchToTimerView()" />

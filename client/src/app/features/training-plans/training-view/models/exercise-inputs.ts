@@ -12,4 +12,5 @@ export interface ExerciseInputs {
   targetRPEInput: HTMLInputElement;
   rpeInput: HTMLInputElement;
   estMaxInput: HTMLInputElement;
+  noteInput: HTMLInputElement;
 }

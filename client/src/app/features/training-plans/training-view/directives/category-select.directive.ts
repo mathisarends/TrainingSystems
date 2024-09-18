@@ -1,5 +1,6 @@
 import { Directive, HostListener } from '@angular/core';
 import { FormService } from '../../../../core/form.service';
+import { InteractiveElementDirective } from '../../../../shared/directives/interactive-element.directive';
 import { AutoSaveService } from '../../../../shared/service/auto-save.service';
 import { ExerciseDataService } from '../exercise-data.service';
 import { RepSchemeByCategory } from '../models/default-rep-scheme-by-category';
@@ -14,7 +15,7 @@ import { ExerciseTableRowService } from '../services/exercise-table-row.service'
   selector: '[category-select]',
   standalone: true,
 })
-export class CategorySelectDirective {
+export class CategorySelectDirective extends InteractiveElementDirective {
   /**
    * Constant representing the placeholder category option.
    * Used to identify when no actual category is selected.
@@ -22,24 +23,23 @@ export class CategorySelectDirective {
   private readonly PLACEHOLDER_CATEGORY = '- Bitte Auswählen -';
 
   constructor(
-    protected autoSaveService: AutoSaveService,
-    protected formService: FormService,
+    protected override autoSaveService: AutoSaveService,
+    protected override formService: FormService,
     private exerciseTableRowService: ExerciseTableRowService,
     private exerciseDataService: ExerciseDataService,
-  ) {}
+  ) {
+    super(autoSaveService, formService);
+  }
 
   /**
    * Tracks changes to the category selection and updates the input fields accordingly.
    */
-  @HostListener('input', ['$event'])
-  onInputChange(event: Event): void {
-    this.formService.trackChange(event);
-
+  @HostListener('change', ['$event'])
+  override onChange(event: Event): void {
     const categorySelector = event.target as HTMLSelectElement;
-
     this.updateInputValues(categorySelector, this.exerciseDataService.getDefaultRepSchemeByCategory());
 
-    this.autoSaveService.save();
+    super.onChange(event);
   }
 
   /**
@@ -81,6 +81,7 @@ export class CategorySelectDirective {
    */
   private resetInputs(exerciseSelect: HTMLSelectElement): void {
     const inputs: ExerciseInputs = this.exerciseTableRowService.getInputsByElement(exerciseSelect);
+    console.log('🚀 ~ CategorySelectDirective ~ resetInputs ~ inputs:', inputs);
 
     this.forEachInput(inputs, (input) => (input.value = ''));
   }
