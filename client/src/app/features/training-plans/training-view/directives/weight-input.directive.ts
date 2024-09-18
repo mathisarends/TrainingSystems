@@ -5,41 +5,28 @@ import { ExerciseDataService } from '../exercise-data.service';
 import { EstMaxService } from '../services/estmax.service';
 import { ExerciseTableRowService } from '../services/exercise-table-row.service';
 import { PauseTimeService } from '../services/pause-time.service';
+import { AbstractDoubleClickDirective } from './abstract-double-click.directive';
 
 /**
- * Directive that extends the InteractiveElementDirective to add additional functionality.
+ * Directive that extends the AbstractDoubleClickDirective
+ * to add additional functionality specific to weight input handling.
  */
 @Directive({
   selector: '[weightInput]',
   standalone: true,
 })
-export class WeightInputDirective implements AfterViewInit {
-  /**
-   * Reference to the host input element.
-   */
-  private inputElement!: HTMLInputElement;
-
-  /**
-   * Stores the timestamp of the last click event.
-   * Used to calculate the time difference between clicks for double-click detection.
-   */
-  private lastClickTime: number = 0;
-
-  /**
-   * Time threshold (in milliseconds) to detect a double-click event.
-   * If two clicks occur within this time frame, it is considered a double-click.
-   */
-  private doubleClickThreshold: number = 300;
-
+export class WeightInputDirective extends AbstractDoubleClickDirective implements AfterViewInit {
   constructor(
     private elementRef: ElementRef,
-    private autoSaveService: AutoSaveService,
-    private formService: FormService,
     private exerciseTableRowService: ExerciseTableRowService,
     private exerciseDataService: ExerciseDataService,
     private pauseTimeService: PauseTimeService,
     private estMaxService: EstMaxService,
-  ) {}
+    protected override autoSaveService: AutoSaveService,
+    protected override formService: FormService,
+  ) {
+    super(autoSaveService, formService);
+  }
 
   /**
    * Lifecycle hook that runs after the view is initialized.
@@ -71,7 +58,7 @@ export class WeightInputDirective implements AfterViewInit {
    */
   @HostListener('blur', ['$event.target'])
   handleBlurEvent(): void {
-    const weightValues = this.parseWeightInputValues();
+    const weightValues = this.parseInputValues();
     const amountOfSets = this.getAmountOfSets();
 
     const setsFinished = weightValues.length === amountOfSets;
@@ -85,7 +72,7 @@ export class WeightInputDirective implements AfterViewInit {
   }
 
   @HostListener('change', ['$event'])
-  startPauseTimert(event: Event): void {
+  startPauseTimer(event: Event): void {
     const categoryValue = this.exerciseTableRowService.getExerciseCategorySelectorByElement(this.inputElement).value;
     const pauseTime = this.exerciseDataService.getExerciseData().categoryPauseTimes[categoryValue];
 
@@ -107,8 +94,8 @@ export class WeightInputDirective implements AfterViewInit {
    * On double-click, the last entered weight value is duplicated to fill in
    * the remaining sets, if any sets are left unfilled.
    */
-  private onDoubleClick(): void {
-    const weightValues = this.parseWeightInputValues();
+  protected onDoubleClick(): void {
+    const weightValues = this.parseInputValues(); // Using inherited method
     const amountOfSets = this.getAmountOfSets();
 
     const isSetLeft = weightValues.length < amountOfSets;
@@ -116,7 +103,7 @@ export class WeightInputDirective implements AfterViewInit {
       return;
     }
 
-    this.duplicateLastWeightInput(weightValues);
+    this.duplicateLastInput(weightValues); // Using inherited method
 
     // Dismiss the keyboard on mobile devices by removing focus from the input element
     this.inputElement.blur();
@@ -131,27 +118,11 @@ export class WeightInputDirective implements AfterViewInit {
   }
 
   /**
-   * Duplicates the last entered weight input to fill any remaining sets.
-   */
-  private duplicateLastWeightInput(weightValues: number[]): void {
-    const lastWeightInput = weightValues[weightValues.length - 1];
-    this.inputElement.value = `${this.inputElement.value};${lastWeightInput}`;
-  }
-
-  /**
    * Calculates the rounded average weight from the entered values.
    * The rounding is done to the nearest 2.5 units (standard for weight increments).
    */
   private calculateRoundedWeight(weightValues: number[]): number {
     const averageWeight = weightValues.reduce((acc, curr) => acc + curr, 0) / weightValues.length;
     return Math.round(averageWeight / 2.5) * 2.5;
-  }
-
-  /**
-   * Parses the weight input values entered in the input field.
-   * The values are expected to be separated by semicolons (';') and may include commas (',') which are replaced with dots ('.') for parsing.
-   */
-  private parseWeightInputValues(): number[] {
-    return this.inputElement.value.split(';').map((value) => parseFloat(value.trim().replace(',', '.')));
   }
 }
