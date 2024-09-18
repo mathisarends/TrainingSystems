@@ -74,26 +74,7 @@ export class CategorySelectDirective {
     tableRow: Element,
     category: string,
   ): void {
-    this.renderer.setStyle(categorySelector, 'opacity', '1');
-
-    const selectedCategoryIndex = this.getSelectedCategoryIndex(category);
-    exerciseNameSelectors.forEach((selector, index) => {
-      const isSelected = index === selectedCategoryIndex;
-      this.setSelectorVisibility(selector, isSelected);
-    });
-
-    // Update the input values based on the selected category
     this.updateInputValues(tableRow, category, this.exerciseDataService.getDefaultRepSchemeByCategory());
-  }
-
-  private getSelectedCategoryIndex(category: string): number {
-    return this.exerciseDataService.getExerciseCategories().indexOf(category);
-  }
-
-  private setSelectorVisibility(selector: HTMLSelectElement, isVisible: boolean): void {
-    this.renderer.setStyle(selector, 'display', isVisible ? 'block' : 'none');
-    this.renderer.setStyle(selector, 'opacity', isVisible ? '1' : '0');
-    selector.disabled = !isVisible;
   }
 
   private updateInputValues(
@@ -101,14 +82,7 @@ export class CategorySelectDirective {
     category: string,
     defaultRepSchemeByCategory: RepSchemeByCategory,
   ): void {
-    const exerciseNameSelectorWrappers = Array.from(tableRow.querySelectorAll('.exercise-name-selector'));
-    const exerciseNameSelectors = exerciseNameSelectorWrappers.map(
-      (wrapper) => wrapper.querySelector('select') as HTMLSelectElement,
-    );
-
-    const exerciseSelect = Array.from(exerciseNameSelectors).find(
-      (selector) => window.getComputedStyle(selector).opacity === '1' && !selector.disabled,
-    )!;
+    const exerciseNameSelector = tableRow.querySelector('.exercise-name-selector select') as HTMLSelectElement;
 
     const appInputWrappers = Array.from(tableRow.querySelectorAll('app-input'));
     const inputElements = appInputWrappers.flatMap((input) => Array.from(input.querySelectorAll('input')));
@@ -126,16 +100,16 @@ export class CategorySelectDirective {
         targetRPEInput.value = defaultValues.defaultRPE.toString();
       }
     } else {
-      this.resetInputs(exerciseSelect);
-      this.updateFormService(exerciseSelect, true);
+      this.resetInputs(exerciseNameSelector);
+      this.updateFormService(exerciseNameSelector);
       return;
     }
 
-    this.updateFormService(exerciseSelect, false);
+    this.updateFormService(exerciseNameSelector);
   }
 
   private resetInputs(exerciseSelect: HTMLSelectElement): void {
-    const inputs: ExerciseInputs = this.exerciseTableRowService.getInputsByCategorySelector(exerciseSelect, true);
+    const inputs: ExerciseInputs = this.exerciseTableRowService.getInputsByCategorySelector(exerciseSelect);
 
     for (const key in inputs) {
       if (inputs.hasOwnProperty(key)) {
@@ -145,8 +119,8 @@ export class CategorySelectDirective {
     }
   }
 
-  private updateFormService(exerciseSelect: HTMLSelectElement, resetMode: boolean): void {
-    const inputs: ExerciseInputs = this.exerciseTableRowService.getInputsByCategorySelector(exerciseSelect, resetMode);
+  private updateFormService(exerciseSelect: HTMLSelectElement): void {
+    const inputs: ExerciseInputs = this.exerciseTableRowService.getInputsByCategorySelector(exerciseSelect);
 
     for (const key in inputs) {
       if (inputs.hasOwnProperty(key)) {

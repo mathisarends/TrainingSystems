@@ -60,15 +60,12 @@
               />
             </td>
             <td data-cell="Exercise">
-              @for (category of exerciseData.exerciseCategories; track category) {
-                <app-dropdown
-                  name="day{{ trainingDayIndex }}_exercise{{ k }}_exercise_name"
-                  class="exercise-name-selector"
-                  [options]="exerciseData.categorizedExercises[category]"
-                  [selectedValue]="exercise.exercise"
-                  [style.display]="exercise.category === category ? 'block' : 'none'"
-                />
-              }
+              <app-dropdown
+                name="day{{ trainingDayIndex }}_exercise{{ k }}_exercise_name"
+                class="exercise-name-selector"
+                [options]="exerciseData.categorizedExercises[exercise.category]"
+                [(selectedValue)]="exercise.exercise"
+              />
             </td>
             <td data-cell="Sets">
               <app-input

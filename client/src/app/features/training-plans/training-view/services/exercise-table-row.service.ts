@@ -81,11 +81,11 @@ export class ExerciseTableRowService {
    * @param categorySelector The HTMLSelectElement for the exercise category.
    * @returns An object containing all relevant input elements.
    */
-  getInputsByCategorySelector(categorySelector: HTMLSelectElement, resetMode = false): ExerciseInputs {
+  getInputsByCategorySelector(categorySelector: HTMLSelectElement): ExerciseInputs {
     return {
       exerciseSelect: this.findClosestElementInRow(
         categorySelector,
-        resetMode ? ExerciseTableRowInputType.EXERCISE_SELECTOR_GENERIC : ExerciseTableRowInputType.EXERCISE_SELECTOR,
+        ExerciseTableRowInputType.EXERCISE_SELECTOR_GENERIC,
       ) as HTMLSelectElement,
       setsInput: this.findClosestElementInRow(
         categorySelector,
