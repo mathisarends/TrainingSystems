@@ -67,18 +67,22 @@ export class EstMaxService {
 
     return exercise;
   }
+
   /**
-   * Calculates the estimated maximum weight based on weight, reps, and RPE.
+   * Calculates the estimated maximum weight using the Wathan formula, incorporating actual reps adjusted for RPE.
+   *
    * @param weight - The weight lifted.
    * @param reps - The number of repetitions performed.
-   * @param rpe - The rating of perceived exertion.
+   * @param rpe - The rating of perceived exertion (RPE).
    * @returns The calculated estimated max weight.
    */
   private calcEstMax(weight: number, reps: number, rpe: number): number {
     const actualReps = reps + (10 - rpe);
-    const unroundedValue = weight * (1 + 0.0333 * actualReps);
-    const roundedValue = Math.ceil(unroundedValue / 2.5) * 2.5;
-    return roundedValue;
+
+    const denominator = 48.8 + 53.8 * Math.exp(-0.075 * actualReps);
+    const unroundedValue = (weight * 100) / denominator;
+
+    return Math.ceil(unroundedValue / 2.5) * 2.5;
   }
 
   /**

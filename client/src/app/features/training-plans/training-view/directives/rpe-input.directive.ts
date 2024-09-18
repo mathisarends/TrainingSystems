@@ -85,7 +85,7 @@ export class RpeInputDirective extends AbstractDoubleClickDirective {
   }
 
   private isValidRPE(rpe: number): boolean {
-    return rpe >= this.MIN_RPE && rpe >= this.MAX_RPE;
+    return rpe >= this.MIN_RPE && rpe <= this.MAX_RPE;
   }
 
   /**

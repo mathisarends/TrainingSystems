@@ -38,11 +38,9 @@ export class WeightInputDirective extends AbstractDoubleClickDirective implement
       this.inputElement.value = roundedWeight.toString();
 
       this.formService.addChange(this.inputElement.name, this.inputElement.value);
-
-      this.estMaxService.calculateMaxAfterInputChange(event.target as HTMLInputElement);
-
-      this.autoSaveService.save();
     }
+    this.autoSaveService.save();
+    this.estMaxService.calculateMaxAfterInputChange(event.target as HTMLInputElement);
 
     this.pauseTimeService.startPauseTimer(pauseTime);
   }
