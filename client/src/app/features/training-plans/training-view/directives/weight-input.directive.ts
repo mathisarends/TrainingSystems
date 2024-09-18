@@ -98,10 +98,8 @@ export class WeightInputDirective implements AfterViewInit {
     const categoryValue = this.exerciseTableRowService.getExerciseCategorySelectorByElement(this.inputElement).value;
     const pauseTime = this.exerciseDataService.getExerciseData().categoryPauseTimes[categoryValue];
 
-    console.log('here');
-
     this.pauseTimeService.startPauseTimer(pauseTime);
-    this.estMaxService.calculateMaxAfterInputChange(event);
+    this.estMaxService.calculateMaxAfterInputChange(event.target as HTMLInputElement);
   }
 
   /**

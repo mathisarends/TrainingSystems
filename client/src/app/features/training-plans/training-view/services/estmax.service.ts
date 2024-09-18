@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { FormService } from '../../../../core/form.service';
-import { InteractiveElement } from '../../../../shared/types/interactive-element.types';
 import { Exercise } from '../training-exercise';
 import { ExerciseTableRowService } from './exercise-table-row.service';
 import { TrainingPlanDataService } from './training-plan-data.service';
@@ -15,25 +14,13 @@ export class EstMaxService {
     private trainingPlanDataService: TrainingPlanDataService,
   ) {}
 
-  /**
-   * Initializes the event listeners for weight, actual RPE, and reps inputs to calculate estimated max.
-   */
-  initializeEstMaxCalculation(): void {
-    const weightInputs = document.querySelectorAll('.weight-data-cell input');
-    const actualRpeInputs = document.querySelectorAll('.actualRPE input');
-    const repsInputs = document.querySelectorAll('.reps input');
-
-    weightInputs.forEach((input) => input.addEventListener('change', (e) => this.handleInputChange(e)));
-    actualRpeInputs.forEach((input) => input.addEventListener('change', (e) => this.handleInputChange(e)));
-    repsInputs.forEach((input) => input.addEventListener('change', (e) => this.handleInputChange(e)));
-  }
-
-  calculateMaxAfterInputChange(event: Event) {
-    const target = event.target as InteractiveElement;
-    const category = this.exerciseTableRowService.getExerciseCategorySelectorByElement(target).value;
+  calculateMaxAfterInputChange(inputElement: HTMLInputElement) {
+    const category = this.exerciseTableRowService.getExerciseCategorySelectorByElement(inputElement).value;
+    const exerciseData = this.getExerciseFromTargetNameAttribut(inputElement.name);
 
     if (this.shouldCalculateEstMaxForCategory(category)) {
-      const { weightInput, setsInput, rpeInput, estMaxInput } = this.exerciseTableRowService.getInputsByElement(target);
+      const { exerciseSelect, weightInput, setsInput, rpeInput, estMaxInput } =
+        this.exerciseTableRowService.getInputsByElement(inputElement);
 
       const weight = parseFloat(weightInput.value);
       const sets = parseFloat(setsInput.value);
@@ -42,12 +29,15 @@ export class EstMaxService {
       if (weight && sets && rpe) {
         const estMax = this.calcEstMax(weight, sets, rpe);
         estMaxInput.value = estMax.toString();
+        exerciseData.estMax = estMax;
+
         this.formService.addChange(estMaxInput.name, estMaxInput.value);
 
         const nextExerciseCategory = weightInput
           .closest('tr')
           ?.nextElementSibling?.querySelector('.exercise-name-selector select') as HTMLSelectElement | undefined;
-        if (nextExerciseCategory && nextExerciseCategory?.ariaValueMax === category) {
+
+        if (nextExerciseCategory?.value === exerciseSelect.value) {
           const nextExerciseReps = parseFloat(
             this.exerciseTableRowService.getRepsInputByElement(nextExerciseCategory).value,
           );
@@ -58,53 +48,6 @@ export class EstMaxService {
           if (nextExerciseReps && nextExerciseRpe) {
             const backoffWeight = this.calcBackoff(nextExerciseReps, nextExerciseRpe, estMax);
             const nextRowWeightInput = this.exerciseTableRowService.getWeightInputByElement(nextExerciseCategory);
-            nextRowWeightInput.placeholder = backoffWeight.toString();
-          }
-        }
-      }
-    }
-  }
-
-  // um die daten im UI zu aktualisieren müssen wir eignetlich auf der Training Plan Data im Modul über einen Service arbeiten
-
-  /**
-   * Handles input change events to trigger estimated max calculation.
-   * @param event - The input change event.
-   */
-  private handleInputChange(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    const exerciseData = this.getExerciseFromTargetNameAttribut(target.name);
-
-    const category = this.exerciseTableRowService.getExerciseCategorySelectorByElement(target).value;
-    const parentRow = target.closest('tr')!;
-
-    if (this.shouldCalculateEstMaxForCategory(category)) {
-      const weight = parseFloat(this.exerciseTableRowService.getWeightInputByElement(target).value);
-      const reps = parseInt(this.exerciseTableRowService.getRepsInputByElement(target).value);
-      const rpe = parseFloat(this.exerciseTableRowService.getActualRPEByElement(target).value);
-      if (weight > 0 && reps && rpe) {
-        const estMax = this.calcEstMax(weight, reps, rpe);
-        const estMaxInput = this.exerciseTableRowService.getEstMaxByElement(target);
-
-        estMaxInput.value = estMax.toString();
-        exerciseData.estMax = estMax;
-
-        const nextRow = parentRow.nextElementSibling as HTMLElement;
-        const exercise = (
-          parentRow.querySelector('.exercise-name-selector:not([style*="display: none"])') as HTMLInputElement
-        )?.value;
-        const nextExercise = (
-          nextRow.querySelector('.exercise-name-selector:not([style*="display: none"])') as HTMLInputElement
-        )?.value;
-        const nextWeightInputValue = this.exerciseTableRowService.getWeightInputByElement(nextRow).value;
-
-        if (nextRow && exercise === nextExercise && estMax && !nextWeightInputValue) {
-          const nextRowReps = parseInt(this.exerciseTableRowService.getRepsInputByElement(nextRow).value);
-          const nextRowRPE = parseFloat(this.exerciseTableRowService.getPlanedRpeByElement(nextRow).value);
-
-          if (nextRowReps && nextRowRPE) {
-            const backoffWeight = this.calcBackoff(nextRowReps, nextRowRPE, estMax);
-            const nextRowWeightInput = nextRow.querySelector('.weight') as HTMLInputElement;
             nextRowWeightInput.placeholder = backoffWeight.toString();
           }
         }

@@ -1,6 +1,7 @@
 import { Directive, ElementRef, HostListener } from '@angular/core';
 import { FormService } from '../../../../core/form.service';
 import { InteractiveElementService } from '../../../../shared/service/interactive-element.service';
+import { EstMaxService } from '../services/estmax.service';
 import { ExerciseTableRowService } from '../services/exercise-table-row.service';
 
 /**
@@ -36,6 +37,7 @@ export class RpeInputDirective {
     private formService: FormService,
     private elementRef: ElementRef,
     private exerciseTableRowService: ExerciseTableRowService,
+    private estMaxService: EstMaxService,
   ) {}
 
   /**
@@ -60,6 +62,13 @@ export class RpeInputDirective {
     }
 
     this.lastClickTime = currentTime;
+  }
+
+  @HostListener('change', ['$event'])
+  onChange(event: Event): void {
+    if (this.isActualRpeInput()) {
+      this.estMaxService.calculateMaxAfterInputChange(event.target as HTMLInputElement);
+    }
   }
 
   /**
@@ -205,5 +214,9 @@ export class RpeInputDirective {
    */
   private parseInputValues(): number[] {
     return this.inputElement.value.split(';').map((value) => parseFloat(value.trim().replace(',', '.')));
+  }
+
+  private isActualRpeInput(): boolean {
+    return this.inputElement.closest('app-input')!.classList.contains('actualRPE');
   }
 }

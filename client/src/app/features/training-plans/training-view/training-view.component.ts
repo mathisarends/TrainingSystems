@@ -32,6 +32,7 @@ import { IconComponent } from '../../../shared/icon/icon.component';
 import { InteractiveElementService } from '../../../shared/service/interactive-element.service';
 import { AutoProgressionComponent } from './auto-progression/auto-progression.component';
 import { CategorySelectDirective } from './directives/category-select.directive';
+import { RepInputDirective } from './directives/reps-input.directive';
 import { RpeInputDirective } from './directives/rpe-input.directive';
 import { WeightInputDirective } from './directives/weight-input.directive';
 import { ExerciseDataService } from './exercise-data.service';
@@ -43,6 +44,7 @@ import { TrainingPlanDataService } from './services/training-plan-data.service';
 import { TrainingViewNavigationService } from './training-view-navigation.service';
 import { TrainingViewService } from './training-view-service';
 import { TrainingPlanDto } from './trainingPlanDto';
+
 /**
  * Component to manage and display the training view.
  * Handles loading of training data, swipe gestures, and form submissions.
@@ -64,6 +66,7 @@ import { TrainingPlanDto } from './trainingPlanDto';
     IconComponent,
     InputComponent,
     DropdownComponent,
+    RepInputDirective,
   ],
   providers: [TrainingViewService, FocusService, TrainingPlanDataService, EstMaxService],
   templateUrl: './training-view.component.html',
@@ -146,8 +149,6 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
     if (this.browserCheckService.isBrowser() && !this.automationContextInitialized) {
       if (this.dataViewLoaded.getValue() && this.trainingTable) {
         this.initializeSwipeListener();
-
-        this.estMaxService.initializeEstMaxCalculation();
 
         this.automationContextInitialized = true;
       }

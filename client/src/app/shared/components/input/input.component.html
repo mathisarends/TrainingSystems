@@ -29,6 +29,21 @@
     />
   }
 
+  @case ('repInputDirective') {
+    <input
+      repInputDirective
+      type="type()"
+      class="transparent-input"
+      [name]="name()"
+      [placeholder]="placeholder()"
+      [value]="value()"
+      [ngClass]="{
+        'text-left': mobileDetectionService.isMobileDevice,
+        'text-center': !mobileDetectionService.isMobileDevice && alignText() === 'center',
+      }"
+    />
+  }
+
   @case ('rpeInputDirective') {
     <input
       rpeInputDirective

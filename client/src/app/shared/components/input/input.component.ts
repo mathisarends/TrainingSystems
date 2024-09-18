@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, input, output } from '@angular/core';
+import { RepInputDirective } from '../../../features/training-plans/training-view/directives/reps-input.directive';
 import { RpeInputDirective } from '../../../features/training-plans/training-view/directives/rpe-input.directive';
 import { WeightInputDirective } from '../../../features/training-plans/training-view/directives/weight-input.directive';
 import { MobileDeviceDetectionService } from '../../../platform/mobile-device-detection.service';
@@ -8,7 +9,7 @@ import { InteractiveElementDirective } from '../../directives/interactive-elemen
 @Component({
   selector: 'app-input',
   standalone: true,
-  imports: [CommonModule, InteractiveElementDirective, WeightInputDirective, RpeInputDirective],
+  imports: [CommonModule, InteractiveElementDirective, WeightInputDirective, RpeInputDirective, RepInputDirective],
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss',
 })
@@ -57,9 +58,9 @@ export class InputComponent<T extends string | number> {
    * - 'weightInputDirective': Adds weight input specific behavior.
    * By default, the 'interactiveElementDirective' is applied.
    */
-  directiveUsed = input<'interactiveElementDirective' | 'weightInputDirective' | 'rpeInputDirective'>(
-    'interactiveElementDirective',
-  );
+  directiveUsed = input<
+    'interactiveElementDirective' | 'weightInputDirective' | 'rpeInputDirective' | 'repInputDirective'
+  >('interactiveElementDirective');
 
   /**
    * Handles the `change` event from the input element.

@@ -80,7 +80,13 @@
               />
             </td>
             <td data-cell="Reps">
-              <app-input class="reps" [type]="'number'" [name]="namePrefix + 'reps'" [value]="exercise.reps" />
+              <app-input
+                [directiveUsed]="'repInputDirective'"
+                class="reps"
+                [type]="'number'"
+                [name]="namePrefix + 'reps'"
+                [value]="exercise.reps"
+              />
             </td>
             <td class="weight-data-cell" data-cell="Weight">
               @let exerciseThisWeek = exercise?.exercise;
