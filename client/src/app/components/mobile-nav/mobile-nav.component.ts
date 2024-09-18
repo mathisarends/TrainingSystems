@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { IconComponent } from '../../shared/icon/icon.component';
+import { Router } from '@angular/router';
 import { IconName } from '../../shared/icon/icon-name';
+import { IconComponent } from '../../shared/icon/icon.component';
 
 @Component({
   selector: 'app-mobile-nav',
@@ -11,4 +12,21 @@ import { IconName } from '../../shared/icon/icon-name';
 })
 export class MobileNavComponent {
   protected IconName = IconName;
+
+  protected activeItem: string = 'home';
+
+  constructor(private router: Router) {}
+
+  // Method to set the active item
+  setActive(item: string): void {
+    this.activeItem = item;
+
+    if (item === 'home') {
+      this.router.navigate(['']);
+    } else if (item === 'profile') {
+      this.router.navigate(['profile']);
+    } else if (item === 'statistics') {
+      this.router.navigate(['user/usage']);
+    }
+  }
 }

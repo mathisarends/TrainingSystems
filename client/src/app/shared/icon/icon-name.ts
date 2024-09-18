@@ -20,4 +20,6 @@ export enum IconName {
   ARROW_RIGHT = 'arrow-right',
   MAIL = 'mail',
   PLAY = 'play',
+  HOME = 'home',
+  CHEVRON_LEFT = 'chevron-left',
 }
