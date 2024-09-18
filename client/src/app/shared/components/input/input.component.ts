@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, input, output } from '@angular/core';
-import { RepInputDirective } from '../../../features/training-plans/training-view/directives/reps-input.directive';
+import { RepInputDirective } from '../../../features/training-plans/training-view/directives/rep-input.directive';
 import { RpeInputDirective } from '../../../features/training-plans/training-view/directives/rpe-input.directive';
 import { WeightInputDirective } from '../../../features/training-plans/training-view/directives/weight-input.directive';
 import { MobileDeviceDetectionService } from '../../../platform/mobile-device-detection.service';

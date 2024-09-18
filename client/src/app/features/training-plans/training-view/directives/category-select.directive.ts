@@ -1,6 +1,6 @@
 import { Directive, HostListener } from '@angular/core';
 import { FormService } from '../../../../core/form.service';
-import { InteractiveElementService } from '../../../../shared/service/interactive-element.service';
+import { AutoSaveService } from '../../../../shared/service/auto-save.service';
 import { ExerciseDataService } from '../exercise-data.service';
 import { RepSchemeByCategory } from '../models/default-rep-scheme-by-category';
 import { ExerciseInputs } from '../models/exercise-inputs';
@@ -22,20 +22,11 @@ export class CategorySelectDirective {
   private readonly PLACEHOLDER_CATEGORY = '- Bitte Auswählen -';
 
   constructor(
-    protected interactiveElementService: InteractiveElementService,
+    protected autoSaveService: AutoSaveService,
     protected formService: FormService,
     private exerciseTableRowService: ExerciseTableRowService,
     private exerciseDataService: ExerciseDataService,
   ) {}
-
-  /**
-   * Host listener for the 'focus' event on the target element.
-   * Tracks the focus of the category selector.
-   */
-  @HostListener('focus', ['$event.target'])
-  onFocus(target: HTMLSelectElement): void {
-    this.interactiveElementService.focus(target.value);
-  }
 
   /**
    * Tracks changes to the category selection and updates the input fields accordingly.
@@ -48,7 +39,7 @@ export class CategorySelectDirective {
 
     this.updateInputValues(categorySelector, this.exerciseDataService.getDefaultRepSchemeByCategory());
 
-    this.interactiveElementService.triggerChange(categorySelector.value);
+    this.autoSaveService.save();
   }
 
   /**

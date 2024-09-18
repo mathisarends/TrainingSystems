@@ -29,10 +29,10 @@ import { ToastService } from '../../../shared/components/toast/toast.service';
 import { InteractiveElementDirective } from '../../../shared/directives/interactive-element.directive';
 import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
-import { InteractiveElementService } from '../../../shared/service/interactive-element.service';
+import { AutoSaveService } from '../../../shared/service/auto-save.service';
 import { AutoProgressionComponent } from './auto-progression/auto-progression.component';
 import { CategorySelectDirective } from './directives/category-select.directive';
-import { RepInputDirective } from './directives/reps-input.directive';
+import { RepInputDirective } from './directives/rep-input.directive';
 import { RpeInputDirective } from './directives/rpe-input.directive';
 import { WeightInputDirective } from './directives/weight-input.directive';
 import { ExerciseDataService } from './exercise-data.service';
@@ -95,13 +95,12 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
     private route: ActivatedRoute,
     private trainingViewService: TrainingViewService,
     private formService: FormService,
-    private estMaxService: EstMaxService,
     private toastService: ToastService,
     private navigationService: TrainingViewNavigationService,
     private swipeService: SwipeService,
     private modalService: ModalService,
     private browserCheckService: BrowserCheckService,
-    private interactiveElementService: InteractiveElementService,
+    private autoSaveService: AutoSaveService,
     private exerciseDataService: ExerciseDataService,
     private focusService: FocusService,
     private destroyRef: DestroyRef,
@@ -124,7 +123,7 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
       this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
     });
 
-    this.interactiveElementService.inputChanged$
+    this.autoSaveService.inputChanged$
       .pipe(takeUntilDestroyed(this.destroyRef)) // Automatically unsubscribe
       .subscribe(() => {
         this.saveTrainingData();

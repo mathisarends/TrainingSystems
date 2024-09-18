@@ -1,6 +1,6 @@
 import { AfterViewInit, Directive, ElementRef, HostListener } from '@angular/core';
 import { FormService } from '../../../../core/form.service';
-import { InteractiveElementService } from '../../../../shared/service/interactive-element.service';
+import { AutoSaveService } from '../../../../shared/service/auto-save.service';
 import { ExerciseDataService } from '../exercise-data.service';
 import { EstMaxService } from '../services/estmax.service';
 import { ExerciseTableRowService } from '../services/exercise-table-row.service';
@@ -33,7 +33,7 @@ export class WeightInputDirective implements AfterViewInit {
 
   constructor(
     private elementRef: ElementRef,
-    private interactiveElementService: InteractiveElementService,
+    private autoSaveService: AutoSaveService,
     private formService: FormService,
     private exerciseTableRowService: ExerciseTableRowService,
     private exerciseDataService: ExerciseDataService,
@@ -66,15 +66,6 @@ export class WeightInputDirective implements AfterViewInit {
   }
 
   /**
-   * Handles the focus event of the interactive element.
-   * When the element gains focus, its value is stored by the InteractiveElementService.
-   */
-  @HostListener('focus', ['$event.target'])
-  handleFocusEvent(): void {
-    this.interactiveElementService.focus(this.inputElement.value);
-  }
-
-  /**
    * Handles the blur event of the interactive element.
    * When the element loses focus, its value is compared to the stored value to detect changes.
    */
@@ -89,7 +80,7 @@ export class WeightInputDirective implements AfterViewInit {
       this.inputElement.value = roundedWeight.toString();
 
       this.formService.addChange(this.inputElement.name, this.inputElement.value);
-      this.interactiveElementService.triggerChange(this.inputElement.value);
+      this.autoSaveService.save();
     }
   }
 

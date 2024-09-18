@@ -25,6 +25,7 @@ export class EstMaxService {
       const weight = parseFloat(weightInput.value);
       const sets = parseFloat(setsInput.value);
       const rpe = parseFloat(rpeInput.value);
+      console.log('🚀 ~ EstMaxService ~ calculateMaxAfterInputChange ~ rpe:', rpe);
 
       if (weight && sets && rpe) {
         const estMax = this.calcEstMax(weight, sets, rpe);

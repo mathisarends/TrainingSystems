@@ -1,7 +1,6 @@
 import { Directive, HostListener } from '@angular/core';
 import { FormService } from '../../core/form.service';
-import { InteractiveElementService } from '../service/interactive-element.service';
-import { InteractiveElement } from '../types/interactive-element.types';
+import { AutoSaveService } from '../service/auto-save.service';
 
 /**
  * Directive to handle interactive form elements by tracking focus, blur, and input events.
@@ -13,7 +12,7 @@ import { InteractiveElement } from '../types/interactive-element.types';
 })
 export class InteractiveElementDirective {
   constructor(
-    protected interactiveElementService: InteractiveElementService,
+    protected autoSaveService: AutoSaveService,
     protected formService: FormService,
   ) {}
 
@@ -27,7 +26,6 @@ export class InteractiveElementDirective {
   onChange(event: Event): void {
     this.formService.trackChange(event);
 
-    const elementValue = (event.target as InteractiveElement).value;
-    this.interactiveElementService.triggerChange(elementValue);
+    this.autoSaveService.save();
   }
 }

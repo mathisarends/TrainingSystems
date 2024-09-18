@@ -1,6 +1,7 @@
 import { Directive, ElementRef, HostListener } from '@angular/core';
 import { FormService } from '../../../../core/form.service';
-import { InteractiveElementService } from '../../../../shared/service/interactive-element.service';
+import { InteractiveElementDirective } from '../../../../shared/directives/interactive-element.directive';
+import { AutoSaveService } from '../../../../shared/service/auto-save.service';
 import { EstMaxService } from '../services/estmax.service';
 import { ExerciseTableRowService } from '../services/exercise-table-row.service';
 
@@ -11,7 +12,7 @@ import { ExerciseTableRowService } from '../services/exercise-table-row.service'
   selector: '[rpeInputDirective]',
   standalone: true,
 })
-export class RpeInputDirective {
+export class RpeInputDirective extends InteractiveElementDirective {
   private readonly MIN_RPE = 5;
   private readonly MAX_RPE = 10;
 
@@ -33,12 +34,14 @@ export class RpeInputDirective {
   private doubleClickThreshold: number = 300;
 
   constructor(
-    private interactiveElementService: InteractiveElementService,
-    private formService: FormService,
+    protected override autoSaveService: AutoSaveService,
+    protected override formService: FormService,
     private elementRef: ElementRef,
     private exerciseTableRowService: ExerciseTableRowService,
     private estMaxService: EstMaxService,
-  ) {}
+  ) {
+    super(autoSaveService, formService);
+  }
 
   /**
    * Lifecycle hook that runs after the view is initialized.
@@ -65,10 +68,22 @@ export class RpeInputDirective {
   }
 
   @HostListener('change', ['$event'])
-  onChange(event: Event): void {
+  override onChange(event: Event): void {
+    if (!this.inputElement.value) return;
+
+    const rpeValues = this.parseRPEInput(this.inputElement.value);
+
+    if (rpeValues.length === 1) {
+      this.validateSingleRPE(this.inputElement);
+    } else {
+      this.validateMultipleRPEs(this.inputElement, rpeValues);
+    }
+
     if (this.isActualRpeInput()) {
       this.estMaxService.calculateMaxAfterInputChange(event.target as HTMLInputElement);
     }
+
+    super.onChange(event);
   }
 
   /**
@@ -92,50 +107,6 @@ export class RpeInputDirective {
   }
 
   /**
-   * Handles the focus event of the interactive element.
-   * When the element gains focus, its value is stored by the InteractiveElementService.
-   *
-   * @param target - The HTML element that triggered the focus event.
-   */
-  @HostListener('focus', ['$event.target'])
-  handleFocusEvent(rpeInput: HTMLInputElement): void {
-    this.interactiveElementService.focus(rpeInput.value);
-  }
-
-  /**
-   * Handles the blur event of the interactive element.
-   * When the element loses focus, its value is compared to the stored value to detect changes.
-   *
-   * @param target - The HTML element that triggered the blur event.
-   */
-  @HostListener('blur', ['$event.target'])
-  handleBlurEvent(rpeInput: HTMLInputElement): void {
-    if (!rpeInput.value) return;
-
-    const rpeValues = this.parseRPEInput(rpeInput.value);
-
-    if (rpeValues.length === 1) {
-      this.validateSingleRPE(rpeValues[0], rpeInput);
-    } else {
-      this.validateMultipleRPEs(rpeInput, rpeValues);
-    }
-
-    this.formService.addChange(rpeInput.name, rpeInput.value);
-
-    this.interactiveElementService.triggerChange(rpeInput.value);
-  }
-
-  /**
-   * Handles the input event of the interactive element.
-   * When the value of the element changes, the new value is tracked by the FormService.
-   *
-   * @param event - The input event triggered by the element.
-   */
-  @HostListener('input', ['$event'])
-  handleInputChange(event: Event): void {
-    this.formService.trackChange(event);
-  }
-  /**
    * Parses the RPE input string and returns an array of numbers.
    * Replaces commas with dots and splits the input by semicolons.
    * @param rpeString - The RPE input string.
@@ -155,7 +126,9 @@ export class RpeInputDirective {
    * @param rpe - The RPE value to validate.
    * @param rpeInput - The HTML input element containing the RPE value.
    */
-  private validateSingleRPE(rpe: number, rpeInput: HTMLInputElement): void {
+  private validateSingleRPE(rpeInput: HTMLInputElement): void {
+    const rpe = Number(this.inputElement.value);
+
     if (rpe < this.MIN_RPE) {
       rpeInput.value = this.MIN_RPE.toString();
     } else if (rpe > this.MAX_RPE) {
@@ -175,8 +148,8 @@ export class RpeInputDirective {
     const setInput = this.exerciseTableRowService.getSetInputByElement(rpeInput);
 
     if (numbers.length === Number(setInput.value)) {
-      const averageRPE = this.calculateAverageRPE(numbers);
-      this.validateSingleRPE(averageRPE, rpeInput);
+      this.inputElement.value = this.calculateAverageRPE(numbers).toString();
+      this.validateSingleRPE(rpeInput);
     }
   }
 
