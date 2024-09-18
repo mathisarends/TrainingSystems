@@ -60,7 +60,7 @@ export class CategorySelectDirective {
     defaultRepSchemeByCategory: RepSchemeByCategory,
   ): void {
     const { exerciseSelect, setsInput, repsInput, targetRPEInput } =
-      this.exerciseTableRowService.getInputsByCategorySelector(categorySelector);
+      this.exerciseTableRowService.getInputsByElement(categorySelector);
 
     const category = categorySelector.value;
 
@@ -89,7 +89,7 @@ export class CategorySelectDirective {
    * Resets the values of input fields related to the selected exercise.
    */
   private resetInputs(exerciseSelect: HTMLSelectElement): void {
-    const inputs: ExerciseInputs = this.exerciseTableRowService.getInputsByCategorySelector(exerciseSelect);
+    const inputs: ExerciseInputs = this.exerciseTableRowService.getInputsByElement(exerciseSelect);
 
     this.forEachInput(inputs, (input) => (input.value = ''));
   }
@@ -98,7 +98,7 @@ export class CategorySelectDirective {
    * Updates the form state by adding changes for each input element in the exercise row.
    */
   private updateFormService(exerciseSelect: HTMLSelectElement): void {
-    const inputs: ExerciseInputs = this.exerciseTableRowService.getInputsByCategorySelector(exerciseSelect);
+    const inputs: ExerciseInputs = this.exerciseTableRowService.getInputsByElement(exerciseSelect);
     this.forEachInput(inputs, (input) => this.formService.addChange(input.name, input.value));
   }
 

@@ -39,6 +39,7 @@ import { ExerciseDataDTO } from './exerciseDataDto';
 import { RestTimerComponent } from './rest-timer/rest-timer.component';
 import { EstMaxService } from './services/estmax.service';
 import { FocusService } from './services/focus.service';
+import { TrainingPlanDataService } from './services/training-plan-data.service';
 import { TrainingViewNavigationService } from './training-view-navigation.service';
 import { TrainingViewService } from './training-view-service';
 import { TrainingPlanDto } from './trainingPlanDto';
@@ -64,7 +65,7 @@ import { TrainingPlanDto } from './trainingPlanDto';
     InputComponent,
     DropdownComponent,
   ],
-  providers: [TrainingViewService, FocusService],
+  providers: [TrainingViewService, FocusService, TrainingPlanDataService, EstMaxService],
   templateUrl: './training-view.component.html',
   styleUrls: ['./training-view.component.scss'],
 })
@@ -101,6 +102,7 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
     private exerciseDataService: ExerciseDataService,
     private focusService: FocusService,
     private destroyRef: DestroyRef,
+    protected trainingDataService: TrainingPlanDataService,
     protected mobileDeviceDetectionService: MobileDeviceDetectionService,
   ) {}
 
@@ -209,7 +211,7 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
     })
       .pipe(
         tap(({ trainingPlan, exerciseData }) => {
-          this.trainingPlanData = trainingPlan;
+          this.trainingDataService.trainingPlanData = trainingPlan;
 
           this.exerciseData = exerciseData;
           this.exerciseDataService.exerciseData = exerciseData;

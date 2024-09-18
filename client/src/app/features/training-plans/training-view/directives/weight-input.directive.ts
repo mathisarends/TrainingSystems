@@ -2,6 +2,7 @@ import { AfterViewInit, Directive, ElementRef, HostListener } from '@angular/cor
 import { FormService } from '../../../../core/form.service';
 import { InteractiveElementService } from '../../../../shared/service/interactive-element.service';
 import { ExerciseDataService } from '../exercise-data.service';
+import { EstMaxService } from '../services/estmax.service';
 import { ExerciseTableRowService } from '../services/exercise-table-row.service';
 import { PauseTimeService } from '../services/pause-time.service';
 
@@ -37,6 +38,7 @@ export class WeightInputDirective implements AfterViewInit {
     private exerciseTableRowService: ExerciseTableRowService,
     private exerciseDataService: ExerciseDataService,
     private pauseTimeService: PauseTimeService,
+    private estMaxService: EstMaxService,
   ) {}
 
   /**
@@ -92,11 +94,14 @@ export class WeightInputDirective implements AfterViewInit {
   }
 
   @HostListener('change', ['$event'])
-  startPauseTimert(): void {
+  startPauseTimert(event: Event): void {
     const categoryValue = this.exerciseTableRowService.getExerciseCategorySelectorByElement(this.inputElement).value;
     const pauseTime = this.exerciseDataService.getExerciseData().categoryPauseTimes[categoryValue];
 
+    console.log('here');
+
     this.pauseTimeService.startPauseTimer(pauseTime);
+    this.estMaxService.calculateMaxAfterInputChange(event);
   }
 
   /**

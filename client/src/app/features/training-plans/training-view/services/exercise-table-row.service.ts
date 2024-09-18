@@ -81,36 +81,21 @@ export class ExerciseTableRowService {
    * @param categorySelector The HTMLSelectElement for the exercise category.
    * @returns An object containing all relevant input elements.
    */
-  getInputsByCategorySelector(categorySelector: HTMLSelectElement): ExerciseInputs {
+  getInputsByElement(element: InteractiveElement): ExerciseInputs {
     return {
       exerciseSelect: this.findClosestElementInRow(
-        categorySelector,
+        element,
         ExerciseTableRowInputType.EXERCISE_SELECTOR,
       ) as HTMLSelectElement,
-      setsInput: this.findClosestElementInRow(
-        categorySelector,
-        ExerciseTableRowInputType.SETS_INPUT,
-      ) as HTMLInputElement,
-      repsInput: this.findClosestElementInRow(
-        categorySelector,
-        ExerciseTableRowInputType.REPS_INPUT,
-      ) as HTMLInputElement,
-      weightInput: this.findClosestElementInRow(
-        categorySelector,
-        ExerciseTableRowInputType.WEIGHT_INPUT,
-      ) as HTMLInputElement,
+      setsInput: this.findClosestElementInRow(element, ExerciseTableRowInputType.SETS_INPUT) as HTMLInputElement,
+      repsInput: this.findClosestElementInRow(element, ExerciseTableRowInputType.REPS_INPUT) as HTMLInputElement,
+      weightInput: this.findClosestElementInRow(element, ExerciseTableRowInputType.WEIGHT_INPUT) as HTMLInputElement,
       targetRPEInput: this.findClosestElementInRow(
-        categorySelector,
+        element,
         ExerciseTableRowInputType.TARGET_RPE_INPUT,
       ) as HTMLInputElement,
-      rpeInput: this.findClosestElementInRow(
-        categorySelector,
-        ExerciseTableRowInputType.ACTUAL_RPE_INPUT,
-      ) as HTMLInputElement,
-      estMaxInput: this.findClosestElementInRow(
-        categorySelector,
-        ExerciseTableRowInputType.EST_MAX_INPUT,
-      ) as HTMLInputElement,
+      rpeInput: this.findClosestElementInRow(element, ExerciseTableRowInputType.ACTUAL_RPE_INPUT) as HTMLInputElement,
+      estMaxInput: this.findClosestElementInRow(element, ExerciseTableRowInputType.EST_MAX_INPUT) as HTMLInputElement,
     };
   }
 
