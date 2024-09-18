@@ -53,7 +53,7 @@
                 name="day{{ trainingDayIndex }}_exercise{{ k }}_category"
                 [options]="exerciseData.exerciseCategories"
                 [directiveUsed]="'category-select'"
-                [selectedValue]="exercise.category"
+                [(selectedValue)]="exercise.category"
                 [ngStyle]="{
                   opacity: exercise.category === '- Bitte Auswählen -' || !exercise.category ? 0 : 1,
                 }"

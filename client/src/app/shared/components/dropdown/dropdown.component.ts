@@ -30,6 +30,11 @@ export class DropdownComponent {
   selectedValue = input.required<string | number>();
 
   /**
+   * Emits its value when the value is changed.
+   */
+  selectedValueChange = output<string | number>();
+
+  /**
    * The list of option that are displayed in the user interface.
    */
   options = input.required<(string | number)[]>();
@@ -46,12 +51,6 @@ export class DropdownComponent {
   directiveUsed = input<'interactiveElementDirective' | 'category-select'>('interactiveElementDirective');
 
   /**
-   * Emits the value of the selected option whenever the user changes their selection.
-   * This output is a signal-based event emitter that emits the new selected value.
-   */
-  selectionChanged = output<string>();
-
-  /**
    * Handles the `change` event from the select element.
    * Emits the new selected value through the `selectionChanged` output.
    *
@@ -59,6 +58,6 @@ export class DropdownComponent {
    */
   onChange(event: Event) {
     const newValue = (event.target as HTMLSelectElement).value;
-    this.selectionChanged.emit(newValue);
+    this.selectedValueChange.emit(newValue);
   }
 }
