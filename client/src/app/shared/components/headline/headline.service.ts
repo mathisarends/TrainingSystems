@@ -24,9 +24,8 @@ export class HeadlineService {
     if (url.includes('profile')) {
       this.title.set('profile');
     } else if (url.includes('usage')) {
-      this.title.set('Statistics');
-    } else if (url.includes('view')) {
-      console.log('here');
+      this.title.set('usage');
+    } else if (url.includes('view') || url.includes('statistics')) {
       this.isTitleLoading.set(true);
       return;
     } else {

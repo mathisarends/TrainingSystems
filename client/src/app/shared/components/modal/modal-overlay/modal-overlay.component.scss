@@ -1,11 +1,11 @@
 :host {
-  position: fixed;
+  position: absolute; /* Change from fixed to absolute */
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
+  height: 80vh; /* Adjust height as necessary */
   background-repeat: repeat;
-  z-index: 1040; /* Ensure this is below Bootstrap Modals if used */
+  z-index: 10; /* Ensure it's below the modal and above the content */
   display: flex;
   align-items: center;
   justify-content: center;

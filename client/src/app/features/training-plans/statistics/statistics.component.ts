@@ -10,6 +10,7 @@ import { PolarChartComponent } from '../../../components/charts/polar-chart/pola
 import { ChartSkeletonComponent } from '../../../components/loaders/chart-skeleton/chart-skeleton.component';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
+import { HeadlineService } from '../../../shared/components/headline/headline.service';
 import { MultiSelectComponent } from '../../../shared/components/multi-select/multi-select.component';
 import { ChartColorService } from '../training-view/services/chart-color.service';
 import { TrainingExerciseTonnageDto } from './main-exercise-tonnage-dto';
@@ -35,8 +36,6 @@ import { TrainingStatisticsService } from './training-statistics.service';
   styleUrls: ['./statistics.component.scss'],
 })
 export class StatisticsComponent implements OnInit {
-  trainingPlanTitle: string = '';
-
   dataLoaded: boolean = false;
 
   selectedExercises!: string[];
@@ -55,6 +54,7 @@ export class StatisticsComponent implements OnInit {
     private chartColorService: ChartColorService,
     private modalService: ModalService,
     private trainingStatisticService: TrainingStatisticsService,
+    private headlineService: HeadlineService,
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -123,7 +123,9 @@ export class StatisticsComponent implements OnInit {
     title: string,
   ): void {
     // Setze den Titel des Trainingsplans
-    this.trainingPlanTitle = title;
+    this.headlineService.subTitle.set('stats');
+    this.headlineService.title.set(title);
+    this.headlineService.isTitleLoading.set(false);
 
     // Setze Daten für das Liniendiagramm
     this.lineChartDatasets = Object.keys(tonnageData).map((categoryKey) => {

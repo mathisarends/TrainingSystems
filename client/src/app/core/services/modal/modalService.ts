@@ -45,7 +45,6 @@ export class ModalService {
       });
       this.appRef.attachView(this.overlayComponentRef.hostView);
       document.body.appendChild(this.overlayComponentRef.location.nativeElement);
-
       // Create the modal component
       this.modalComponentRef = createComponent(ModalComponent, {
         environmentInjector: this.environmentInjector,
@@ -119,6 +118,7 @@ export class ModalService {
     this.modalComponentRef.destroy();
 
     this.appRef.detachView(this.overlayComponentRef.hostView);
+
     this.overlayComponentRef.destroy();
   }
 }

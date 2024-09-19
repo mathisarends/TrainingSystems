@@ -25,7 +25,7 @@ body {
   background-image: url('/images/background/white-3.avif');
 }
 
-.blur-background > *:not(app-modal) {
+.blur-background .outlet-wrapper {
   filter: blur(2px);
   transition: filter 0.3s ease-in-out;
 }
