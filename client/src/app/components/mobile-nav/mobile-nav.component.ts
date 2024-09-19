@@ -26,7 +26,7 @@ export class MobileNavComponent {
     } else if (item === 'profile') {
       this.router.navigate(['profile']);
     } else if (item === 'statistics') {
-      this.router.navigate(['user/usage']);
+      this.router.navigate(['usage']);
     }
   }
 }

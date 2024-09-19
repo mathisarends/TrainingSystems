@@ -12,6 +12,7 @@
   background-color: #2e3a40; /* Dunkles Grau für die Navigationsleiste */
   border-radius: 16px 16px 0 0;
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+  transition: color 0.3s ease;
 }
 
 .nav-item {
@@ -25,7 +26,7 @@
 
 .nav-item .nav-label {
   margin-top: 5px;
-  font-size: 14px;
+  font-size: 13px;
   color: #6c757d;
 }
 

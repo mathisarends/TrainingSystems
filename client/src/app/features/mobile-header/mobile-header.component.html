@@ -1,4 +1,4 @@
-<app-circular-icon-button (clicked)="navigateToPreviousRoute()" [icon]="IconName.ArrowLeft" [iconSize]="22" />
+<app-headline [heading]="currentUrlSignal()!" [subHeading]="'TYR'" />
 
 <img
   [src]="profileService.userData?.pictureUrl || '/images/profile-placeholder.webp'"

@@ -17,8 +17,8 @@ body {
   display: flex;
   flex-direction: column;
   margin: 0;
-  /* background-image: url('/images/background/white-3.avif'); */
   background-repeat: repeat;
+  background-image: url('/images/background/white-3.avif');
 }
 
 .background-image {
@@ -31,7 +31,7 @@ body {
 }
 
 .outlet-wrapper {
-  margin-top: 1rem;
+  padding-top: 4.5rem;
   padding-inline: 7.5%;
 }
 @media screen and (max-width: 786px) {

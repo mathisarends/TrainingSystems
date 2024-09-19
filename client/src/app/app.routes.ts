@@ -2,8 +2,6 @@ import { Routes } from '@angular/router';
 
 import { ExercisesComponent } from './features/exercise-page/components/exercise/exercises.component';
 
-import { SpinnerComponent } from './shared/components/spinner/spinner.component';
-
 import { ResetPasswordComponent } from './features/auth/reset-password/reset-password.component';
 
 import { AuthGuard } from './core/guards/auth.guard';
@@ -22,9 +20,8 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'user/reset-password', component: RequestNewPasswordEmail },
   { path: 'user/reset/password/:token', component: ResetPasswordComponent },
-  { path: 'user/usage', component: UsageStatisticsComponent, canActivate: [AuthGuard] },
-  { path: 'user/ticket', component: GymTicketComponent, canActivate: [AuthGuard] },
-  { path: 'spinner', component: SpinnerComponent },
+  { path: 'usage', component: UsageStatisticsComponent, canActivate: [AuthGuard] },
+  { path: 'ticket', component: GymTicketComponent, canActivate: [AuthGuard] },
   {
     path: '',
     component: TrainingPlansComponent,
