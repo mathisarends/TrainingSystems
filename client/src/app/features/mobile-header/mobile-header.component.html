@@ -1,7 +1,15 @@
-<app-headline [heading]="currentUrlSignal()!" [subHeading]="'TYR'" />
-
-<img
-  [src]="profileService.userData?.pictureUrl || '/images/profile-placeholder.webp'"
-  alt="M"
-  class="h-100 rounded-circle"
+<app-headline
+  [heading]="headlineService.title()"
+  [showSpikeLoader]="headlineService.isTitleLoading()"
+  [subHeading]="headlineService.subTitle()"
 />
+
+@if (showAlternativeButton()) {
+  <app-circular-icon-button [icon]="IconName.CLOCK" [iconSize]="20" (clicked)="onCircularButtonClick()" />
+} @else {
+  <img
+    [src]="profileService.userData?.pictureUrl || '/images/profile-placeholder.webp'"
+    alt="M"
+    class="h-100 rounded-circle"
+  />
+}

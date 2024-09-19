@@ -4,15 +4,6 @@
   @let mobileView = mobileDeviceDetectionService.isMobileDevice;
 
   <form (submit)="onSubmit($event)" class="mt-4" id="form">
-    <div class="headline-container" [ngClass]="{ 'background-image': mobileView }">
-      <app-headline [subHeading]="subHeading" [heading]="trainingDataService.trainingPlanData.title" />
-      @if (mobileView) {
-        <div>
-          <app-icon-button [iconName]="IconName.CLOCK" (buttonClick)="switchToTimerView()" />
-        </div>
-      }
-    </div>
-
     <table #trainingTable class="table table-striped training-table responsive-table caption-top mb-4">
       <thead>
         <tr>

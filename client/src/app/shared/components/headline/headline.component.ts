@@ -2,6 +2,7 @@ import { Component, input } from '@angular/core';
 import { LoadingService } from '../../../core/loading.service';
 import { SpikeLoaderComponent } from '../loader/spike-loader/spike-loader.component';
 import { SkeletonComponent } from '../skeleton/skeleton.component';
+import { HeadlineService } from './headline.service';
 
 @Component({
   selector: 'app-headline',
@@ -15,5 +16,10 @@ export class HeadlineComponent {
 
   subHeading = input<string>('');
 
-  constructor(protected loadingService: LoadingService) {}
+  showSpikeLoader = input<boolean>(true);
+
+  constructor(
+    protected loadingService: LoadingService,
+    protected headlineService: HeadlineService,
+  ) {}
 }

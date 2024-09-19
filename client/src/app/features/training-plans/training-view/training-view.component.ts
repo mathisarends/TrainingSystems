@@ -22,6 +22,7 @@ import { SwipeService } from '../../../core/swipe.service';
 import { MobileDeviceDetectionService } from '../../../platform/mobile-device-detection.service';
 import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
 import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
+import { HeadlineService } from '../../../shared/components/headline/headline.service';
 import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
 import { InputComponent } from '../../../shared/components/input/input.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
@@ -30,6 +31,7 @@ import { InteractiveElementDirective } from '../../../shared/directives/interact
 import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
 import { AutoSaveService } from '../../../shared/service/auto-save.service';
+import { ButtonClickService } from '../../../shared/service/button-click.service';
 import { AutoProgressionComponent } from './auto-progression/auto-progression.component';
 import { CategorySelectDirective } from './directives/category-select.directive';
 import { RepInputDirective } from './directives/rep-input.directive';
@@ -106,6 +108,8 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
     private destroyRef: DestroyRef,
     protected trainingDataService: TrainingPlanDataService,
     protected mobileDeviceDetectionService: MobileDeviceDetectionService,
+    private headlineService: HeadlineService,
+    private buttonClickService: ButtonClickService
   ) {}
 
   /**
@@ -120,7 +124,13 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
 
       this.subHeading = `W${this.trainingWeekIndex + 1}D${this.trainingDayIndex + 1}`;
 
+      this.headlineService.subTitle.set(`W${this.trainingWeekIndex + 1}D${this.trainingDayIndex + 1}`);
+
       this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
+
+      this.buttonClickService.buttonClick$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+        this.switchToTimerView();
+      });
     });
 
     this.autoSaveService.inputChanged$
@@ -216,7 +226,11 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
           this.exerciseData = exerciseData;
           this.exerciseDataService.exerciseData = exerciseData;
 
-          this.title = trainingPlan?.title;
+          if (trainingPlan.title) {
+            this.title = trainingPlan.title;
+            this.headlineService.title.set(trainingPlan.title);
+            this.headlineService.isTitleLoading.set(false);
+          }
         }),
         tap(() => {
           if (this.trainingPlanData && this.exerciseData && this.title) {
