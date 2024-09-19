@@ -12,6 +12,9 @@ import { IconComponent } from '../../icon/icon.component';
 export class CircularIconButtonComponent {
   icon = input.required<IconName>();
 
+  /**
+   * Determines the size of the icon displayed in the componenet.
+   */
   iconSize = input<number>(20);
 
   /**

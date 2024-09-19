@@ -1,5 +1,8 @@
 import { Location } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter, map } from 'rxjs';
 import { CircularIconButtonComponent } from '../../shared/components/circular-icon-button/circular-icon-button.component';
 import { HeadlineComponent } from '../../shared/components/headline/headline.component';
 import { IconName } from '../../shared/icon/icon-name';
@@ -15,6 +18,14 @@ import { ProfileService } from '../profile/profileService';
 })
 export class MobileHeaderComponent {
   protected readonly IconName = IconName;
+
+  // Wäre doch eigentlich auch was für einen globalen service
+  protected readonly currentUrlSignal = toSignal(
+    inject(Router).events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+      map((event: NavigationEnd) => event.url),
+    ),
+  );
 
   constructor(
     protected profileService: ProfileService,

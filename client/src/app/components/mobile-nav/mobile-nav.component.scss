@@ -7,11 +7,11 @@
   height: 80px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem 0.75rem;
-  background-color: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
+  justify-content: space-around;
+  padding: 0.75rem 1rem;
+  background-color: #2e3a40; /* Dunkles Grau für die Navigationsleiste */
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .nav-item {
@@ -19,57 +19,30 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex: 1;
-  height: 100%;
-  color: #6c757d;
-  position: relative;
+  color: #ffffff; /* Standardfarbe für Icons und Text */
+  transition: color 0.3s;
 }
 
 .nav-item .nav-label {
   margin-top: 5px;
-  font-size: 12px;
+  font-size: 14px;
   color: #6c757d;
 }
 
-.nav-item.active .nav-label {
-  color: #007bff;
-  font-weight: bold;
+.nav-item.active .nav-label,
+.nav-item.active app-icon {
+  color: #eee; /* Gelb-Orange für aktive Icons */
 }
 
-.central {
-  position: relative;
+.navbar {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  background-color: #2e3a40; /* Passende dunkle Farbe wie im Bild */
+  padding: 10px;
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15); /* Leichter Schatten */
 }
 
-.central-icon {
-  background-color: #e91e63; /* Pinkfarbe für den zentralen Button */
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  position: absolute;
-  top: -20px; /* Schwebt über der Leiste */
-  z-index: 100;
-}
-
-.central-icon app-plus-icon {
-  color: #ffffff;
-}
-
-.navbar::after {
-  content: '';
-  display: block;
-  position: absolute;
-  bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40px;
-  height: 4px;
-  background-color: rgba(0, 0, 0, 0.1); /* Grauer Unterstrich */
-  border-radius: 2px;
+.nav-item:hover {
+  color: #007bff; /* Hover-Farbe für Icons und Text */
 }
