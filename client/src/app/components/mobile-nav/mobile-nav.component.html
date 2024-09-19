@@ -8,6 +8,11 @@
   <span class="nav-label">Statistiken</span>
 </div>
 
+<div class="nav-item" (click)="setActive('exercises')" [class.active]="activeItem === 'exercises'">
+  <app-icon [name]="IconName.DATABASE" [color]="activeItem === 'exercises' ? '#eee' : '#6c757d'" [size]="26" />
+  <span class="nav-label">Übungen</span>
+</div>
+
 <div class="nav-item" (click)="setActive('profile')" [class.active]="activeItem === 'profile'">
   <app-icon [name]="IconName.User" [color]="activeItem === 'profile' ? '#eee' : '#6c757d'" [size]="26" />
   <span class="nav-label">Profil</span>

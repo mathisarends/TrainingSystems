@@ -2,6 +2,7 @@ import { Component, DestroyRef, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
+import { LoadingService } from '../../core/loading.service';
 import { CircularIconButtonComponent } from '../../shared/components/circular-icon-button/circular-icon-button.component';
 import { HeadlineComponent } from '../../shared/components/headline/headline.component';
 import { HeadlineService } from '../../shared/components/headline/headline.service';
@@ -25,6 +26,7 @@ export class MobileHeaderComponent {
   constructor(
     protected profileService: ProfileService,
     protected headlineService: HeadlineService,
+    protected loadingService: LoadingService,
     private buttonClickService: ButtonClickService,
     private router: Router,
     private route: ActivatedRoute,

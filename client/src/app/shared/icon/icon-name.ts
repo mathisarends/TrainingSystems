@@ -25,4 +25,5 @@ export enum IconName {
   CHEVRON_LEFT = 'chevron-left',
   SEARCH = 'search',
   MIC = 'mic',
+  DATABASE = 'database',
 }
