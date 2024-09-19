@@ -7,6 +7,7 @@ import { MobileNavComponent } from './components/mobile-nav/mobile-nav.component
 import { AuthService } from './core/auth.service';
 import { BrowserCheckService } from './core/browser-check.service';
 import { RedirectService } from './core/redirect.service';
+import { MobileHeaderComponent } from './features/mobile-header/mobile-header.component';
 import { MobileDeviceDetectionService } from './platform/mobile-device-detection.service';
 import { ServiceWorkerService } from './platform/service-worker.service';
 import { SpinnerComponent } from './shared/components/spinner/spinner.component';
@@ -23,6 +24,7 @@ import { ToastComponent } from './shared/components/toast/toast.component';
     SpinnerComponent,
     LoadingProgressBarComponent,
     MobileNavComponent,
+    MobileHeaderComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],

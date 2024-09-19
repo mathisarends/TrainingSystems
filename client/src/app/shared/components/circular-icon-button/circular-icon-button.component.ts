@@ -12,6 +12,8 @@ import { IconComponent } from '../../icon/icon.component';
 export class CircularIconButtonComponent {
   icon = input.required<IconName>();
 
+  iconSize = input<number>(20);
+
   /**
    * Emits an event when the icon is clicked.
    * This output can be used to trigger actions when the user interacts with the icon.

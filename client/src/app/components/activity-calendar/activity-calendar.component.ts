@@ -38,6 +38,7 @@ export class ActivityCalendar implements OnInit, AfterViewInit {
     monthElement.nativeElement.scrollIntoView({
       behavior: 'smooth',
       block: 'center',
+      inline: 'center',
     });
   }
 
