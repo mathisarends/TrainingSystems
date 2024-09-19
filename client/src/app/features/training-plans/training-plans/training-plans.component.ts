@@ -12,6 +12,7 @@ import { AlertComponent } from '../../../shared/components/alert/alert.component
 import { CircularIconButtonComponent } from '../../../shared/components/circular-icon-button/circular-icon-button.component';
 import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
 import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
+import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component';
 import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
 import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
@@ -35,6 +36,7 @@ import { TrainingPlanService } from '../training-view/services/training-plan.ser
     SkeletonCardComponent,
     IconComponent,
     CircularIconButtonComponent,
+    SearchBarComponent,
   ],
   templateUrl: './training-plans.component.html',
   styleUrls: ['./training-plans.component.scss'],

@@ -2,9 +2,14 @@
   <div class="d-flex justify-content-between align-items-center">
     <app-headline [subHeading]="'own'" [heading]="'plans'" />
 
-    <app-circular-icon-button [icon]="IconName.PLUS" (clicked)="createNewPlan()" />
+
   </div>
 </div> -->
+
+<div class="d-flex align-items-center justify-content-between">
+  <app-search-bar />
+  <app-circular-icon-button [icon]="IconName.PLUS" (clicked)="createNewPlan()" />
+</div>
 
 @if (allTrainingPlans$ | async; as allTrainingPlans) {
   <section id="gallery">

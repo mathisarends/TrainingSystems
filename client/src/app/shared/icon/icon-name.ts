@@ -23,4 +23,6 @@ export enum IconName {
   PLAY = 'play',
   HOME = 'home',
   CHEVRON_LEFT = 'chevron-left',
+  SEARCH = 'search',
+  MIC = 'mic',
 }
