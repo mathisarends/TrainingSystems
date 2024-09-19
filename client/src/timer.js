@@ -24,8 +24,6 @@ class Timer {
       clearInterval(this.timer); // Stop any existing timer
     }
 
-    this.updateTimerDisplay(this.remainingTime);
-
     this.timer = setInterval(() => {
       if (this.remainingTime <= 0) {
         clearInterval(this.timer);
@@ -33,6 +31,8 @@ class Timer {
         return;
       }
       this.remainingTime--;
+
+      this.updateTimerDisplay(this.remainingTime);
 
       const minutes = Math.floor(this.remainingTime / 60);
       const seconds = this.remainingTime % 60;
