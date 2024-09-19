@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CircularIconButtonComponent } from '../../shared/components/circular-icon-button/circular-icon-button.component';
 import { HeadlineComponent } from '../../shared/components/headline/headline.component';
 import { IconName } from '../../shared/icon/icon-name';
 import { IconComponent } from '../../shared/icon/icon.component';
+import { ProfileService } from '../profile/profileService';
 
 @Component({
   standalone: true,
@@ -11,10 +12,8 @@ import { IconComponent } from '../../shared/icon/icon.component';
   templateUrl: 'mobile-header.component.html',
   styleUrl: 'mobile-header.component.scss',
 })
-export class MobileHeaderComponent implements OnInit {
+export class MobileHeaderComponent {
   protected readonly IconName = IconName;
 
-  constructor() {}
-
-  ngOnInit() {}
+  constructor(protected profileService: ProfileService) {}
 }

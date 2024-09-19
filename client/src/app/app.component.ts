@@ -8,6 +8,7 @@ import { AuthService } from './core/auth.service';
 import { BrowserCheckService } from './core/browser-check.service';
 import { RedirectService } from './core/redirect.service';
 import { MobileHeaderComponent } from './features/mobile-header/mobile-header.component';
+import { ProfileService } from './features/profile/profileService';
 import { MobileDeviceDetectionService } from './platform/mobile-device-detection.service';
 import { ServiceWorkerService } from './platform/service-worker.service';
 import { SpinnerComponent } from './shared/components/spinner/spinner.component';
@@ -39,6 +40,7 @@ export class AppComponent implements OnInit {
     private redirectService: RedirectService,
     private activatedRoute: ActivatedRoute,
     private authService: AuthService,
+    private profileService: ProfileService,
   ) {}
 
   ngOnInit() {
@@ -53,6 +55,8 @@ export class AppComponent implements OnInit {
 
       // called to prevent ts-warnings
       this.authService.checkAuthenticationStatus().subscribe();
+
+      this.profileService.getProfile().subscribe();
 
       if (!this.mobileDeviceDetectionService.isMobileDevice) {
         return;

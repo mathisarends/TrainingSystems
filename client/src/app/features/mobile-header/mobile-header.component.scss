@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 2rem;
+  height: 2.5rem;
 }
 
 .title-container {
@@ -17,9 +17,10 @@
 
 .sub-heading {
   font-size: 1rem;
-  color: #8c94a0;
+  color: #84878a;
 }
 
 .rounded-circle {
+  padding: 0.5em;
   border-radius: 50%;
 }

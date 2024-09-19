@@ -3,4 +3,8 @@
   <div class="sub-heading">Lorem Ipsum</div>
 </div>
 
-<img [src]="'/images/profile-placeholder.webp'" alt="M" class="h-100 rounded-circle" />
+<img
+  [src]="profileService.userData?.pictureUrl || '/images/profile-placeholder.webp'"
+  alt="M"
+  class="h-100 rounded-circle"
+/>
