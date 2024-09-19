@@ -1,8 +1,3 @@
-<div class="training-plan-search-container">
-  <app-search-bar (searchQueryChanged)="filterTrainingPlans($event)" />
-  <app-circular-icon-button [icon]="IconName.PLUS" (clicked)="createNewPlan()" />
-</div>
-
 @if (allTrainingPlans$ | async; as allTrainingPlans) {
   <section id="gallery">
     <div class="container">

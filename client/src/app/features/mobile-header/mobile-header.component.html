@@ -4,8 +4,18 @@
   [subHeading]="headlineService.subTitle()"
 />
 
-@if (showAlternativeButton()) {
-  <app-circular-icon-button [icon]="IconName.CLOCK" [iconSize]="20" (clicked)="onCircularButtonClick()" />
+@if (currentButtonIcon() === IconName.CLOCK) {
+  <app-circular-icon-button
+    [icon]="IconName.CLOCK"
+    [iconSize]="20"
+    (clicked)="onCircularButtonClick()"
+  ></app-circular-icon-button>
+} @else if (currentButtonIcon() === IconName.PLUS) {
+  <app-circular-icon-button
+    [icon]="IconName.PLUS"
+    [iconSize]="20"
+    (clicked)="onCircularButtonClick()"
+  ></app-circular-icon-button>
 } @else {
   <div class="image-wrapper">
     <img

@@ -21,7 +21,7 @@ import { ProfileService } from '../profile/profileService';
 export class MobileHeaderComponent {
   protected readonly IconName = IconName;
 
-  showAlternativeButton = signal<boolean>(false);
+  protected currentButtonIcon = signal<IconName | null>(null);
 
   constructor(
     protected profileService: ProfileService,
@@ -38,7 +38,7 @@ export class MobileHeaderComponent {
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe(() => {
-        this.checkRouteForClockDisplay();
+        this.checkRouteForButtonIcon();
       });
   }
 
@@ -47,12 +47,24 @@ export class MobileHeaderComponent {
     this.buttonClickService.emitButtonClick();
   }
 
-  private checkRouteForClockDisplay() {
+  // Method to determine which button icon to display based on the route
+  private checkRouteForButtonIcon() {
     const queryParams = this.route.snapshot.queryParams;
+    const routePath = this.router.url;
+
     const hasPlanId = queryParams['planId'];
     const hasWeek = queryParams['week'];
     const hasDay = queryParams['day'];
 
-    this.showAlternativeButton.set(hasPlanId && hasWeek && hasDay);
+    if (hasPlanId && hasWeek && hasDay) {
+      // Show the clock icon if all query params are present
+      this.currentButtonIcon.set(IconName.CLOCK);
+    } else if (routePath === '/') {
+      // Show the plus icon if the route is "/"
+      this.currentButtonIcon.set(IconName.PLUS);
+    } else {
+      // Set to null to show the profile picture in other cases
+      this.currentButtonIcon.set(null);
+    }
   }
 }

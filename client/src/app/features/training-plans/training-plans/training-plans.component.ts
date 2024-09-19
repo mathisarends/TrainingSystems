@@ -16,6 +16,7 @@ import { SearchBarComponent } from '../../../shared/components/search-bar/search
 import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
 import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
+import { ButtonClickService } from '../../../shared/service/button-click.service';
 import { CreateTrainingFormComponent } from '../training-view/create-training-form/create-training-form.component';
 import { TrainingPlanCardView } from '../training-view/models/exercise/training-plan-card-view-dto';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
@@ -54,6 +55,7 @@ export class TrainingPlansComponent implements OnInit {
     private httpClient: HttpService,
     private searchService: SearchService,
     private trainingPlanService: TrainingPlanService,
+    private buttonClickService: ButtonClickService,
     private destroyRef: DestroyRef,
   ) {}
 
@@ -74,6 +76,10 @@ export class TrainingPlansComponent implements OnInit {
 
     this.filteredTrainingPlans$.subscribe((plans) => {
       this.updateColumnClass(plans?.length ?? 0);
+    });
+
+    this.buttonClickService.buttonClick$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.createNewPlan();
     });
   }
 
