@@ -6,13 +6,14 @@ import { filter, map } from 'rxjs';
 import { HeaderComponent } from '../../components/header/header.component';
 import { CircularIconButtonComponent } from '../../shared/components/circular-icon-button/circular-icon-button.component';
 import { HeadlineComponent } from '../../shared/components/headline/headline.component';
+import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
 import { IconName } from '../../shared/icon/icon-name';
 import { IconComponent } from '../../shared/icon/icon.component';
 import { ProfileService } from '../profile/profileService';
 
 @Component({
   standalone: true,
-  imports: [CircularIconButtonComponent, IconComponent, HeadlineComponent, HeaderComponent],
+  imports: [CircularIconButtonComponent, IconComponent, HeadlineComponent, HeaderComponent, SkeletonComponent],
   selector: 'app-mobile-header',
   templateUrl: 'mobile-header.component.html',
   styleUrl: 'mobile-header.component.scss',
@@ -33,8 +34,4 @@ export class MobileHeaderComponent {
     protected profileService: ProfileService,
     private location: Location,
   ) {}
-
-  protected navigateToPreviousRoute() {
-    this.location.back();
-  }
 }
