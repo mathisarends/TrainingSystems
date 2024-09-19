@@ -1,12 +1,12 @@
 <div class="d-flex justify-content-between align-items-center">
-  @if (!loadingService.isLoading()) {
+  @if (loadingService.isLoading()) {
+    <app-spike-loader />
+  } @else {
     <span>
       @if (subHeading()) {
         <span class="context-headline">{{ subHeading() }}</span>
       }
       <span class="headline">{{ heading() }}</span>
     </span>
-  } @else {
-    <span class="loader"></span>
   }
 </div>
