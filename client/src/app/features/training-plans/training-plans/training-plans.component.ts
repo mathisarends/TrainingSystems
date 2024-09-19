@@ -110,7 +110,7 @@ export class TrainingPlansComponent implements OnInit {
    * Filters the training plans based on the search text.
    * @param searchText - The search input text.
    */
-  private filterTrainingPlans(searchText: string): void {
+  protected filterTrainingPlans(searchText: string): void {
     const allPlans = this.allTrainingPlans$.value || [];
     this.filteredTrainingPlans$.next(
       allPlans.filter((trainingPlan) => trainingPlan.title.toLowerCase().includes(searchText.toLowerCase())),

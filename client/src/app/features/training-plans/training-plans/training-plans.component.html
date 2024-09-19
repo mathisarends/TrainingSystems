@@ -1,13 +1,5 @@
-<!-- <div class="container heading-container mt-4 mb-3">
-  <div class="d-flex justify-content-between align-items-center">
-    <app-headline [subHeading]="'own'" [heading]="'plans'" />
-
-
-  </div>
-</div> -->
-
-<div class="d-flex align-items-center justify-content-between">
-  <app-search-bar />
+<div class="training-plan-search-container">
+  <app-search-bar (searchQueryChanged)="filterTrainingPlans($event)" />
   <app-circular-icon-button [icon]="IconName.PLUS" (clicked)="createNewPlan()" />
 </div>
 
@@ -28,7 +20,7 @@
               <app-alert
                 alertType="light"
                 alertText="Keine deiner bestehenden Trainingpläne passen zu dieser Suchanfrage!"
-              ></app-alert>
+              />
             </div>
           } @else {
             @for (trainingPlan of filteredTrainingPlans; track trainingPlan) {
