@@ -122,10 +122,6 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
       this.trainingWeekIndex = parseInt(params['week']);
       this.trainingDayIndex = parseInt(params['day']);
 
-      this.subHeading = `W${this.trainingWeekIndex + 1}D${this.trainingDayIndex + 1}`;
-
-      this.headlineService.subTitle.set(`W${this.trainingWeekIndex + 1}D${this.trainingDayIndex + 1}`);
-
       this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
 
       this.buttonClickService.buttonClick$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -225,6 +221,9 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
 
           this.exerciseData = exerciseData;
           this.exerciseDataService.exerciseData = exerciseData;
+
+          this.subHeading = `W${this.trainingWeekIndex + 1}D${this.trainingDayIndex + 1}`;
+          this.headlineService.subTitle.set(`W${this.trainingWeekIndex + 1}D${this.trainingDayIndex + 1}`);
 
           if (trainingPlan.title) {
             this.title = trainingPlan.title;
