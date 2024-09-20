@@ -1,4 +1,4 @@
-import { Component, HostListener, input, OnInit, output, signal } from '@angular/core';
+import { Component, effect, HostListener, Injector, input, OnInit, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IconName } from '../../icon/icon-name';
 import { IconComponent } from '../../icon/icon.component';
@@ -49,28 +49,32 @@ export class MultiSelectComponent implements OnInit {
   /**
    * The current search term entered by the user for filtering options.
    */
-  searchTerm = signal('');
+  searchQuery = signal('');
 
   /**
    * A signal representing the filtered items based on the search term.
    */
   filteredItems = signal<string[]>([]);
 
+  constructor(private injector: Injector) {}
+
   ngOnInit(): void {
     this.selected.set(this.selectedItems());
     this.filteredItems.set(this.items());
+
+    effect(
+      () => {
+        const filtered = this.items().filter((option) =>
+          option.toLowerCase().includes(this.searchQuery().toLowerCase()),
+        );
+        this.filteredItems.set(filtered);
+      },
+      { injector: this.injector, allowSignalWrites: true },
+    );
   }
 
   toggleDropdown() {
     this.isOpen.set(!this.isOpen());
-  }
-
-  /**
-   * Filters the available options based on the current search term.
-   */
-  filterOptions(): void {
-    const filtered = this.items().filter((option) => option.toLowerCase().includes(this.searchTerm().toLowerCase()));
-    this.filteredItems.set(filtered);
   }
 
   /**

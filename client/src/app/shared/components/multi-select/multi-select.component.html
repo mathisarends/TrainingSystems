@@ -14,15 +14,7 @@
     </div>
   </div>
   <div class="dropdown-menu p-2" [class.show]="isOpen()" (click)="$event.stopPropagation()">
-    <div class="dropdown-search">
-      <input
-        type="text"
-        class="form-control w-100"
-        placeholder="Search..."
-        [(ngModel)]="searchTerm"
-        (ngModelChange)="filterOptions()"
-      />
-    </div>
+    <app-search-bar [(searchQuery)]="searchQuery" />
 
     @for (option of filteredItems(); track option) {
       <div class="form-check">
