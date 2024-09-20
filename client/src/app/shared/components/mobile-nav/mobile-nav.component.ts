@@ -49,7 +49,14 @@ export class MobileNavComponent implements OnInit {
   ngOnInit(): void {
     effect(
       () => {
-        const currentRoute = this.routeWatcherService.getCurrentRouteSignal()();
+        let currentRoute = this.routeWatcherService.getCurrentRouteSignal()();
+
+        const routeExists = this.navItems.some((item) => item.route === currentRoute);
+
+        if (!routeExists) {
+          currentRoute = '/';
+        }
+
         this.activeRoute.set(currentRoute);
         this.updateIconColors(currentRoute);
       },
