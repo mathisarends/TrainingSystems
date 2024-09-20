@@ -1,9 +1,11 @@
-<app-circular-icon-button [icon]="IconName.MORE_VERTICAL" [iconSize]="20" (clicked)="toggleDropdown()" />
+<app-circular-icon-button [icon]="IconName.MORE_VERTICAL" [iconSize]="20" (clicked)="toggleCollapsed()" />
 
-<div class="custom-dropdown" [@toggleCollapse]="!isDropdownOpen() ? 'collapsed' : 'expanded'">
+<div class="custom-dropdown" [@toggleCollapse]="isCollapsed() ? 'collapsed' : 'expanded'">
   <ul>
-    <li (click)="selectOption('Option 1')">Option 1</li>
-    <li (click)="selectOption('Option 2')">Option 2</li>
-    <li (click)="selectOption('Option 3')">Option 3</li>
+    @for (option of options(); track option) {
+      <li (click)="selectOption(option)">
+        {{ option }}
+      </li>
+    }
   </ul>
 </div>
