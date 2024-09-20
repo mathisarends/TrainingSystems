@@ -27,8 +27,8 @@ export class MobileHeaderComponent implements OnInit {
 
   private routeIconMap = new Map<string, { icon: IconName | null; options: string[] }>([
     ['/', { icon: IconName.PLUS, options: [''] }],
-    ['/exercises', { icon: IconName.MORE_VERTICAL, options: ['Reset Exercises'] }],
-    ['/profile', { icon: IconName.MORE_VERTICAL, options: ['Edit', 'Logout'] }],
+    ['/exercises', { icon: IconName.MORE_VERTICAL, options: ['Zurücksetzen'] }],
+    ['/profile', { icon: IconName.MORE_VERTICAL, options: ['Editieren', 'Logout'] }],
   ]);
 
   constructor(

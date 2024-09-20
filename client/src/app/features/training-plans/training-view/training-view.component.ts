@@ -13,7 +13,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, forkJoin } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { BrowserCheckService } from '../../../core/browser-check.service';
 import { FormService } from '../../../core/form.service';
 import { ModalService } from '../../../core/services/modal/modalService';
@@ -249,8 +249,7 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
    * Prevents default form submission, collects changed data, and submits the training plan.
    * @param event - The form submission event.
    */
-  onSubmit(event: Event): void {
-    event.preventDefault();
+  saveTrainingData(): void {
     const changedData = this.formService.getChanges();
 
     this.trainingViewService
@@ -259,18 +258,8 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
         tap(() => {
           this.formService.clearChanges();
         }),
-        catchError((error) => {
-          this.toastService.success('Daten konnten nicht gespeichtert werden');
-
-          console.error('Error updating training plan:', error);
-          return [];
-        }),
       )
       .subscribe();
-  }
-
-  saveTrainingData() {
-    this.onSubmit(new Event('submit'));
   }
 
   /**
