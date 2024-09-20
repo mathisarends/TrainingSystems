@@ -1,0 +1,9 @@
+<app-circular-icon-button [icon]="IconName.MORE_VERTICAL" [iconSize]="20" (clicked)="toggleDropdown()" />
+
+<div class="custom-dropdown" [@toggleCollapse]="!isDropdownOpen() ? 'collapsed' : 'expanded'">
+  <ul>
+    <li (click)="selectOption('Option 1')">Option 1</li>
+    <li (click)="selectOption('Option 2')">Option 2</li>
+    <li (click)="selectOption('Option 3')">Option 3</li>
+  </ul>
+</div>

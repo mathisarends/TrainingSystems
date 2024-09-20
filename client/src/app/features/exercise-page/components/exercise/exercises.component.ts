@@ -9,6 +9,7 @@ import { InputComponent } from '../../../../shared/components/input/input.compon
 import { ToastService } from '../../../../shared/components/toast/toast.service';
 import { InteractiveElementDirective } from '../../../../shared/directives/interactive-element.directive';
 import { AutoSaveService } from '../../../../shared/service/auto-save.service';
+import { ButtonClickService } from '../../../../shared/service/button-click.service';
 import { ExerciseDataDTO } from '../../../training-plans/training-view/exerciseDataDto';
 import { ExerciseService } from '../../service/exercise.service.';
 import { ExerciseTableSkeletonComponent } from '../exercise-table-skeleton/exercise-table-skeleton.component';
@@ -112,6 +113,7 @@ export class ExercisesComponent implements OnInit {
     private exerciseService: ExerciseService,
     private formService: FormService,
     private autoSaveService: AutoSaveService,
+    private buttonClickService: ButtonClickService,
     private destroyRef: DestroyRef,
   ) {}
 
@@ -125,16 +127,20 @@ export class ExercisesComponent implements OnInit {
     this.autoSaveService.inputChanged$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.exerciseService.updateExercises(this.formService.getChanges()).subscribe();
     });
+
+    this.buttonClickService.buttonClick$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.onReset();
+    });
   }
 
   /**
    * Resets the exercises to their default settings after confirming via a modal dialog.
    */
-  async onReset(event: Event): Promise<void> {
-    event.preventDefault();
+  async onReset(): Promise<void> {
     const confirmed = await this.modalService.openBasicInfoModal({
       title: 'Übungen zurücksetzen',
       buttonText: 'Zurücksetzen',
+      isDestructiveAction: true,
       infoText:
         'Bist du dir sicher, dass du die Übungen auf die Standarteinstellungen zurücksetzen willst? Die Änderungen können danach nicht wieder rückgängig gemacht werden!',
     });

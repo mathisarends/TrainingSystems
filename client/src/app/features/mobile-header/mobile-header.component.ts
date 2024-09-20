@@ -4,6 +4,7 @@ import { LoadingService } from '../../core/loading.service';
 import { CircularIconButtonComponent } from '../../shared/components/circular-icon-button/circular-icon-button.component';
 import { HeadlineComponent } from '../../shared/components/headline/headline.component';
 import { HeadlineService } from '../../shared/components/headline/headline.service';
+import { MoreOptionsButtonComponent } from '../../shared/components/more-options-button/more-options-button.component';
 import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
 import { IconName } from '../../shared/icon/icon-name';
 import { ButtonClickService } from '../../shared/service/button-click.service';
@@ -12,7 +13,7 @@ import { ProfileService } from '../profile/profileService';
 
 @Component({
   standalone: true,
-  imports: [CircularIconButtonComponent, HeadlineComponent, SkeletonComponent],
+  imports: [CircularIconButtonComponent, HeadlineComponent, SkeletonComponent, MoreOptionsButtonComponent],
   selector: 'app-mobile-header',
   templateUrl: 'mobile-header.component.html',
   styleUrl: 'mobile-header.component.scss',

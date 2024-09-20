@@ -5,7 +5,7 @@
 />
 
 @if (currentButtonIcon() === IconName.MORE_VERTICAL) {
-  <app-circular-icon-button [icon]="IconName.MORE_VERTICAL" [iconSize]="20" (clicked)="onCircularButtonClick()" />
+  <app-more-options-button />
 } @else if (currentButtonIcon()) {
   <app-circular-icon-button [icon]="currentButtonIcon()!" [iconSize]="20" (clicked)="onCircularButtonClick()" />
 } @else if (currentButtonIcon() === IconName.PLUS) {
