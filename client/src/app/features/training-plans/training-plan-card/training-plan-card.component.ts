@@ -3,20 +3,17 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { TrainingPlanCardView } from '../../features/training-plans/training-view/models/exercise/training-plan-card-view-dto';
-
-import { HttpService } from '../../core/http-client.service';
-import { ModalService } from '../../core/services/modal/modalService';
-import { ModalSize } from '../../core/services/modal/modalSize';
-import { EditTrainingPlanComponent } from '../../features/training-plans/edit-training-plan/edit-training-plan.component';
-import { TrainingPlanService } from '../../features/training-plans/training-view/services/training-plan.service';
-import { IconButtonComponent } from '../../shared/components/icon-button/icon-button.component';
-import { BasicInfoComponent } from '../../shared/components/modal/basic-info/basic-info.component';
-import { ToastService } from '../../shared/components/toast/toast.service';
-import { TooltipDirective } from '../../shared/directives/tooltip.directive';
-import { IconName } from '../../shared/icon/icon-name';
-import { IconComponent } from '../../shared/icon/icon.component';
-import {} from '../percentage-circle-visualisation/percentage-circle-visualisation.component';
+import { HttpService } from '../../../core/http-client.service';
+import { ModalService } from '../../../core/services/modal/modalService';
+import { ModalSize } from '../../../core/services/modal/modalSize';
+import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
+import { ToastService } from '../../../shared/components/toast/toast.service';
+import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
+import { IconName } from '../../../shared/icon/icon-name';
+import { IconComponent } from '../../../shared/icon/icon.component';
+import { EditTrainingPlanComponent } from '../edit-training-plan/edit-training-plan.component';
+import { TrainingPlanCardView } from '../training-view/models/exercise/training-plan-card-view-dto';
+import { TrainingPlanService } from '../training-view/services/training-plan.service';
 
 /**
  * Component for displaying and managing a single training plan card.
@@ -85,14 +82,12 @@ export class TrainingPlanCardComponent {
    * @param index - The index of the training plan to delete.
    */
   async showDeleteTrainingPlanModal(): Promise<void> {
-    const confirmed = await this.modalService.open({
-      component: BasicInfoComponent,
+    const confirmed = await this.modalService.openBasicInfoModal({
       title: 'Trainingsplan löschen',
       buttonText: 'Löschen',
       isDestructiveAction: true,
-      componentData: {
-        text: 'Bist du dir sicher, dass du dieses Element löschen willst? Diese Änderung kann nicht mehr rückgängig gemacht werden!',
-      },
+      infoText:
+        'Bist du dir sicher, dass du dieses Element löschen willst? Diese Änderung kann nicht mehr rückgängig gemacht werden!',
     });
 
     if (confirmed) {

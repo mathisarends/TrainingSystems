@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
-import { Friend } from '../../../components/friend-card/friend';
-import { FriendCardComponent } from '../../../components/friend-card/friend-card.component';
+
 import { HttpService } from '../../../core/http-client.service';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
+import { Friend } from '../friend-card/friend';
+import { FriendCardComponent } from '../friend-card/friend-card.component';
 
 @Component({
   selector: 'app-friend-modal',
@@ -55,7 +56,7 @@ export class FriendRequestComponent implements OnInit {
   }
 
   async onFriendAccept(userId: string) {
-    const response = await firstValueFrom(this.httpService.get(`/friendship/accept/${userId}`));
+    await firstValueFrom(this.httpService.get(`/friendship/accept/${userId}`));
 
     const currentFriends = this.friendsSubject.value;
     const updatedFriends = currentFriends.filter((friend) => userId !== friend.id);

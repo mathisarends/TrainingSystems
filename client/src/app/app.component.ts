@@ -1,9 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
-
-import { HeaderComponent } from './components/header/header.component';
-import { LoadingProgressBarComponent } from './components/loaders/loading-progress-bar/loading-progress-bar.component';
-import { MobileNavComponent } from './components/mobile-nav/mobile-nav.component';
 import { AuthService } from './core/auth.service';
 import { BrowserCheckService } from './core/browser-check.service';
 import { RedirectService } from './core/redirect.service';
@@ -11,6 +7,8 @@ import { MobileHeaderComponent } from './features/mobile-header/mobile-header.co
 import { ProfileService } from './features/profile/profileService';
 import { MobileDeviceDetectionService } from './platform/mobile-device-detection.service';
 import { ServiceWorkerService } from './platform/service-worker.service';
+import { LoadingProgressBarComponent } from './shared/components/loader/loading-progress-bar/loading-progress-bar.component';
+import { MobileNavComponent } from './shared/components/mobile-nav/mobile-nav.component';
 import { SpinnerComponent } from './shared/components/spinner/spinner.component';
 import { ToastComponent } from './shared/components/toast/toast.component';
 
@@ -20,7 +18,6 @@ import { ToastComponent } from './shared/components/toast/toast.component';
   providers: [RedirectService],
   imports: [
     RouterOutlet,
-    HeaderComponent,
     ToastComponent,
     SpinnerComponent,
     LoadingProgressBarComponent,

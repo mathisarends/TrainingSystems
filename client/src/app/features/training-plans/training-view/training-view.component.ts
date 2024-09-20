@@ -14,7 +14,6 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, forkJoin } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { SkeletonTrainingTableComponent } from '../../../components/loaders/skeletons/skeleton-training-table/skeleton-training-table.component';
 import { BrowserCheckService } from '../../../core/browser-check.service';
 import { FormService } from '../../../core/form.service';
 import { ModalService } from '../../../core/services/modal/modalService';
@@ -25,6 +24,7 @@ import { HeadlineComponent } from '../../../shared/components/headline/headline.
 import { HeadlineService } from '../../../shared/components/headline/headline.service';
 import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
 import { InputComponent } from '../../../shared/components/input/input.component';
+import { SkeletonTrainingTableComponent } from '../../../shared/components/loader/skeleton-training-table/skeleton-training-table.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { ToastService } from '../../../shared/components/toast/toast.service';
 import { InteractiveElementDirective } from '../../../shared/directives/interactive-element.directive';
@@ -109,7 +109,7 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
     protected trainingDataService: TrainingPlanDataService,
     protected mobileDeviceDetectionService: MobileDeviceDetectionService,
     private headlineService: HeadlineService,
-    private buttonClickService: ButtonClickService
+    private buttonClickService: ButtonClickService,
   ) {}
 
   /**

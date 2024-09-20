@@ -1,8 +1,8 @@
 import { Component, effect, Injector, OnInit, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
-import { IconName } from '../../shared/icon/icon-name';
-import { IconComponent } from '../../shared/icon/icon.component';
-import { RouteWatcherService } from '../../shared/service/route-watcher.service';
+import { IconName } from '../../icon/icon-name';
+import { IconComponent } from '../../icon/icon.component';
+import { RouteWatcherService } from '../../service/route-watcher.service';
 import { NavItem } from './nav-item';
 
 @Component({

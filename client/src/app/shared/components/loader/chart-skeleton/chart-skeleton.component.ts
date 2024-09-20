@@ -1,5 +1,5 @@
 import { Component, input, OnInit, signal } from '@angular/core';
-import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
+import { SkeletonComponent } from '../../skeleton/skeleton.component';
 
 /**
  * Component that dynamically generates  a skeleton loading UI for a chart.

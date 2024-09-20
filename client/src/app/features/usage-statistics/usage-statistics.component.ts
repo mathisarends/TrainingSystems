@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { ActivityCalendar } from '../../components/activity-calendar/activity-calendar.component';
-import { BarChartData } from '../../components/charts/grouped-bar-chart/bar-chart.-data';
-import { GroupedBarChartComponent } from '../../components/charts/grouped-bar-chart/grouped-bar-chart.component';
-import { TrainingDayNotificationComponent } from '../../components/training-day-notification/training-day-notification.component';
 import { HttpService } from '../../core/http-client.service';
+import { BarChartData } from '../../shared/components/charts/grouped-bar-chart/bar-chart.-data';
+import { GroupedBarChartComponent } from '../../shared/components/charts/grouped-bar-chart/grouped-bar-chart.component';
 import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 import { NotificationService } from '../../shared/service/notification.service';
 import { ActivityCalendarData } from './activity-calendar-data';
+import { ActivityCalendar } from './activity-calendar/activity-calendar.component';
 import { RecentTrainingDurationsData } from './recent-training-durations-data';
+import { TrainingDayNotificationComponent } from './training-day-notification/training-day-notification.component';
 import { TrainingDayFinishedNotification } from './training-finished-notification';
 
 @Component({
@@ -68,11 +68,6 @@ export class UsageStatisticsComponent implements OnInit {
               borderWidth: 1,
             },
           ];
-
-          console.log('🚀 ~ UsageStatisticsComponent ~ map ~ { chartData: groupedBarChartData, labels: dateLabels }:', {
-            chartData: groupedBarChartData,
-            labels: dateLabels,
-          });
 
           return { chartData: groupedBarChartData, labels: dateLabels };
         }),

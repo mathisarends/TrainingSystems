@@ -1,4 +1,4 @@
-import { IconName } from '../../shared/icon/icon-name';
+import { IconName } from '../../icon/icon-name';
 
 /**
  * Interface representing a navigation item in the mobile navigation bar.

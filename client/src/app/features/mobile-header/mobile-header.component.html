@@ -8,7 +8,7 @@
   <app-more-options-button [options]="['Zurücksetzen']" (optionSelected)="onOptionSelected($event)" />
 } @else if (currentButtonIcon()) {
   <app-circular-icon-button [icon]="currentButtonIcon()!" [iconSize]="20" (clicked)="onCircularButtonClick()" />
-} @else if (currentButtonIcon() === IconName.PLUS) {
+} @else {
   <div class="image-wrapper">
     <img
       [src]="profileService.userData?.pictureUrl || '/images/profile-placeholder.webp'"
