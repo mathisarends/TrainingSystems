@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { HttpService } from '../../core/http-client.service';
 import { UserData } from './user-data';
@@ -7,11 +7,11 @@ import { UserData } from './user-data';
   providedIn: 'root',
 })
 export class ProfileService {
-  userData: UserData | undefined = undefined;
+  userData = signal<UserData | undefined>(undefined);
 
   constructor(private httpClientService: HttpService) {}
 
   getProfile(): Observable<UserData> {
-    return this.httpClientService.get<UserData>('/user/profile').pipe(tap((data: UserData) => (this.userData = data)));
+    return this.httpClientService.get<UserData>('/user/profile').pipe(tap((data: UserData) => this.userData.set(data)));
   }
 }

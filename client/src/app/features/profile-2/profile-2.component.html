@@ -1,0 +1,12 @@
+@let user = profileService.userData();
+@if (user) {
+  <div class="profile-card">
+    <div class="profile-picture">
+      <img id="profileImage" src="" alt="Profile" />
+    </div>
+    <div class="profile-info">
+      <h2 id="profileName">{{ user.username }}</h2>
+      <p id="profileEmail">{{ user.email }}</p>
+    </div>
+  </div>
+}
