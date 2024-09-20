@@ -1,6 +1,6 @@
 import { Component, input } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HttpService } from '../../../../core/http-client.service';
+import { HttpService } from '../../../../core/services/http-client.service';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { ToastService } from '../../../../shared/components/toast/toast.service';
 
@@ -36,12 +36,6 @@ export class AutoProgressionComponent {
       this.httpService.post(url).subscribe({
         next: () => {
           this.toastService.success('Progression geplant');
-        },
-        error: (error) => {
-          console.error('Subscription error:', error);
-          if (error.status === 500) {
-            this.toastService.error('Interner Serverfehler, bitte versuchen Sie es später erneut.');
-          }
         },
       });
     }

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
-import { AuthService } from './core/auth.service';
-import { BrowserCheckService } from './core/browser-check.service';
-import { RedirectService } from './core/redirect.service';
+import { AuthService } from './core/services/auth.service';
+import { BrowserCheckService } from './core/services/browser-check.service';
+import { RedirectService } from './core/services/redirect.service';
 import { MobileHeaderComponent } from './features/mobile-header/mobile-header.component';
 import { ProfileService } from './features/profile/profileService';
 import { MobileDeviceDetectionService } from './platform/mobile-device-detection.service';

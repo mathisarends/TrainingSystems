@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpService } from '../../core/http-client.service';
+import { HttpService } from '../../core/services/http-client.service';
 import { ToastService } from '../../shared/components/toast/toast.service';
 import { IconName } from '../../shared/icon/icon-name';
 

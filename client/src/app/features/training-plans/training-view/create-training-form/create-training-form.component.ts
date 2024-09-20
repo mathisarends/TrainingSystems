@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Input, signal, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
-import { HttpService } from '../../../../core/http-client.service';
+import { HttpService } from '../../../../core/services/http-client.service';
 import { ModalService } from '../../../../core/services/modal/modalService';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { ToastService } from '../../../../shared/components/toast/toast.service';

@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { LoadingService } from '../../../core/loading.service';
+import { LoadingService } from '../../../core/services/loading.service';
 import { SpikeLoaderComponent } from '../loader/spike-loader/spike-loader.component';
 import { SkeletonComponent } from '../skeleton/skeleton.component';
 import { HeadlineService } from './headline.service';

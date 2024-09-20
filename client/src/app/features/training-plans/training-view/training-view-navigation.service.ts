@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormService } from '../../../core/form.service';
+import { FormService } from '../../../core/services/form.service';
 import { TrainingPlanDto } from './trainingPlanDto';
 
 @Injectable({

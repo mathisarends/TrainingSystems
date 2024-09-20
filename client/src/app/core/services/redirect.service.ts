@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
-import { BrowserCheckService } from './browser-check.service';
+import { NavigationEnd, Router } from '@angular/router';
 import { filter, take } from 'rxjs';
+import { BrowserCheckService } from './browser-check.service';
 
 /**
  * @service RedirectService

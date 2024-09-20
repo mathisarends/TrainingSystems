@@ -1,5 +1,5 @@
 import { Directive, HostListener } from '@angular/core';
-import { FormService } from '../../../../core/form.service';
+import { FormService } from '../../../../core/services/form.service';
 import { InteractiveElementDirective } from '../../../../shared/directives/interactive-element.directive';
 import { AutoSaveService } from '../../../../shared/service/auto-save.service';
 import { ExerciseDataService } from '../exercise-data.service';

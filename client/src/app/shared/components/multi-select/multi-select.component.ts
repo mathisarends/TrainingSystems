@@ -3,8 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { toggleCollapseAnimation } from '../../animations/toggle-collapse';
 import { IconName } from '../../icon/icon-name';
 import { IconComponent } from '../../icon/icon.component';
-import { CheckboxItem } from '../checkbox/checkbox-item';
-import { CheckboxComponent } from '../checkbox/checkbox.component';
+import { CheckboxItem } from '../checbkox/checkbox-item';
+import { CheckboxComponent } from '../checbkox/checkbox.component';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
 
 /**

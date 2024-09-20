@@ -1,7 +1,7 @@
 import { Component, effect, ElementRef, Injector, OnInit, signal, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
-import { BrowserCheckService } from '../../../../core/browser-check.service';
-import { LoadingService } from '../../../../core/loading.service';
+import { BrowserCheckService } from '../../../../core/services/browser-check.service';
+import { LoadingService } from '../../../../core/services/loading.service';
 
 @Component({
   selector: 'app-loading-progress-bar',

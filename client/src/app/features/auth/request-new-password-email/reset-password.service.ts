@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { HttpService } from '../../../core/http-client.service';
-import { Observable } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { HttpService } from '../../../core/services/http-client.service';
 import { BasicConfirmationResponse } from '../../../shared/dto/basic-confirmation-response';
 
 @Injectable()

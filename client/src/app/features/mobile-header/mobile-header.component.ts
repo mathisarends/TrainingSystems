@@ -1,6 +1,6 @@
 import { Component, effect, Injector, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-import { LoadingService } from '../../core/loading.service';
+import { LoadingService } from '../../core/services/loading.service';
 import { CircularIconButtonComponent } from '../../shared/components/circular-icon-button/circular-icon-button.component';
 import { HeadlineComponent } from '../../shared/components/headline/headline.component';
 import { HeadlineService } from '../../shared/components/headline/headline.service';

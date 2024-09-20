@@ -12,11 +12,20 @@
     @if (trainingDayNotifications$ | async; as trainingDayNotifications) {
       <app-training-day-notification [notificationsInput]="trainingDayNotifications" />
     } @else {
-      <app-spinner />
+      <main class="mt-3">
+        <app-chart-skeleton />
+        <app-chart-skeleton />
+      </main>
     }
   } @else {
-    <app-spinner />
+    <main class="mt-3">
+      <app-chart-skeleton />
+      <app-chart-skeleton />
+    </main>
   }
 } @else {
-  <app-spinner />
+  <main class="mt-3">
+    <app-chart-skeleton />
+    <app-chart-skeleton />
+  </main>
 }

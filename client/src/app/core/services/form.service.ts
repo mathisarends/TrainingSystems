@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { InteractiveElement } from '../shared/types/interactive-element.types';
-import { DataMap } from '../shared/types/api-data';
+import { DataMap } from '../../shared/types/api-data';
+import { InteractiveElement } from '../../shared/types/interactive-element.types';
 
 @Injectable({
   providedIn: 'root',

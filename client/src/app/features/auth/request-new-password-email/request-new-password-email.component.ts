@@ -3,7 +3,7 @@ import { HttpResponse } from '@angular/common/http';
 import { Component, Inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, filter, of, tap } from 'rxjs';
-import { HttpService } from '../../../core/http-client.service';
+import { HttpService } from '../../../core/services/http-client.service';
 import { ToastService } from '../../../shared/components/toast/toast.service';
 import { BaisAuthComponent } from '../basic-auth.component';
 import { ResetPasswordService } from './reset-password.service';

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { map, Observable, of } from 'rxjs';
-import { AuthService } from '../auth.service';
-import { BrowserCheckService } from '../browser-check.service';
+import { AuthService } from '../services/auth.service';
+import { BrowserCheckService } from '../services/browser-check.service';
 import { ModalService } from '../services/modal/modalService';
 
 @Injectable({

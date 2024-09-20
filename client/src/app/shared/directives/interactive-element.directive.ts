@@ -1,5 +1,5 @@
 import { Directive, HostListener } from '@angular/core';
-import { FormService } from '../../core/form.service';
+import { FormService } from '../../core/services/form.service';
 import { AutoSaveService } from '../service/auto-save.service';
 
 /**

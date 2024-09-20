@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 
-import { HttpService } from '../../../core/http-client.service';
+import { HttpService } from '../../../core/services/http-client.service';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
 import { Friend } from '../friend-card/friend';

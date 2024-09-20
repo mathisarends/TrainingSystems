@@ -1,5 +1,5 @@
 import { AfterViewInit, Directive, ElementRef, HostListener } from '@angular/core';
-import { FormService } from '../../../../core/form.service';
+import { FormService } from '../../../../core/services/form.service';
 import { AutoSaveService } from '../../../../shared/service/auto-save.service';
 import { ExerciseDataService } from '../exercise-data.service';
 import { EstMaxService } from '../services/estmax.service';

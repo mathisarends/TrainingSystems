@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { HttpService } from '../../core/http-client.service';
+import { HttpService } from '../../core/services/http-client.service';
 import { BarChartData } from '../../shared/components/charts/grouped-bar-chart/bar-chart.-data';
 import { GroupedBarChartComponent } from '../../shared/components/charts/grouped-bar-chart/grouped-bar-chart.component';
+import { ChartSkeletonComponent } from '../../shared/components/loader/chart-skeleton/chart-skeleton.component';
 import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
-import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 import { NotificationService } from '../../shared/service/notification.service';
 import { ActivityCalendarData } from './activity-calendar-data';
 import { ActivityCalendar } from './activity-calendar/activity-calendar.component';
@@ -18,11 +18,11 @@ import { TrainingDayFinishedNotification } from './training-finished-notificatio
   standalone: true,
   imports: [
     ActivityCalendar,
-    SpinnerComponent,
     CommonModule,
     SkeletonComponent,
     TrainingDayNotificationComponent,
     GroupedBarChartComponent,
+    ChartSkeletonComponent,
   ],
   templateUrl: './usage-statistics.component.html',
   styleUrls: ['./usage-statistics.component.scss'], // Corrected to styleUrls

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpService } from '../../core/http-client.service';
+import { HttpService } from '../../core/services/http-client.service';
 
 @Injectable({ providedIn: 'root' })
 export class GymTicketService {

@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { HttpService } from '../../core/http-client.service';
+import { HttpService } from '../../core/services/http-client.service';
 import { UserData } from './user-data';
 
 @Injectable({

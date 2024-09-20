@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom, Observable } from 'rxjs';
-import { HttpService } from '../../core/http-client.service';
+import { HttpService } from '../../core/services/http-client.service';
 import { ModalService } from '../../core/services/modal/modalService';
 import { ModalSize } from '../../core/services/modal/modalSize';
 import { AlertComponent } from '../../shared/components/alert/alert.component';
@@ -194,7 +194,7 @@ export class ProfileComponent implements OnInit {
     });
 
     if (response) {
-      this.httpService.delete('/user/delete-account').subscribe((response) => {
+      this.httpService.delete('/user/delete-account').subscribe(() => {
         this.toastService.success('Account erfolgreich gelöscht');
         this.router.navigate(['register']);
       });

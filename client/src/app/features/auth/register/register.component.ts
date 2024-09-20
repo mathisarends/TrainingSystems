@@ -2,7 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpService } from '../../../core/http-client.service';
+import { HttpService } from '../../../core/services/http-client.service';
 import { ToastService } from '../../../shared/components/toast/toast.service';
 import { IconComponent } from '../../../shared/icon/icon.component';
 import { BaisAuthComponent } from '../basic-auth.component';
