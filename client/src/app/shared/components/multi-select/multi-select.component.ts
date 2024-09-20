@@ -1,7 +1,10 @@
 import { Component, effect, HostListener, Injector, input, OnInit, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { toggleCollapseAnimation } from '../../animations/toggle-collapse';
 import { IconName } from '../../icon/icon-name';
 import { IconComponent } from '../../icon/icon.component';
+import { CheckboxItem } from '../checkbox/checkbox-item';
+import { CheckboxComponent } from '../checkbox/checkbox.component';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
 
 /**
@@ -10,9 +13,10 @@ import { SearchBarComponent } from '../search-bar/search-bar.component';
 @Component({
   selector: 'app-multi-select',
   standalone: true,
-  imports: [FormsModule, IconComponent, SearchBarComponent],
+  imports: [FormsModule, IconComponent, SearchBarComponent, CheckboxComponent],
   templateUrl: './multi-select.component.html',
   styleUrls: ['./multi-select.component.scss'],
+  animations: [toggleCollapseAnimation],
 })
 export class MultiSelectComponent implements OnInit {
   protected IconName = IconName;
@@ -83,10 +87,9 @@ export class MultiSelectComponent implements OnInit {
    * @param option The option that was selected or deselected.
    * @param event The DOM event triggered by the selection change.
    */
-  onSelectionChange(option: string, event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
+  onSelectionChange(option: string, checkboxItem: CheckboxItem): void {
     const newSelected = [...this.selected()];
-    if (inputElement.checked) {
+    if (checkboxItem.isChecked) {
       newSelected.push(option);
     } else {
       const index = newSelected.indexOf(option);

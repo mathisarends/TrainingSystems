@@ -16,17 +16,13 @@
   <div class="dropdown-menu p-2" [class.show]="isOpen()" (click)="$event.stopPropagation()">
     <app-search-bar [(searchQuery)]="searchQuery" />
 
-    @for (option of filteredItems(); track option) {
-      <div class="form-check">
-        <input
-          type="checkbox"
-          class="form-check-input"
-          [id]="option"
-          [checked]="selected().includes(option)"
-          (change)="onSelectionChange(option, $event)"
+    <div class="checkbox-container">
+      @for (option of filteredItems(); track option) {
+        <app-checkbox
+          [item]="{ label: option, isChecked: selected().includes(option) }"
+          (valueChanged)="onSelectionChange(option, $event)"
         />
-        <label class="form-check-label" [for]="option">{{ option }}</label>
-      </div>
-    }
+      }
+    </div>
   </div>
 </div>

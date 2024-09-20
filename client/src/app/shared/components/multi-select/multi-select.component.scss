@@ -41,25 +41,13 @@
   display: block;
 }
 
-.dropdown-search {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-  position: relative;
-}
-
-.dropdown-search input {
-  width: 100%;
-}
-
-.form-check-input:checked {
-  background-color: #007bff;
-  border-color: #007bff;
-}
-
 .chip {
   padding: 5px 10px;
   border-radius: 4px;
   font-size: 14px;
   color: #000;
+}
+
+.checkbox-container {
+  padding-inline: 0.3em;
 }
