@@ -1,19 +1,29 @@
-<div class="nav-item" (click)="setActive('home')" [class.active]="activeItem === 'home'">
-  <app-icon [name]="IconName.HOME" [color]="activeItem === 'home' ? '#eee' : '#6c757d'" [size]="26" />
+@let currentRoute = routeWatcherService.getCurrentRouteSignal()();
+
+<!-- Home Navigation Item -->
+<div class="nav-item" (click)="setActive('home')" [class.active]="currentRoute === '/'">
+  <app-icon [name]="IconName.HOME" [color]="currentRoute === '/' ? '#eee' : '#6c757d'" [size]="26"></app-icon>
   <span class="nav-label">Home</span>
 </div>
 
-<div class="nav-item" (click)="setActive('statistics')" [class.active]="activeItem === 'statistics'">
-  <app-icon [name]="IconName.BAR_CHART" [color]="activeItem === 'statistics' ? '#eee' : '#6c757d'" [size]="26" />
+<!-- Statistics Navigation Item -->
+<div class="nav-item" (click)="setActive('statistics')" [class.active]="currentRoute === '/usage'">
+  <app-icon [name]="IconName.BAR_CHART" [color]="currentRoute === '/usage' ? '#eee' : '#6c757d'" [size]="26"></app-icon>
   <span class="nav-label">Statistiken</span>
 </div>
 
-<div class="nav-item" (click)="setActive('exercises')" [class.active]="activeItem === 'exercises'">
-  <app-icon [name]="IconName.DATABASE" [color]="activeItem === 'exercises' ? '#eee' : '#6c757d'" [size]="26" />
+<!-- Exercises Navigation Item -->
+<div class="nav-item" (click)="setActive('exercises')" [class.active]="currentRoute === '/exercises'">
+  <app-icon
+    [name]="IconName.DATABASE"
+    [color]="currentRoute === '/exercises' ? '#eee' : '#6c757d'"
+    [size]="26"
+  ></app-icon>
   <span class="nav-label">Übungen</span>
 </div>
 
-<div class="nav-item" (click)="setActive('profile')" [class.active]="activeItem === 'profile'">
-  <app-icon [name]="IconName.User" [color]="activeItem === 'profile' ? '#eee' : '#6c757d'" [size]="26" />
+<!-- Profile Navigation Item -->
+<div class="nav-item" (click)="setActive('profile')" [class.active]="currentRoute === '/profile'">
+  <app-icon [name]="IconName.User" [color]="currentRoute === '/profile' ? '#eee' : '#6c757d'" [size]="26"></app-icon>
   <span class="nav-label">Profil</span>
 </div>

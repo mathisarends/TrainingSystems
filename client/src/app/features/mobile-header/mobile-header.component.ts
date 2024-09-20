@@ -51,12 +51,10 @@ export class MobileHeaderComponent implements OnInit {
   }
 
   protected onOptionSelected(option: string) {
-    console.log('🚀 ~ MobileHeaderComponent ~ onOptionSelected ~ option:', option);
     this.buttonClickService.emitButtonClick();
   }
 
   private updateButtonIcon(routePath: string) {
-    console.log('🚀 ~ MobileHeaderComponent ~ updateButtonIcon ~ routePath:', routePath);
     const queryParams = this.route.snapshot.queryParams;
 
     if (this.isTrainingViewRoute(queryParams)) {
