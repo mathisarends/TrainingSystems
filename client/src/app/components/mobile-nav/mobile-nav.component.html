@@ -1,29 +1,6 @@
-@let currentRoute = routeWatcherService.getCurrentRouteSignal()();
-
-<!-- Home Navigation Item -->
-<div class="nav-item" (click)="setActive('home')" [class.active]="currentRoute === '/'">
-  <app-icon [name]="IconName.HOME" [color]="currentRoute === '/' ? '#eee' : '#6c757d'" [size]="26"></app-icon>
-  <span class="nav-label">Home</span>
-</div>
-
-<!-- Statistics Navigation Item -->
-<div class="nav-item" (click)="setActive('statistics')" [class.active]="currentRoute === '/usage'">
-  <app-icon [name]="IconName.BAR_CHART" [color]="currentRoute === '/usage' ? '#eee' : '#6c757d'" [size]="26"></app-icon>
-  <span class="nav-label">Statistiken</span>
-</div>
-
-<!-- Exercises Navigation Item -->
-<div class="nav-item" (click)="setActive('exercises')" [class.active]="currentRoute === '/exercises'">
-  <app-icon
-    [name]="IconName.DATABASE"
-    [color]="currentRoute === '/exercises' ? '#eee' : '#6c757d'"
-    [size]="26"
-  ></app-icon>
-  <span class="nav-label">Übungen</span>
-</div>
-
-<!-- Profile Navigation Item -->
-<div class="nav-item" (click)="setActive('profile')" [class.active]="currentRoute === '/profile'">
-  <app-icon [name]="IconName.User" [color]="currentRoute === '/profile' ? '#eee' : '#6c757d'" [size]="26"></app-icon>
-  <span class="nav-label">Profil</span>
-</div>
+@for (item of navItems; track item) {
+  <div class="nav-item" (click)="setActive(item.route)" [class.active]="activeRoute() === item.route">
+    <app-icon [name]="item.icon" [color]="iconColors()[item.route]" [size]="26"></app-icon>
+    <span class="nav-label">{{ item.label }}</span>
+  </div>
+}
