@@ -1,7 +1,4 @@
-import { Directive, ElementRef, HostListener, Input, Renderer2, DestroyRef } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { DestroyRef, Directive, ElementRef, HostListener, Input, Renderer2 } from '@angular/core';
 
 /**
  * Directive to display a tooltip with a message when an element is hovered over.
@@ -17,18 +14,8 @@ export class TooltipDirective {
   constructor(
     private el: ElementRef,
     private renderer: Renderer2,
-    private router: Router,
     private destroyRef: DestroyRef,
   ) {
-    this.router.events
-      .pipe(
-        filter((event) => event instanceof NavigationEnd),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe(() => {
-        this.hideTooltip();
-      });
-
     this.destroyRef.onDestroy(() => {
       if (this.tooltipElement) {
         this.renderer.removeChild(document.body, this.tooltipElement);
@@ -51,6 +38,14 @@ export class TooltipDirective {
       this.createTooltipElement();
     }
     this.showTooltip();
+  }
+
+  /**
+   * Event listener for click event.
+   * Hides the tooltip element when the element is clicked.
+   */
+  @HostListener('click') onClick() {
+    this.hideTooltip(); // Hide the tooltip when the element is clicked
   }
 
   /**
