@@ -1,12 +1,27 @@
 @let user = profileService.userData();
 @if (user) {
-  <div class="profile-card">
-    <div class="profile-picture">
-      <img id="profileImage" src="" alt="Profile" />
-    </div>
+  <div class="profile-header-container">
+    <img [src]="user.pictureUrl || '/images/profile-placeholder.webp'" alt="Profile" />
     <div class="profile-info">
-      <h2 id="profileName">{{ user.username }}</h2>
-      <p id="profileEmail">{{ user.email }}</p>
+      <h2>{{ user.username }}</h2>
+      <p>{{ user.email }}</p>
     </div>
   </div>
+
+  <div class="three-button-container">
+    <div class="box">
+      <app-icon [name]="IconName.IMAGE" [size]="24" [color]="'grey'" />
+      <p>Ticket</p>
+    </div>
+    <div class="box">
+      <app-icon [name]="IconName.USERS" [size]="24" [color]="'grey'" />
+      <p>Social</p>
+    </div>
+    <div class="box">
+      <app-icon [name]="IconName.SETTINGS" [size]="24" [color]="'grey'" />
+      <p>Settings</p>
+    </div>
+  </div>
+} @else {
+  <app-spinner />
 }

@@ -1,6 +1,6 @@
 @if (profile$ | async; as profile) {
-  <div class="container my-md-5 my-0">
-    <div class="bg-white shadow rounded overflow-hidden profile-container">
+  <div class="container my-0">
+    <div class="shadow rounded overflow-hidden profile-container">
       <div class="px-4 pt-0 pb-4 cover">
         <div class="media align-items-end profile-head">
           <div class="profile mr-3">
@@ -18,22 +18,6 @@
             <h4 class="mt-0 mb-0">{{ profile.username }}</h4>
           </div>
         </div>
-      </div>
-      <div class="bg-light p-4 mb-2 d-flex justify-content-end text-center">
-        <ul class="list-inline mb-0">
-          <li class="list-inline-item">
-            <h5 class="font-weight-bold mb-0 d-block">215</h5>
-            <small class="text-muted"> <i class="fas fa-image mr-1"></i>Photos</small>
-          </li>
-          <li class="list-inline-item">
-            <h5 class="font-weight-bold mb-0 d-block">745</h5>
-            <small class="text-muted"> <i class="fas fa-user mr-1"></i>Followers</small>
-          </li>
-          <li class="list-inline-item">
-            <h5 class="font-weight-bold mb-0 d-block">340</h5>
-            <small class="text-muted"> <i class="fas fa-user mr-1"></i>Following</small>
-          </li>
-        </ul>
       </div>
 
       <div class="px-4 py-3">

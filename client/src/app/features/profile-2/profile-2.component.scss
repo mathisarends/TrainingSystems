@@ -1,41 +1,60 @@
-body {
-  margin: 0;
-  font-family: 'Arial', sans-serif;
+:host {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #f3f4f6;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 0.5rem;
+
+  p {
+    margin: 0;
+  }
 }
 
-.profile-card {
-  background-color: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  width: 300px;
-  text-align: center;
-}
-
-.profile-picture {
+.profile-header-container {
   display: flex;
-  justify-content: center;
-  margin-bottom: 15px;
+  flex-direction: row;
+  gap: 1rem;
+
+  img {
+    height: 6rem;
+    width: 6rem;
+    border: 4px solid white;
+  }
+
+  .profile-info {
+    padding-top: 0.35em;
+  }
+
+  .profile-info h2 {
+    font-size: 1.2rem;
+    color: #333333;
+  }
+
+  .profile-info p {
+    color: #888888;
+    margin-top: -0.25rem;
+  }
 }
 
-.profile-picture img {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-}
+.three-button-container {
+  display: flex;
+  gap: 0.5rem;
 
-.profile-info h2 {
-  font-size: 1.5rem;
-  margin: 0;
-  color: #333333;
-}
+  .box {
+    border: 2px solid white;
+    color: grey;
+    border-radius: 2px;
+    background-color: #e9e9e9;
+    flex-grow: 1;
+    max-width: 200px;
+    aspect-ratio: 1;
+    display: flex;
+    gap: 0.4rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
-.profile-info p {
-  color: #888888;
-  margin: 5px 0 0 0;
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
 }

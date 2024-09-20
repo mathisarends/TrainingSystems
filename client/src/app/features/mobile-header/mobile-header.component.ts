@@ -23,6 +23,14 @@ export class MobileHeaderComponent implements OnInit {
 
   protected currentButtonIcon = signal<IconName | null>(null);
 
+  protected moreOptions: string[] = [];
+
+  private routeIconMap = new Map<string, { icon: IconName | null; options: string[] }>([
+    ['/', { icon: IconName.PLUS, options: [''] }],
+    ['/exercises', { icon: IconName.MORE_VERTICAL, options: ['Reset Exercises'] }],
+    ['/profile', { icon: IconName.MORE_VERTICAL, options: ['Edit', 'Logout'] }],
+  ]);
+
   constructor(
     protected profileService: ProfileService,
     protected headlineService: HeadlineService,
@@ -39,7 +47,7 @@ export class MobileHeaderComponent implements OnInit {
     effect(
       () => {
         const currentRoute = this.routeWatcherService.getCurrentRouteSignal()();
-        this.updateButtonIcon(currentRoute);
+        this.updateButtonIconAndOptions(currentRoute);
       },
       { allowSignalWrites: true, injector: this.injector },
     );
@@ -53,18 +61,18 @@ export class MobileHeaderComponent implements OnInit {
   protected onOptionSelected(option: string) {
     this.buttonClickService.emitButtonClick();
   }
-
-  private updateButtonIcon(routePath: string) {
+  private updateButtonIconAndOptions(routePath: string) {
     const queryParams = this.route.snapshot.queryParams;
 
     if (this.isTrainingViewRoute(queryParams)) {
       this.currentButtonIcon.set(IconName.CLOCK);
-    } else if (routePath === '/') {
-      this.currentButtonIcon.set(IconName.PLUS);
-    } else if (routePath === '/exercises') {
-      this.currentButtonIcon.set(IconName.MORE_VERTICAL);
+    } else if (this.routeIconMap.has(routePath)) {
+      const { icon, options } = this.routeIconMap.get(routePath)!;
+      this.currentButtonIcon.set(icon);
+      this.moreOptions = options;
     } else {
       this.currentButtonIcon.set(null);
+      this.moreOptions = [];
     }
   }
 

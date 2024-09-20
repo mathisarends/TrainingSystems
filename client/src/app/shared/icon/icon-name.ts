@@ -27,4 +27,7 @@ export enum IconName {
   MIC = 'mic',
   DATABASE = 'database',
   MORE_VERTICAL = 'more-vertical',
+  USERS = 'users',
+  SETTINGS = 'settings',
+  IMAGE = 'image',
 }
