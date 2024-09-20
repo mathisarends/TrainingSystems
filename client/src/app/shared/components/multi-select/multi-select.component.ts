@@ -2,6 +2,7 @@ import { Component, HostListener, input, OnInit, output, signal } from '@angular
 import { FormsModule } from '@angular/forms';
 import { IconName } from '../../icon/icon-name';
 import { IconComponent } from '../../icon/icon.component';
+import { SearchBarComponent } from '../search-bar/search-bar.component';
 
 /**
  * Represents a generic multi-select-dropdown
@@ -9,7 +10,7 @@ import { IconComponent } from '../../icon/icon.component';
 @Component({
   selector: 'app-multi-select',
   standalone: true,
-  imports: [FormsModule, IconComponent],
+  imports: [FormsModule, IconComponent, SearchBarComponent],
   templateUrl: './multi-select.component.html',
   styleUrls: ['./multi-select.component.scss'],
 })

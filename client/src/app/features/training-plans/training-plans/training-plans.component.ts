@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, effect, Injector, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { HttpService } from '../../../core/http-client.service';
-import { SearchService } from '../../../core/search.service';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { ModalSize } from '../../../core/services/modal/modalSize';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
@@ -50,13 +49,15 @@ export class TrainingPlansComponent implements OnInit {
 
   columnClass!: string; // bestimmt in Abhängig der Anzahl der Pläne welches Grid System benutzt werden soll
 
+  trainingPlanSearchQuery = signal<string>('');
+
   constructor(
     private modalService: ModalService,
     private httpClient: HttpService,
-    private searchService: SearchService,
     private trainingPlanService: TrainingPlanService,
     private buttonClickService: ButtonClickService,
     private destroyRef: DestroyRef,
+    private injector: Injector,
   ) {}
 
   /**
@@ -65,10 +66,6 @@ export class TrainingPlansComponent implements OnInit {
    */
   async ngOnInit(): Promise<void> {
     await this.loadTrainingPlans();
-
-    this.searchService.searchText$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((searchText) => {
-      this.filterTrainingPlans(searchText);
-    });
 
     this.trainingPlanService.trainingPlansChanged$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.loadTrainingPlans();
@@ -81,6 +78,18 @@ export class TrainingPlansComponent implements OnInit {
     this.buttonClickService.buttonClick$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.createNewPlan();
     });
+
+    effect(
+      () => {
+        const allPlans = this.allTrainingPlans$.value || [];
+        this.filteredTrainingPlans$.next(
+          allPlans.filter((trainingPlan) =>
+            trainingPlan.title.toLowerCase().includes(this.trainingPlanSearchQuery().toLowerCase()),
+          ),
+        );
+      },
+      { injector: this.injector },
+    );
   }
 
   /**
@@ -110,17 +119,6 @@ export class TrainingPlansComponent implements OnInit {
         existingPlans: trainingPlans,
       },
     });
-  }
-
-  /**
-   * Filters the training plans based on the search text.
-   * @param searchText - The search input text.
-   */
-  protected filterTrainingPlans(searchText: string): void {
-    const allPlans = this.allTrainingPlans$.value || [];
-    this.filteredTrainingPlans$.next(
-      allPlans.filter((trainingPlan) => trainingPlan.title.toLowerCase().includes(searchText.toLowerCase())),
-    );
   }
 
   /**

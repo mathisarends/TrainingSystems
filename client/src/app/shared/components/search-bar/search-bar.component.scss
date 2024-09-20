@@ -6,7 +6,17 @@
   width: 100%;
   margin-bottom: 0.65rem;
   background-color: rgba(249, 249, 249, 0.8);
-  border: 2px solid #efefef; /* Light blue border */
+  border: 2px solid #efefef;
+
+  &:hover {
+    background-color: rgba(249, 249, 249, 0.6);
+    border-color: #ebebeb;
+  }
+
+  &:focus {
+    background-color: white;
+    border-color: #bcbcbc;
+  }
 }
 
 .search-input {
@@ -16,6 +26,11 @@
   padding: 0.5rem;
   font-size: 1rem;
   background: inherit;
+
+  /* Hover state styles */
+  transition:
+    background-color 0.2s ease-in-out,
+    border-color 0.2s ease-in-out;
 }
 
 .search-input::placeholder {
