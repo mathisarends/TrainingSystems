@@ -9,7 +9,7 @@
     <div class="training-notification-body">
       <p>
         @if (notification.startTime) {
-          <strong>Date:</strong> {{ notification.startTime | formatDate }}<br />
+          <strong>Date:</strong> {{ notification.startTime }}<br />
         }
         <strong>Duration:</strong> {{ notification.durationInMinutes }} minutes<br />
         <strong>Total Tonnage:</strong> {{ notification.trainingDayTonnage }} kg

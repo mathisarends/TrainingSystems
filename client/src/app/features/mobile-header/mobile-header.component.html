@@ -4,19 +4,11 @@
   [subHeading]="headlineService.subTitle()"
 />
 
-@if (currentButtonIcon() === IconName.CLOCK) {
-  <app-circular-icon-button
-    [icon]="IconName.CLOCK"
-    [iconSize]="20"
-    (clicked)="onCircularButtonClick()"
-  ></app-circular-icon-button>
+@if (currentButtonIcon() === IconName.MORE_VERTICAL) {
+  <app-circular-icon-button [icon]="IconName.MORE_VERTICAL" [iconSize]="20" (clicked)="onCircularButtonClick()" />
+} @else if (currentButtonIcon()) {
+  <app-circular-icon-button [icon]="currentButtonIcon()!" [iconSize]="20" (clicked)="onCircularButtonClick()" />
 } @else if (currentButtonIcon() === IconName.PLUS) {
-  <app-circular-icon-button
-    [icon]="IconName.PLUS"
-    [iconSize]="20"
-    (clicked)="onCircularButtonClick()"
-  ></app-circular-icon-button>
-} @else {
   <div class="image-wrapper">
     <img
       [src]="profileService.userData?.pictureUrl || '/images/profile-placeholder.webp'"

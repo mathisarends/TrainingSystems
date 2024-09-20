@@ -26,4 +26,5 @@ export enum IconName {
   SEARCH = 'search',
   MIC = 'mic',
   DATABASE = 'database',
+  MORE_VERTICAL = 'more-vertical',
 }

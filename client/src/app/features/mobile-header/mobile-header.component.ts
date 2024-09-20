@@ -1,7 +1,5 @@
-import { Component, DestroyRef, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { filter } from 'rxjs';
+import { Component, effect, Injector, OnInit, signal } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
 import { LoadingService } from '../../core/loading.service';
 import { CircularIconButtonComponent } from '../../shared/components/circular-icon-button/circular-icon-button.component';
 import { HeadlineComponent } from '../../shared/components/headline/headline.component';
@@ -9,6 +7,7 @@ import { HeadlineService } from '../../shared/components/headline/headline.servi
 import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
 import { IconName } from '../../shared/icon/icon-name';
 import { ButtonClickService } from '../../shared/service/button-click.service';
+import { RouteWatcherService } from '../../shared/service/route-watcher.service';
 import { ProfileService } from '../profile/profileService';
 
 @Component({
@@ -18,7 +17,7 @@ import { ProfileService } from '../profile/profileService';
   templateUrl: 'mobile-header.component.html',
   styleUrl: 'mobile-header.component.scss',
 })
-export class MobileHeaderComponent {
+export class MobileHeaderComponent implements OnInit {
   protected readonly IconName = IconName;
 
   protected currentButtonIcon = signal<IconName | null>(null);
@@ -28,18 +27,21 @@ export class MobileHeaderComponent {
     protected headlineService: HeadlineService,
     protected loadingService: LoadingService,
     private buttonClickService: ButtonClickService,
-    private router: Router,
     private route: ActivatedRoute,
-    private destroyRef: DestroyRef,
+    private routeWatcherService: RouteWatcherService,
+    private injector: Injector,
   ) {
-    this.router.events
-      .pipe(
-        filter((event) => event instanceof NavigationEnd),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe(() => {
-        this.checkRouteForButtonIcon();
-      });
+    // Use the effect to automatically update the button icon based on the route signal
+  }
+
+  ngOnInit(): void {
+    effect(
+      () => {
+        const currentRoute = this.routeWatcherService.getCurrentRouteSignal()();
+        this.updateButtonIcon(currentRoute);
+      },
+      { allowSignalWrites: true, injector: this.injector },
+    );
   }
 
   // Emit the button click event
@@ -47,24 +49,22 @@ export class MobileHeaderComponent {
     this.buttonClickService.emitButtonClick();
   }
 
-  // Method to determine which button icon to display based on the route
-  private checkRouteForButtonIcon() {
+  private updateButtonIcon(routePath: string) {
+    console.log('🚀 ~ MobileHeaderComponent ~ updateButtonIcon ~ routePath:', routePath);
     const queryParams = this.route.snapshot.queryParams;
-    const routePath = this.router.url;
 
-    const hasPlanId = queryParams['planId'];
-    const hasWeek = queryParams['week'];
-    const hasDay = queryParams['day'];
-
-    if (hasPlanId && hasWeek && hasDay) {
-      // Show the clock icon if all query params are present
+    if (this.isTrainingViewRoute(queryParams)) {
       this.currentButtonIcon.set(IconName.CLOCK);
     } else if (routePath === '/') {
-      // Show the plus icon if the route is "/"
       this.currentButtonIcon.set(IconName.PLUS);
+    } else if (routePath === '/exercises') {
+      this.currentButtonIcon.set(IconName.MORE_VERTICAL);
     } else {
-      // Set to null to show the profile picture in other cases
       this.currentButtonIcon.set(null);
     }
+  }
+
+  private isTrainingViewRoute(queryParams: Params) {
+    return queryParams['planId'] && queryParams['week'] && queryParams['day'];
   }
 }

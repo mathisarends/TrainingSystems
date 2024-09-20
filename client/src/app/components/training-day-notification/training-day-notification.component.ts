@@ -6,13 +6,12 @@ import { toggleCollapseAnimation } from '../../shared/animations/toggle-collapse
 import { ToastService } from '../../shared/components/toast/toast.service';
 import { IconName } from '../../shared/icon/icon-name';
 import { IconComponent } from '../../shared/icon/icon.component';
-import { FormatDatePipe } from '../../shared/pipes/format-date.pipe';
 import { NotificationService } from '../../shared/service/notification.service';
 
 @Component({
   selector: 'app-training-day-notification',
   standalone: true,
-  imports: [CommonModule, IconComponent, FormatDatePipe],
+  imports: [CommonModule, IconComponent],
   templateUrl: './training-day-notification.component.html',
   styleUrls: ['./training-day-notification.component.scss'],
   animations: [toggleCollapseAnimation],
