@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 @import './app//shared/directives/tooltip.scss';
+
 :root {
   --accent-color: #a78bfa;
 
@@ -33,44 +34,6 @@ body {
   background-image: url('/images/background/white-3.avif');
 }
 
-.alternative-background {
-}
-
-.blur-background .outlet-wrapper {
-  filter: blur(2px);
-  transition: filter 0.3s ease-in-out;
-}
-
-.outlet-wrapper {
-  padding-top: 5rem;
-  padding-inline: 7.5%;
-}
-@media screen and (max-width: 786px) {
-  .outlet-wrapper {
-    padding-inline: 4%;
-    padding-bottom: 5rem;
-  }
-}
-
-.modal-content {
-  background-image: linear-gradient(rgba(240, 240, 240, 0.6), rgba(250, 250, 250, 0.65)),
-    url('/images/background/white-3.avif');
-  background-size: cover;
-  background-repeat: no-repeat;
-}
-
-.modal-header,
-.modal-body,
-.modal-footer {
-  background-color: transparent !important;
-}
-
-input.form-control,
-select.form-control,
-textarea.form-control {
-  background: inherit;
-}
-
 @media screen and (min-width: 1200px) {
   body {
     background-image: none;
@@ -79,8 +42,10 @@ textarea.form-control {
   .background-image {
     background: none;
   }
+}
 
-  .modal-content {
-    background: white;
-  }
+input.form-control,
+select.form-control,
+textarea.form-control {
+  background: inherit;
 }

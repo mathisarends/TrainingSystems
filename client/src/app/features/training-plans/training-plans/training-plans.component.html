@@ -1,6 +1,5 @@
 @if (allTrainingPlans$ | async; as allTrainingPlans) {
   <section id="gallery">
-    <app-search-bar [(searchQuery)]="trainingPlanSearchQuery" />
     <div class="container">
       <div class="row">
         @if (filteredTrainingPlans$ | async; as filteredTrainingPlans) {

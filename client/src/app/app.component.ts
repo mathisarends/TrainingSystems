@@ -8,7 +8,7 @@ import { ProfileService } from './features/profile/profileService';
 import { MobileDeviceDetectionService } from './platform/mobile-device-detection.service';
 import { ServiceWorkerService } from './platform/service-worker.service';
 import { LoadingProgressBarComponent } from './shared/components/loader/loading-progress-bar/loading-progress-bar.component';
-import { MobileNavComponent } from './shared/components/mobile-nav/mobile-nav.component';
+import { NavBarComponent } from './shared/components/nav-bar/nav-bar.component';
 import { SpinnerComponent } from './shared/components/spinner/spinner.component';
 import { ToastComponent } from './shared/components/toast/toast.component';
 
@@ -21,7 +21,7 @@ import { ToastComponent } from './shared/components/toast/toast.component';
     ToastComponent,
     SpinnerComponent,
     LoadingProgressBarComponent,
-    MobileNavComponent,
+    NavBarComponent,
     HeaderComponent,
   ],
   templateUrl: './app.component.html',

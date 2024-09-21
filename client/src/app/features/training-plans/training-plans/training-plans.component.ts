@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, effect, Injector, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
@@ -10,7 +10,6 @@ import { CircularIconButtonComponent } from '../../../shared/components/circular
 import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
 import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
 import { SkeletonCardComponent } from '../../../shared/components/loader/skeleton-card/skeleton-card.component';
-import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component';
 import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
 import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
@@ -36,7 +35,6 @@ import { TrainingPlanService } from '../training-view/services/training-plan.ser
     SkeletonCardComponent,
     IconComponent,
     CircularIconButtonComponent,
-    SearchBarComponent,
   ],
   templateUrl: './training-plans.component.html',
   styleUrls: ['./training-plans.component.scss'],
@@ -57,7 +55,6 @@ export class TrainingPlansComponent implements OnInit {
     private trainingPlanService: TrainingPlanService,
     private buttonClickService: ButtonClickService,
     private destroyRef: DestroyRef,
-    private injector: Injector,
   ) {}
 
   /**
@@ -78,18 +75,6 @@ export class TrainingPlansComponent implements OnInit {
     this.buttonClickService.buttonClick$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.createNewPlan();
     });
-
-    effect(
-      () => {
-        const allPlans = this.allTrainingPlans$.value || [];
-        this.filteredTrainingPlans$.next(
-          allPlans.filter((trainingPlan) =>
-            trainingPlan.title.toLowerCase().includes(this.trainingPlanSearchQuery().toLowerCase()),
-          ),
-        );
-      },
-      { injector: this.injector },
-    );
   }
 
   /**

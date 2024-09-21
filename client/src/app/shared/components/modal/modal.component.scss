@@ -1,3 +1,22 @@
+.modal-header,
+.modal-body,
+.modal-footer {
+  background-color: transparent !important;
+}
+
+.modal-content {
+  background-image: linear-gradient(rgba(240, 240, 240, 0.6), rgba(250, 250, 250, 0.65)),
+    url('/images/background/white-3.avif');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+@media screen and (min-width: 1200px) {
+  .modal-content {
+    background: white;
+  }
+}
+
 .button-container {
   display: flex;
   gap: 10px; /* Abstand zwischen den Buttons */

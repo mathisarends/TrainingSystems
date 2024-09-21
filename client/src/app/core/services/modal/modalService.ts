@@ -29,11 +29,6 @@ export class ModalService {
    * Opens a modal dialog with the specified options.
    *
    * @param options - The options for the modal dialog.
-   */
-  /**
-   * Opens a modal dialog with the specified options.
-   *
-   * @param options - The options for the modal dialog.
    * @returns A promise that resolves when the modal is confirmed or rejected.
    */
   open(options: ModalOptions): Promise<boolean> {

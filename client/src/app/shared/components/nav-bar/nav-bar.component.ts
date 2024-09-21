@@ -6,13 +6,13 @@ import { RouteWatcherService } from '../../service/route-watcher.service';
 import { NavItem } from './nav-item';
 
 @Component({
-  selector: 'app-mobile-nav',
+  selector: 'app-nav-bar',
   standalone: true,
   imports: [IconComponent],
-  templateUrl: './mobile-nav.component.html',
-  styleUrls: ['./mobile-nav.component.scss'],
+  templateUrl: './nav-bar.component.html',
+  styleUrls: ['./nav-bar.component.scss'],
 })
-export class MobileNavComponent implements OnInit {
+export class NavBarComponent implements OnInit {
   protected IconName = IconName;
 
   /**
