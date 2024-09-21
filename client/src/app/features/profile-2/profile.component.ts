@@ -12,7 +12,7 @@ import { IconName } from '../../shared/icon/icon-name';
 import { IconComponent } from '../../shared/icon/icon.component';
 import { ButtonClickService } from '../../shared/service/button-click.service';
 import { ImageUploadService } from '../../shared/service/image-upload.service';
-import { GymtTicketComponent } from '../gym-ticket/gym-ticket.component';
+import { GymTicketComponent } from '../gym-ticket/gym-ticket.component';
 import { GymTicketService } from '../gym-ticket/gym-ticket.service';
 import { ChangeProfilePictureConfirmationComponent } from './change-profile-picture-confirmation/change-profile-picture-confirmation.component';
 import { ProfileService } from './service/profileService';
@@ -60,7 +60,7 @@ export class ProfileComponent2 implements OnInit {
     if (listItem.label === 'Ticket') {
       this.gymTicketService.getGymTicket().subscribe((ticket: string) => {
         this.modalService.open({
-          component: GymtTicketComponent,
+          component: GymTicketComponent,
           title: 'Gym Ticket',
           buttonText: 'Schließen',
           componentData: {
