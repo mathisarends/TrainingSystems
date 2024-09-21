@@ -53,6 +53,12 @@ export class ProfileComponent2 implements OnInit {
           },
         });
       });
+    } else if (listItem.label === 'Settings' || listItem.label == 'Social') {
+      this.modalService.openBasicInfoModal({
+        title: 'Settings',
+        buttonText: 'Schließen',
+        infoText: 'Leider noch nicht implementiert. Komm später wieder',
+      });
     }
   }
 }
