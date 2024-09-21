@@ -1,15 +1,17 @@
-import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
-import * as userService from '../service/userService.js';
+import { Request, Response } from 'express';
 import { authService } from '../service/authService.js';
+import * as userService from '../service/userService.js';
 
 import dotenv from 'dotenv';
-import { getTonnagePerTrainingDay } from '../service/trainingService.js';
-import { encrypt, decrypt } from '../utils/cryption.js';
 import transporter from '../config/mailerConfig.js';
+import { getTonnagePerTrainingDay } from '../service/trainingService.js';
 import { createResetPasswordEmail } from '../service/userService.js';
+import { decrypt, encrypt } from '../utils/cryption.js';
 
 import { format } from 'date-fns';
+import { User } from '../models/collections/user/user.js';
+import { MongoGenericDAO } from '../models/dao/mongo-generic.dao.js';
 dotenv.config();
 
 export async function register(req: Request, res: Response): Promise<void> {
@@ -149,6 +151,34 @@ export async function getProfile(req: Request, res: Response): Promise<void> {
   };
 
   res.status(200).json(userDto);
+}
+
+export async function editProfile(req: Request, res: Response): Promise<Response> {
+  const user = await userService.getUser(req, res);
+  const userDAO = userService.getUserGenericDAO(req);
+
+  const username = req.body.username;
+  const profilePicture = req.body.picture;
+
+  if (await isNewUserNameGivenAndValid(userDAO, username)) {
+    user.username = username;
+  }
+
+  if (profilePicture) {
+    user.pictureUrl = profilePicture;
+  }
+
+  await userDAO.update(user);
+
+  return res.status(200).json({ message: 'Profil aktualisiert' });
+}
+
+async function isNewUserNameGivenAndValid(userDAO: MongoGenericDAO<User>, username: string) {
+  if (!username) {
+    return false;
+  }
+  const user = await userDAO.findOne({ username });
+  return !user;
 }
 
 /**

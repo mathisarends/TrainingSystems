@@ -54,7 +54,11 @@ export class ProfileComponent2 implements OnInit {
             break;
 
           case 'Editieren':
-            console.log('Editieren selected');
+            this.modalService.openBasicInfoModal({
+              title: 'Profil bearbeiten',
+              buttonText: 'Speichern',
+              infoText: 'Leider noch nicht implementiert. Komm später wieder',
+            });
             break;
 
           default:

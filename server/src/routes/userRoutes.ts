@@ -1,7 +1,7 @@
 import express from 'express';
-import { authService } from '../service/authService.js';
 import * as userController from '../controller/userController.js';
 import { asyncHandler } from '../middleware/error-handler.js';
+import { authService } from '../service/authService.js';
 import { getUser } from '../service/userService.js';
 
 const router = express.Router();
@@ -10,6 +10,7 @@ router.post('/register', asyncHandler(userController.register));
 router.post('/login', asyncHandler(userController.login));
 router.post('/login/oauth2', asyncHandler(userController.loginOAuth2));
 router.get('/profile', authService.authenticationMiddleware, asyncHandler(userController.getProfile));
+router.post('/profile', authService.authenticationMiddleware, asyncHandler(userController.editProfile));
 
 router.post('/send-reset-password-email', asyncHandler(userController.sendPasswordResetEmail));
 router.get('/authenticate-password-request/:token', asyncHandler(userController.authenticatePasswordResetPage));
