@@ -1,18 +1,18 @@
 import { Component, Input } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
-import { ToastService } from '../../../shared/components/toast/toast.service';
-import { ImageUploadService } from '../../../shared/service/image-upload.service';
-import { GymTicketService } from '../gym-ticket.service';
+import { ModalService } from '../../core/services/modal/modalService';
+import { ToastService } from '../../shared/components/toast/toast.service';
+import { ImageUploadService } from '../../shared/service/image-upload.service';
+import { GymTicketService } from './gym-ticket.service';
 
 @Component({
-  selector: 'app-ticket-preview-component',
+  selector: 'app-ticket',
   standalone: true,
   imports: [],
-  templateUrl: './ticket-preview-component.component.html',
-  styleUrls: ['./ticket-preview-component.component.scss'],
+  templateUrl: './gym-ticket.component.html',
+  styleUrls: ['./gym-ticket.component.scss'],
   providers: [GymTicketService],
 })
-export class TicketPreviewComponentComponent {
+export class GymtTicketComponent {
   protected readonly NO_GYM_TICKET_AVAILABLE = 'noGymTicketAvailable';
 
   @Input({ required: true }) ticketImage!: string;
@@ -20,6 +20,7 @@ export class TicketPreviewComponentComponent {
   constructor(
     private imageUploadService: ImageUploadService,
     private gymTicketService: GymTicketService,
+    private modalService: ModalService,
     private toastService: ToastService,
   ) {}
 
@@ -30,9 +31,9 @@ export class TicketPreviewComponentComponent {
       return;
     }
 
-    this.gymTicketService.uploadGymTicket(uploadedImageBase64Str).subscribe(async () => {
+    this.gymTicketService.uploadGymTicket(uploadedImageBase64Str).subscribe(() => {
+      this.modalService.close();
       this.toastService.success('Ticket hochgeladen');
-      this.ticketImage = await firstValueFrom(this.gymTicketService.getGymTicket());
     });
   }
 }

@@ -8,8 +8,8 @@ import { SpinnerComponent } from '../../shared/components/spinner/spinner.compon
 import { IconName } from '../../shared/icon/icon-name';
 import { IconComponent } from '../../shared/icon/icon.component';
 import { ButtonClickService } from '../../shared/service/button-click.service';
+import { GymtTicketComponent } from '../gym-ticket/gym-ticket.component';
 import { GymTicketService } from '../gym-ticket/gym-ticket.service';
-import { TicketPreviewComponentComponent } from '../gym-ticket/ticket-preview-component/ticket-preview-component.component';
 import { ProfileService } from '../profile/profileService';
 
 @Component({
@@ -45,7 +45,7 @@ export class ProfileComponent2 implements OnInit {
     if (listItem.label === 'Ticket') {
       this.gymTicketService.getGymTicket().subscribe((ticket: string) => {
         this.modalService.open({
-          component: TicketPreviewComponentComponent,
+          component: GymtTicketComponent,
           title: 'Gym Ticket',
           buttonText: 'Schließen',
           componentData: {
