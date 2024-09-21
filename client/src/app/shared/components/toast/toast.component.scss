@@ -1,6 +1,6 @@
 .toast-container {
   position: fixed;
-  bottom: 0;
+  bottom: 4.75rem;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -21,7 +21,6 @@
   transform: translateY(100%);
   transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.35);
   width: 100%;
-  max-width: 85vw;
   min-width: 285px;
   max-width: 600px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

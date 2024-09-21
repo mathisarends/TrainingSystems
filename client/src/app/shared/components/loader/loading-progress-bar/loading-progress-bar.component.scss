@@ -7,12 +7,12 @@
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1000;
+  z-index: 2000;
 }
 
 .progress-bar {
   height: 100%;
-  background-color: rgb(168, 170, 173);
+  background-color: rgb(211, 211, 211);
   transition:
     width 0.1s ease-in-out,
     opacity 0.3s ease-in-out; /* Smooth transition for both width and opacity */
