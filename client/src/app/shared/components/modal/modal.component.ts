@@ -4,10 +4,11 @@ import {
   Component,
   ComponentRef,
   EnvironmentInjector,
+  EventEmitter,
+  Output,
   ViewChild,
   ViewContainerRef,
   createComponent,
-  output,
 } from '@angular/core';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { ModalSize } from '../../../core/services/modal/modalSize';
@@ -76,12 +77,12 @@ export class ModalComponent implements AfterViewInit {
   /**
    * Emits an event when the confirm action is triggered by the user (e.g., clicking the confirm button).
    */
-  confirmed = output<void>();
+  @Output() confirmed = new EventEmitter<void>();
 
   /**
    * Emits an event when the cancel action is triggered by the user (e.g., clicking the cancel button or closing the modal).
    */
-  cancelled = output<void>();
+  @Output() cancelled = new EventEmitter<void>();
 
   constructor(
     private environmentInjector: EnvironmentInjector,
