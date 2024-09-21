@@ -14,12 +14,22 @@ import { IconListItem } from './icon-list-item';
 export class IconListeItemComponent {
   protected readonly IconName = IconName;
 
+  /**
+   * The list item to be displayed.
+   */
   item = input.required<IconListItem>();
 
+  /**
+   * An event emitter that emits the current `IconListItem` when the component
+   * is clicked.
+   */
   itemClicked = output<IconListItem>();
 
-  constructor() {}
-
+  /**
+   * Handles the click event on the component. When the user clicks anywhere
+   * on the component, this method is triggered, emitting the `itemClicked` event
+   * with the current `IconListItem`.
+   */
   @HostListener('click')
   onClick() {
     this.itemClicked.emit(this.item());
