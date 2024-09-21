@@ -70,8 +70,8 @@ export class ModalComponent implements AfterViewInit {
   }
 
   confirm() {
-    if (this.childComponentRef.instance.onSubmit) {
-      this.childComponentRef.instance.onSubmit();
+    if (this.childComponentRef.instance.onConfirm) {
+      this.childComponentRef.instance.onConfirm();
     }
 
     if (!this.confirmationRequired) {
@@ -81,9 +81,9 @@ export class ModalComponent implements AfterViewInit {
     this.confirmed.emit();
   }
 
-  secondaryButtonClick() {
-    if (this.childComponentRef.instance.onSecondaryButtonClick) {
-      this.childComponentRef.instance.onSecondaryButtonClick();
+  toggleModalView() {
+    if (this.childComponentRef.instance.onToggleView) {
+      this.childComponentRef.instance.onToggleView();
     }
   }
 }

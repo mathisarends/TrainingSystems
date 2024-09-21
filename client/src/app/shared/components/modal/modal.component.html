@@ -11,11 +11,7 @@
       @if (footer) {
         <div class="modal-footer">
           @if (secondaryButtonText) {
-            <app-button
-              [variant]="'SECONDARY'"
-              [textContent]="secondaryButtonText"
-              (clicked)="secondaryButtonClick()"
-            />
+            <app-button [variant]="'SECONDARY'" [textContent]="secondaryButtonText" (clicked)="toggleModalView()" />
           }
 
           @let buttonVariant = isDestructiveAction ? 'DESTRUCTIVE' : 'PRIMARY';

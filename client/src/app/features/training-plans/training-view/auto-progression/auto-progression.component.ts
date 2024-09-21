@@ -2,6 +2,7 @@ import { Component, input } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpService } from '../../../../core/services/http-client.service';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
+import { OnConfirm } from '../../../../shared/components/modal/on-confirm';
 import { ToastService } from '../../../../shared/components/toast/toast.service';
 
 @Component({
@@ -11,7 +12,7 @@ import { ToastService } from '../../../../shared/components/toast/toast.service'
   templateUrl: './auto-progression.component.html',
   styleUrl: './auto-progression.component.scss',
 })
-export class AutoProgressionComponent {
+export class AutoProgressionComponent implements OnConfirm {
   planId = input.required<string>;
 
   autoProgressionForm: FormGroup;
@@ -27,7 +28,7 @@ export class AutoProgressionComponent {
     });
   }
 
-  onSubmit(): void {
+  onConfirm(): void {
     if (this.autoProgressionForm.valid) {
       const { rpeProgression, deloadWeek } = this.autoProgressionForm.value;
 

@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { firstValueFrom, Observable, Subscription } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { ModalService } from '../../../core/services/modal/modalService';
+import { OnConfirm } from '../../../shared/components/modal/on-confirm';
 import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
 import { ToastService } from '../../../shared/components/toast/toast.service';
 import { ImageUploadService } from '../../../shared/service/image-upload.service';
@@ -22,7 +23,7 @@ import { TrainingPlanEditViewDto } from './training-plan-edit-view-dto';
   templateUrl: './edit-training-plan.component.html',
   styleUrls: ['./edit-training-plan.component.scss'],
 })
-export class EditTrainingPlanComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class EditTrainingPlanComponent implements OnInit, OnDestroy, AfterViewChecked, OnConfirm {
   @Input() id!: string;
   @ViewChild('coverImage') coverImageElement!: ElementRef<HTMLImageElement>;
 
@@ -122,7 +123,7 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy, AfterViewCh
   /**
    * Handles form submission.
    */
-  protected async onSubmit(): Promise<void> {
+  async onConfirm(): Promise<void> {
     if (this.trainingForm.valid) {
       const formData = this.trainingForm.value;
 

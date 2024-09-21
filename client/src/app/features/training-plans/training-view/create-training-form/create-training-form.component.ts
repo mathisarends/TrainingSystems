@@ -5,6 +5,8 @@ import { firstValueFrom } from 'rxjs';
 import { HttpService } from '../../../../core/services/http-client.service';
 import { ModalService } from '../../../../core/services/modal/modalService';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
+import { OnConfirm } from '../../../../shared/components/modal/on-confirm';
+import { OnToggleView } from '../../../../shared/components/modal/on-toggle-view';
 import { ToastService } from '../../../../shared/components/toast/toast.service';
 import { ImageUploadService } from '../../../../shared/service/image-upload.service';
 import { TrainingPlanCardView } from '../models/exercise/training-plan-card-view-dto';
@@ -20,7 +22,7 @@ import { TrainingPlanService } from '../services/training-plan.service';
   templateUrl: './create-training-form.component.html',
   styleUrls: ['./create-training-form.component.scss'],
 })
-export class CreateTrainingFormComponent {
+export class CreateTrainingFormComponent implements OnConfirm, OnToggleView {
   private readonly placeholderCoverImage = '/images/training/training_3.jpg';
 
   @ViewChild('coverImage') coverImage!: ElementRef<HTMLImageElement>;
@@ -87,7 +89,7 @@ export class CreateTrainingFormComponent {
   /**
    * Handles form submission.
    */
-  async onSubmit() {
+  async onConfirm() {
     if (!this.trainingForm.valid) {
       this.trainingForm.markAllAsTouched();
       return;
@@ -103,7 +105,7 @@ export class CreateTrainingFormComponent {
     this.modalService.close(); // Close modal on successful submission
   }
 
-  onSecondaryButtonClick() {
+  onToggleView() {
     if (this.showCreatePlanBasedOnExistingOne()) {
       this.showCreatePlanBasedOnExistingOne.set(false);
       this.initializeForm();
