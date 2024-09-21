@@ -15,8 +15,8 @@ import { ProfileService } from '../profile/profileService';
   standalone: true,
   imports: [CircularIconButtonComponent, HeadlineComponent, SkeletonComponent, MoreOptionsButtonComponent],
   selector: 'app-header',
-  templateUrl: 'header.component.html',
-  styleUrl: 'header.component.scss',
+  templateUrl: './header.component.html',
+  styleUrl: './header.component.scss',
 })
 export class HeaderComponent implements OnInit {
   protected readonly IconName = IconName;
@@ -59,8 +59,9 @@ export class HeaderComponent implements OnInit {
   }
 
   protected onOptionSelected(option: string) {
-    this.buttonClickService.emitButtonClick();
+    this.buttonClickService.emitButtonClick(option);
   }
+
   private updateButtonIconAndOptions(routePath: string) {
     const queryParams = this.route.snapshot.queryParams;
 

@@ -30,4 +30,5 @@ export enum IconName {
   USERS = 'users',
   SETTINGS = 'settings',
   IMAGE = 'image',
+  AWARD = 'award',
 }

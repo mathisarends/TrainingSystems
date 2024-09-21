@@ -54,6 +54,7 @@ export class AuthService {
   logout(): void {
     this.httpService.post('/user/logout').subscribe(() => {
       this.isAuthenticatedSignal.set(false);
+      this.router.navigate(['login']);
     });
   }
 

@@ -1,5 +1,7 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs';
+import { AuthService } from '../../core/services/auth.service';
 import { ModalService } from '../../core/services/modal/modalService';
 import { IconBackgroundColor } from '../../shared/components/icon-list-item/icon-background-color';
 import { IconListItem } from '../../shared/components/icon-list-item/icon-list-item';
@@ -24,13 +26,15 @@ export class ProfileComponent2 implements OnInit {
   protected IconName = IconName;
 
   protected readonly listItems: IconListItem[] = [
-    { label: 'Ticket', iconName: IconName.IMAGE, iconBackgroundColor: IconBackgroundColor.Orange },
-    { label: 'Social', iconName: IconName.USERS, iconBackgroundColor: IconBackgroundColor.Turquoise },
-    { label: 'Settings', iconName: IconName.SETTINGS, iconBackgroundColor: IconBackgroundColor.DodgerBlue },
+    { label: 'Ticket', iconName: IconName.IMAGE, iconBackgroundColor: IconBackgroundColor.Turquoise },
+    { label: 'Social', iconName: IconName.USERS, iconBackgroundColor: IconBackgroundColor.LimeGreen },
+    { label: 'Achievements', iconName: IconName.AWARD, iconBackgroundColor: IconBackgroundColor.Orange },
+    { label: 'Settings', iconName: IconName.SETTINGS, iconBackgroundColor: IconBackgroundColor.BlueViolet },
   ];
 
   constructor(
     protected profileService: ProfileService,
+    private authService: AuthService,
     private modalService: ModalService,
     private gymTicketService: GymTicketService,
     private buttonClickService: ButtonClickService,
@@ -38,7 +42,25 @@ export class ProfileComponent2 implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.buttonClickService.buttonClick$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {});
+    this.buttonClickService.buttonClick$
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        filter((option): option is string => !!option),
+      )
+      .subscribe((option: string) => {
+        switch (option) {
+          case 'Logout':
+            this.authService.logout();
+            break;
+
+          case 'Editieren':
+            console.log('Editieren selected');
+            break;
+
+          default:
+            console.log('Unknown option');
+        }
+      });
   }
 
   protected onListItemClicked(listItem: IconListItem) {
@@ -53,9 +75,9 @@ export class ProfileComponent2 implements OnInit {
           },
         });
       });
-    } else if (listItem.label === 'Settings' || listItem.label == 'Social') {
+    } else if (listItem.label === 'Settings' || listItem.label == 'Social' || listItem.label === 'Achievements') {
       this.modalService.openBasicInfoModal({
-        title: 'Settings',
+        title: listItem.label,
         buttonText: 'Schließen',
         infoText: 'Leider noch nicht implementiert. Komm später wieder',
       });
