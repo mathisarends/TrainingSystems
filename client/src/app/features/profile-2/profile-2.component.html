@@ -6,7 +6,8 @@
         <h2>{{ user.username }}</h2>
         <p>{{ user.email }}</p>
       </div>
-      <img [src]="user.pictureUrl || '/images/profile-placeholder.webp'" alt="Profile" />
+      <img #profilePicture [src]="user.pictureUrl || '/images/profile-placeholder.webp'" alt="Profile" />
+      <input type="file" id="file-input" (change)="handleProfilePictureChange($event)" />
     </div>
 
     <div class="list-item-container">

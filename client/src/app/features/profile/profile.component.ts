@@ -15,6 +15,8 @@ import { TooltipDirective } from '../../shared/directives/tooltip.directive';
 import { IconName } from '../../shared/icon/icon-name';
 import { IconComponent } from '../../shared/icon/icon.component';
 import { ImageUploadService } from '../../shared/service/image-upload.service';
+import { ProfileService } from '../profile-2/service/profileService';
+import { UserData } from '../profile-2/service/user-data';
 import { ActivityCalendar } from '../usage-statistics/activity-calendar/activity-calendar.component';
 import { ChangeProfilePictureConfirmationComponent } from './change-profile-picture-confirmation/change-profile-picture-confirmation.component';
 import { Friend } from './friend-card/friend';
@@ -22,8 +24,6 @@ import { FriendCardMode } from './friend-card/friend-card-mode';
 import { FriendCardComponent } from './friend-card/friend-card.component';
 import { FriendModalComponent } from './friend-modal/friend-modal.component';
 import { FriendRequestComponent } from './friend-request/friend-request.component';
-import { ProfileService } from './profileService';
-import { UserData } from './user-data';
 
 @Component({
   selector: 'app-profile',

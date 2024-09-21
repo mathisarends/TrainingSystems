@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
@@ -7,12 +7,15 @@ import { IconBackgroundColor } from '../../shared/components/icon-list-item/icon
 import { IconListItem } from '../../shared/components/icon-list-item/icon-list-item';
 import { IconListeItemComponent } from '../../shared/components/icon-list-item/icon-list-item.component';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
+import { ToastService } from '../../shared/components/toast/toast.service';
+import { BasicConfirmationResponse } from '../../shared/dto/basic-confirmation-response';
 import { IconName } from '../../shared/icon/icon-name';
 import { IconComponent } from '../../shared/icon/icon.component';
 import { ButtonClickService } from '../../shared/service/button-click.service';
+import { ImageUploadService } from '../../shared/service/image-upload.service';
 import { GymtTicketComponent } from '../gym-ticket/gym-ticket.component';
 import { GymTicketService } from '../gym-ticket/gym-ticket.service';
-import { ProfileService } from '../profile/profileService';
+import { ProfileService } from './service/profileService';
 
 @Component({
   standalone: true,
@@ -25,6 +28,9 @@ import { ProfileService } from '../profile/profileService';
 export class ProfileComponent2 implements OnInit {
   protected IconName = IconName;
 
+  @ViewChild('profilePicture', { static: false })
+  profilePictureElement!: ElementRef;
+
   protected readonly listItems: IconListItem[] = [
     { label: 'Ticket', iconName: IconName.IMAGE, iconBackgroundColor: IconBackgroundColor.Turquoise },
     { label: 'Social', iconName: IconName.USERS, iconBackgroundColor: IconBackgroundColor.LimeGreen },
@@ -36,7 +42,9 @@ export class ProfileComponent2 implements OnInit {
     protected profileService: ProfileService,
     private authService: AuthService,
     private modalService: ModalService,
+    private toastService: ToastService,
     private gymTicketService: GymTicketService,
+    private imageUploadService: ImageUploadService,
     private buttonClickService: ButtonClickService,
     private destroyRef: DestroyRef,
   ) {}
@@ -86,5 +94,23 @@ export class ProfileComponent2 implements OnInit {
         infoText: 'Leider noch nicht implementiert. Komm später wieder',
       });
     }
+  }
+
+  // TODO: Hier vorher mit der Profile Picture Confirmation spielen
+
+  protected async handleProfilePictureChange(event: Event) {
+    const uploadedPictureBase64Str = await this.imageUploadService.handleImageUpload(event, true);
+
+    if (!uploadedPictureBase64Str) {
+      return;
+    }
+
+    this.profileService
+      .uploadProfilePicture(uploadedPictureBase64Str)
+      .subscribe((response: BasicConfirmationResponse) => {
+        this.profilePictureElement.nativeElement.src = uploadedPictureBase64Str;
+        this.toastService.success(response.message);
+        this.profileService.getProfile(); // update profile service + TODO: rename this method
+      });
   }
 }

@@ -9,7 +9,7 @@ import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.com
 import { IconName } from '../../shared/icon/icon-name';
 import { ButtonClickService } from '../../shared/service/button-click.service';
 import { RouteWatcherService } from '../../shared/service/route-watcher.service';
-import { ProfileService } from '../profile/profileService';
+import { ProfileService } from '../profile-2/service/profileService';
 
 @Component({
   standalone: true,
@@ -28,7 +28,7 @@ export class HeaderComponent implements OnInit {
   private routeIconMap = new Map<string, { icon: IconName | null; options: string[] }>([
     ['/', { icon: IconName.PLUS, options: [''] }],
     ['/exercises', { icon: IconName.MORE_VERTICAL, options: ['Zurücksetzen'] }],
-    ['/profile', { icon: IconName.MORE_VERTICAL, options: ['Editieren', 'Logout'] }],
+    ['/profile', { icon: IconName.MORE_VERTICAL, options: ['Logout'] }],
   ]);
 
   constructor(

@@ -4,7 +4,7 @@ import { AuthService } from './core/services/auth.service';
 import { BrowserCheckService } from './core/services/browser-check.service';
 import { RedirectService } from './core/services/redirect.service';
 import { HeaderComponent } from './features/header/header.component';
-import { ProfileService } from './features/profile/profileService';
+import { ProfileService } from './features/profile-2/service/profileService';
 import { MobileDeviceDetectionService } from './platform/mobile-device-detection.service';
 import { ServiceWorkerService } from './platform/service-worker.service';
 import { LoadingProgressBarComponent } from './shared/components/loader/loading-progress-bar/loading-progress-bar.component';
