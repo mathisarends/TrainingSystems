@@ -1,10 +1,16 @@
 :host {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 1.25rem;
   margin-top: 0.5rem;
-  background-image: url('/images/background/white-lines.webp');
+  width: 100%;
 
+  .profile-wrapper {
+    width: 55vw;
+    max-width: 650px;
+  }
   p {
     margin: 0;
   }
@@ -13,6 +19,7 @@
 .profile-header-container {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   gap: 1rem;
 
   img {
@@ -36,26 +43,12 @@
   }
 }
 
-.three-button-container {
-  display: flex;
-  gap: 0.5rem;
+@media screen and (max-width: 768px) {
+  :host {
+    align-items: unset;
 
-  .box {
-    border: 2px solid white;
-    color: grey;
-    border-radius: 2px;
-    background-color: #e9e9e9;
-    flex-grow: 1;
-    max-width: 200px;
-    aspect-ratio: 1;
-    display: flex;
-    gap: 0.4rem;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    &:hover {
-      transform: scale(1.05);
+    .profile-wrapper {
+      width: 100%;
     }
   }
 }

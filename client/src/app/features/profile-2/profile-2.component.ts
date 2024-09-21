@@ -5,10 +5,11 @@ import { IconName } from '../../shared/icon/icon-name';
 import { IconComponent } from '../../shared/icon/icon.component';
 import { ButtonClickService } from '../../shared/service/button-click.service';
 import { ProfileService } from '../profile/profileService';
+import { ProfileListItemComponent } from './profile-list-item/profile-list-item.component';
 
 @Component({
   standalone: true,
-  imports: [IconComponent, SpinnerComponent],
+  imports: [IconComponent, SpinnerComponent, ProfileListItemComponent],
   selector: 'app-profile-2',
   templateUrl: 'profile-2.component.html',
   styleUrls: ['profile-2.component.scss'],

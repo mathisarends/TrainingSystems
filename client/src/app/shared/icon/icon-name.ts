@@ -1,7 +1,6 @@
 export enum IconName {
   Activity = 'activity',
   AlertTriangle = 'alert-triangle',
-
   Bell = 'bell',
   BookOpen = 'book-open',
   ChevronDown = 'chevron-down',
@@ -23,6 +22,7 @@ export enum IconName {
   PLAY = 'play',
   HOME = 'home',
   CHEVRON_LEFT = 'chevron-left',
+  CHEVRON_RIGHT = 'chevron-right',
   SEARCH = 'search',
   MIC = 'mic',
   DATABASE = 'database',
