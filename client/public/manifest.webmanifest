@@ -1,7 +1,7 @@
 {
   "name": "TYR Training Systems",
   "short_name": "TYR TS",
-  "theme_color": "#ffffff",
+  "theme_color": "#fdfdfd",
   "background_color": "#ffffff",
   "display": "standalone",
   "scope": "./",
