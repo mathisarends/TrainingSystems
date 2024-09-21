@@ -128,14 +128,6 @@
       </tbody>
     </table>
 
-    <div class="pagination-container mb-4">
-      <app-pagination
-        [currentPage]="trainingDayIndex"
-        [totalPages]="trainingPlanData.trainingFrequency"
-        (pageChanged)="onPageChanged($event)"
-      ></app-pagination>
-    </div>
-
     <button class="btn btn-outline-dark m-1" id="reset-btn" type="button" (click)="openAutoProgressionModal()">
       Options
     </button>
