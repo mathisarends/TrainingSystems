@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, signal } from '@angular/core';
 import { ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper';
 import { ModalService } from '../../core/services/modal/modalService';
 import { ToastService } from '../../shared/components/toast/toast.service';
@@ -14,13 +14,13 @@ import { GymTicketService } from './gym-ticket.service';
   styleUrls: ['./gym-ticket.component.scss'],
   providers: [GymTicketService],
 })
-export class GymTicketComponent {
+export class GymTicketComponent implements OnInit {
   protected readonly NO_GYM_TICKET_AVAILABLE = 'noGymTicketAvailable';
 
   @Input({ required: true }) ticketImage!: string;
 
-  isCropping = false;
-  croppedImage: string | null | undefined = null;
+  ticketImageSignal = signal<string>('');
+  isCropView = signal<boolean>(false);
 
   constructor(
     private imageUploadService: ImageUploadService,
@@ -29,21 +29,18 @@ export class GymTicketComponent {
     private toastService: ToastService,
   ) {}
 
-  protected async handleImageUpload(event: Event) {
+  ngOnInit(): void {
+    this.ticketImageSignal.set(this.ticketImage);
+  }
+
+  protected async displayUploadedImage(event: Event) {
     const uploadedImageBase64Str = await this.imageUploadService.handleImageUpload(event);
 
     if (!uploadedImageBase64Str) {
       return;
     }
 
-    this.gymTicketService.uploadGymTicket(uploadedImageBase64Str).subscribe(() => {
-      this.modalService.close();
-      this.toastService.success('Ticket hochgeladen');
-    });
-  }
-
-  protected startCropping() {
-    this.isCropping = true;
+    this.ticketImageSignal.set(uploadedImageBase64Str);
   }
 
   protected async imageCropped(event: ImageCroppedEvent) {
@@ -55,20 +52,10 @@ export class GymTicketComponent {
       const base64 = await this.convertBlobToBase64(event.blob!);
 
       if (typeof base64 === 'string') {
-        this.croppedImage = base64;
+        this.ticketImageSignal.set(base64);
       }
     } catch (error) {
       console.error('Error converting blob to Base64', error);
-    }
-  }
-
-  protected uploadCroppedImage() {
-    if (this.croppedImage) {
-      this.gymTicketService.uploadGymTicket(this.croppedImage).subscribe(() => {
-        this.modalService.close();
-        this.toastService.success('Zugeschnittenes Ticket hochgeladen');
-        this.isCropping = false;
-      });
     }
   }
 
@@ -79,5 +66,17 @@ export class GymTicketComponent {
       reader.onerror = reject;
       reader.readAsDataURL(blob); // Blob wird als Base64 gelesen
     });
+  }
+
+  onSubmit() {
+    if (this.ticketImageSignal() !== this.ticketImage) {
+      this.gymTicketService.uploadGymTicket(this.ticketImageSignal()).subscribe((response) => {
+        this.toastService.success(response.message);
+      });
+    }
+  }
+
+  onSecondaryButtonClick() {
+    this.isCropView.set(!this.isCropView());
   }
 }

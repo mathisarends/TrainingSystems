@@ -1,32 +1,20 @@
-<!-- Überprüfe, ob ein Ticket-Bild verfügbar ist -->
-@if (ticketImage !== NO_GYM_TICKET_AVAILABLE) {
+@if (isCropView()) {
+  <image-cropper
+    [imageBase64]="ticketImageSignal()"
+    [maintainAspectRatio]="false"
+    (imageCropped)="imageCropped($event)"
+    format="png"
+  />
+} @else if (ticketImage !== NO_GYM_TICKET_AVAILABLE) {
   <div class="upload-container" (click)="fileInput.click()">
-    @if (isCropping) {
-      <image-cropper
-        [imageBase64]="ticketImage"
-        [maintainAspectRatio]="false"
-        (imageCropped)="imageCropped($event)"
-        format="png"
-      />
-    } @else {
-      <img [src]="ticketImage" alt="Upload Ticket" class="w-100" />
-    }
+    <img [src]="ticketImageSignal()" alt="Upload Ticket" class="w-100" />
 
-    <input type="file" #fileInput (change)="handleImageUpload($event)" accept="image/*" hidden />
+    <input type="file" #fileInput (change)="displayUploadedImage($event)" accept="image/*" hidden />
   </div>
-
-  <!-- Button, um das bestehende Ticket zu bearbeiten -->
-  @if (isCropping) {
-    <button (click)="uploadCroppedImage()" class="btn btn-success mt-3">Zugeschnittenes Bild hochladen</button>
-  } @else {
-    <button (click)="startCropping()" class="btn btn-primary mt-3">Bild zuschneiden</button>
-  }
-
-  <!-- Zeige den Cropper nur, wenn isCropping true ist -->
 } @else {
   <!-- Wenn kein Ticket vorhanden ist, zeige den Dateiupload -->
   <div class="upload-dropzone" (click)="fileInput.click()">
     <p>Drag & Drop your gym ticket here, or click to select an image.</p>
-    <input type="file" #fileInput (change)="handleImageUpload($event)" accept="image/*" hidden />
+    <input type="file" #fileInput (change)="displayUploadedImage($event)" accept="image/*" hidden />
   </div>
 }

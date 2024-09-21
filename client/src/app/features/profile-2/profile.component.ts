@@ -62,7 +62,8 @@ export class ProfileComponent2 implements OnInit {
         this.modalService.open({
           component: GymTicketComponent,
           title: 'Gym Ticket',
-          buttonText: 'Schließen',
+          buttonText: 'Speichern',
+          secondaryButtonText: 'Zuschneiden',
           componentData: {
             ticketImage: ticket,
           },
