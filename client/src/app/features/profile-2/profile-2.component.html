@@ -7,7 +7,7 @@
         <p>{{ user.email }}</p>
       </div>
       <img #profilePicture [src]="user.pictureUrl || '/images/profile-placeholder.webp'" alt="Profile" />
-      <input type="file" id="file-input" (change)="handleProfilePictureChange($event)" />
+      <input type="file" id="file-input" (change)="showProfilePictureChangeDialog($event)" />
     </div>
 
     <div class="list-item-container">

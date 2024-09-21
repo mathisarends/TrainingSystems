@@ -9,7 +9,6 @@ import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { RequestNewPasswordEmail } from './features/auth/request-new-password-email/request-new-password-email.component';
 import { ProfileComponent2 } from './features/profile-2/profile-2.component';
-import { ProfileComponent } from './features/profile/profile.component';
 import { StatisticsComponent } from './features/training-plans/statistics/statistics.component';
 import { TrainingPlansComponent } from './features/training-plans/training-plans/training-plans.component';
 import { TrainingViewComponent } from './features/training-plans/training-view/training-view.component';
@@ -33,7 +32,6 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
   },
   { path: 'profile', component: ProfileComponent2, canActivate: [AuthGuard] },
-  { path: 'profile2', component: ProfileComponent, canActivate: [AuthGuard] },
   {
     path: 'exercises',
     component: ExercisesComponent,

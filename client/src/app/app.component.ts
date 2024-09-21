@@ -53,7 +53,7 @@ export class AppComponent implements OnInit {
       // called to prevent ts-warnings
       this.authService.checkAuthenticationStatus().subscribe();
 
-      this.profileService.getProfile().subscribe();
+      this.profileService.fetchAndSetProfileData().subscribe();
 
       if (!this.mobileDeviceDetectionService.isMobileDevice) {
         return;

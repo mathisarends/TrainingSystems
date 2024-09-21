@@ -15,6 +15,7 @@ import { ButtonClickService } from '../../shared/service/button-click.service';
 import { ImageUploadService } from '../../shared/service/image-upload.service';
 import { GymtTicketComponent } from '../gym-ticket/gym-ticket.component';
 import { GymTicketService } from '../gym-ticket/gym-ticket.service';
+import { ChangeProfilePictureConfirmationComponent } from './change-profile-picture-confirmation/change-profile-picture-confirmation.component';
 import { ProfileService } from './service/profileService';
 
 @Component({
@@ -96,21 +97,33 @@ export class ProfileComponent2 implements OnInit {
     }
   }
 
-  // TODO: Hier vorher mit der Profile Picture Confirmation spielen
-
-  protected async handleProfilePictureChange(event: Event) {
+  protected async showProfilePictureChangeDialog(event: Event) {
     const uploadedPictureBase64Str = await this.imageUploadService.handleImageUpload(event, true);
 
     if (!uploadedPictureBase64Str) {
       return;
     }
 
-    this.profileService
-      .uploadProfilePicture(uploadedPictureBase64Str)
-      .subscribe((response: BasicConfirmationResponse) => {
-        this.profilePictureElement.nativeElement.src = uploadedPictureBase64Str;
-        this.toastService.success(response.message);
-        this.profileService.getProfile(); // update profile service + TODO: rename this method
-      });
+    const currentProfilePicture = this.profileService.userData()!.pictureUrl;
+
+    const response = await this.modalService.open({
+      component: ChangeProfilePictureConfirmationComponent,
+      title: 'Profilbild ändern',
+      buttonText: 'Bestäigen',
+      componentData: {
+        oldProfilePicture: currentProfilePicture,
+        newProfilePicture: uploadedPictureBase64Str,
+      },
+    });
+
+    if (response) {
+      this.profileService
+        .uploadProfilePicture(uploadedPictureBase64Str)
+        .subscribe((response: BasicConfirmationResponse) => {
+          this.profilePictureElement.nativeElement.src = uploadedPictureBase64Str;
+          this.toastService.success(response.message);
+          this.profileService.fetchAndSetProfileData();
+        });
+    }
   }
 }

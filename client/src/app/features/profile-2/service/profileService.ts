@@ -12,7 +12,7 @@ export class ProfileService {
 
   constructor(private httpClientService: HttpService) {}
 
-  getProfile(): Observable<UserData> {
+  fetchAndSetProfileData(): Observable<UserData> {
     return this.httpClientService.get<UserData>('/user/profile').pipe(tap((data: UserData) => this.userData.set(data)));
   }
 
