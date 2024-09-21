@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: space-around;
   padding: 0.75rem 1rem;
-  background-color: #2e3a40; /* Dunkles Grau für die Navigationsleiste */
+  background-color: var(--dark-grey);
   border-radius: 16px 16px 0 0;
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
   transition: color 0.3s ease;

@@ -5,7 +5,7 @@
   --accent-color: #a78bfa;
 
   --light-grey: #f0f0f0;
-  --dark-grey: #222222;
+  --dark-grey: #2e3a40;
   --border-color: #e2e8f0;
 
   --off-white: #fdfdfd;
@@ -28,6 +28,11 @@ body {
   background-repeat: repeat;
   background-image: url('/images/background/white-3.avif');
   overflow-x: hidden;
+}
+
+.blur-background .outlet-wrapper {
+  filter: blur(2px);
+  transition: filter 0.3s ease-in-out;
 }
 
 .background-image {

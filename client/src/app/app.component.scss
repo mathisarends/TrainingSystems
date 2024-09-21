@@ -3,11 +3,6 @@
   padding-inline: 7.5%;
 }
 
-.blur-background .outlet-wrapper {
-  filter: blur(2px);
-  transition: filter 0.3s ease-in-out;
-}
-
 @media screen and (max-width: 786px) {
   .outlet-wrapper {
     padding-inline: 4%;
