@@ -43,6 +43,13 @@
   }
 }
 
+.list-item-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-top: 1rem;
+}
+
 @media screen and (max-width: 768px) {
   :host {
     align-items: unset;

@@ -2,16 +2,22 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.75em 0em;
-  padding-right: 0.5em;
+  padding: 0.75em 0.5em;
   background-color: rgb(243, 239, 239);
-  border-radius: 1.5em;
+  border-radius: 0.8em;
+
+  transition: background-color 0.2s ease;
+
+  &:hover,
+  &:active {
+    background-color: rgb(230, 230, 230);
+  }
 }
 
 .icon-label-container {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.7rem;
 
   p {
     color: rgb(68, 68, 68);
@@ -22,7 +28,6 @@
 .icon-box {
   width: 35px;
   height: 35px;
-  background-color: orangered;
   display: grid;
   place-items: center;
   border-radius: 0.8rem;

@@ -9,22 +9,11 @@
       <img [src]="user.pictureUrl || '/images/profile-placeholder.webp'" alt="Profile" />
     </div>
 
-    <app-profile-list-item />
-
-    <!-- <div class="three-button-container">
-      <div class="box">
-        <app-icon [name]="IconName.IMAGE" [size]="24" [color]="'grey'" />
-        <p>Ticket</p>
-      </div>
-      <div class="box">
-        <app-icon [name]="IconName.USERS" [size]="24" [color]="'grey'" />
-        <p>Social</p>
-      </div>
-      <div class="box">
-        <app-icon [name]="IconName.SETTINGS" [size]="24" [color]="'grey'" />
-        <p>Settings</p>
-      </div>
-    </div> -->
+    <div class="list-item-container">
+      @for (item of listItems; track item) {
+        <app-profile-list-item [item]="item" (itemClicked)="onListItemClicked($any($event))" />
+      }
+    </div>
   </div>
 } @else {
   <app-spinner />
