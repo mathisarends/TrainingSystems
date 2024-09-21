@@ -27,6 +27,7 @@ export class HeaderComponent implements OnInit {
 
   private routeIconMap = new Map<string, { icon: IconName | null; options: string[] }>([
     ['/', { icon: IconName.PLUS, options: [''] }],
+    ['/?login=success', { icon: IconName.PLUS, options: [''] }],
     ['/exercises', { icon: IconName.MORE_VERTICAL, options: ['Zurücksetzen'] }],
     ['/profile', { icon: IconName.MORE_VERTICAL, options: ['Logout'] }],
   ]);
