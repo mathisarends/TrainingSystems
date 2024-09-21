@@ -1,6 +1,5 @@
 import { Component, DestroyRef, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { filter } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { ModalService } from '../../core/services/modal/modalService';
 import { IconBackgroundColor } from '../../shared/components/icon-list-item/icon-background-color';
@@ -22,8 +21,8 @@ import { ProfileService } from './service/profileService';
   standalone: true,
   imports: [IconComponent, SpinnerComponent, IconListeItemComponent],
   selector: 'app-profile-2',
-  templateUrl: 'profile-2.component.html',
-  styleUrls: ['profile-2.component.scss'],
+  templateUrl: 'profile.component.html',
+  styleUrls: ['profile.component.scss'],
   providers: [GymTicketService],
 })
 export class ProfileComponent2 implements OnInit {
@@ -37,6 +36,7 @@ export class ProfileComponent2 implements OnInit {
     { label: 'Social', iconName: IconName.USERS, iconBackgroundColor: IconBackgroundColor.LimeGreen },
     { label: 'Achievements', iconName: IconName.AWARD, iconBackgroundColor: IconBackgroundColor.Orange },
     { label: 'Settings', iconName: IconName.SETTINGS, iconBackgroundColor: IconBackgroundColor.BlueViolet },
+    { label: 'Account löschen', iconName: IconName.Trash, iconBackgroundColor: IconBackgroundColor.OrangeRed },
   ];
 
   constructor(
@@ -51,32 +51,12 @@ export class ProfileComponent2 implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.buttonClickService.buttonClick$
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        filter((option): option is string => !!option),
-      )
-      .subscribe((option: string) => {
-        switch (option) {
-          case 'Logout':
-            this.authService.logout();
-            break;
-
-          case 'Editieren':
-            this.modalService.openBasicInfoModal({
-              title: 'Profil bearbeiten',
-              buttonText: 'Speichern',
-              infoText: 'Leider noch nicht implementiert. Komm später wieder',
-            });
-            break;
-
-          default:
-            console.log('Unknown option');
-        }
-      });
+    this.buttonClickService.buttonClick$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.authService.logout();
+    });
   }
 
-  protected onListItemClicked(listItem: IconListItem) {
+  protected async onListItemClicked(listItem: IconListItem) {
     if (listItem.label === 'Ticket') {
       this.gymTicketService.getGymTicket().subscribe((ticket: string) => {
         this.modalService.open({
@@ -88,7 +68,9 @@ export class ProfileComponent2 implements OnInit {
           },
         });
       });
-    } else if (listItem.label === 'Settings' || listItem.label == 'Social' || listItem.label === 'Achievements') {
+    } else if (listItem.label === 'Account löschen') {
+      this.showDeleteAccountDialog();
+    } else {
       this.modalService.openBasicInfoModal({
         title: listItem.label,
         buttonText: 'Schließen',
@@ -125,5 +107,26 @@ export class ProfileComponent2 implements OnInit {
           this.profileService.fetchAndSetProfileData();
         });
     }
+  }
+
+  private async showDeleteAccountDialog() {
+    const response = await this.modalService.openBasicInfoModal({
+      title: 'Account löschen',
+      buttonText: 'Löschen',
+      isDestructiveAction: true,
+      infoText:
+        'Bist du dir sicher, dass du deinen Account löschen willst? Du musst diese Aktion per Email bestätigen.',
+    });
+
+    if (response) {
+      this.handleAccountDeletion();
+    }
+  }
+
+  private handleAccountDeletion() {
+    this.profileService.deleteAccount().subscribe((response) => {
+      this.authService.logout();
+      this.toastService.success(response.message);
+    });
   }
 }

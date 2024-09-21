@@ -358,5 +358,5 @@ export async function deleteAccount(req: Request, res: Response): Promise<Respon
 
   await userDAO.delete(user.id);
 
-  return res.status(200).json({ message: 'Account successfully deleted' });
+  return res.status(200).json({ message: 'Account gelöscht' });
 }
