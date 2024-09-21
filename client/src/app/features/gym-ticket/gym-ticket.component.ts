@@ -42,26 +42,24 @@ export class GymTicketComponent {
     });
   }
 
-  // Aktiviert den Image-Cropper
   protected startCropping() {
     this.isCropping = true;
   }
 
-  // Wird ausgelöst, wenn das Bild zugeschnitten wurde
-  protected imageCropped(event: ImageCroppedEvent) {
+  protected async imageCropped(event: ImageCroppedEvent) {
     if (!event.blob) {
       console.error('Blob is not defined in ImageCroppedEvent');
     }
-    this.convertBlobToBase64(event.blob!)
-      .then((base64: string | ArrayBuffer | null) => {
-        if (typeof base64 === 'string') {
-          console.log('Converted Base64 string:', base64);
-          this.croppedImage = base64;
-        }
-      })
-      .catch((error) => {
-        console.error('Error converting blob to Base64', error);
-      });
+
+    try {
+      const base64 = await this.convertBlobToBase64(event.blob!);
+
+      if (typeof base64 === 'string') {
+        this.croppedImage = base64;
+      }
+    } catch (error) {
+      console.error('Error converting blob to Base64', error);
+    }
   }
 
   protected uploadCroppedImage() {

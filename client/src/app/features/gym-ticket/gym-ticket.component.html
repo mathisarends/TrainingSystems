@@ -4,8 +4,8 @@
     @if (isCropping) {
       <image-cropper
         [imageBase64]="ticketImage"
+        [maintainAspectRatio]="false"
         (imageCropped)="imageCropped($event)"
-        [maintainAspectRatio]="true"
         format="png"
       />
     } @else {
