@@ -4,9 +4,7 @@ import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
  * Service to handle swipe gestures on HTML elements.
  * Provides methods to add and remove swipe listeners for different swipe directions.
  */
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class SwipeService {
   /**
    * Threshold for horizontal swipe detection

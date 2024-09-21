@@ -1,4 +1,4 @@
-<app-icon [name]="IconName.SEARCH" [size]="22" [color]="'gray'" />
+<app-icon [name]="IconName.SEARCH" [size]="20" [color]="'gray'" />
 <input
   type="text"
   (input)="onInputChange($event)"
@@ -6,4 +6,4 @@
   placeholder="Search..."
   class="search-input"
 />
-<app-icon [name]="IconName.X" [size]="18" [color]="'gray'" (clicked)="clearSearch()" />
+<app-icon class="clear-search-bar-icon" [name]="IconName.X" [size]="18" [color]="'gray'" (clicked)="clearSearch()" />

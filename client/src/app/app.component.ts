@@ -3,7 +3,7 @@ import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { AuthService } from './core/services/auth.service';
 import { BrowserCheckService } from './core/services/browser-check.service';
 import { RedirectService } from './core/services/redirect.service';
-import { MobileHeaderComponent } from './features/mobile-header/mobile-header.component';
+import { HeaderComponent } from './features/header/header.component';
 import { ProfileService } from './features/profile/profileService';
 import { MobileDeviceDetectionService } from './platform/mobile-device-detection.service';
 import { ServiceWorkerService } from './platform/service-worker.service';
@@ -22,7 +22,7 @@ import { ToastComponent } from './shared/components/toast/toast.component';
     SpinnerComponent,
     LoadingProgressBarComponent,
     MobileNavComponent,
-    MobileHeaderComponent,
+    HeaderComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],

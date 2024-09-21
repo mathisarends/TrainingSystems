@@ -14,11 +14,11 @@ import { ProfileService } from '../profile/profileService';
 @Component({
   standalone: true,
   imports: [CircularIconButtonComponent, HeadlineComponent, SkeletonComponent, MoreOptionsButtonComponent],
-  selector: 'app-mobile-header',
-  templateUrl: 'mobile-header.component.html',
-  styleUrl: 'mobile-header.component.scss',
+  selector: 'app-header',
+  templateUrl: 'header.component.html',
+  styleUrl: 'header.component.scss',
 })
-export class MobileHeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit {
   protected readonly IconName = IconName;
 
   protected currentButtonIcon = signal<IconName | null>(null);

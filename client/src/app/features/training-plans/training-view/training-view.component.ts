@@ -26,7 +26,6 @@ import { IconButtonComponent } from '../../../shared/components/icon-button/icon
 import { InputComponent } from '../../../shared/components/input/input.component';
 import { SkeletonTrainingTableComponent } from '../../../shared/components/loader/skeleton-training-table/skeleton-training-table.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
-import { ToastService } from '../../../shared/components/toast/toast.service';
 import { InteractiveElementDirective } from '../../../shared/directives/interactive-element.directive';
 import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
@@ -70,7 +69,7 @@ import { TrainingPlanDto } from './trainingPlanDto';
     DropdownComponent,
     RepInputDirective,
   ],
-  providers: [TrainingViewService, FocusService, TrainingPlanDataService, EstMaxService],
+  providers: [TrainingViewService, FocusService, TrainingPlanDataService, EstMaxService, SwipeService],
   templateUrl: './training-view.component.html',
   styleUrls: ['./training-view.component.scss'],
 })
@@ -97,7 +96,6 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
     private route: ActivatedRoute,
     private trainingViewService: TrainingViewService,
     private formService: FormService,
-    private toastService: ToastService,
     private navigationService: TrainingViewNavigationService,
     private swipeService: SwipeService,
     private modalService: ModalService,
@@ -168,8 +166,8 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
     if (this.trainingTable) {
       this.swipeService.addSwipeListener(
         this.trainingTable.nativeElement,
-        () => this.onPageChanged(this.trainingDayIndex + 1),
-        () => this.onPageChanged(this.trainingDayIndex - 1),
+        () => this.navigateDay(this.trainingDayIndex + 1),
+        () => this.navigateDay(this.trainingDayIndex - 1),
         () => {
           this.navigateWeek(-1);
         },
@@ -260,24 +258,6 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
         }),
       )
       .subscribe();
-  }
-
-  /**
-   * Handles page change events.
-   * Checks for unsaved data and
-   */
-  async onPageChanged(day: number): Promise<void> {
-    if (this.formService.hasUnsavedChanges()) {
-      const confirmed = await this.modalService.openBasicInfoModal({
-        title: 'Ungespeicherte Änderungen',
-        buttonText: 'Änderungen verwerfen',
-        infoText: 'Es gibt ungespeicherte Änderungen. Möchtest du wirklich fortfahren und die Änderungen verwerfen?',
-      });
-
-      if (confirmed) this.navigateDay(day);
-    } else {
-      this.navigateDay(day);
-    }
   }
 
   navigateDay(day: number) {

@@ -6,6 +6,8 @@
   --light-grey: #f0f0f0;
   --dark-grey: #222222;
   --border-color: #e2e8f0;
+
+  --off-white: #fdfdfd;
 }
 
 * {
@@ -26,13 +28,16 @@ body {
   background-image: url('/images/background/white-3.avif');
 }
 
+.alternative-background {
+}
+
 .blur-background .outlet-wrapper {
   filter: blur(2px);
   transition: filter 0.3s ease-in-out;
 }
 
 .outlet-wrapper {
-  padding-top: 4.5rem;
+  padding-top: 5rem;
   padding-inline: 7.5%;
 }
 @media screen and (max-width: 786px) {

@@ -1,22 +1,14 @@
 :host {
   display: flex;
   align-items: center;
-  border-radius: 0.75em;
-  padding-inline: 0.5em;
   width: 100%;
   margin-bottom: 0.65rem;
   background-color: rgba(249, 249, 249, 0.8);
-  border: 2px solid #efefef;
+  border-bottom: 2px solid #d5d5d5;
+}
 
-  &:hover {
-    background-color: rgba(249, 249, 249, 0.6);
-    border-color: #ebebeb;
-  }
-
-  &:focus {
-    background-color: white;
-    border-color: #bcbcbc;
-  }
+.clear-search-bar-icon:hover {
+  cursor: pointer;
 }
 
 .search-input {
