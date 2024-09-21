@@ -8,7 +8,6 @@ import { AuthGuard } from './core/guards/auth.guard';
 import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { RequestNewPasswordEmail } from './features/auth/request-new-password-email/request-new-password-email.component';
-import { GymTicketComponent } from './features/gym-ticket/gym-ticket.component';
 import { ProfileComponent2 } from './features/profile-2/profile-2.component';
 import { ProfileComponent } from './features/profile/profile.component';
 import { StatisticsComponent } from './features/training-plans/statistics/statistics.component';
@@ -22,7 +21,6 @@ export const routes: Routes = [
   { path: 'user/reset-password', component: RequestNewPasswordEmail },
   { path: 'user/reset/password/:token', component: ResetPasswordComponent },
   { path: 'usage', component: UsageStatisticsComponent, canActivate: [AuthGuard] },
-  { path: 'ticket', component: GymTicketComponent, canActivate: [AuthGuard] },
   {
     path: '',
     component: TrainingPlansComponent,

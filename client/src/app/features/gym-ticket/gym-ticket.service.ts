@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../core/services/http-client.service';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class GymTicketService {
   constructor(private httpClient: HttpService) {}
 

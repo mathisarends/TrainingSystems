@@ -1,5 +1,6 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ModalService } from '../../core/services/modal/modalService';
 import { IconBackgroundColor } from '../../shared/components/icon-list-item/icon-background-color';
 import { IconListItem } from '../../shared/components/icon-list-item/icon-list-item';
 import { IconListeItemComponent } from '../../shared/components/icon-list-item/icon-list-item.component';
@@ -7,6 +8,8 @@ import { SpinnerComponent } from '../../shared/components/spinner/spinner.compon
 import { IconName } from '../../shared/icon/icon-name';
 import { IconComponent } from '../../shared/icon/icon.component';
 import { ButtonClickService } from '../../shared/service/button-click.service';
+import { GymTicketService } from '../gym-ticket/gym-ticket.service';
+import { TicketPreviewComponentComponent } from '../gym-ticket/ticket-preview-component/ticket-preview-component.component';
 import { ProfileService } from '../profile/profileService';
 
 @Component({
@@ -15,6 +18,7 @@ import { ProfileService } from '../profile/profileService';
   selector: 'app-profile-2',
   templateUrl: 'profile-2.component.html',
   styleUrls: ['profile-2.component.scss'],
+  providers: [GymTicketService],
 })
 export class ProfileComponent2 implements OnInit {
   protected IconName = IconName;
@@ -27,6 +31,8 @@ export class ProfileComponent2 implements OnInit {
 
   constructor(
     protected profileService: ProfileService,
+    private modalService: ModalService,
+    private gymTicketService: GymTicketService,
     private buttonClickService: ButtonClickService,
     private destroyRef: DestroyRef,
   ) {}
@@ -36,6 +42,17 @@ export class ProfileComponent2 implements OnInit {
   }
 
   protected onListItemClicked(listItem: IconListItem) {
-    console.log('🚀 ~ ProfileComponent2 ~ onListItemClicked ~ listItem:', listItem);
+    if (listItem.label === 'Ticket') {
+      this.gymTicketService.getGymTicket().subscribe((ticket: string) => {
+        this.modalService.open({
+          component: TicketPreviewComponentComponent,
+          title: 'Gym Ticket',
+          buttonText: 'Schließen',
+          componentData: {
+            ticketImage: ticket,
+          },
+        });
+      });
+    }
   }
 }
