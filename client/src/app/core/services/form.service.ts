@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DataMap } from '../../shared/types/api-data';
+import { DataMap } from '../../shared/types/data-map';
 import { InteractiveElement } from '../../shared/types/interactive-element.types';
 
 @Injectable({

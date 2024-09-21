@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
-import { DataMap } from '../../../shared/types/api-data';
+import { DataMap } from '../../../shared/types/data-map';
 import { ExerciseDataDTO } from '../../training-plans/training-view/exerciseDataDto';
 
 @Injectable()

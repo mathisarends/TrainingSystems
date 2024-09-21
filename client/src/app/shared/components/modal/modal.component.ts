@@ -1,17 +1,17 @@
+import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   Component,
   ComponentRef,
   EnvironmentInjector,
-  EventEmitter,
-  Input,
-  Output,
   ViewChild,
   ViewContainerRef,
   createComponent,
+  output,
 } from '@angular/core';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { ModalSize } from '../../../core/services/modal/modalSize';
+import { DataMap } from '../../types/data-map';
 import { ButtonComponent } from '../button/button.component';
 import { OnConfirm } from './on-confirm';
 import { OnToggleView } from './on-toggle-view';
@@ -19,26 +19,69 @@ import { OnToggleView } from './on-toggle-view';
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [ButtonComponent],
+  imports: [ButtonComponent, CommonModule],
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
 })
 export class ModalComponent implements AfterViewInit {
-  @Output() confirmed = new EventEmitter<void>();
-  @Output() cancelled = new EventEmitter<void>();
-
-  @Input() title: string = 'Default Title';
-  @Input() isDestructiveAction: boolean = false;
-  @Input() secondaryButtonText: string = '';
-  @Input() confirmButtonText: string = 'Bestätigen';
-  @Input() childComponentType!: any;
-  @Input() childComponentData: any;
-  @Input() size: ModalSize = ModalSize.MEDIUM;
-  @Input() footer: boolean = false;
-  @Input() confirmationRequired = true;
   @ViewChild('modalContent', { read: ViewContainerRef })
   modalContent!: ViewContainerRef;
   childComponentRef!: ComponentRef<any>;
+
+  /**
+   * The title of the modal. This is displayed in the modal header.
+   */
+  title: string = 'Default Title';
+
+  /**
+   * Determines whether the action associated with the modal is destructive (e.g., deletion).
+   */
+  isDestructiveAction: boolean = false;
+
+  /**
+   * Text to display on the secondary button, typically used for actions like "Cancel".
+   */
+  secondaryButtonText?: string;
+
+  /**
+   * Text to display on the confirmation button, typically used for actions like "Confirm".
+   */
+  confirmButtonText: string = 'Bestätigen';
+
+  /**
+   * The type of the component that should be dynamically loaded into the modal body.
+   */
+  childComponentType!: any;
+
+  /**
+   * Data to be passed to the dynamically loaded child component within the modal.
+   */
+  childComponentData!: DataMap | null;
+
+  /**
+   * The size of the modal (small, medium, large). Controls the modal's width.
+   */
+  size: ModalSize = ModalSize.MEDIUM;
+
+  /**
+   * Controls whether the footer (usually containing buttons) is visible in the modal.
+   */
+  footer: boolean = false;
+
+  /**
+   * Indicates whether a confirmation is required for the action (e.g., form validation before closing).
+   */
+  confirmationRequired: boolean = true;
+
+  /**
+   * Emits an event when the confirm action is triggered by the user (e.g., clicking the confirm button).
+   */
+  confirmed = output<void>();
+
+  /**
+   * Emits an event when the cancel action is triggered by the user (e.g., clicking the cancel button or closing the modal).
+   */
+  cancelled = output<void>();
 
   constructor(
     private environmentInjector: EnvironmentInjector,
