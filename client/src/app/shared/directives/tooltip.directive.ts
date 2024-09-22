@@ -1,4 +1,5 @@
-import { DestroyRef, Directive, ElementRef, HostListener, Input, Renderer2 } from '@angular/core';
+import { DestroyRef, Directive, effect, ElementRef, HostListener, Input, Renderer2 } from '@angular/core';
+import { RouteWatcherService } from '../service/route-watcher.service';
 
 /**
  * Directive to display a tooltip with a message when an element is hovered over.
@@ -15,11 +16,17 @@ export class TooltipDirective {
     private el: ElementRef,
     private renderer: Renderer2,
     private destroyRef: DestroyRef,
+    private routeWatcherService: RouteWatcherService,
   ) {
     this.destroyRef.onDestroy(() => {
       if (this.tooltipElement) {
         this.renderer.removeChild(document.body, this.tooltipElement);
       }
+    });
+
+    effect(() => {
+      let _currentRoute = this.routeWatcherService.getCurrentRouteSignal()();
+      this.hideTooltip();
     });
   }
 
@@ -38,14 +45,6 @@ export class TooltipDirective {
       this.createTooltipElement();
     }
     this.showTooltip();
-  }
-
-  /**
-   * Event listener for click event.
-   * Hides the tooltip element when the element is clicked.
-   */
-  @HostListener('click') onClick() {
-    this.hideTooltip(); // Hide the tooltip when the element is clicked
   }
 
   /**
