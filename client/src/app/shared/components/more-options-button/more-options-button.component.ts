@@ -64,6 +64,7 @@ export class MoreOptionsButtonComponent {
    * @param event The click event on the document.
    */
   @HostListener('document:click', ['$event'])
+  @HostListener('document:touchstart', ['$event'])
   onDocumentClick(event: Event) {
     const target = event.target as HTMLElement;
     if (this.isCollapsed() === false && !this.elementRef.nativeElement.contains(target)) {
