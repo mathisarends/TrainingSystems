@@ -1,14 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  AfterViewChecked,
-  Component,
-  DestroyRef,
-  ElementRef,
-  HostListener,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewChecked, Component, DestroyRef, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -40,7 +31,6 @@ import { ExerciseDataService } from './exercise-data.service';
 import { ExerciseDataDTO } from './exerciseDataDto';
 import { RestTimerComponent } from './rest-timer/rest-timer.component';
 import { EstMaxService } from './services/estmax.service';
-import { FocusService } from './services/focus.service';
 import { TrainingPlanDataService } from './services/training-plan-data.service';
 import { TrainingViewNavigationService } from './training-view-navigation.service';
 import { TrainingViewService } from './training-view-service';
@@ -69,11 +59,11 @@ import { TrainingPlanDto } from './trainingPlanDto';
     DropdownComponent,
     RepInputDirective,
   ],
-  providers: [TrainingViewService, FocusService, TrainingPlanDataService, EstMaxService, SwipeService],
+  providers: [TrainingViewService, TrainingPlanDataService, EstMaxService, SwipeService],
   templateUrl: './training-view.component.html',
   styleUrls: ['./training-view.component.scss'],
 })
-export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecked {
+export class TrainingViewComponent implements OnInit, /* OnDestroy, */ AfterViewChecked {
   protected readonly IconName = IconName;
 
   title = '';
@@ -103,7 +93,6 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
     private browserCheckService: BrowserCheckService,
     private autoSaveService: AutoSaveService,
     private exerciseDataService: ExerciseDataService,
-    private focusService: FocusService,
     private destroyRef: DestroyRef,
     protected trainingDataService: TrainingPlanDataService,
     protected mobileDeviceDetectionService: MobileDeviceDetectionService,
@@ -134,16 +123,6 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
       .subscribe(() => {
         this.saveTrainingData();
       });
-
-    if (this.browserCheckService.isBrowser()) {
-      document.addEventListener('visibilitychange', this.handleVisibilityChange.bind(this));
-    }
-  }
-
-  ngOnDestroy() {
-    if (this.browserCheckService.isBrowser()) {
-      document.removeEventListener('visibilitychange', this.handleVisibilityChange.bind(this));
-    }
   }
 
   /**
@@ -177,20 +156,6 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
           this.navigateWeek(1);
         },
       );
-    }
-  }
-
-  @HostListener('window:beforeunload', ['$event'])
-  handleBeforeUnload(event: Event) {
-    this.focusService.saveFocusedElement();
-  }
-
-  handleVisibilityChange() {
-    if (document.visibilityState === 'hidden') {
-      this.focusService.saveFocusedElement();
-    } else if (document.visibilityState === 'visible') {
-      this.focusService.restoreFocusedElement();
-      this.focusService.clearFocusedElement();
     }
   }
 
