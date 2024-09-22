@@ -7,6 +7,13 @@ import { IconComponent } from '../../../shared/icon/icon.component';
 import { ImageUploadService } from '../../../shared/service/image-upload.service';
 import { ProfileService } from '../service/profileService';
 
+/**
+ * HHandles the functionality for
+ * changing and confirming the profile picture. It integrates with the `ProfileService` to upload
+ * the new profile picture and refresh the profile data.
+ *
+ * @extends AbstractImageCropperComponent
+ */
 @Component({
   selector: 'app-change-profile-picture-confirmation',
   standalone: true,

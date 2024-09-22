@@ -10,14 +10,7 @@
       <div class="card-body">
         <form [formGroup]="trainingForm" (ngSubmit)="onConfirm()">
           <div class="form-group text-center mb-4 position-relative">
-            <img
-              #coverImage
-              src="https://via.placeholder.com/150"
-              alt="Cover Bild Platzhalter"
-              id="cover-image"
-              class="img-fluid mb-2"
-              style="width: 150px; height: 150px; cursor: pointer"
-            />
+            <img #coverImage alt="Cover Bild Platzhalter" id="cover-image" />
             <input
               type="file"
               id="cover-image-input"

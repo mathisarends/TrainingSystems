@@ -13,7 +13,7 @@ export abstract class AbstractImageCropperComponent implements OnInit, OnConfirm
   /**
    * Signal that holds the state of "no image available".
    */
-  NO_IMAGE_AVAILABLE = signal<string>('noImageAvailable');
+  NO_IMAGE_AVAILABLE = signal<string>('');
 
   @Input({ required: true }) image!: string;
 
