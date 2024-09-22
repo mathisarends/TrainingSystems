@@ -95,6 +95,10 @@ export class TrainingPlansComponent implements OnInit {
     moveItemInArray(this.filteredTrainingPlans$.value, event.previousIndex, event.currentIndex);
 
     this.filteredTrainingPlans$.next([...this.filteredTrainingPlans$.value]);
+
+    const reorderedIds = this.filteredTrainingPlans$.value.map((plan) => plan.id);
+
+    this.trainingPlanService.reorderTrainingPlans(reorderedIds).subscribe((response) => {});
   }
 
   /**

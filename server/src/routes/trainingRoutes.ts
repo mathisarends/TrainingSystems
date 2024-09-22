@@ -3,12 +3,13 @@ import * as trainingController from '../controller/training/trainingController.j
 import * as trainingDayController from '../controller/training/trainingDayController.js';
 import * as trainingStatisticsController from '../controller/training/trainingStatisticsController.js';
 
-import { authService } from '../service/authService.js';
 import { asyncHandler } from '../middleware/error-handler.js';
+import { authService } from '../service/authService.js';
 const router = express.Router();
 
 /** Lädt eine Kartenansicht mit allen Trainingspplänen */
 router.get('/plans', authService.authenticationMiddleware, asyncHandler(trainingController.getPlans));
+router.post('/reorder', authService.authenticationMiddleware, asyncHandler(trainingController.updateTrainingPlanOrder));
 router.post('/create', authService.authenticationMiddleware, asyncHandler(trainingController.createPlan));
 router.delete('/delete/:planId', authService.authenticationMiddleware, asyncHandler(trainingController.deletePlan));
 router.get('/edit/:id', authService.authenticationMiddleware, asyncHandler(trainingController.getPlanForEdit));

@@ -13,7 +13,7 @@ import {
   findTrainingPlanById,
   handleWeekDifference
 } from '../../service/trainingService.js';
-import { getUser } from '../../service/userService.js';
+import { getUser, getUserGenericDAO } from '../../service/userService.js';
 
 import _ from 'lodash';
 
@@ -24,11 +24,7 @@ import _ from 'lodash';
 export async function getPlans(req: Request, res: Response): Promise<void> {
   const user = await getUser(req, res);
 
-  const sortedTrainingPlans = user.trainingPlans.sort((a: TrainingPlan, b: TrainingPlan) => {
-    return new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime();
-  });
-
-  const trainingPlanCards: TrainingPlanCardViewDto[] = sortedTrainingPlans.map((plan: TrainingPlan) => ({
+  const trainingPlanCards: TrainingPlanCardViewDto[] = user.trainingPlans.map((plan: TrainingPlan) => ({
     ...TrainingPlanDtoMapper.getCardView(plan),
     pictureUrl: user.pictureUrl,
     percentageFinished: trainingService.getPercentageOfTrainingPlanFinished(plan),
@@ -36,6 +32,31 @@ export async function getPlans(req: Request, res: Response): Promise<void> {
   }));
 
   res.status(200).json({ trainingPlanCards });
+}
+
+export async function updateTrainingPlanOrder(req: Request, res: Response): Promise<Response> {
+  const user = await getUser(req, res);
+  const userDAO = getUserGenericDAO(req);
+
+  const { updatedOrder } = req.body;
+
+  if (!Array.isArray(updatedOrder)) {
+    return res.status(400).json({ error: 'Invalid request body. Expected an array of training plan IDs.' });
+  }
+
+  const sortedTrainingPlans = updatedOrder.map((id: string) => {
+    const plan = user.trainingPlans.find((p: TrainingPlan) => p.id === id);
+    if (!plan) {
+      throw new Error(`Training plan with ID ${id} not found`);
+    }
+    return plan;
+  });
+
+  user.trainingPlans = sortedTrainingPlans;
+
+  await userDAO.update(user);
+
+  return res.status(200).json({ message: 'Reihenfolge geupdated' });
 }
 
 /**
