@@ -21,7 +21,6 @@ import { SwipeService } from '../../../core/services/swipe.service';
 import { MobileDeviceDetectionService } from '../../../platform/mobile-device-detection.service';
 import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
 import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
-import { HeadlineService } from '../../../shared/components/headline/headline.service';
 import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
 import { InputComponent } from '../../../shared/components/input/input.component';
 import { SkeletonTrainingTableComponent } from '../../../shared/components/loader/skeleton-training-table/skeleton-training-table.component';
@@ -31,6 +30,7 @@ import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
 import { AutoSaveService } from '../../../shared/service/auto-save.service';
 import { ButtonClickService } from '../../../shared/service/button-click.service';
+import { HeaderService } from '../../header/header.service';
 import { AutoProgressionComponent } from './auto-progression/auto-progression.component';
 import { CategorySelectDirective } from './directives/category-select.directive';
 import { RepInputDirective } from './directives/rep-input.directive';
@@ -95,6 +95,7 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
   constructor(
     private route: ActivatedRoute,
     private trainingViewService: TrainingViewService,
+    private headerService: HeaderService,
     private formService: FormService,
     private navigationService: TrainingViewNavigationService,
     private swipeService: SwipeService,
@@ -106,7 +107,6 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
     private destroyRef: DestroyRef,
     protected trainingDataService: TrainingPlanDataService,
     protected mobileDeviceDetectionService: MobileDeviceDetectionService,
-    private headlineService: HeadlineService,
     private buttonClickService: ButtonClickService,
   ) {}
 
@@ -115,6 +115,8 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
    * Subscribes to route parameters and loads the initial data.
    */
   ngOnInit() {
+    this.headerService.setLoading();
+
     this.route.queryParams.subscribe((params) => {
       this.planId = params['planId'];
       this.trainingWeekIndex = parseInt(params['week']);
@@ -221,12 +223,16 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
           this.exerciseDataService.exerciseData = exerciseData;
 
           this.subHeading = `W${this.trainingWeekIndex + 1}D${this.trainingDayIndex + 1}`;
-          this.headlineService.subTitle.set(`W${this.trainingWeekIndex + 1}D${this.trainingDayIndex + 1}`);
 
           if (trainingPlan.title) {
+            this.headerService.setHeadlineInfo({
+              title: trainingPlan.title,
+              subTitle: this.subHeading,
+              iconName: IconName.CLOCK,
+              onButtonClickCallback: this.switchToTimerView.bind(this),
+            });
+
             this.title = trainingPlan.title;
-            this.headlineService.title.set(trainingPlan.title);
-            this.headlineService.isTitleLoading.set(false);
           }
         }),
         tap(() => {

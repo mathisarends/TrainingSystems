@@ -1,13 +1,13 @@
 <app-headline
-  [heading]="headlineService.title()"
-  [showSpikeLoader]="headlineService.isTitleLoading()"
-  [subHeading]="headlineService.subTitle()"
+  [heading]="headerService.title()"
+  [showSpikeLoader]="headerService.loading()"
+  [subHeading]="headerService.subTitle()"
 />
 
-@if (currentButtonIcon() === IconName.MORE_VERTICAL) {
-  <app-more-options-button [options]="moreOptions" (optionSelected)="onOptionSelected($event)" />
-} @else if (currentButtonIcon()) {
-  <app-circular-icon-button [icon]="currentButtonIcon()!" [iconSize]="20" (clicked)="onCircularButtonClick()" />
+@if (headerService.iconName() === IconName.MORE_VERTICAL) {
+  <app-more-options-button [options]="headerService.options()" (optionSelected)="onOptionSelected($event)" />
+} @else if (headerService.iconName()) {
+  <app-circular-icon-button [icon]="headerService.iconName()!" [iconSize]="20" (clicked)="onCircularButtonClick()" />
 } @else {
   <div class="image-wrapper">
     <img

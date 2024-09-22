@@ -7,6 +7,7 @@ import { GroupedBarChartComponent } from '../../shared/components/charts/grouped
 import { ChartSkeletonComponent } from '../../shared/components/loader/chart-skeleton/chart-skeleton.component';
 import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
 import { NotificationService } from '../../shared/service/notification.service';
+import { HeaderService } from '../header/header.service';
 import { ActivityCalendarData } from './activity-calendar-data';
 import { ActivityCalendar } from './activity-calendar/activity-calendar.component';
 import { RecentTrainingDurationsData } from './recent-training-durations-data';
@@ -46,9 +47,14 @@ export class UsageStatisticsComponent implements OnInit {
   constructor(
     private httpClient: HttpService,
     private notificationService: NotificationService,
+    private headerService: HeaderService,
   ) {}
 
   ngOnInit(): void {
+    this.headerService.setHeadlineInfo({
+      title: 'Usage',
+    });
+
     this.activityCalendarData$ = this.httpClient.get<ActivityCalendarData>('/user/activity-calendar');
 
     this.recentTrainingDurations$ = this.httpClient
