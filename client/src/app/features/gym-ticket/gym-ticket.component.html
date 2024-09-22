@@ -1,16 +1,18 @@
-@if (isCropView()) {
-  <image-cropper
-    [imageBase64]="ticketImageSignal()"
-    [maintainAspectRatio]="false"
-    (imageCropped)="imageCropped($event)"
-    format="png"
-  />
-} @else if (ticketImage !== NO_GYM_TICKET_AVAILABLE) {
-  <div class="upload-container" (click)="fileInput.click()">
-    <img [src]="ticketImageSignal()" alt="Upload Ticket" class="w-100" />
+@if (imageSignal() !== NO_IMAGE_AVAILABLE()) {
+  @if (isCropView()) {
+    <image-cropper
+      [imageBase64]="imageSignal()!"
+      [maintainAspectRatio]="false"
+      (imageCropped)="imageCropped($event)"
+      format="png"
+    />
+  } @else {
+    <div class="upload-container" (click)="fileInput.click()">
+      <img [src]="imageSignal()" alt="Upload Ticket" class="w-100" />
 
-    <input type="file" #fileInput (change)="displayUploadedImage($event)" accept="image/*" hidden />
-  </div>
+      <input type="file" #fileInput (change)="displayUploadedImage($event)" accept="image/*" hidden />
+    </div>
+  }
 } @else {
   <!-- Wenn kein Ticket vorhanden ist, zeige den Dateiupload -->
   <div class="upload-dropzone" (click)="fileInput.click()">

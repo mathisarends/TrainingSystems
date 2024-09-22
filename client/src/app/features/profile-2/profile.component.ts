@@ -65,7 +65,7 @@ export class ProfileComponent2 implements OnInit {
           buttonText: 'Speichern',
           secondaryButtonText: 'Zuschneiden',
           componentData: {
-            ticketImage: ticket,
+            image: ticket,
           },
         });
       });
