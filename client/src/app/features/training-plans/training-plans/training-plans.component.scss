@@ -17,8 +17,24 @@
   app-circular-icon-button {
     position: absolute;
     top: 10rem;
-    right: 0.5rem;
+    right: 1.25rem;
+
+    cursor: grab;
+
+    &:active {
+      cursor: grabbing;
+    }
   }
+}
+
+.cdk-drag-preview {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  opacity: 0.9;
+  transform: scale(1.05);
+}
+
+.cdk-drop-list-dragging .training-plan-card-container {
+  opacity: 0.5;
 }
 
 @media screen and (max-width: 768px) {
