@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { LoadingService } from '../../core/services/loading.service';
 import { CircularIconButtonComponent } from '../../shared/components/circular-icon-button/circular-icon-button.component';
 import { HeadlineComponent } from '../../shared/components/headline/headline.component';
 import { MoreOptionsButtonComponent } from '../../shared/components/more-options-button/more-options-button.component';
@@ -22,7 +21,6 @@ export class HeaderComponent {
   constructor(
     protected profileService: ProfileService,
     protected headerService: HeaderService,
-    protected loadingService: LoadingService,
     private buttonClickService: ButtonClickService,
   ) {}
 
