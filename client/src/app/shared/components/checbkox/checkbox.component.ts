@@ -1,4 +1,4 @@
-import { Component, effect, HostListener, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, HostListener, input, output, signal } from '@angular/core';
 import { CheckboxItem } from './checkbox-item';
 
 @Component({
@@ -6,6 +6,7 @@ import { CheckboxItem } from './checkbox-item';
   standalone: true,
   templateUrl: './checkbox.component.html',
   styleUrl: './checkbox.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckboxComponent {
   /**

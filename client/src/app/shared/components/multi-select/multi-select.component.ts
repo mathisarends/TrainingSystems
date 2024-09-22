@@ -1,4 +1,14 @@
-import { Component, effect, HostListener, Injector, input, OnInit, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  HostListener,
+  Injector,
+  input,
+  OnInit,
+  output,
+  signal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { toggleCollapseAnimation } from '../../animations/toggle-collapse';
 import { IconName } from '../../icon/icon-name';
@@ -17,6 +27,7 @@ import { SearchBarComponent } from '../search-bar/search-bar.component';
   templateUrl: './multi-select.component.html',
   styleUrls: ['./multi-select.component.scss'],
   animations: [toggleCollapseAnimation],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MultiSelectComponent implements OnInit {
   protected IconName = IconName;
