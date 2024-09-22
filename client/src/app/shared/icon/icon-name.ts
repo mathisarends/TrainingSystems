@@ -31,4 +31,6 @@ export enum IconName {
   SETTINGS = 'settings',
   IMAGE = 'image',
   AWARD = 'award',
+  MOVE = 'move',
+  SLIDERS = 'sliders',
 }

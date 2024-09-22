@@ -48,6 +48,8 @@
         [iconName]="IconName.Trash"
         (buttonClick)="showDeleteTrainingPlanModal()"
       ></app-icon-button>
+
+      <app-icon-button [tooltipTitle]="'Anordnen'" cdkDragHandle [iconName]="IconName.SLIDERS"></app-icon-button>
     </div>
     <div>{{ trainingPlan.percentageFinished }}%</div>
   </div>
