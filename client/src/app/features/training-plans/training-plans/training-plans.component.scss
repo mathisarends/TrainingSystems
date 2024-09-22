@@ -10,6 +10,17 @@
   align-items: center;
 }
 
+.training-plan-card-container {
+  position: relative;
+  color: white;
+
+  app-circular-icon-button {
+    position: absolute;
+    top: 10rem;
+    right: 0.5rem;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .row > * {
     padding-left: 0 !important;
