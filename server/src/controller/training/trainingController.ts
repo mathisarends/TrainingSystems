@@ -93,7 +93,7 @@ export async function createPlan(req: Request, res: Response): Promise<void> {
     coverImageBase64: coverImage
   };
 
-  user.trainingPlans.push(newTrainingPlan);
+  user.trainingPlans.unshift(newTrainingPlan);
   await userDAO.update(user);
 
   res.status(200).json({ message: 'Plan erfolgreich erstellt' });
