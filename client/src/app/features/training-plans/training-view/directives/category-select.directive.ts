@@ -1,6 +1,5 @@
 import { Directive, HostListener } from '@angular/core';
 import { FormService } from '../../../../core/services/form.service';
-import { InteractiveElementDirective } from '../../../../shared/directives/interactive-element.directive';
 import { AutoSaveService } from '../../../../shared/service/auto-save.service';
 import { ExerciseDataService } from '../exercise-data.service';
 import { RepSchemeByCategory } from '../models/default-rep-scheme-by-category';
@@ -15,7 +14,7 @@ import { ExerciseTableRowService } from '../services/exercise-table-row.service'
   selector: '[category-select]',
   standalone: true,
 })
-export class CategorySelectDirective extends InteractiveElementDirective {
+export class CategorySelectDirective {
   /**
    * Constant representing the placeholder category option.
    * Used to identify when no actual category is selected.
@@ -23,33 +22,32 @@ export class CategorySelectDirective extends InteractiveElementDirective {
   private readonly PLACEHOLDER_CATEGORY = '- Bitte Auswählen -';
 
   constructor(
-    protected override autoSaveService: AutoSaveService,
-    protected override formService: FormService,
+    private autoSaveService: AutoSaveService,
+    private formService: FormService,
     private exerciseTableRowService: ExerciseTableRowService,
     private exerciseDataService: ExerciseDataService,
-  ) {
-    super(autoSaveService, formService);
-  }
+  ) {}
 
   /**
    * Tracks changes to the category selection and updates the input fields accordingly.
    */
   @HostListener('change', ['$event'])
-  override onChange(event: Event): void {
+  async onChange(event: Event): Promise<void> {
     const categorySelector = event.target as HTMLSelectElement;
-    this.updateInputValues(categorySelector, this.exerciseDataService.getDefaultRepSchemeByCategory());
+    await this.updateInputValues(categorySelector, this.exerciseDataService.getDefaultRepSchemeByCategory());
 
-    super.onChange(event);
+    this.autoSaveService.save();
   }
 
   /**
    * Updates the input fields (sets, reps, target RPE) based on the selected category.
    * If the placeholder category is selected, resets the input fields.
    */
-  private updateInputValues(
+  private async updateInputValues(
     categorySelector: HTMLSelectElement,
     defaultRepSchemeByCategory: RepSchemeByCategory,
-  ): void {
+  ): Promise<void> {
+    console.log('updateInputValues');
     const category = categorySelector.value;
 
     if (this.isPlaceholderCategory(category)) {
@@ -57,7 +55,7 @@ export class CategorySelectDirective extends InteractiveElementDirective {
       return;
     }
 
-    this.setDefaultValuesForCategory(categorySelector, defaultRepSchemeByCategory);
+    await this.setDefaultValuesForCategory(categorySelector, defaultRepSchemeByCategory);
 
     this.updateFormService(categorySelector);
   }
@@ -66,15 +64,20 @@ export class CategorySelectDirective extends InteractiveElementDirective {
    * Sets default values for the input fields (sets, reps, RPE, etc.) based on the selected exercise category.
    * Resets other fields like weight, RPE, estimated max, and notes to empty values.
    */
-  private setDefaultValuesForCategory(
+  private async setDefaultValuesForCategory(
     categorySelector: HTMLSelectElement,
     defaultRepSchemeByCategory: RepSchemeByCategory,
   ) {
-    const { setsInput, repsInput, weightInput, rpeInput, targetRPEInput, estMaxInput, noteInput } =
+    const { exerciseSelect, setsInput, repsInput, weightInput, rpeInput, targetRPEInput, estMaxInput, noteInput } =
       this.exerciseTableRowService.getInputsByElement(categorySelector);
     const category = categorySelector.value;
 
+    const firstExerciseOptionForCategory =
+      this.exerciseDataService.getExerciseData().categorizedExercises[categorySelector.value][0];
+
     const defaultValues = defaultRepSchemeByCategory[category];
+
+    exerciseSelect.value = firstExerciseOptionForCategory;
     setsInput.value = defaultValues.defaultSets.toString();
     repsInput.value = defaultValues.defaultReps.toString();
     weightInput.value = '';
@@ -82,6 +85,15 @@ export class CategorySelectDirective extends InteractiveElementDirective {
     estMaxInput.value = '';
     noteInput.value = '';
     targetRPEInput.value = defaultValues.defaultRPE.toString();
+
+    await this.waitForDomUpdated();
+  }
+  private async waitForDomUpdated(): Promise<void> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 100);
+    });
   }
 
   /**
@@ -104,8 +116,9 @@ export class CategorySelectDirective extends InteractiveElementDirective {
   /**
    * Updates the form state by adding changes for each input element in the exercise row.
    */
-  private updateFormService(exerciseSelect: HTMLSelectElement): void {
-    const inputs: ExerciseInputs = this.exerciseTableRowService.getInputsByElement(exerciseSelect);
+  private updateFormService(categorySelector: HTMLSelectElement): void {
+    const inputs: ExerciseInputs = this.exerciseTableRowService.getInputsByElement(categorySelector);
+
     this.forEachInput(inputs, (input) => this.formService.addChange(input.name, input.value));
   }
 

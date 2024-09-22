@@ -83,6 +83,10 @@ export class ExerciseTableRowService {
    */
   getInputsByElement(element: InteractiveElement): ExerciseInputs {
     return {
+      categorySelect: this.findClosestElementInRow(
+        element,
+        ExerciseTableRowInputType.CATEGORY_SELECTOR,
+      ) as HTMLSelectElement,
       exerciseSelect: this.findClosestElementInRow(
         element,
         ExerciseTableRowInputType.EXERCISE_SELECTOR,

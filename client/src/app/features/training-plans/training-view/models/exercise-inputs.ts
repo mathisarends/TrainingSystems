@@ -5,6 +5,7 @@
  *
  */
 export interface ExerciseInputs {
+  categorySelect: HTMLSelectElement;
   exerciseSelect: HTMLSelectElement;
   setsInput: HTMLInputElement;
   repsInput: HTMLInputElement;

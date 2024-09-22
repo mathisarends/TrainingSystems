@@ -23,7 +23,6 @@ import { AutoSaveService } from '../../../shared/service/auto-save.service';
 import { ButtonClickService } from '../../../shared/service/button-click.service';
 import { HeaderService } from '../../header/header.service';
 import { AutoProgressionComponent } from './auto-progression/auto-progression.component';
-import { CategorySelectDirective } from './directives/category-select.directive';
 import { RepInputDirective } from './directives/rep-input.directive';
 import { RpeInputDirective } from './directives/rpe-input.directive';
 import { WeightInputDirective } from './directives/weight-input.directive';
@@ -52,7 +51,6 @@ import { TrainingPlanDto } from './trainingPlanDto';
     SkeletonTrainingTableComponent,
     WeightInputDirective,
     RpeInputDirective,
-    CategorySelectDirective,
     InteractiveElementDirective,
     IconComponent,
     InputComponent,
