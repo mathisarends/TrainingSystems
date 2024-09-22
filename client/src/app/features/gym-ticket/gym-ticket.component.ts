@@ -1,5 +1,4 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ImageCropperComponent } from 'ngx-image-cropper';
 import { AbstractImageCropperComponent } from '../../shared/components/abstract-image-cropper/abstract-image-cropper.component';
 import { ToastService } from '../../shared/components/toast/toast.service';
@@ -9,10 +8,11 @@ import { GymTicketService } from './gym-ticket.service';
 @Component({
   selector: 'app-ticket',
   standalone: true,
-  imports: [CommonModule, ImageCropperComponent],
+  imports: [ImageCropperComponent],
   templateUrl: './gym-ticket.component.html',
   styleUrls: ['./gym-ticket.component.scss'],
   providers: [GymTicketService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GymTicketComponent extends AbstractImageCropperComponent implements OnInit {
   constructor(
@@ -28,15 +28,9 @@ export class GymTicketComponent extends AbstractImageCropperComponent implements
     this.NO_IMAGE_AVAILABLE.set('noGymTicketAvailable');
   }
 
-  setImage(value: string | null) {
-    this.imageSignal.set(value);
-  }
-
-  uploadImage(image: string | null) {
-    if (image) {
-      this.gymTicketService.uploadGymTicket(image).subscribe((response) => {
-        this.toastService.success(response.message);
-      });
-    }
+  uploadImage(image: string) {
+    this.gymTicketService.uploadGymTicket(image).subscribe((response) => {
+      this.toastService.success(response.message);
+    });
   }
 }

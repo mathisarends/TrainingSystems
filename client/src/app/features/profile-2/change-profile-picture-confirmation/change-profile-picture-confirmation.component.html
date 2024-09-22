@@ -1,15 +1,29 @@
-<div class="text-center p-5">
-  <div class="d-flex justify-content-center align-items-center">
-    <div>
-      <img [src]="oldProfilePicture" alt="Altes Profilbild" class="img-thumbnail" style="width: 150px; height: 150px" />
-      <p>Altes Profilbild</p>
-    </div>
-    <div class="mx-3">
-      <app-icon [name]="IconName.ARROW_RIGHT" [size]="32" style="font-size: 3rem; color: #007bff" />
-    </div>
-    <div>
-      <img [src]="newProfilePicture" alt="Neues Profilbild" class="img-thumbnail" style="width: 150px; height: 150px" />
-      <p>Neues Profilbild</p>
+@if (isCropView()) {
+  <image-cropper
+    [imageBase64]="imageSignal()!"
+    [maintainAspectRatio]="false"
+    (imageCropped)="imageCropped($event)"
+    format="png"
+  />
+} @else {
+  <div class="text-center p-5">
+    <div class="d-flex justify-content-center align-items-center">
+      <div>
+        <img
+          [src]="oldProfilePicture"
+          alt="Altes Profilbild"
+          class="img-thumbnail"
+          style="width: 150px; height: 150px"
+        />
+        <p>Altes Profilbild</p>
+      </div>
+      <div class="mx-3">
+        <app-icon [name]="IconName.ARROW_RIGHT" [size]="32" style="font-size: 3rem; color: #007bff" />
+      </div>
+      <div>
+        <img [src]="imageSignal()" alt="Neues Profilbild" class="img-thumbnail" style="width: 150px; height: 150px" />
+        <p>Neues Profilbild</p>
+      </div>
     </div>
   </div>
-</div>
+}

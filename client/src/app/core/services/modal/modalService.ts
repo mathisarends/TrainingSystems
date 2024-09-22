@@ -33,22 +33,22 @@ export class ModalService {
    */
   open(options: ModalOptions): Promise<boolean> {
     return new Promise<boolean>((resolve) => {
-      // Create the overlay component
       this.overlayComponentRef = createComponent(ModalOverlayComponent, {
         environmentInjector: this.environmentInjector,
         elementInjector: this.injector,
       });
+
       this.appRef.attachView(this.overlayComponentRef.hostView);
       document.body.appendChild(this.overlayComponentRef.location.nativeElement);
-      // Create the modal component
+
       this.modalComponentRef = createComponent(ModalComponent, {
         environmentInjector: this.environmentInjector,
         elementInjector: this.injector,
       });
+
       this.appRef.attachView(this.modalComponentRef.hostView);
       document.body.appendChild(this.modalComponentRef.location.nativeElement);
 
-      // Pass options to the modal component instance
       this.modalComponentRef.instance.childComponentType = options.component;
       this.modalComponentRef.instance.title = options.title;
       this.modalComponentRef.instance.size = options.size ?? ModalSize.MEDIUM;
@@ -71,18 +71,13 @@ export class ModalService {
         this.modalComponentRef.instance.childComponentData = options.componentData;
       }
 
-      if (options.minHeight) {
-        this.modalComponentRef.location.nativeElement.style.minHeight = `${options.minHeight}px`;
-      }
-
-      // Listen for confirm or cancel events
       this.modalComponentRef.instance.confirmed.subscribe(() => {
-        resolve(true); // Resolve the promise with true if confirmed
+        resolve(true);
         this.close();
       });
 
       this.modalComponentRef.instance.cancelled.subscribe(() => {
-        resolve(false); // Resolve the promise with false if cancelled
+        resolve(false);
         this.close();
       });
     });

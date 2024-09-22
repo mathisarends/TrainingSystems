@@ -41,11 +41,6 @@ export interface ModalOptions {
   componentData?: Record<string, unknown>;
 
   /**
-   * The minimum height of the modal in pixels. Optional.
-   */
-  minHeight?: number;
-
-  /**
    * Auf true zu setzen, wenn man z.B. Formvalidierung innerhalb einer Komponente benutzen will
    */
   confirmationRequired?: boolean;

@@ -7,7 +7,6 @@ import { IconListItem } from '../../shared/components/icon-list-item/icon-list-i
 import { IconListeItemComponent } from '../../shared/components/icon-list-item/icon-list-item.component';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 import { ToastService } from '../../shared/components/toast/toast.service';
-import { BasicConfirmationResponse } from '../../shared/dto/basic-confirmation-response';
 import { IconName } from '../../shared/icon/icon-name';
 import { IconComponent } from '../../shared/icon/icon.component';
 import { ButtonClickService } from '../../shared/service/button-click.service';
@@ -89,25 +88,16 @@ export class ProfileComponent2 implements OnInit {
 
     const currentProfilePicture = this.profileService.userData()!.pictureUrl;
 
-    const response = await this.modalService.open({
+    this.modalService.open({
       component: ChangeProfilePictureConfirmationComponent,
       title: 'Profilbild ändern',
       buttonText: 'Bestäigen',
+      secondaryButtonText: 'Zuschneiden',
       componentData: {
         oldProfilePicture: currentProfilePicture,
-        newProfilePicture: uploadedPictureBase64Str,
+        image: uploadedPictureBase64Str,
       },
     });
-
-    if (response) {
-      this.profileService
-        .uploadProfilePicture(uploadedPictureBase64Str)
-        .subscribe((response: BasicConfirmationResponse) => {
-          this.profilePictureElement.nativeElement.src = uploadedPictureBase64Str;
-          this.toastService.success(response.message);
-          this.profileService.fetchAndSetProfileData();
-        });
-    }
   }
 
   private async showDeleteAccountDialog() {

@@ -5,6 +5,9 @@ import { OnConfirm } from '../modal/on-confirm';
 import { OnToggleView } from '../modal/on-toggle-view';
 import { ToastService } from '../toast/toast.service';
 
+/**
+ * Signal that holds the state of "no image available".
+ */
 @Directive()
 export abstract class AbstractImageCropperComponent implements OnInit, OnConfirm, OnToggleView {
   /**
@@ -34,25 +37,6 @@ export abstract class AbstractImageCropperComponent implements OnInit, OnConfirm
   }
 
   /**
-   * Abstract method for derived components to implement specific behavior
-   * for setting the image.
-   */
-  abstract setImage(value: string | null): void;
-
-  /**
-   * Uploads the image and sets the uploaded image in `imageSignal`.
-   */
-  protected async displayUploadedImage(event: Event) {
-    const uploadedImageBase64Str = await this.imageUploadService.handleImageUpload(event);
-
-    if (!uploadedImageBase64Str) {
-      return;
-    }
-
-    this.setImage(uploadedImageBase64Str);
-  }
-
-  /**
    * Submits the image if it has been modified.
    */
   onConfirm() {
@@ -71,6 +55,27 @@ export abstract class AbstractImageCropperComponent implements OnInit, OnConfirm
     }
 
     this.isCropView.set(!this.isCropView());
+  }
+
+  /**
+   * Abstract method for derived components to implement specific behavior
+   * for setting the image.
+   */
+  setImage(value: string | null): void {
+    this.imageSignal.set(value);
+  }
+
+  /**
+   * Uploads the image and sets the uploaded image in `imageSignal`.
+   */
+  protected async displayUploadedImage(event: Event) {
+    const uploadedImageBase64Str = await this.imageUploadService.handleImageUpload(event);
+
+    if (!uploadedImageBase64Str) {
+      return;
+    }
+
+    this.setImage(uploadedImageBase64Str);
   }
 
   /**
