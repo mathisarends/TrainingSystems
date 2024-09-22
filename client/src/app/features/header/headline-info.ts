@@ -5,5 +5,5 @@ export interface HeadlineInfo {
   subTitle?: string;
   iconName?: IconName;
   onButtonClickCallback?: () => void;
-  options: string[];
+  options?: string[];
 }

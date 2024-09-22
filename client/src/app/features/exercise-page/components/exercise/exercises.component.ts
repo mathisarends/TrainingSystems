@@ -8,8 +8,10 @@ import { DropdownComponent } from '../../../../shared/components/dropdown/dropdo
 import { InputComponent } from '../../../../shared/components/input/input.component';
 import { ToastService } from '../../../../shared/components/toast/toast.service';
 import { InteractiveElementDirective } from '../../../../shared/directives/interactive-element.directive';
+import { IconName } from '../../../../shared/icon/icon-name';
 import { AutoSaveService } from '../../../../shared/service/auto-save.service';
 import { ButtonClickService } from '../../../../shared/service/button-click.service';
+import { HeaderService } from '../../../header/header.service';
 import { ExerciseDataDTO } from '../../../training-plans/training-view/exerciseDataDto';
 import { ExerciseService } from '../../service/exercise.service.';
 import { ExerciseTableSkeletonComponent } from '../exercise-table-skeleton/exercise-table-skeleton.component';
@@ -110,6 +112,7 @@ export class ExercisesComponent implements OnInit {
   constructor(
     private toastService: ToastService,
     private modalService: ModalService,
+    private headerService: HeaderService,
     private exerciseService: ExerciseService,
     private formService: FormService,
     private autoSaveService: AutoSaveService,
@@ -123,6 +126,12 @@ export class ExercisesComponent implements OnInit {
    */
   ngOnInit(): void {
     this.exerciseData$ = this.exerciseService.loadExerciseData();
+
+    this.headerService.setHeadlineInfo({
+      title: 'Exercises',
+      iconName: IconName.MORE_VERTICAL,
+      options: ['Zurücksetzen'],
+    });
 
     this.autoSaveService.inputChanged$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.exerciseService.updateExercises(this.formService.getChanges()).subscribe();

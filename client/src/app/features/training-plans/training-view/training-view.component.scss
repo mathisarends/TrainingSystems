@@ -66,6 +66,10 @@ form {
     content: attr(data-cell) ': ';
   }
 
+  .training-table tr:first-child {
+    border: none;
+  }
+
   .training-table tr {
     border-top: 4px solid rgb(216, 216, 216);
   }

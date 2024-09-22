@@ -31,6 +31,7 @@ import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
 import { AutoSaveService } from '../../../shared/service/auto-save.service';
 import { ButtonClickService } from '../../../shared/service/button-click.service';
+import { HeaderService } from '../../header/header.service';
 import { AutoProgressionComponent } from './auto-progression/auto-progression.component';
 import { CategorySelectDirective } from './directives/category-select.directive';
 import { RepInputDirective } from './directives/rep-input.directive';
@@ -95,6 +96,7 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
   constructor(
     private route: ActivatedRoute,
     private trainingViewService: TrainingViewService,
+    private headerService: HeaderService,
     private formService: FormService,
     private navigationService: TrainingViewNavigationService,
     private swipeService: SwipeService,
@@ -115,6 +117,8 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
    * Subscribes to route parameters and loads the initial data.
    */
   ngOnInit() {
+    this.headerService.setLoading();
+
     this.route.queryParams.subscribe((params) => {
       this.planId = params['planId'];
       this.trainingWeekIndex = parseInt(params['week']);
@@ -224,6 +228,13 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
           this.headlineService.subTitle.set(`W${this.trainingWeekIndex + 1}D${this.trainingDayIndex + 1}`);
 
           if (trainingPlan.title) {
+            this.headerService.setHeadlineInfo({
+              title: trainingPlan.title,
+              subTitle: this.subHeading,
+              iconName: IconName.CLOCK,
+              onButtonClickCallback: this.switchToTimerView.bind(this),
+            });
+
             this.title = trainingPlan.title;
             this.headlineService.title.set(trainingPlan.title);
             this.headlineService.isTitleLoading.set(false);

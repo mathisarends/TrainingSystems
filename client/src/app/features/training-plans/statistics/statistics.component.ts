@@ -9,9 +9,9 @@ import { LineChartDataset } from '../../../shared/components/charts/line-chart/l
 import { LineChartComponent } from '../../../shared/components/charts/line-chart/line-chart.component';
 import { PolarChartComponent } from '../../../shared/components/charts/polar-chart/polar-chart.component';
 import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
-import { HeadlineService } from '../../../shared/components/headline/headline.service';
 import { ChartSkeletonComponent } from '../../../shared/components/loader/chart-skeleton/chart-skeleton.component';
 import { MultiSelectComponent } from '../../../shared/components/multi-select/multi-select.component';
+import { HeaderService } from '../../header/header.service';
 import { ChartColorService } from '../training-view/services/chart-color.service';
 import { TrainingExerciseTonnageDto } from './main-exercise-tonnage-dto';
 import { Tonnage } from './tonnage';
@@ -54,10 +54,12 @@ export class StatisticsComponent implements OnInit {
     private chartColorService: ChartColorService,
     private modalService: ModalService,
     private trainingStatisticService: TrainingStatisticsService,
-    private headlineService: HeadlineService,
+    private headerService: HeaderService,
   ) {}
 
   async ngOnInit(): Promise<void> {
+    this.headerService.setLoading();
+
     this.id = this.router.url.split('/').pop()!;
     if (this.id) {
       await this.fetchInitialData(this.id);
@@ -122,10 +124,10 @@ export class StatisticsComponent implements OnInit {
     setsResponse: { [key: string]: number[] },
     title: string,
   ): void {
-    // Setze den Titel des Trainingsplans
-    this.headlineService.subTitle.set('stats');
-    this.headlineService.title.set(title);
-    this.headlineService.isTitleLoading.set(false);
+    this.headerService.setHeadlineInfo({
+      title: title,
+      subTitle: 'stats',
+    });
 
     // Setze Daten für das Liniendiagramm
     this.lineChartDatasets = Object.keys(tonnageData).map((categoryKey) => {

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, first, firstValueFrom } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { ModalSize } from '../../../core/services/modal/modalSize';
@@ -14,6 +14,7 @@ import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
 import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
 import { ButtonClickService } from '../../../shared/service/button-click.service';
+import { HeaderService } from '../../header/header.service';
 import { TrainingPlanCardComponent } from '../training-plan-card/training-plan-card.component';
 import { CreateTrainingFormComponent } from '../training-view/create-training-form/create-training-form.component';
 import { TrainingPlanCardView } from '../training-view/models/exercise/training-plan-card-view-dto';
@@ -52,6 +53,7 @@ export class TrainingPlansComponent implements OnInit {
   constructor(
     private modalService: ModalService,
     private httpClient: HttpService,
+    private headerService: HeaderService,
     private trainingPlanService: TrainingPlanService,
     private buttonClickService: ButtonClickService,
     private destroyRef: DestroyRef,
@@ -62,6 +64,13 @@ export class TrainingPlansComponent implements OnInit {
    * Loads training plans and subscribes to search input and modal events.
    */
   async ngOnInit(): Promise<void> {
+
+    this.headerService.setHeadlineInfo({
+      title: "Training",
+      iconName: IconName.PLUS,
+      onButtonClickCallback: this.createNewPlan.bind(this)
+    })
+
     await this.loadTrainingPlans();
 
     this.trainingPlanService.trainingPlansChanged$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -90,19 +99,19 @@ export class TrainingPlansComponent implements OnInit {
   /**
    * Opens the modal to create a new training plan.
    */
-  protected async createNewPlan(): Promise<void> {
-    const trainingPlans = await firstValueFrom(this.allTrainingPlans$);
-
-    this.modalService.open({
-      component: CreateTrainingFormComponent,
-      title: 'Trainingsplan erstellen',
-      buttonText: 'Erstellen',
-      secondaryButtonText: 'Optionen',
-      size: ModalSize.LARGE,
-      confirmationRequired: true,
-      componentData: {
-        existingPlans: trainingPlans,
-      },
+  protected createNewPlan(): void {
+    this.allTrainingPlans$.pipe(first()).subscribe(trainingPlans => {
+      this.modalService.open({
+        component: CreateTrainingFormComponent,
+        title: 'Trainingsplan erstellen',
+        buttonText: 'Erstellen',
+        secondaryButtonText: 'Optionen',
+        size: ModalSize.LARGE,
+        confirmationRequired: true,
+        componentData: {
+          existingPlans: trainingPlans,
+        },
+      });
     });
   }
 

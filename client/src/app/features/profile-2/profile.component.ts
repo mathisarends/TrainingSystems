@@ -13,6 +13,7 @@ import { ButtonClickService } from '../../shared/service/button-click.service';
 import { ImageUploadService } from '../../shared/service/image-upload.service';
 import { GymTicketComponent } from '../gym-ticket/gym-ticket.component';
 import { GymTicketService } from '../gym-ticket/gym-ticket.service';
+import { HeaderService } from '../header/header.service';
 import { ChangeProfilePictureConfirmationComponent } from './change-profile-picture-confirmation/change-profile-picture-confirmation.component';
 import { ProfileService } from './service/profileService';
 
@@ -41,6 +42,7 @@ export class ProfileComponent2 implements OnInit {
   constructor(
     protected profileService: ProfileService,
     private authService: AuthService,
+    private headerService: HeaderService,
     private modalService: ModalService,
     private toastService: ToastService,
     private gymTicketService: GymTicketService,
@@ -50,6 +52,12 @@ export class ProfileComponent2 implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.headerService.setHeadlineInfo({
+      title: 'Profile',
+      iconName: IconName.MORE_VERTICAL,
+      options: ['Logout'],
+    });
+
     this.buttonClickService.buttonClick$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.authService.logout();
     });
