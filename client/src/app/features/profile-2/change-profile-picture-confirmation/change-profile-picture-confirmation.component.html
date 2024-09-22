@@ -6,11 +6,11 @@
     format="png"
   />
 } @else {
-  <div class="text-center p-5">
+  <div class="text-center p-3">
     <div class="d-flex justify-content-center align-items-center">
       <div>
         <img
-          [src]="oldProfilePicture"
+          [src]="oldProfilePicture || '/images/profile-placeholder.webp'"
           alt="Altes Profilbild"
           class="img-thumbnail"
           style="width: 150px; height: 150px"
