@@ -1,21 +1,22 @@
 import { Request, Response } from 'express';
-import { MongoGenericDAO } from '../../models/dao/mongo-generic.dao.js';
-import * as trainingService from '../../service/trainingService.js';
+import { v4 as uuidv4 } from 'uuid';
 import { User } from '../../models/collections/user/user.js';
+import { MongoGenericDAO } from '../../models/dao/mongo-generic.dao.js';
+import { TrainingPlanCardViewDto } from '../../models/dto/training-plan-card-view-dto.js';
+import { ExerciseCategoryType } from '../../models/training/exercise-category-type.js';
+import { TrainingPlan } from '../../models/training/trainingPlan.js';
+import { WeightRecommendationBase } from '../../models/training/weight-recommandation.enum.js';
+import { TrainingPlanDtoMapper } from '../../service/training-plan-dto-mapper.js';
+import * as trainingService from '../../service/trainingService.js';
 import {
   createNewTrainingPlanWithPlaceholders,
   findTrainingPlanById,
   handleWeekDifference
 } from '../../service/trainingService.js';
 import { getUser } from '../../service/userService.js';
-import { TrainingPlanDtoMapper } from '../../service/training-plan-dto-mapper.js';
-import { TrainingPlanCardViewDto } from '../../models/dto/training-plan-card-view-dto.js';
-import { WeightRecommendationBase } from '../../models/training/weight-recommandation.enum.js';
-import { v4 as uuidv4 } from 'uuid';
-import { TrainingPlan } from '../../models/training/trainingPlan.js';
-import { ExerciseCategoryType } from '../../models/training/exercise-category-type.js';
 
 import _ from 'lodash';
+
 /**
  * Retrieves the list of training plans for the user, summarizing them into card views.
  * The result is intended to be a lightweight representation of the user's training plans.
@@ -23,7 +24,11 @@ import _ from 'lodash';
 export async function getPlans(req: Request, res: Response): Promise<void> {
   const user = await getUser(req, res);
 
-  const trainingPlanCards: TrainingPlanCardViewDto[] = user.trainingPlans.map((plan: TrainingPlan) => ({
+  const sortedTrainingPlans = user.trainingPlans.sort((a: TrainingPlan, b: TrainingPlan) => {
+    return new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime();
+  });
+
+  const trainingPlanCards: TrainingPlanCardViewDto[] = sortedTrainingPlans.map((plan: TrainingPlan) => ({
     ...TrainingPlanDtoMapper.getCardView(plan),
     pictureUrl: user.pictureUrl,
     percentageFinished: trainingService.getPercentageOfTrainingPlanFinished(plan),
