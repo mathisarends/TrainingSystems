@@ -1,7 +1,7 @@
 @if (allTrainingPlans$ | async; as allTrainingPlans) {
   <section id="gallery">
     <div class="container">
-      <div class="row">
+      <div class="row" cdkDropList (cdkDropListDropped)="drop($event)">
         @if (filteredTrainingPlans$ | async; as filteredTrainingPlans) {
           @if (filteredTrainingPlans.length === 0 && allTrainingPlans.length === 0) {
             <div class="col-12">
@@ -15,11 +15,11 @@
               <app-alert
                 alertType="light"
                 alertText="Keine deiner bestehenden Trainingpläne passen zu dieser Suchanfrage!"
-              />
+              ></app-alert>
             </div>
           } @else {
             @for (trainingPlan of filteredTrainingPlans; track trainingPlan) {
-              <div [ngClass]="columnClass">
+              <div [ngClass]="columnClass" cdkDrag>
                 <app-training-plan-card
                   [trainingPlan]="trainingPlan"
                   [columnClass]="columnClass"
@@ -38,7 +38,7 @@
       <div class="row">
         @for (k of [1, 2, 3]; track k) {
           <div [ngClass]="columnClass">
-            <app-skeleton-card />
+            <app-skeleton-card></app-skeleton-card>
           </div>
         }
       </div>

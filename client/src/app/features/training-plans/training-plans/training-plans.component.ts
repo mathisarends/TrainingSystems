@@ -1,3 +1,4 @@
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -36,6 +37,7 @@ import { TrainingPlanService } from '../training-view/services/training-plan.ser
     SkeletonCardComponent,
     IconComponent,
     CircularIconButtonComponent,
+    DragDropModule,
   ],
   templateUrl: './training-plans.component.html',
   styleUrls: ['./training-plans.component.scss'],
@@ -64,12 +66,11 @@ export class TrainingPlansComponent implements OnInit {
    * Loads training plans and subscribes to search input and modal events.
    */
   async ngOnInit(): Promise<void> {
-
     this.headerService.setHeadlineInfo({
-      title: "Training",
+      title: 'Training',
       iconName: IconName.PLUS,
-      onButtonClickCallback: this.createNewPlan.bind(this)
-    })
+      onButtonClickCallback: this.createNewPlan.bind(this),
+    });
 
     await this.loadTrainingPlans();
 
@@ -86,6 +87,16 @@ export class TrainingPlansComponent implements OnInit {
     });
   }
 
+  drop(event: CdkDragDrop<TrainingPlanCardView[]>) {
+    if (!this.filteredTrainingPlans$.value) {
+      return;
+    }
+
+    moveItemInArray(this.filteredTrainingPlans$.value, event.previousIndex, event.currentIndex);
+
+    this.filteredTrainingPlans$.next([...this.filteredTrainingPlans$.value]);
+  }
+
   /**
    * Loads training plans from the server.
    */
@@ -100,7 +111,7 @@ export class TrainingPlansComponent implements OnInit {
    * Opens the modal to create a new training plan.
    */
   protected createNewPlan(): void {
-    this.allTrainingPlans$.pipe(first()).subscribe(trainingPlans => {
+    this.allTrainingPlans$.pipe(first()).subscribe((trainingPlans) => {
       this.modalService.open({
         component: CreateTrainingFormComponent,
         title: 'Trainingsplan erstellen',
