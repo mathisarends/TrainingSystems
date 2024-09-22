@@ -21,7 +21,6 @@ import { SwipeService } from '../../../core/services/swipe.service';
 import { MobileDeviceDetectionService } from '../../../platform/mobile-device-detection.service';
 import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
 import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
-import { HeadlineService } from '../../../shared/components/headline/headline.service';
 import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
 import { InputComponent } from '../../../shared/components/input/input.component';
 import { SkeletonTrainingTableComponent } from '../../../shared/components/loader/skeleton-training-table/skeleton-training-table.component';
@@ -108,7 +107,6 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
     private destroyRef: DestroyRef,
     protected trainingDataService: TrainingPlanDataService,
     protected mobileDeviceDetectionService: MobileDeviceDetectionService,
-    private headlineService: HeadlineService,
     private buttonClickService: ButtonClickService,
   ) {}
 
@@ -225,7 +223,6 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
           this.exerciseDataService.exerciseData = exerciseData;
 
           this.subHeading = `W${this.trainingWeekIndex + 1}D${this.trainingDayIndex + 1}`;
-          this.headlineService.subTitle.set(`W${this.trainingWeekIndex + 1}D${this.trainingDayIndex + 1}`);
 
           if (trainingPlan.title) {
             this.headerService.setHeadlineInfo({
@@ -236,8 +233,6 @@ export class TrainingViewComponent implements OnInit, OnDestroy, AfterViewChecke
             });
 
             this.title = trainingPlan.title;
-            this.headlineService.title.set(trainingPlan.title);
-            this.headlineService.isTitleLoading.set(false);
           }
         }),
         tap(() => {
