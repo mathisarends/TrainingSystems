@@ -6,7 +6,7 @@
       @if (subHeading()) {
         <span class="context-headline">{{ subHeading() }}</span>
       }
-      <span class="headline">{{ heading() }}</span>
+      <span class="headline">{{ heading() | slice: 0 : 12 }}</span>
     </span>
   }
 </div>

@@ -133,7 +133,7 @@ export class EditTrainingPlanComponent implements OnInit, AfterViewChecked, OnCo
     if (this.trainingForm.valid) {
       const formData = this.trainingForm.value;
 
-      await firstValueFrom(this.httpClient.patch(`/training/edit/${this.id}`, formData));
+      await firstValueFrom(this.httpClient.patch(`/training/edit/${this.id()}`, formData));
       this.trainingPlanService.trainingPlanChanged();
       this.modalService.close();
 
