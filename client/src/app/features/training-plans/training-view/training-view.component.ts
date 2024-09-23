@@ -112,7 +112,7 @@ export class TrainingViewComponent implements OnInit, /* OnDestroy, */ AfterView
       this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
 
       this.buttonClickService.buttonClick$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-        this.switchToTimerView();
+        this.openAutoProgressionModal();
       });
     });
 
@@ -191,7 +191,10 @@ export class TrainingViewComponent implements OnInit, /* OnDestroy, */ AfterView
             this.headerService.setHeadlineInfo({
               title: trainingPlan.title,
               subTitle: this.subHeading,
-              buttons: [{ icon: IconName.CLOCK, callback: this.switchToTimerView.bind(this) }],
+              buttons: [
+                { icon: IconName.CLOCK, callback: this.switchToTimerView.bind(this) },
+                { icon: IconName.MORE_VERTICAL, options: [{ label: 'Progression', icon: IconName.Activity }] },
+              ],
             });
 
             this.title = trainingPlan.title;

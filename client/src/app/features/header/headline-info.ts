@@ -17,5 +17,9 @@ export interface HeadlineInfo {
    */
   subTitle?: string;
 
+  /**
+   * An optional array of buttons to be displayed in the header.
+   * If no values are passed the profile picture of the user is displayed.
+   */
   buttons?: HeadlineButton[];
 }

@@ -5,13 +5,15 @@
 />
 
 @if (headerService.buttons().length > 0) {
-  @for (button of headerService.buttons(); track button) {
-    @if (button.icon === IconName.MORE_VERTICAL) {
-      <app-more-options-button [options]="button.options!" (optionSelected)="onOptionSelected($event)" />
-    } @else {
-      <app-circular-icon-button [icon]="button.icon" [iconSize]="20" (clicked)="onCircularButtonClick()" />
+  <div class="button-container">
+    @for (button of headerService.buttons(); track button) {
+      @if (button.icon === IconName.MORE_VERTICAL) {
+        <app-more-options-button [options]="button.options!" (optionSelected)="onOptionSelected($event)" />
+      } @else {
+        <app-circular-icon-button [icon]="button.icon" [iconSize]="20" (clicked)="onCircularButtonClick()" />
+      }
     }
-  }
+  </div>
 } @else {
   <div class="image-wrapper">
     <img

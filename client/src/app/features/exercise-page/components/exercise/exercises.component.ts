@@ -6,6 +6,7 @@ import { FormService } from '../../../../core/services/form.service';
 import { ModalService } from '../../../../core/services/modal/modalService';
 import { DropdownComponent } from '../../../../shared/components/dropdown/dropdown.component';
 import { InputComponent } from '../../../../shared/components/input/input.component';
+import { MoreOptionListItem } from '../../../../shared/components/more-options-button/more-option-list-item';
 import { ToastService } from '../../../../shared/components/toast/toast.service';
 import { InteractiveElementDirective } from '../../../../shared/directives/interactive-element.directive';
 import { IconName } from '../../../../shared/icon/icon-name';
@@ -127,10 +128,7 @@ export class ExercisesComponent implements OnInit {
   ngOnInit(): void {
     this.exerciseData$ = this.exerciseService.loadExerciseData();
 
-    this.headerService.setHeadlineInfo({
-      title: 'Exercises',
-      buttons: [{ icon: IconName.MORE_VERTICAL, options: [{ label: 'Zurücksetzen', icon: IconName.Trash }] }],
-    });
+    this.setHeaderInfo();
 
     this.autoSaveService.inputChanged$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.exerciseService.updateExercises(this.formService.getChanges()).subscribe();
@@ -138,6 +136,15 @@ export class ExercisesComponent implements OnInit {
 
     this.buttonClickService.buttonClick$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.onReset();
+    });
+  }
+
+  private setHeaderInfo() {
+    const nmoreOptions: MoreOptionListItem[] = [{ label: 'Zurücksetzen', icon: IconName.Trash }];
+
+    this.headerService.setHeadlineInfo({
+      title: 'Exercises',
+      buttons: [{ icon: IconName.MORE_VERTICAL, options: nmoreOptions }],
     });
   }
 
