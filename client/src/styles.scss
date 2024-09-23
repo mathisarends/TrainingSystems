@@ -32,7 +32,12 @@ body {
 
 .blur-background .outlet-wrapper {
   filter: blur(2px);
-  transition: filter 0.3s ease-in-out;
+  transition: filter 0.2s ease-in-out;
+}
+
+.blur-background app-header {
+  filter: blur(2px);
+  transition: filter 0.2s ease-in-out;
 }
 
 .background-image {
