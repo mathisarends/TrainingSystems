@@ -1,6 +1,7 @@
 import { Component, ElementRef, HostListener, input, output, signal, WritableSignal } from '@angular/core';
 import { toggleCollapseAnimation } from '../../animations/toggle-collapse';
 import { IconName } from '../../icon/icon-name';
+import { IconComponent } from '../../icon/icon.component';
 import { CircularIconButtonComponent } from '../circular-icon-button/circular-icon-button.component';
 import { MoreOptionListItem } from './more-option-list-item';
 
@@ -10,7 +11,7 @@ import { MoreOptionListItem } from './more-option-list-item';
 @Component({
   selector: 'app-more-options-button',
   standalone: true,
-  imports: [CircularIconButtonComponent],
+  imports: [CircularIconButtonComponent, IconComponent],
   templateUrl: './more-options-button.component.html',
   styleUrls: ['./more-options-button.component.scss'],
   animations: [toggleCollapseAnimation],

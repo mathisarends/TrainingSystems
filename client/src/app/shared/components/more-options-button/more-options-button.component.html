@@ -1,9 +1,12 @@
 <app-circular-icon-button [icon]="IconName.MORE_VERTICAL" [iconSize]="20" (clicked)="toggleCollapsed()" />
 
-<div class="custom-dropdown" [@toggleCollapse]="isCollapsed() ? 'collapsed' : 'expanded'">
+<div class="more-option-list-container" [@toggleCollapse]="isCollapsed() ? 'collapsed' : 'expanded'">
   <ul>
     @for (option of options(); track option) {
       <li (click)="selectOption(option.label)">
+        @if (option.icon) {
+          <app-icon [name]="option.icon" [size]="17" />
+        }
         {{ option.label }}
       </li>
     }
