@@ -55,6 +55,16 @@ form {
   display: none;
 }
 
+tr {
+  position: relative;
+
+  app-icon {
+    position: absolute;
+    top: 14.5rem;
+    right: 0;
+  }
+}
+
 @media (max-width: 768px) {
   .rest-pause-time-indicator {
     position: fixed;

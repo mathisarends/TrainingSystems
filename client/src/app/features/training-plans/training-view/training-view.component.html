@@ -38,7 +38,7 @@
             };
           @let namePrefix = 'day' + trainingDayIndex + '_exercise' + k + '_';
 
-          <tr>
+          <tr cdkDrag>
             <td data-cell="Category">
               <app-dropdown
                 name="day{{ trainingDayIndex }}_exercise{{ k }}_category"

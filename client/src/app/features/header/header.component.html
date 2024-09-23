@@ -6,7 +6,7 @@
 
 @if (headerService.buttons().length > 0) {
   <div class="button-container">
-    @for (button of headerService.buttons(); track button) {
+    @for (button of headerService.buttons(); track button.icon) {
       @if (button.icon === IconName.MORE_VERTICAL) {
         <app-more-options-button [options]="button.options!" />
       } @else {

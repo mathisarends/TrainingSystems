@@ -84,7 +84,7 @@ export class NavBarComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     effect(
       () => {
-        const currentRoute = this.activeRoute();
+        const currentRoute = this.routeWatcherService.getCurrentRouteSignal()();
 
         this.swipeService.removeSwipeListener();
         if (!this.loadingService.isLoading() && this.isRouteRepresentedInNavbar(currentRoute)) {

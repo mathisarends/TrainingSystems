@@ -12,8 +12,9 @@ export class TrainingViewNavigationService {
     private formService: FormService,
   ) {}
 
-  navigateDay(trainingDayIndex: number, trainingFrequency: number, week: number): number {
+  navigateDay(trainingDayIndex: number, trainingFrequency: number, week: number): void {
     if (trainingDayIndex >= 0 && trainingDayIndex <= trainingFrequency - 1) {
+      console.log('here not ?');
       this.router.navigate([], {
         queryParams: {
           week: week,
@@ -22,10 +23,6 @@ export class TrainingViewNavigationService {
         queryParamsHandling: 'merge',
       });
     }
-
-    this.clearInputValues();
-
-    return trainingDayIndex;
   }
 
   /** Per Default auf den ersten Tag der Woche navigieren */

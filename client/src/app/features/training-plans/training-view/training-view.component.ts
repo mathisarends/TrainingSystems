@@ -1,11 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewChecked, Component, DestroyRef, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, DestroyRef, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, forkJoin } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { BrowserCheckService } from '../../../core/services/browser-check.service';
 import { FormService } from '../../../core/services/form.service';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { SwipeService } from '../../../core/services/swipe.service';
@@ -34,7 +33,6 @@ import { PauseTimeService } from './services/pause-time.service';
 import { TrainingPlanDataService } from './services/training-plan-data.service';
 import { TrainingViewNavigationService } from './training-view-navigation.service';
 import { TrainingViewService } from './training-view-service';
-import { TrainingPlanDto } from './trainingPlanDto';
 
 /**
  * Component to manage and display the training view.
@@ -63,24 +61,22 @@ import { TrainingPlanDto } from './trainingPlanDto';
   templateUrl: './training-view.component.html',
   styleUrls: ['./training-view.component.scss'],
 })
-export class TrainingViewComponent implements OnInit, /* OnDestroy, */ AfterViewChecked {
+export class TrainingViewComponent implements OnInit {
   protected readonly IconName = IconName;
 
-  title = '';
   trainingWeekIndex: number = 0;
   trainingDayIndex: number = 0;
 
   protected planId!: string;
   exerciseData: ExerciseDataDTO = new ExerciseDataDTO();
-  trainingPlanData: TrainingPlanDto = new TrainingPlanDto();
   private dataViewLoaded = new BehaviorSubject<boolean>(false);
   dataViewLoaded$ = this.dataViewLoaded.asObservable();
 
   private automationContextInitialized = false;
 
-  subHeading: string = '';
-
   @ViewChild('trainingTable', { static: false }) trainingTable!: ElementRef;
+
+  isDragMode = signal(false);
 
   constructor(
     private route: ActivatedRoute,
@@ -90,7 +86,6 @@ export class TrainingViewComponent implements OnInit, /* OnDestroy, */ AfterView
     private navigationService: TrainingViewNavigationService,
     private swipeService: SwipeService,
     private modalService: ModalService,
-    private browserCheckService: BrowserCheckService,
     private autoSaveService: AutoSaveService,
     private exerciseDataService: ExerciseDataService,
     private destroyRef: DestroyRef,
@@ -104,9 +99,10 @@ export class TrainingViewComponent implements OnInit, /* OnDestroy, */ AfterView
    * Subscribes to route parameters and loads the initial data.
    */
   ngOnInit() {
-    this.headerService.setLoading();
-
     this.route.queryParams.subscribe((params) => {
+      this.automationContextInitialized = false;
+      this.swipeService.removeSwipeListener();
+      this.headerService.setLoading();
       this.planId = params['planId'];
       this.trainingWeekIndex = parseInt(params['week']);
       this.trainingDayIndex = parseInt(params['day']);
@@ -121,17 +117,10 @@ export class TrainingViewComponent implements OnInit, /* OnDestroy, */ AfterView
       });
   }
 
-  /**
-   * Lifecycle hook that is called after the component's view has been checked.
-   * Initializes the swipe listener once the data view has loaded.
-   */
   ngAfterViewChecked(): void {
-    if (this.browserCheckService.isBrowser() && !this.automationContextInitialized) {
-      if (this.dataViewLoaded.getValue() && this.trainingTable) {
-        this.initializeSwipeListener();
-
-        this.automationContextInitialized = true;
-      }
+    if (this.dataViewLoaded.getValue() && this.trainingTable && !this.automationContextInitialized) {
+      this.initializeSwipeListener();
+      this.automationContextInitialized = true;
     }
   }
 
@@ -156,14 +145,6 @@ export class TrainingViewComponent implements OnInit, /* OnDestroy, */ AfterView
   }
 
   /**
-   * Removes the swipe listener.
-   * Calls the swipe service to remove the registered listeners.
-   */
-  removeSwipeListener(): void {
-    this.swipeService.removeSwipeListener();
-  }
-
-  /**
    * Loads training data and exercise data for the specified plan, week, and day.
    * Updates the component state with the loaded data.
    * @param planId - ID of the training plan.
@@ -183,12 +164,10 @@ export class TrainingViewComponent implements OnInit, /* OnDestroy, */ AfterView
           this.exerciseData = exerciseData;
           this.exerciseDataService.exerciseData = exerciseData;
 
-          this.subHeading = `W${this.trainingWeekIndex + 1}D${this.trainingDayIndex + 1}`;
-
           if (trainingPlan.title) {
             this.headerService.setHeadlineInfo({
               title: trainingPlan.title,
-              subTitle: this.subHeading,
+              subTitle: `W${this.trainingWeekIndex + 1}D${this.trainingDayIndex + 1}`,
               buttons: [
                 { icon: IconName.CLOCK, callback: this.switchToTimerView.bind(this) },
                 {
@@ -203,15 +182,11 @@ export class TrainingViewComponent implements OnInit, /* OnDestroy, */ AfterView
                 },
               ],
             });
-
-            this.title = trainingPlan.title;
           }
         }),
         tap(() => {
-          if (this.trainingPlanData && this.exerciseData && this.title) {
+          if (this.trainingDataService.trainingPlanData && this.exerciseData) {
             this.dataViewLoaded.next(true);
-            this.removeSwipeListener();
-            this.initializeSwipeListener();
           } else {
             this.dataViewLoaded.next(false);
           }
@@ -239,20 +214,17 @@ export class TrainingViewComponent implements OnInit, /* OnDestroy, */ AfterView
   }
 
   navigateDay(day: number) {
-    if (day >= this.trainingPlanData.trainingBlockLength) {
+    if (day >= this.trainingDataService.trainingPlanData.trainingBlockLength) {
       day = 0;
     } else if (day < 0) {
-      day = this.trainingPlanData.trainingBlockLength - 1;
+      day = this.trainingDataService.trainingPlanData.trainingBlockLength - 1;
     }
 
-    this.trainingDayIndex = this.navigationService.navigateDay(
+    this.navigationService.navigateDay(
       day,
-      this.trainingPlanData.trainingFrequency,
+      this.trainingDataService.trainingPlanData.trainingFrequency,
       this.trainingWeekIndex,
     );
-
-    this.automationContextInitialized = false;
-    this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
   }
 
   /**
@@ -264,7 +236,7 @@ export class TrainingViewComponent implements OnInit, /* OnDestroy, */ AfterView
     this.trainingWeekIndex = this.navigationService.navigateWeek(
       this.trainingWeekIndex,
       direction,
-      this.trainingPlanData,
+      this.trainingDataService.trainingPlanData,
       this.trainingDayIndex,
     );
     this.automationContextInitialized = false;

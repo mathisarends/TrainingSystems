@@ -2,7 +2,7 @@
 
 <div class="more-option-list-container" [@toggleCollapse]="isCollapsed() ? 'collapsed' : 'expanded'">
   <ul>
-    @for (option of options(); track option) {
+    @for (option of options(); track option.label) {
       <li (click)="selectOption(option)">
         @if (option.icon) {
           <app-icon [name]="option.icon" [size]="17" />
