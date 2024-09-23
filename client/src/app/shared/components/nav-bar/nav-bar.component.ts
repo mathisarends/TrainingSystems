@@ -44,32 +44,32 @@ export class NavBarComponent implements OnInit, AfterViewInit {
 
   /**
    * The `effect` function tracks changes in the current route and updates the active route
-
    */
   ngOnInit(): void {
     effect(
       () => {
         let currentRoute = this.routeWatcherService.getCurrentRouteSignal()();
 
-        const routeExists = this.navItems.some((item) => item.route === currentRoute);
-        this.swipeService.removeSwipeListener();
-
-        if (!routeExists) {
+        if (!this.isRouteRepresentedInNavbar(currentRoute)) {
           currentRoute = '/';
-        } else {
-          this.activeRoute.set(currentRoute);
         }
+        this.activeRoute.set(currentRoute);
       },
       { allowSignalWrites: true, injector: this.injector },
     );
   }
 
+  /**
+   * After the view is fully initialized, swipe listeners are set up based on the active route.
+   * This ensures that the DOM is completely rendered before manipulating DOM elements.
+   */
   ngAfterViewInit(): void {
     effect(
       () => {
         const currentRoute = this.activeRoute();
 
-        if (!this.loadingService.isLoading()) {
+        this.swipeService.removeSwipeListener();
+        if (!this.loadingService.isLoading() && this.isRouteRepresentedInNavbar(currentRoute)) {
           this.setupSwipeListeners(currentRoute);
         }
       },
@@ -77,7 +77,20 @@ export class NavBarComponent implements OnInit, AfterViewInit {
     );
   }
 
-  setupSwipeListeners(route: string) {
+  /**
+   * Updates the current route by navigating to the specified route.
+   *
+   * @param route The route to navigate to.
+   */
+  protected setActive(route: string): void {
+    this.router.navigate([route]);
+  }
+
+  /**
+   * Sets up swipe listeners for the specified route. This adds swipe navigation
+   * based on the active route and ignores certain elements depending on the route.
+   */
+  private setupSwipeListeners(route: string) {
     const navbar = this.elementRef.nativeElement;
     const appRoot = navbar.parentElement;
 
@@ -93,14 +106,16 @@ export class NavBarComponent implements OnInit, AfterViewInit {
     );
   }
 
-  handleForbiddenSwipeElementsForRoute(route: string, outletWrapper: HTMLElement) {
+  /**
+   * After the view is fully initialized, swipe listeners are set up based on the active route.
+   * This ensures that the DOM is completely rendered before manipulating DOM elements.
+   */
+  private handleForbiddenSwipeElementsForRoute(route: string, outletWrapper: HTMLElement) {
     if (route === '/usage') {
       const excludedElementsNodeList = outletWrapper.querySelectorAll('app-activity-calendar');
       const excludedElementsArray = Array.from(excludedElementsNodeList) as HTMLElement[];
 
       this.swipeService.setExcludedElements(excludedElementsArray);
-    } else {
-      this.swipeService.setExcludedElements([]);
     }
   }
 
@@ -109,7 +124,7 @@ export class NavBarComponent implements OnInit, AfterViewInit {
    * Uses the `navItems` array to determine the previous or next route.
    * @param direction - The swipe direction ('left' or 'right').
    */
-  handleSwipeNavigation(direction: 'left' | 'right') {
+  private handleSwipeNavigation(direction: 'left' | 'right') {
     const currentIndex = this.navItems.findIndex((item) => item.route === this.activeRoute());
 
     if (direction === 'left' && currentIndex < this.navItems.length - 1) {
@@ -121,12 +136,7 @@ export class NavBarComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /**
-   * Updates the current route by navigating to the specified route.
-   *
-   * @param route The route to navigate to.
-   */
-  setActive(route: string): void {
-    this.router.navigate([route]);
+  private isRouteRepresentedInNavbar(route: string): boolean {
+    return this.navItems.some((item) => item.route === route);
   }
 }
