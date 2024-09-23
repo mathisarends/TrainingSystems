@@ -1,9 +1,20 @@
-import { AfterViewInit, Component, effect, ElementRef, Injector, OnInit, signal, WritableSignal } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  Injector,
+  OnInit,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingService } from '../../../core/services/loading.service';
 import { SwipeService } from '../../../core/services/swipe.service';
 import { IconName } from '../../icon/icon-name';
 import { IconComponent } from '../../icon/icon.component';
+import { NotificationService } from '../../service/notification.service';
 import { RouteWatcherService } from '../../service/route-watcher.service';
 import { NavItem } from './nav-item';
 
@@ -16,6 +27,11 @@ import { NavItem } from './nav-item';
 })
 export class NavBarComponent implements OnInit, AfterViewInit {
   protected IconName = IconName;
+
+  /**
+   * Derived signal for the notification count
+   */
+  protected notificationCount = computed(() => this.notificationService.trainingDayNotifications().length);
 
   /**
    * Array of navigation items defining the label, route, and associated icon for each navigation button.
@@ -36,6 +52,7 @@ export class NavBarComponent implements OnInit, AfterViewInit {
   constructor(
     private router: Router,
     protected routeWatcherService: RouteWatcherService,
+    protected notificationService: NotificationService,
     private swipeService: SwipeService,
     private loadingService: LoadingService,
     private elementRef: ElementRef,

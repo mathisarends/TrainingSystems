@@ -11,6 +11,7 @@ import { LoadingProgressBarComponent } from './shared/components/loader/loading-
 import { NavBarComponent } from './shared/components/nav-bar/nav-bar.component';
 import { SpinnerComponent } from './shared/components/spinner/spinner.component';
 import { ToastComponent } from './shared/components/toast/toast.component';
+import { NotificationService } from './shared/service/notification.service';
 
 @Component({
   selector: 'app-root',
@@ -38,6 +39,7 @@ export class AppComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private authService: AuthService,
     private profileService: ProfileService,
+    private notificationService: NotificationService,
   ) {}
 
   ngOnInit() {
@@ -54,6 +56,8 @@ export class AppComponent implements OnInit {
       this.authService.checkAuthenticationStatus().subscribe();
 
       this.profileService.fetchAndSetProfileData().subscribe();
+
+      this.notificationService.fetchAndSetTrainingDayNotifications().subscribe();
 
       if (!this.mobileDeviceDetectionService.isMobileDevice) {
         return;

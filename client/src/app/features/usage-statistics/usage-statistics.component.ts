@@ -12,7 +12,6 @@ import { ActivityCalendarData } from './activity-calendar-data';
 import { ActivityCalendar } from './activity-calendar/activity-calendar.component';
 import { RecentTrainingDurationsData } from './recent-training-durations-data';
 import { TrainingDayNotificationComponent } from './training-day-notification/training-day-notification.component';
-import { TrainingDayFinishedNotification } from './training-finished-notification';
 
 @Component({
   selector: 'app-usage-statistics',
@@ -39,14 +38,9 @@ export class UsageStatisticsComponent implements OnInit {
    */
   recentTrainingDurations$!: Observable<{ chartData: BarChartData[]; labels: string[] }>;
 
-  /**
-   * Observable that emits the exercise data or null if there's an error or it's still loading.
-   */
-  trainingDayNotifications$!: Observable<TrainingDayFinishedNotification[]>;
-
   constructor(
+    protected notificationService: NotificationService,
     private httpClient: HttpService,
-    private notificationService: NotificationService,
     private headerService: HeaderService,
   ) {}
 
@@ -78,7 +72,5 @@ export class UsageStatisticsComponent implements OnInit {
           return { chartData: groupedBarChartData, labels: dateLabels };
         }),
       );
-
-    this.trainingDayNotifications$ = this.notificationService.getTrainingDayNotifications();
   }
 }
