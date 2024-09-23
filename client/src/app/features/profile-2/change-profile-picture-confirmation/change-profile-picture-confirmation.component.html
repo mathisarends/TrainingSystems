@@ -1,6 +1,6 @@
 @if (isCropView()) {
   <image-cropper
-    [imageBase64]="imageSignal()!"
+    [imageBase64]="image()!"
     [maintainAspectRatio]="false"
     (imageCropped)="imageCropped($event)"
     format="png"
@@ -21,7 +21,7 @@
         <app-icon [name]="IconName.ARROW_RIGHT" [size]="32" style="font-size: 3rem; color: #007bff" />
       </div>
       <div>
-        <img [src]="imageSignal()" alt="Neues Profilbild" class="img-thumbnail" style="width: 150px; height: 150px" />
+        <img [src]="image()" alt="Neues Profilbild" class="img-thumbnail" style="width: 150px; height: 150px" />
         <p>Neues Profilbild</p>
       </div>
     </div>

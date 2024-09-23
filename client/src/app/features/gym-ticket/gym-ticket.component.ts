@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ImageCropperComponent } from 'ngx-image-cropper';
 import { AbstractImageCropperComponent } from '../../shared/components/abstract-image-cropper/abstract-image-cropper.component';
+import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
 import { ToastService } from '../../shared/components/toast/toast.service';
 import { ImageUploadService } from '../../shared/service/image-upload.service';
 import { GymTicketService } from './gym-ticket.service';
@@ -8,11 +9,10 @@ import { GymTicketService } from './gym-ticket.service';
 @Component({
   selector: 'app-ticket',
   standalone: true,
-  imports: [ImageCropperComponent],
+  imports: [ImageCropperComponent, SkeletonComponent],
   templateUrl: './gym-ticket.component.html',
   styleUrls: ['./gym-ticket.component.scss'],
   providers: [GymTicketService],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GymTicketComponent extends AbstractImageCropperComponent implements OnInit {
   constructor(

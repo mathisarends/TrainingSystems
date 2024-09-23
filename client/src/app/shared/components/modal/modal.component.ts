@@ -1,14 +1,19 @@
 import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ComponentRef,
   EnvironmentInjector,
   EventEmitter,
+  Injector,
   Output,
   ViewChild,
   ViewContainerRef,
+  WritableSignal,
   createComponent,
+  effect,
+  signal,
 } from '@angular/core';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { ModalSize } from '../../../core/services/modal/modalSize';
@@ -57,7 +62,7 @@ export class ModalComponent implements AfterViewInit {
   /**
    * Data to be passed to the dynamically loaded child component within the modal.
    */
-  childComponentData!: DataMap | null;
+  childComponentData: WritableSignal<DataMap | null> = signal(null);
 
   /**
    * The size of the modal (small, medium, large). Controls the modal's width.
@@ -87,10 +92,22 @@ export class ModalComponent implements AfterViewInit {
   constructor(
     private environmentInjector: EnvironmentInjector,
     private modalService: ModalService,
+    private injector: Injector,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngAfterViewInit() {
     this.loadChildComponent();
+
+    effect(
+      () => {
+        console.log('Kommen wir hier hin?', this.childComponentData());
+        if (this.childComponentData()) {
+          this.setChildComponentInputs(this.childComponentData());
+        }
+      },
+      { injector: this.injector, allowSignalWrites: true },
+    );
   }
 
   /**
@@ -108,20 +125,32 @@ export class ModalComponent implements AfterViewInit {
     });
 
     this.modalContent.insert(this.childComponentRef.hostView);
-
-    if (this.childComponentData) {
-      this.setChildComponentInputs(this.childComponentData);
-    }
   }
 
   /**
    * Sets inputs for the dynamically loaded child component.
-   * Only properties that exist in the child component will be set.
+   * Detects if a target property is a signal, and updates the signal instead of direct property assignment.
    */
   private setChildComponentInputs(data: any): void {
     Object.keys(data).forEach((key) => {
-      this.childComponentRef.instance[key] = data[key];
+      const instanceProperty = this.childComponentRef.instance[key];
+
+      if (this.isSignal(instanceProperty)) {
+        (instanceProperty as WritableSignal<any>).set(data[key]);
+      } else {
+        this.childComponentRef.instance[key] = data[key];
+      }
     });
+  }
+
+  /**
+   * Checks if a given property is a Signal.
+   *
+   * @param property - The property to check.
+   * @returns True if the property is a Signal, false otherwise.
+   */
+  private isSignal(property: any): boolean {
+    return property && typeof property === 'function' && 'set' in property;
   }
 
   /**

@@ -68,7 +68,7 @@ export class ModalService {
       }
 
       if (options.componentData) {
-        this.modalComponentRef.instance.childComponentData = options.componentData;
+        this.modalComponentRef.instance.childComponentData.set(options.componentData);
       }
 
       this.modalComponentRef.instance.confirmed.subscribe(() => {
@@ -81,6 +81,19 @@ export class ModalService {
         this.close();
       });
     });
+  }
+
+  // signal basiert umsetzen für den modalService:
+  /**
+   * Updates the component data of the modal's child component.
+   * @param newComponentData - The new data to update the child component with.
+   */
+  updateComponentData(newComponentData: any) {
+    if (this.modalComponentRef) {
+      this.modalComponentRef.instance.childComponentData.set(newComponentData);
+    } else {
+      console.warn('Modal component reference is not available for updating data.');
+    }
   }
 
   /**

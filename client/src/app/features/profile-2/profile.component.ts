@@ -65,15 +65,19 @@ export class ProfileComponent2 implements OnInit {
 
   protected async onListItemClicked(listItem: IconListItem) {
     if (listItem.label === 'Ticket') {
+      this.modalService.open({
+        component: GymTicketComponent,
+        title: 'Gym Ticket',
+        buttonText: 'Speichern',
+        secondaryButtonText: 'Zuschneiden',
+        componentData: {
+          image: '',
+        },
+      });
+
       this.gymTicketService.getGymTicket().subscribe((ticket: string) => {
-        this.modalService.open({
-          component: GymTicketComponent,
-          title: 'Gym Ticket',
-          buttonText: 'Speichern',
-          secondaryButtonText: 'Zuschneiden',
-          componentData: {
-            image: ticket,
-          },
+        this.modalService.updateComponentData({
+          image: ticket,
         });
       });
     } else if (listItem.label === 'Account löschen') {

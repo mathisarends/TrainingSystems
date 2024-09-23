@@ -1,22 +1,27 @@
-@if (imageSignal() !== NO_IMAGE_AVAILABLE()) {
-  @if (isCropView()) {
-    <image-cropper
-      [imageBase64]="imageSignal()!"
-      [maintainAspectRatio]="false"
-      (imageCropped)="imageCropped($event)"
-      format="png"
-    />
-  } @else {
-    <div class="upload-container" (click)="fileInput.click()">
-      <img [src]="imageSignal()" alt="Upload Ticket" class="w-100" />
+@if (image()) {
+  @if (image() !== NO_IMAGE_AVAILABLE()) {
+    @if (isCropView()) {
+      <image-cropper
+        class="ticket-image"
+        [imageBase64]="image()!"
+        [maintainAspectRatio]="false"
+        (imageCropped)="imageCropped($event)"
+        format="png"
+      />
+    } @else {
+      <div class="upload-container" (click)="fileInput.click()">
+        <img [src]="image()" alt="Upload Ticket" class="ticket-image" />
 
+        <input type="file" #fileInput (change)="displayUploadedImage($event)" accept="image/*" hidden />
+      </div>
+    }
+  } @else {
+    <!-- Wenn kein Ticket vorhanden ist, zeige den Dateiupload -->
+    <div class="upload-dropzone" (click)="fileInput.click()">
+      <p>Drag & Drop your gym ticket here, or click to select an image.</p>
       <input type="file" #fileInput (change)="displayUploadedImage($event)" accept="image/*" hidden />
     </div>
   }
 } @else {
-  <!-- Wenn kein Ticket vorhanden ist, zeige den Dateiupload -->
-  <div class="upload-dropzone" (click)="fileInput.click()">
-    <p>Drag & Drop your gym ticket here, or click to select an image.</p>
-    <input type="file" #fileInput (change)="displayUploadedImage($event)" accept="image/*" hidden />
-  </div>
+  <app-skeleton [height]="'25rem'" />
 }

@@ -1,4 +1,4 @@
-import { Directive, Input, OnInit, signal } from '@angular/core';
+import { Directive, OnInit, signal } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { ImageUploadService } from '../../service/image-upload.service';
 import { OnConfirm } from '../modal/on-confirm';
@@ -15,12 +15,9 @@ export abstract class AbstractImageCropperComponent implements OnInit, OnConfirm
    */
   NO_IMAGE_AVAILABLE = signal<string>('');
 
-  @Input({ required: true }) image!: string;
+  image = signal('');
 
-  /**
-   * Signal holding the state of the current image.
-   */
-  imageSignal = signal<string | null>(null);
+  initialImage = signal('');
 
   /**
    * Signal indicating whether the crop view is active.
@@ -33,15 +30,15 @@ export abstract class AbstractImageCropperComponent implements OnInit, OnConfirm
   ) {}
 
   ngOnInit(): void {
-    this.imageSignal.set(this.image);
+    this.initialImage.set(this.image());
   }
 
   /**
    * Submits the image if it has been modified.
    */
   onConfirm() {
-    if (this.imageSignal() !== this.image) {
-      this.uploadImage(this.imageSignal());
+    if (this.initialImage() !== this.image()) {
+      this.uploadImage(this.image());
     }
   }
 
@@ -49,7 +46,7 @@ export abstract class AbstractImageCropperComponent implements OnInit, OnConfirm
    * Toggles the crop view mode.
    */
   onToggleView() {
-    if (this.imageSignal() === this.NO_IMAGE_AVAILABLE()) {
+    if (this.image() === this.NO_IMAGE_AVAILABLE()) {
       this.toastService.error('Bildzuschnitt nicht möglich');
       return;
     }
@@ -61,8 +58,8 @@ export abstract class AbstractImageCropperComponent implements OnInit, OnConfirm
    * Abstract method for derived components to implement specific behavior
    * for setting the image.
    */
-  setImage(value: string | null): void {
-    this.imageSignal.set(value);
+  setImage(value: string): void {
+    this.image.set(value);
   }
 
   /**
