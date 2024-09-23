@@ -1,3 +1,4 @@
+import { MoreOptionListItem } from '../../shared/components/more-options-button/more-option-list-item';
 import { IconName } from '../../shared/icon/icon-name';
 
 /**
@@ -33,5 +34,5 @@ export interface HeadlineInfo {
    * An optional list of action options for the header.
    * This can be used to provide additional actions that the user can select.
    */
-  options?: string[];
+  options?: MoreOptionListItem[];
 }

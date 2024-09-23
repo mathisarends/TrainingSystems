@@ -33,4 +33,5 @@ export enum IconName {
   AWARD = 'award',
   MOVE = 'move',
   SLIDERS = 'sliders',
+  LOG_OUT = 'log-out',
 }

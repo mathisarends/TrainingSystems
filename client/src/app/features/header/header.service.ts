@@ -1,4 +1,5 @@
 import { Injectable, signal } from '@angular/core';
+import { MoreOptionListItem } from '../../shared/components/more-options-button/more-option-list-item';
 import { IconName } from '../../shared/icon/icon-name';
 import { HeadlineInfo } from './headline-info';
 
@@ -29,7 +30,7 @@ export class HeaderService {
   /**
    * Holds the list of options for additional actions in the header.
    */
-  options = signal<string[]>([]);
+  options = signal<MoreOptionListItem[]>([]);
 
   /**
    * Signal that stores the callback function for handling button clicks in the header.

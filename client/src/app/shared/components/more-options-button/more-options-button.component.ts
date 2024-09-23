@@ -2,6 +2,7 @@ import { Component, ElementRef, HostListener, input, output, signal, WritableSig
 import { toggleCollapseAnimation } from '../../animations/toggle-collapse';
 import { IconName } from '../../icon/icon-name';
 import { CircularIconButtonComponent } from '../circular-icon-button/circular-icon-button.component';
+import { MoreOptionListItem } from './more-option-list-item';
 
 /**
  * Component that renders a circular icon button with a dropdown menu of options.
@@ -20,7 +21,7 @@ export class MoreOptionsButtonComponent {
   /**
    * The list of string options to be displayed in the dropdown menu.
    */
-  options = input.required<string[]>();
+  options = input.required<MoreOptionListItem[]>();
 
   /**
    * Event emitter that outputs the selected option.

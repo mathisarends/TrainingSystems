@@ -3,8 +3,8 @@
 <div class="custom-dropdown" [@toggleCollapse]="isCollapsed() ? 'collapsed' : 'expanded'">
   <ul>
     @for (option of options(); track option) {
-      <li (click)="selectOption(option)">
-        {{ option }}
+      <li (click)="selectOption(option.label)">
+        {{ option.label }}
       </li>
     }
   </ul>

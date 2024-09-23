@@ -60,14 +60,14 @@ export class SwipeService {
     const handleTouchStart = (event: TouchEvent) => {
       if (this.isEventOnExcludedElement(event)) {
         this.isSwipeIgnored = true;
-        return;
-      }
-      this.isSwipeIgnored = false;
+      } else {
+        this.isSwipeIgnored = false;
 
-      touchStartX = event.changedTouches[0].screenX;
-      touchStartY = event.changedTouches[0].screenY;
-      touchEndX = touchStartX;
-      touchEndY = touchStartY;
+        touchStartX = event.changedTouches[0].screenX;
+        touchStartY = event.changedTouches[0].screenY;
+        touchEndX = touchStartX;
+        touchEndY = touchStartY;
+      }
     };
 
     const handleTouchMove = (event: TouchEvent) => {
