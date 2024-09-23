@@ -20,7 +20,6 @@ import { InteractiveElementDirective } from '../../../shared/directives/interact
 import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
 import { AutoSaveService } from '../../../shared/service/auto-save.service';
-import { ButtonClickService } from '../../../shared/service/button-click.service';
 import { HeaderService } from '../../header/header.service';
 import { FormatTimePipe } from '../format-time.pipe';
 import { AutoProgressionComponent } from './auto-progression/auto-progression.component';
@@ -98,7 +97,6 @@ export class TrainingViewComponent implements OnInit, /* OnDestroy, */ AfterView
     protected trainingDataService: TrainingPlanDataService,
     protected mobileDeviceDetectionService: MobileDeviceDetectionService,
     protected pauseTimeService: PauseTimeService,
-    private buttonClickService: ButtonClickService,
   ) {}
 
   /**
@@ -114,14 +112,6 @@ export class TrainingViewComponent implements OnInit, /* OnDestroy, */ AfterView
       this.trainingDayIndex = parseInt(params['day']);
 
       this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
-
-      this.buttonClickService.buttonClick$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((message) => {
-        if (!message) {
-          this.switchToTimerView();
-        } else if (message === 'Progression') {
-          this.openAutoProgressionModal();
-        }
-      });
     });
 
     this.autoSaveService.inputChanged$
@@ -201,7 +191,16 @@ export class TrainingViewComponent implements OnInit, /* OnDestroy, */ AfterView
               subTitle: this.subHeading,
               buttons: [
                 { icon: IconName.CLOCK, callback: this.switchToTimerView.bind(this) },
-                { icon: IconName.MORE_VERTICAL, options: [{ label: 'Progression', icon: IconName.Activity }] },
+                {
+                  icon: IconName.MORE_VERTICAL,
+                  options: [
+                    {
+                      label: 'Progression',
+                      icon: IconName.Activity,
+                      callback: this.openAutoProgressionModal.bind(this),
+                    },
+                  ],
+                },
               ],
             });
 

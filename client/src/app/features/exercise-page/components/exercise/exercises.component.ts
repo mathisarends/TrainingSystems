@@ -11,7 +11,6 @@ import { ToastService } from '../../../../shared/components/toast/toast.service'
 import { InteractiveElementDirective } from '../../../../shared/directives/interactive-element.directive';
 import { IconName } from '../../../../shared/icon/icon-name';
 import { AutoSaveService } from '../../../../shared/service/auto-save.service';
-import { ButtonClickService } from '../../../../shared/service/button-click.service';
 import { HeaderService } from '../../../header/header.service';
 import { ExerciseDataDTO } from '../../../training-plans/training-view/exerciseDataDto';
 import { ExerciseService } from '../../service/exercise.service.';
@@ -117,7 +116,6 @@ export class ExercisesComponent implements OnInit {
     private exerciseService: ExerciseService,
     private formService: FormService,
     private autoSaveService: AutoSaveService,
-    private buttonClickService: ButtonClickService,
     private destroyRef: DestroyRef,
   ) {}
 
@@ -133,14 +131,12 @@ export class ExercisesComponent implements OnInit {
     this.autoSaveService.inputChanged$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.exerciseService.updateExercises(this.formService.getChanges()).subscribe();
     });
-
-    this.buttonClickService.buttonClick$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      this.onReset();
-    });
   }
 
   private setHeaderInfo() {
-    const nmoreOptions: MoreOptionListItem[] = [{ label: 'Zurücksetzen', icon: IconName.Trash }];
+    const nmoreOptions: MoreOptionListItem[] = [
+      { label: 'Zurücksetzen', icon: IconName.Trash, callback: this.onReset.bind(this) },
+    ];
 
     this.headerService.setHeadlineInfo({
       title: 'Exercises',

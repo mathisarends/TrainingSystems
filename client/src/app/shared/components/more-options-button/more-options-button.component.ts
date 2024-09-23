@@ -54,9 +54,10 @@ export class MoreOptionsButtonComponent {
    *
    * @param option The selected option from the dropdown.
    */
-  protected selectOption(option: string) {
+  protected selectOption(option: MoreOptionListItem) {
     this.isCollapsed.set(true);
-    this.optionSelected.emit(option);
+
+    option.callback();
   }
 
   /**

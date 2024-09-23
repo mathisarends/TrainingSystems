@@ -4,9 +4,9 @@ import { HeadlineComponent } from '../../shared/components/headline/headline.com
 import { MoreOptionsButtonComponent } from '../../shared/components/more-options-button/more-options-button.component';
 import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
 import { IconName } from '../../shared/icon/icon-name';
-import { ButtonClickService } from '../../shared/service/button-click.service';
 import { ProfileService } from '../profile-2/service/profileService';
 import { HeaderService } from './header.service';
+import { HeadlineButton } from './headline-button';
 
 @Component({
   standalone: true,
@@ -21,15 +21,14 @@ export class HeaderComponent {
   constructor(
     protected profileService: ProfileService,
     protected headerService: HeaderService,
-    private buttonClickService: ButtonClickService,
   ) {}
 
   // Emit the button click event
-  protected onCircularButtonClick() {
-    this.buttonClickService.emitButtonClick();
-  }
-
-  protected onOptionSelected(option: string) {
-    this.buttonClickService.emitButtonClick(option);
+  protected onCircularButtonClick(button: HeadlineButton) {
+    if (button.callback) {
+      button.callback();
+    } else {
+      console.warn('No callback for button registered');
+    }
   }
 }

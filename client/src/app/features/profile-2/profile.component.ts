@@ -1,5 +1,4 @@
 import { Component, DestroyRef, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../core/services/auth.service';
 import { ModalService } from '../../core/services/modal/modalService';
 import { IconBackgroundColor } from '../../shared/components/icon-list-item/icon-background-color';
@@ -9,7 +8,6 @@ import { SpinnerComponent } from '../../shared/components/spinner/spinner.compon
 import { ToastService } from '../../shared/components/toast/toast.service';
 import { IconName } from '../../shared/icon/icon-name';
 import { IconComponent } from '../../shared/icon/icon.component';
-import { ButtonClickService } from '../../shared/service/button-click.service';
 import { ImageUploadService } from '../../shared/service/image-upload.service';
 import { GymTicketComponent } from '../gym-ticket/gym-ticket.component';
 import { GymTicketService } from '../gym-ticket/gym-ticket.service';
@@ -47,18 +45,18 @@ export class ProfileComponent2 implements OnInit {
     private toastService: ToastService,
     private gymTicketService: GymTicketService,
     private imageUploadService: ImageUploadService,
-    private buttonClickService: ButtonClickService,
     private destroyRef: DestroyRef,
   ) {}
 
   ngOnInit() {
     this.headerService.setHeadlineInfo({
       title: 'Profile',
-      buttons: [{ icon: IconName.MORE_VERTICAL, options: [{ label: 'Logout', icon: IconName.LOG_OUT }] }],
-    });
-
-    this.buttonClickService.buttonClick$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      this.authService.logout();
+      buttons: [
+        {
+          icon: IconName.MORE_VERTICAL,
+          options: [{ label: 'Logout', icon: IconName.LOG_OUT, callback: this.handleLogout.bind(this) }],
+        },
+      ],
     });
   }
 
@@ -123,6 +121,10 @@ export class ProfileComponent2 implements OnInit {
     if (response) {
       this.handleAccountDeletion();
     }
+  }
+
+  private handleLogout(): void {
+    this.authService.logout();
   }
 
   private handleAccountDeletion() {

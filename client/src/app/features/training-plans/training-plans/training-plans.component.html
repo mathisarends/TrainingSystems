@@ -1,19 +1,23 @@
 @if (trainingPlans$ | async; as allTrainingPlans) {
-  <div class="row" cdkDropList (cdkDropListDropped)="drop($event)">
+  <div class="search-bar-container" [@toggleCollapse]="searchBarCollapsed() ? 'collapsed' : 'expanded'">
+    <app-search-bar [(searchQuery)]="trainingPlanSearchQuery" />
+  </div>
+
+  <div class="row" cdkDropList (cdkDropListDropped)="updateTrainingPlanOrder($event)">
     @if (filteredTrainingPlans$ | async; as filteredTrainingPlans) {
       @if (filteredTrainingPlans.length === 0 && allTrainingPlans.length === 0) {
         <div class="col-12">
           <app-alert
             alertType="light"
             alertText="Du hast noch keine eigenen Trainingspläne erstellt. Erstelle welche mit dem Button oben!"
-          ></app-alert>
+          />
         </div>
       } @else if (filteredTrainingPlans.length === 0) {
         <div class="col-12">
           <app-alert
             alertType="light"
             alertText="Keine deiner bestehenden Trainingpläne passen zu dieser Suchanfrage!"
-          ></app-alert>
+          />
         </div>
       } @else {
         @for (trainingPlan of filteredTrainingPlans; track trainingPlan) {
@@ -36,7 +40,7 @@
       <div class="row">
         @for (k of [1, 2, 3]; track k) {
           <div [ngClass]="columnClass">
-            <app-skeleton-card></app-skeleton-card>
+            <app-skeleton-card />
           </div>
         }
       </div>

@@ -1,20 +1,17 @@
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, effect, Injector, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { BehaviorSubject, first, Observable } from 'rxjs';
+import { BehaviorSubject, filter, first, Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { ModalSize } from '../../../core/services/modal/modalSize';
+import { toggleCollapseAnimation } from '../../../shared/animations/toggle-collapse';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
 import { CircularIconButtonComponent } from '../../../shared/components/circular-icon-button/circular-icon-button.component';
-import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
-import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
 import { SkeletonCardComponent } from '../../../shared/components/loader/skeleton-card/skeleton-card.component';
-import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
+import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component';
 import { IconName } from '../../../shared/icon/icon-name';
-import { IconComponent } from '../../../shared/icon/icon.component';
-import { ButtonClickService } from '../../../shared/service/button-click.service';
 import { HeaderService } from '../../header/header.service';
 import { TrainingPlanCardComponent } from '../training-plan-card/training-plan-card.component';
 import { CreateTrainingComponent } from '../training-view/create-training/create-training.component';
@@ -30,17 +27,15 @@ import { TrainingPlanService } from '../training-view/services/training-plan.ser
   imports: [
     AlertComponent,
     CommonModule,
-    TooltipDirective,
     TrainingPlanCardComponent,
-    HeadlineComponent,
-    IconButtonComponent,
     SkeletonCardComponent,
-    IconComponent,
     CircularIconButtonComponent,
+    SearchBarComponent,
     DragDropModule,
   ],
   templateUrl: './training-plans.component.html',
   styleUrls: ['./training-plans.component.scss'],
+  animations: [toggleCollapseAnimation],
 })
 export class TrainingPlansComponent implements OnInit {
   protected readonly IconName = IconName;
@@ -52,12 +47,14 @@ export class TrainingPlansComponent implements OnInit {
 
   trainingPlanSearchQuery = signal<string>('');
 
+  searchBarCollapsed = signal<boolean>(true);
+
   constructor(
     private modalService: ModalService,
     private httpClient: HttpService,
     private headerService: HeaderService,
     private trainingPlanService: TrainingPlanService,
-    private buttonClickService: ButtonClickService,
+    private injector: Injector,
     private destroyRef: DestroyRef,
   ) {}
 
@@ -74,16 +71,15 @@ export class TrainingPlansComponent implements OnInit {
       this.loadTrainingPlans();
     });
 
-    this.filteredTrainingPlans$.subscribe((plans) => {
-      this.updateColumnClass(plans?.length ?? 0);
-    });
-
-    this.buttonClickService.buttonClick$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      this.createNewPlan();
-    });
+    effect(
+      () => {
+        this.filterTrainingPlans();
+      },
+      { injector: this.injector, allowSignalWrites: true },
+    );
   }
 
-  drop(event: CdkDragDrop<TrainingPlanCardView[]>) {
+  protected updateTrainingPlanOrder(event: CdkDragDrop<TrainingPlanCardView[]>) {
     if (!this.filteredTrainingPlans$.value) {
       return;
     }
@@ -111,7 +107,7 @@ export class TrainingPlansComponent implements OnInit {
   /**
    * Opens the modal to create a new training plan.
    */
-  protected createNewPlan(): void {
+  private createNewPlan(): void {
     this.trainingPlans$.pipe(first()).subscribe((trainingPlans) => {
       this.modalService.open({
         component: CreateTrainingComponent,
@@ -127,13 +123,31 @@ export class TrainingPlansComponent implements OnInit {
     });
   }
 
-  private setHeaderInfo() {
+  private setHeaderInfo(): void {
+    const options = [
+      { icon: IconName.SEARCH, label: 'Suchen', callback: this.toggleSearchBarVisibility.bind(this) },
+      { icon: IconName.PLUS, label: 'Erstellen', callback: this.createNewPlan.bind(this) },
+    ];
+
     this.headerService.setHeadlineInfo({
       title: 'Training',
-      buttons: [
-        { icon: IconName.SEARCH, callback: () => {} },
-        { icon: IconName.PLUS, callback: this.createNewPlan.bind(this) },
-      ],
+      buttons: [{ icon: IconName.MORE_VERTICAL, options }],
+    });
+  }
+
+  private toggleSearchBarVisibility(): void {
+    this.searchBarCollapsed.set(!this.searchBarCollapsed());
+  }
+
+  private filterTrainingPlans(): void {
+    const searchQuery = this.trainingPlanSearchQuery().toLowerCase();
+
+    this.trainingPlans$.subscribe((trainingPlans) => {
+      const filteredPlans = trainingPlans.filter((plan) => plan.title.toLowerCase().includes(searchQuery));
+
+      this.filteredTrainingPlans$.next(filteredPlans);
+
+      this.updateColumnClass(filter.length);
     });
   }
 

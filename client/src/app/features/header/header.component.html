@@ -8,9 +8,9 @@
   <div class="button-container">
     @for (button of headerService.buttons(); track button) {
       @if (button.icon === IconName.MORE_VERTICAL) {
-        <app-more-options-button [options]="button.options!" (optionSelected)="onOptionSelected($event)" />
+        <app-more-options-button [options]="button.options!" />
       } @else {
-        <app-circular-icon-button [icon]="button.icon" [iconSize]="20" (clicked)="onCircularButtonClick()" />
+        <app-circular-icon-button [icon]="button.icon" [iconSize]="20" (clicked)="onCircularButtonClick(button)" />
       }
     }
   </div>

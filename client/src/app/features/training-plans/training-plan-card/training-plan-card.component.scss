@@ -1,30 +1,17 @@
-.card:hover {
-  scale: 1.005;
-}
-
 .card {
   transition: transform 0.3s ease; /* Definiert die Dauer und die Art der Animation */
+  transition: box-shadow 0.3s ease;
+  transition: filter 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    scale: 1.001;
+    filter: brightness(0.975);
+  }
 }
 
 .card-text {
   margin-bottom: 0.5rem;
-
-  &:hover {
-    transform: scale(1.01); /* Transform anstelle von scale verwenden */
-  }
-}
-
-/* Define the custom grid system */
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
-  padding: 16px;
-}
-
-.grid-item {
-  display: flex;
-  flex-direction: column;
 }
 
 .card-custom {
