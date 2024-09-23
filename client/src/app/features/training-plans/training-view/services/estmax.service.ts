@@ -77,9 +77,7 @@ export class EstMaxService {
    */
   private calcEstMax(weight: number, reps: number, rpe: number): number {
     const actualReps = reps + (10 - rpe);
-
-    const denominator = 48.8 + 53.8 * Math.exp(-0.075 * actualReps);
-    const unroundedValue = (weight * 100) / denominator;
+    const unroundedValue = weight * (1 + actualReps / 30);
 
     return Math.ceil(unroundedValue / 2.5) * 2.5;
   }
