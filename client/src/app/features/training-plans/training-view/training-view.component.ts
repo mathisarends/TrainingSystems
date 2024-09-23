@@ -22,6 +22,7 @@ import { IconComponent } from '../../../shared/icon/icon.component';
 import { AutoSaveService } from '../../../shared/service/auto-save.service';
 import { ButtonClickService } from '../../../shared/service/button-click.service';
 import { HeaderService } from '../../header/header.service';
+import { FormatTimePipe } from '../format-time.pipe';
 import { AutoProgressionComponent } from './auto-progression/auto-progression.component';
 import { RepInputDirective } from './directives/rep-input.directive';
 import { RpeInputDirective } from './directives/rpe-input.directive';
@@ -30,6 +31,7 @@ import { ExerciseDataService } from './exercise-data.service';
 import { ExerciseDataDTO } from './exerciseDataDto';
 import { RestTimerComponent } from './rest-timer/rest-timer.component';
 import { EstMaxService } from './services/estmax.service';
+import { PauseTimeService } from './services/pause-time.service';
 import { TrainingPlanDataService } from './services/training-plan-data.service';
 import { TrainingViewNavigationService } from './training-view-navigation.service';
 import { TrainingViewService } from './training-view-service';
@@ -56,6 +58,7 @@ import { TrainingPlanDto } from './trainingPlanDto';
     InputComponent,
     DropdownComponent,
     RepInputDirective,
+    FormatTimePipe,
   ],
   providers: [TrainingViewService, TrainingPlanDataService, EstMaxService, SwipeService],
   templateUrl: './training-view.component.html',
@@ -94,6 +97,7 @@ export class TrainingViewComponent implements OnInit, /* OnDestroy, */ AfterView
     private destroyRef: DestroyRef,
     protected trainingDataService: TrainingPlanDataService,
     protected mobileDeviceDetectionService: MobileDeviceDetectionService,
+    protected pauseTimeService: PauseTimeService,
     private buttonClickService: ButtonClickService,
   ) {}
 
@@ -111,8 +115,12 @@ export class TrainingViewComponent implements OnInit, /* OnDestroy, */ AfterView
 
       this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
 
-      this.buttonClickService.buttonClick$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-        this.openAutoProgressionModal();
+      this.buttonClickService.buttonClick$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((message) => {
+        if (!message) {
+          this.switchToTimerView();
+        } else if (message === 'Progression') {
+          this.openAutoProgressionModal();
+        }
       });
     });
 

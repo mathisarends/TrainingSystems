@@ -9,8 +9,11 @@ export class PauseTimeService {
 
   private renderer: Renderer2;
   private keepAliveIntervalId: any; // Store the keep-alive interval ID
-  private remainingTime: number = 0; // Store the remaining time
+
   private initialTime: number = 0;
+
+  remainingTime: number = 0; // Store the remaining time
+
   countdownEmitter: EventEmitter<number> = new EventEmitter<number>(); // Countdown Emitter
 
   constructor(

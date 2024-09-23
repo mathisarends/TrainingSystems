@@ -51,7 +51,27 @@ form {
   background-color: inherit;
 }
 
+.rest-pause-time-indicator {
+  display: none;
+}
+
 @media (max-width: 768px) {
+  .rest-pause-time-indicator {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    padding-top: 0.5rem;
+    height: 4rem;
+    bottom: 57.5px;
+    left: 0;
+    right: 0;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-top: 1px solid grey;
+    background-color: rgba(240, 240, 240, 0.9);
+    font-size: 1.1rem;
+  }
+
   .responsive-table td {
     display: grid;
     grid-template-columns: 17ch auto;

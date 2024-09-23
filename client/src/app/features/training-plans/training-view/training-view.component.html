@@ -129,6 +129,10 @@
     </table>
   </form>
 
+  <!--   <div class="rest-pause-time-indicator" (click)="switchToTimerView()">
+    {{ pauseTimeService.remainingTime | formatTime }}
+  </div> -->
+
   @if (!mobileView) {
     <div class="fixed-bottom-bar">
       <app-icon [name]="IconName.ArrowLeft" [size]="24" (click)="navigateWeek(-1)" />
