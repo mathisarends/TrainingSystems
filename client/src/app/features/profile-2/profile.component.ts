@@ -1,4 +1,4 @@
-import { Component, DestroyRef, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { ModalService } from '../../core/services/modal/modalService';
 import { IconBackgroundColor } from '../../shared/components/icon-list-item/icon-background-color';
@@ -45,19 +45,10 @@ export class ProfileComponent2 implements OnInit {
     private toastService: ToastService,
     private gymTicketService: GymTicketService,
     private imageUploadService: ImageUploadService,
-    private destroyRef: DestroyRef,
   ) {}
 
   ngOnInit() {
-    this.headerService.setHeadlineInfo({
-      title: 'Profile',
-      buttons: [
-        {
-          icon: IconName.MORE_VERTICAL,
-          options: [{ label: 'Logout', icon: IconName.LOG_OUT, callback: this.handleLogout.bind(this) }],
-        },
-      ],
-    });
+    this.setHeadlineInfo();
   }
 
   protected async onListItemClicked(listItem: IconListItem) {
@@ -121,6 +112,18 @@ export class ProfileComponent2 implements OnInit {
     if (response) {
       this.handleAccountDeletion();
     }
+  }
+
+  private setHeadlineInfo(): void {
+    this.headerService.setHeadlineInfo({
+      title: 'Profile',
+      buttons: [
+        {
+          icon: IconName.MORE_VERTICAL,
+          options: [{ label: 'Logout', icon: IconName.LOG_OUT, callback: this.handleLogout.bind(this) }],
+        },
+      ],
+    });
   }
 
   private handleLogout(): void {

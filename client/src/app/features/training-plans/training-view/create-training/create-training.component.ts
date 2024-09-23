@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Input, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, signal, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { HttpService } from '../../../../core/services/http-client.service';
 import { ModalService } from '../../../../core/services/modal/modalService';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
+import { FormInputComponent } from '../../../../shared/components/form-input/form-input.component';
 import { OnConfirm } from '../../../../shared/components/modal/on-confirm';
 import { OnToggleView } from '../../../../shared/components/modal/on-toggle-view';
 import { ToastService } from '../../../../shared/components/toast/toast.service';
@@ -18,21 +19,22 @@ import { TrainingPlanService } from '../services/training-plan.service';
 @Component({
   selector: 'app-create-training-form',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, AlertComponent],
+  imports: [ReactiveFormsModule, CommonModule, AlertComponent, FormInputComponent],
   templateUrl: './create-training.component.html',
   styleUrls: ['./create-training.component.scss'],
 })
 export class CreateTrainingComponent implements OnConfirm, OnToggleView {
-  private readonly placeholderCoverImage = '/images/training/training_3.jpg';
-
   @ViewChild('coverImage') coverImage!: ElementRef<HTMLImageElement>;
+  private readonly placeholderCoverImage = '/images/training/training_3.png';
 
-  @Input() existingPlans: TrainingPlanCardView[] = [];
+  existingPlans = signal<TrainingPlanCardView[]>([]);
 
   showCreatePlanBasedOnExistingOne = signal(false);
   selectedPlan = signal<TrainingPlanCardView | undefined>(undefined);
 
   trainingForm!: FormGroup;
+
+  test = signal('');
 
   /**
    * Constructor to initialize the form and inject dependencies.
@@ -113,7 +115,7 @@ export class CreateTrainingComponent implements OnConfirm, OnToggleView {
     }
 
     this.showCreatePlanBasedOnExistingOne.set(true);
-    this.selectedPlan.set(this.existingPlans[0] ?? undefined);
+    this.selectedPlan.set(this.existingPlans()[0] ?? undefined);
 
     if (this.selectedPlan() !== undefined) {
       this.populateFormWithPlan(this.selectedPlan()!);
@@ -124,7 +126,7 @@ export class CreateTrainingComponent implements OnConfirm, OnToggleView {
     const selectElement = event.target as HTMLSelectElement;
     const selectedPlanId = selectElement.value;
 
-    const selectedPlan = this.existingPlans.find((plan) => plan.id === selectedPlanId);
+    const selectedPlan = this.existingPlans().find((plan) => plan.id === selectedPlanId);
     this.selectedPlan.set(selectedPlan);
 
     this.populateFormWithPlan(selectedPlan!);
