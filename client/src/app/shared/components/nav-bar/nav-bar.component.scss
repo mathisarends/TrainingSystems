@@ -40,14 +40,10 @@
 .navbar {
   display: flex;
   justify-content: space-between;
-  background-color: #2e3a40; /* Passende dunkle Farbe wie im Bild */
+  background-color: #2e3a40;
   padding: 10px;
   border-radius: 16px 16px 0 0;
-  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15); /* Leichter Schatten */
-}
-
-.nav-item:hover {
-  color: #007bff; /* Hover-Farbe für Icons und Text */
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
 }
 
 @media screen and (min-width: 786px) {

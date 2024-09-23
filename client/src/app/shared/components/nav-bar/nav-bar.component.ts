@@ -1,5 +1,7 @@
-import { Component, effect, Injector, OnInit, signal, WritableSignal } from '@angular/core';
+import { AfterViewInit, Component, effect, ElementRef, Injector, OnInit, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
+import { LoadingService } from '../../../core/services/loading.service';
+import { SwipeService } from '../../../core/services/swipe.service';
 import { IconName } from '../../icon/icon-name';
 import { IconComponent } from '../../icon/icon.component';
 import { RouteWatcherService } from '../../service/route-watcher.service';
@@ -12,7 +14,7 @@ import { NavItem } from './nav-item';
   templateUrl: './nav-bar.component.html',
   styleUrls: ['./nav-bar.component.scss'],
 })
-export class NavBarComponent implements OnInit {
+export class NavBarComponent implements OnInit, AfterViewInit {
   protected IconName = IconName;
 
   /**
@@ -34,12 +36,15 @@ export class NavBarComponent implements OnInit {
   constructor(
     private router: Router,
     protected routeWatcherService: RouteWatcherService,
+    private swipeService: SwipeService,
+    private loadingService: LoadingService,
+    private elementRef: ElementRef,
     private injector: Injector,
   ) {}
 
   /**
    * The `effect` function tracks changes in the current route and updates the active route
-   * and icon colors reactively.
+
    */
   ngOnInit(): void {
     effect(
@@ -47,15 +52,73 @@ export class NavBarComponent implements OnInit {
         let currentRoute = this.routeWatcherService.getCurrentRouteSignal()();
 
         const routeExists = this.navItems.some((item) => item.route === currentRoute);
+        this.swipeService.removeSwipeListener();
 
         if (!routeExists) {
           currentRoute = '/';
+        } else {
+          this.activeRoute.set(currentRoute);
         }
-
-        this.activeRoute.set(currentRoute);
       },
       { allowSignalWrites: true, injector: this.injector },
     );
+  }
+
+  ngAfterViewInit(): void {
+    effect(
+      () => {
+        const currentRoute = this.activeRoute();
+
+        if (!this.loadingService.isLoading()) {
+          this.setupSwipeListeners(currentRoute);
+        }
+      },
+      { injector: this.injector },
+    );
+  }
+
+  setupSwipeListeners(route: string) {
+    const navbar = this.elementRef.nativeElement;
+    const appRoot = navbar.parentElement;
+
+    const outletWrapper = appRoot.querySelector('.outlet-wrapper');
+    this.handleForbiddenSwipeElementsForRoute(route, outletWrapper);
+
+    this.swipeService.addSwipeListener(
+      outletWrapper,
+      () => this.handleSwipeNavigation('left'),
+      () => this.handleSwipeNavigation('right'),
+      () => {},
+      () => {},
+    );
+  }
+
+  handleForbiddenSwipeElementsForRoute(route: string, outletWrapper: HTMLElement) {
+    if (route === '/usage') {
+      const excludedElementsNodeList = outletWrapper.querySelectorAll('app-activity-calendar');
+      const excludedElementsArray = Array.from(excludedElementsNodeList) as HTMLElement[];
+
+      this.swipeService.setExcludedElements(excludedElementsArray);
+    } else {
+      this.swipeService.setExcludedElements([]);
+    }
+  }
+
+  /**
+   * Handles the navigation based on swipe direction and current route.
+   * Uses the `navItems` array to determine the previous or next route.
+   * @param direction - The swipe direction ('left' or 'right').
+   */
+  handleSwipeNavigation(direction: 'left' | 'right') {
+    const currentIndex = this.navItems.findIndex((item) => item.route === this.activeRoute());
+
+    if (direction === 'left' && currentIndex < this.navItems.length - 1) {
+      const nextRoute = this.navItems[currentIndex + 1].route;
+      this.setActive(nextRoute);
+    } else if (direction === 'right' && currentIndex > 0) {
+      const previousRoute = this.navItems[currentIndex - 1].route;
+      this.setActive(previousRoute);
+    }
   }
 
   /**

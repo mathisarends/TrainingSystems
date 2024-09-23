@@ -4,7 +4,9 @@ import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
  * Service to handle swipe gestures on HTML elements.
  * Provides methods to add and remove swipe listeners for different swipe directions.
  */
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class SwipeService {
   /**
    * Threshold for horizontal swipe detection
@@ -19,12 +21,19 @@ export class SwipeService {
   private renderer: Renderer2;
   private listeners: (() => void)[] = [];
 
+  private excludedElements: HTMLElement[] = [];
+  private isSwipeIgnored = false;
+
   /**
    * Constructor to create a SwipeService instance.
    * @param rendererFactory - Factory to create a Renderer2 instance.
    */
   constructor(rendererFactory: RendererFactory2) {
     this.renderer = rendererFactory.createRenderer(null, null);
+  }
+
+  setExcludedElements(elements: HTMLElement[]): void {
+    this.excludedElements = elements;
   }
 
   /**
@@ -49,6 +58,12 @@ export class SwipeService {
     let touchEndY = 0;
 
     const handleTouchStart = (event: TouchEvent) => {
+      if (this.isEventOnExcludedElement(event)) {
+        this.isSwipeIgnored = true;
+        return;
+      }
+      this.isSwipeIgnored = false;
+
       touchStartX = event.changedTouches[0].screenX;
       touchStartY = event.changedTouches[0].screenY;
       touchEndX = touchStartX;
@@ -63,6 +78,10 @@ export class SwipeService {
     const handleTouchEnd = () => {
       const deltaX = touchStartX - touchEndX;
       const deltaY = touchStartY - touchEndY;
+
+      if (this.isSwipeIgnored) {
+        return;
+      }
 
       if (this.isHorizontalSwipe(deltaX, deltaY)) {
         this.handleHorizontalSwipe(deltaX, swipeLeftCallback, swipeRightCallback);
@@ -83,6 +102,15 @@ export class SwipeService {
     this.registerListener(element, 'touchstart', handleTouchStart as EventListener);
     this.registerListener(element, 'touchmove', handleTouchMove as EventListener);
     this.registerListener(element, 'touchend', handleTouchEnd as EventListener);
+  }
+
+  /**
+   * Checks if the touch event started on one of the excluded elements.
+   * @param event - The touch event.
+   * @returns Whether the touch event occurred on an excluded element.
+   */
+  private isEventOnExcludedElement(event: TouchEvent) {
+    return this.excludedElements.some((excludedElement) => excludedElement.contains(event.target as Node));
   }
 
   /**
