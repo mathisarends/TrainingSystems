@@ -13,8 +13,12 @@ export class TrainingViewNavigationService {
   ) {}
 
   navigateDay(trainingDayIndex: number, trainingFrequency: number, week: number): void {
+    console.log('🚀 ~ TrainingViewNavigationService ~ navigateDay ~ week:', week);
+    console.log('🚀 ~ TrainingViewNavigationService ~ navigateDay ~ trainingFrequency:', trainingFrequency);
+    console.log('🚀 ~ TrainingViewNavigationService ~ navigateDay ~ trainingDayIndex:', trainingDayIndex);
+
     if (trainingDayIndex >= 0 && trainingDayIndex <= trainingFrequency - 1) {
-      console.log('here not ?');
+      console.log('not');
       this.router.navigate([], {
         queryParams: {
           week: week,
@@ -26,7 +30,7 @@ export class TrainingViewNavigationService {
   }
 
   /** Per Default auf den ersten Tag der Woche navigieren */
-  navigateWeek(trainingWeekIndex: number, direction: number, trainingPlanData: TrainingPlanDto, day = 0): number {
+  navigateWeek(trainingWeekIndex: number, direction: number, trainingPlanData: TrainingPlanDto, day = 0): void {
     let week = 0;
 
     if (trainingWeekIndex === 0 && direction === -1) {
@@ -44,27 +48,5 @@ export class TrainingViewNavigationService {
       },
       queryParamsHandling: 'merge',
     });
-
-    this.clearInputValues();
-
-    return week;
-  }
-
-  private clearInputValues() {
-    const changedData = this.formService.getChanges();
-
-    for (const name in changedData) {
-      if (changedData.hasOwnProperty(name)) {
-        const inputElement = document.querySelector(`[name="${name}"]`) as HTMLInputElement | HTMLSelectElement;
-        if (inputElement?.classList.contains('exercise-category-selector')) {
-          inputElement.value = '- Bitte Auswählen -';
-          inputElement.dispatchEvent(new Event('change'));
-        } else if (inputElement) {
-          inputElement.value = '';
-        }
-      }
-    }
-
-    this.formService.clearChanges();
   }
 }

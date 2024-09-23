@@ -132,8 +132,8 @@ export class TrainingViewComponent implements OnInit {
     if (this.trainingTable) {
       this.swipeService.addSwipeListener(
         this.trainingTable.nativeElement,
-        () => this.navigateDay(this.trainingDayIndex + 1),
-        () => this.navigateDay(this.trainingDayIndex - 1),
+        () => this.navigateDay(this.trainingDayIndex + 1, this.trainingWeekIndex),
+        () => this.navigateDay(this.trainingDayIndex - 1, this.trainingWeekIndex),
         () => {
           this.navigateWeek(-1);
         },
@@ -213,18 +213,21 @@ export class TrainingViewComponent implements OnInit {
       .subscribe();
   }
 
-  navigateDay(day: number) {
-    if (day >= this.trainingDataService.trainingPlanData.trainingBlockLength) {
+  navigateDay(day: number, weekIndex: number) {
+    if (day === this.trainingDataService.trainingPlanData.trainingFrequency) {
+      const isLastWeek = weekIndex === this.trainingDataService.trainingPlanData.trainingBlockLength - 1;
+
+      if (!isLastWeek) {
+        weekIndex = weekIndex + 1;
+      } else {
+        weekIndex = 0;
+      }
       day = 0;
     } else if (day < 0) {
       day = this.trainingDataService.trainingPlanData.trainingBlockLength - 1;
     }
 
-    this.navigationService.navigateDay(
-      day,
-      this.trainingDataService.trainingPlanData.trainingFrequency,
-      this.trainingWeekIndex,
-    );
+    this.navigationService.navigateDay(day, this.trainingDataService.trainingPlanData.trainingFrequency, weekIndex);
   }
 
   /**
@@ -233,14 +236,12 @@ export class TrainingViewComponent implements OnInit {
    * @param direction - Direction to navigate (1 for next week, -1 for previous week).
    */
   navigateWeek(direction: number): void {
-    this.trainingWeekIndex = this.navigationService.navigateWeek(
+    this.navigationService.navigateWeek(
       this.trainingWeekIndex,
       direction,
       this.trainingDataService.trainingPlanData,
       this.trainingDayIndex,
     );
-    this.automationContextInitialized = false;
-    this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
   }
 
   switchToTimerView() {
