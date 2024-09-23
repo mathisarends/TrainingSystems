@@ -31,7 +31,7 @@ export async function getPlans(req: Request, res: Response): Promise<void> {
     averageTrainingDayDuration: trainingService.getAverageTrainingDuration(plan)
   }));
 
-  res.status(200).json({ trainingPlanCards });
+  res.status(200).json(trainingPlanCards);
 }
 
 export async function updateTrainingPlanOrder(req: Request, res: Response): Promise<Response> {

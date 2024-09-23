@@ -2,7 +2,7 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { BehaviorSubject, first, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, first, Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { ModalSize } from '../../../core/services/modal/modalSize';
@@ -45,10 +45,10 @@ import { TrainingPlanService } from '../training-view/services/training-plan.ser
 export class TrainingPlansComponent implements OnInit {
   protected readonly IconName = IconName;
 
-  protected allTrainingPlans$ = new BehaviorSubject<TrainingPlanCardView[] | null>(null);
-  protected filteredTrainingPlans$ = new BehaviorSubject<TrainingPlanCardView[] | null>(null);
+  trainingPlans$!: Observable<TrainingPlanCardView[]>;
+  filteredTrainingPlans$ = new BehaviorSubject<TrainingPlanCardView[] | null>(null);
 
-  columnClass!: string; // bestimmt in Abhängig der Anzahl der Pläne welches Grid System benutzt werden soll
+  columnClass!: string;
 
   trainingPlanSearchQuery = signal<string>('');
 
@@ -65,10 +65,10 @@ export class TrainingPlansComponent implements OnInit {
    * Lifecycle hook that runs when the component is initialized.
    * Loads training plans and subscribes to search input and modal events.
    */
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     this.setHeaderInfo();
 
-    await this.loadTrainingPlans();
+    this.loadTrainingPlans();
 
     this.trainingPlanService.trainingPlansChanged$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.loadTrainingPlans();
@@ -94,24 +94,25 @@ export class TrainingPlansComponent implements OnInit {
 
     const reorderedIds = this.filteredTrainingPlans$.value.map((plan) => plan.id);
 
-    this.trainingPlanService.reorderTrainingPlans(reorderedIds).subscribe((response) => {});
+    this.trainingPlanService.reorderTrainingPlans(reorderedIds).subscribe();
   }
 
   /**
    * Loads training plans from the server.
    */
-  protected async loadTrainingPlans(): Promise<void> {
-    const response: any = await firstValueFrom(this.httpClient.get<any>('/training/plans'));
+  protected loadTrainingPlans(): void {
+    this.trainingPlans$ = this.httpClient.get<TrainingPlanCardView[]>('/training/plans');
 
-    this.allTrainingPlans$.next(response?.trainingPlanCards);
-    this.filteredTrainingPlans$.next(response?.trainingPlanCards);
+    this.trainingPlans$.subscribe((trainingPlans) => {
+      this.filteredTrainingPlans$.next(trainingPlans);
+    });
   }
 
   /**
    * Opens the modal to create a new training plan.
    */
   protected createNewPlan(): void {
-    this.allTrainingPlans$.pipe(first()).subscribe((trainingPlans) => {
+    this.trainingPlans$.pipe(first()).subscribe((trainingPlans) => {
       this.modalService.open({
         component: CreateTrainingComponent,
         title: 'Trainingsplan erstellen',
