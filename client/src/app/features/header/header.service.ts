@@ -1,6 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { MoreOptionListItem } from '../../shared/components/more-options-button/more-option-list-item';
-import { IconName } from '../../shared/icon/icon-name';
+import { HeadlineButton } from './headline-button';
 import { HeadlineInfo } from './headline-info';
 
 /**
@@ -21,22 +20,7 @@ export class HeaderService {
    */
   subTitle = signal<string>('TYR');
 
-  /**
-   * Holds the icon name for the header, if any.
-   * Can be undefined if no icon is set.
-   */
-  iconName = signal<IconName | undefined>(undefined);
-
-  /**
-   * Holds the list of options for additional actions in the header.
-   */
-  options = signal<MoreOptionListItem[]>([]);
-
-  /**
-   * Signal that stores the callback function for handling button clicks in the header.
-   * Can be undefined if no callback is provided.
-   */
-  onButtonClickCallback = signal<(() => void) | undefined>(undefined);
+  buttons = signal<HeadlineButton[]>([]);
 
   /**
    * Signal that represents whether the header is in a loading state.
@@ -52,9 +36,7 @@ export class HeaderService {
   setHeadlineInfo(headlineInfo: HeadlineInfo) {
     this.title.set(headlineInfo.title);
     this.subTitle.set(headlineInfo.subTitle ?? 'TYR');
-    this.iconName.set(headlineInfo.iconName ?? undefined);
-    this.options.set(headlineInfo.options || []);
-    this.onButtonClickCallback.set(headlineInfo.onButtonClickCallback ?? undefined);
+    this.buttons.set(headlineInfo.buttons || []);
     this.loading.set(false);
   }
 

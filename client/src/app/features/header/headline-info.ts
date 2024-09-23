@@ -1,5 +1,4 @@
-import { MoreOptionListItem } from '../../shared/components/more-options-button/more-option-list-item';
-import { IconName } from '../../shared/icon/icon-name';
+import { HeadlineButton } from './headline-button';
 
 /**
  * Interface that represents the structure of headline information for the header component.
@@ -18,21 +17,5 @@ export interface HeadlineInfo {
    */
   subTitle?: string;
 
-  /**
-   * The optional icon name to display in the header.
-   * If provided, the icon will be displayed alongside the title or in place of other elements.
-   */
-  iconName?: IconName;
-
-  /**
-   * An optional callback function that is triggered when the associated header button is clicked.
-   * This allows for custom actions to be performed when the user interacts with the header.
-   */
-  onButtonClickCallback?: () => void;
-
-  /**
-   * An optional list of action options for the header.
-   * This can be used to provide additional actions that the user can select.
-   */
-  options?: MoreOptionListItem[];
+  buttons?: HeadlineButton[];
 }

@@ -68,8 +68,7 @@ export class TrainingPlansComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.headerService.setHeadlineInfo({
       title: 'Training',
-      iconName: IconName.PLUS,
-      onButtonClickCallback: this.createNewPlan.bind(this),
+      buttons: [{ icon: IconName.PLUS, callback: this.createNewPlan.bind(this) }],
     });
 
     await this.loadTrainingPlans();

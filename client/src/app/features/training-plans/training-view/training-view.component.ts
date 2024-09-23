@@ -191,8 +191,7 @@ export class TrainingViewComponent implements OnInit, /* OnDestroy, */ AfterView
             this.headerService.setHeadlineInfo({
               title: trainingPlan.title,
               subTitle: this.subHeading,
-              iconName: IconName.CLOCK,
-              onButtonClickCallback: this.switchToTimerView.bind(this),
+              buttons: [{ icon: IconName.CLOCK, callback: this.switchToTimerView.bind(this) }],
             });
 
             this.title = trainingPlan.title;

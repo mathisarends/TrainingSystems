@@ -129,8 +129,7 @@ export class ExercisesComponent implements OnInit {
 
     this.headerService.setHeadlineInfo({
       title: 'Exercises',
-      iconName: IconName.MORE_VERTICAL,
-      options: [{ label: 'Zurücksetzen', icon: IconName.Trash }],
+      buttons: [{ icon: IconName.MORE_VERTICAL, options: [{ label: 'Zurücksetzen', icon: IconName.Trash }] }],
     });
 
     this.autoSaveService.inputChanged$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {

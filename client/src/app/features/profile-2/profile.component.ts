@@ -54,8 +54,7 @@ export class ProfileComponent2 implements OnInit {
   ngOnInit() {
     this.headerService.setHeadlineInfo({
       title: 'Profile',
-      iconName: IconName.MORE_VERTICAL,
-      options: [{ label: 'Logout', icon: IconName.LOG_OUT }],
+      buttons: [{ icon: IconName.MORE_VERTICAL, options: [{ label: 'Logout', icon: IconName.LOG_OUT }] }],
     });
 
     this.buttonClickService.buttonClick$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
