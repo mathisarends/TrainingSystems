@@ -30,17 +30,18 @@ export async function getPlanForDay(req: Request, res: Response): Promise<void> 
 
   const trainingWeekIndex = Number(week);
   const trainingDayIndex = Number(day);
+  console.log('🚀 ~ getPlanForDay ~ trainingDayIndex:', trainingDayIndex);
 
   const user = await getUser(req, res);
 
   const trainingPlan = findTrainingPlanById(user.trainingPlans, id);
 
-  if (trainingWeekIndex > trainingPlan.trainingWeeks.length) {
+  if (trainingWeekIndex > trainingPlan.trainingWeeks.length - 1) {
     throw new Error('Die angefragte Woche gibt es nicht im Trainingsplan bitte erhöhe die Blocklänge');
   }
 
   const trainingWeek = trainingPlan.trainingWeeks[trainingWeekIndex];
-  if (trainingDayIndex > trainingWeek.trainingDays.length) {
+  if (trainingDayIndex > trainingWeek.trainingDays.length - 1) {
     throw new Error('Der angefragte Tag ist zu hoch für die angegebene Trainingsfrequenz');
   }
 
