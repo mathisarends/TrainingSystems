@@ -20,7 +20,7 @@
           />
         </div>
       } @else {
-        @for (trainingPlan of filteredTrainingPlans; track trainingPlan) {
+        @for (trainingPlan of filteredTrainingPlans; track trainingPlan.id) {
           <div class="training-plan-card-container" [ngClass]="columnClass" cdkDrag>
             <app-training-plan-card
               [trainingPlan]="trainingPlan"

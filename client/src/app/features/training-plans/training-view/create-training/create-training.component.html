@@ -8,7 +8,7 @@
   @if (existingPlans.length > 0) {
     <div class="form-floating mb-4">
       <select id="existing_plan_selector" class="form-control" (change)="selectTrainingPlan($event)">
-        @for (trainingPlan of existingPlans; track trainingPlan.id) {
+        @for (trainingPlan of existingPlans(); track trainingPlan.id) {
           <option [value]="trainingPlan.id">{{ trainingPlan.title }}</option>
         }
       </select>
@@ -40,8 +40,6 @@
               [src]="trainingForm.get('coverImage')?.value ?? 'https://placehold.jp/150x150.png'"
               alt="Cover Bild Platzhalter"
               id="cover-image"
-              class="img-fluid mb-2"
-              style="width: 150px; height: 150px; cursor: pointer"
             />
             <input
               type="file"
@@ -53,6 +51,8 @@
           </div>
 
           <!-- Rest of the form remains unchanged -->
+
+          <app-form-input [label]="'Test'" [placeholder]="'placeholder'" [(value)]="test" />
 
           <div class="form-floating mb-4">
             <input

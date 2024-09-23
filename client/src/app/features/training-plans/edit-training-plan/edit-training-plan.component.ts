@@ -79,7 +79,7 @@ export class EditTrainingPlanComponent implements OnInit, AfterViewChecked, OnCo
   async ngOnInit(): Promise<void> {
     effect(
       () => {
-        this.fetchTrainingPlan(this.id());
+        this.fetchTrainingPlan();
       },
       { injector: this.injector, allowSignalWrites: true },
     );
@@ -96,7 +96,7 @@ export class EditTrainingPlanComponent implements OnInit, AfterViewChecked, OnCo
    * Fetches the training plan details to edit.
    * @param id - The ID of the training plan to fetch.
    */
-  private async fetchTrainingPlan(id: string): Promise<void> {
+  private async fetchTrainingPlan(): Promise<void> {
     const response = await firstValueFrom(this.editTrainingPlanService.getPlanForEdit(this.id()));
 
     this.loading = false;
