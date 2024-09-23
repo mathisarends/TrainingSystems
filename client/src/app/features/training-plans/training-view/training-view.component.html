@@ -18,7 +18,7 @@
           <th scope="col" class="text-center">Notes</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody cdkDropList (cdkDropListDropped)="drop($event)">
         @for (k of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track k; let i = $index) {
           @let exercise =
             trainingDataService.trainingPlanData.trainingDay.exercises![i] || {
@@ -38,7 +38,7 @@
             };
           @let namePrefix = 'day' + trainingDayIndex + '_exercise' + k + '_';
 
-          <tr>
+          <tr cdkDrag>
             <td data-cell="Category">
               <app-dropdown
                 name="day{{ trainingDayIndex }}_exercise{{ k }}_category"
@@ -123,6 +123,8 @@
             <td data-cell="Notes">
               <app-input class="notes" [type]="'text'" [name]="namePrefix + 'notes'" [value]="exercise.notes ?? ''" />
             </td>
+
+            <app-icon [name]="IconName.SLIDERS" cdkDragHandle />
           </tr>
         }
       </tbody>

@@ -1,5 +1,6 @@
+import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { AfterViewChecked, Component, DestroyRef, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, DestroyRef, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -59,6 +60,7 @@ import { TrainingPlanDto } from './trainingPlanDto';
     DropdownComponent,
     RepInputDirective,
     FormatTimePipe,
+    DragDropModule,
   ],
   providers: [TrainingViewService, TrainingPlanDataService, EstMaxService, SwipeService],
   templateUrl: './training-view.component.html',
@@ -82,6 +84,8 @@ export class TrainingViewComponent implements OnInit, /* OnDestroy, */ AfterView
   subHeading: string = '';
 
   @ViewChild('trainingTable', { static: false }) trainingTable!: ElementRef;
+
+  isDragMode = signal(false);
 
   constructor(
     private route: ActivatedRoute,
@@ -120,6 +124,8 @@ export class TrainingViewComponent implements OnInit, /* OnDestroy, */ AfterView
           this.switchToTimerView();
         } else if (message === 'Progression') {
           this.openAutoProgressionModal();
+        } else if (message === 'Anordnen') {
+          this.isDragMode.set(true);
         }
       });
     });
@@ -201,7 +207,13 @@ export class TrainingViewComponent implements OnInit, /* OnDestroy, */ AfterView
               subTitle: this.subHeading,
               buttons: [
                 { icon: IconName.CLOCK, callback: this.switchToTimerView.bind(this) },
-                { icon: IconName.MORE_VERTICAL, options: [{ label: 'Progression', icon: IconName.Activity }] },
+                {
+                  icon: IconName.MORE_VERTICAL,
+                  options: [
+                    { label: 'Anordnen', icon: IconName.SLIDERS },
+                    { label: 'Progression', icon: IconName.Activity },
+                  ],
+                },
               ],
             });
 
@@ -290,5 +302,9 @@ export class TrainingViewComponent implements OnInit, /* OnDestroy, */ AfterView
         planId: this.planId,
       },
     });
+  }
+
+  drop($event: CdkDragDrop<any, any, any>) {
+    console.log('🚀 ~ TrainingViewComponent ~ drop ~ event:', $event);
   }
 }
