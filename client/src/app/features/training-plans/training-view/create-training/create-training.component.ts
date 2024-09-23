@@ -19,10 +19,10 @@ import { TrainingPlanService } from '../services/training-plan.service';
   selector: 'app-create-training-form',
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule, AlertComponent],
-  templateUrl: './create-training-form.component.html',
-  styleUrls: ['./create-training-form.component.scss'],
+  templateUrl: './create-training.component.html',
+  styleUrls: ['./create-training.component.scss'],
 })
-export class CreateTrainingFormComponent implements OnConfirm, OnToggleView {
+export class CreateTrainingComponent implements OnConfirm, OnToggleView {
   private readonly placeholderCoverImage = '/images/training/training_3.jpg';
 
   @ViewChild('coverImage') coverImage!: ElementRef<HTMLImageElement>;

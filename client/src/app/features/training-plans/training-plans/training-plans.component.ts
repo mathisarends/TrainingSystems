@@ -17,7 +17,7 @@ import { IconComponent } from '../../../shared/icon/icon.component';
 import { ButtonClickService } from '../../../shared/service/button-click.service';
 import { HeaderService } from '../../header/header.service';
 import { TrainingPlanCardComponent } from '../training-plan-card/training-plan-card.component';
-import { CreateTrainingFormComponent } from '../training-view/create-training-form/create-training-form.component';
+import { CreateTrainingComponent } from '../training-view/create-training/create-training.component';
 import { TrainingPlanCardView } from '../training-view/models/exercise/training-plan-card-view-dto';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
 
@@ -66,10 +66,7 @@ export class TrainingPlansComponent implements OnInit {
    * Loads training plans and subscribes to search input and modal events.
    */
   async ngOnInit(): Promise<void> {
-    this.headerService.setHeadlineInfo({
-      title: 'Training',
-      buttons: [{ icon: IconName.PLUS, callback: this.createNewPlan.bind(this) }],
-    });
+    this.setHeaderInfo();
 
     await this.loadTrainingPlans();
 
@@ -116,7 +113,7 @@ export class TrainingPlansComponent implements OnInit {
   protected createNewPlan(): void {
     this.allTrainingPlans$.pipe(first()).subscribe((trainingPlans) => {
       this.modalService.open({
-        component: CreateTrainingFormComponent,
+        component: CreateTrainingComponent,
         title: 'Trainingsplan erstellen',
         buttonText: 'Erstellen',
         secondaryButtonText: 'Optionen',
@@ -126,6 +123,16 @@ export class TrainingPlansComponent implements OnInit {
           existingPlans: trainingPlans,
         },
       });
+    });
+  }
+
+  private setHeaderInfo() {
+    this.headerService.setHeadlineInfo({
+      title: 'Training',
+      buttons: [
+        { icon: IconName.SEARCH, callback: () => {} },
+        { icon: IconName.PLUS, callback: this.createNewPlan.bind(this) },
+      ],
     });
   }
 
