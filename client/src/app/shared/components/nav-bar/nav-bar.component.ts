@@ -31,11 +31,6 @@ export class NavBarComponent implements OnInit {
    */
   protected activeRoute: WritableSignal<string> = signal('');
 
-  /**
-   * Signal that holds the colors for each navigation icon, depending on whether the item is active or not.
-   */
-  protected iconColors: WritableSignal<{ [route: string]: string }> = signal({});
-
   constructor(
     private router: Router,
     protected routeWatcherService: RouteWatcherService,
@@ -58,7 +53,6 @@ export class NavBarComponent implements OnInit {
         }
 
         this.activeRoute.set(currentRoute);
-        this.updateIconColors(currentRoute);
       },
       { allowSignalWrites: true, injector: this.injector },
     );
@@ -71,20 +65,5 @@ export class NavBarComponent implements OnInit {
    */
   setActive(route: string): void {
     this.router.navigate([route]);
-  }
-
-  /**
-   * Updates the icon colors based on the active route.
-   * If the current route matches a navigation item's route, the icon color is set to a highlighted color (`#eee`),
-   * otherwise it is set to the default color (`#6c757d`).
-   *
-   * @param activeRoute The currently active route used to determine the icon color.
-   */
-  private updateIconColors(activeRoute: string): void {
-    const updatedColors: { [route: string]: string } = {};
-    this.navItems.forEach((item) => {
-      updatedColors[item.route] = activeRoute === item.route ? '#eee' : '#6c757d';
-    });
-    this.iconColors.set(updatedColors);
   }
 }

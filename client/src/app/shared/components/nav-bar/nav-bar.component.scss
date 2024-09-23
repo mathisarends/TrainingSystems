@@ -22,7 +22,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #ffffff; /* Standardfarbe für Icons und Text */
+  color: #6c757d;
   transition: color 0.3s;
 }
 
@@ -34,7 +34,7 @@
 
 .nav-item.active .nav-label,
 .nav-item.active app-icon {
-  color: #eee; /* Gelb-Orange für aktive Icons */
+  color: #eee;
 }
 
 .navbar {
