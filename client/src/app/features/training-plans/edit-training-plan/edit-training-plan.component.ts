@@ -1,7 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import {
+  AfterViewChecked,
+  Component,
+  effect,
+  ElementRef,
+  Injector,
+  OnInit,
+  Renderer2,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { firstValueFrom, Observable, Subscription } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { OnConfirm } from '../../../shared/components/modal/on-confirm';
@@ -23,14 +33,13 @@ import { TrainingPlanEditViewDto } from './training-plan-edit-view-dto';
   templateUrl: './edit-training-plan.component.html',
   styleUrls: ['./edit-training-plan.component.scss'],
 })
-export class EditTrainingPlanComponent implements OnInit, OnDestroy, AfterViewChecked, OnConfirm {
-  @Input() id!: string;
+export class EditTrainingPlanComponent implements OnInit, AfterViewChecked, OnConfirm {
   @ViewChild('coverImage') coverImageElement!: ElementRef<HTMLImageElement>;
+
+  id = signal('');
 
   protected trainingForm: FormGroup;
   protected loading: boolean = true;
-
-  private subscription: Subscription = new Subscription();
 
   $trainingPlanMetaData!: Observable<TrainingPlanEditViewDto>;
 
@@ -46,6 +55,7 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy, AfterViewCh
    */
   constructor(
     private fb: FormBuilder,
+    private injector: Injector,
     private modalService: ModalService,
     private toastService: ToastService,
     private trainingPlanService: TrainingPlanService,
@@ -67,9 +77,12 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy, AfterViewCh
    * Lifecycle hook to handle initialization tasks.
    */
   async ngOnInit(): Promise<void> {
-    if (this.id) {
-      await this.fetchTrainingPlan(this.id);
-    }
+    effect(
+      () => {
+        this.fetchTrainingPlan(this.id());
+      },
+      { injector: this.injector, allowSignalWrites: true },
+    );
   }
 
   /**
@@ -80,18 +93,11 @@ export class EditTrainingPlanComponent implements OnInit, OnDestroy, AfterViewCh
   }
 
   /**
-   * Lifecycle hook to handle cleanup tasks.
-   */
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
-
-  /**
    * Fetches the training plan details to edit.
    * @param id - The ID of the training plan to fetch.
    */
   private async fetchTrainingPlan(id: string): Promise<void> {
-    const response = await firstValueFrom(this.editTrainingPlanService.getPlanForEdit(this.id));
+    const response = await firstValueFrom(this.editTrainingPlanService.getPlanForEdit(this.id()));
 
     this.loading = false;
 

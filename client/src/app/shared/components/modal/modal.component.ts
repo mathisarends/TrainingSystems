@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
-  ChangeDetectorRef,
   Component,
   ComponentRef,
   EnvironmentInjector,
   EventEmitter,
   Injector,
+  OnInit,
   Output,
   ViewChild,
   ViewContainerRef,
@@ -29,7 +29,7 @@ import { OnToggleView } from './on-toggle-view';
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
 })
-export class ModalComponent implements AfterViewInit {
+export class ModalComponent implements AfterViewInit, OnInit {
   @ViewChild('modalContent', { read: ViewContainerRef })
   modalContent!: ViewContainerRef;
   childComponentRef!: ComponentRef<any>;
@@ -93,21 +93,21 @@ export class ModalComponent implements AfterViewInit {
     private environmentInjector: EnvironmentInjector,
     private modalService: ModalService,
     private injector: Injector,
-    private cdr: ChangeDetectorRef,
   ) {}
 
-  ngAfterViewInit() {
-    this.loadChildComponent();
-
+  ngOnInit(): void {
     effect(
       () => {
-        console.log('Kommen wir hier hin?', this.childComponentData());
         if (this.childComponentData()) {
           this.setChildComponentInputs(this.childComponentData());
         }
       },
       { injector: this.injector, allowSignalWrites: true },
     );
+  }
+
+  ngAfterViewInit() {
+    this.loadChildComponent();
   }
 
   /**
