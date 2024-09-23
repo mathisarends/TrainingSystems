@@ -1,0 +1,15 @@
+:host {
+  position: absolute;
+  top: -8px;
+  right: -4px;
+  background-color: var(--accent-color);
+  color: white;
+  padding: 2px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  min-width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}

@@ -26,29 +26,14 @@
   transition: color 0.3s;
   position: relative;
 
-  .notification-badge {
-    position: absolute;
-    top: -7.5px;
-    right: -7.5px;
-    background-color: var(--accent-color);
-    color: white;
-    padding: 2px;
-    font-size: 0.75rem;
-    font-weight: bold;
-    min-width: 24px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-  }
-
   &:hover {
     color: white;
   }
-}
 
-.nav-item .nav-label {
-  margin-top: 5px;
-  font-size: 13px;
+  .nav-label {
+    margin-top: 5px;
+    font-size: 13px;
+  }
 }
 
 .nav-item.active .nav-label,

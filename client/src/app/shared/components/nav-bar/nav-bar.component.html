@@ -3,9 +3,8 @@
     <app-icon [name]="item.icon" [class.active]="activeRoute() === item.route" [size]="26"></app-icon>
     <span class="nav-label">{{ item.label }}</span>
 
-    @if (item.route === '/usage' && notificationCount()) {
-      <!-- Add badge for notifications -->
-      <div class="notification-badge">{{ notificationCount() }}</div>
+    @if (item.route === '/usage' && notificationCount() > 0) {
+      <app-notification-badge [count]="notificationCount()" />
     }
   </div>
 }

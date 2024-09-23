@@ -16,12 +16,13 @@ import { IconName } from '../../icon/icon-name';
 import { IconComponent } from '../../icon/icon.component';
 import { NotificationService } from '../../service/notification.service';
 import { RouteWatcherService } from '../../service/route-watcher.service';
+import { NotificationBadgeComponent } from '../notification-badge/notification-badge.component';
 import { NavItem } from './nav-item';
 
 @Component({
   selector: 'app-nav-bar',
   standalone: true,
-  imports: [IconComponent],
+  imports: [IconComponent, NotificationBadgeComponent],
   templateUrl: './nav-bar.component.html',
   styleUrls: ['./nav-bar.component.scss'],
 })
