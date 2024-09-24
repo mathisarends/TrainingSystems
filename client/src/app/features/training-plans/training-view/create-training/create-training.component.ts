@@ -5,7 +5,6 @@ import { firstValueFrom } from 'rxjs';
 import { HttpService } from '../../../../core/services/http-client.service';
 import { ModalService } from '../../../../core/services/modal/modalService';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
-import { FormInputComponent } from '../../../../shared/components/form-input/form-input.component';
 import { OnConfirm } from '../../../../shared/components/modal/on-confirm';
 import { OnToggleView } from '../../../../shared/components/modal/on-toggle-view';
 import { ToastService } from '../../../../shared/components/toast/toast.service';
@@ -19,7 +18,7 @@ import { TrainingPlanService } from '../services/training-plan.service';
 @Component({
   selector: 'app-create-training-form',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, AlertComponent, FormInputComponent],
+  imports: [ReactiveFormsModule, CommonModule, AlertComponent],
   templateUrl: './create-training.component.html',
   styleUrls: ['./create-training.component.scss'],
 })

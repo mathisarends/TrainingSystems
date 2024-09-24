@@ -17,69 +17,43 @@
       />
     </div>
 
-    <!-- Title Input -->
-    <div class="form-floating mb-4">
-      <input
-        type="text"
-        class="form-control"
-        id="training_title"
-        [(ngModel)]="title"
-        name="training_title"
-        placeholder="Title"
-        required
-      />
-      <label for="training_title">Title</label>
-      @if (!isTitleValid()) {
-        <div class="text-danger">Title is required</div>
-      }
-    </div>
+    <app-floating-label-input [label]="'Title'" [(value)]="title" [required]="true" />
 
-    <!-- Training Frequency -->
-    <div class="form-floating mb-4">
-      <select
-        id="training_frequency"
-        name="training_frequency"
-        class="form-control"
-        [(ngModel)]="trainingFrequency"
-        required
-      >
-        <option value="" disabled hidden></option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-      </select>
-      <label for="training_frequency">Trainings / Week</label>
-      @if (!isTrainingFrequencyValid()) {
-        <div class="text-danger">Training frequency is required</div>
-      }
-    </div>
+    <app-floating-label-input
+      [label]="'Trainings / Week'"
+      [(value)]="trainingFrequency"
+      [required]="true"
+      type="select"
+      [options]="[
+        { value: 3, label: '3' },
+        { value: 4, label: '4' },
+        { value: 5, label: '5' },
+        { value: 6, label: '6' },
+      ]"
+    />
 
-    <!-- Training Weeks -->
-    <div class="form-floating mb-4">
-      <select id="training_weeks" name="training_weeks" class="form-control" [(ngModel)]="trainingWeeks" required>
-        <option value="" disabled hidden></option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-      </select>
-      <label for="training_weeks">Block Duration (Weeks)</label>
-      @if (!isTrainingWeeksValid()) {
-        <div class="text-danger">Training weeks are required</div>
-      }
-    </div>
+    <app-floating-label-input
+      [label]="'Trainingdauer (Wochen)'"
+      [(value)]="trainingWeeks"
+      [required]="true"
+      type="select"
+      [options]="[
+        { value: 3, label: '3' },
+        { value: 4, label: '4' },
+        { value: 5, label: '5' },
+        { value: 6, label: '6' },
+      ]"
+    />
 
-    <!-- Weight Recommendations -->
-    <div class="form-floating mb-4">
-      <select class="form-control" [(ngModel)]="weightPlaceholders" name="weight_placeholders" required>
-        <option value="lastWeek">Based on last week</option>
-        <option value="off">No weight recommendations</option>
-      </select>
-      <label for="weightPlaceholders">Weight Recommendations</label>
-      @if (!isWeightPlaceholdersValid()) {
-        <div class="text-danger">Weight recommendations are required</div>
-      }
-    </div>
+    <app-floating-label-input
+      [label]="'Gewichsempfehlungen'"
+      [(value)]="weightPlaceholders"
+      [required]="true"
+      type="select"
+      [options]="[
+        { value: 'lastWeek', label: 'Vorherige Woche' },
+        { value: 'off', label: 'Keine' },
+      ]"
+    />
   </form>
 }

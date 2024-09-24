@@ -1,7 +1,6 @@
 import { Component, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { ModalService } from '../../core/services/modal/modalService';
-import { FormInputComponent } from '../../shared/components/form-input/form-input.component';
 import { IconBackgroundColor } from '../../shared/components/icon-list-item/icon-background-color';
 import { IconListItem } from '../../shared/components/icon-list-item/icon-list-item';
 import { IconListeItemComponent } from '../../shared/components/icon-list-item/icon-list-item.component';
@@ -18,7 +17,7 @@ import { ProfileService } from './service/profileService';
 
 @Component({
   standalone: true,
-  imports: [IconComponent, SpinnerComponent, IconListeItemComponent, FormInputComponent],
+  imports: [IconComponent, SpinnerComponent, IconListeItemComponent],
   selector: 'app-profile-2',
   templateUrl: 'profile.component.html',
   styleUrls: ['profile.component.scss'],

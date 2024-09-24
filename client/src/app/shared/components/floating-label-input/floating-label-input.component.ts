@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, input, model, signal } from '@angular/core';
 
 /**
@@ -5,17 +6,17 @@ import { Component, input, model, signal } from '@angular/core';
  * The component provides a floating label, validation support, and dynamic error messaging.
  */
 @Component({
-  selector: 'app-form-input',
+  selector: 'app-floating-label-input',
+  imports: [CommonModule],
   standalone: true,
-  templateUrl: './form-input.component.html',
-  styleUrls: ['./form-input.component.scss'],
+  templateUrl: './floating-label-input.component.html',
 })
-export class FormInputComponent {
+export class FloatingLabelInputComponent {
   /**
    * The model that holds the value of the input field.
-   * This is a required value, and its type is a string.
+   * This is a required value, and its type can be a string or number (depending on input type).
    */
-  value = model.required<string>();
+  value = model.required<string | number>();
 
   /**
    * The label for the input field, passed in as an input property.
@@ -24,9 +25,19 @@ export class FormInputComponent {
   label = input.required<string>();
 
   /**
+   * Type of the input element, either 'text', 'number', or 'select'.
+   */
+  type = input<string>('text'); // Default to 'text'
+
+  /**
    * Boolean input that determines whether the input field is required.
    */
   required = input<boolean>(true);
+
+  /**
+   * If the type is 'select', the options to display in the dropdown.
+   */
+  options = input<{ value: string | number; label: string }[]>([]); // Empty array by default
 
   /**
    * Signal that tracks whether the input is in an invalid state.
@@ -40,11 +51,10 @@ export class FormInputComponent {
   errorMessage = signal<string>('');
 
   /**
-   * Handles changes to the input value.
-   * This function is triggered whenever the user types in the input field.
+   * Handles changes to the input or select value.
    */
   protected onInputChange(event: Event): void {
-    const value = (event.target as HTMLInputElement).value;
+    const value = (event.target as HTMLInputElement | HTMLSelectElement).value;
     this.value.set(value);
     this.validateInput();
   }

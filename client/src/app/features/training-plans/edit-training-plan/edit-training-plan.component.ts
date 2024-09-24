@@ -1,19 +1,10 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  computed,
-  effect,
-  ElementRef,
-  Injector,
-  OnInit,
-  Renderer2,
-  signal,
-  ViewChild
-} from '@angular/core';
+import { Component, computed, effect, ElementRef, Injector, OnInit, Renderer2, signal, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { ModalService } from '../../../core/services/modal/modalService';
+import { FloatingLabelInputComponent } from '../../../shared/components/floating-label-input/floating-label-input.component';
 import { OnConfirm } from '../../../shared/components/modal/on-confirm';
 import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
 import { ToastService } from '../../../shared/components/toast/toast.service';
@@ -28,25 +19,22 @@ import { EditTrainingPlanService } from './edit-training-plan.service';
   selector: 'app-edit-training-plan',
   standalone: true,
   providers: [EditTrainingPlanService],
-  imports: [CommonModule, SkeletonComponent, FormsModule],
+  imports: [CommonModule, SkeletonComponent, FormsModule, FloatingLabelInputComponent],
   templateUrl: './edit-training-plan.component.html',
   styleUrls: ['./edit-training-plan.component.scss'],
 })
 export class EditTrainingPlanComponent implements OnInit, OnConfirm {
   protected readonly placeholderCoverImage = '/images/training/training_3.png';
-
   @ViewChild('coverImage') coverImageElement!: ElementRef<HTMLImageElement>;
 
   id = signal('');
 
-  // Form field signals
   title = signal('');
-  trainingFrequency = signal<number>(0);  
-  trainingWeeks = signal<number>(0);  
-  weightPlaceholders = signal<'lastWeek' | 'off'>('lastWeek');  
+  trainingFrequency = signal<number>(0);
+  trainingWeeks = signal<number>(0);
+  weightPlaceholders = signal<'lastWeek' | 'off'>('lastWeek');
   coverImage = signal('');
 
-  // Form validation signals
   isTitleValid = computed(() => this.title().trim().length > 0);
   isTrainingFrequencyValid = computed(() => this.trainingFrequency() > 0);
   isTrainingWeeksValid = computed(() => this.trainingWeeks() > 0);
@@ -79,9 +67,6 @@ export class EditTrainingPlanComponent implements OnInit, OnConfirm {
    */
   private async fetchTrainingPlan(): Promise<void> {
     const response = await firstValueFrom(this.editTrainingPlanService.getPlanForEdit(this.id()));
-    console.log('🚀 ~ EditTrainingPlanComponent ~ fetchTrainingPlan ~ response:', response);
-
-    // Set the signal values based on the fetched training plan
 
     this.title.set(response.title);
     this.trainingFrequency.set(response.trainingFrequency);

@@ -1,0 +1,39 @@
+<div class="form-floating mb-4">
+  @switch (type()) {
+    @case ('text') {
+      <input
+        class="form-control"
+        [class.is-invalid]="isInvalid()"
+        id="floatingInput"
+        (input)="onInputChange($event)"
+        [value]="value()"
+      />
+    }
+    @case ('select') {
+      <select
+        class="form-control"
+        [class.is-invalid]="isInvalid()"
+        id="floatingSelect"
+        (change)="onInputChange($event)"
+        [value]="value()"
+      >
+        <option value="" disabled hidden></option>
+        @for (option of options(); track option.value) {
+          <option [value]="option.value" [selected]="option.value === value()">
+            {{ option.label }}
+          </option>
+        }
+      </select>
+    }
+  }
+
+  @if (type() === 'text') {
+    <label for="floatingInput">{{ label() }}</label>
+  } @else if (type() === 'select') {
+    <label for="floatingSelect">{{ label() }}</label>
+  }
+
+  @if (isInvalid()) {
+    <div class="text-danger">{{ errorMessage() }}</div>
+  }
+</div>
