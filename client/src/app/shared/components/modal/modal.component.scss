@@ -4,6 +4,10 @@
   background-color: transparent !important;
 }
 
+.modal-header {
+  cursor: move;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

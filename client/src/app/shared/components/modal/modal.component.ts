@@ -17,6 +17,7 @@ import {
 } from '@angular/core';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { ModalSize } from '../../../core/services/modal/modalSize';
+import { DraggableDirective } from '../../directives/draggable.directive';
 import { DataMap } from '../../types/data-map';
 import { ButtonComponent } from '../button/button.component';
 import { OnConfirm } from './on-confirm';
@@ -25,7 +26,7 @@ import { OnToggleView } from './on-toggle-view';
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [ButtonComponent, CommonModule],
+  imports: [ButtonComponent, CommonModule, DraggableDirective],
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
 })
