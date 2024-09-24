@@ -122,7 +122,6 @@ export class ModalService {
     this.modalComponentRef.destroy();
 
     this.appRef.detachView(this.overlayComponentRef.hostView);
-
     this.overlayComponentRef.destroy();
   }
 }

@@ -4,6 +4,19 @@
   background-color: transparent !important;
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal {
+  animation: fadeIn 0.15s ease-out;
+}
+
 @media screen and (min-width: 1200px) {
   .modal-content {
     background: white;
