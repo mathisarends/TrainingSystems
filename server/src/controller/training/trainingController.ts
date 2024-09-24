@@ -20,6 +20,7 @@ import { TrainingDAyFinishedNotification } from '../../models/collections/user/t
 import { TrainingPlanEditViewDto } from '../../models/dto/training-plan-edit-view-dto.js';
 
 import transporter from '../../config/mailerConfig.js';
+import { getEmailConfigForTrainingDaySummary } from './training-day-summary.js';
 
 /**
  * Retrieves the list of training plans for the user, summarizing them into card views.
@@ -204,14 +205,9 @@ export async function updatePlan(req: Request, res: Response): Promise<void> {
     ]
   };
 
-  const htmlContent = generateTrainingSummaryEmail(trainingData);
+  const mailConfig = await getEmailConfigForTrainingDaySummary(trainingData, user.email);
 
-  await transporter.sendMail({
-    from: 'trainingsystems@no-reply.com',
-    to: user.email,
-    subject: 'Your Training Summary',
-    html: htmlContent
-  });
+  await transporter.sendMail(mailConfig);
 
   await userDAO.update(user);
   res.status(200).json({ message: 'Trainingsplan erfolgreich aktualisiert' });
@@ -336,104 +332,4 @@ function isMainCategory(category: string): boolean {
     category === ExerciseCategoryType.BENCH ||
     category === ExerciseCategoryType.DEADLIFT
   );
-}
-
-function generateTrainingSummaryEmail(trainingData: TrainingDAyFinishedNotification) {
-  return `
-    <!DOCTYPE html>
-    <html lang="en">
-      <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Training Summary</title>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            color: #333333;
-            padding: 20px;
-          }
-
-          .container {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-          }
-
-          h1 {
-            text-align: left;
-            color: #2e3a40;
-          }
-
-          .summary-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-          }
-
-          .summary-table th, .summary-table td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #e0e0e0;
-          }
-
-          .summary-table th {
-            background-color: #f0f0f0;
-          }
-
-          .text-center {
-            text-align: center !important;
-          }
-
-          p {
-            color: #666666;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <h1>Training Summary</h1>
-          <p>Date: <strong>${trainingData.endTime}</strong></p>
-          <p>Total Duration: <strong>${trainingData.durationInMinutes}</strong> minutes</p>
-
-          <table class="summary-table">
-            <thead>
-              <tr>
-                <th>Exercise</th>
-                <th>Category</th>
-                <th>Sets</th>
-                <th>Reps</th>
-                <th>Weight</th>
-                <th>Target RPE</th>
-                <th>Actual RPE</th>
-                <th>Est Max</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${trainingData.exercises
-                .map(
-                  exercise => `
-                <tr>
-                  <td>${exercise.exercise}</td>
-                  <td>${exercise.category}</td>
-                  <td class="text-center">${exercise.sets}</td>
-                  <td class="text-center">${exercise.reps}</td>
-                  <td class="text-center">${exercise.weight}</td>
-                  <td class="text-center">${exercise.targetRPE}</td>
-                  <td class="text-center">${exercise.actualRPE}</td>
-                 <td class="text-center">${exercise.estMax !== undefined && exercise.estMax !== null ? exercise.estMax : ''}</td>
-                </tr>
-              `
-                )
-                .join('')}
-            </tbody>
-          </table>
-
-          <p>Total Tonnage: <strong>${trainingData.trainingDayTonnage.toLocaleString()}</strong> kg</p>
-
-        </div>
-      </body>
-    </html>
-  `;
 }
