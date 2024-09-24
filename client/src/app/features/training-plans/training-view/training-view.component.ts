@@ -33,6 +33,7 @@ import { PauseTimeService } from './services/pause-time.service';
 import { TrainingPlanDataService } from './services/training-plan-data.service';
 import { TrainingViewNavigationService } from './training-view-navigation.service';
 import { TrainingViewService } from './training-view-service';
+import { TrainingPlanDto } from './trainingPlanDto';
 
 /**
  * Component to manage and display the training view.
@@ -164,25 +165,7 @@ export class TrainingViewComponent implements OnInit {
           this.exerciseData = exerciseData;
           this.exerciseDataService.exerciseData = exerciseData;
 
-          if (trainingPlan.title) {
-            this.headerService.setHeadlineInfo({
-              title: trainingPlan.title,
-              subTitle: `W${this.trainingWeekIndex + 1}D${this.trainingDayIndex + 1}`,
-              buttons: [
-                { icon: IconName.CLOCK, callback: this.switchToTimerView.bind(this) },
-                {
-                  icon: IconName.MORE_VERTICAL,
-                  options: [
-                    {
-                      label: 'Progression',
-                      icon: IconName.Activity,
-                      callback: this.openAutoProgressionModal.bind(this),
-                    },
-                  ],
-                },
-              ],
-            });
-          }
+          this.setHeadlineInfo(trainingPlan);
         }),
         tap(() => {
           if (this.trainingDataService.trainingPlanData && this.exerciseData) {
@@ -261,6 +244,31 @@ export class TrainingViewComponent implements OnInit {
       componentData: {
         planId: this.planId,
       },
+    });
+  }
+
+  private setHeadlineInfo(trainingPlan: TrainingPlanDto) {
+    this.headerService.setHeadlineInfo({
+      title: trainingPlan.title,
+      subTitle: `W${this.trainingWeekIndex + 1}D${this.trainingDayIndex + 1}`,
+      buttons: [
+        { icon: IconName.CLOCK, callback: this.switchToTimerView.bind(this) },
+        {
+          icon: IconName.MORE_VERTICAL,
+          options: [
+            {
+              label: 'Progression',
+              icon: IconName.Activity,
+              callback: this.openAutoProgressionModal.bind(this),
+            },
+            {
+              label: 'Anordnen',
+              icon: IconName.MOVE,
+              callback: () => console.log('anordnen'),
+            },
+          ],
+        },
+      ],
     });
   }
 }
