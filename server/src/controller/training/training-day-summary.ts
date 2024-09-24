@@ -101,10 +101,6 @@ function generateTrainingSummaryEmail(trainingData: TrainingDAyFinishedNotificat
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
           }
 
-          h1 {
-            text-align: left;
-          }
-
           .summary-table {
             width: 100%;
             border-collapse: collapse;
@@ -134,7 +130,6 @@ function generateTrainingSummaryEmail(trainingData: TrainingDAyFinishedNotificat
         </head>
         <body>
           <div class="container">
-            <h1>Training Summary</h1>
             <p>Date: <strong>${trainingData.endTime}</strong></p>
             <p>Total Duration: <strong>${trainingData.durationInMinutes}</strong> minutes</p>
   
@@ -173,8 +168,6 @@ function generateTrainingSummaryEmail(trainingData: TrainingDAyFinishedNotificat
   
             <p>Total Tonnage: <strong>${trainingData.trainingDayTonnage.toLocaleString()}</strong> kg</p>
   
-            <!-- Hier wird das Bild eingebettet -->
-            <h2>Training Day Tonnage</h2>
             <img src="cid:tonnageChart" alt="Tonnage Chart" />
           </div>
         </body>
