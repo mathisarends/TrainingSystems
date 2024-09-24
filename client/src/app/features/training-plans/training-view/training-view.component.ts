@@ -187,6 +187,7 @@ export class TrainingViewComponent implements OnInit {
    */
   saveTrainingData(): void {
     const changedData = this.formService.getChanges();
+    console.log('🚀 ~ TrainingViewComponent ~ saveTrainingData ~ changedData:', changedData);
 
     this.trainingViewService
       .submitTrainingPlan(this.planId, this.trainingWeekIndex, this.trainingDayIndex, changedData)
@@ -286,6 +287,26 @@ export class TrainingViewComponent implements OnInit {
       event.currentIndex,
     );
 
-    console.log('Updated exercises:', this.trainingDataService.trainingPlanData.trainingDay.exercises);
+    // Track the changes for both the previous and current exercises
+    this.trackExerciseChanges(event.previousIndex);
+    this.trackExerciseChanges(event.currentIndex);
+
+    // Save the tracked changes
+    this.saveTrainingData();
+  }
+
+  /**
+   * Tracks changes for the exercise at the given index.
+   * @param index - The index of the exercise in the array.
+   */
+  trackExerciseChanges(index: number) {
+    const exercise = this.trainingDataService.trainingPlanData.trainingDay.exercises![index];
+    const namePrefix = `day${this.trainingDayIndex}_exercise${index + 1}_`;
+
+    const fields = ['category', 'exercise_name', 'sets', 'reps', 'weight', 'targetRPE', 'actualRPE', 'estMax', 'notes'];
+
+    fields.forEach((field) => {
+      this.formService.addChange(namePrefix + field, (exercise as any)[field]);
+    });
   }
 }

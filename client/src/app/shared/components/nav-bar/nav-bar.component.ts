@@ -69,7 +69,11 @@ export class NavBarComponent implements OnInit, AfterViewInit {
         let currentRoute = this.routeWatcherService.getCurrentRouteSignal()();
 
         if (!this.isRouteRepresentedInNavbar(currentRoute)) {
-          currentRoute = '/';
+          if (currentRoute.includes('statistics')) {
+            currentRoute = '/usage';
+          } else {
+            currentRoute = '/';
+          }
         }
         this.activeRoute.set(currentRoute);
       },
