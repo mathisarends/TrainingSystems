@@ -4,11 +4,12 @@ import { firstValueFrom } from 'rxjs';
 import { HttpService } from '../../../../core/services/http-client.service';
 import { ModalService } from '../../../../core/services/modal/modalService';
 import { FloatingLabelInputComponent } from '../../../../shared/components/floating-label-input/floating-label-input.component';
+import { ToDropDownOptionsPipe } from '../../../../shared/components/floating-label-input/to-dropdown-options.pipe';
 import { OnConfirm } from '../../../../shared/components/modal/on-confirm';
 import { OnToggleView } from '../../../../shared/components/modal/on-toggle-view';
 import { ToastService } from '../../../../shared/components/toast/toast.service';
 import { ImageUploadService } from '../../../../shared/service/image-upload.service';
-import { WeightRecommendationBase } from '../../edit-training-plan/training-plan-edit-view-dto';
+import { TrainingPlanEditView } from '../../model/training-plan-edit-view';
 import { TrainingPlanCardView } from '../models/exercise/training-plan-card-view-dto';
 import { TrainingPlanService } from '../services/training-plan.service';
 
@@ -18,7 +19,7 @@ import { TrainingPlanService } from '../services/training-plan.service';
 @Component({
   selector: 'app-create-training-form',
   standalone: true,
-  imports: [CommonModule, FloatingLabelInputComponent],
+  imports: [CommonModule, FloatingLabelInputComponent, ToDropDownOptionsPipe],
   templateUrl: './create-training.component.html',
   styleUrls: ['./create-training.component.scss'],
 })
@@ -27,20 +28,18 @@ export class CreateTrainingComponent implements OnInit, OnConfirm, OnToggleView 
   protected readonly placeholderCoverImage = '/images/training/training_3.png';
 
   existingPlans = signal<TrainingPlanCardView[]>([]);
+
   showCreatePlanBasedOnExistingOne = signal(false);
-  selectedPlan = signal<TrainingPlanCardView | undefined>(undefined);
 
-  // Form Signals
-  title = signal<string>('');
-  trainingFrequency = signal<number>(4);
-  trainingWeeks = signal<number>(4);
-  weightPlaceholders = signal<WeightRecommendationBase>(WeightRecommendationBase.LASTWEEK);
-  coverImageBase64 = signal<string>(this.placeholderCoverImage);
+  /**
+   * The training plan object that contains the form fields using Angular signals.
+   */
+  trainingPlanEditView!: TrainingPlanEditView;
 
-  // Validation
-  isTitleValid = signal(true);
-  isTrainingFrequencyValid = signal(true);
-  isTrainingWeeksValid = signal(true);
+  /**
+   * Signal indicating whether the training plan is loading.
+   */
+  loading = signal(true);
 
   selectedPlanId = signal<string>('');
 
@@ -54,9 +53,16 @@ export class CreateTrainingComponent implements OnInit, OnConfirm, OnToggleView 
   ) {}
 
   ngOnInit(): void {
+    this.trainingPlanEditView = TrainingPlanEditView.fromDto();
+
     effect(
       () => {
+        if (!this.selectedPlanId()) {
+          this.selectedPlanId.set(this.existingPlans()[0]?.id ?? null);
+        }
+
         const selectedPlan = this.existingPlans().find((plan) => plan.id === this.selectedPlanId());
+
         if (selectedPlan) {
           this.populateFormWithPlan(selectedPlan);
         }
@@ -70,45 +76,26 @@ export class CreateTrainingComponent implements OnInit, OnConfirm, OnToggleView 
    * @param plan - The training plan to pre-fill the form with.
    */
   populateFormWithPlan(plan: TrainingPlanCardView): void {
-    this.title.set(plan.title + ' RE');
-    this.trainingFrequency.set(plan.trainingFrequency);
-    this.trainingWeeks.set(plan.blockLength);
-    this.weightPlaceholders.set(plan.weightRecomamndationBase);
-    this.coverImageBase64.set(plan.coverImageBase64 ?? this.placeholderCoverImage);
+    this.trainingPlanEditView.title.set(plan.title + ' RE');
+    this.trainingPlanEditView.trainingFrequency.set(plan.trainingFrequency);
+    this.trainingPlanEditView.trainingBlockLength.set(plan.blockLength);
+    this.trainingPlanEditView.weightRecommendationBase.set(plan.weightRecomamndationBase);
+    this.trainingPlanEditView.coverImageBase64.set(plan.coverImageBase64 ?? this.placeholderCoverImage);
   }
 
   /**
    * Handles form submission using signals.
    */
   async onConfirm() {
-    if (!this.validateForm()) {
+    if (!this.trainingPlanEditView.isValid()) {
       return;
     }
 
-    const formData = {
-      title: this.title(),
-      trainingFrequency: this.trainingFrequency(),
-      trainingWeeks: this.trainingWeeks(),
-      weightPlaceholders: this.weightPlaceholders(),
-      coverImage: this.coverImageBase64(),
-    };
-
-    await firstValueFrom(this.httpClient.post('/training/create', formData));
+    await firstValueFrom(this.httpClient.post('/training/create', this.trainingPlanEditView.toDto()));
 
     this.toastService.success('Plan erstellt!');
     this.trainingPlanService.trainingPlanChanged();
     this.modalService.close();
-  }
-
-  /**
-   * Validates the form fields using signals.
-   */
-  private validateForm(): boolean {
-    this.isTitleValid.set(this.title().trim().length > 0);
-    this.isTrainingFrequencyValid.set(this.trainingFrequency() > 0);
-    this.isTrainingWeeksValid.set(this.trainingWeeks() > 0);
-
-    return this.isTitleValid() && this.isTrainingFrequencyValid() && this.isTrainingWeeksValid();
   }
 
   /**
@@ -118,34 +105,24 @@ export class CreateTrainingComponent implements OnInit, OnConfirm, OnToggleView 
     const uploadedImageBase64Str = await this.imageUploadService.handleImageUpload(event);
 
     if (uploadedImageBase64Str) {
-      this.coverImageBase64.set(uploadedImageBase64Str);
+      this.trainingPlanEditView.coverImageBase64.set(uploadedImageBase64Str);
     }
   }
 
   onToggleView() {
     if (this.showCreatePlanBasedOnExistingOne()) {
       this.showCreatePlanBasedOnExistingOne.set(false);
-      this.resetForm();
+      this.trainingPlanEditView.resetToDefaults();
       return;
     }
 
     this.showCreatePlanBasedOnExistingOne.set(true);
-    const selectedPlan = this.existingPlans()[0] ?? undefined;
-    this.selectedPlan.set(selectedPlan);
+    const selectedPlanId = this.existingPlans()[0].id ?? undefined;
+    this.selectedPlanId.set(selectedPlanId);
 
-    if (selectedPlan) {
+    if (selectedPlanId) {
+      const selectedPlan = this.existingPlans().find((plan) => plan.id === this.selectedPlanId())!;
       this.populateFormWithPlan(selectedPlan);
     }
-  }
-
-  /**
-   * Resets the form to default values.
-   */
-  private resetForm() {
-    this.title.set('');
-    this.trainingFrequency.set(4);
-    this.trainingWeeks.set(4);
-    this.weightPlaceholders.set(WeightRecommendationBase.LASTWEEK);
-    this.coverImageBase64.set(this.placeholderCoverImage);
   }
 }

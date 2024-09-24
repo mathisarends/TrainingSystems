@@ -68,11 +68,13 @@ export async function createPlan(req: Request, res: Response): Promise<void> {
   const user = await getUser(req, res);
   const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
 
-  const title = req.body.title;
-  const trainingFrequency = Number(req.body.trainingFrequency);
-  const trainingWeeks = Number(req.body.trainingWeeks);
-  const weightRecommandation = req.body.weightPlaceholders as WeightRecommendationBase;
-  const coverImage = req.body.coverImage;
+  const trainingPlanEditDto = req.body as TrainingPlanEditViewDto;
+
+  const title = trainingPlanEditDto.title;
+  const trainingFrequency = Number(trainingPlanEditDto.trainingFrequency);
+  const trainingWeeks = Number(trainingPlanEditDto.trainingBlockLength);
+  const weightRecommandation = trainingPlanEditDto.weightRecommandationBase as WeightRecommendationBase;
+  const coverImage = trainingPlanEditDto.coverImageBase64;
 
   const referencePlanId = req.body.referencePlanId;
   let trainingWeeksArr;
@@ -150,7 +152,7 @@ export async function updatePlan(req: Request, res: Response): Promise<void> {
 
   trainingPlan.title = trainingPlanEditDto.title;
   trainingPlan.trainingFrequency = Number(trainingPlanEditDto.trainingFrequency);
-  trainingPlan.weightRecommandationBase = trainingPlanEditDto.weightRecommandationBase as WeightRecommendationBase;
+  trainingPlan.weightRecommandationBase = trainingPlanEditDto.weightRecommandationBase;
 
   if (trainingPlanEditDto.coverImageBase64) {
     trainingPlan.coverImageBase64 = trainingPlanEditDto.coverImageBase64;

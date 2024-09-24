@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, ElementRef, Injector, OnInit, Renderer2, signal, ViewChild } from '@angular/core';
+import { Component, effect, ElementRef, Injector, OnInit, signal, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ImageCropperComponent } from 'ngx-image-cropper';
 import { firstValueFrom } from 'rxjs';
@@ -10,7 +10,7 @@ import { OnConfirm } from '../../../shared/components/modal/on-confirm';
 import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
 import { ToastService } from '../../../shared/components/toast/toast.service';
 import { ImageUploadService } from '../../../shared/service/image-upload.service';
-import { TrainingPlan } from '../model/training-plan-edit-view';
+import { TrainingPlanEditView } from '../model/training-plan-edit-view';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
 import { EditTrainingPlanService } from './edit-training-plan.service';
 
@@ -37,7 +37,7 @@ export class EditTrainingPlanComponent extends AbstractImageCropperComponent imp
   /**
    * The training plan object that contains the form fields using Angular signals.
    */
-  trainingPlan!: TrainingPlan;
+  trainingPlanEditView!: TrainingPlanEditView;
 
   /**
    * Signal indicating whether the training plan is loading.
@@ -47,9 +47,7 @@ export class EditTrainingPlanComponent extends AbstractImageCropperComponent imp
   constructor(
     private injector: Injector,
     private modalService: ModalService,
-
     private trainingPlanService: TrainingPlanService,
-    private renderer: Renderer2,
     private editTrainingPlanService: EditTrainingPlanService,
     imageUploadService: ImageUploadService,
     toastService: ToastService,
@@ -70,10 +68,10 @@ export class EditTrainingPlanComponent extends AbstractImageCropperComponent imp
    * Handles form submission, checking the validity of all form fields.
    */
   override onConfirm(): void {
-    if (this.isFormValid()) {
-      const formData = this.trainingPlan.toDto();
+    if (this.trainingPlanEditView.isValid()) {
+      const formData = this.trainingPlanEditView.toDto();
 
-      this.editTrainingPlanService.editTrainingPlan(this.trainingPlan.id(), formData).subscribe((response) => {
+      this.editTrainingPlanService.editTrainingPlan(this.trainingPlanEditView.id(), formData).subscribe((response) => {
         this.trainingPlanService.trainingPlanChanged();
         this.modalService.close();
         this.toastService.success(response.message);
@@ -89,23 +87,10 @@ export class EditTrainingPlanComponent extends AbstractImageCropperComponent imp
   private async fetchTrainingPlan(): Promise<void> {
     const response = await firstValueFrom(this.editTrainingPlanService.getPlanForEdit(this.id()));
 
-    this.trainingPlan = new TrainingPlan(response);
-    this.image.set(this.trainingPlan.coverImageBase64());
+    this.trainingPlanEditView = TrainingPlanEditView.fromDto(response);
+    this.image.set(this.trainingPlanEditView.coverImageBase64());
 
     this.loading.set(false);
-  }
-
-  /**
-   * Checks the overall form validity by verifying all individual field signals.
-   * @returns true if the form is valid; false otherwise.
-   */
-  private isFormValid(): boolean {
-    return (
-      this.trainingPlan.title().trim().length > 0 &&
-      !!this.trainingPlan.trainingFrequency() &&
-      !!this.trainingPlan.trainingBlockLength() &&
-      !!this.trainingPlan.weightRecommendationBase()
-    );
   }
 
   /**
@@ -116,7 +101,7 @@ export class EditTrainingPlanComponent extends AbstractImageCropperComponent imp
     const uploadedImageBase64Str = await this.imageUploadService.handleImageUpload(event);
 
     if (uploadedImageBase64Str) {
-      this.trainingPlan.coverImageBase64.set(uploadedImageBase64Str);
+      this.trainingPlanEditView.coverImageBase64.set(uploadedImageBase64Str);
       this.image.set(uploadedImageBase64Str);
     }
   }

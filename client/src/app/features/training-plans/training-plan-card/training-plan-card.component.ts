@@ -62,8 +62,8 @@ export class TrainingPlanCardComponent {
    * Opens the modal to edit a training plan.
    * @param index - The index of the training plan to edit.
    */
-  showEditTrainingPlanModal(id: string): void {
-    this.modalService.open({
+  async showEditTrainingPlanModal(id: string): Promise<void> {
+    const edited = await this.modalService.open({
       component: EditTrainingPlanComponent,
       title: 'Trainingsplan bearbeiten',
       buttonText: 'Übernehmen',
@@ -71,6 +71,10 @@ export class TrainingPlanCardComponent {
       size: ModalSize.LARGE,
       componentData: { id },
     });
+
+    if (edited) {
+      this.changedPlanConstellation.emit();
+    }
   }
 
   viewStatistics(id: string): void {
@@ -93,6 +97,7 @@ export class TrainingPlanCardComponent {
 
     if (confirmed) {
       await this.handleDelete(this.trainingPlan.id);
+      this.changedPlanConstellation.emit();
     }
   }
 

@@ -1,21 +1,18 @@
 @if (showCreatePlanBasedOnExistingOne()) {
   @if (existingPlans().length > 0) {
-    <div class="form-floating mb-4">
-      <select id="existing_plan_selector" class="form-control">
-        @for (trainingPlan of existingPlans(); track trainingPlan.id) {
-          <option [value]="trainingPlan.id">{{ trainingPlan.title }}</option>
-        }
-      </select>
-      <label for="existing_plan_selector">Existierenden Plan wählen</label>
-    </div>
+    <app-floating-label-input
+      [label]="'Basisplan wählen'"
+      [(value)]="selectedPlanId!"
+      [required]="true"
+      type="select"
+      [options]="existingPlans() | toDropDownOptions: 'id' : 'title'"
+    />
 
-    <!-- Common form fields -->
-    <ng-container *ngIf="selectedPlan(); else emptyForm">
+    <ng-container *ngIf="selectedPlanId(); else emptyForm">
       <ng-container *ngTemplateOutlet="commonForm"></ng-container>
     </ng-container>
 
     <ng-template #emptyForm>
-      <!-- Fallback content when no plan is selected -->
       <p>No existing plan selected. Please choose an existing plan or create a new one.</p>
     </ng-template>
   }
@@ -24,11 +21,10 @@
 }
 
 <ng-template #commonForm>
-  <!-- Image Upload -->
   <div class="form-group text-center mb-4 position-relative">
     <img
       #coverImage
-      [src]="coverImageBase64() || placeholderCoverImage"
+      [src]="trainingPlanEditView.coverImageBase64() || placeholderCoverImage"
       alt="Cover Bild Platzhalter"
       id="cover-image"
     />
@@ -40,12 +36,12 @@
       (change)="handleImageUpload($event)"
     />
   </div>
-  <!-- Floating Label Inputs -->
-  <app-floating-label-input [label]="'Titel'" [(value)]="title" [required]="true"></app-floating-label-input>
+
+  <app-floating-label-input [label]="'Titel'" [(value)]="trainingPlanEditView.title" [required]="true" />
 
   <app-floating-label-input
     [label]="'Trainings / Woche'"
-    [(value)]="trainingFrequency"
+    [(value)]="trainingPlanEditView.trainingFrequency"
     [required]="true"
     type="select"
     [options]="[
@@ -54,11 +50,11 @@
       { value: 5, label: '5' },
       { value: 6, label: '6' },
     ]"
-  ></app-floating-label-input>
+  />
 
   <app-floating-label-input
     [label]="'Blocklänge (Wochen)'"
-    [(value)]="trainingWeeks"
+    [(value)]="trainingPlanEditView.trainingBlockLength"
     [required]="true"
     type="select"
     [options]="[
@@ -67,16 +63,16 @@
       { value: 5, label: '5' },
       { value: 6, label: '6' },
     ]"
-  ></app-floating-label-input>
+  />
 
   <app-floating-label-input
     [label]="'Gewichtsempfehlungen'"
-    [(value)]="weightPlaceholders"
+    [(value)]="trainingPlanEditView.weightRecommendationBase"
     [required]="true"
     type="select"
     [options]="[
       { value: 'lastWeek', label: 'basierend auf letzter Woche' },
       { value: 'off', label: 'keine Gewichtsempfehlungen' },
     ]"
-  ></app-floating-label-input>
+  />
 </ng-template>

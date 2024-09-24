@@ -25,11 +25,11 @@
       (change)="handleImageUpload($event)"
     />
 
-    <app-floating-label-input [label]="'Title'" [(value)]="trainingPlan.title" [required]="true" />
+    <app-floating-label-input [label]="'Title'" [(value)]="trainingPlanEditView.title" [required]="true" />
 
     <app-floating-label-input
       [label]="'Trainings / Week'"
-      [(value)]="trainingPlan.trainingFrequency"
+      [(value)]="trainingPlanEditView.trainingFrequency"
       [required]="true"
       type="select"
       [options]="[
@@ -42,7 +42,7 @@
 
     <app-floating-label-input
       [label]="'Trainingdauer (Wochen)'"
-      [(value)]="trainingPlan.trainingBlockLength"
+      [(value)]="trainingPlanEditView.trainingBlockLength"
       [required]="true"
       type="select"
       [options]="[
@@ -55,7 +55,7 @@
 
     <app-floating-label-input
       [label]="'Gewichtsempfehlungen'"
-      [(value)]="trainingPlan.weightRecommendationBase"
+      [(value)]="trainingPlanEditView.weightRecommendationBase"
       [required]="true"
       type="select"
       [options]="[
