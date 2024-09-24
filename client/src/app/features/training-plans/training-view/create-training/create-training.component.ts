@@ -25,7 +25,7 @@ import { TrainingPlanService } from '../services/training-plan.service';
 })
 export class CreateTrainingComponent implements OnConfirm, OnToggleView {
   @ViewChild('coverImage') coverImage!: ElementRef<HTMLImageElement>;
-  private readonly placeholderCoverImage = '/images/training/training_3.png';
+  protected readonly placeholderCoverImage = '/images/training/training_3.png';
 
   existingPlans = signal<TrainingPlanCardView[]>([]);
 

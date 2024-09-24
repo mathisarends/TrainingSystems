@@ -1,89 +1,85 @@
-@if (loading) {
+@if (loading()) {
   <app-skeleton [height]="'12rem'" />
-
   @for (k of [1, 2, 3]; track k) {
     <app-skeleton [height]="'4.25rem'" />
   }
 } @else {
-  <div class="row no-gutters">
-    <div class="col-md-12">
-      <div class="card-body">
-        <form [formGroup]="trainingForm" (ngSubmit)="onConfirm()">
-          <div class="form-group text-center mb-4 position-relative">
-            <img #coverImage alt="Cover Bild Platzhalter" id="cover-image" />
-            <input
-              type="file"
-              id="cover-image-input"
-              class="form-control-file position-absolute"
-              style="opacity: 0; width: 100%; height: 100%; top: 0; left: 0; cursor: pointer"
-              (change)="handleImageUpload($event)"
-            />
-          </div>
-
-          <div class="form-floating mb-4">
-            <input
-              type="text"
-              class="form-control"
-              id="training_title"
-              formControlName="title"
-              placeholder="Titel"
-              required
-            />
-            <label for="training_title">Titel</label>
-            <div *ngIf="trainingForm.get('title')?.invalid && trainingForm.get('title')?.touched" class="text-danger">
-              Title is required
-            </div>
-          </div>
-
-          <div class="form-floating mb-4">
-            <select id="training_frequency" class="form-control" formControlName="trainingFrequency" required>
-              <option value="" disabled hidden></option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-            </select>
-            <label for="training_frequency">Trainings / Woche</label>
-            <div
-              *ngIf="trainingForm.get('trainingFrequency')?.invalid && trainingForm.get('trainingFrequency')?.touched"
-              class="text-danger"
-            >
-              Training frequency is required
-            </div>
-          </div>
-
-          <div class="form-floating mb-4">
-            <select id="training_weeks" class="form-control" formControlName="trainingWeeks" required>
-              <option value="" disabled hidden></option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-            </select>
-            <label for="training_weeks">Blocklänge (Wochen)</label>
-            <div
-              *ngIf="trainingForm.get('trainingWeeks')?.invalid && trainingForm.get('trainingWeeks')?.touched"
-              class="text-danger"
-            >
-              Training weeks are required
-            </div>
-          </div>
-
-          <div class="form-floating mb-4">
-            <select formControlName="weightPlaceholders" class="form-control" required>
-              <option value="lastWeek">basierend auf letzter Woche</option>
-              <option value="off">keine Gewichtsempfehlungen</option>
-            </select>
-            <label for="weightPlaceholders">Gewichtsempfehlungen</label>
-            <div
-              *ngIf="trainingForm.get('weightPlaceholders')?.invalid && trainingForm.get('weightPlaceholders')?.touched"
-              class="text-danger"
-            >
-              Weight recommendations are required
-            </div>
-          </div>
-        </form>
-      </div>
+  <form (ngSubmit)="onConfirm()">
+    <div class="form-group text-center mb-4 position-relative">
+      <img #coverImage [src]="placeholderCoverImage" alt="Cover Image Placeholder" id="cover-image" />
+      <input
+        type="file"
+        name="cover-image"
+        id="cover-image"
+        class="form-control-file position-absolute"
+        style="opacity: 0; width: 100%; height: 100%; top: 0; left: 0; cursor: pointer"
+        (change)="handleImageUpload($event)"
+      />
     </div>
-  </div>
+
+    <!-- Title Input -->
+    <div class="form-floating mb-4">
+      <input
+        type="text"
+        class="form-control"
+        id="training_title"
+        [(ngModel)]="title"
+        name="training_title"
+        placeholder="Title"
+        required
+      />
+      <label for="training_title">Title</label>
+      @if (!isTitleValid()) {
+        <div class="text-danger">Title is required</div>
+      }
+    </div>
+
+    <!-- Training Frequency -->
+    <div class="form-floating mb-4">
+      <select
+        id="training_frequency"
+        name="training_frequency"
+        class="form-control"
+        [(ngModel)]="trainingFrequency"
+        required
+      >
+        <option value="" disabled hidden></option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+      </select>
+      <label for="training_frequency">Trainings / Week</label>
+      @if (!isTrainingFrequencyValid()) {
+        <div class="text-danger">Training frequency is required</div>
+      }
+    </div>
+
+    <!-- Training Weeks -->
+    <div class="form-floating mb-4">
+      <select id="training_weeks" name="training_weeks" class="form-control" [(ngModel)]="trainingWeeks" required>
+        <option value="" disabled hidden></option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+      </select>
+      <label for="training_weeks">Block Duration (Weeks)</label>
+      @if (!isTrainingWeeksValid()) {
+        <div class="text-danger">Training weeks are required</div>
+      }
+    </div>
+
+    <!-- Weight Recommendations -->
+    <div class="form-floating mb-4">
+      <select class="form-control" [(ngModel)]="weightPlaceholders" name="weight_placeholders" required>
+        <option value="lastWeek">Based on last week</option>
+        <option value="off">No weight recommendations</option>
+      </select>
+      <label for="weightPlaceholders">Weight Recommendations</label>
+      @if (!isWeightPlaceholdersValid()) {
+        <div class="text-danger">Weight recommendations are required</div>
+      }
+    </div>
+  </form>
 }

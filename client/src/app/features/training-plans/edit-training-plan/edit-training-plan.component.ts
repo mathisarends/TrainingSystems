@@ -1,17 +1,17 @@
 import { CommonModule } from '@angular/common';
 import {
-  AfterViewChecked,
   Component,
+  computed,
   effect,
   ElementRef,
   Injector,
   OnInit,
   Renderer2,
   signal,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { firstValueFrom, Observable } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+import { firstValueFrom } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { OnConfirm } from '../../../shared/components/modal/on-confirm';
@@ -20,41 +20,41 @@ import { ToastService } from '../../../shared/components/toast/toast.service';
 import { ImageUploadService } from '../../../shared/service/image-upload.service';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
 import { EditTrainingPlanService } from './edit-training-plan.service';
-import { TrainingPlanEditViewDto } from './training-plan-edit-view-dto';
 
 /**
- * Component for editing a training plan.
+ * Component for editing a training plan using signals.
  */
 @Component({
   selector: 'app-edit-training-plan',
   standalone: true,
   providers: [EditTrainingPlanService],
-  imports: [ReactiveFormsModule, CommonModule, SkeletonComponent],
+  imports: [CommonModule, SkeletonComponent, FormsModule],
   templateUrl: './edit-training-plan.component.html',
   styleUrls: ['./edit-training-plan.component.scss'],
 })
-export class EditTrainingPlanComponent implements OnInit, AfterViewChecked, OnConfirm {
+export class EditTrainingPlanComponent implements OnInit, OnConfirm {
+  protected readonly placeholderCoverImage = '/images/training/training_3.png';
+
   @ViewChild('coverImage') coverImageElement!: ElementRef<HTMLImageElement>;
 
   id = signal('');
 
-  protected trainingForm: FormGroup;
-  protected loading: boolean = true;
+  // Form field signals
+  title = signal('');
+  trainingFrequency = signal<number>(0);  
+  trainingWeeks = signal<number>(0);  
+  weightPlaceholders = signal<'lastWeek' | 'off'>('lastWeek');  
+  coverImage = signal('');
 
-  $trainingPlanMetaData!: Observable<TrainingPlanEditViewDto>;
+  // Form validation signals
+  isTitleValid = computed(() => this.title().trim().length > 0);
+  isTrainingFrequencyValid = computed(() => this.trainingFrequency() > 0);
+  isTrainingWeeksValid = computed(() => this.trainingWeeks() > 0);
+  isWeightPlaceholdersValid = computed(() => this.weightPlaceholders().length > 0);
 
-  /**
-   * Constructor to initialize the form and inject dependencies.
-   * @param fb - FormBuilder to create the form group.
-   * @param modalEventsService - Service to handle modal events.
-   * @param modalService - Service to handle modal operations.
-   * @param trainingPlanService - Service to manage training plans.
-   * @param httpClient - Service to handle HTTP requests.
-   * @param renderer - Renderer2 instance to manipulate DOM elements.
-   * @param imageUploadService - Service to handle image uploads.
-   */
+  loading = signal(true);
+
   constructor(
-    private fb: FormBuilder,
     private injector: Injector,
     private modalService: ModalService,
     private toastService: ToastService,
@@ -63,19 +63,8 @@ export class EditTrainingPlanComponent implements OnInit, AfterViewChecked, OnCo
     private renderer: Renderer2,
     private editTrainingPlanService: EditTrainingPlanService,
     private imageUploadService: ImageUploadService,
-  ) {
-    this.trainingForm = this.fb.group({
-      title: ['', Validators.required],
-      trainingFrequency: ['', Validators.required],
-      trainingWeeks: ['', Validators.required],
-      weightPlaceholders: ['', Validators.required],
-      coverImage: [''],
-    });
-  }
+  ) {}
 
-  /**
-   * Lifecycle hook to handle initialization tasks.
-   */
   async ngOnInit(): Promise<void> {
     effect(
       () => {
@@ -86,35 +75,28 @@ export class EditTrainingPlanComponent implements OnInit, AfterViewChecked, OnCo
   }
 
   /**
-   * Lifecycle hook to handle view checks.
-   */
-  ngAfterViewChecked(): void {
-    this.setCoverImage(this.trainingForm.get('coverImage')?.value || '');
-  }
-
-  /**
-   * Fetches the training plan details to edit.
-   * @param id - The ID of the training plan to fetch.
+   * Fetches the training plan details to edit and updates signals with values.
    */
   private async fetchTrainingPlan(): Promise<void> {
     const response = await firstValueFrom(this.editTrainingPlanService.getPlanForEdit(this.id()));
+    console.log('🚀 ~ EditTrainingPlanComponent ~ fetchTrainingPlan ~ response:', response);
 
-    this.loading = false;
+    // Set the signal values based on the fetched training plan
 
-    this.trainingForm.patchValue({
-      title: response.title,
-      trainingFrequency: response.trainingFrequency,
-      trainingWeeks: response.trainingBlockLength,
-      weightPlaceholders: response.weightRecommandationBase,
-      coverImage: response.coverImageBase64 || '',
-    });
+    this.title.set(response.title);
+    this.trainingFrequency.set(response.trainingFrequency);
+    this.trainingWeeks.set(response.trainingBlockLength);
+    this.weightPlaceholders.set(response.weightRecommandationBase);
+    this.coverImage.set(response.coverImageBase64 || '');
 
     this.setCoverImage(response.coverImageBase64 || '');
+
+    this.loading.set(false);
   }
 
   /**
    * Sets the cover image for the training plan.
-   * @param imageUrl - The URL of the cover image.
+   * @param imageUrl - The URL or Base64 of the cover image.
    */
   private setCoverImage(imageUrl: string): void {
     if (this.coverImageElement) {
@@ -127,34 +109,49 @@ export class EditTrainingPlanComponent implements OnInit, AfterViewChecked, OnCo
   }
 
   /**
-   * Handles form submission.
+   * Handles form submission, checking the validity of all form fields.
    */
   async onConfirm(): Promise<void> {
-    if (this.trainingForm.valid) {
-      const formData = this.trainingForm.value;
+    if (this.isFormValid()) {
+      const formData = {
+        title: this.title(),
+        trainingFrequency: this.trainingFrequency(),
+        trainingWeeks: this.trainingWeeks(),
+        weightPlaceholders: this.weightPlaceholders(),
+        coverImage: this.coverImage(),
+      };
 
       await firstValueFrom(this.httpClient.patch(`/training/edit/${this.id()}`, formData));
       this.trainingPlanService.trainingPlanChanged();
       this.modalService.close();
 
-      this.toastService.success('Plan bearbeitet');
+      this.toastService.success('Plan edited successfully.');
     }
   }
 
   /**
-   * Handles image upload and updates the form control.
+   * Checks the overall form validity by verifying all individual field signals.
+   * @returns true if the form is valid; false otherwise.
+   */
+  private isFormValid(): boolean {
+    return (
+      this.isTitleValid() &&
+      this.isTrainingFrequencyValid() &&
+      this.isTrainingWeeksValid() &&
+      this.isWeightPlaceholdersValid()
+    );
+  }
+
+  /**
+   * Handles image upload and updates the cover image signal.
    * @param event - The file input change event.
    */
   protected async handleImageUpload(event: any): Promise<void> {
     const uploadedImageBase64Str = await this.imageUploadService.handleImageUpload(event);
 
-    if (!uploadedImageBase64Str) {
-      return;
+    if (uploadedImageBase64Str) {
+      this.coverImage.set(uploadedImageBase64Str);
+      this.setCoverImage(uploadedImageBase64Str);
     }
-
-    if (this.coverImageElement) {
-      this.renderer.setAttribute(this.coverImageElement.nativeElement, 'src', uploadedImageBase64Str);
-    }
-    this.trainingForm.patchValue({ coverImage: uploadedImageBase64Str });
   }
 }
