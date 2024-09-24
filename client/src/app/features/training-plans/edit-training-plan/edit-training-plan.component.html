@@ -5,22 +5,25 @@
   }
 } @else {
   <form (ngSubmit)="onConfirm()">
-    <div class="form-group text-center mb-4 position-relative">
-      <img
-        #coverImage
-        [src]="trainingPlan.coverImageBase64() || placeholderCoverImage"
-        alt="Cover Image Placeholder"
+    @if (isCropView()) {
+      <image-cropper
         id="cover-image"
+        [imageBase64]="image()!"
+        [maintainAspectRatio]="false"
+        (imageCropped)="imageCropped($event)"
+        format="png"
       />
-      <input
-        type="file"
-        name="cover-image"
-        id="cover-image"
-        class="form-control-file position-absolute"
-        style="opacity: 0; width: 100%; height: 100%; top: 0; left: 0; cursor: pointer"
-        (change)="handleImageUpload($event)"
-      />
-    </div>
+    } @else {
+      <img #coverImage [src]="image() || placeholderCoverImage" alt="Cover Placeholder" id="cover-image" />
+    }
+    <input
+      type="file"
+      name="cover-image"
+      id="cover-image"
+      class="form-control-file position-absolute"
+      style="opacity: 0; width: 100%; height: 100%; top: 0; left: 0; cursor: pointer"
+      (change)="handleImageUpload($event)"
+    />
 
     <app-floating-label-input [label]="'Title'" [(value)]="trainingPlan.title" [required]="true" />
 

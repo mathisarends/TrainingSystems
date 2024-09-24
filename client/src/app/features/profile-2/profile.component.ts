@@ -103,7 +103,7 @@ export class ProfileComponent2 implements OnInit {
   }
 
   private async showDeleteAccountDialog() {
-    const response = await this.modalService.openBasicInfoModal({
+    const confirmed = await this.modalService.openBasicInfoModal({
       title: 'Account löschen',
       buttonText: 'Löschen',
       isDestructiveAction: true,
@@ -111,7 +111,7 @@ export class ProfileComponent2 implements OnInit {
         'Bist du dir sicher, dass du deinen Account löschen willst? Du musst diese Aktion per Email bestätigen.',
     });
 
-    if (response) {
+    if (confirmed) {
       this.handleAccountDeletion();
     }
   }

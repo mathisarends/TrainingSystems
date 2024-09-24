@@ -67,6 +67,7 @@ export class TrainingPlanCardComponent {
       component: EditTrainingPlanComponent,
       title: 'Trainingsplan bearbeiten',
       buttonText: 'Übernehmen',
+      secondaryButtonText: 'Zuschneiden',
       size: ModalSize.LARGE,
       componentData: { id },
     });

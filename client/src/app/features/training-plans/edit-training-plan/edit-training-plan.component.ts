@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, ElementRef, Injector, OnInit, Renderer2, signal, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ImageCropperComponent } from 'ngx-image-cropper';
 import { firstValueFrom } from 'rxjs';
 import { ModalService } from '../../../core/services/modal/modalService';
+import { AbstractImageCropperComponent } from '../../../shared/components/abstract-image-cropper/abstract-image-cropper.component';
 import { FloatingLabelInputComponent } from '../../../shared/components/floating-label-input/floating-label-input.component';
 import { OnConfirm } from '../../../shared/components/modal/on-confirm';
 import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
@@ -19,11 +21,11 @@ import { EditTrainingPlanService } from './edit-training-plan.service';
   selector: 'app-edit-training-plan',
   standalone: true,
   providers: [EditTrainingPlanService],
-  imports: [CommonModule, SkeletonComponent, FormsModule, FloatingLabelInputComponent],
+  imports: [CommonModule, SkeletonComponent, FormsModule, FloatingLabelInputComponent, ImageCropperComponent],
   templateUrl: './edit-training-plan.component.html',
   styleUrls: ['./edit-training-plan.component.scss'],
 })
-export class EditTrainingPlanComponent implements OnInit, OnConfirm {
+export class EditTrainingPlanComponent extends AbstractImageCropperComponent implements OnInit, OnConfirm {
   protected readonly placeholderCoverImage = '/images/training/training_3.png';
   @ViewChild('coverImage') coverImageElement!: ElementRef<HTMLImageElement>;
 
@@ -32,20 +34,30 @@ export class EditTrainingPlanComponent implements OnInit, OnConfirm {
    */
   id = signal('');
 
+  /**
+   * The training plan object that contains the form fields using Angular signals.
+   */
   trainingPlan!: TrainingPlan;
+
+  /**
+   * Signal indicating whether the training plan is loading.
+   */
   loading = signal(true);
 
   constructor(
     private injector: Injector,
     private modalService: ModalService,
-    private toastService: ToastService,
+
     private trainingPlanService: TrainingPlanService,
     private renderer: Renderer2,
     private editTrainingPlanService: EditTrainingPlanService,
-    private imageUploadService: ImageUploadService,
-  ) {}
+    imageUploadService: ImageUploadService,
+    toastService: ToastService,
+  ) {
+    super(imageUploadService, toastService);
+  }
 
-  async ngOnInit(): Promise<void> {
+  override async ngOnInit(): Promise<void> {
     effect(
       async () => {
         await this.fetchTrainingPlan();
@@ -55,31 +67,9 @@ export class EditTrainingPlanComponent implements OnInit, OnConfirm {
   }
 
   /**
-   * Fetches the training plan details to edit and initializes the TrainingPlan class with values.
-   */
-  private async fetchTrainingPlan(): Promise<void> {
-    const response = await firstValueFrom(this.editTrainingPlanService.getPlanForEdit(this.id()));
-
-    this.trainingPlan = new TrainingPlan(response);
-    this.setCoverImage(this.trainingPlan.coverImageBase64());
-
-    this.loading.set(false);
-  }
-
-  /**
-   * Sets the cover image for the training plan.
-   * @param imageUrl - The URL or Base64 of the cover image.
-   */
-  private setCoverImage(imageUrl: string): void {
-    if (this.coverImageElement) {
-      this.renderer.setAttribute(this.coverImageElement.nativeElement, 'src', imageUrl || this.placeholderCoverImage);
-    }
-  }
-
-  /**
    * Handles form submission, checking the validity of all form fields.
    */
-  onConfirm(): void {
+  override onConfirm(): void {
     if (this.isFormValid()) {
       const formData = this.trainingPlan.toDto();
 
@@ -89,6 +79,20 @@ export class EditTrainingPlanComponent implements OnInit, OnConfirm {
         this.toastService.success(response.message);
       });
     }
+  }
+
+  uploadImage(image: string | null): void {}
+
+  /**
+   * Fetches the training plan details to edit and initializes the TrainingPlan class with values.
+   */
+  private async fetchTrainingPlan(): Promise<void> {
+    const response = await firstValueFrom(this.editTrainingPlanService.getPlanForEdit(this.id()));
+
+    this.trainingPlan = new TrainingPlan(response);
+    this.image.set(this.trainingPlan.coverImageBase64());
+
+    this.loading.set(false);
   }
 
   /**
@@ -112,8 +116,8 @@ export class EditTrainingPlanComponent implements OnInit, OnConfirm {
     const uploadedImageBase64Str = await this.imageUploadService.handleImageUpload(event);
 
     if (uploadedImageBase64Str) {
-      this.trainingPlan.coverImageBase64.set(uploadedImageBase64Str); // Update the signal
-      this.setCoverImage(uploadedImageBase64Str);
+      this.trainingPlan.coverImageBase64.set(uploadedImageBase64Str);
+      this.image.set(uploadedImageBase64Str);
     }
   }
 }
