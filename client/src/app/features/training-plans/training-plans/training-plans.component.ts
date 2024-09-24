@@ -132,12 +132,15 @@ export class TrainingPlansComponent implements OnInit {
   private setHeaderInfo(): void {
     const options = [
       { icon: IconName.SEARCH, label: 'Suchen', callback: this.toggleSearchBarVisibility.bind(this) },
-      { icon: IconName.PLUS, label: 'Erstellen', callback: this.createNewPlan.bind(this) },
+      { icon: IconName.DRAG, label: 'Anordnen', callback: () => {} },
     ];
 
     this.headerService.setHeadlineInfo({
       title: 'Training',
-      buttons: [{ icon: IconName.MORE_VERTICAL, options }],
+      buttons: [
+        { icon: IconName.PLUS, callback: this.createNewPlan.bind(this) },
+        { icon: IconName.MORE_VERTICAL, options },
+      ],
     });
   }
 
