@@ -109,6 +109,7 @@ export abstract class AbstractImageCropperComponent implements OnInit, OnConfirm
 
   /**
    * Abstract method to be implemented by derived classes for handling image uploads.
+   * Is called in the onConfirm callback.
    */
   abstract uploadImage(image: string | null): void;
 }

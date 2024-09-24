@@ -1,7 +1,7 @@
 @if (showCreatePlanBasedOnExistingOne()) {
-  @if (existingPlans.length > 0) {
+  @if (existingPlans().length > 0) {
     <div class="form-floating mb-4">
-      <select id="existing_plan_selector" class="form-control" (change)="selectTrainingPlan($event)">
+      <select id="existing_plan_selector" class="form-control">
         @for (trainingPlan of existingPlans(); track trainingPlan.id) {
           <option [value]="trainingPlan.id">{{ trainingPlan.title }}</option>
         }
@@ -24,84 +24,59 @@
 }
 
 <ng-template #commonForm>
-  <form [formGroup]="trainingForm">
-    <div class="form-group text-center mb-4 position-relative">
-      <img
-        #coverImage
-        [src]="trainingForm.get('coverImage')?.value ?? 'https://placehold.jp/150x150.png'"
-        alt="Cover Bild Platzhalter"
-        id="cover-image"
-      />
-      <input
-        type="file"
-        id="cover-image-input"
-        class="form-control-file position-absolute"
-        style="opacity: 0; width: 100%; height: 100%; top: 0; left: 0; cursor: pointer"
-        (change)="handleImageUpload($event)"
-      />
-    </div>
+  <!-- Image Upload -->
+  <div class="form-group text-center mb-4 position-relative">
+    <img
+      #coverImage
+      [src]="coverImageBase64() || placeholderCoverImage"
+      alt="Cover Bild Platzhalter"
+      id="cover-image"
+    />
+    <input
+      type="file"
+      id="cover-image-input"
+      class="form-control-file position-absolute"
+      style="opacity: 0; width: 100%; height: 100%; top: 0; left: 0; cursor: pointer"
+      (change)="handleImageUpload($event)"
+    />
+  </div>
+  <!-- Floating Label Inputs -->
+  <app-floating-label-input [label]="'Titel'" [(value)]="title" [required]="true"></app-floating-label-input>
 
-    <div class="form-floating mb-4">
-      <input
-        type="text"
-        class="form-control"
-        id="training_title"
-        formControlName="title"
-        placeholder="Titel"
-        required
-      />
-      <label for="training_title">Titel</label>
-      <div *ngIf="trainingForm.get('title')?.invalid && trainingForm.get('title')?.touched" class="text-danger">
-        Title is required
-      </div>
-    </div>
+  <app-floating-label-input
+    [label]="'Trainings / Woche'"
+    [(value)]="trainingFrequency"
+    [required]="true"
+    type="select"
+    [options]="[
+      { value: 3, label: '3' },
+      { value: 4, label: '4' },
+      { value: 5, label: '5' },
+      { value: 6, label: '6' },
+    ]"
+  ></app-floating-label-input>
 
-    <div class="form-floating mb-4">
-      <select id="training_frequency" class="form-control" formControlName="trainingFrequency" required>
-        <option value="" disabled hidden></option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-      </select>
-      <label for="training_frequency">Trainings / Woche</label>
-      <div
-        *ngIf="trainingForm.get('trainingFrequency')?.invalid && trainingForm.get('trainingFrequency')?.touched"
-        class="text-danger"
-      >
-        Training frequency is required
-      </div>
-    </div>
+  <app-floating-label-input
+    [label]="'Blocklänge (Wochen)'"
+    [(value)]="trainingWeeks"
+    [required]="true"
+    type="select"
+    [options]="[
+      { value: 3, label: '3' },
+      { value: 4, label: '4' },
+      { value: 5, label: '5' },
+      { value: 6, label: '6' },
+    ]"
+  ></app-floating-label-input>
 
-    <div class="form-floating mb-4">
-      <select id="training_weeks" class="form-control" formControlName="trainingWeeks" required>
-        <option value="" disabled hidden></option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-      </select>
-      <label for="training_weeks">Blocklänge (Wochen)</label>
-      <div
-        *ngIf="trainingForm.get('trainingWeeks')?.invalid && trainingForm.get('trainingWeeks')?.touched"
-        class="text-danger"
-      >
-        Training weeks are required
-      </div>
-    </div>
-
-    <div class="form-floating mb-4">
-      <select formControlName="weightPlaceholders" class="form-control" required>
-        <option value="lastWeek" selected>basierend auf letzter Woche</option>
-        <option value="off">keine Gewichtsempfehlungen</option>
-      </select>
-      <label for="weightPlaceholders">Gewichtsempfehlungen</label>
-      <div
-        *ngIf="trainingForm.get('weightPlaceholders')?.invalid && trainingForm.get('weightPlaceholders')?.touched"
-        class="text-danger"
-      >
-        Weight recommendations are required
-      </div>
-    </div>
-  </form>
+  <app-floating-label-input
+    [label]="'Gewichtsempfehlungen'"
+    [(value)]="weightPlaceholders"
+    [required]="true"
+    type="select"
+    [options]="[
+      { value: 'lastWeek', label: 'basierend auf letzter Woche' },
+      { value: 'off', label: 'keine Gewichtsempfehlungen' },
+    ]"
+  ></app-floating-label-input>
 </ng-template>

@@ -2,7 +2,7 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, effect, Injector, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { BehaviorSubject, filter, first, Observable } from 'rxjs';
+import { BehaviorSubject, first, Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { ModalSize } from '../../../core/services/modal/modalSize';
@@ -69,6 +69,12 @@ export class TrainingPlansComponent implements OnInit {
 
     this.trainingPlanService.trainingPlansChanged$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.loadTrainingPlans();
+    });
+
+    this.filteredTrainingPlans$.subscribe((trainingPlans) => {
+      if (trainingPlans) {
+        this.updateColumnClass(trainingPlans.length);
+      }
     });
 
     effect(
@@ -146,8 +152,6 @@ export class TrainingPlansComponent implements OnInit {
       const filteredPlans = trainingPlans.filter((plan) => plan.title.toLowerCase().includes(searchQuery));
 
       this.filteredTrainingPlans$.next(filteredPlans);
-
-      this.updateColumnClass(filter.length);
     });
   }
 
