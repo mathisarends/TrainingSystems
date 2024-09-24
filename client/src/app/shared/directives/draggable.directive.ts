@@ -1,4 +1,5 @@
 import { Directive, ElementRef, HostListener, Renderer2 } from '@angular/core';
+import { MobileDeviceDetectionService } from '../../platform/mobile-device-detection.service';
 
 @Directive({
   selector: '[appDraggable]',
@@ -14,11 +15,15 @@ export class DraggableDirective {
   constructor(
     private el: ElementRef,
     private renderer: Renderer2,
+    private mobileDeviceDetectionService: MobileDeviceDetectionService,
   ) {}
 
-  // Mousedown event to start dragging
   @HostListener('mousedown', ['$event'])
   onMouseDown(event: MouseEvent): void {
+    if (this.mobileDeviceDetectionService.isMobileDevice) {
+      return;
+    }
+
     if ((event.target as HTMLElement).closest('.btn-close') || (event.target as HTMLElement).closest('.modal-footer')) {
       return;
     }
@@ -34,7 +39,6 @@ export class DraggableDirective {
 
     // Set the element to be positioned absolutely for dragging, but only after it's rendered
     this.renderer.setStyle(element, 'position', 'absolute');
-    this.renderer.setStyle(element, 'top', `${this.initialY}px`);
     this.renderer.setStyle(element, 'left', `${this.initialX}px`);
     this.renderer.setStyle(element, 'width', `${rect.width}px`);
     this.renderer.setStyle(element, 'cursor', 'move');
