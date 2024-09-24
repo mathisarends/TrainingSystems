@@ -1,4 +1,4 @@
-import { Component, input, model } from '@angular/core';
+import { Component, input, model, signal } from '@angular/core';
 
 @Component({
   selector: 'app-form-input',
@@ -12,4 +12,14 @@ export class FormInputComponent {
   label = input<string>('');
 
   placeholder = input<string>('');
+
+  isFocused = signal(false);
+
+  onFocus(): void {
+    this.isFocused.set(true);
+  }
+
+  onBlur(): void {
+    this.isFocused.set(false);
+  }
 }
