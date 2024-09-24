@@ -18,114 +18,227 @@
           <th scope="col" class="text-center">Notes</th>
         </tr>
       </thead>
-      <tbody>
-        @for (k of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track k; let i = $index) {
-          @let exercise =
-            trainingDataService.trainingPlanData.trainingDay.exercises![i] || {
-              category: '',
-              exercise: '',
-              sets: '',
-              reps: '',
-              weight: '',
-              targetRPE: '',
-              actualRPE: '',
-              estMax: '',
-            };
-          @let previousTrainingDayExercise =
-            trainingDataService.trainingPlanData.previousTrainingDay?.exercises?.[i] ?? {
-              exercise: undefined,
-              weight: undefined,
-            };
-          @let namePrefix = 'day' + trainingDayIndex + '_exercise' + k + '_';
 
-          <tr cdkDrag>
-            <td data-cell="Category">
-              <app-dropdown
-                name="day{{ trainingDayIndex }}_exercise{{ k }}_category"
-                class="exercise-category-selector"
-                [options]="exerciseData.exerciseCategories"
-                [directiveUsed]="'category-select'"
-                [(selectedValue)]="exercise.category"
-                [ngStyle]="{
-                  opacity: exercise.category === '- Bitte Auswählen -' || !exercise.category ? 0 : 1,
-                }"
-              />
-            </td>
-            <td data-cell="Exercise">
-              <app-dropdown
-                name="day{{ trainingDayIndex }}_exercise{{ k }}_exercise_name"
-                class="exercise-name-selector"
-                [options]="exerciseData.categorizedExercises[exercise.category]"
-                [(selectedValue)]="exercise.exercise"
-                [ngStyle]="{
-                  opacity: exercise.category === '- Bitte Auswählen -' || !exercise.category ? 0 : 1,
-                }"
-              />
-            </td>
-            <td data-cell="Sets">
-              <app-input
-                class="sets"
-                [type]="'number'"
-                [name]="'day' + trainingDayIndex + '_exercise' + k + '_sets'"
-                [value]="exercise.sets"
-              />
-            </td>
-            <td data-cell="Reps">
-              <app-input
-                [directiveUsed]="'repInputDirective'"
-                class="reps"
-                [type]="'number'"
-                [name]="namePrefix + 'reps'"
-                [value]="exercise.reps"
-              />
-            </td>
-            <td class="weight-data-cell" data-cell="Weight">
-              @let exerciseThisWeek = exercise?.exercise;
-              @let previousWeekExercise = previousTrainingDayExercise?.exercise;
-              <app-input
-                class="weight"
-                [placeholder]="
-                  exerciseThisWeek && previousWeekExercise ? previousTrainingDayExercise?.weight || '' : ''
-                "
-                [type]="'text'"
-                [name]="namePrefix + 'weight'"
-                [directiveUsed]="'weightInputDirective'"
-                [value]="exercise.weight || ''"
-              />
-            </td>
-            <td data-cell="RPE">
-              <app-input
-                class="targetRPE"
-                [type]="'text'"
-                [name]="namePrefix + 'targetRPE'"
-                [directiveUsed]="'rpeInputDirective'"
-                [value]="exercise.targetRPE"
-              />
-            </td>
-            <td data-cell="@RPE">
-              <app-input
-                class="actualRPE"
-                [type]="'text'"
-                [name]="namePrefix + 'actualRPE'"
-                [directiveUsed]="'rpeInputDirective'"
-                [value]="exercise.actualRPE || ''"
-              />
-            </td>
-            <td data-cell="Est. Max">
-              <app-input
-                class="estMax"
-                [type]="'number'"
-                [name]="namePrefix + 'estMax'"
-                [(value)]="exercise.estMax"
-                [ngClass]="{ 'opacity-0': exercise.estMax === undefined || exercise.estMax === 0 }"
-              />
-            </td>
-            <td data-cell="Notes">
-              <app-input class="notes" [type]="'text'" [name]="namePrefix + 'notes'" [value]="exercise.notes ?? ''" />
-            </td>
-          </tr>
-        }
-      </tbody>
+      @if (isDragMode()) {
+        <tbody cdkDropList (cdkDropListDropped)="drop($event)">
+          @for (k of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track k; let i = $index) {
+            @let exercise =
+              trainingDataService.trainingPlanData.trainingDay.exercises![i] || {
+                category: '',
+                exercise: '',
+                sets: '',
+                reps: '',
+                weight: '',
+                targetRPE: '',
+                actualRPE: '',
+                estMax: '',
+              };
+            @let previousTrainingDayExercise =
+              trainingDataService.trainingPlanData.previousTrainingDay?.exercises?.[i] ?? {
+                exercise: undefined,
+                weight: undefined,
+              };
+            @let namePrefix = 'day' + trainingDayIndex + '_exercise' + k + '_';
+
+            <tr cdkDrag>
+              <td data-cell="Category">
+                <app-dropdown
+                  name="day{{ trainingDayIndex }}_exercise{{ k }}_category"
+                  class="exercise-category-selector"
+                  [options]="exerciseData.exerciseCategories"
+                  [directiveUsed]="'category-select'"
+                  [(selectedValue)]="exercise.category"
+                  [ngStyle]="{
+                    opacity: exercise.category === '- Bitte Auswählen -' || !exercise.category ? 0 : 1,
+                  }"
+                />
+              </td>
+              <td data-cell="Exercise">
+                <app-dropdown
+                  name="day{{ trainingDayIndex }}_exercise{{ k }}_exercise_name"
+                  class="exercise-name-selector"
+                  [options]="exerciseData.categorizedExercises[exercise.category]"
+                  [(selectedValue)]="exercise.exercise"
+                  [ngStyle]="{
+                    opacity: exercise.category === '- Bitte Auswählen -' || !exercise.category ? 0 : 1,
+                  }"
+                />
+              </td>
+              <td data-cell="Sets">
+                <app-input
+                  class="sets"
+                  [type]="'number'"
+                  [name]="'day' + trainingDayIndex + '_exercise' + k + '_sets'"
+                  [value]="exercise.sets"
+                />
+              </td>
+              <td data-cell="Reps">
+                <app-input
+                  [directiveUsed]="'repInputDirective'"
+                  class="reps"
+                  [type]="'number'"
+                  [name]="namePrefix + 'reps'"
+                  [value]="exercise.reps"
+                />
+              </td>
+              <td class="weight-data-cell" data-cell="Weight">
+                @let exerciseThisWeek = exercise?.exercise;
+                @let previousWeekExercise = previousTrainingDayExercise?.exercise;
+                <app-input
+                  class="weight"
+                  [placeholder]="
+                    exerciseThisWeek && previousWeekExercise ? previousTrainingDayExercise?.weight || '' : ''
+                  "
+                  [type]="'text'"
+                  [name]="namePrefix + 'weight'"
+                  [directiveUsed]="'weightInputDirective'"
+                  [value]="exercise.weight || ''"
+                />
+              </td>
+              <td data-cell="RPE">
+                <app-input
+                  class="targetRPE"
+                  [type]="'text'"
+                  [name]="namePrefix + 'targetRPE'"
+                  [directiveUsed]="'rpeInputDirective'"
+                  [value]="exercise.targetRPE"
+                />
+              </td>
+              <td data-cell="@RPE">
+                <app-input
+                  class="actualRPE"
+                  [type]="'text'"
+                  [name]="namePrefix + 'actualRPE'"
+                  [directiveUsed]="'rpeInputDirective'"
+                  [value]="exercise.actualRPE || ''"
+                />
+              </td>
+              <td data-cell="Est. Max">
+                <app-input
+                  class="estMax"
+                  [type]="'number'"
+                  [name]="namePrefix + 'estMax'"
+                  [(value)]="exercise.estMax"
+                  [ngClass]="{ 'opacity-0': exercise.estMax === undefined || exercise.estMax === 0 }"
+                />
+              </td>
+              <td data-cell="Notes">
+                <app-input class="notes" [type]="'text'" [name]="namePrefix + 'notes'" [value]="exercise.notes ?? ''" />
+              </td>
+              <app-icon [name]="IconName.SLIDERS" cdkDragHandle />
+            </tr>
+          }
+        </tbody>
+      } @else {
+        <tbody>
+          @for (k of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track k; let i = $index) {
+            @let exercise =
+              trainingDataService.trainingPlanData.trainingDay.exercises![i] || {
+                category: '',
+                exercise: '',
+                sets: '',
+                reps: '',
+                weight: '',
+                targetRPE: '',
+                actualRPE: '',
+                estMax: '',
+              };
+            @let previousTrainingDayExercise =
+              trainingDataService.trainingPlanData.previousTrainingDay?.exercises?.[i] ?? {
+                exercise: undefined,
+                weight: undefined,
+              };
+            @let namePrefix = 'day' + trainingDayIndex + '_exercise' + k + '_';
+
+            <tr>
+              <td data-cell="Category">
+                <app-dropdown
+                  name="day{{ trainingDayIndex }}_exercise{{ k }}_category"
+                  class="exercise-category-selector"
+                  [options]="exerciseData.exerciseCategories"
+                  [directiveUsed]="'category-select'"
+                  [(selectedValue)]="exercise.category"
+                  [ngStyle]="{
+                    opacity: exercise.category === '- Bitte Auswählen -' || !exercise.category ? 0 : 1,
+                  }"
+                />
+              </td>
+              <td data-cell="Exercise">
+                <app-dropdown
+                  name="day{{ trainingDayIndex }}_exercise{{ k }}_exercise_name"
+                  class="exercise-name-selector"
+                  [options]="exerciseData.categorizedExercises[exercise.category]"
+                  [(selectedValue)]="exercise.exercise"
+                  [ngStyle]="{
+                    opacity: exercise.category === '- Bitte Auswählen -' || !exercise.category ? 0 : 1,
+                  }"
+                />
+              </td>
+              <td data-cell="Sets">
+                <app-input
+                  class="sets"
+                  [type]="'number'"
+                  [name]="'day' + trainingDayIndex + '_exercise' + k + '_sets'"
+                  [value]="exercise.sets"
+                />
+              </td>
+              <td data-cell="Reps">
+                <app-input
+                  [directiveUsed]="'repInputDirective'"
+                  class="reps"
+                  [type]="'number'"
+                  [name]="namePrefix + 'reps'"
+                  [value]="exercise.reps"
+                />
+              </td>
+              <td class="weight-data-cell" data-cell="Weight">
+                @let exerciseThisWeek = exercise?.exercise;
+                @let previousWeekExercise = previousTrainingDayExercise?.exercise;
+                <app-input
+                  class="weight"
+                  [placeholder]="
+                    exerciseThisWeek && previousWeekExercise ? previousTrainingDayExercise?.weight || '' : ''
+                  "
+                  [type]="'text'"
+                  [name]="namePrefix + 'weight'"
+                  [directiveUsed]="'weightInputDirective'"
+                  [value]="exercise.weight || ''"
+                />
+              </td>
+              <td data-cell="RPE">
+                <app-input
+                  class="targetRPE"
+                  [type]="'text'"
+                  [name]="namePrefix + 'targetRPE'"
+                  [directiveUsed]="'rpeInputDirective'"
+                  [value]="exercise.targetRPE"
+                />
+              </td>
+              <td data-cell="@RPE">
+                <app-input
+                  class="actualRPE"
+                  [type]="'text'"
+                  [name]="namePrefix + 'actualRPE'"
+                  [directiveUsed]="'rpeInputDirective'"
+                  [value]="exercise.actualRPE || ''"
+                />
+              </td>
+              <td data-cell="Est. Max">
+                <app-input
+                  class="estMax"
+                  [type]="'number'"
+                  [name]="namePrefix + 'estMax'"
+                  [(value)]="exercise.estMax"
+                  [ngClass]="{ 'opacity-0': exercise.estMax === undefined || exercise.estMax === 0 }"
+                />
+              </td>
+              <td data-cell="Notes">
+                <app-input class="notes" [type]="'text'" [name]="namePrefix + 'notes'" [value]="exercise.notes ?? ''" />
+              </td>
+            </tr>
+          }
+        </tbody>
+      }
     </table>
   </form>
 

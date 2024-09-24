@@ -1,3 +1,4 @@
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -57,6 +58,7 @@ import { TrainingPlanDto } from './trainingPlanDto';
     DropdownComponent,
     RepInputDirective,
     FormatTimePipe,
+    DragDropModule,
   ],
   providers: [TrainingViewService, TrainingPlanDataService, EstMaxService, SwipeService],
   templateUrl: './training-view.component.html',
@@ -264,11 +266,26 @@ export class TrainingViewComponent implements OnInit {
             {
               label: 'Anordnen',
               icon: IconName.MOVE,
-              callback: () => console.log('anordnen'),
+              callback: () => this.toggleIsDragMode(),
             },
           ],
         },
       ],
     });
+  }
+
+  private toggleIsDragMode() {
+    this.isDragMode.set(!this.isDragMode());
+  }
+
+  drop(event: CdkDragDrop<any, any, any>) {
+    // Move the row in the exercises array to its new position
+    moveItemInArray(
+      this.trainingDataService.trainingPlanData.trainingDay.exercises!,
+      event.previousIndex,
+      event.currentIndex,
+    );
+
+    console.log('Updated exercises:', this.trainingDataService.trainingPlanData.trainingDay.exercises);
   }
 }
