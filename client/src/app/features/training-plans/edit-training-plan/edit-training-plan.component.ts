@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, effect, ElementRef, Injector, OnInit, Renderer2, signal, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
-import { HttpService } from '../../../core/services/http-client.service';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { FloatingLabelInputComponent } from '../../../shared/components/floating-label-input/floating-label-input.component';
 import { OnConfirm } from '../../../shared/components/modal/on-confirm';
@@ -36,9 +35,9 @@ export class EditTrainingPlanComponent implements OnInit, OnConfirm {
   coverImage = signal('');
 
   isTitleValid = computed(() => this.title().trim().length > 0);
-  isTrainingFrequencyValid = computed(() => this.trainingFrequency() > 0);
-  isTrainingWeeksValid = computed(() => this.trainingWeeks() > 0);
-  isWeightPlaceholdersValid = computed(() => this.weightPlaceholders().length > 0);
+  isTrainingFrequencyValid = computed(() => !!this.trainingFrequency());
+  isTrainingWeeksValid = computed(() => !!this.trainingWeeks());
+  isWeightPlaceholdersValid = computed(() => !!this.weightPlaceholders());
 
   loading = signal(true);
 
@@ -47,7 +46,6 @@ export class EditTrainingPlanComponent implements OnInit, OnConfirm {
     private modalService: ModalService,
     private toastService: ToastService,
     private trainingPlanService: TrainingPlanService,
-    private httpClient: HttpService,
     private renderer: Renderer2,
     private editTrainingPlanService: EditTrainingPlanService,
     private imageUploadService: ImageUploadService,
@@ -96,7 +94,7 @@ export class EditTrainingPlanComponent implements OnInit, OnConfirm {
   /**
    * Handles form submission, checking the validity of all form fields.
    */
-  async onConfirm(): Promise<void> {
+  onConfirm(): void {
     if (this.isFormValid()) {
       const formData = {
         title: this.title(),
@@ -106,11 +104,11 @@ export class EditTrainingPlanComponent implements OnInit, OnConfirm {
         coverImage: this.coverImage(),
       };
 
-      await firstValueFrom(this.httpClient.patch(`/training/edit/${this.id()}`, formData));
-      this.trainingPlanService.trainingPlanChanged();
-      this.modalService.close();
-
-      this.toastService.success('Plan edited successfully.');
+      this.editTrainingPlanService.editTrainingPlan(this.id(), formData).subscribe((response) => {
+        this.trainingPlanService.trainingPlanChanged();
+        this.modalService.close();
+        this.toastService.success(response.message);
+      });
     }
   }
 

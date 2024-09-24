@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
+import { BasicConfirmationResponse } from '../../../shared/dto/basic-confirmation-response';
+import { DataMap } from '../../../shared/types/data-map';
 import { TrainingPlanEditViewDto } from './training-plan-edit-view-dto';
 
 @Injectable()
@@ -9,5 +11,9 @@ export class EditTrainingPlanService {
 
   getPlanForEdit(id: string): Observable<TrainingPlanEditViewDto> {
     return this.httpService.get<TrainingPlanEditViewDto>(`/training/edit/${id}`);
+  }
+
+  editTrainingPlan(id: string, formData: DataMap): Observable<BasicConfirmationResponse> {
+    return this.httpService.patch(`/training/edit/${id}`, formData);
   }
 }
