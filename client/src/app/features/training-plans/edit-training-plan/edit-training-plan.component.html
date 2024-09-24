@@ -6,7 +6,12 @@
 } @else {
   <form (ngSubmit)="onConfirm()">
     <div class="form-group text-center mb-4 position-relative">
-      <img #coverImage [src]="placeholderCoverImage" alt="Cover Image Placeholder" id="cover-image" />
+      <img
+        #coverImage
+        [src]="trainingPlan.coverImageBase64() || placeholderCoverImage"
+        alt="Cover Image Placeholder"
+        id="cover-image"
+      />
       <input
         type="file"
         name="cover-image"
@@ -17,11 +22,11 @@
       />
     </div>
 
-    <app-floating-label-input [label]="'Title'" [(value)]="title" [required]="true" />
+    <app-floating-label-input [label]="'Title'" [(value)]="trainingPlan.title" [required]="true" />
 
     <app-floating-label-input
       [label]="'Trainings / Week'"
-      [(value)]="trainingFrequency"
+      [(value)]="trainingPlan.trainingFrequency"
       [required]="true"
       type="select"
       [options]="[
@@ -34,7 +39,7 @@
 
     <app-floating-label-input
       [label]="'Trainingdauer (Wochen)'"
-      [(value)]="trainingWeeks"
+      [(value)]="trainingPlan.trainingBlockLength"
       [required]="true"
       type="select"
       [options]="[
@@ -46,8 +51,8 @@
     />
 
     <app-floating-label-input
-      [label]="'Gewichsempfehlungen'"
-      [(value)]="weightPlaceholders"
+      [label]="'Gewichtsempfehlungen'"
+      [(value)]="trainingPlan.weightRecommendationBase"
       [required]="true"
       type="select"
       [options]="[

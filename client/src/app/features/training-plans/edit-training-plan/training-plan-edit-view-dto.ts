@@ -10,7 +10,7 @@ export interface TrainingPlanEditViewDto {
 /**
  * Enum for weight recommendation base.
  */
-enum WeightRecommendationBase {
+export enum WeightRecommendationBase {
   LASTWEEK = 'lastWeek',
   OFF = 'off',
 }

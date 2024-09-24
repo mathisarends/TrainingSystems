@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, ElementRef, Injector, OnInit, Renderer2, signal, ViewChild } from '@angular/core';
+import { Component, effect, ElementRef, Injector, OnInit, Renderer2, signal, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { ModalService } from '../../../core/services/modal/modalService';
@@ -8,6 +8,7 @@ import { OnConfirm } from '../../../shared/components/modal/on-confirm';
 import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
 import { ToastService } from '../../../shared/components/toast/toast.service';
 import { ImageUploadService } from '../../../shared/service/image-upload.service';
+import { TrainingPlan } from '../model/training-plan-edit-view';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
 import { EditTrainingPlanService } from './edit-training-plan.service';
 
@@ -26,19 +27,12 @@ export class EditTrainingPlanComponent implements OnInit, OnConfirm {
   protected readonly placeholderCoverImage = '/images/training/training_3.png';
   @ViewChild('coverImage') coverImageElement!: ElementRef<HTMLImageElement>;
 
+  /**
+   * The unique identifier for the training plan passed as a signal via the modal service.
+   */
   id = signal('');
 
-  title = signal('');
-  trainingFrequency = signal<number>(0);
-  trainingWeeks = signal<number>(0);
-  weightPlaceholders = signal<'lastWeek' | 'off'>('lastWeek');
-  coverImage = signal('');
-
-  isTitleValid = computed(() => this.title().trim().length > 0);
-  isTrainingFrequencyValid = computed(() => !!this.trainingFrequency());
-  isTrainingWeeksValid = computed(() => !!this.trainingWeeks());
-  isWeightPlaceholdersValid = computed(() => !!this.weightPlaceholders());
-
+  trainingPlan!: TrainingPlan;
   loading = signal(true);
 
   constructor(
@@ -53,26 +47,21 @@ export class EditTrainingPlanComponent implements OnInit, OnConfirm {
 
   async ngOnInit(): Promise<void> {
     effect(
-      () => {
-        this.fetchTrainingPlan();
+      async () => {
+        await this.fetchTrainingPlan();
       },
       { injector: this.injector, allowSignalWrites: true },
     );
   }
 
   /**
-   * Fetches the training plan details to edit and updates signals with values.
+   * Fetches the training plan details to edit and initializes the TrainingPlan class with values.
    */
   private async fetchTrainingPlan(): Promise<void> {
     const response = await firstValueFrom(this.editTrainingPlanService.getPlanForEdit(this.id()));
 
-    this.title.set(response.title);
-    this.trainingFrequency.set(response.trainingFrequency);
-    this.trainingWeeks.set(response.trainingBlockLength);
-    this.weightPlaceholders.set(response.weightRecommandationBase);
-    this.coverImage.set(response.coverImageBase64 || '');
-
-    this.setCoverImage(response.coverImageBase64 || '');
+    this.trainingPlan = new TrainingPlan(response);
+    this.setCoverImage(this.trainingPlan.coverImageBase64());
 
     this.loading.set(false);
   }
@@ -83,11 +72,7 @@ export class EditTrainingPlanComponent implements OnInit, OnConfirm {
    */
   private setCoverImage(imageUrl: string): void {
     if (this.coverImageElement) {
-      this.renderer.setAttribute(
-        this.coverImageElement.nativeElement,
-        'src',
-        imageUrl || 'https://via.placeholder.com/150',
-      );
+      this.renderer.setAttribute(this.coverImageElement.nativeElement, 'src', imageUrl || this.placeholderCoverImage);
     }
   }
 
@@ -96,15 +81,9 @@ export class EditTrainingPlanComponent implements OnInit, OnConfirm {
    */
   onConfirm(): void {
     if (this.isFormValid()) {
-      const formData = {
-        title: this.title(),
-        trainingFrequency: this.trainingFrequency(),
-        trainingWeeks: this.trainingWeeks(),
-        weightPlaceholders: this.weightPlaceholders(),
-        coverImage: this.coverImage(),
-      };
+      const formData = this.trainingPlan.toDto();
 
-      this.editTrainingPlanService.editTrainingPlan(this.id(), formData).subscribe((response) => {
+      this.editTrainingPlanService.editTrainingPlan(this.trainingPlan.id(), formData).subscribe((response) => {
         this.trainingPlanService.trainingPlanChanged();
         this.modalService.close();
         this.toastService.success(response.message);
@@ -118,10 +97,10 @@ export class EditTrainingPlanComponent implements OnInit, OnConfirm {
    */
   private isFormValid(): boolean {
     return (
-      this.isTitleValid() &&
-      this.isTrainingFrequencyValid() &&
-      this.isTrainingWeeksValid() &&
-      this.isWeightPlaceholdersValid()
+      this.trainingPlan.title().trim().length > 0 &&
+      !!this.trainingPlan.trainingFrequency() &&
+      !!this.trainingPlan.trainingBlockLength() &&
+      !!this.trainingPlan.weightRecommendationBase()
     );
   }
 
@@ -133,7 +112,7 @@ export class EditTrainingPlanComponent implements OnInit, OnConfirm {
     const uploadedImageBase64Str = await this.imageUploadService.handleImageUpload(event);
 
     if (uploadedImageBase64Str) {
-      this.coverImage.set(uploadedImageBase64Str);
+      this.trainingPlan.coverImageBase64.set(uploadedImageBase64Str); // Update the signal
       this.setCoverImage(uploadedImageBase64Str);
     }
   }

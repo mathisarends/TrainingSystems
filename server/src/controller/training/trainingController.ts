@@ -16,6 +16,7 @@ import {
 import { getUser, getUserGenericDAO } from '../../service/userService.js';
 
 import _ from 'lodash';
+import { TrainingPlanEditViewDto } from '../../models/dto/training-plan-edit-view-dto.js';
 
 /**
  * Retrieves the list of training plans for the user, summarizing them into card views.
@@ -145,15 +146,18 @@ export async function updatePlan(req: Request, res: Response): Promise<void> {
 
   const trainingPlan = findTrainingPlanById(user.trainingPlans, planId);
 
-  trainingPlan.title = req.body.title;
-  trainingPlan.trainingFrequency = Number(req.body.trainingFrequency);
-  trainingPlan.weightRecommandationBase = req.body.weightPlaceholders as WeightRecommendationBase;
-  if (req.body.coverImage) {
-    trainingPlan.coverImageBase64 = req.body.coverImage;
+  const trainingPlanEditDto = req.body as TrainingPlanEditViewDto;
+
+  trainingPlan.title = trainingPlanEditDto.title;
+  trainingPlan.trainingFrequency = Number(trainingPlanEditDto.trainingFrequency);
+  trainingPlan.weightRecommandationBase = trainingPlanEditDto.weightRecommandationBase as WeightRecommendationBase;
+
+  if (trainingPlanEditDto.coverImageBase64) {
+    trainingPlan.coverImageBase64 = trainingPlanEditDto.coverImageBase64;
   }
 
-  if (trainingPlan.trainingWeeks.length !== Number(req.body.trainingWeeks)) {
-    const difference = trainingPlan.trainingWeeks.length - parseInt(req.body.trainingWeeks);
+  if (trainingPlan.trainingWeeks.length !== trainingPlanEditDto.trainingBlockLength) {
+    const difference = trainingPlan.trainingWeeks.length - trainingPlanEditDto.trainingBlockLength;
     handleWeekDifference(trainingPlan, difference);
   }
 
