@@ -55,17 +55,35 @@ form {
   display: none;
 }
 
+.cdk-drag-preview {
+  border: 2px dashed grey;
+}
+
 tr {
   position: relative;
 
   app-icon {
+    display: none;
     position: absolute;
-    top: 14.5rem;
-    right: 0;
+    top: 0rem;
+    right: 0rem;
+  }
+
+  &:hover app-icon {
+    display: block;
   }
 }
 
 @media (max-width: 768px) {
+  tr {
+    app-icon {
+      display: block;
+      position: absolute;
+      top: 14.5rem;
+      right: 0;
+    }
+  }
+
   .rest-pause-time-indicator {
     position: fixed;
     display: flex;

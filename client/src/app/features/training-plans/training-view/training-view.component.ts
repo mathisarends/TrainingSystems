@@ -266,7 +266,7 @@ export class TrainingViewComponent implements OnInit {
             },
             {
               label: 'Anordnen',
-              icon: IconName.MOVE,
+              icon: IconName.DRAG,
               callback: () => this.toggleIsDragMode(),
             },
           ],

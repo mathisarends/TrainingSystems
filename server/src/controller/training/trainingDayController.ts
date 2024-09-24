@@ -30,7 +30,6 @@ export async function getPlanForDay(req: Request, res: Response): Promise<void> 
 
   const trainingWeekIndex = Number(week);
   const trainingDayIndex = Number(day);
-  console.log('🚀 ~ getPlanForDay ~ trainingDayIndex:', trainingDayIndex);
 
   const user = await getUser(req, res);
 
