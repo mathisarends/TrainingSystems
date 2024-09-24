@@ -1,10 +1,5 @@
-<input
-  id="customInput"
-  type="text"
-  [value]="value()"
-  [placeholder]="placeholder()"
-  [class.filled]="value()"
-  (focus)="onFocus()"
-  (blur)="onBlur()"
-/>
-<label for="customInput" [class.floating]="value() || isFocused">{{ label() }}</label>
+<input id="input" type="text" [value]="value()" (input)="onInputChange($event)" [class.filled]="value()" />
+<label for="customInput">{{ label() }}</label>
+@if (isInvalid()) {
+  <div class="error-message">{{ errorMessage() }}</div>
+}
