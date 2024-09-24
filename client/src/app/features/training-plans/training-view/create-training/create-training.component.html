@@ -1,4 +1,4 @@
-@if (showCreatePlanBasedOnExistingOne()) {
+@if (isExistingPlanMode()) {
   @if (existingPlans().length > 0) {
     <app-floating-label-input
       [label]="'Basisplan wählen'"

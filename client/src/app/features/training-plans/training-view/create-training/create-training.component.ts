@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, ElementRef, Injector, OnInit, signal, ViewChild } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
 import { HttpService } from '../../../../core/services/http-client.service';
-import { ModalService } from '../../../../core/services/modal/modalService';
 import { FloatingLabelInputComponent } from '../../../../shared/components/floating-label-input/floating-label-input.component';
 import { ToDropDownOptionsPipe } from '../../../../shared/components/floating-label-input/to-dropdown-options.pipe';
 import { OnConfirm } from '../../../../shared/components/modal/on-confirm';
@@ -29,7 +27,7 @@ export class CreateTrainingComponent implements OnInit, OnConfirm, OnToggleView 
 
   existingPlans = signal<TrainingPlanCardView[]>([]);
 
-  showCreatePlanBasedOnExistingOne = signal(false);
+  isExistingPlanMode = signal(false);
 
   /**
    * The training plan object that contains the form fields using Angular signals.
@@ -47,7 +45,6 @@ export class CreateTrainingComponent implements OnInit, OnConfirm, OnToggleView 
     private trainingPlanService: TrainingPlanService,
     private httpClient: HttpService,
     private imageUploadService: ImageUploadService,
-    private modalService: ModalService,
     private toastService: ToastService,
     private injector: Injector,
   ) {}
@@ -57,7 +54,7 @@ export class CreateTrainingComponent implements OnInit, OnConfirm, OnToggleView 
 
     effect(
       () => {
-        if (!this.selectedPlanId()) {
+        if (!this.selectedPlanId() && this.isExistingPlanMode()) {
           this.selectedPlanId.set(this.existingPlans()[0]?.id ?? null);
         }
 
@@ -86,16 +83,19 @@ export class CreateTrainingComponent implements OnInit, OnConfirm, OnToggleView 
   /**
    * Handles form submission using signals.
    */
-  async onConfirm() {
+  onConfirm(): void {
     if (!this.trainingPlanEditView.isValid()) {
       return;
     }
 
-    await firstValueFrom(this.httpClient.post('/training/create', this.trainingPlanEditView.toDto()));
+    if (this.isExistingPlanMode()) {
+      this.trainingPlanEditView.setReferencePlanId(this.selectedPlanId());
+    }
 
-    this.toastService.success('Plan erstellt!');
-    this.trainingPlanService.trainingPlanChanged();
-    this.modalService.close();
+    this.httpClient.post('/training/create', this.trainingPlanEditView.toDto()).subscribe(() => {
+      this.toastService.success('Plan erstellt');
+      this.trainingPlanService.trainingPlanChanged();
+    });
   }
 
   /**
@@ -110,19 +110,10 @@ export class CreateTrainingComponent implements OnInit, OnConfirm, OnToggleView 
   }
 
   onToggleView() {
-    if (this.showCreatePlanBasedOnExistingOne()) {
-      this.showCreatePlanBasedOnExistingOne.set(false);
+    this.isExistingPlanMode.set(!this.isExistingPlanMode());
+
+    if (!this.isExistingPlanMode()) {
       this.trainingPlanEditView.resetToDefaults();
-      return;
-    }
-
-    this.showCreatePlanBasedOnExistingOne.set(true);
-    const selectedPlanId = this.existingPlans()[0].id ?? undefined;
-    this.selectedPlanId.set(selectedPlanId);
-
-    if (selectedPlanId) {
-      const selectedPlan = this.existingPlans().find((plan) => plan.id === this.selectedPlanId())!;
-      this.populateFormWithPlan(selectedPlan);
     }
   }
 }

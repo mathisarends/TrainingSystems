@@ -12,6 +12,8 @@ export class TrainingPlanEditView {
   weightRecommendationBase: WritableSignal<WeightRecommendationBase>;
   coverImageBase64: WritableSignal<string>;
 
+  referencePlanId: WritableSignal<string | undefined> = signal(undefined);
+
   protected readonly defaultValues = {
     id: '',
     title: '',
@@ -56,6 +58,7 @@ export class TrainingPlanEditView {
       trainingBlockLength: this.trainingBlockLength(),
       weightRecommandationBase: this.weightRecommendationBase(),
       coverImageBase64: this.coverImageBase64(),
+      referencePlanId: this.referencePlanId(),
     };
   }
 
@@ -91,5 +94,9 @@ export class TrainingPlanEditView {
     this.trainingBlockLength.set(this.defaultValues.trainingBlockLength);
     this.weightRecommendationBase.set(this.defaultValues.weightRecommendationBase);
     this.coverImageBase64.set(this.defaultValues.coverImageBase64);
+  }
+
+  setReferencePlanId(id: string): void {
+    this.referencePlanId.set(id);
   }
 }
