@@ -24,24 +24,25 @@ export class SettingsComponent implements OnInit, OnConfirm {
 
   ngOnInit() {
     this.settingsService.getPermissions().subscribe((response) => {
-      this.checkboxItems().push({
-        label: 'Trainingszusammenfassungen (Email)',
-        isChecked: response.isTrainingSummaryEmailEnabled,
-      });
+      this.checkboxItems.set([
+        {
+          label: 'Trainingszusammenfassungen (Email)',
+          isChecked: response.isTrainingSummaryEmailEnabled,
+        },
+      ]);
     });
   }
 
   protected onCheckboxValueChange(item: CheckboxItem) {
-    if (item.label === 'Trainingszusammenfassungen (Email)') {
-      this.getTrainingSummaryPermissionItem().isChecked = item.isChecked;
-    }
+    const updatedItems = this.checkboxItems().map((checkboxItem) =>
+      checkboxItem.label === item.label ? { ...checkboxItem, isChecked: item.isChecked } : checkboxItem,
+    );
+    this.checkboxItems.set(updatedItems);
   }
 
   onConfirm(): void {
-    const trainingSummaryPermission = this.getTrainingSummaryPermissionItem();
-
     const updatedPermissions: PermissionDto = {
-      isTrainingSummaryEmailEnabled: trainingSummaryPermission.isChecked,
+      isTrainingSummaryEmailEnabled: this.getTrainingSummaryPermissionItem().isChecked,
     };
 
     this.settingsService.updatePermissions(updatedPermissions).subscribe((response) => {

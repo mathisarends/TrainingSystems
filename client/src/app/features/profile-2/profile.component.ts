@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { ModalService } from '../../core/services/modal/modalService';
 import { IconBackgroundColor } from '../../shared/components/icon-list-item/icon-background-color';
@@ -19,7 +20,7 @@ import { SettingsComponent } from './settings/settings.component';
 @Component({
   standalone: true,
   imports: [IconComponent, SpinnerComponent, IconListeItemComponent],
-  selector: 'app-profile-2',
+  selector: 'app-profile',
   templateUrl: 'profile.component.html',
   styleUrls: ['profile.component.scss'],
   providers: [GymTicketService],
@@ -48,10 +49,17 @@ export class ProfileComponent2 implements OnInit {
     private toastService: ToastService,
     private gymTicketService: GymTicketService,
     private imageUploadService: ImageUploadService,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit() {
     this.setHeadlineInfo();
+
+    this.route.queryParams.subscribe((params) => {
+      if (params['openSettings'] === 'true') {
+        this.displaySettingsModal();
+      }
+    });
   }
 
   protected async onListItemClicked(listItem: IconListItem) {

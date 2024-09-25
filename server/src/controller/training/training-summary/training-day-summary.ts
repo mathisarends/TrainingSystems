@@ -245,7 +245,7 @@ function generateTrainingSummaryEmail(trainingSummaryData: TrainingSummary) {
           <p class="total-tonnage">Total Tonnage: <strong>${trainingSummaryData.trainingDayTonnage.toLocaleString()}</strong> kg</p>
           <img src="cid:tonnageChart" alt="Tonnage Chart" class="tonnage-chart" />
           <div class="footer">
-            <a class="neutral-link" href="https://trainingsystemsre.onrender.com/unsubscribe">Unsubscribe from Email Notifications</a>
+            <a class="neutral-link" href="https://trainingsystemsre.onrender.com/profile?openSettings=true">Unsubscribe from Email Notifications</a>
           </div>
         </div>
       </body>
