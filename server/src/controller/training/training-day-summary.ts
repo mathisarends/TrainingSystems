@@ -79,6 +79,23 @@ export async function getEmailConfigForTrainingDaySummary(
 }
 
 function generateTrainingSummaryEmail(trainingData: TrainingDAyFinishedNotification) {
+  const dateFormatted = trainingData.startTime!.toLocaleDateString('de-DE', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+
+  // Start- und Endzeit formatieren: 17:45-19:00
+  const startTimeFormatted = trainingData.startTime!.toLocaleTimeString('de-DE', {
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+  const endTimeFormatted = trainingData.endTime!.toLocaleTimeString('de-DE', {
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+
   return `
       <!DOCTYPE html>
       <html lang="en">
@@ -130,20 +147,21 @@ function generateTrainingSummaryEmail(trainingData: TrainingDAyFinishedNotificat
         </head>
         <body>
           <div class="container">
-            <p>Date: <strong>${trainingData.endTime}</strong></p>
-            <p>Total Duration: <strong>${trainingData.durationInMinutes}</strong> minutes</p>
+          <p>Date: <strong>${dateFormatted}</strong></p>
+          <p>Time: <strong>${startTimeFormatted} - ${endTimeFormatted}</strong></p>
+          <p>Total Duration: <strong>${trainingData.durationInMinutes}</strong> minutes</p>
   
             <table class="summary-table">
               <thead>
                 <tr>
                   <th>Exercise</th>
                   <th>Category</th>
-                  <th>Sets</th>
-                  <th>Reps</th>
-                  <th>Weight</th>
-                  <th>Target RPE</th>
-                  <th>Actual RPE</th>
-                  <th>Est Max</th>
+                  <th class="text-center">Sets</th>
+                  <th class="text-center">Reps</th>
+                  <th class="text-center">Weight</th>
+                  <th class="text-center">Target RPE</th>
+                  <th class="text-center">Actual RPE</th>
+                  <th class="text-center">Est Max</th>
                 </tr>
               </thead>
               <tbody>
