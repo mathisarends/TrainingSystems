@@ -153,6 +153,27 @@ export async function getProfile(req: Request, res: Response): Promise<void> {
   res.status(200).json(userDto);
 }
 
+export async function getPermisisons(req: Request, res: Response): Promise<Response> {
+  const user = await userService.getUser(req, res);
+
+  const permissions = {
+    isTrainingSummaryEmailEnabled: user.isTrainingSummaryEmailEnabled ?? true
+  };
+
+  return res.status(200).json(permissions);
+}
+
+export async function updatePermissions(req: Request, res: Response): Promise<Response> {
+  const user = await userService.getUser(req, res);
+  const userDAO = userService.getUserGenericDAO(req);
+
+  user.isTrainingSummaryEmailEnabled = req.body.isTrainingSummaryEmailEnabled;
+
+  await userDAO.update(user);
+
+  return res.status(200).json({ message: 'Einstellungen geupdated' });
+}
+
 export async function editProfile(req: Request, res: Response): Promise<Response> {
   const user = await userService.getUser(req, res);
   const userDAO = userService.getUserGenericDAO(req);
