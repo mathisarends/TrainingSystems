@@ -1,4 +1,6 @@
-import { Request, Response, NextFunction, RequestHandler } from 'express';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
+
+import logger from '../config/logger.js';
 
 /**
  * Central error handling middleware.
@@ -7,7 +9,7 @@ import { Request, Response, NextFunction, RequestHandler } from 'express';
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
-  console.error(err.stack);
+  logger.error(`Error occurred on ${req.method} ${req.url}: ${err.message}`);
   res.status(500).json({ error: 'Interner Serverfehler' });
 }
 

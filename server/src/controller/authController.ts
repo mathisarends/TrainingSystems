@@ -8,10 +8,13 @@ import transporter from '../config/mailerConfig.js';
 import { LoginDto } from '../interfaces/loginDto.js';
 import { RegisterUserDto } from '../interfaces/registerUserDto.js';
 
+import logger from '../config/logger.js';
+
 /**
  * Verifies the user's authentication state by checking the token.
  */
 export async function getAuthState(req: Request, res: Response): Promise<Response> {
+  logger.info('GET Request on / route');
   await userService.getUser(req, res);
   return res.status(200).json({ message: 'auth verified' });
 }

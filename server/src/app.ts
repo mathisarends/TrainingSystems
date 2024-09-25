@@ -9,6 +9,7 @@ import cors from 'cors';
 // Routers
 import emailTestRouter from './controller/emailTestRouter.js';
 import { errorHandler } from './middleware/error-handler.js';
+import requestLogger from './middleware/request-middleware.js';
 import exerciseRouter from './routes/exerciseRoutes.js';
 import friendShipRouter from './routes/friendshipRoutes.js';
 import trainingRouter from './routes/training/trainingRoutes.js';
@@ -34,6 +35,8 @@ async function configureApp(app: Express) {
       allowedHeaders: 'Content-Type, Authorization'
     })
   );
+
+  app.use(requestLogger);
 
   app.use('/api/user', userRouter);
   app.use('/api/training', trainingRouter);

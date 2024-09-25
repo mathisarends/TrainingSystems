@@ -34,7 +34,9 @@
     "pg": "^8.11.3",
     "sharp": "^0.33.4",
     "socket.io": "^4.7.5",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "winston": "^3.14.2",
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
@@ -53,6 +55,7 @@
     "@types/pg": "^8.11.2",
     "@types/sharp": "^0.32.0",
     "@types/uuid": "^9.0.8",
+    "@types/winston": "^2.4.4",
     "@typescript-eslint/eslint-plugin": "^7.1.0",
     "@typescript-eslint/parser": "^7.1.0",
     "eslint": "^8.57.0",
