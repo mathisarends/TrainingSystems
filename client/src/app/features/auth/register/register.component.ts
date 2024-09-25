@@ -45,7 +45,7 @@ export class RegisterComponent extends BaisAuthComponent implements OnInit {
       password: formData.get('password') as string,
       confirmPassword: formData.get('confirmPassword') as string,
     };
-    this.httpClient.post<any>('/user/register', data).subscribe({
+    this.httpClient.post<any>('/user/auth/register', data).subscribe({
       next: () => {
         this.toastService.success('Account erfolgreich erstellt');
         this.router.navigate(['login']);

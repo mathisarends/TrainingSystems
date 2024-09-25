@@ -18,7 +18,7 @@ export class ResetPasswordService {
    * - Sends a password reset link to the provided email address.
    */
   requestPasswordResetLink(email: string): Observable<HttpResponse<any>> {
-    return this.httpService.post('/user/send-reset-password-email', { email });
+    return this.httpService.post('/user/auth/send-reset-password-email', { email });
   }
 
   /**
@@ -29,7 +29,7 @@ export class ResetPasswordService {
    *
    */
   authenticatePasswordResetPage(token: string): Observable<void> {
-    return this.httpService.get(`/user/authenticate-password-request/${token}`);
+    return this.httpService.get(`/user/auth/authenticate-password-request/${token}`);
   }
 
   /**
@@ -40,6 +40,6 @@ export class ResetPasswordService {
    *
    */
   resetPassword(password: string, repeatPassword: string, token: string): Observable<BasicConfirmationResponse> {
-    return this.httpService.post(`/user/reset-password/${token}`, { password, repeatPassword });
+    return this.httpService.post(`/user/auth/reset-password/${token}`, { password, repeatPassword });
   }
 }

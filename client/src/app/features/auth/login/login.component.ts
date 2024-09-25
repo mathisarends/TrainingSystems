@@ -48,7 +48,7 @@ export class LoginComponent extends BaisAuthComponent implements OnInit {
     };
 
     this.httpClient
-      .post('/user/login', data)
+      .post('/user/auth/login', data)
       .pipe(
         tap(() => {
           this.authService.setAuthenticationStatus(true);

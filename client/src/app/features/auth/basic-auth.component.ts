@@ -22,8 +22,8 @@ export abstract class BaisAuthComponent {
   ) {
     this.oauthRoute =
       process.env['NODE_ENV'] === 'production'
-        ? 'https://trainingsystems.onrender.com/user/login/oauth2'
-        : 'http://localhost:3000/user/login/oauth2';
+        ? 'https://trainingsystems.onrender.com/api/user/auth/login/oauth2'
+        : 'http://localhost:3000/api/user/auth/login/oauth2';
   }
 
   protected loadGoogleClientScript(): Promise<void> {
