@@ -1,4 +1,4 @@
-import { Component, ElementRef, Injector, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { ModalService } from '../../core/services/modal/modalService';
@@ -50,7 +50,6 @@ export class ProfileComponent2 implements OnInit {
     private gymTicketService: GymTicketService,
     private imageUploadService: ImageUploadService,
     private route: ActivatedRoute,
-    private injector: Injector,
   ) {}
 
   ngOnInit() {
