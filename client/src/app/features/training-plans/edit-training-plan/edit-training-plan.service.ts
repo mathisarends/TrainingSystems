@@ -13,6 +13,6 @@ export class EditTrainingPlanService {
   }
 
   editTrainingPlan(id: string, formData: TrainingPlanEditViewDto): Observable<BasicConfirmationResponse> {
-    return this.httpService.patch(`/training/plan/edit/plan/${id}`, formData);
+    return this.httpService.patch(`/training/plan/edit/${id}`, formData);
   }
 }

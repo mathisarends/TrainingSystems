@@ -71,7 +71,7 @@ export async function getEmailConfigForTrainingDaySummary(trainingSummaryData: T
 }
 
 // Function to generate the HTML email content
-function generateTrainingSummaryEmail(trainingSummaryData: TrainingSummary) {
+export function generateTrainingSummaryEmail(trainingSummaryData: TrainingSummary) {
   const dateFormatted = formatDate(trainingSummaryData.startTime!);
   const startTimeFormatted = formatTime(trainingSummaryData.startTime!);
   const endTimeFormatted = formatTime(trainingSummaryData.endTime!);
@@ -80,14 +80,14 @@ function generateTrainingSummaryEmail(trainingSummaryData: TrainingSummary) {
     .map(
       exercise => `
       <tr>
-        <td>${exercise.exercise}</td>
-        <td>${exercise.category}</td>
-        <td class="text-center">${exercise.sets}</td>
-        <td class="text-center">${exercise.reps}</td>
-        <td class="text-center">${exercise.weight}</td>
-        <td class="text-center">${exercise.targetRPE}</td>
-        <td class="text-center">${exercise.actualRPE}</td>
-        <td class="text-center">${exercise.estMax ?? ''}</td>
+        <td data-cell="Exercise"><div class="label">Exercise</div>${exercise.exercise}</td>
+        <td data-cell="Category"><div class="label">Category</div>${exercise.category}</td>
+        <td class="text-center" data-cell="Sets"><div class="label">Sets</div>${exercise.sets}</td>
+        <td class="text-center" data-cell="Reps"><div class="label">Reps</div>${exercise.reps}</td>
+        <td class="text-center" data-cell="Weight"><div class="label">Weight</div>${exercise.weight}</td>
+        <td class="text-center" data-cell="Target RPE"><div class="label">Target RPE</div>${exercise.targetRPE}</td>
+        <td class="text-center" data-cell="Actual RPE"><div class="label">Actual RPE</div>${exercise.actualRPE}</td>
+        <td class="text-center" data-cell="Est Max"><div class="label">Est. Max</div>${exercise.estMax ?? ''}</td>
       </tr>
     `
     )
@@ -118,10 +118,10 @@ function generateTrainingSummaryEmail(trainingSummaryData: TrainingSummary) {
               margin-bottom: 0.5rem;
             }
 
-            /* Stile für die Headlines */
+            /* Styles for headlines */
             .context-headline,
             .headline {
-              font-size: 1.75rem;
+              font-size: 1.65rem;
               font-weight: bold;
               text-transform: uppercase;
             }
@@ -212,6 +212,56 @@ function generateTrainingSummaryEmail(trainingSummaryData: TrainingSummary) {
               color: #333;
               font-size: 0.85rem;
               text-decoration: none;
+            }
+
+                        
+            .summary-table .label {
+                display: none;
+              }
+
+            /* Responsive table with grid layout for smaller screens */
+            @media (max-width: 768px) {
+              .summary-table {
+                display: block;
+                border: none;
+              }
+
+              .summary-table thead {
+                display: none;
+              }
+
+              .summary-table tbody {
+                display: grid;
+                grid-template-columns: 1fr;
+                grid-row-gap: 15px;
+              }
+
+              .summary-table tr {
+                display: grid;
+                grid-template-columns: 1fr;
+                background-color: #fefefe;
+                padding: 10px;
+                border: 1px solid #e0e0e0;
+                border-radius: 5px;
+              }
+
+              .summary-table .label {
+                content: attr(data-cell);
+                font-weight: bold;
+                text-transform: uppercase;
+                color: #666;
+                display: block;
+                margin-bottom: 5px;
+              }
+
+              .text-center {
+                text-align: left !important;
+              }
+
+              .summary-table td {
+                padding: 10px;
+                text-align: left;
+              }
             }
         </style>
       </head>

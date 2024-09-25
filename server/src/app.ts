@@ -7,6 +7,8 @@ import startDB from './db.js';
 import cors from 'cors';
 
 // Routers
+import { generateTrainingSummaryEmail } from './controller/training/training-summary/training-day-summary.js';
+import { TrainingSummary } from './controller/training/training-summary/training-summary.js';
 import { errorHandler } from './middleware/error-handler.js';
 import exerciseRouter from './routes/exerciseRoutes.js';
 import friendShipRouter from './routes/friendshipRoutes.js';
@@ -38,6 +40,54 @@ async function configureApp(app: Express) {
   app.use('/api/training', trainingRouter);
   app.use('/api/exercise', exerciseRouter);
   app.use('/api/friendship', friendShipRouter);
+
+  app.get('/', (req, res) => {
+    const trainingSummaryData: TrainingSummary = {
+      id: '123123',
+      trainingDayWeekNumber: 2,
+      trainingDayDayNumber: 3,
+      trainingPlanTitle: 'Strength Training',
+      startTime: new Date(),
+      endTime: new Date(),
+      durationInMinutes: 75,
+      trainingDayTonnage: 1200,
+      exercises: [
+        {
+          exercise: 'Bench Press',
+          category: 'Strength',
+          sets: 4,
+          reps: 8,
+          weight: '80',
+          targetRPE: '7',
+          actualRPE: '8',
+          estMax: 95
+        },
+        {
+          exercise: 'Squat',
+          category: 'Strength',
+          sets: 5,
+          reps: 5,
+          weight: '80',
+          targetRPE: '7',
+          actualRPE: '8',
+          estMax: 150
+        },
+        {
+          exercise: 'Deadlift',
+          category: 'Strength',
+          sets: 3,
+          reps: 5,
+          weight: '80',
+          targetRPE: '7',
+          actualRPE: '8',
+          estMax: 160
+        }
+      ]
+    };
+
+    const htmlContent = generateTrainingSummaryEmail(trainingSummaryData);
+    res.send(htmlContent);
+  });
 
   app.use(errorHandler);
 }
