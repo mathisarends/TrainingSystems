@@ -1,4 +1,5 @@
 import express from 'express';
+
 import activityRouter from './activityRouter.js';
 import authRouter from './authRoutes.js';
 import gymTicketRouter from './gymTicketRouter.js';

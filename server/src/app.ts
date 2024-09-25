@@ -10,7 +10,7 @@ import cors from 'cors';
 import { errorHandler } from './middleware/error-handler.js';
 import exerciseRouter from './routes/exerciseRoutes.js';
 import friendShipRouter from './routes/friendshipRoutes.js';
-import trainingRouter from './routes/trainingRoutes.js';
+import trainingRouter from './routes/training/trainingRoutes.js';
 import userRouter from './routes/user/userRoutes.js';
 
 dotenv.config();

@@ -1,7 +1,7 @@
 import express from 'express';
 import * as exerciseController from '../controller/exerciseController.js';
-import { authService } from '../service/authService.js';
 import { asyncHandler } from '../middleware/error-handler.js';
+import { authService } from '../service/authService.js';
 
 const router = express.Router();
 
