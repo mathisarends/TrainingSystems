@@ -20,7 +20,7 @@ import { TrainingDAyFinishedNotification } from '../../models/collections/user/t
 import { TrainingPlanEditViewDto } from '../../models/dto/training-plan-edit-view-dto.js';
 
 import transporter from '../../config/mailerConfig.js';
-import { getEmailConfigForTrainingDaySummary } from './training-day-summary.js';
+import { getEmailConfigForTrainingDaySummary } from './training-summary/training-day-summary.js';
 
 /**
  * Retrieves the list of training plans for the user, summarizing them into card views.
