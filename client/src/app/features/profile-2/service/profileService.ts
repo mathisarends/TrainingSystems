@@ -26,7 +26,7 @@ export class ProfileService {
    * Uploads a new profile picture for the user.
    */
   uploadProfilePicture(profilePicture: string): Observable<BasicConfirmationResponse> {
-    return this.httpClientService.post<any>('/user/update-profile-picture', {
+    return this.httpClientService.post<any>('/user/profile/update-profile-picture', {
       profilePicture: profilePicture,
     });
   }
@@ -35,6 +35,6 @@ export class ProfileService {
    * Deletes the user's account from the system.
    */
   deleteAccount(): Observable<BasicConfirmationResponse> {
-    return this.httpClientService.delete<any>('/user/delete-account');
+    return this.httpClientService.delete<any>('/user/profile/delete-account');
   }
 }
