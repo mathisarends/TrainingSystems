@@ -4,8 +4,12 @@ import DailyRotateFile from 'winston-daily-rotate-file'; // Importiere DailyRota
 const { combine, timestamp, printf } = format;
 
 // Definiere das Log-Format
-const logFormat = printf(({ level, message, timestamp }) => {
-  return `${timestamp} [${level.toUpperCase()}]: ${message}`;
+const logFormat = printf(({ level, message, timestamp, ...meta }) => {
+  let metaInfo = '';
+  if (meta) {
+    metaInfo = JSON.stringify(meta);
+  }
+  return `${timestamp} [${level.toUpperCase()}]: ${message} ${metaInfo}`;
 });
 
 const fileRotateTransport = new DailyRotateFile({

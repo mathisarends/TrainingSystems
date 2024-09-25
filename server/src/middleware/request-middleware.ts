@@ -5,6 +5,7 @@ import logger from '../config/logger.js';
 const requestLogger = (req: Request, res: Response, next: NextFunction) => {
   const startTime = Date.now();
 
+  // Event-Listener, der ausgeführt wird, wenn die Antwort fertig ist
   res.on('finish', () => {
     const duration = Date.now() - startTime;
 
@@ -13,6 +14,7 @@ const requestLogger = (req: Request, res: Response, next: NextFunction) => {
       url: req.originalUrl,
       status: res.statusCode,
       responseTime: `${duration}ms`,
+      queryParams: req.query,
       userAgent: req.headers['user-agent'],
       ip: req.ip
     });
