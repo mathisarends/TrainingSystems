@@ -63,11 +63,14 @@ export async function getEmailConfigForTrainingDaySummary(
   trainingData: TrainingDAyFinishedNotification,
   userEmail: string
 ) {
+  // Rendere den Tonnage-Chart
   const tonnageChartBuffer = await renderTonnageChart(trainingData);
 
+  // Speicher den Chart als Bild
   const tonnageChartPath = path.join(__dirname, 'tonnage-chart.png');
   fs.writeFileSync(tonnageChartPath, tonnageChartBuffer);
 
+  // E-Mail-Inhalt generieren
   return {
     from: 'trainingsystems@no-reply.com',
     to: userEmail,
