@@ -329,6 +329,11 @@ function getIndexOfDayPerYearFromDate(date: Date): number {
   return Math.floor((dateObj.getTime() - startOfYear.getTime()) / (1000 * 60 * 60 * 24));
 }
 
+export async function getProfilePicture(req: Request, res: Response): Promise<Response> {
+  const user = await userService.getUser(req, res);
+  return res.status(200).json(user.pictureUrl);
+}
+
 export async function updateProfilePicture(req: Request, res: Response): Promise<Response> {
   const userDAO = req.app.locals.userDAO;
   const user = await userService.getUser(req, res);
@@ -380,4 +385,9 @@ export async function deleteAccount(req: Request, res: Response): Promise<Respon
   await userDAO.delete(user.id);
 
   return res.status(200).json({ message: 'Account gelöscht' });
+}
+
+export async function getAuthState(req: Request, res: Response): Promise<Response> {
+  await userService.getUser(req, res);
+  return res.status(200).json({ message: 'auth verified' });
 }
