@@ -6,6 +6,7 @@ import * as userService from '../service/userService.js';
 import bcrypt from 'bcryptjs';
 import transporter from '../config/mailerConfig.js';
 import { LoginDto } from '../interfaces/loginDto.js';
+import { RegisterUserDto } from '../interfaces/registerUserDto.js';
 
 /**
  * Verifies the user's authentication state by checking the token.
@@ -22,10 +23,10 @@ export async function getAuthState(req: Request, res: Response): Promise<Respons
 export async function login(req: Request, res: Response) {
   const userDAO = userService.getUserGenericDAO(req);
 
-  const loginData: LoginDto = req.body;
+  const { email, password }: LoginDto = req.body;
 
-  const user = await userDAO.findOne({ email: loginData.email });
-  if (!user || !(await bcrypt.compare(loginData.password, user.password!))) {
+  const user = await userDAO.findOne({ email: email });
+  if (!user || !(await bcrypt.compare(password, user.password!))) {
     return res.status(401).json({ error: 'Keine gültige Email und Passwort Kombination' });
   }
 
@@ -70,7 +71,7 @@ export function logOut(req: Request, res: Response): void {
  */
 export async function register(req: Request, res: Response): Promise<Response> {
   const userDAO = userService.getUserGenericDAO(req);
-  const { username, email, password, confirmPassword } = req.body;
+  const { username, email, password, confirmPassword }: RegisterUserDto = req.body;
 
   if (password !== confirmPassword) {
     return res.status(400).json({ error: 'Passwörter stimmen nicht überein! ' });
