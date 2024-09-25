@@ -142,7 +142,9 @@ export class TrainingSessionManager {
         ...trainingDayNotification
       };
 
-      await sendMailForTrainingDaySummary(trainingDaySummary, user.email);
+      if (user.isTrainingSummaryEmailEnabled !== false) {
+        await sendMailForTrainingDaySummary(trainingDaySummary, user.email);
+      }
     }
 
     this.removeTracker(trainingDayId);

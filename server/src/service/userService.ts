@@ -1,22 +1,22 @@
-import { MongoGenericDAO } from '../models/dao/mongo-generic.dao.js';
-import { User } from '../models/collections/user/user.js';
 import bcrypt from 'bcryptjs';
-import { OAuth2Client } from 'google-auth-library';
-import {
-  placeHolderExercises,
-  squatExercises,
-  benchExercises,
-  deadliftExercises,
-  overheadpressExercises,
-  chestExercises,
-  backExercises,
-  shoulderExercises,
-  tricepExercises,
-  bicepsExercises,
-  legExercises
-} from '../ressources/exercises/exerciseCatalog.js';
 import { Request, Response } from 'express';
+import { OAuth2Client } from 'google-auth-library';
+import { User } from '../models/collections/user/user.js';
+import { MongoGenericDAO } from '../models/dao/mongo-generic.dao.js';
 import { ExerciseCategoryType } from '../models/training/exercise-category-type.js';
+import {
+  backExercises,
+  benchExercises,
+  bicepsExercises,
+  chestExercises,
+  deadliftExercises,
+  legExercises,
+  overheadpressExercises,
+  placeHolderExercises,
+  shoulderExercises,
+  squatExercises,
+  tricepExercises
+} from '../ressources/exercises/exerciseCatalog.js';
 import { encrypt } from '../utils/cryption.js';
 import { NewUserParams } from './new-user-params.js';
 
@@ -98,6 +98,7 @@ async function createNewUser(userDetails: NewUserParams): Promise<Omit<User, 'id
     trainingPlans: [],
     trainingDayNotifications: [],
     gymtTicket: encrypt('noGymTicketAvailable'),
+    isTrainingSummaryEmailEnabled: true,
     exercises: {
       [ExerciseCategoryType.PLACEHOLDER]: placeHolderExercises,
       [ExerciseCategoryType.SQUAT]: squatExercises,

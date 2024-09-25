@@ -1,9 +1,9 @@
 /* Autor: Mathis Kristoffer Arends */
-import { Entity } from '../entity.js';
-import { UserExercise } from './user-exercise.js';
-import { TrainingPlan } from '../../training/trainingPlan.js';
 import { ExerciseCategoryType } from '../../training/exercise-category-type.js';
+import { TrainingPlan } from '../../training/trainingPlan.js';
+import { Entity } from '../entity.js';
 import { TrainingDAyFinishedNotification } from './training-fninished-notifcation.js';
+import { UserExercise } from './user-exercise.js';
 
 /**
  * Represents a user with authentication details.
@@ -58,6 +58,8 @@ export interface User extends Entity {
    * representing the summary of the user's previous training day.
    */
   trainingDayNotifications: TrainingDAyFinishedNotification[];
+
+  isTrainingSummaryEmailEnabled: boolean;
 
   passwordResetToken?: string;
 }
