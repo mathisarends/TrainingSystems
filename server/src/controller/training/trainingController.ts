@@ -16,11 +16,11 @@ import {
 import { getUser, getUserGenericDAO } from '../../service/userService.js';
 
 import _ from 'lodash';
-import { TrainingDAyFinishedNotification } from '../../models/collections/user/training-fninished-notifcation.js';
 import { TrainingPlanEditViewDto } from '../../models/dto/training-plan-edit-view-dto.js';
 
 import transporter from '../../config/mailerConfig.js';
 import { getEmailConfigForTrainingDaySummary } from './training-summary/training-day-summary.js';
+import { TrainingSummary } from './training-summary/training-summary.js';
 
 /**
  * Retrieves the list of training plans for the user, summarizing them into card views.
@@ -167,8 +167,15 @@ export async function updatePlan(req: Request, res: Response): Promise<void> {
     handleWeekDifference(trainingPlan, difference);
   }
 
-  const trainingData: TrainingDAyFinishedNotification = {
+  const latestTrainingPlan = user.trainingPlans.sort((a, b) => {
+    return new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime();
+  })[0];
+
+  const trainingData: TrainingSummary = {
     id: '1234',
+    trainingPlanTitle: latestTrainingPlan.title,
+    trainingDayDayNumber: 3,
+    trainingDayWeekNumber: 4,
     endTime: new Date(),
     startTime: new Date(new Date().getTime() - 90 * 60000),
     durationInMinutes: 90,

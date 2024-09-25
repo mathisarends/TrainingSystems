@@ -10,6 +10,7 @@ dotenv.config();
 
 import { fileURLToPath } from 'url';
 import { ChartColors } from './chart-colors.js';
+import { TrainingSummary } from './training-summary';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -43,11 +44,8 @@ async function renderTonnageChart(trainingData: TrainingDAyFinishedNotification)
   return await chartJSNodeCanvas.renderToBuffer(config);
 }
 
-export async function getEmailConfigForTrainingDaySummary(
-  trainingData: TrainingDAyFinishedNotification,
-  userEmail: string
-) {
-  const tonnageChartBuffer = await renderTonnageChart(trainingData);
+export async function getEmailConfigForTrainingDaySummary(trainingSummaryData: TrainingSummary, userEmail: string) {
+  const tonnageChartBuffer = await renderTonnageChart(trainingSummaryData);
 
   const tonnageChartPath = path.join(__dirname, 'tonnage-chart.png');
   fs.writeFileSync(tonnageChartPath, tonnageChartBuffer);
@@ -56,7 +54,7 @@ export async function getEmailConfigForTrainingDaySummary(
     from: 'trainingsystems@no-reply.com',
     to: userEmail,
     subject: 'Training Summary',
-    html: generateTrainingSummaryEmail(trainingData),
+    html: generateTrainingSummaryEmail(trainingSummaryData),
     attachments: [
       {
         filename: 'tonnage-chart.png',
@@ -68,12 +66,12 @@ export async function getEmailConfigForTrainingDaySummary(
 }
 
 // Function to generate the HTML email content
-function generateTrainingSummaryEmail(trainingData: TrainingDAyFinishedNotification) {
-  const dateFormatted = formatDate(trainingData.startTime!);
-  const startTimeFormatted = formatTime(trainingData.startTime!);
-  const endTimeFormatted = formatTime(trainingData.endTime!);
+function generateTrainingSummaryEmail(trainingSummaryData: TrainingSummary) {
+  const dateFormatted = formatDate(trainingSummaryData.startTime!);
+  const startTimeFormatted = formatTime(trainingSummaryData.startTime!);
+  const endTimeFormatted = formatTime(trainingSummaryData.endTime!);
 
-  const exerciseRows = trainingData.exercises
+  const exerciseRows = trainingSummaryData.exercises
     .map(
       exercise => `
       <tr>
@@ -215,12 +213,12 @@ function generateTrainingSummaryEmail(trainingData: TrainingDAyFinishedNotificat
       <body>
         <div class="container">
           <div class="headline-container">
-            <span class="context-headline">W2D3</span>
-            <span class="headline">Trainingsplan</span>
+            <span class="context-headline">W${trainingSummaryData.trainingDayWeekNumber}D${trainingSummaryData.trainingDayDayNumber}</span>
+            <span class="headline">${trainingSummaryData.trainingPlanTitle}</span>
           </div>
           <div class="time-data-container">
             <p>${dateFormatted}</p>
-            <p>Zeitraum: ${startTimeFormatted} - ${endTimeFormatted} (${trainingData.durationInMinutes} Minuten)</p>
+            <p>Zeitraum: ${startTimeFormatted} - ${endTimeFormatted} (${trainingSummaryData.durationInMinutes} Minuten)</p>
           </div>
           <table class="summary-table">
             <thead>
@@ -239,7 +237,7 @@ function generateTrainingSummaryEmail(trainingData: TrainingDAyFinishedNotificat
               ${exerciseRows}
             </tbody>
           </table>
-          <p class="total-tonnage">Total Tonnage: <strong>${trainingData.trainingDayTonnage.toLocaleString()}</strong> kg</p>
+          <p class="total-tonnage">Total Tonnage: <strong>${trainingSummaryData.trainingDayTonnage.toLocaleString()}</strong> kg</p>
           <img src="cid:tonnageChart" alt="Tonnage Chart" class="tonnage-chart" />
           <div class="footer">
             <a class="neutral-link" href="https://trainingsystemsre.onrender.com/unsubscribe">Unsubscribe from Email Notifications</a>
