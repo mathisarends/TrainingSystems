@@ -22,6 +22,10 @@ export class SettingsComponent implements OnInit, OnConfirm {
     private toastService: ToastService,
   ) {}
 
+  /**
+   * Initializes the component by fetching user permissions from the backend
+   * and updating the checkbox items accordingly.
+   */
   ngOnInit() {
     this.settingsService.getPermissions().subscribe((response) => {
       this.checkboxItems.set([
@@ -33,6 +37,9 @@ export class SettingsComponent implements OnInit, OnConfirm {
     });
   }
 
+  /**
+   * Handles the change event of a checkbox item and updates the checkboxItems signal.
+   */
   protected onCheckboxValueChange(item: CheckboxItem) {
     const updatedItems = this.checkboxItems().map((checkboxItem) =>
       checkboxItem.label === item.label ? { ...checkboxItem, isChecked: item.isChecked } : checkboxItem,
@@ -40,6 +47,9 @@ export class SettingsComponent implements OnInit, OnConfirm {
     this.checkboxItems.set(updatedItems);
   }
 
+  /**
+   * Saves the updated user permissions to the backend when the modal is confirmed.
+   */
   onConfirm(): void {
     const updatedPermissions: PermissionDto = {
       isTrainingSummaryEmailEnabled: this.getTrainingSummaryPermissionItem().isChecked,
@@ -50,6 +60,9 @@ export class SettingsComponent implements OnInit, OnConfirm {
     });
   }
 
+  /**
+   * Retrieves the CheckboxItem corresponding to 'Trainingszusammenfassungen (Email)'.
+   */
   private getTrainingSummaryPermissionItem(): CheckboxItem {
     return this.checkboxItems().find((item) => item.label === 'Trainingszusammenfassungen (Email)')!;
   }
