@@ -1,17 +1,17 @@
-import express, { Express } from 'express';
-import http from 'http';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
+import express, { Express } from 'express';
+import http from 'http';
 import startDB from './db.js';
 
 import cors from 'cors';
 
 // Routers
-import userRouter from './routes/userRoutes.js';
-import trainingRouter from './routes/trainingRoutes.js';
+import { errorHandler } from './middleware/error-handler.js';
 import exerciseRouter from './routes/exerciseRoutes.js';
 import friendShipRouter from './routes/friendshipRoutes.js';
-import { errorHandler } from './middleware/error-handler.js';
+import trainingRouter from './routes/trainingRoutes.js';
+import userRouter from './routes/userRoutes.js';
 
 dotenv.config();
 
@@ -34,10 +34,10 @@ async function configureApp(app: Express) {
     })
   );
 
-  app.use('/user', userRouter);
-  app.use('/training', trainingRouter);
-  app.use('/exercise', exerciseRouter);
-  app.use('/friendship', friendShipRouter);
+  app.use('/api/user', userRouter);
+  app.use('/api/training', trainingRouter);
+  app.use('/api/exercise', exerciseRouter);
+  app.use('/api/friendship', friendShipRouter);
 
   app.use(errorHandler);
 }
