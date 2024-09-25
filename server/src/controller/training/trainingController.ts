@@ -170,6 +170,7 @@ export async function updatePlan(req: Request, res: Response): Promise<void> {
   const trainingData: TrainingDAyFinishedNotification = {
     id: '1234',
     endTime: new Date(),
+    startTime: new Date(new Date().getTime() - 90 * 60000),
     durationInMinutes: 90,
     trainingDayTonnage: 24000,
     exercises: [
