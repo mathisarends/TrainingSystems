@@ -7,7 +7,6 @@ import dotenv from 'dotenv';
 import transporter from '../config/mailerConfig.js';
 import { getTonnagePerTrainingDay } from '../service/trainingService.js';
 import { createResetPasswordEmail } from '../service/userService.js';
-import { decrypt, encrypt } from '../utils/cryption.js';
 
 import { format } from 'date-fns';
 import { User } from '../models/collections/user/user.js';
@@ -343,30 +342,6 @@ export async function updateProfilePicture(req: Request, res: Response): Promise
   await userDAO.update(user);
 
   return res.status(200).json({ message: 'Dein Profilbild wurde erfolgreich geupdated' });
-}
-
-export async function uploadGymTicket(req: Request, res: Response): Promise<Response> {
-  const userDAO = userService.getUserGenericDAO(req);
-  const user = await userService.getUser(req, res);
-  const gymTicket = req.body.gymTicket;
-  const encryptedGymTicket = encrypt(gymTicket);
-
-  if (!gymTicket) {
-    return res.status(404).json({ error: 'Gym Ticket was not found in request body' });
-  }
-
-  user.gymtTicket = encryptedGymTicket;
-  await userDAO.update(user);
-
-  return res.status(200).json({ message: 'Your Gym Ticket was succesfully updated' });
-}
-
-export async function getGymTicket(req: Request, res: Response): Promise<Response> {
-  const user = await userService.getUser(req, res);
-
-  const decryptedGymTicket = decrypt(user.gymtTicket);
-
-  return res.status(200).json(decryptedGymTicket);
 }
 
 export function signOut(req: Request, res: Response): void {

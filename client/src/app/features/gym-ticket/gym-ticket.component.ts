@@ -5,6 +5,7 @@ import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.com
 import { ToastService } from '../../shared/components/toast/toast.service';
 import { ImageUploadService } from '../../shared/service/image-upload.service';
 import { GymTicketService } from './gym-ticket.service';
+import { GymTicketDto } from './model/gym-ticket-dto';
 
 @Component({
   selector: 'app-ticket',
@@ -29,7 +30,11 @@ export class GymTicketComponent extends AbstractImageCropperComponent implements
   }
 
   uploadImage(image: string) {
-    this.gymTicketService.uploadGymTicket(image).subscribe((response) => {
+    const gymTicketDto: GymTicketDto = {
+      gymTicket: image,
+    };
+
+    this.gymTicketService.uploadGymTicket(gymTicketDto).subscribe((response) => {
       this.toastService.success(response.message);
     });
   }
