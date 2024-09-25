@@ -24,7 +24,11 @@ export class DraggableDirective {
       return;
     }
 
-    if ((event.target as HTMLElement).closest('.btn-close') || (event.target as HTMLElement).closest('.modal-footer')) {
+    if (
+      (event.target as HTMLElement).closest('.btn-close') ||
+      (event.target as HTMLElement).closest('.modal-footer') ||
+      (event.target as HTMLElement).closest('.modal-body')
+    ) {
       return;
     }
 

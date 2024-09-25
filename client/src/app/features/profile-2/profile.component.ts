@@ -14,6 +14,7 @@ import { GymTicketService } from '../gym-ticket/gym-ticket.service';
 import { HeaderService } from '../header/header.service';
 import { ChangeProfilePictureConfirmationComponent } from './change-profile-picture-confirmation/change-profile-picture-confirmation.component';
 import { ProfileService } from './service/profileService';
+import { SettingsComponent } from './settings/settings.component';
 
 @Component({
   standalone: true,
@@ -72,6 +73,8 @@ export class ProfileComponent2 implements OnInit {
       });
     } else if (listItem.label === 'Account löschen') {
       this.showDeleteAccountDialog();
+    } else if (listItem.label === 'Settings') {
+      this.displaySettingsModal();
     } else {
       this.modalService.openBasicInfoModal({
         title: listItem.label,
@@ -99,6 +102,14 @@ export class ProfileComponent2 implements OnInit {
         oldProfilePicture: currentProfilePicture,
         image: uploadedPictureBase64Str,
       },
+    });
+  }
+
+  private displaySettingsModal() {
+    this.modalService.open({
+      component: SettingsComponent,
+      title: 'Einstellungen',
+      buttonText: 'Speichern',
     });
   }
 

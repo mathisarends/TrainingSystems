@@ -7,7 +7,7 @@ import { IconListItem } from './icon-list-item';
 @Component({
   standalone: true,
   imports: [IconComponent, CommonModule],
-  selector: 'app-profile-list-item',
+  selector: 'app-icon-list-item',
   templateUrl: './icon-list-item.component.html',
   styleUrl: './icon-list-item.component.scss',
 })
