@@ -7,6 +7,24 @@ import * as trainingDayController from '../../controller/training/trainingDayCon
 
 const trainingPlanRouter = express.Router();
 
+// Auf die Bearbeitung
+trainingPlanRouter.delete(
+  '/delete/:planId',
+  authService.authenticationMiddleware,
+  asyncHandler(trainingController.deletePlan)
+);
+trainingPlanRouter.get(
+  '/edit/:id',
+  authService.authenticationMiddleware,
+  asyncHandler(trainingController.getPlanForEdit)
+);
+trainingPlanRouter.patch(
+  '/edit/:id',
+  authService.authenticationMiddleware,
+  asyncHandler(trainingController.updatePlan)
+);
+
+// Auf die Trainingsansicht bezogen
 trainingPlanRouter.get(
   '/:id/:week/:day',
   authService.authenticationMiddleware,

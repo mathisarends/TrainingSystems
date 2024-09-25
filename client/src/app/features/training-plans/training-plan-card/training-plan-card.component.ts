@@ -108,7 +108,7 @@ export class TrainingPlanCardComponent {
   private async handleDelete(id: string): Promise<void> {
     if (id) {
       try {
-        await firstValueFrom(this.httpService.delete(`/training/delete/${id}`));
+        await firstValueFrom(this.httpService.delete(`/training/plan/delete/${id}`));
 
         this.modalService.close();
         this.toastService.success('Plan gelöscht');

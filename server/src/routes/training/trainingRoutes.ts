@@ -14,8 +14,5 @@ router.use('/plan', trainingPlanRouter);
 router.get('/plans', authService.authenticationMiddleware, asyncHandler(trainingController.getPlans));
 router.post('/reorder', authService.authenticationMiddleware, asyncHandler(trainingController.updateTrainingPlanOrder));
 router.post('/create', authService.authenticationMiddleware, asyncHandler(trainingController.createPlan));
-router.delete('/delete/:planId', authService.authenticationMiddleware, asyncHandler(trainingController.deletePlan));
-router.get('/edit/:id', authService.authenticationMiddleware, asyncHandler(trainingController.getPlanForEdit));
-router.patch('/edit/:id', authService.authenticationMiddleware, asyncHandler(trainingController.updatePlan));
 
 export default router;
