@@ -1,29 +1,44 @@
 import { Request, Response } from 'express';
 import { authService } from '../service/authService.js';
+import * as emailService from '../service/emailService.js';
 import * as userService from '../service/userService.js';
 
 import bcrypt from 'bcryptjs';
 import transporter from '../config/mailerConfig.js';
+import { LoginDto } from '../interfaces/loginDto.js';
 
-export async function register(req: Request, res: Response): Promise<void> {
-  const userDAO = req.app.locals.userDAO;
-  const user = await userService.registerUser(userDAO, req.body);
-  authService.createAndSetToken({ id: user.id }, res);
-  res.status(200).json({ message: 'Dein Account wurde erfolgreich erstellt' });
+/**
+ * Verifies the user's authentication state by checking the token.
+ */
+export async function getAuthState(req: Request, res: Response): Promise<Response> {
+  await userService.getUser(req, res);
+  return res.status(200).json({ message: 'auth verified' });
 }
 
+/**
+ * Logs in a user using email and password.
+ * If the login is successful, a token is created and set in the response.
+ */
 export async function login(req: Request, res: Response) {
-  const userDAO = req.app.locals.userDAO;
-  const user = await userService.loginUser(userDAO, req.body.email, req.body.password);
-  if (!user) {
-    authService.removeToken(res);
+  const userDAO = userService.getUserGenericDAO(req);
+
+  const loginData: LoginDto = req.body;
+
+  const user = await userDAO.findOne({ email: loginData.email });
+  if (!user || !(await bcrypt.compare(loginData.password, user.password!))) {
     return res.status(401).json({ error: 'Keine gültige Email und Passwort Kombination' });
   }
+
   authService.createAndSetToken({ id: user.id }, res);
 
   res.status(200).json({ message: 'Erfolgreich eingeloggt' });
 }
 
+/**
+ * Logs in a user using OAuth2 credentials.
+ * After successful authentication, a token is created and set in the response cookies.
+ * This token is used by the frontend to maintain the user's authentication state.
+ */
 export async function loginOAuth2(req: Request, res: Response): Promise<void> {
   const userDAO = req.app.locals.userDAO;
   const user = await userService.loginOAuth2User(userDAO, req.body.credential);
@@ -41,14 +56,41 @@ export async function loginOAuth2(req: Request, res: Response): Promise<void> {
   res.redirect(redirectUrl);
 }
 
+/**
+ * Sends a password reset email to the user.
+ * Generates a token and includes it in the password reset URL.
+ */
 export function logOut(req: Request, res: Response): void {
   authService.removeToken(res);
   res.status(200).json({ message: 'Token erfolgreich entfernt' });
 }
 
-export async function getAuthState(req: Request, res: Response): Promise<Response> {
-  await userService.getUser(req, res);
-  return res.status(200).json({ message: 'auth verified' });
+/**
+ * Registers a new user and creates a token after successful registration.
+ */
+export async function register(req: Request, res: Response): Promise<Response> {
+  const userDAO = userService.getUserGenericDAO(req);
+  const { username, email, password, confirmPassword } = req.body;
+
+  if (password !== confirmPassword) {
+    return res.status(400).json({ error: 'Passwörter stimmen nicht überein! ' });
+  }
+
+  const existingUser = await userDAO.findOne({ email });
+
+  if (existingUser) {
+    return res.status(409).json({ error: 'Email bereits vergeben' });
+  }
+
+  if (username.length < 3) {
+    return res.status(400).json({ error: 'Der Name muss mindestens 3 Zeichen haben' });
+  }
+
+  const userObj = await userService.createNewUser({ username, email, password });
+  const user = await userDAO.create(userObj);
+
+  authService.createAndSetToken({ id: user.id }, res);
+  return res.status(200).json({ message: 'Account erfolgreich erstellt' });
 }
 
 /**
@@ -74,7 +116,7 @@ export async function sendPasswordResetEmail(req: Request, res: Response) {
   const baseURL = process.env.NODE_ENV === 'development' ? process.env.DEV_BASE_URL : process.env.PROD_BASE_URL;
 
   const resetUrl = `${baseURL}/user/reset/password/${token}`;
-  const mailOptions = userService.createResetPasswordEmail(user, email, resetUrl);
+  const mailOptions = emailService.createResetPasswordEmail(user, email, resetUrl);
 
   await transporter.sendMail(mailOptions);
 
@@ -85,23 +127,13 @@ export async function sendPasswordResetEmail(req: Request, res: Response) {
 }
 
 /**
- * Authenticates the password reset page using the token.
+ * Authenticates the password reset page using a token.
+ * Verifies if the token is valid and if the user has requested a password reset.
  */
 export async function authenticatePasswordResetPage(req: Request, res: Response): Promise<Response> {
   const token = req.params.token;
 
-  try {
-    res.locals.user = authService.verifyToken(token);
-  } catch (error) {
-    const err = error as Error;
-    if (err.name === 'TokenExpiredError') {
-      return res.status(400).json({ error: 'The token has expired' });
-    } else if (err.name === 'JsonWebTokenError') {
-      return res.status(400).json({ error: 'Invalid token' });
-    } else {
-      return res.status(500).json({ error: 'An internal error occurred' });
-    }
-  }
+  res.locals.user = authService.verifyToken(token);
 
   const user = await userService.getUser(req, res);
 
@@ -113,7 +145,8 @@ export async function authenticatePasswordResetPage(req: Request, res: Response)
 }
 
 /**
- * Resets the user's password using the token.
+ * Resets the user's password using a valid reset token.
+ * Validates the provided password and updates it in the system.
  */
 export async function resetPassword(req: Request, res: Response): Promise<Response> {
   const token = req.params.token;
