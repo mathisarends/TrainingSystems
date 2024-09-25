@@ -289,16 +289,12 @@ export async function deleteTrainingDayNotification(req: Request, res: Response)
  * Retrieves a specific training day by its ID along with its plan, week, and day indices.
  */
 export async function getTrainingDayById(req: Request, res: Response): Promise<Response> {
-  const trainingDayId = req.params.id; // Get the training day ID from the request parameters
+  const trainingDayId = req.params.id;
 
-  const user = await userService.getUser(req, res); // Retrieve the user object
-
-  if (!user) {
-    return res.status(404).json({ error: 'User not found.' });
-  }
+  const user = await userService.getUser(req, res);
 
   for (const trainingPlan of user.trainingPlans) {
-    const trainingPlanId = trainingPlan.id; // Store the current training plan ID
+    const trainingPlanId = trainingPlan.id;
 
     for (let weekIndex = 0; weekIndex < trainingPlan.trainingWeeks.length; weekIndex++) {
       const trainingWeek = trainingPlan.trainingWeeks[weekIndex];

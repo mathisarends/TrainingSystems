@@ -1,7 +1,5 @@
 import express from 'express';
-import * as userController from '../../controller/userController.js';
-import { asyncHandler } from '../../middleware/error-handler.js';
-import { authService } from '../../service/authService.js';
+import activityRouter from './activityRouter.js';
 import authRouter from './authRoutes.js';
 import gymTicketRouter from './gymTicketRouter.js';
 import permissionRouter from './permissionRouter.js';
@@ -13,35 +11,6 @@ userRouter.use('/gym-ticket', gymTicketRouter);
 userRouter.use('/profile', profileRouter);
 userRouter.use('/auth', authRouter);
 userRouter.use('/permissions', permissionRouter);
-
-userRouter.get(
-  '/activity-calendar',
-  authService.authenticationMiddleware,
-  asyncHandler(userController.getActivityCalendar)
-);
-
-userRouter.get(
-  '/recent-training-durations',
-  authService.authenticationMiddleware,
-  asyncHandler(userController.getRecentTrainingDurations)
-);
-
-userRouter.get(
-  '/training-notifications',
-  authService.authenticationMiddleware,
-  asyncHandler(userController.getTrainingDayNotifications)
-);
-
-userRouter.delete(
-  '/training-notification/:id',
-  authService.authenticationMiddleware,
-  asyncHandler(userController.deleteTrainingDayNotification)
-);
-
-userRouter.get(
-  '/training-day/:id',
-  authService.authenticationMiddleware,
-  asyncHandler(userController.getTrainingDayById)
-);
+userRouter.use('/activity', activityRouter);
 
 export default userRouter;

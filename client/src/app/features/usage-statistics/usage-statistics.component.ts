@@ -49,10 +49,10 @@ export class UsageStatisticsComponent implements OnInit {
       title: 'Usage',
     });
 
-    this.activityCalendarData$ = this.httpClient.get<ActivityCalendarData>('/user/activity-calendar');
+    this.activityCalendarData$ = this.httpClient.get<ActivityCalendarData>('/user/activity/activity-calendar');
 
     this.recentTrainingDurations$ = this.httpClient
-      .get<RecentTrainingDurationsData[]>('/user/recent-training-durations')
+      .get<RecentTrainingDurationsData[]>('/user/activity/recent-training-durations')
       .pipe(
         map((trainingDurations: RecentTrainingDurationsData[]) => {
           // Extrahiere die Daten und Labels
