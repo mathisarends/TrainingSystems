@@ -7,27 +7,6 @@ import { getTonnagePerTrainingDay } from '../service/trainingService.js';
 import { format } from 'date-fns';
 dotenv.config();
 
-export async function getPermisisons(req: Request, res: Response): Promise<Response> {
-  const user = await userService.getUser(req, res);
-
-  const permissions = {
-    isTrainingSummaryEmailEnabled: user.isTrainingSummaryEmailEnabled ?? true
-  };
-
-  return res.status(200).json(permissions);
-}
-
-export async function updatePermissions(req: Request, res: Response): Promise<Response> {
-  const user = await userService.getUser(req, res);
-  const userDAO = userService.getUserGenericDAO(req);
-
-  user.isTrainingSummaryEmailEnabled = req.body.isTrainingSummaryEmailEnabled;
-
-  await userDAO.update(user);
-
-  return res.status(200).json({ message: 'Einstellungen geupdated' });
-}
-
 /**
  * Retrieves the activity calendar for a user, calculating the tonnage (total weight lifted)
  * for each training day and returning a map of dates to tonnages.
