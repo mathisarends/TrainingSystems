@@ -1,5 +1,5 @@
 import express from 'express';
-import * as userController from '../../controller/userController.js';
+import * as activityController from '../../controller/activityController.js';
 import { asyncHandler } from '../../middleware/error-handler.js';
 import { authService } from '../../service/authService.js';
 
@@ -8,32 +8,32 @@ const activityRouter = express.Router();
 activityRouter.get(
   '/activity-calendar',
   authService.authenticationMiddleware,
-  asyncHandler(userController.getActivityCalendar)
+  asyncHandler(activityController.getActivityCalendar)
 );
 
 activityRouter.get(
   '/recent-training-durations',
   authService.authenticationMiddleware,
-  asyncHandler(userController.getRecentTrainingDurations)
+  asyncHandler(activityController.getRecentTrainingDurations)
 );
 
 activityRouter.get(
   '/training-notifications',
   authService.authenticationMiddleware,
-  asyncHandler(userController.getTrainingDayNotifications)
+  asyncHandler(activityController.getTrainingDayNotifications)
 );
 
 activityRouter.delete(
   '/training-notification/:id',
   authService.authenticationMiddleware,
-  asyncHandler(userController.deleteTrainingDayNotification)
+  asyncHandler(activityController.deleteTrainingDayNotification)
 );
 
 // wird zum navigieren auf einene bestimmten Trainingsplan benutzt anscheinend
 activityRouter.get(
   '/training-day/:id',
   authService.authenticationMiddleware,
-  asyncHandler(userController.getTrainingDayById)
+  asyncHandler(activityController.getTrainingDayById)
 );
 
 export default activityRouter;

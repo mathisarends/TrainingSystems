@@ -1,11 +1,9 @@
+import { format } from 'date-fns';
 import { Request, Response } from 'express';
+import { getTonnagePerTrainingDay } from '../service/trainingService.js';
 import * as userService from '../service/userService.js';
 
-import dotenv from 'dotenv';
-import { getTonnagePerTrainingDay } from '../service/trainingService.js';
-
-import { format } from 'date-fns';
-dotenv.config();
+// TODO: Dtos hierfür bauen und die Logik entsprechend ein wenig refactoren?
 
 /**
  * Retrieves the activity calendar for a user, calculating the tonnage (total weight lifted)

@@ -48,7 +48,7 @@ export function decrypt(encryptedDataBase64: string) {
     const decrypted = Buffer.concat([decipher.update(ciphertext), decipher.final()]);
     return decrypted.toString('utf8');
   } catch (err) {
-    console.error('Fehler beim Entschlüsseln:', (err as unknown as Error).message);
+    console.error('Fehler beim Entschlüsseln:', (err as Error).message);
     throw new Error('Entschlüsselung fehlgeschlagen');
   }
 }
