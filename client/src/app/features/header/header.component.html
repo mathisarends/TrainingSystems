@@ -17,7 +17,7 @@
 } @else {
   <div class="image-wrapper">
     <img
-      [src]="profileService.userData()?.pictureUrl || '/images/profile-placeholder.webp'"
+      [src]="profileService.pictureUrl() || '/images/profile-placeholder.webp'"
       alt="M"
       class="h-100 rounded-circle"
     />

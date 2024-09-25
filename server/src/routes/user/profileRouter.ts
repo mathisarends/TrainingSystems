@@ -1,33 +1,22 @@
 import express from 'express';
-import * as userController from '../../controller/userController.js';
+import * as profileController from '../../controller/profileController.js';
 import { asyncHandler } from '../../middleware/error-handler.js';
 import { authService } from '../../service/authService.js';
-import { getUser } from '../../service/userService.js';
 
 const profileRouter = express.Router();
 
-profileRouter.get('/', authService.authenticationMiddleware, asyncHandler(userController.getProfile));
-profileRouter.post('/', authService.authenticationMiddleware, asyncHandler(userController.editProfile));
-
-profileRouter.get(
-  '/profile-picture',
-  authService.authenticationMiddleware,
-  asyncHandler(async (req, res) => {
-    const user = await getUser(req, res);
-    res.status(200).json(user.pictureUrl);
-  })
-);
+profileRouter.get('/', authService.authenticationMiddleware, asyncHandler(profileController.getProfile));
 
 profileRouter.post(
   '/update-profile-picture',
   authService.authenticationMiddleware,
-  asyncHandler(userController.updateProfilePicture)
+  asyncHandler(profileController.updateProfilePicture)
 );
 
 profileRouter.delete(
   '/delete-account',
   authService.authenticationMiddleware,
-  asyncHandler(userController.deleteAccount)
+  asyncHandler(profileController.deleteAccount)
 );
 
 export default profileRouter;

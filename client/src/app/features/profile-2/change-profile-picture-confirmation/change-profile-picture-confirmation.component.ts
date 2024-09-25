@@ -6,6 +6,7 @@ import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
 import { ImageUploadService } from '../../../shared/service/image-upload.service';
 import { ProfileService } from '../service/profileService';
+import { UpdateProfilePictureDto } from '../service/update-profile-picture-dto';
 
 /**
  * HHandles the functionality for
@@ -35,8 +36,14 @@ export class ChangeProfilePictureConfirmationComponent extends AbstractImageCrop
   }
 
   override uploadImage(image: string): void {
-    this.profileService.uploadProfilePicture(image).subscribe((response) => {
+    const updateProfilePictureDto: UpdateProfilePictureDto = {
+      profilePicture: image,
+    };
+
+    this.profileService.uploadProfilePicture(updateProfilePictureDto).subscribe((response) => {
       this.toastService.success(response.message);
+      this.profileService.pictureUrl.set(image);
+
       this.profileService.fetchAndSetProfileData();
     });
   }

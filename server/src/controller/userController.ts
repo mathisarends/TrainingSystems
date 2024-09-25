@@ -9,8 +9,6 @@ import { getTonnagePerTrainingDay } from '../service/trainingService.js';
 import { createResetPasswordEmail } from '../service/userService.js';
 
 import { format } from 'date-fns';
-import { User } from '../models/collections/user/user.js';
-import { MongoGenericDAO } from '../models/dao/mongo-generic.dao.js';
 dotenv.config();
 
 export async function register(req: Request, res: Response): Promise<void> {
@@ -141,17 +139,6 @@ export async function resetPassword(req: Request, res: Response): Promise<Respon
   return res.status(200).json({ message: 'Dein Passwort wurde erfolgreich zurückgesetzt' });
 }
 
-export async function getProfile(req: Request, res: Response): Promise<void> {
-  const user = await userService.getUser(req, res);
-  const userDto = {
-    username: user.username,
-    email: user.email,
-    pictureUrl: user.pictureUrl
-  };
-
-  res.status(200).json(userDto);
-}
-
 export async function getPermisisons(req: Request, res: Response): Promise<Response> {
   const user = await userService.getUser(req, res);
 
@@ -171,34 +158,6 @@ export async function updatePermissions(req: Request, res: Response): Promise<Re
   await userDAO.update(user);
 
   return res.status(200).json({ message: 'Einstellungen geupdated' });
-}
-
-export async function editProfile(req: Request, res: Response): Promise<Response> {
-  const user = await userService.getUser(req, res);
-  const userDAO = userService.getUserGenericDAO(req);
-
-  const username = req.body.username;
-  const profilePicture = req.body.picture;
-
-  if (await isNewUserNameGivenAndValid(userDAO, username)) {
-    user.username = username;
-  }
-
-  if (profilePicture) {
-    user.pictureUrl = profilePicture;
-  }
-
-  await userDAO.update(user);
-
-  return res.status(200).json({ message: 'Profil aktualisiert' });
-}
-
-async function isNewUserNameGivenAndValid(userDAO: MongoGenericDAO<User>, username: string) {
-  if (!username) {
-    return false;
-  }
-  const user = await userDAO.findOne({ username });
-  return !user;
 }
 
 /**
@@ -324,38 +283,9 @@ function getIndexOfDayPerYearFromDate(date: Date): number {
   return Math.floor((dateObj.getTime() - startOfYear.getTime()) / (1000 * 60 * 60 * 24));
 }
 
-export async function getProfilePicture(req: Request, res: Response): Promise<Response> {
-  const user = await userService.getUser(req, res);
-  return res.status(200).json(user.pictureUrl);
-}
-
-export async function updateProfilePicture(req: Request, res: Response): Promise<Response> {
-  const userDAO = req.app.locals.userDAO;
-  const user = await userService.getUser(req, res);
-  const profilePicture = req.body.profilePicture;
-
-  if (!profilePicture) {
-    return res.status(404).json({ error: 'Profile picture not found in request body' });
-  }
-
-  user.pictureUrl = profilePicture;
-  await userDAO.update(user);
-
-  return res.status(200).json({ message: 'Dein Profilbild wurde erfolgreich geupdated' });
-}
-
 export function signOut(req: Request, res: Response): void {
   authService.removeToken(res);
   res.status(200).json({ message: 'Token erfolgreich entfernt' });
-}
-
-export async function deleteAccount(req: Request, res: Response): Promise<Response> {
-  const userDAO = userService.getUserGenericDAO(req);
-  const user = await userService.getUser(req, res);
-
-  await userDAO.delete(user.id);
-
-  return res.status(200).json({ message: 'Account gelöscht' });
 }
 
 export async function getAuthState(req: Request, res: Response): Promise<Response> {

@@ -1,12 +1,11 @@
-@let user = profileService.userData();
-@if (user) {
+@if (profileService.pictureUrl()) {
   <div class="profile-wrapper">
     <div class="profile-header-container">
       <div class="profile-info">
-        <h2>{{ user.username }}</h2>
-        <p>{{ user.email }}</p>
+        <h2>{{ profileService.username() }}</h2>
+        <p>{{ profileService.email() }}</p>
       </div>
-      <img #profilePicture [src]="user.pictureUrl || '/images/profile-placeholder.webp'" alt="Profile" />
+      <img #profilePicture [src]="profileService.pictureUrl() || '/images/profile-placeholder.webp'" alt="Profile" />
       <input type="file" id="file-input" (change)="showProfilePictureChangeDialog($event)" />
     </div>
 

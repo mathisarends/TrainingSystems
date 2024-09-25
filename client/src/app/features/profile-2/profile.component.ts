@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, Injector, OnInit, signal, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { ModalService } from '../../core/services/modal/modalService';
@@ -50,6 +50,7 @@ export class ProfileComponent2 implements OnInit {
     private gymTicketService: GymTicketService,
     private imageUploadService: ImageUploadService,
     private route: ActivatedRoute,
+    private injector: Injector,
   ) {}
 
   ngOnInit() {
@@ -99,7 +100,7 @@ export class ProfileComponent2 implements OnInit {
       return;
     }
 
-    const currentProfilePicture = this.profileService.userData()!.pictureUrl;
+    const currentProfilePicture = this.profileService.pictureUrl();
 
     this.modalService.open({
       component: ChangeProfilePictureConfirmationComponent,

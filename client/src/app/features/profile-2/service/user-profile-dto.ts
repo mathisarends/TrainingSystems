@@ -4,7 +4,7 @@
  * that is commonly used throughout the application.
  * It includes properties for the user's username, email, and profile picture.
  */
-export interface UserData {
+export interface UserProfileDto {
   /**
    * The user's unique username.
    */
