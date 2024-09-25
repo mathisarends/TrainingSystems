@@ -18,8 +18,7 @@ import { getUser, getUserGenericDAO } from '../../service/userService.js';
 import _ from 'lodash';
 import { TrainingPlanEditViewDto } from '../../models/dto/training-plan-edit-view-dto.js';
 
-import transporter from '../../config/mailerConfig.js';
-import { getEmailConfigForTrainingDaySummary } from './training-summary/training-day-summary.js';
+import { sendMailForTrainingDaySummary } from './training-summary/training-day-summary.js';
 import { TrainingSummary } from './training-summary/training-summary.js';
 
 /**
@@ -213,9 +212,7 @@ export async function updatePlan(req: Request, res: Response): Promise<void> {
     ]
   };
 
-  const mailConfig = await getEmailConfigForTrainingDaySummary(trainingData, user.email);
-
-  await transporter.sendMail(mailConfig);
+  await sendMailForTrainingDaySummary(trainingData, user.email);
 
   await userDAO.update(user);
   res.status(200).json({ message: 'Trainingsplan erfolgreich aktualisiert' });

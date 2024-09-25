@@ -1,14 +1,14 @@
+import { ChartConfiguration } from 'chart.js';
 import { ChartJSNodeCanvas } from 'chartjs-node-canvas';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { TrainingDAyFinishedNotification } from '../../../models/collections/user/training-fninished-notifcation';
 
-import { ChartConfiguration } from 'chart.js';
-
 dotenv.config();
 
 import { fileURLToPath } from 'url';
+import transporter from '../../../config/mailerConfig.js';
 import { ChartColors } from './chart-colors.js';
 import { TrainingSummary } from './training-summary';
 
@@ -42,6 +42,11 @@ async function renderTonnageChart(trainingData: TrainingDAyFinishedNotification)
   };
 
   return await chartJSNodeCanvas.renderToBuffer(config);
+}
+
+export async function sendMailForTrainingDaySummary(trainingSummaryData: TrainingSummary, userEmail: string) {
+  const mailConfig = await getEmailConfigForTrainingDaySummary(trainingSummaryData, userEmail);
+  return await transporter.sendMail(mailConfig);
 }
 
 export async function getEmailConfigForTrainingDaySummary(trainingSummaryData: TrainingSummary, userEmail: string) {
