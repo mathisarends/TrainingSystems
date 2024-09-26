@@ -13,6 +13,15 @@ export class ToPauseTimeProgressPercentagePipe implements PipeTransform {
     if (!totalTime || totalTime === 0) {
       return 100;
     }
+
+    if (this.isTimerFinised(currentTime, totalTime)) {
+      return 100;
+    }
+
     return (currentTime / totalTime) * 100;
+  }
+
+  private isTimerFinised(currentTime: number, totalTime: number): boolean {
+    return (currentTime / totalTime) * 100 === 0;
   }
 }

@@ -85,11 +85,19 @@ export class PauseTimeService {
       clearInterval(this.keepAliveIntervalId);
       this.keepAliveIntervalId = null;
     }
-    this.countdownEmitter.emit(0); // Emit 0 when the timer stops
+
+    this.clearLocalStorage();
+
+    this.countdownEmitter.emit(0);
   }
 
   private handleCurrentTimeUpdate(currentTime: number): void {
     this.remainingTime = currentTime;
+
+    if (currentTime === 0) {
+      this.clearLocalStorage();
+    }
+
     this.countdownEmitter.emit(currentTime); // Emit the updated current time
   }
 
@@ -118,6 +126,13 @@ export class PauseTimeService {
         this.countdownEmitter.emit(this.remainingTime);
       }
     }
+  }
+
+  /**
+   * Clears the exercise name and initial time from localStorage.
+   */
+  private clearLocalStorage(): void {
+    localStorage.removeItem('initialTime');
   }
 
   private saveExerciseNameInLocalStorage(exerciseName: string): void {
