@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { ModalService } from '../../core/services/modal/modalService';
 import { IconBackgroundColor } from '../../shared/components/icon-list-item/icon-background-color';
@@ -35,9 +35,9 @@ export class ProfileComponent2 implements OnInit {
   inputSignal = signal('');
 
   protected readonly listItems: IconListItem[] = [
-    { label: 'Ticket', iconName: IconName.IMAGE, iconBackgroundColor: IconBackgroundColor.Turquoise },
+    { label: 'Exercises', iconName: IconName.DATABASE, iconBackgroundColor: IconBackgroundColor.DodgerBlue },
+    { label: 'Ticket', iconName: IconName.IMAGE, iconBackgroundColor: IconBackgroundColor.Orange },
     { label: 'Social', iconName: IconName.USERS, iconBackgroundColor: IconBackgroundColor.LimeGreen },
-    { label: 'Achievements', iconName: IconName.AWARD, iconBackgroundColor: IconBackgroundColor.Orange },
     { label: 'Settings', iconName: IconName.SETTINGS, iconBackgroundColor: IconBackgroundColor.BlueViolet },
     { label: 'Account löschen', iconName: IconName.Trash, iconBackgroundColor: IconBackgroundColor.OrangeRed },
   ];
@@ -50,6 +50,7 @@ export class ProfileComponent2 implements OnInit {
     private toastService: ToastService,
     private gymTicketService: GymTicketService,
     private imageUploadService: ImageUploadService,
+    private router: Router,
     private route: ActivatedRoute,
   ) {}
 
@@ -80,6 +81,8 @@ export class ProfileComponent2 implements OnInit {
           image: ticket,
         });
       });
+    } else if (listItem.label === 'Exercises') {
+      this.router.navigate(['exercises']);
     } else if (listItem.label === 'Account löschen') {
       this.showDeleteAccountDialog();
     } else if (listItem.label === 'Settings') {
