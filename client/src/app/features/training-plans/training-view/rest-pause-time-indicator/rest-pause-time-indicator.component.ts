@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener } from '@angular/core';
+import { Component, HostBinding, HostListener, signal } from '@angular/core';
 import { ModalService } from '../../../../core/services/modal/modalService';
+import { toggleCollapseAnimation } from '../../../../shared/animations/toggle-collapse';
 import { IconBackgroundColor } from '../../../../shared/components/icon-list-item/icon-background-color';
 import { IconName } from '../../../../shared/icon/icon-name';
 import { IconComponent } from '../../../../shared/icon/icon.component';
@@ -18,23 +19,32 @@ import { ToPauseTimeProgressPercentagePipe } from './to-pause-time-progress-perc
   imports: [IconComponent, FormatTimePipe, CommonModule, ToPauseTimeProgressPercentagePipe],
   templateUrl: './rest-pause-time-indicator.component.html',
   styleUrls: ['./rest-pause-time-indicator.component.scss'],
+  animations: [toggleCollapseAnimation],
 })
 export class RestPauseTimeIndicatorComponent {
   protected readonly IconName = IconName;
   protected readonly IconBackgroundColor = IconBackgroundColor;
+
+  isCollapsed = signal(false);
 
   constructor(
     protected pauseTimeService: PauseTimeService,
     private modalService: ModalService,
   ) {}
 
+  @HostBinding('@toggleCollapse') get toggleAnimation() {
+    return this.isCollapsed() ? 'collapsed' : 'expanded';
+  }
+
   @HostListener('click')
-  onHostClick(): void {
-    this.modalService.open({
+  async onHostClick(): Promise<void> {
+    this.isCollapsed.set(true);
+    await this.modalService.open({
       component: RestTimerComponent,
-      title: this.pauseTimeService.currentExercise(),
+      title: 'Pause Timer',
       buttonText: 'Abbrechen',
       hasFooter: false,
     });
+    this.isCollapsed.set(false);
   }
 }
