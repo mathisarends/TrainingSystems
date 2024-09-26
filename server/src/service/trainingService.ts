@@ -156,7 +156,7 @@ export function getMostRecentTrainingPlanOfUser(trainnigPlans: TrainingPlan[]): 
     return null;
   }
 
-  return trainnigPlans.sort((a, b) => a.lastUpdated.getTime() - b.lastUpdated.getTime())[0];
+  return trainnigPlans.sort((a, b) => b.lastUpdated.getTime() - a.lastUpdated.getTime())[0];
 }
 
 // Function to find the latest training day with weight entry

@@ -6,8 +6,6 @@ import { ServiceWorkerService } from '../../../../platform/service-worker.servic
   providedIn: 'root',
 })
 export class PauseTimeService {
-  restartTimerOnDisplayOnlock = false;
-
   private renderer: Renderer2;
   private keepAliveIntervalId: any; // Store the keep-alive interval ID
 
@@ -72,7 +70,7 @@ export class PauseTimeService {
           duration: this.remainingTime,
         });
       }
-    }, 10000); // Send keep-alive every 10 seconds
+    }, 10000); 
   }
 
   /**
