@@ -13,13 +13,14 @@ import { ImageUploadService } from '../../shared/service/image-upload.service';
 import { GymTicketComponent } from '../gym-ticket/gym-ticket.component';
 import { GymTicketService } from '../gym-ticket/gym-ticket.service';
 import { HeaderService } from '../header/header.service';
+import { RestPauseTimeIndicatorComponent } from '../training-plans/training-view/rest-pause-time-indicator/rest-pause-time-indicator.component';
 import { ChangeProfilePictureConfirmationComponent } from './change-profile-picture-confirmation/change-profile-picture-confirmation.component';
 import { ProfileService } from './service/profileService';
 import { SettingsComponent } from './settings/settings.component';
 
 @Component({
   standalone: true,
-  imports: [IconComponent, SpinnerComponent, IconListeItemComponent],
+  imports: [IconComponent, SpinnerComponent, IconListeItemComponent, RestPauseTimeIndicatorComponent],
   selector: 'app-profile',
   templateUrl: 'profile.component.html',
   styleUrls: ['profile.component.scss'],

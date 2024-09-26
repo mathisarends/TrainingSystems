@@ -1,0 +1,12 @@
+<div class="icon-info-container">
+  <div class="icon-box">
+    <app-icon [name]="IconName.CLOCK" [size]="18" [color]="'white'" />
+  </div>
+
+  {{ pauseTimeService.currentExercise() }}
+</div>
+
+<div class="pause-time-with-icon-container">
+  {{ pauseTimeService.getCurrentTime() | formatTime }}
+  <app-icon [name]="IconName.ChevronUp" [size]="20" />
+</div>

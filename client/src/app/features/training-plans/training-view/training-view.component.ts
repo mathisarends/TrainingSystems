@@ -28,6 +28,7 @@ import { RpeInputDirective } from './directives/rpe-input.directive';
 import { WeightInputDirective } from './directives/weight-input.directive';
 import { ExerciseDataService } from './exercise-data.service';
 import { ExerciseDataDTO } from './exerciseDataDto';
+import { RestPauseTimeIndicatorComponent } from './rest-pause-time-indicator/rest-pause-time-indicator.component';
 import { RestTimerComponent } from './rest-timer/rest-timer.component';
 import { EstMaxService } from './services/estmax.service';
 import { PauseTimeService } from './services/pause-time.service';
@@ -59,6 +60,7 @@ import { TrainingPlanDto } from './trainingPlanDto';
     RepInputDirective,
     FormatTimePipe,
     DragDropModule,
+    RestPauseTimeIndicatorComponent,
   ],
   providers: [TrainingViewService, TrainingPlanDataService, EstMaxService, SwipeService],
   templateUrl: './training-view.component.html',
@@ -187,7 +189,6 @@ export class TrainingViewComponent implements OnInit {
    */
   saveTrainingData(): void {
     const changedData = this.formService.getChanges();
-    console.log('🚀 ~ TrainingViewComponent ~ saveTrainingData ~ changedData:', changedData);
 
     this.trainingViewService
       .submitTrainingPlan(this.planId, this.trainingWeekIndex, this.trainingDayIndex, changedData)

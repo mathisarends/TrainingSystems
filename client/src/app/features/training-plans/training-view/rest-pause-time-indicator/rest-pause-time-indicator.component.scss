@@ -1,0 +1,39 @@
+:host {
+  position: fixed;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.5rem;
+  padding-inline: 1em;
+  bottom: 45px;
+  padding-bottom: 40px;
+  left: 0;
+  right: 0;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border-top: 1px solid #d1d1d1;
+  background-color: rgba(240, 240, 240, 0.9);
+  font-size: 1.1rem;
+  background-color: #f0f2f5;
+  color: #676767;
+}
+
+.icon-info-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.icon-box {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 0.5em;
+  background-color: var(--accent-color);
+}
+
+.pause-time-with-icon-container {
+  display: flex;
+  gap: 0.5rem;
+}

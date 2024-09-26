@@ -31,6 +31,7 @@ export class WeightInputDirective extends AbstractDoubleClickDirective implement
   @HostListener('change', ['$event'])
   startPauseTimer(event: Event): void {
     const categoryValue = this.exerciseTableRowService.getExerciseCategorySelectorByElement(this.inputElement).value;
+    const exerciseName = this.exerciseTableRowService.getExerciseNameSelectorByElement(this.inputElement).value;
     const pauseTime = this.exerciseDataService.getExerciseData().categoryPauseTimes[categoryValue];
 
     if (this.isLastSet()) {
@@ -42,6 +43,6 @@ export class WeightInputDirective extends AbstractDoubleClickDirective implement
     this.autoSaveService.save();
     this.estMaxService.calculateMaxAfterInputChange(event.target as HTMLInputElement);
 
-    this.pauseTimeService.startPauseTimer(pauseTime);
+    this.pauseTimeService.startPauseTimer(pauseTime, exerciseName);
   }
 }

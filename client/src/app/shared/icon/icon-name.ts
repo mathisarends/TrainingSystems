@@ -35,4 +35,6 @@ export enum IconName {
   MOVE = 'move',
   SLIDERS = 'sliders',
   LOG_OUT = 'log-out',
+  PAUSE = 'pause',
+  PAUSE_CIRCLE = 'pause-circle',
 }

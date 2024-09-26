@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable, Renderer2, RendererFactory2 } from '@angular/core';
+import { EventEmitter, Injectable, Renderer2, RendererFactory2, signal } from '@angular/core';
 import { ServiceWorkerService } from '../../../../platform/service-worker.service';
 
 @Injectable({
@@ -13,6 +13,9 @@ export class PauseTimeService {
   private initialTime: number = 0;
 
   remainingTime: number = 0; // Store the remaining time
+
+  isPaused = signal(false);
+  currentExercise = signal('');
 
   countdownEmitter: EventEmitter<number> = new EventEmitter<number>(); // Countdown Emitter
 
@@ -36,7 +39,9 @@ export class PauseTimeService {
    * Starts the pause timer with the given duration.
    * Sends a message to the service worker and starts the keep-alive interval.
    */
-  startPauseTimer(pauseTime: number): void {
+  startPauseTimer(pauseTime: number, exerciseName: string): void {
+    this.currentExercise.set(exerciseName);
+
     this.initialTime = pauseTime;
     this.remainingTime = pauseTime;
 
