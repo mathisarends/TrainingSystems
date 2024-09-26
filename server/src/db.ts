@@ -1,15 +1,15 @@
+import dotenv from 'dotenv';
 import { Express } from 'express';
+import { MongoClient } from 'mongodb';
 import mongoose from 'mongoose';
 import { MongoGenericDAO } from './models/dao/mongo-generic.dao.js';
-import { MongoClient } from 'mongodb';
-import dotenv from 'dotenv';
 
 dotenv.config();
 
 export default async function startDB(app: Express) {
   try {
     const isProduction = process.env.NODE_ENV === 'production';
-    const dbURI = isProduction ? process.env.mongo_uri_prod! : process.env.mongo_uri!;
+    const dbURI = isProduction ? process.env.mongo_uri_prod! : process.env.mongo_uri_2!;
 
     await mongoose.connect(dbURI);
     console.log('Database connected');

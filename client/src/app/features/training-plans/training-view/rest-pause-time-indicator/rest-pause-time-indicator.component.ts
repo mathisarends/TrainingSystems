@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostBinding, HostListener, signal } from '@angular/core';
+import { Component, effect, HostBinding, HostListener, Injector, OnInit, signal } from '@angular/core';
 import { ModalService } from '../../../../core/services/modal/modalService';
 import { toggleCollapseAnimation } from '../../../../shared/animations/toggle-collapse';
 import { IconBackgroundColor } from '../../../../shared/components/icon-list-item/icon-background-color';
@@ -21,16 +21,32 @@ import { ToPauseTimeProgressPercentagePipe } from './to-pause-time-progress-perc
   styleUrls: ['./rest-pause-time-indicator.component.scss'],
   animations: [toggleCollapseAnimation],
 })
-export class RestPauseTimeIndicatorComponent {
+export class RestPauseTimeIndicatorComponent implements OnInit {
   protected readonly IconName = IconName;
   protected readonly IconBackgroundColor = IconBackgroundColor;
 
-  isCollapsed = signal(false);
+  isCollapsed = signal(true);
 
   constructor(
     protected pauseTimeService: PauseTimeService,
     private modalService: ModalService,
+    private injector: Injector,
   ) {}
+
+  ngOnInit(): void {
+    effect(
+      () => {
+        const isModalVisible = this.modalService.isVisible();
+
+        if (this.pauseTimeService.getCurrentTime() === 0 || isModalVisible) {
+          this.isCollapsed.set(true);
+        } else if (!isModalVisible) {
+          this.isCollapsed.set(false);
+        }
+      },
+      { allowSignalWrites: true, injector: this.injector },
+    );
+  }
 
   @HostBinding('@toggleCollapse') get toggleAnimation() {
     return this.isCollapsed() ? 'collapsed' : 'expanded';
@@ -38,13 +54,11 @@ export class RestPauseTimeIndicatorComponent {
 
   @HostListener('click')
   async onHostClick(): Promise<void> {
-    this.isCollapsed.set(true);
     await this.modalService.open({
       component: RestTimerComponent,
       title: 'Pause Timer',
       buttonText: 'Abbrechen',
       hasFooter: false,
     });
-    this.isCollapsed.set(false);
   }
 }

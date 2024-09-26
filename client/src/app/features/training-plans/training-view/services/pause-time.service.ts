@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable, Renderer2, RendererFactory2, signal } from '@angular/core';
+import { EventEmitter, Injectable, signal } from '@angular/core';
 import { BrowserCheckService } from '../../../../core/services/browser-check.service';
 import { ServiceWorkerService } from '../../../../platform/service-worker.service';
 
@@ -6,24 +6,20 @@ import { ServiceWorkerService } from '../../../../platform/service-worker.servic
   providedIn: 'root',
 })
 export class PauseTimeService {
-  private renderer: Renderer2;
   private keepAliveIntervalId: any; // Store the keep-alive interval ID
 
   private initialTime: number = 0;
 
-  remainingTime: number = 0; // Store the remaining time
+  remainingTime = signal(0);
 
   currentExercise = signal('');
 
   countdownEmitter: EventEmitter<number> = new EventEmitter<number>(); // Countdown Emitter
 
   constructor(
-    rendererFactory: RendererFactory2,
     private serviceWorkerService: ServiceWorkerService,
     private browserCheckService: BrowserCheckService,
   ) {
-    this.renderer = rendererFactory.createRenderer(null, null);
-
     if (this.browserCheckService.isBrowser()) {
       this.restoreStateFromLocalStorage();
     }
@@ -43,7 +39,7 @@ export class PauseTimeService {
    */
   startPauseTimer(pauseTime: number, exerciseName: string): void {
     this.initialTime = pauseTime;
-    this.remainingTime = pauseTime;
+    this.remainingTime.set(pauseTime);
 
     this.saveExerciseNameInLocalStorage(exerciseName);
     this.saveInitialTimeInLocalStorage(pauseTime);
@@ -64,13 +60,13 @@ export class PauseTimeService {
     }
 
     this.keepAliveIntervalId = setInterval(() => {
-      if (this.remainingTime > 0) {
+      if (this.remainingTime() > 0) {
         this.serviceWorkerService.sendMessageToServiceWorker({
           command: 'keepAlive',
-          duration: this.remainingTime,
+          duration: this.remainingTime(),
         });
       }
-    }, 10000); 
+    }, 10000);
   }
 
   /**
@@ -78,7 +74,7 @@ export class PauseTimeService {
    */
   private stopTimer(): void {
     this.initialTime = 0;
-    this.remainingTime = 0;
+    this.remainingTime.set(0);
     if (this.keepAliveIntervalId) {
       clearInterval(this.keepAliveIntervalId);
       this.keepAliveIntervalId = null;
@@ -90,7 +86,7 @@ export class PauseTimeService {
   }
 
   private handleCurrentTimeUpdate(currentTime: number): void {
-    this.remainingTime = currentTime;
+    this.remainingTime.set(currentTime);
 
     if (currentTime === 0) {
       this.clearLocalStorage();
@@ -100,7 +96,7 @@ export class PauseTimeService {
   }
 
   getCurrentTime(): number {
-    return this.remainingTime;
+    return this.remainingTime();
   }
 
   getInitialTime(): number {
@@ -117,11 +113,11 @@ export class PauseTimeService {
 
     if (savedInitialTime) {
       this.initialTime = parseInt(savedInitialTime, 10);
-      this.remainingTime = this.initialTime;
+      this.remainingTime.set(this.initialTime);
 
-      if (this.remainingTime > 0) {
+      if (this.remainingTime() > 0) {
         this.startKeepAlive();
-        this.countdownEmitter.emit(this.remainingTime);
+        this.countdownEmitter.emit(this.remainingTime());
       }
     }
   }

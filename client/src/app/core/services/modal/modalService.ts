@@ -5,6 +5,7 @@ import {
   Injectable,
   Injector,
   createComponent,
+  signal,
 } from '@angular/core';
 import { BasicInfoComponent } from '../../../shared/components/modal/basic-info/basic-info.component';
 import { ModalOverlayComponent } from '../../../shared/components/modal/modal-overlay/modal-overlay.component';
@@ -18,6 +19,8 @@ import { ModalSize } from './modalSize';
 export class ModalService {
   private modalComponentRef!: ComponentRef<ModalComponent>;
   private overlayComponentRef!: ComponentRef<ModalOverlayComponent>;
+
+  isVisible = signal(false);
 
   constructor(
     private appRef: ApplicationRef,
@@ -71,6 +74,8 @@ export class ModalService {
         this.modalComponentRef.instance.childComponentData.set(options.componentData);
       }
 
+      this.isVisible.set(true);
+
       this.modalComponentRef.instance.confirmed.subscribe(() => {
         resolve(true);
         this.close();
@@ -123,5 +128,7 @@ export class ModalService {
 
     this.appRef.detachView(this.overlayComponentRef.hostView);
     this.overlayComponentRef.destroy();
+
+    this.isVisible.set(false);
   }
 }
