@@ -36,7 +36,7 @@ tr {
 
 @media (max-width: 768px) {
   form {
-    margin-top: -3.5rem;
+    margin-top: -3.25rem;
     padding-bottom: 2rem;
   }
 
@@ -74,6 +74,7 @@ tr {
 
   .training-table td {
     border: none;
+    padding: 0.775em;
   }
 
   .training-table tr td input[type='number'] {
