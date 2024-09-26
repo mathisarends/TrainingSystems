@@ -8,7 +8,7 @@ import { LoadingService } from '../../../../core/services/loading.service';
   standalone: true,
   imports: [],
   templateUrl: './loading-progress-bar.component.html',
-  styleUrls: ['./loading-progress-bar.component.scss'], // Corrected to styleUrls
+  styleUrls: ['./loading-progress-bar.component.scss'],
 })
 export class LoadingProgressBarComponent implements OnInit {
   progress = signal<number>(0);
@@ -16,7 +16,7 @@ export class LoadingProgressBarComponent implements OnInit {
   private loadingComplete$ = new Subject<void>();
   private loadingInterval: any;
 
-  @ViewChild('progressBar', { static: true }) progressBar!: ElementRef; // Reference to the progress bar element
+  @ViewChild('progressBar', { static: true }) progressBar!: ElementRef;
 
   constructor(
     private browserCheckService: BrowserCheckService,
@@ -26,7 +26,6 @@ export class LoadingProgressBarComponent implements OnInit {
 
   ngOnInit() {
     if (this.browserCheckService.isBrowser()) {
-      // Reactively listen to changes in the loading state using the computed signal
       effect(
         () => {
           if (this.loadingService.isLoading()) {
@@ -79,8 +78,8 @@ export class LoadingProgressBarComponent implements OnInit {
 
   showProgressBar() {
     const progressBarElement = this.progressBar.nativeElement as HTMLElement;
-    progressBarElement.classList.remove('hidden'); // Remove the 'hidden' class to show the progress bar
-    progressBarElement.style.display = 'block'; // Ensure the progress bar is visible
+    progressBarElement.classList.remove('hidden');
+    progressBarElement.style.display = 'block';
   }
 
   hideProgressBar() {

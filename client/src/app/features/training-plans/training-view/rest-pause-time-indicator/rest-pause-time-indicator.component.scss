@@ -1,12 +1,11 @@
 :host {
+  position: relative;
   position: fixed;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 0.5rem;
-  padding-inline: 1em;
-  bottom: 45px;
-  padding-bottom: 40px;
+  padding: 0.65rem 0.75rem;
+  bottom: 75px;
   left: 0;
   right: 0;
   border-top-left-radius: 10px;
@@ -16,6 +15,16 @@
   font-size: 1.1rem;
   background-color: #f0f2f5;
   color: #676767;
+}
+
+.progress-bar {
+  position: absolute;
+  top: 3.25rem;
+  left: 0;
+  height: 3px;
+  background-color: var(--accent-color);
+  width: 100%;
+  border-radius: 3px;
 }
 
 .icon-info-container {
