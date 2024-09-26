@@ -28,18 +28,11 @@ export class RestPauseTimeIndicatorComponent {
     private modalService: ModalService,
   ) {}
 
-  getProgressPercentage(): number {
-    const currentTime = this.pauseTimeService.getCurrentTime();
-    const totalTime = this.pauseTimeService.getInitialTime();
-
-    return (currentTime / totalTime) * 100;
-  }
-
   @HostListener('click')
   onHostClick(): void {
     this.modalService.open({
       component: RestTimerComponent,
-      title: 'Pause Timer',
+      title: this.pauseTimeService.currentExercise(),
       buttonText: 'Abbrechen',
       hasFooter: false,
     });
