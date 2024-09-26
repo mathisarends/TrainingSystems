@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { map, Observable } from 'rxjs';
-import { HttpService } from '../../core/services/http-client.service';
+import { forkJoin, map, Observable } from 'rxjs';
 import { BarChartData } from '../../shared/components/charts/grouped-bar-chart/bar-chart.-data';
 import { GroupedBarChartComponent } from '../../shared/components/charts/grouped-bar-chart/grouped-bar-chart.component';
 import { ChartSkeletonComponent } from '../../shared/components/loader/chart-skeleton/chart-skeleton.component';
@@ -12,6 +11,7 @@ import { ActivityCalendarData } from './activity-calendar-data';
 import { ActivityCalendar } from './activity-calendar/activity-calendar.component';
 import { RecentTrainingDurationsData } from './recent-training-durations-data';
 import { TrainingDayNotificationComponent } from './training-day-notification/training-day-notification.component';
+import { UsageStatisticsService } from './usage.-statistics.service';
 
 @Component({
   selector: 'app-usage-statistics',
@@ -26,21 +26,20 @@ import { TrainingDayNotificationComponent } from './training-day-notification/tr
   ],
   templateUrl: './usage-statistics.component.html',
   styleUrls: ['./usage-statistics.component.scss'], // Corrected to styleUrls
+  providers: [UsageStatisticsService],
 })
 export class UsageStatisticsComponent implements OnInit {
   /**
-   * Observable that emits the exercise data as an object with day indices as keys and tonnage values, or null if there's an error or it's still loading.
+   * Observable that emits both activity calendar data and recent training durations data.
    */
-  activityCalendarData$!: Observable<ActivityCalendarData | null>;
-
-  /**
-   * Observable that emits both the BarChartData and labels.
-   */
-  recentTrainingDurations$!: Observable<{ chartData: BarChartData[]; labels: string[] }>;
+  usageStatisticsData$!: Observable<{
+    activityCalendarData: ActivityCalendarData;
+    recentTrainingDurations: { chartData: BarChartData[]; labels: string[] };
+  }>;
 
   constructor(
     protected notificationService: NotificationService,
-    private httpClient: HttpService,
+    private usageStatisticsService: UsageStatisticsService,
     private headerService: HeaderService,
   ) {}
 
@@ -49,16 +48,12 @@ export class UsageStatisticsComponent implements OnInit {
       title: 'Usage',
     });
 
-    this.activityCalendarData$ = this.httpClient.get<ActivityCalendarData>('/user/activity/activity-calendar');
-
-    this.recentTrainingDurations$ = this.httpClient
-      .get<RecentTrainingDurationsData[]>('/user/activity/recent-training-durations')
-      .pipe(
+    this.usageStatisticsData$ = forkJoin({
+      activityCalendarData: this.usageStatisticsService.getActivityCalendarData(),
+      recentTrainingDurations: this.usageStatisticsService.getRecentTrainingDurationsData().pipe(
         map((trainingDurations: RecentTrainingDurationsData[]) => {
-          // Extrahiere die Daten und Labels
           const dateLabels = trainingDurations.map((duration) => duration.date);
           const data = trainingDurations.map((duration) => duration.durationInMinutes);
-          console.log('🚀 ~ UsageStatisticsComponent ~ map ~ data:', data);
 
           const groupedBarChartData: BarChartData[] = [
             {
@@ -72,6 +67,7 @@ export class UsageStatisticsComponent implements OnInit {
 
           return { chartData: groupedBarChartData, labels: dateLabels };
         }),
-      );
+      ),
+    });
   }
 }

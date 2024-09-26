@@ -48,7 +48,8 @@ export async function getRecentTrainingDurations(req: Request, res: Response): P
       durationInMinutes: day.durationInMinutes!,
       date: formatDateWithWeekday(new Date(day.endTime!))
     }))
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 30);
 
   res.status(200).json(trainingDurationsWithDate);
 }

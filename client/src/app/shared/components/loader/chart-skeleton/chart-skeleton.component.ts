@@ -1,4 +1,4 @@
-import { Component, input, OnInit, signal } from '@angular/core';
+import { Component, effect, Injector, input, OnInit, signal } from '@angular/core';
 import { SkeletonComponent } from '../../skeleton/skeleton.component';
 
 /**
@@ -24,8 +24,16 @@ export class ChartSkeletonComponent implements OnInit {
    */
   rowsArray = signal<number[]>([]);
 
+  constructor(private injector: Injector) {}
+
   ngOnInit(): void {
-    const rowsArray = Array.from({ length: this.rows() }, (_, i) => i);
-    this.rowsArray.set(rowsArray);
+    effect(
+      () => {
+        const rowsArray = Array.from({ length: this.rows() }, (_, i) => i);
+        console.log('🚀 ~ ChartSkeletonComponent ~ ngOnInit ~ rowsArray:', rowsArray);
+        this.rowsArray.set(rowsArray);
+      },
+      { allowSignalWrites: true, injector: this.injector },
+    );
   }
 }
