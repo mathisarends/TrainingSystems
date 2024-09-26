@@ -1,6 +1,7 @@
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import express, { Express } from 'express';
+import helmet from 'helmet';
 import http from 'http';
 import startDB from './db.js';
 
@@ -37,6 +38,8 @@ async function configureApp(app: Express) {
   );
 
   app.use(requestLogger);
+
+  app.use(helmet());
 
   app.use('/api/user', userRouter);
   app.use('/api/training', trainingRouter);
