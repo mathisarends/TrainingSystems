@@ -46,10 +46,9 @@ export async function getRecentTrainingDurations(req: Request, res: Response): P
     .filter(day => !!day.durationInMinutes)
     .map(day => ({
       durationInMinutes: day.durationInMinutes!,
-      date: format(new Date(day.endTime!), 'dd.MM.yyyy')
+      date: formatDateWithWeekday(new Date(day.endTime!))
     }))
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 14);
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   res.status(200).json(trainingDurationsWithDate);
 }
@@ -126,4 +125,17 @@ function getIndexOfDayPerYearFromDate(date: Date): number {
 
   const startOfYear = new Date(dateObj.getFullYear(), 0, 1);
   return Math.floor((dateObj.getTime() - startOfYear.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+/**
+ * Formats a date into the German weekday name and mm.dd format.
+ * @param date - The date to format.
+ * @returns A string with the format "Montag, 24.08".
+ */
+function formatDateWithWeekday(date: Date): string {
+  const germanWeekDays = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+
+  const dayName = germanWeekDays[date.getDay()];
+  const formattedDate = format(date, 'dd.MM');
+  return `${dayName}, ${formattedDate}`;
 }

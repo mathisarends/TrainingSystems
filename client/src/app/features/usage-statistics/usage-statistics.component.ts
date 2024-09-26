@@ -58,13 +58,14 @@ export class UsageStatisticsComponent implements OnInit {
           // Extrahiere die Daten und Labels
           const dateLabels = trainingDurations.map((duration) => duration.date);
           const data = trainingDurations.map((duration) => duration.durationInMinutes);
+          console.log('🚀 ~ UsageStatisticsComponent ~ map ~ data:', data);
 
           const groupedBarChartData: BarChartData[] = [
             {
               label: 'Trainingsdauer (Minuten)',
-              data: data, // Extrahiere die Trainingsdauern
-              borderColor: 'rgba(54, 162, 235, 1)',
-              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              data: data,
+              borderColor: 'rgba(255, 99, 132, 1)',
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
               borderWidth: 1,
             },
           ];
