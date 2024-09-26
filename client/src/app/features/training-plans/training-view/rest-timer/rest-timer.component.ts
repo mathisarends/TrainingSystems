@@ -29,9 +29,6 @@ export class RestTimerComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.progressRing) {
         this.updateCircle();
       }
-      if (remainingTime === 0 && this.initialTime) {
-        this.playTimerFinishedAudio();
-      }
     });
 
     this.pauseTimeService.countdownEmitter.emit(this.remainingTime);
@@ -43,10 +40,6 @@ export class RestTimerComponent implements OnInit, OnDestroy, AfterViewInit {
       // Initiale Kreisfüllung beim Start
       this.updateCircle();
     }
-  }
-
-  playTimerFinishedAudio() {
-    new Audio('./audio/boxing_bell.mp3').play();
   }
 
   ngAfterViewInit(): void {
@@ -65,7 +58,6 @@ export class RestTimerComponent implements OnInit, OnDestroy, AfterViewInit {
 
   skipTimer() {
     this.sendMessageToServiceWorker('stop');
-    this.playTimerFinishedAudio();
 
     this.modalService.close();
   }

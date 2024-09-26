@@ -80,6 +80,7 @@ export class PauseTimeService {
       this.keepAliveIntervalId = null;
     }
 
+    new Audio('./audio/boxing_bell.mp3').play();
     this.clearLocalStorage();
 
     this.countdownEmitter.emit(0);
@@ -90,6 +91,7 @@ export class PauseTimeService {
 
     if (currentTime === 0) {
       this.clearLocalStorage();
+      new Audio('./audio/boxing_bell.mp3').play();
     }
 
     this.countdownEmitter.emit(currentTime); // Emit the updated current time
