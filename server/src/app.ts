@@ -8,6 +8,7 @@ import startDB from './db.js';
 import cors from 'cors';
 
 // Routers
+import limiter from './config/rate-limiter.js';
 import emailTestRouter from './controller/emailTestRouter.js';
 import { errorHandler } from './middleware/error-handler.js';
 import requestLogger from './middleware/request-middleware.js';
@@ -41,6 +42,7 @@ async function configureApp(app: Express) {
 
   app.use(helmet());
 
+  app.use('/api/', limiter);
   app.use('/api/user', userRouter);
   app.use('/api/training', trainingRouter);
   app.use('/api/exercise', exerciseRouter);
