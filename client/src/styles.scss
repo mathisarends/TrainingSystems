@@ -28,6 +28,9 @@ body {
   background-repeat: repeat;
   background-image: url('/images/background/white-3.avif');
   overflow-x: hidden;
+
+  scrollbar-width: thin;
+  scrollbar-color: rgb(199, 199, 199) #e9ecef;
 }
 
 .blur-background .outlet-wrapper {
@@ -58,4 +61,23 @@ input.form-control,
 select.form-control,
 textarea.form-control {
   background: inherit;
+}
+
+::-webkit-scrollbar {
+  width: 1rem;
+}
+
+::-webkit-scrollbar-track {
+  background: #e9ecef;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #c9c9c9;
+  border-radius: 14px;
+  border: 2px solid #e9ecef;
+}
+
+::-webkit-scrollbar-button {
+  display: none;
 }

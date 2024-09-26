@@ -241,12 +241,4 @@
       }
     </table>
   </form>
-
-
-  @if (!mobileView) {
-    <div class="fixed-bottom-bar">
-      <app-icon [name]="IconName.ArrowLeft" [size]="24" (click)="navigateWeek(-1)" />
-      <app-icon [name]="IconName.ARROW_RIGHT" [size]="24" (click)="navigateWeek(1)" />
-    </div>
-  }
 }
