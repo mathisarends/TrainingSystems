@@ -5,6 +5,7 @@ import { BrowserCheckService } from './core/services/browser-check.service';
 import { RedirectService } from './core/services/redirect.service';
 import { HeaderComponent } from './features/header/header.component';
 import { ProfileService } from './features/profile-2/service/profileService';
+import { RestPauseTimeIndicatorComponent } from './features/training-plans/training-view/rest-pause-time-indicator/rest-pause-time-indicator.component';
 import { MobileDeviceDetectionService } from './platform/mobile-device-detection.service';
 import { ServiceWorkerService } from './platform/service-worker.service';
 import { LoadingProgressBarComponent } from './shared/components/loader/loading-progress-bar/loading-progress-bar.component';
@@ -24,6 +25,7 @@ import { NotificationService } from './shared/service/notification.service';
     LoadingProgressBarComponent,
     NavBarComponent,
     HeaderComponent,
+    RestPauseTimeIndicatorComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],

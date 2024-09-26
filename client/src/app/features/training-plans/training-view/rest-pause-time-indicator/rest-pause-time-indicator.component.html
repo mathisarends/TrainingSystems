@@ -1,5 +1,3 @@
-<div class="progress-bar" [style.width.%]="getProgressPercentage()"></div>
-
 <div class="icon-info-container">
   <div class="icon-box">
     <app-icon [name]="IconName.CLOCK" [size]="18" [color]="'white'" />
@@ -9,6 +7,13 @@
 </div>
 
 <div class="pause-time-with-icon-container">
-  {{ pauseTimeService.getCurrentTime() | formatTime }}
-  <app-icon [name]="IconName.ChevronUp" [size]="20" />
+  <p>
+    {{ pauseTimeService.getCurrentTime() | formatTime }}
+  </p>
+  <app-icon [name]="IconName.ChevronUp" [size]="22" />
 </div>
+
+<div
+  class="progress-bar"
+  [style.width.%]="pauseTimeService.getCurrentTime() | toPauseTimeProgressPercentage: pauseTimeService.getInitialTime()"
+></div>

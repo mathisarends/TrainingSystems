@@ -7,6 +7,7 @@ import { IconComponent } from '../../../../shared/icon/icon.component';
 import { FormatTimePipe } from '../../format-time.pipe';
 import { RestTimerComponent } from '../rest-timer/rest-timer.component';
 import { PauseTimeService } from '../services/pause-time.service';
+import { ToPauseTimeProgressPercentagePipe } from './to-pause-time-progress-percentage';
 
 /**
  * A component that displays a rest or pause time indicator.
@@ -14,7 +15,7 @@ import { PauseTimeService } from '../services/pause-time.service';
 @Component({
   selector: 'app-rest-pause-time-indicator',
   standalone: true,
-  imports: [IconComponent, FormatTimePipe, CommonModule],
+  imports: [IconComponent, FormatTimePipe, CommonModule, ToPauseTimeProgressPercentagePipe],
   templateUrl: './rest-pause-time-indicator.component.html',
   styleUrls: ['./rest-pause-time-indicator.component.scss'],
 })

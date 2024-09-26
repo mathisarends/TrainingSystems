@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
+import { BrowserCheckService } from '../core/services/browser-check.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ServiceWorkerService {
+  constructor(private browserCheckService: BrowserCheckService) {}
+
   /**
    * Register the service worker and check for updates.
    */
@@ -35,7 +38,7 @@ export class ServiceWorkerService {
    * @param callback The function to handle the message.
    */
   listenForMessages(callback: (event: MessageEvent) => void): void {
-    if ('serviceWorker' in navigator) {
+    if (this.browserCheckService.isBrowser() && 'serviceWorker' in navigator) {
       navigator.serviceWorker.addEventListener('message', callback);
     }
   }
