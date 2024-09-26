@@ -1,4 +1,5 @@
 import { EventEmitter, Injectable, Renderer2, RendererFactory2, signal } from '@angular/core';
+import { BrowserCheckService } from '../../../../core/services/browser-check.service';
 import { ServiceWorkerService } from '../../../../platform/service-worker.service';
 
 @Injectable({
@@ -14,7 +15,6 @@ export class PauseTimeService {
 
   remainingTime: number = 0; // Store the remaining time
 
-  isPaused = signal(false);
   currentExercise = signal('');
 
   countdownEmitter: EventEmitter<number> = new EventEmitter<number>(); // Countdown Emitter
@@ -22,10 +22,14 @@ export class PauseTimeService {
   constructor(
     rendererFactory: RendererFactory2,
     private serviceWorkerService: ServiceWorkerService,
+    private browserCheckService: BrowserCheckService,
   ) {
     this.renderer = rendererFactory.createRenderer(null, null);
 
-    // Message handling from the service worker
+    if (this.browserCheckService.isBrowser()) {
+      this.restoreStateFromLocalStorage();
+    }
+
     this.serviceWorkerService.listenForMessages((event: MessageEvent) => {
       if (event.data.command === 'currentTime') {
         this.handleCurrentTimeUpdate(event.data.currentTime);
@@ -40,17 +44,20 @@ export class PauseTimeService {
    * Sends a message to the service worker and starts the keep-alive interval.
    */
   startPauseTimer(pauseTime: number, exerciseName: string): void {
-    this.currentExercise.set(exerciseName);
-
     this.initialTime = pauseTime;
     this.remainingTime = pauseTime;
+
+    this.saveExerciseNameInLocalStorage(exerciseName);
+    this.saveInitialTimeInLocalStorage(pauseTime);
 
     this.serviceWorkerService.sendMessageToServiceWorker({
       command: 'start',
       duration: pauseTime,
     });
 
-    this.startKeepAlive(); // Start the keep-alive process
+    this.currentExercise.set(exerciseName);
+
+    this.startKeepAlive();
   }
 
   private startKeepAlive() {
@@ -92,5 +99,32 @@ export class PauseTimeService {
 
   getInitialTime(): number {
     return this.initialTime;
+  }
+
+  private restoreStateFromLocalStorage(): void {
+    const savedExercise = localStorage.getItem('currentExercise');
+    const savedInitialTime = localStorage.getItem('initialTime');
+
+    if (savedExercise) {
+      this.currentExercise.set(savedExercise);
+    }
+
+    if (savedInitialTime) {
+      this.initialTime = parseInt(savedInitialTime, 10);
+      this.remainingTime = this.initialTime;
+
+      if (this.remainingTime > 0) {
+        this.startKeepAlive();
+        this.countdownEmitter.emit(this.remainingTime);
+      }
+    }
+  }
+
+  private saveExerciseNameInLocalStorage(exerciseName: string): void {
+    localStorage.setItem('currentExercise', exerciseName);
+  }
+
+  private saveInitialTimeInLocalStorage(exercisePauseTime: number): void {
+    localStorage.setItem('initialTime', exercisePauseTime.toString());
   }
 }

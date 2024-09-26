@@ -11,7 +11,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class ToPauseTimeProgressPercentagePipe implements PipeTransform {
   transform(currentTime: number, totalTime: number): number {
     if (!totalTime || totalTime === 0) {
-      return 0;
+      return 100;
     }
     return (currentTime / totalTime) * 100;
   }
