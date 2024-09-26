@@ -1,7 +1,7 @@
-import { TrainingPlan } from '../models/training/trainingPlan.js';
-import { TrainingWeek } from '../models/training/trainingWeek.js';
 import { Exercise } from '../models/training/exercise.js';
 import { TrainingDay } from '../models/training/trainingDay.js';
+import { TrainingPlan } from '../models/training/trainingPlan.js';
+import { TrainingWeek } from '../models/training/trainingWeek.js';
 
 import { v4 as uuidv4 } from 'uuid';
 import { TrainingDayIndexes } from './training-day-indexes.js';
@@ -149,6 +149,14 @@ function addNewTrainingWeeks(trainingWeeks: TrainingWeek[], trainingFrequency: n
 
 export function removeTrainingWeeks(trainingWeeks: TrainingWeek[], removeTrainingWeeks: number) {
   trainingWeeks.splice(-removeTrainingWeeks, removeTrainingWeeks);
+}
+
+export function getMostRecentTrainingPlanOfUser(trainnigPlans: TrainingPlan[]): TrainingPlan | null {
+  if (trainnigPlans.length === 0) {
+    return null;
+  }
+
+  return trainnigPlans.sort((a, b) => a.lastUpdated.getTime() - b.lastUpdated.getTime())[0];
 }
 
 // Function to find the latest training day with weight entry

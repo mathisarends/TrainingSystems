@@ -10,6 +10,7 @@ import { TrainingPlanDtoMapper } from '../../service/training-plan-dto-mapper.js
 import * as trainingService from '../../service/trainingService.js';
 import {
   createNewTrainingPlanWithPlaceholders,
+  findLatestTrainingDayWithWeight,
   findTrainingPlanById,
   handleWeekDifference
 } from '../../service/trainingService.js';
@@ -36,6 +37,25 @@ export async function getPlans(req: Request, res: Response): Promise<void> {
   }));
 
   res.status(200).json(trainingPlanCards);
+}
+
+export async function getMostRecentTrainingPlanLink(req: Request, res: Response): Promise<Response> {
+  const user = await getUser(req, res);
+
+  const baseURL = process.env.NODE_ENV === 'development' ? process.env.DEV_BASE_URL : process.env.PROD_BASE_URL;
+
+  const mostRecentTrainingPlan = trainingService.getMostRecentTrainingPlanOfUser(user.trainingPlans);
+
+  // TODO: query parameter zum öffnen der Plan erstellen Logik
+  if (!mostRecentTrainingPlan) {
+    return res.status(200).json(baseURL);
+  }
+
+  const { weekIndex, dayIndex } = findLatestTrainingDayWithWeight(mostRecentTrainingPlan);
+
+  return res
+    .status(200)
+    .json(`${baseURL}/training/view?planId=${mostRecentTrainingPlan.id}&week=${weekIndex}&day=${dayIndex}`);
 }
 
 export async function updateTrainingPlanOrder(req: Request, res: Response): Promise<Response> {

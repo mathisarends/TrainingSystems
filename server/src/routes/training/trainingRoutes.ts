@@ -12,6 +12,11 @@ router.use('/plan', trainingPlanRouter);
 
 /** Lädt eine Kartenansicht mit allen Trainingspplänen */
 router.get('/plans', authService.authenticationMiddleware, asyncHandler(trainingController.getPlans));
+router.get(
+  '/most-recent-plan-link',
+  authService.authenticationMiddleware,
+  asyncHandler(trainingController.getMostRecentTrainingPlanLink)
+);
 router.post('/reorder', authService.authenticationMiddleware, asyncHandler(trainingController.updateTrainingPlanOrder));
 router.post('/create', authService.authenticationMiddleware, asyncHandler(trainingController.createPlan));
 

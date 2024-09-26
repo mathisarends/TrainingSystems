@@ -1,5 +1,6 @@
 import { Component, computed, effect, Injector, OnInit, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpService } from '../../../core/services/http-client.service';
 import { IconName } from '../../icon/icon-name';
 import { IconComponent } from '../../icon/icon.component';
 import { NotificationService } from '../../service/notification.service';
@@ -26,7 +27,7 @@ export class NavBarComponent implements OnInit {
    */
   protected navItems: NavItem[] = [
     { label: 'Home', route: '/', icon: this.IconName.HOME },
-    { label: 'Training', route: '/exercises', icon: this.IconName.Activity },
+    { label: 'Training', route: '', icon: this.IconName.Activity },
     { label: 'Statistiken', route: '/usage', icon: this.IconName.BAR_CHART },
     { label: 'Profil', route: '/profile', icon: this.IconName.User },
   ];
@@ -40,6 +41,7 @@ export class NavBarComponent implements OnInit {
   constructor(
     protected routeWatcherService: RouteWatcherService,
     protected notificationService: NotificationService,
+    private httpService: HttpService,
     private router: Router,
     private injector: Injector,
   ) {}
@@ -53,10 +55,10 @@ export class NavBarComponent implements OnInit {
         let currentRoute = this.routeWatcherService.getCurrentRouteSignal()();
 
         if (!this.isRouteRepresentedInNavbar(currentRoute)) {
-          if (currentRoute.includes('statistics')) {
-            currentRoute = '/usage';
+          if (this.isTrainingPlanUuidInRoute(currentRoute)) {
+            currentRoute = '';
           } else {
-            currentRoute = '/';
+            currentRoute = '/usage';
           }
         }
         this.activeRoute.set(currentRoute);
@@ -71,10 +73,40 @@ export class NavBarComponent implements OnInit {
    * @param route The route to navigate to.
    */
   protected setActive(route: string): void {
+    if (this.isActivityRoute(route)) {
+      this.redirectToMostRecentTrainingDay();
+      return;
+    }
+
     this.router.navigate([route]);
   }
 
   private isRouteRepresentedInNavbar(route: string): boolean {
     return this.navItems.some((item) => item.route === route);
+  }
+
+  private redirectToMostRecentTrainingDay() {
+    this.httpService.get<string>('/training/most-recent-plan-link').subscribe((link) => {
+      const url = new URL(link);
+      const path = url.pathname;
+
+      const queryParams = {
+        planId: url.searchParams.get('planId'),
+        week: url.searchParams.get('week'),
+        day: url.searchParams.get('day'),
+      };
+
+      this.router.navigate([path], { queryParams });
+    });
+  }
+
+  private isTrainingPlanUuidInRoute(route: string): boolean {
+    const uuidRegex = /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/;
+
+    return uuidRegex.test(route);
+  }
+
+  private isActivityRoute(route: string) {
+    return !route;
   }
 }
