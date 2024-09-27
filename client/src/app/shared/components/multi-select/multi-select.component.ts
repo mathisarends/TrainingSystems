@@ -8,6 +8,7 @@ import {
   model,
   OnInit,
   signal,
+  ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { toggleCollapseAnimation } from '../../animations/toggle-collapse';
@@ -30,6 +31,7 @@ import { SearchBarComponent } from '../search-bar/search-bar.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MultiSelectComponent implements OnInit {
+  @ViewChild(SearchBarComponent) searchBar!: SearchBarComponent;
   protected IconName = IconName;
 
   /**
@@ -98,6 +100,10 @@ export class MultiSelectComponent implements OnInit {
   @HostListener('click')
   onHostClick(): void {
     this.isOpen.set(!this.isOpen());
+
+    if (this.isOpen()) {
+      this.searchBar.focusInput();
+    }
   }
 
   /**
