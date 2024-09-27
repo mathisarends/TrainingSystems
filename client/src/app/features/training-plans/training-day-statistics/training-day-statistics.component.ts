@@ -39,7 +39,8 @@ export class TrainingDayStatisticsComponent implements OnInit {
   dataLoaded: boolean = false;
 
   selectedExercises: WritableSignal<string[]> = signal([]);
-  allExercises!: string[];
+
+  allExercises: WritableSignal<string[]> = signal([]);
 
   lineChartDatasets!: LineChartDataset[];
   lineChartLabels!: string[];
@@ -109,7 +110,7 @@ export class TrainingDayStatisticsComponent implements OnInit {
       firstValueFrom(this.trainingStatisticService.getSelectedCategories(id)),
     ]);
 
-    this.allExercises = allExercisesResponse;
+    this.allExercises.set(allExercisesResponse);
     this.selectedExercises.set(selectedExercisesResponse);
 
     if (this.selectedExercises) {

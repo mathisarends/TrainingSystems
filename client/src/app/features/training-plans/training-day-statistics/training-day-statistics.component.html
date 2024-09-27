@@ -5,7 +5,7 @@
   </main>
 } @else {
   <main>
-    <app-multi-select [items]="allExercises" [(selectedItems)]="selectedExercises" />
+    <app-multi-select [items]="allExercises()" [(selectedItems)]="selectedExercises" />
 
     <app-line-chart
       [data]="lineChartDatasets"

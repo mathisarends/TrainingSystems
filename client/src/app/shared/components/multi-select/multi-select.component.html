@@ -13,7 +13,11 @@
       }
     </div>
   </div>
-  <div class="dropdown-menu p-2" [class.show]="isOpen()" (click)="$event.stopPropagation()">
+  <div
+    class="dropdown-menu p-2"
+    [@toggleCollapse]="isOpen() ? 'expanded' : 'collapsed'"
+    (click)="$event.stopPropagation()"
+  >
     <app-search-bar [(searchQuery)]="searchQuery" />
 
     <div class="checkbox-container">
