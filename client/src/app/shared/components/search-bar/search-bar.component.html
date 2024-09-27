@@ -1,5 +1,6 @@
 <app-icon [name]="IconName.SEARCH" [size]="20" [color]="'gray'" />
 <input
+  #searchInput
   type="text"
   (input)="onInputChange($event)"
   [value]="searchQuery()"

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, model } from '@angular/core';
+import { Component, ElementRef, model, ViewChild } from '@angular/core';
 import { IconName } from '../../icon/icon-name';
 import { IconComponent } from '../../icon/icon.component';
 
@@ -11,14 +11,13 @@ import { IconComponent } from '../../icon/icon.component';
   styleUrls: ['./search-bar.component.scss'],
 })
 export class SearchBarComponent {
+  @ViewChild('searchInput') searchInputElement!: ElementRef<HTMLInputElement>;
   protected readonly IconName = IconName;
 
   /**
    * Holds the current query string
    */
   searchQuery = model<string>('');
-
-  constructor() {}
 
   /**
    * Handles user input changes within the search bar.
@@ -29,6 +28,13 @@ export class SearchBarComponent {
     const target = event.target as HTMLInputElement;
 
     this.searchQuery.set(target.value);
+  }
+
+  /**
+   * Setzt den Fokus auf das Input-Element
+   */
+  focusInput(): void {
+    this.searchInputElement.nativeElement.focus();
   }
 
   /**
