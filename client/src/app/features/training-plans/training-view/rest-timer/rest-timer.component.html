@@ -1,5 +1,5 @@
 <div class="timer-display">
-  <app-percentage-circle-visualisation class="timer-display" [size]="275" [percentage]="percentFinished()" />
+  <app-percentage-circle-visualisation class="timer-display" [size]="275" [percentage]="percentageRemaining()" />
 
   <span class="time-remaining">{{ pauseTimeService.remainingTime() | formatTime }}</span>
 

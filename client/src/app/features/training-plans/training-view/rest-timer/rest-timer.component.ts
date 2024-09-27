@@ -1,20 +1,23 @@
-import { AfterViewInit, Component, effect, Injector, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, effect, Injector, OnInit, signal, WritableSignal } from '@angular/core';
 import { ModalService } from '../../../../core/services/modal/modalService';
 import { ServiceWorkerService } from '../../../../platform/service-worker.service';
 import { PercentageCircleVisualisationComponent } from '../../../../shared/components/percentage-circle-visualisation/percentage-circle-visualisation.component';
 import { Percentage } from '../../../../shared/components/percentage-circle-visualisation/percentage.type';
+import { IconName } from '../../../../shared/icon/icon-name';
+import { IconComponent } from '../../../../shared/icon/icon.component';
 import { FormatTimePipe } from '../../format-time.pipe';
 import { PauseTimeService } from '../services/pause-time.service';
 
 @Component({
   selector: 'app-rest-timer',
   standalone: true,
-  imports: [PercentageCircleVisualisationComponent, FormatTimePipe],
+  imports: [PercentageCircleVisualisationComponent, FormatTimePipe, IconComponent],
   templateUrl: './rest-timer.component.html',
   styleUrls: ['./rest-timer.component.scss'],
 })
-export class RestTimerComponent implements OnInit, AfterViewInit {
-  percentFinished: WritableSignal<Percentage> = signal(99);
+export class RestTimerComponent implements OnInit {
+  protected readonly IconName = IconName;
+  percentageRemaining: WritableSignal<Percentage> = signal(100);
 
   constructor(
     protected pauseTimeService: PauseTimeService,
@@ -30,14 +33,6 @@ export class RestTimerComponent implements OnInit, AfterViewInit {
       },
       { allowSignalWrites: true, injector: this.injector },
     );
-  }
-
-  ngAfterViewChecked(): void {
-    this.updateCircle();
-  }
-
-  ngAfterViewInit(): void {
-    this.updateCircle();
   }
 
   adjustTime(seconds: number) {
@@ -61,6 +56,10 @@ export class RestTimerComponent implements OnInit, AfterViewInit {
     const remainingTime = this.pauseTimeService.remainingTime();
     const percentageRemaining = ((remainingTime / initialTime) * 100) as Percentage;
 
-    this.percentFinished.set(percentageRemaining);
+    this.percentageRemaining.set(percentageRemaining);
+
+    if (this.percentageRemaining() === 0) {
+      this.percentageRemaining.set(100);
+    }
   }
 }

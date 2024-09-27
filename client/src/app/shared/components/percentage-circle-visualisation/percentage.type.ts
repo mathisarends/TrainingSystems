@@ -19,4 +19,4 @@ type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] exte
  * This type restricts its value to a number between 0 and 100 inclusive.
  * It is constructed using the `Range` utility type with a range from 0 to 100.
  */
-export type Percentage = Range<0, 100>;
+export type Percentage = Range<0, 101>;

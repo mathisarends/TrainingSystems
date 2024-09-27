@@ -17,18 +17,12 @@
 }
 
 .time-remaining {
-  position: absolute;
   font-size: 2.5rem;
-  color: #333;
-}
-
-.time-remaining {
-  font-size: 2.5rem;
-  color: #333;
   position: absolute;
   top: 50%;
   transform: translateY(-55%);
   font-weight: 500;
+  color: #555;
 }
 
 .initial-time {
@@ -61,15 +55,15 @@
 }
 
 .minus-button {
-  color: #007bff;
+  color: var(--accent-color);
   background-color: inherit;
 }
 
 .plus-button {
-  color: #007bff;
+  color: var(--accent-color);
   background-color: inherit;
 }
 
 .skip-button {
-  background-color: #007bff;
+  background-color: var(--accent-color);
 }

@@ -37,4 +37,7 @@ export enum IconName {
   LOG_OUT = 'log-out',
   PAUSE = 'pause',
   PAUSE_CIRCLE = 'pause-circle',
+  FAST_FORWARD = 'fast-forward',
+  SKIP_FORWARD = 'skip-forward',
+  SKIP_BACK = 'skip-back',
 }
