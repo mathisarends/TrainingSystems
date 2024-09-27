@@ -30,7 +30,6 @@ export class ChartSkeletonComponent implements OnInit {
     effect(
       () => {
         const rowsArray = Array.from({ length: this.rows() }, (_, i) => i);
-        console.log('🚀 ~ ChartSkeletonComponent ~ ngOnInit ~ rowsArray:', rowsArray);
         this.rowsArray.set(rowsArray);
       },
       { allowSignalWrites: true, injector: this.injector },

@@ -56,7 +56,7 @@ export class RestPauseTimeIndicatorComponent implements OnInit {
   async onHostClick(): Promise<void> {
     await this.modalService.open({
       component: RestTimerComponent,
-      title: 'Pause Timer',
+      title: this.pauseTimeService.currentExercise(),
       buttonText: 'Abbrechen',
       hasFooter: false,
     });
