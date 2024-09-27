@@ -40,4 +40,14 @@
     [attr.cy]="size() / 2"
     [attr.transform]="'rotate(-90 ' + size() / 2 + ' ' + size() / 2 + ')'"
   />
+
+  <!-- <circle
+    class="drag-handle"
+    [attr.cx]="handlePosition().x"
+    [attr.cy]="handlePosition().y"
+    r="10"
+    fill="grey"
+    (mousedown)="startDragging($event)"
+    (touchstart)="startDragging($event)"
+  /> -->
 </svg>

@@ -29,13 +29,17 @@ export class RestTimerComponent implements OnInit {
   ngOnInit(): void {
     effect(
       () => {
-        this.updateCircle();
+        this.calculateRemainingRestTimePercentage();
       },
       { allowSignalWrites: true, injector: this.injector },
     );
   }
 
   adjustTime(seconds: number) {
+    if (this.pauseTimeService.remainingTime() + seconds < 0) {
+      seconds = 0;
+    }
+
     this.sendMessageToServiceWorker('adjustTime', { seconds });
   }
 
@@ -44,7 +48,6 @@ export class RestTimerComponent implements OnInit {
     this.modalService.close();
   }
 
-  // Funktioniert noch nicht so ganz ist aber eien gute idee! TODO: fix
   protected calcTimeAndAdjustTimer(newPercentage: number) {
     const initialTime = this.pauseTimeService.getInitialTime();
     let newRemainingTime = this.pauseTimeService.getInitialTime() - (newPercentage / 100) * initialTime;
@@ -60,11 +63,10 @@ export class RestTimerComponent implements OnInit {
     });
   }
 
-  private updateCircle() {
+  private calculateRemainingRestTimePercentage() {
     const initialTime = this.pauseTimeService.getInitialTime();
     const remainingTime = this.pauseTimeService.remainingTime();
 
-    // Early return prevents divison with 0
     if (remainingTime === 0) {
       this.percentageRemaining.set(100);
       return;

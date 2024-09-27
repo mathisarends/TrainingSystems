@@ -7,7 +7,6 @@ import {
   Injector,
   input,
   output,
-  signal,
   ViewChild,
 } from '@angular/core';
 import { Percentage } from './percentage.type';
@@ -42,8 +41,6 @@ export class PercentageCircleVisualisationComponent implements AfterViewInit {
    */
   showPercentageText = input<boolean>(false);
 
-  isDragging = signal(false);
-
   constructor(private injector: Injector) {}
 
   /**
@@ -71,16 +68,7 @@ export class PercentageCircleVisualisationComponent implements AfterViewInit {
   // Mouse down event to start dragging
   @HostListener('mousedown', ['$event'])
   onMouseDown(event: MouseEvent) {
-    this.isDragging.set(true);
     this.updatePercentageFromEvent(event);
-  }
-
-  // Mouse move event to update progress while dragging
-  @HostListener('mousemove', ['$event'])
-  onMouseMove(event: MouseEvent) {
-    if (this.isDragging()) {
-      this.updatePercentageFromEvent(event);
-    }
   }
 
   // Calculate the percentage based on mouse position
@@ -101,4 +89,18 @@ export class PercentageCircleVisualisationComponent implements AfterViewInit {
     const newPercentage = ((angle / 360) * 100) as Percentage;
     this.percentageChanged.emit(newPercentage);
   }
+
+  // Toggle for Drag logic
+  /* handlePosition() {
+    const radius = this.size() / 2 - 5;
+    const angle = (this.percentage() / 100) * 360;
+
+    const radians = (-angle - 90) * (Math.PI / 180);
+
+    // Berechne die X- und Y-Position auf dem Kreis
+    const x = this.size() / 2 + radius * Math.cos(radians);
+    const y = this.size() / 2 + radius * Math.sin(radians);
+
+    return { x, y };
+  } */
 }
