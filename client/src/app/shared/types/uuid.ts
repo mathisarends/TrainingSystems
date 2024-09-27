@@ -1,1 +1,1 @@
-export type UUID = string & { readonly brand: unique symbol };
+export type UUID = string;

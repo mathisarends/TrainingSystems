@@ -2,24 +2,24 @@
   <div
     class="card-custom-img"
     [ngStyle]="{
-      'background-image': 'url(' + (trainingPlan.coverImageBase64 || '/images/training/training_3.jpg') + ')',
+      'background-image': 'url(' + (trainingPlan().coverImageBase64 || '/images/training/training_3.jpg') + ')',
     }"
   ></div>
   <div class="card-custom-avatar">
-    <img class="img-fluid" [src]="trainingPlan.pictureUrl ?? '/images/profile-placeholder.webp'" alt="Avatar" />
+    <img class="img-fluid" [src]="trainingPlan().pictureUrl ?? '/images/profile-placeholder.webp'" alt="Avatar" />
   </div>
   <div class="card-body" style="overflow-y: auto">
-    <h4 class="card-title">{{ trainingPlan.title }}</h4>
-    <p class="card-text">{{ trainingPlan.trainingFrequency }} Trainings / Woche</p>
+    <h4 class="card-title">{{ trainingPlan().title }}</h4>
+    <p class="card-text">{{ trainingPlan().trainingFrequency }} Trainings / Woche</p>
 
     <p class="card-text ml-3">
-      {{ trainingPlan.lastUpdated }}
+      {{ trainingPlan().lastUpdated }}
     </p>
 
-    @if (trainingPlan.averageTrainingDayDuration) {
+    @if (trainingPlan().averageTrainingDayDuration) {
       <p class="card-text d-flex gap-2">
         <app-icon [name]="IconName.Activity" [size]="15" />
-        {{ trainingPlan.averageTrainingDayDuration }}
+        {{ trainingPlan().averageTrainingDayDuration }}
       </p>
     }
   </div>
@@ -28,27 +28,27 @@
       <app-icon-button
         [tooltipTitle]="'Ansehen'"
         [iconName]="IconName.EYE"
-        (buttonClick)="viewTrainingPlan(trainingPlan.id)"
-      ></app-icon-button>
+        (buttonClick)="viewTrainingPlan(trainingPlan().id)"
+      />
 
       <app-icon-button
         [tooltipTitle]="'Statistiken'"
         [iconName]="IconName.BAR_CHART"
-        (buttonClick)="viewStatistics(trainingPlan.id)"
-      ></app-icon-button>
+        (buttonClick)="viewStatistics(trainingPlan().id)"
+      />
 
       <app-icon-button
         [tooltipTitle]="'Bearbeiten'"
         [iconName]="IconName.Edit"
-        (buttonClick)="showEditTrainingPlanModal(trainingPlan.id)"
-      ></app-icon-button>
+        (buttonClick)="showEditTrainingPlanModal(trainingPlan().id)"
+      />
 
       <app-icon-button
         [tooltipTitle]="'Löschen'"
         [iconName]="IconName.Trash"
         (buttonClick)="showDeleteTrainingPlanModal()"
-      ></app-icon-button>
+      />
     </div>
-    <div>{{ trainingPlan.percentageFinished }}%</div>
+    <div>{{ trainingPlan().percentageFinished }}%</div>
   </div>
 </div>

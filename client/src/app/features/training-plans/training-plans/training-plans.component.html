@@ -1,4 +1,4 @@
-<div class="search-bar-container" [@toggleCollapse]="searchBarCollapsed() ? 'collapsed' : 'expanded'">
+<div class="search-bar-container" [@toggleCollapse]="isSearchbarCollapsed() ? 'collapsed' : 'expanded'">
   <app-search-bar [(searchQuery)]="trainingPlanSearchQuery" />
 </div>
 

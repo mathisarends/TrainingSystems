@@ -42,14 +42,21 @@ export class TrainingPlansComponent implements OnInit {
   @ViewChild(SearchBarComponent) searchBar!: SearchBarComponent;
   protected readonly IconName = IconName;
 
+  /**
+   * Observable for fetching the training plans from the service
+   */
   trainingPlans$!: Observable<TrainingPlanCardView[]>;
+
+  /**
+   * BehaviorSubject for managing and emitting the filtered list of training plans.
+   */
   filteredTrainingPlans$ = new BehaviorSubject<TrainingPlanCardView[] | null>(null);
 
   columnClass!: string;
 
   trainingPlanSearchQuery = signal<string>('');
 
-  searchBarCollapsed = signal<boolean>(true);
+  isSearchbarCollapsed = signal<boolean>(true);
 
   constructor(
     private modalService: ModalService,
@@ -164,9 +171,9 @@ export class TrainingPlansComponent implements OnInit {
    * If expanded, the search input is focused automatically.
    */
   private toggleSearchBarVisibility(): void {
-    this.searchBarCollapsed.set(!this.searchBarCollapsed());
+    this.isSearchbarCollapsed.set(!this.isSearchbarCollapsed());
 
-    if (!this.searchBarCollapsed()) {
+    if (!this.isSearchbarCollapsed()) {
       this.searchBar.focusInput();
     }
   }

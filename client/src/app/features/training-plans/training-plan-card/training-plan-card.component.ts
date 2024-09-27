@@ -1,9 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { Router } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
-import { HttpService } from '../../../core/services/http-client.service';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { ModalSize } from '../../../core/services/modal/modalSize';
 import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
@@ -14,6 +11,8 @@ import { IconComponent } from '../../../shared/icon/icon.component';
 import { EditTrainingPlanComponent } from '../edit-training-plan/edit-training-plan.component';
 import { TrainingPlanCardView } from '../training-view/models/exercise/training-plan-card-view-dto';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
+import { TrainingPlanCardService } from './training-plan-card.service';
+import { TrainingWeekDayDto } from './training-week-day-dto';
 
 /**
  * Component for displaying and managing a single training plan card.
@@ -24,19 +23,32 @@ import { TrainingPlanService } from '../training-view/services/training-plan.ser
   imports: [CommonModule, TooltipDirective, IconButtonComponent, IconComponent],
   templateUrl: './training-plan-card.component.html',
   styleUrls: ['./training-plan-card.component.scss'],
+  providers: [TrainingPlanCardService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TrainingPlanCardComponent {
   protected readonly IconName = IconName;
 
-  @Input() trainingPlan!: TrainingPlanCardView;
-  @Input() columnClass!: string;
-  @Output() changedPlanConstellation = new EventEmitter<void>();
+  /**
+   * The training plan data that will be displayed in the card.
+   */
+  trainingPlan = input.required<TrainingPlanCardView>();
+
+  /**
+   * Determines the CSS layout based on screen size (e.g., different column widths for mobile and desktop views).
+   */
+  columnClass = input.required<string>();
+
+  /**
+   * Output: Emits an event when the training plan's constellation has changed.
+   */
+  changedPlanConstellation = output<void>();
 
   constructor(
-    private httpService: HttpService,
     private router: Router,
     private modalService: ModalService,
     private toastService: ToastService,
+    private trainingPlanCardService: TrainingPlanCardService,
     private trainingPlanService: TrainingPlanService,
   ) {}
 
@@ -44,17 +56,15 @@ export class TrainingPlanCardComponent {
    * Navigates to the view page of the training plan.
    * @param id - The ID of the training plan to view.
    */
-  async viewTrainingPlan(id: string): Promise<void> {
-    const response = await firstValueFrom(this.httpService.get<any>(`/training/plan/${id}/latest`));
-    const latestWeek = response.weekIndex;
-    const latestDay = response.dayIndex;
-
-    this.router.navigate(['/training/view'], {
-      queryParams: {
-        planId: id,
-        week: latestWeek,
-        day: latestDay,
-      },
+  viewTrainingPlan(id: string): void {
+    this.trainingPlanCardService.getLatestTrainingPlan(id).subscribe((response: TrainingWeekDayDto) => {
+      this.router.navigate(['/training/view'], {
+        queryParams: {
+          planId: id,
+          week: response.weekIndex,
+          day: response.dayIndex,
+        },
+      });
     });
   }
 
@@ -78,7 +88,6 @@ export class TrainingPlanCardComponent {
   }
 
   viewStatistics(id: string): void {
-    console.log('id', id);
     this.router.navigate([`statistics/${id}`]);
   }
 
@@ -96,8 +105,7 @@ export class TrainingPlanCardComponent {
     });
 
     if (confirmed) {
-      await this.handleDelete(this.trainingPlan.id);
-      this.changedPlanConstellation.emit();
+      this.handleDelete(this.trainingPlan().id);
     }
   }
 
@@ -105,23 +113,14 @@ export class TrainingPlanCardComponent {
    * Deletes the training plan.
    * @param id - The ID of the training plan to delete.
    */
-  private async handleDelete(id: string): Promise<void> {
-    if (id) {
-      try {
-        await firstValueFrom(this.httpService.delete(`/training/plan/delete/${id}`));
+  private handleDelete(id: string): void {
+    this.trainingPlanCardService.deleteTrainingPlan(id).subscribe(() => {
+      this.modalService.close();
+      this.toastService.success('Plan gelöscht');
 
-        this.modalService.close();
-        this.toastService.success('Plan gelöscht');
+      this.trainingPlanService.trainingPlanChanged();
 
-        this.trainingPlanService.trainingPlanChanged();
-
-        this.changedPlanConstellation.emit();
-      } catch (error) {
-        console.error('Error deleting training plan:', error);
-        if (error instanceof HttpErrorResponse && error.status === 404) {
-          console.log('Route oder Nutzer nicht gefunden');
-        }
-      }
-    }
+      this.changedPlanConstellation.emit();
+    });
   }
 }
