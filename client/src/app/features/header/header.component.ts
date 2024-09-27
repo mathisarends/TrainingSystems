@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { CircularIconButtonComponent } from '../../shared/components/circular-icon-button/circular-icon-button.component';
 import { HeadlineComponent } from '../../shared/components/headline/headline.component';
 import { MoreOptionsButtonComponent } from '../../shared/components/more-options-button/more-options-button.component';
@@ -21,6 +22,7 @@ export class HeaderComponent {
   constructor(
     protected profileService: ProfileService,
     protected headerService: HeaderService,
+    private router: Router,
   ) {}
 
   // Emit the button click event
@@ -30,5 +32,9 @@ export class HeaderComponent {
     } else {
       console.warn('No callback for button registered');
     }
+  }
+
+  protected onProfilePictureClick() {
+    this.router.navigate(['profile']);
   }
 }
