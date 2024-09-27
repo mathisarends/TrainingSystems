@@ -58,7 +58,7 @@ export class NavBarComponent implements OnInit {
           if (this.isTrainingPlanUuidInRoute(currentRoute)) {
             currentRoute = '';
           } else {
-            currentRoute = '/usage';
+            currentRoute = '/profile';
           }
         }
         this.activeRoute.set(currentRoute);

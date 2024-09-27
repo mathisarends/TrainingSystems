@@ -82,7 +82,7 @@ export class ProfileComponent2 implements OnInit {
         });
       });
     } else if (listItem.label === 'Exercises') {
-      this.router.navigate(['exercises']);
+      this.router.navigate(['profile/exercises']);
     } else if (listItem.label === 'Account löschen') {
       this.showDeleteAccountDialog();
     } else if (listItem.label === 'Settings') {
