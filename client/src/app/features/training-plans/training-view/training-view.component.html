@@ -241,4 +241,10 @@
       }
     </table>
   </form>
+
+  <app-pagination
+    [currentPage]="trainingDayIndex"
+    [totalPages]="trainingDataService.trainingPlanData.trainingFrequency"
+    (pageChanged)="navigateDay($event, trainingWeekIndex)"
+  />
 }
