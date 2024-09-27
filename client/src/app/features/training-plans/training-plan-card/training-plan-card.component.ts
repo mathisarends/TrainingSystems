@@ -58,6 +58,10 @@ export class TrainingPlanCardComponent {
    */
   viewTrainingPlan(id: string): void {
     this.trainingPlanCardService.getLatestTrainingPlan(id).subscribe((response: TrainingWeekDayDto) => {
+      console.log(
+        '🚀 ~ TrainingPlanCardComponent ~ this.trainingPlanCardService.getLatestTrainingPlan ~ response:',
+        response,
+      );
       this.router.navigate(['/training/view'], {
         queryParams: {
           planId: id,
@@ -105,7 +109,7 @@ export class TrainingPlanCardComponent {
     });
 
     if (confirmed) {
-      this.handleDelete(this.trainingPlan().id);
+      this.handleDelete();
     }
   }
 
@@ -113,8 +117,8 @@ export class TrainingPlanCardComponent {
    * Deletes the training plan.
    * @param id - The ID of the training plan to delete.
    */
-  private handleDelete(id: string): void {
-    this.trainingPlanCardService.deleteTrainingPlan(id).subscribe(() => {
+  private handleDelete(): void {
+    this.trainingPlanCardService.deleteTrainingPlan(this.trainingPlan().id).subscribe(() => {
       this.modalService.close();
       this.toastService.success('Plan gelöscht');
 

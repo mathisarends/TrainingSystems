@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
+import { HttpService } from '../../../core/services/http-client.service';
 
 @Injectable()
 export class TrainingPlanCardService {
   private baseUrl = '/training';
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpService: HttpService) {}
 
   /**
    * Fetch the latest training plan data by ID.
@@ -14,7 +14,7 @@ export class TrainingPlanCardService {
    * @returns Observable containing the latest training plan data.
    */
   getLatestTrainingPlan(id: string): Observable<any> {
-    return this.httpClient.get<any>(`${this.baseUrl}/plan/${id}/latest`);
+    return this.httpService.get<any>(`${this.baseUrl}/plan/${id}/latest`);
   }
 
   /**
@@ -23,6 +23,6 @@ export class TrainingPlanCardService {
    * @returns Observable of the delete operation result.
    */
   deleteTrainingPlan(id: string): Observable<void> {
-    return this.httpClient.delete<void>(`${this.baseUrl}/delete/${id}`);
+    return this.httpService.delete<void>(`${this.baseUrl}/plan/delete/${id}`);
   }
 }
