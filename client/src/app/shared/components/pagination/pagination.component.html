@@ -1,9 +1,5 @@
-<div class="pagination p1 w-100 d-flex">
-  <ul>
-    @for (page of createRange(totalPages); track page) {
-      <a [class.is-active]="isSelected(page)" href="#" (click)="navigatePage(page, $event)">
-        <li>{{ page + 1 }}</li>
-      </a>
-    }
-  </ul>
-</div>
+@for (page of createRange(totalPages()); track page) {
+  <a [class.is-active]="page | selectedPage: currentPage()" href="#" (click)="navigatePage(page, $event)">
+    {{ page + 1 }}
+  </a>
+}
