@@ -19,15 +19,15 @@ export class EstMaxService {
     const exerciseData = this.getExerciseFromTargetNameAttribut(inputElement.name);
 
     if (this.shouldCalculateEstMaxForCategory(category)) {
-      const { exerciseSelect, weightInput, setsInput, rpeInput, estMaxInput } =
+      const { exerciseSelect, weightInput, repsInput, rpeInput, estMaxInput } =
         this.exerciseTableRowService.getInputsByElement(inputElement);
 
       const weight = parseFloat(weightInput.value);
-      const sets = parseFloat(setsInput.value);
+      const reps = parseFloat(repsInput.value);
       const rpe = parseFloat(rpeInput.value);
 
-      if (weight && sets && rpe) {
-        const estMax = this.calcEstMax(weight, sets, rpe);
+      if (weight && reps && rpe) {
+        const estMax = this.calcEstMax(weight, reps, rpe);
         estMaxInput.value = estMax.toString();
         exerciseData.estMax = estMax;
 

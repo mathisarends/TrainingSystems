@@ -29,9 +29,9 @@ a {
     }
 
     &.is-active {
-      background-color: #007bff;
+      background-color: var(--accent-color);
       color: white;
-      border-color: #007bff;
+      border-color: var(--accent-color);
     }
   }
 }
