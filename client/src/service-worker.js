@@ -58,5 +58,8 @@ self.addEventListener('message', function (event) {
     case 'adjustTime':
       timer.remainingTime += data.seconds;
       break;
+    case 'setTime':
+      console.log('test it out');
+      timer.remainingTime = data.newRemainingTime;
   }
 });

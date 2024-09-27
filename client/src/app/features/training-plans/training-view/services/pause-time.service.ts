@@ -6,7 +6,7 @@ import { ServiceWorkerService } from '../../../../platform/service-worker.servic
   providedIn: 'root',
 })
 export class PauseTimeService {
-  private keepAliveIntervalId: any; // Store the keep-alive interval ID
+  private keepAliveIntervalId: any;
 
   private initialTime: number = 0;
 
