@@ -36,10 +36,13 @@
       cy="150"
     />
   </svg>
-  <span class="time-remaining">{{ remainingTime | formatTime }}</span>
 
-  <span class="initial-time">{{ initialTime | formatTime }}</span>
+  <span class="time-remaining">{{ pauseTimeService.remainingTime() | formatTime }}</span>
+
+  <span class="initial-time">{{ pauseTimeService.getInitialTime() | formatTime }}</span>
 </div>
+
+<app-percentage-circle-visualisation class="timer-display" [size]="275" [percentage]="percentFinished()" />
 
 <div class="timer-controls">
   <button class="timer-button minus-button" (click)="adjustTime(-30)">-30 SEC</button>

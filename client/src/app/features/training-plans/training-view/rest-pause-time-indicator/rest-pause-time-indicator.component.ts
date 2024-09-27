@@ -38,7 +38,7 @@ export class RestPauseTimeIndicatorComponent implements OnInit {
       () => {
         const isModalVisible = this.modalService.isVisible();
 
-        if (this.pauseTimeService.getCurrentTime() === 0 || isModalVisible) {
+        if (!this.pauseTimeService.isRunning() || isModalVisible) {
           this.isCollapsed.set(true);
         } else if (!isModalVisible) {
           this.isCollapsed.set(false);

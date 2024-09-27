@@ -1,8 +1,18 @@
-import { AfterViewInit, Component, effect, ElementRef, Injector, OnInit, ViewChild } from '@angular/core';
-import { Subscription } from 'rxjs';
+import {
+  AfterViewInit,
+  Component,
+  effect,
+  ElementRef,
+  Injector,
+  OnInit,
+  signal,
+  ViewChild,
+  WritableSignal,
+} from '@angular/core';
 import { ModalService } from '../../../../core/services/modal/modalService';
 import { ServiceWorkerService } from '../../../../platform/service-worker.service';
 import { PercentageCircleVisualisationComponent } from '../../../../shared/components/percentage-circle-visualisation/percentage-circle-visualisation.component';
+import { Percentage } from '../../../../shared/components/percentage-circle-visualisation/percentage.type';
 import { FormatTimePipe } from '../../format-time.pipe';
 import { PauseTimeService } from '../services/pause-time.service';
 
@@ -16,24 +26,18 @@ import { PauseTimeService } from '../services/pause-time.service';
 export class RestTimerComponent implements OnInit, AfterViewInit {
   @ViewChild('progressRing') progressRing!: ElementRef;
 
-  remainingTime: number;
-  timerSubscription: Subscription | null = null;
-  initialTime: number;
+  percentFinished: WritableSignal<Percentage> = signal(99);
 
   constructor(
-    private pauseTimeService: PauseTimeService,
+    protected pauseTimeService: PauseTimeService,
     private modalService: ModalService,
     private serviceWorkerService: ServiceWorkerService,
     private injector: Injector,
-  ) {
-    this.remainingTime = this.pauseTimeService.getCurrentTime();
-    this.initialTime = this.pauseTimeService.getInitialTime();
-  }
+  ) {}
 
   ngOnInit(): void {
     effect(
       () => {
-        this.remainingTime = this.pauseTimeService.remainingTime();
         if (this.progressRing) {
           this.updateCircle();
         }
@@ -42,9 +46,8 @@ export class RestTimerComponent implements OnInit, AfterViewInit {
     );
   }
 
-  // Initiale Kreisfüllung beim Start
   ngAfterViewChecked(): void {
-    if (this.progressRing && this.remainingTime === 0) {
+    if (this.progressRing && this.pauseTimeService.remainingTime() === 0) {
       this.updateCircle();
     }
   }
@@ -59,7 +62,6 @@ export class RestTimerComponent implements OnInit, AfterViewInit {
 
   skipTimer() {
     this.sendMessageToServiceWorker('stop');
-
     this.modalService.close();
   }
 
@@ -74,11 +76,17 @@ export class RestTimerComponent implements OnInit, AfterViewInit {
     const circle = this.progressRing.nativeElement.querySelector('.progress-ring__circle');
     const radius = circle.r.baseVal.value;
 
+    const initialTime = this.pauseTimeService.getInitialTime();
+    const remainingTime = this.pauseTimeService.remainingTime();
+    const percentageRemaining = ((remainingTime / initialTime) * 100) as Percentage;
+
+    this.percentFinished.set(percentageRemaining);
+
     const circumference = 2 * Math.PI * radius;
 
-    let offset = (this.remainingTime / this.initialTime) * circumference;
+    let offset = (this.pauseTimeService.remainingTime() / this.pauseTimeService.getInitialTime()) * circumference;
 
-    if (this.remainingTime === 0) {
+    if (this.pauseTimeService.remainingTime() === 0) {
       offset = circumference;
     }
 

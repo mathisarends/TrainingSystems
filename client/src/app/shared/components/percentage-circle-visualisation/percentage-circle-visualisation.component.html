@@ -21,21 +21,23 @@
   <circle
     class="progress-ring__background"
     stroke="url(#backgroundGradient)"
-    [attr.stroke-width]="size() / 10"
+    [attr.stroke-width]="10"
     fill="transparent"
     [attr.r]="size() / 2 - 5"
     [attr.cx]="size() / 2"
     [attr.cy]="size() / 2"
+    [attr.transform]="'rotate(-90 ' + size() / 2 + ' ' + size() / 2 + ')'"
   />
 
   <!-- Progress ring -->
   <circle
     class="progress-ring__circle"
     stroke="url(#progressGradient)"
-    [attr.stroke-width]="size() / 10"
+    [attr.stroke-width]="10"
     fill="transparent"
     [attr.r]="size() / 2 - 5"
     [attr.cx]="size() / 2"
     [attr.cy]="size() / 2"
+    [attr.transform]="'rotate(-90 ' + size() / 2 + ' ' + size() / 2 + ')'"
   />
 </svg>

@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable, signal } from '@angular/core';
+import { computed, EventEmitter, Injectable, signal } from '@angular/core';
 import { BrowserCheckService } from '../../../../core/services/browser-check.service';
 import { ServiceWorkerService } from '../../../../platform/service-worker.service';
 
@@ -13,6 +13,10 @@ export class PauseTimeService {
   remainingTime = signal(0);
 
   currentExercise = signal('');
+
+  isRunning = computed(() => {
+    return this.remainingTime() > 0;
+  });
 
   countdownEmitter: EventEmitter<number> = new EventEmitter<number>(); // Countdown Emitter
 
@@ -95,10 +99,6 @@ export class PauseTimeService {
     }
 
     this.countdownEmitter.emit(currentTime); // Emit the updated current time
-  }
-
-  getCurrentTime(): number {
-    return this.remainingTime();
   }
 
   getInitialTime(): number {

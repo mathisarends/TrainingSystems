@@ -8,11 +8,11 @@
 
 <div class="pause-time-with-icon-container">
   <p>
-    {{ pauseTimeService.getCurrentTime() | formatTime }}
+    {{ pauseTimeService.remainingTime() | formatTime }}
   </p>
 </div>
 
 <div
   class="progress-bar"
-  [style.width.%]="pauseTimeService.getCurrentTime() | toPauseTimeProgressPercentage: pauseTimeService.getInitialTime()"
+  [style.width.%]="pauseTimeService.remainingTime() | toPauseTimeProgressPercentage: pauseTimeService.getInitialTime()"
 ></div>

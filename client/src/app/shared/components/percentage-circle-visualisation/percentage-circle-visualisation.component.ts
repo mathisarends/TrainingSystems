@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, effect, ElementRef, Injector, input, ViewChild } from '@angular/core';
 import { Percentage } from './percentage.type';
 
 @Component({
@@ -29,22 +29,29 @@ export class PercentageCircleVisualisationComponent implements AfterViewInit {
    */
   showPercentageText = input<boolean>(false);
 
+  constructor(private injector: Injector) {}
+
   /**
    * Angular lifecycle hook that is called after the view has been initialized.
    * It calculates and applies the stroke dasharray and offset for the progress circle
    * based on the provided percentage.
    */
   ngAfterViewInit(): void {
-    const circle = this.progressRing.nativeElement.querySelector('.progress-ring__circle');
-    const radius = circle.r?.baseVal.value;
+    effect(
+      () => {
+        const circle = this.progressRing.nativeElement.querySelector('.progress-ring__circle');
+        const radius = circle.r?.baseVal.value;
 
-    const circumference = 2 * Math.PI * radius;
+        const circumference = 2 * Math.PI * radius;
 
-    // Calculate the offset for the progress based on the percentage.
-    let offset = (this.percentage() / 100) * circumference;
+        // Calculate the offset for the progress based on the percentage.
+        let offset = (this.percentage() / 100) * circumference;
 
-    // Apply the stroke dasharray and offset to the circle.
-    circle.style.strokeDasharray = `${circumference} ${circumference}`;
-    circle.style.strokeDashoffset = `${offset}`;
+        // Apply the stroke dasharray and offset to the circle.
+        circle.style.strokeDasharray = `${circumference} ${circumference}`;
+        circle.style.strokeDashoffset = `${offset}`;
+      },
+      { allowSignalWrites: true, injector: this.injector },
+    );
   }
 }
