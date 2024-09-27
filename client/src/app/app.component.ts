@@ -1,7 +1,6 @@
-import { ApplicationRef, Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
-import { first } from 'rxjs';
 import { AuthService } from './core/services/auth.service';
 import { BrowserCheckService } from './core/services/browser-check.service';
 import { RedirectService } from './core/services/redirect.service';
@@ -45,7 +44,6 @@ export class AppComponent implements OnInit {
     private profileService: ProfileService,
     private notificationService: NotificationService,
     private destroyRef: DestroyRef,
-    private appRef: ApplicationRef,
   ) {}
 
   ngOnInit() {
@@ -55,9 +53,7 @@ export class AppComponent implements OnInit {
       }
     });
 
-    this.appRef.isStable.pipe(first((stable) => stable)).subscribe(() => {
-      console.log('🚀 ~ AppComponent ~ this.appRef.isStable.pipe ~ stable:');
-    });
+
 
     if (this.browserCheckService.isBrowser()) {
       this.serviceWorkerService.registerServiceWorker();

@@ -32,8 +32,8 @@ import { TrainingStatisticsService } from './training-statistics.service';
     ChartSkeletonComponent,
   ],
   providers: [TrainingStatisticsService],
-  templateUrl: './statistics.component.html',
-  styleUrls: ['./statistics.component.scss'],
+  templateUrl: './training-day-statistics.component.html',
+  styleUrls: ['./training-day-statistics.component.scss'],
 })
 export class StatisticsComponent implements OnInit {
   dataLoaded: boolean = false;
