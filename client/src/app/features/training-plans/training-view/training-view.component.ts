@@ -17,6 +17,7 @@ import { InputComponent } from '../../../shared/components/input/input.component
 import { SkeletonTrainingTableComponent } from '../../../shared/components/loader/skeleton-training-table/skeleton-training-table.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { InteractiveElementDirective } from '../../../shared/directives/interactive-element.directive';
+import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
 import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
 import { AutoSaveService } from '../../../shared/service/auto-save.service';
@@ -59,6 +60,7 @@ import { TrainingPlanDto } from './trainingPlanDto';
     RepInputDirective,
     FormatTimePipe,
     DragDropModule,
+    TooltipDirective,
   ],
   providers: [TrainingViewService, TrainingPlanDataService, EstMaxService, SwipeService],
   templateUrl: './training-view.component.html',
@@ -155,7 +157,6 @@ export class TrainingViewComponent implements OnInit {
    * @param day - Index of the training day.
    */
   loadData(planId: string, week: number, day: number): void {
-    this.dataViewLoaded.next(false);
     forkJoin({
       trainingPlan: this.trainingViewService.loadTrainingPlan(planId, week, day),
       exerciseData: this.trainingViewService.loadExerciseData(),

@@ -242,9 +242,28 @@
     </table>
   </form>
 
-  <app-pagination
-    [currentPage]="trainingDayIndex"
-    [totalPages]="trainingDataService.trainingPlanData.trainingFrequency"
-    (pageChanged)="navigateDay($event, trainingWeekIndex)"
-  />
+  <div class="navigation-container">
+    <app-pagination
+      [currentPage]="trainingDayIndex"
+      [totalPages]="trainingDataService.trainingPlanData.trainingFrequency"
+      (pageChanged)="navigateDay($event, trainingWeekIndex)"
+    />
+
+    <div>
+      <app-icon
+        class="week-navigation-icon"
+        [appTooltip]="'Vorherige Woche'"
+        (clicked)="navigateWeek(-1)"
+        [name]="IconName.CHEVRON_LEFT"
+        [size]="28"
+      />
+      <app-icon
+        class="week-navigation-icon"
+        [appTooltip]="'Näcshte Woche'"
+        [name]="IconName.CHEVRON_RIGHT"
+        (clicked)="navigateWeek(1)"
+        [size]="28"
+      />
+    </div>
+  </div>
 }
