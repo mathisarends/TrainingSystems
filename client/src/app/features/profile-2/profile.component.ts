@@ -36,9 +36,10 @@ export class ProfileComponent2 implements OnInit {
 
   protected readonly listItems: IconListItem[] = [
     { label: 'Exercises', iconName: IconName.DATABASE, iconBackgroundColor: IconBackgroundColor.DodgerBlue },
+    { label: 'Log', iconName: IconName.BookOpen, iconBackgroundColor: IconBackgroundColor.BlueViolet },
     { label: 'Ticket', iconName: IconName.IMAGE, iconBackgroundColor: IconBackgroundColor.Orange },
     { label: 'Social', iconName: IconName.USERS, iconBackgroundColor: IconBackgroundColor.LimeGreen },
-    { label: 'Settings', iconName: IconName.SETTINGS, iconBackgroundColor: IconBackgroundColor.BlueViolet },
+    { label: 'Settings', iconName: IconName.SETTINGS, iconBackgroundColor: IconBackgroundColor.DarkGray },
     { label: 'Account löschen', iconName: IconName.Trash, iconBackgroundColor: IconBackgroundColor.OrangeRed },
   ];
 
