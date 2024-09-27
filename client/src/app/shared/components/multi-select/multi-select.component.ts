@@ -75,10 +75,6 @@ export class MultiSelectComponent implements OnInit {
     );
   }
 
-  toggleDropdown() {
-    this.isOpen.set(!this.isOpen());
-  }
-
   /**
    * Handles changes to the selection state when an option is selected or deselected.
    * Updates the selected signal and emits the selectionChange event.
@@ -97,6 +93,11 @@ export class MultiSelectComponent implements OnInit {
     }
 
     this.selectedItems.set(newSelected);
+  }
+
+  @HostListener('click')
+  onHostClick(): void {
+    this.isOpen.set(!this.isOpen());
   }
 
   /**
