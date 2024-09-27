@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, Injector, OnInit, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { ModalService } from '../../../core/services/modal/modalService';
@@ -35,10 +35,10 @@ import { TrainingStatisticsService } from './training-statistics.service';
   templateUrl: './training-day-statistics.component.html',
   styleUrls: ['./training-day-statistics.component.scss'],
 })
-export class StatisticsComponent implements OnInit {
+export class TrainingDayStatisticsComponent implements OnInit {
   dataLoaded: boolean = false;
 
-  selectedExercises!: string[];
+  selectedExercises: WritableSignal<string[]> = signal([]);
   allExercises!: string[];
 
   lineChartDatasets!: LineChartDataset[];
@@ -55,6 +55,7 @@ export class StatisticsComponent implements OnInit {
     private modalService: ModalService,
     private trainingStatisticService: TrainingStatisticsService,
     private headerService: HeaderService,
+    private injector: Injector,
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -64,13 +65,21 @@ export class StatisticsComponent implements OnInit {
     if (this.id) {
       await this.fetchInitialData(this.id);
     }
+
+    effect(
+      () => {
+        this.changeDisplayCategories();
+        console.log('called');
+      },
+      { allowSignalWrites: true, injector: this.injector },
+    );
   }
 
-  async changeDisplayCategories(newExercises: string[]) {
-    this.trainingStatisticService.updateLastViewedCategories(this.id, newExercises).subscribe(() => {});
+  async changeDisplayCategories() {
+    this.trainingStatisticService.updateLastViewedCategories(this.id, this.selectedExercises()).subscribe(() => {});
 
     if (this.id) {
-      await this.fetchStatistics(this.id, newExercises);
+      await this.fetchStatistics(this.id, this.selectedExercises());
     }
   }
 
@@ -101,10 +110,10 @@ export class StatisticsComponent implements OnInit {
     ]);
 
     this.allExercises = allExercisesResponse;
-    this.selectedExercises = selectedExercisesResponse;
+    this.selectedExercises.set(selectedExercisesResponse);
 
     if (this.selectedExercises) {
-      await this.fetchStatistics(id, this.selectedExercises);
+      await this.fetchStatistics(id, this.selectedExercises());
     }
   }
 

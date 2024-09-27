@@ -5,8 +5,8 @@ import {
   HostListener,
   Injector,
   input,
+  model,
   OnInit,
-  output,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -42,19 +42,7 @@ export class MultiSelectComponent implements OnInit {
    * The list of currently selected items.
    * This input is optional and can be initialized with a predefined selection.
    */
-  selectedItems = input<string[]>([]);
-
-  /**
-   * Emits an event whenever the selection changes.
-   * The emitted value is the updated list of selected items.
-   */
-  selectionChange = output<string[]>();
-
-  /**
-   * A signal representing the current selection state.
-   * This is used internally to manage the selected items.
-   */
-  selected = signal<string[]>([]);
+  selectedItems = model.required<string[]>();
 
   /**
    * A signal representing the open/closed state of the dropdown.
@@ -74,7 +62,6 @@ export class MultiSelectComponent implements OnInit {
   constructor(private injector: Injector) {}
 
   ngOnInit(): void {
-    this.selected.set(this.selectedItems());
     this.filteredItems.set(this.items());
 
     effect(
@@ -99,7 +86,7 @@ export class MultiSelectComponent implements OnInit {
    * @param event The DOM event triggered by the selection change.
    */
   onSelectionChange(option: string, checkboxItem: CheckboxItem): void {
-    const newSelected = [...this.selected()];
+    const newSelected = [...this.selectedItems()];
     if (checkboxItem.isChecked) {
       newSelected.push(option);
     } else {
@@ -109,8 +96,7 @@ export class MultiSelectComponent implements OnInit {
       }
     }
 
-    this.selected.set(newSelected);
-    this.selectionChange.emit(newSelected);
+    this.selectedItems.set(newSelected);
   }
 
   /**
