@@ -44,6 +44,21 @@ export class RestTimerComponent implements OnInit {
     this.modalService.close();
   }
 
+  // Funktioniert noch nicht so ganz ist aber eien gute idee! TODO: fix
+  protected calcTimeAndAdjustTimer(newPercentage: number) {
+    const initialTime = this.pauseTimeService.getInitialTime();
+    const newRemainingTime = (newPercentage / 100) * initialTime;
+    const remainingTime = this.pauseTimeService.remainingTime();
+
+    // Berechne die Differenz zwischen der neuen verbleibenden Zeit und der aktuellen verbleibenden Zeit
+    const adjustment = newRemainingTime - remainingTime;
+
+    // Berechne eine gerade Zahl für den Adjustment-Wert
+    const roundedAdjustment = Math.round(adjustment / 2) * 2;
+
+    console.log('🚀 ~ RestTimerComponent ~ calcTimeAndAdjustTimer ~ roundedAdjustment:', roundedAdjustment);
+  }
+
   private sendMessageToServiceWorker(command: string, data?: any) {
     this.serviceWorkerService.sendMessageToServiceWorker({
       command,

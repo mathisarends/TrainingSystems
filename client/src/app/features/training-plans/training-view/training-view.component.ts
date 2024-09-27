@@ -104,7 +104,7 @@ export class TrainingViewComponent implements OnInit {
    * Subscribes to route parameters and loads the initial data.
    */
   ngOnInit() {
-    this.route.queryParams.subscribe((params) => {
+    this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       this.automationContextInitialized = false;
       this.swipeService.removeSwipeListener();
       this.headerService.setLoading();

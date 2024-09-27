@@ -71,7 +71,7 @@ export class TrainingPlansComponent implements OnInit {
       this.loadTrainingPlans();
     });
 
-    this.filteredTrainingPlans$.subscribe((trainingPlans) => {
+    this.filteredTrainingPlans$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((trainingPlans) => {
       if (trainingPlans) {
         this.updateColumnClass(trainingPlans.length);
       }

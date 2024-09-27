@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { AuthService } from './core/services/auth.service';
 import { BrowserCheckService } from './core/services/browser-check.service';
@@ -42,10 +43,11 @@ export class AppComponent implements OnInit {
     private authService: AuthService,
     private profileService: ProfileService,
     private notificationService: NotificationService,
+    private destroyRef: DestroyRef,
   ) {}
 
   ngOnInit() {
-    this.activatedRoute.queryParams.subscribe((params) => {
+    this.activatedRoute.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       if (params['login'] === 'success' && this.authService.checkTempAuthCookie()) {
         this.authService.setAuthenticationStatus(true);
       }
@@ -54,7 +56,6 @@ export class AppComponent implements OnInit {
     if (this.browserCheckService.isBrowser()) {
       this.serviceWorkerService.registerServiceWorker();
 
-      // called to prevent ts-warnings
       this.authService.checkAuthenticationStatus().subscribe();
 
       this.profileService.fetchAndSetProfileData().subscribe();

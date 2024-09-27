@@ -1,8 +1,6 @@
 @if (!(dataViewLoaded$ | async)) {
   <app-skeleton-training-table />
 } @else {
-  @let mobileView = mobileDeviceDetectionService.isMobileDevice;
-
   <form id="form">
     <table #trainingTable class="table table-striped training-table responsive-table caption-top mb-4">
       <thead>

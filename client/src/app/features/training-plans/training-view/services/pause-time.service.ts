@@ -98,7 +98,7 @@ export class PauseTimeService {
       new Audio('./audio/boxing_bell.mp3').play();
     }
 
-    this.countdownEmitter.emit(currentTime); // Emit the updated current time
+    this.countdownEmitter.emit(currentTime);
   }
 
   getInitialTime(): number {
