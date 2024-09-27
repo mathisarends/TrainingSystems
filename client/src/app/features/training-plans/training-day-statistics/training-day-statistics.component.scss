@@ -1,16 +1,22 @@
 :host {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Zentriert den gesamten Inhalt des Hosts */
   padding-bottom: 1rem;
-}
-
-main {
-  display: flex;
-  flex-direction: column;
   gap: 2rem;
-  justify-content: center;
   max-width: 1800px;
   width: 100%;
   margin: 0 auto;
+}
+
+.chart-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 1024px) {
+  .chart-grid {
+    grid-template-columns: 1fr;
+  }
 }

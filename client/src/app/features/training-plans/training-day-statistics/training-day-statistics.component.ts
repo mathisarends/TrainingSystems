@@ -11,6 +11,7 @@ import { PolarChartComponent } from '../../../shared/components/charts/polar-cha
 import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
 import { ChartSkeletonComponent } from '../../../shared/components/loader/chart-skeleton/chart-skeleton.component';
 import { MultiSelectComponent } from '../../../shared/components/multi-select/multi-select.component';
+import { KeyboardService } from '../../../shared/service/keyboard.service';
 import { HeaderService } from '../../header/header.service';
 import { ChartColorService } from '../training-view/services/chart-color.service';
 import { TrainingExerciseTonnageDto } from './main-exercise-tonnage-dto';
@@ -31,12 +32,12 @@ import { TrainingStatisticsService } from './training-statistics.service';
     HeadlineComponent,
     ChartSkeletonComponent,
   ],
-  providers: [TrainingStatisticsService],
+  providers: [TrainingStatisticsService, KeyboardService],
   templateUrl: './training-day-statistics.component.html',
   styleUrls: ['./training-day-statistics.component.scss'],
 })
 export class TrainingDayStatisticsComponent implements OnInit {
-  dataLoaded: boolean = false;
+  isLoaded = signal(false);
 
   selectedExercises: WritableSignal<string[]> = signal([]);
 
@@ -124,7 +125,7 @@ export class TrainingDayStatisticsComponent implements OnInit {
       firstValueFrom(this.trainingStatisticService.getSetDataForSelectedExercises(id, exercises)),
     ]);
 
-    this.dataLoaded = true;
+    this.isLoaded.set(true);
 
     this.initializeCharts(tonnageResponse.data, setsResponse, tonnageResponse.title);
   }

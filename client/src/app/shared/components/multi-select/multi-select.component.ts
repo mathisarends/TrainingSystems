@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   effect,
   HostListener,
   Injector,
@@ -10,10 +11,12 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { toggleCollapseAnimation } from '../../animations/toggle-collapse';
 import { IconName } from '../../icon/icon-name';
 import { IconComponent } from '../../icon/icon.component';
+import { KeyboardService } from '../../service/keyboard.service';
 import { CheckboxItem } from '../checbkox/checkbox-item';
 import { CheckboxComponent } from '../checbkox/checkbox.component';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
@@ -28,6 +31,7 @@ import { SearchBarComponent } from '../search-bar/search-bar.component';
   templateUrl: './multi-select.component.html',
   styleUrls: ['./multi-select.component.scss'],
   animations: [toggleCollapseAnimation],
+  providers: [KeyboardService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MultiSelectComponent implements OnInit {
@@ -61,10 +65,22 @@ export class MultiSelectComponent implements OnInit {
    */
   filteredItems = signal<string[]>([]);
 
-  constructor(private injector: Injector) {}
+  constructor(
+    private injector: Injector,
+    private destroyRef: DestroyRef,
+    private keyboardService: KeyboardService,
+  ) {}
 
   ngOnInit(): void {
     this.filteredItems.set(this.items());
+
+    this.keyboardService
+      .escapePressed$()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.searchQuery.set('');
+        this.isOpen.set(false);
+      });
 
     effect(
       () => {
@@ -84,15 +100,9 @@ export class MultiSelectComponent implements OnInit {
    * @param event The DOM event triggered by the selection change.
    */
   onSelectionChange(option: string, checkboxItem: CheckboxItem): void {
-    const newSelected = [...this.selectedItems()];
-    if (checkboxItem.isChecked) {
-      newSelected.push(option);
-    } else {
-      const index = newSelected.indexOf(option);
-      if (index > -1) {
-        newSelected.splice(index, 1);
-      }
-    }
+    const newSelected = checkboxItem.isChecked
+      ? [...this.selectedItems(), option]
+      : this.selectedItems().filter((item) => item !== option);
 
     this.selectedItems.set(newSelected);
   }
