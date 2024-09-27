@@ -15,8 +15,17 @@
   gap: 2rem;
 }
 
+.pagination-container {
+  padding-left: 3rem;
+}
+
 @media (max-width: 1024px) {
   .chart-grid {
     grid-template-columns: 1fr;
+  }
+
+  .pagination-container {
+    display: grid;
+    place-items: center;
   }
 }

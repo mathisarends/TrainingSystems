@@ -11,8 +11,10 @@ import { PolarChartComponent } from '../../../shared/components/charts/polar-cha
 import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
 import { ChartSkeletonComponent } from '../../../shared/components/loader/chart-skeleton/chart-skeleton.component';
 import { MultiSelectComponent } from '../../../shared/components/multi-select/multi-select.component';
+import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { KeyboardService } from '../../../shared/service/keyboard.service';
 import { HeaderService } from '../../header/header.service';
+import { ChangeProfilePictureConfirmationComponent } from '../../profile-2/change-profile-picture-confirmation/change-profile-picture-confirmation.component';
 import { ChartColorService } from '../training-view/services/chart-color.service';
 import { TrainingExerciseTonnageDto } from './main-exercise-tonnage-dto';
 import { Tonnage } from './tonnage';
@@ -31,8 +33,10 @@ import { TrainingStatisticsService } from './training-statistics.service';
     GroupedBarChartComponent,
     HeadlineComponent,
     ChartSkeletonComponent,
+    ChangeProfilePictureConfirmationComponent,
+    PaginationComponent,
   ],
-  providers: [TrainingStatisticsService, KeyboardService],
+  providers: [TrainingStatisticsService, KeyboardService, PaginationComponent],
   templateUrl: './training-day-statistics.component.html',
   styleUrls: ['./training-day-statistics.component.scss'],
 })

@@ -11,6 +11,10 @@
 
     <app-grouped-bar-chart [labels]="groupedBarChartLabels" [barChartDataSets]="groupedBarChartDatasets" />
   </div>
+
+  <div class="pagination-container">
+    <app-pagination [currentPage]="0" [totalPages]="2" />
+  </div>
 } @else {
   <div class="chart-grid">
     <app-chart-skeleton />
