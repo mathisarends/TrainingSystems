@@ -36,9 +36,9 @@
       cy="150"
     />
   </svg>
-  <span class="time-remaining">{{ formatTime(remainingTime) }}</span>
+  <span class="time-remaining">{{ remainingTime | formatTime }}</span>
 
-  <span class="initial-time">{{ formatTime(initialTime) }}</span>
+  <span class="initial-time">{{ initialTime | formatTime }}</span>
 </div>
 
 <div class="timer-controls">

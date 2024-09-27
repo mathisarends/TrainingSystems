@@ -1,14 +1,19 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, effect, ElementRef, Injector, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ModalService } from '../../../../core/services/modal/modalService';
+import { ServiceWorkerService } from '../../../../platform/service-worker.service';
+import { PercentageCircleVisualisationComponent } from '../../../../shared/components/percentage-circle-visualisation/percentage-circle-visualisation.component';
+import { FormatTimePipe } from '../../format-time.pipe';
 import { PauseTimeService } from '../services/pause-time.service';
 
 @Component({
   selector: 'app-rest-timer',
+  standalone: true,
+  imports: [PercentageCircleVisualisationComponent, FormatTimePipe],
   templateUrl: './rest-timer.component.html',
   styleUrls: ['./rest-timer.component.scss'],
 })
-export class RestTimerComponent implements OnInit, OnDestroy, AfterViewInit {
+export class RestTimerComponent implements OnInit, AfterViewInit {
   @ViewChild('progressRing') progressRing!: ElementRef;
 
   remainingTime: number;
@@ -18,38 +23,34 @@ export class RestTimerComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private pauseTimeService: PauseTimeService,
     private modalService: ModalService,
+    private serviceWorkerService: ServiceWorkerService,
+    private injector: Injector,
   ) {
     this.remainingTime = this.pauseTimeService.getCurrentTime();
-    this.initialTime = this.pauseTimeService.getInitialTime(); // Store the initial time
+    this.initialTime = this.pauseTimeService.getInitialTime();
   }
 
   ngOnInit(): void {
-    this.timerSubscription = this.pauseTimeService.countdownEmitter.subscribe((remainingTime: number) => {
-      this.remainingTime = remainingTime;
-      if (this.progressRing) {
-        this.updateCircle();
-      }
-    });
-
-    this.pauseTimeService.countdownEmitter.emit(this.remainingTime);
+    effect(
+      () => {
+        this.remainingTime = this.pauseTimeService.remainingTime();
+        if (this.progressRing) {
+          this.updateCircle();
+        }
+      },
+      { allowSignalWrites: true, injector: this.injector },
+    );
   }
 
-  // Intitial color
+  // Initiale Kreisfüllung beim Start
   ngAfterViewChecked(): void {
     if (this.progressRing && this.remainingTime === 0) {
-      // Initiale Kreisfüllung beim Start
       this.updateCircle();
     }
   }
 
   ngAfterViewInit(): void {
     this.updateCircle();
-  }
-
-  ngOnDestroy(): void {
-    if (this.timerSubscription) {
-      this.timerSubscription.unsubscribe();
-    }
   }
 
   adjustTime(seconds: number) {
@@ -63,20 +64,10 @@ export class RestTimerComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private sendMessageToServiceWorker(command: string, data?: any) {
-    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-      navigator.serviceWorker.controller.postMessage({
-        command,
-        ...data,
-      });
-    } else {
-      console.error('[RestTimerComponent] Service Worker not available or not registered.');
-    }
-  }
-
-  formatTime(seconds: number): string {
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${minutes}:${secs.toString().padStart(2, '0')}`;
+    this.serviceWorkerService.sendMessageToServiceWorker({
+      command,
+      ...data,
+    });
   }
 
   private updateCircle() {
