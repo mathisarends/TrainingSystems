@@ -6,10 +6,6 @@
   min-width: 90px;
 }
 
-.table > :not(caption) > * > * {
-  background-color: inherit;
-}
-
 .cdk-drag-preview {
   border: 2px dashed grey;
 }
