@@ -69,12 +69,14 @@ export class RestTimerComponent implements OnInit {
   private updateCircle() {
     const initialTime = this.pauseTimeService.getInitialTime();
     const remainingTime = this.pauseTimeService.remainingTime();
-    const percentageRemaining = ((remainingTime / initialTime) * 100) as Percentage;
 
-    this.percentageRemaining.set(percentageRemaining);
-
-    if (this.percentageRemaining() === 0) {
+    // Early return prevents divison with 0
+    if (remainingTime === 0) {
       this.percentageRemaining.set(100);
+      return;
     }
+
+    const percentageRemaining = ((remainingTime / initialTime) * 100) as Percentage;
+    this.percentageRemaining.set(percentageRemaining);
   }
 }

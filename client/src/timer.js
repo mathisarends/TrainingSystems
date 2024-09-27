@@ -28,10 +28,11 @@ class Timer {
       if (this.remainingTime <= 0) {
         clearInterval(this.timer);
         this.notifyTimerExpired();
+        this.updateTimerDisplay(this.remainingTime);
         return;
       }
-      this.remainingTime--;
 
+      this.remainingTime--;
       this.updateTimerDisplay(this.remainingTime);
 
       const minutes = Math.floor(this.remainingTime / 60);
@@ -99,8 +100,8 @@ class Timer {
    */
   continueTimer() {
     if (this.isTimerPaused) {
-      this.startTimer(this.pausedTime);
       this.isTimerPaused = false;
+      this.startTimer(this.pausedTime);
     }
   }
 

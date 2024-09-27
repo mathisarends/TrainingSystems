@@ -1,4 +1,4 @@
-import { computed, EventEmitter, Injectable, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { BrowserCheckService } from '../../../../core/services/browser-check.service';
 import { ServiceWorkerService } from '../../../../platform/service-worker.service';
 
@@ -13,12 +13,6 @@ export class PauseTimeService {
   remainingTime = signal(0);
 
   currentExercise = signal('');
-
-  isRunning = computed(() => {
-    return this.remainingTime() > 0;
-  });
-
-  countdownEmitter: EventEmitter<number> = new EventEmitter<number>(); // Countdown Emitter
 
   constructor(
     private serviceWorkerService: ServiceWorkerService,
@@ -86,19 +80,14 @@ export class PauseTimeService {
 
     new Audio('./audio/boxing_bell.mp3').play();
     this.clearLocalStorage();
-
-    this.countdownEmitter.emit(0);
   }
 
   private handleCurrentTimeUpdate(currentTime: number): void {
-    this.remainingTime.set(currentTime);
-
     if (currentTime === 0) {
-      this.clearLocalStorage();
-      new Audio('./audio/boxing_bell.mp3').play();
+      this.stopTimer();
+    } else {
+      this.remainingTime.set(currentTime);
     }
-
-    this.countdownEmitter.emit(currentTime);
   }
 
   getInitialTime(): number {
@@ -119,7 +108,6 @@ export class PauseTimeService {
 
       if (this.remainingTime() > 0) {
         this.startKeepAlive();
-        this.countdownEmitter.emit(this.remainingTime());
       }
     }
   }
