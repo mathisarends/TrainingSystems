@@ -40,4 +40,5 @@ export enum IconName {
   FAST_FORWARD = 'fast-forward',
   SKIP_FORWARD = 'skip-forward',
   SKIP_BACK = 'skip-back',
+  DOWNLOAD = 'download',
 }

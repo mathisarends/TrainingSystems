@@ -59,9 +59,26 @@ export class DraggableDirective {
     const deltaX = event.clientX - this.startX;
     const deltaY = event.clientY - this.startY;
 
+    let newX = this.initialX + deltaX;
+    let newY = this.initialY + deltaY;
+
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+
     const element = this.el.nativeElement;
-    this.renderer.setStyle(element, 'left', `${this.initialX + deltaX}px`);
-    this.renderer.setStyle(element, 'top', `${this.initialY + deltaY}px`);
+    const rect = element.getBoundingClientRect();
+
+    const elementWidth = rect.width;
+    const elementHeight = rect.height;
+
+    if (newX < 0) {
+      newX = 0;
+    } else if (newX + elementWidth > windowWidth) {
+      newX = windowWidth - elementWidth;
+    }
+
+    this.renderer.setStyle(element, 'left', `${newX}px`);
+    this.renderer.setStyle(element, 'top', `${newY}px`);
   }
 
   // Mouseup event to stop dragging
