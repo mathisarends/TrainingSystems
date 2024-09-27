@@ -1,14 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  effect,
-  ElementRef,
-  Injector,
-  OnInit,
-  signal,
-  ViewChild,
-  WritableSignal,
-} from '@angular/core';
+import { AfterViewInit, Component, effect, Injector, OnInit, signal, WritableSignal } from '@angular/core';
 import { ModalService } from '../../../../core/services/modal/modalService';
 import { ServiceWorkerService } from '../../../../platform/service-worker.service';
 import { PercentageCircleVisualisationComponent } from '../../../../shared/components/percentage-circle-visualisation/percentage-circle-visualisation.component';
@@ -24,8 +14,6 @@ import { PauseTimeService } from '../services/pause-time.service';
   styleUrls: ['./rest-timer.component.scss'],
 })
 export class RestTimerComponent implements OnInit, AfterViewInit {
-  @ViewChild('progressRing') progressRing!: ElementRef;
-
   percentFinished: WritableSignal<Percentage> = signal(99);
 
   constructor(
@@ -38,18 +26,14 @@ export class RestTimerComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     effect(
       () => {
-        if (this.progressRing) {
-          this.updateCircle();
-        }
+        this.updateCircle();
       },
       { allowSignalWrites: true, injector: this.injector },
     );
   }
 
   ngAfterViewChecked(): void {
-    if (this.progressRing && this.pauseTimeService.remainingTime() === 0) {
-      this.updateCircle();
-    }
+    this.updateCircle();
   }
 
   ngAfterViewInit(): void {
@@ -73,24 +57,10 @@ export class RestTimerComponent implements OnInit, AfterViewInit {
   }
 
   private updateCircle() {
-    const circle = this.progressRing.nativeElement.querySelector('.progress-ring__circle');
-    const radius = circle.r.baseVal.value;
-
     const initialTime = this.pauseTimeService.getInitialTime();
     const remainingTime = this.pauseTimeService.remainingTime();
     const percentageRemaining = ((remainingTime / initialTime) * 100) as Percentage;
 
     this.percentFinished.set(percentageRemaining);
-
-    const circumference = 2 * Math.PI * radius;
-
-    let offset = (this.pauseTimeService.remainingTime() / this.pauseTimeService.getInitialTime()) * circumference;
-
-    if (this.pauseTimeService.remainingTime() === 0) {
-      offset = circumference;
-    }
-
-    circle.style.strokeDasharray = `${circumference} ${circumference}`;
-    circle.style.strokeDashoffset = `${offset}`;
   }
 }

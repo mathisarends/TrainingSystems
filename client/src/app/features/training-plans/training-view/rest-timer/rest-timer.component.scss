@@ -14,27 +14,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 220px;
-  height: 220px;
-  margin: 20px 0;
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: #007bff;
-  border-radius: 50%;
-}
-
-.progress-ring {
-  position: absolute;
-  transform: rotate(-90deg); /* Rotate the whole ring to start from top */
-}
-
-.progress-ring__background {
-  transform-origin: 50% 50%;
-}
-
-.progress-ring__circle {
-  transition: stroke-dashoffset 1s linear;
-  transform-origin: 50% 50%;
 }
 
 .time-remaining {
@@ -62,16 +41,16 @@
 
 .timer-controls {
   display: flex;
-  justify-content: space-between; /* Platzierung der Buttons */
-  width: 100%; /* Nimmt die gesamte Breite des Containers ein */
-  padding: 0 10px; /* Etwas Polsterung, um sie nicht an den Rand zu drücken */
-  margin-top: 20px; /* Abstand zum Timer oben */
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 10px;
+  margin-top: 20px;
 }
 
 .timer-button {
   flex: 1;
-  margin: 0 5px; /* Abstand zwischen den Buttons */
-  padding: 15px 10px; /* Button-Größe anpassen */
+  margin: 0 5px;
+  padding: 15px 10px;
   border: none;
   border-radius: 5px;
   font-size: 1.085rem;

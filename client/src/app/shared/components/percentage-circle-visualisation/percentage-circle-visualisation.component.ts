@@ -44,10 +44,8 @@ export class PercentageCircleVisualisationComponent implements AfterViewInit {
 
         const circumference = 2 * Math.PI * radius;
 
-        // Calculate the offset for the progress based on the percentage.
         let offset = (this.percentage() / 100) * circumference;
 
-        // Apply the stroke dasharray and offset to the circle.
         circle.style.strokeDasharray = `${circumference} ${circumference}`;
         circle.style.strokeDashoffset = `${offset}`;
       },
