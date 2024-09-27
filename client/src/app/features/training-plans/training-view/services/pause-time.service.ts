@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { effect, Injectable, Injector, signal } from '@angular/core';
 import { BrowserCheckService } from '../../../../core/services/browser-check.service';
 import { ServiceWorkerService } from '../../../../platform/service-worker.service';
 
@@ -17,6 +17,7 @@ export class PauseTimeService {
   constructor(
     private serviceWorkerService: ServiceWorkerService,
     private browserCheckService: BrowserCheckService,
+    private injector: Injector,
   ) {
     if (this.browserCheckService.isBrowser()) {
       this.restoreStateFromLocalStorage();
@@ -24,11 +25,24 @@ export class PauseTimeService {
 
     this.serviceWorkerService.listenForMessages((event: MessageEvent) => {
       if (event.data.command === 'currentTime') {
-        this.handleCurrentTimeUpdate(event.data.currentTime);
-      } else if (event.data?.command === 'stopTimerSignal') {
-        this.stopTimer();
+        this.remainingTime.set(event.data.currentTime);
+      } else if (event.data.command === 'stopTimerSignal') {
+        this.remainingTime.set(0);
       }
     });
+
+    effect(
+      () => {
+        if (this.remainingTime() === 0 && this.initialTime !== 0) {
+          clearInterval(this.keepAliveIntervalId);
+          this.keepAliveIntervalId = null;
+
+          new Audio('./audio/boxing_bell.mp3').play();
+          this.clearLocalStorage();
+        }
+      },
+      { allowSignalWrites: true, injector: this.injector },
+    );
   }
 
   /**
@@ -48,7 +62,6 @@ export class PauseTimeService {
     });
 
     this.currentExercise.set(exerciseName);
-
     this.startKeepAlive();
   }
 
@@ -65,29 +78,6 @@ export class PauseTimeService {
         });
       }
     }, 10000);
-  }
-
-  /**
-   * Stops the timer by resetting remaining time, clearing the interval, and emitting a final event.
-   */
-  private stopTimer(): void {
-    this.initialTime = 0;
-    this.remainingTime.set(0);
-    if (this.keepAliveIntervalId) {
-      clearInterval(this.keepAliveIntervalId);
-      this.keepAliveIntervalId = null;
-    }
-
-    new Audio('./audio/boxing_bell.mp3').play();
-    this.clearLocalStorage();
-  }
-
-  private handleCurrentTimeUpdate(currentTime: number): void {
-    if (currentTime === 0) {
-      this.stopTimer();
-    } else {
-      this.remainingTime.set(currentTime);
-    }
   }
 
   getInitialTime(): number {

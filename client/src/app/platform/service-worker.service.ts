@@ -1,11 +1,14 @@
-import { Injectable } from '@angular/core';
+import { ApplicationRef, Injectable } from '@angular/core';
 import { BrowserCheckService } from '../core/services/browser-check.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ServiceWorkerService {
-  constructor(private browserCheckService: BrowserCheckService) {}
+  constructor(
+    private browserCheckService: BrowserCheckService,
+    private appRef: ApplicationRef,
+  ) {}
 
   /**
    * Register the service worker and check for updates.
