@@ -10,7 +10,8 @@ import {
   ViewChild,
 } from '@angular/core';
 import Chart from 'chart.js/auto';
-import { LineChartDataset } from './lilne-chart-data-set';
+import { LineChartData } from './line-chart-data';
+import { LineChartOptions } from './line-chart-options';
 
 @Component({
   selector: 'app-line-chart',
@@ -21,18 +22,15 @@ import { LineChartDataset } from './lilne-chart-data-set';
 export class LineChartComponent implements AfterViewInit {
   @ViewChild('canvas') canvas!: ElementRef;
 
+  // Simplified inputs using the new interfaces
   chartId = input<string>('lineChart');
-  data = input<LineChartDataset[]>([]);
-  labels = input<string[]>([]);
-  yAxisTitle = input<string>('Value');
-  maintainAspectRatio = input<boolean>(true);
+  data = input<LineChartData>({ labels: [], datasets: [] });
+  options = input<LineChartOptions>({ yAxisTitle: 'Value', maintainAspectRatio: true, responsive: true });
 
   chart = signal<Chart<'line'> | null>(null);
 
-  chartData = computed(() => ({
-    labels: this.labels(),
-    datasets: this.data(),
-  }));
+  // Computed signal to track the current chart data based on inputs
+  chartData = computed(() => this.data());
 
   constructor(private injector: Injector) {}
 
@@ -50,7 +48,7 @@ export class LineChartComponent implements AfterViewInit {
   }
 
   initializeChart(): void {
-    this.chart()?.destroy(); // prevent memoryr leaks
+    this.chart()?.destroy(); // prevent memory leaks
 
     const context = this.canvas.nativeElement.getContext('2d');
     if (!context) {
@@ -62,14 +60,14 @@ export class LineChartComponent implements AfterViewInit {
       type: 'line',
       data: this.chartData(),
       options: {
-        responsive: true,
-        maintainAspectRatio: this.maintainAspectRatio(),
+        responsive: this.options().responsive ?? true,
+        maintainAspectRatio: this.options().maintainAspectRatio ?? true,
         scales: {
           y: {
             beginAtZero: true,
             title: {
               display: true,
-              text: this.yAxisTitle(),
+              text: this.options().yAxisTitle ?? 'Value',
             },
           },
         },
@@ -93,8 +91,8 @@ export class LineChartComponent implements AfterViewInit {
 
   updateChart(): void {
     if (this.chart()) {
-      this.chart()!.data.labels = this.labels();
-      this.chart()!.data.datasets = this.data();
+      this.chart()!.data.labels = this.data().labels;
+      this.chart()!.data.datasets = this.data().datasets;
       this.chart()!.update();
     }
   }

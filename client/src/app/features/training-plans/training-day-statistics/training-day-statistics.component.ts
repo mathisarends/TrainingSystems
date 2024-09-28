@@ -2,7 +2,6 @@ import { Component, DestroyRef, effect, Injector, OnInit, signal, WritableSignal
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationStart, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
-import { ModalService } from '../../../core/services/modal/modalService';
 import { BarChartData } from '../../../shared/components/charts/grouped-bar-chart/bar-chart.-data';
 import { GroupedBarChartComponent } from '../../../shared/components/charts/grouped-bar-chart/grouped-bar-chart.component';
 import { LineChartDataset } from '../../../shared/components/charts/line-chart/lilne-chart-data-set';
@@ -46,18 +45,20 @@ export class TrainingDayStatisticsComponent implements OnInit {
 
   allExercises: WritableSignal<string[]> = signal([]);
 
-  lineChartDatasets!: LineChartDataset[];
-  lineChartLabels!: string[];
+  lineChartData = signal<{
+    datasets: LineChartDataset[];
+    labels: string[];
+  }>({ datasets: [], labels: [] });
 
-  groupedBarChartDatasets!: BarChartData[];
-  groupedBarChartLabels!: string[];
-
+  groupedBarChartData = signal<{
+    datasets: BarChartData[];
+    labels: string[];
+  }>({ datasets: [], labels: [] });
   trainingPlanId = signal('');
 
   constructor(
     private router: Router,
     private chartColorService: ChartColorService,
-    private modalService: ModalService,
     private trainingStatisticService: TrainingStatisticsService,
     private headerService: HeaderService,
     private destroyRef: DestroyRef,
@@ -87,24 +88,26 @@ export class TrainingDayStatisticsComponent implements OnInit {
     forkJoin([
       this.trainingStatisticService.getAllCategories(),
       this.trainingStatisticService.getSelectedCategories(id),
-    ]).subscribe(([allExercisesResponse, selectedExercisesResponse]) => {
-      this.allExercises.set(allExercisesResponse);
-      this.selectedExercises.set(selectedExercisesResponse);
-
-      this.fetchStatistics(id, this.selectedExercises());
-    });
+    ])
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(([allExercisesResponse, selectedExercisesResponse]) => {
+        this.allExercises.set(allExercisesResponse);
+        this.selectedExercises.set(selectedExercisesResponse);
+        this.fetchStatistics(id, this.selectedExercises());
+      });
   }
 
   private fetchStatistics(id: string, exercises: string[]): void {
     forkJoin([
       this.trainingStatisticService.getTonnageDataForSelectedExercises(id, exercises),
       this.trainingStatisticService.getSetDataForSelectedExercises(id, exercises),
-    ]).subscribe(([tonnageResponse, setsResponse]) => {
-      this.isLoaded.set(true);
-      this.initializeCharts(tonnageResponse.data, setsResponse, tonnageResponse.title);
-    });
+    ])
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(([tonnageResponse, setsResponse]) => {
+        this.isLoaded.set(true);
+        this.initializeCharts(tonnageResponse.data, setsResponse, tonnageResponse.title);
+      });
   }
-
   private initializeCharts(
     tonnageData: Partial<TrainingExerciseTonnageDto>,
     setsResponse: { [key: string]: number[] },
@@ -115,19 +118,22 @@ export class TrainingDayStatisticsComponent implements OnInit {
       subTitle: 'stats',
     });
 
-    // Setze Daten für das Liniendiagramm
-    this.lineChartDatasets = Object.keys(tonnageData).map((categoryKey) => {
+    // Line chart setup
+    const lineDatasets = Object.keys(tonnageData).map((categoryKey) => {
       const categoryData = tonnageData[categoryKey as keyof TrainingExerciseTonnageDto];
       return this.createTonnageDataSet(categoryKey, categoryData || []);
     });
-    this.lineChartLabels = this.generateWeekLabels(this.lineChartDatasets[0]?.data.length || 0);
 
-    // Setze Daten für das gruppierte Balkendiagramm
-    this.groupedBarChartDatasets = Object.keys(setsResponse).map((categoryKey) => {
+    const lineLabels = this.generateWeekLabels(lineDatasets[0]?.data.length || 0);
+    this.lineChartData.set({ datasets: lineDatasets, labels: lineLabels });
+
+    // Bar chart setup
+    const barDatasets = Object.keys(setsResponse).map((categoryKey) => {
       const setsData = setsResponse[categoryKey];
       return this.createBarDataset(categoryKey, setsData || []);
     });
-    this.groupedBarChartLabels = this.lineChartLabels;
+
+    this.groupedBarChartData.set({ datasets: barDatasets, labels: lineLabels });
   }
 
   private createTonnageDataSet(category: string, data: Tonnage[]): LineChartDataset {
@@ -172,8 +178,10 @@ export class TrainingDayStatisticsComponent implements OnInit {
     this.fetchStatistics(this.trainingPlanId(), this.selectedExercises());
   }
 
+  /**
+   * Sets up synchronization between navigation events and the backend.
+   */
   private setupNavigationSync(): void {
-    // This method handles syncing the selected categories when the user navigates away
     this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
       if (event instanceof NavigationStart) {
         this.syncCategoriesWithBackend();
@@ -181,6 +189,9 @@ export class TrainingDayStatisticsComponent implements OnInit {
     });
   }
 
+  /**
+   * Synchronizes selected categories with the backend.
+   */
   private syncCategoriesWithBackend(): void {
     this.trainingStatisticService
       .updateLastViewedCategories(this.trainingPlanId(), this.selectedExercises())

@@ -2,9 +2,12 @@
   <app-multi-select [items]="allExercises()" [(selectedItems)]="selectedExercises" [toggleOnSelect]="true" />
 
   <div class="chart-grid">
-    <app-line-chart [data]="lineChartDatasets" [labels]="lineChartLabels" yAxisTitle="Tonnage (kg)" />
+    <app-line-chart [data]="lineChartData()" yAxisTitle="Tonnage (kg)" />
 
-    <app-grouped-bar-chart [labels]="groupedBarChartLabels" [barChartDataSets]="groupedBarChartDatasets" />
+    <app-grouped-bar-chart
+      [barChartDataSets]="groupedBarChartData().datasets"
+      [labels]="groupedBarChartData().labels"
+    />
   </div>
 
   <div class="pagination-container">
