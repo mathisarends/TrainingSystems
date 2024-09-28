@@ -51,6 +51,11 @@ export class MultiSelectComponent implements OnInit {
   selectedItems = model.required<string[]>();
 
   /**
+   * Determines wheter the multi select shall be toggled after an item was selected.
+   */
+  toggleOnSelect = input<boolean>(false);
+
+  /**
    * A signal representing the open/closed state of the dropdown.
    */
   isOpen = signal(false);
@@ -105,6 +110,10 @@ export class MultiSelectComponent implements OnInit {
       : this.selectedItems().filter((item) => item !== option);
 
     this.selectedItems.set(newSelected);
+
+    if (this.toggleOnSelect()) {
+      this.isOpen.set(false);
+    }
   }
 
   @HostListener('click')

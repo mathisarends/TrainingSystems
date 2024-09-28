@@ -1,13 +1,8 @@
 @if (isLoaded()) {
-  <app-multi-select [items]="allExercises()" [(selectedItems)]="selectedExercises" />
+  <app-multi-select [items]="allExercises()" [(selectedItems)]="selectedExercises" [toggleOnSelect]="true" />
 
   <div class="chart-grid">
-    <app-line-chart
-      [data]="lineChartDatasets"
-      [labels]="lineChartLabels"
-      (drillThrough)="showDrillThroughGraph($event)"
-      yAxisTitle="Tonnage (kg)"
-    />
+    <app-line-chart [data]="lineChartDatasets" [labels]="lineChartLabels" yAxisTitle="Tonnage (kg)" />
 
     <app-grouped-bar-chart [labels]="groupedBarChartLabels" [barChartDataSets]="groupedBarChartDatasets" />
   </div>

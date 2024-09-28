@@ -1,13 +1,12 @@
-import { Component, effect, Injector, OnInit, signal, WritableSignal } from '@angular/core';
-import { Router } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
+import { Component, DestroyRef, effect, Injector, OnInit, signal, WritableSignal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NavigationStart, Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { BarChartData } from '../../../shared/components/charts/grouped-bar-chart/bar-chart.-data';
 import { GroupedBarChartComponent } from '../../../shared/components/charts/grouped-bar-chart/grouped-bar-chart.component';
-import { ExerciseDrillThroughEvent } from '../../../shared/components/charts/line-chart/exercise-drill-through-event';
 import { LineChartDataset } from '../../../shared/components/charts/line-chart/lilne-chart-data-set';
 import { LineChartComponent } from '../../../shared/components/charts/line-chart/line-chart.component';
-import { PolarChartComponent } from '../../../shared/components/charts/polar-chart/polar-chart.component';
 import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
 import { ChartSkeletonComponent } from '../../../shared/components/loader/chart-skeleton/chart-skeleton.component';
 import { MultiSelectComponent } from '../../../shared/components/multi-select/multi-select.component';
@@ -61,81 +60,49 @@ export class TrainingDayStatisticsComponent implements OnInit {
     private modalService: ModalService,
     private trainingStatisticService: TrainingStatisticsService,
     private headerService: HeaderService,
+    private destroyRef: DestroyRef,
     private injector: Injector,
   ) {}
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     this.headerService.setLoading();
 
     this.parseAndSetTrainingPlanId();
 
-    await this.fetchInitialData(this.trainingPlanId());
+    this.fetchAndSetCategoryMetadata(this.trainingPlanId());
+
+    this.setupNavigationSync();
 
     effect(
       () => {
-        this.changeDisplayCategories();
+        if (this.isLoaded()) {
+          this.changeDisplayCategories();
+        }
       },
       { allowSignalWrites: true, injector: this.injector },
     );
   }
 
-  async changeDisplayCategories() {
-    this.trainingStatisticService
-      .updateLastViewedCategories(this.trainingPlanId(), this.selectedExercises())
-      .subscribe(() => {});
+  private fetchAndSetCategoryMetadata(id: string): void {
+    forkJoin([
+      this.trainingStatisticService.getAllCategories(),
+      this.trainingStatisticService.getSelectedCategories(id),
+    ]).subscribe(([allExercisesResponse, selectedExercisesResponse]) => {
+      this.allExercises.set(allExercisesResponse);
+      this.selectedExercises.set(selectedExercisesResponse);
 
-    if (this.trainingPlanId()) {
-      await this.fetchStatistics(this.trainingPlanId(), this.selectedExercises());
-    }
+      this.fetchStatistics(id, this.selectedExercises());
+    });
   }
 
-  showDrillThroughGraph(drillThroughData: ExerciseDrillThroughEvent) {
-    this.trainingStatisticService
-      .getDrillThroughForSpecificExerciseCategory(
-        this.trainingPlanId(),
-        drillThroughData.exerciseName,
-        drillThroughData.weekNumber,
-      )
-      .subscribe((response: any) => {
-        const data: number[] = response.exercises.map((exercise: any) => exercise.tonnage);
-        const labels: string[] = response.exercises.map((exercise: any) => exercise.exercise);
-
-        this.modalService.open({
-          component: PolarChartComponent,
-          title: ` Woche ${drillThroughData.weekNumber} - ${drillThroughData.exerciseName}`,
-          hasFooter: false,
-          buttonText: '',
-          componentData: {
-            data,
-            labels,
-          },
-        });
-      });
-  }
-
-  private async fetchInitialData(id: string): Promise<void> {
-    const [allExercisesResponse, selectedExercisesResponse] = await Promise.all([
-      firstValueFrom(this.trainingStatisticService.getAllCategories()),
-      firstValueFrom(this.trainingStatisticService.getSelectedCategories(id)),
-    ]);
-
-    this.allExercises.set(allExercisesResponse);
-    this.selectedExercises.set(selectedExercisesResponse);
-
-    if (this.selectedExercises) {
-      await this.fetchStatistics(id, this.selectedExercises());
-    }
-  }
-
-  private async fetchStatistics(id: string, exercises: string[]): Promise<void> {
-    const [tonnageResponse, setsResponse] = await Promise.all([
-      firstValueFrom(this.trainingStatisticService.getTonnageDataForSelectedExercises(id, exercises)),
-      firstValueFrom(this.trainingStatisticService.getSetDataForSelectedExercises(id, exercises)),
-    ]);
-
-    this.isLoaded.set(true);
-
-    this.initializeCharts(tonnageResponse.data, setsResponse, tonnageResponse.title);
+  private fetchStatistics(id: string, exercises: string[]): void {
+    forkJoin([
+      this.trainingStatisticService.getTonnageDataForSelectedExercises(id, exercises),
+      this.trainingStatisticService.getSetDataForSelectedExercises(id, exercises),
+    ]).subscribe(([tonnageResponse, setsResponse]) => {
+      this.isLoaded.set(true);
+      this.initializeCharts(tonnageResponse.data, setsResponse, tonnageResponse.title);
+    });
   }
 
   private initializeCharts(
@@ -199,5 +166,26 @@ export class TrainingDayStatisticsComponent implements OnInit {
 
   private formatCategoryLabel(category: string): string {
     return category.charAt(0).toUpperCase() + category.slice(1);
+  }
+
+  private changeDisplayCategories() {
+    this.fetchStatistics(this.trainingPlanId(), this.selectedExercises());
+  }
+
+  private setupNavigationSync(): void {
+    // This method handles syncing the selected categories when the user navigates away
+    this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        this.syncCategoriesWithBackend();
+      }
+    });
+  }
+
+  private syncCategoriesWithBackend(): void {
+    this.trainingStatisticService
+      .updateLastViewedCategories(this.trainingPlanId(), this.selectedExercises())
+      .subscribe(() => {
+        console.log('Categories synchronized with backend.');
+      });
   }
 }

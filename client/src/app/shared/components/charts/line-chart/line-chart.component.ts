@@ -1,16 +1,15 @@
 import {
   AfterViewInit,
   Component,
+  computed,
+  effect,
   ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-  SimpleChanges,
+  Injector,
+  input,
+  signal,
   ViewChild,
 } from '@angular/core';
-import Chart, { ActiveElement, ChartEvent } from 'chart.js/auto';
-import { ExerciseDrillThroughEvent } from './exercise-drill-through-event';
+import Chart from 'chart.js/auto';
 import { LineChartDataset } from './lilne-chart-data-set';
 
 @Component({
@@ -19,33 +18,39 @@ import { LineChartDataset } from './lilne-chart-data-set';
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.scss'],
 })
-export class LineChartComponent implements AfterViewInit, OnChanges {
+export class LineChartComponent implements AfterViewInit {
   @ViewChild('canvas') canvas!: ElementRef;
 
-  @Input() chartId: string = 'lineChart';
-  @Input() data: LineChartDataset[] = [];
-  @Input() labels: string[] = [];
-  @Input() yAxisTitle: string = 'Value';
-  @Input() maintainAspectRatio: boolean = true;
+  chartId = input<string>('lineChart');
+  data = input<LineChartDataset[]>([]);
+  labels = input<string[]>([]);
+  yAxisTitle = input<string>('Value');
+  maintainAspectRatio = input<boolean>(true);
 
-  @Output() drillThrough = new EventEmitter<ExerciseDrillThroughEvent>();
+  chart = signal<Chart<'line'> | null>(null);
 
-  chart!: Chart<'line'>;
+  chartData = computed(() => ({
+    labels: this.labels(),
+    datasets: this.data(),
+  }));
+
+  constructor(private injector: Injector) {}
 
   ngAfterViewInit(): void {
     this.initializeChart();
-  }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['data'] && !changes['data'].firstChange) {
-      this.updateChart();
-    }
+    effect(
+      () => {
+        if (this.chart()) {
+          this.updateChart();
+        }
+      },
+      { injector: this.injector },
+    );
   }
 
   initializeChart(): void {
-    if (this.chart) {
-      this.chart.destroy();
-    }
+    this.chart()?.destroy(); // prevent memoryr leaks
 
     const context = this.canvas.nativeElement.getContext('2d');
     if (!context) {
@@ -53,21 +58,18 @@ export class LineChartComponent implements AfterViewInit, OnChanges {
       return;
     }
 
-    this.chart = new Chart(context, {
+    const newChart = new Chart(context, {
       type: 'line',
-      data: {
-        labels: this.labels,
-        datasets: this.data,
-      },
+      data: this.chartData(),
       options: {
         responsive: true,
-        maintainAspectRatio: this.maintainAspectRatio,
+        maintainAspectRatio: this.maintainAspectRatio(),
         scales: {
           y: {
             beginAtZero: true,
             title: {
               display: true,
-              text: this.yAxisTitle,
+              text: this.yAxisTitle(),
             },
           },
         },
@@ -82,29 +84,18 @@ export class LineChartComponent implements AfterViewInit, OnChanges {
             },
           },
         },
-        onClick: (event: ChartEvent, elements: ActiveElement[]) => {
-          if (elements.length) {
-            const element = elements[0];
-            const datasetIndex = element.datasetIndex;
-            const index = element.index;
-            const exercise = this.chart.data.datasets[datasetIndex].label as string;
-            const label = this.chart.data.labels![index] as string;
-
-            // Extract the week number from the label (assuming the label format is "Woche X")
-            const weekNumber = parseInt(label.match(/\d+/)?.[0] || '0', 10);
-
-            this.drillThrough.emit({ exerciseName: exercise, weekNumber });
-          }
-        },
       },
     });
+
+    // Set the new chart instance as a signal
+    this.chart.set(newChart);
   }
 
   updateChart(): void {
-    if (this.chart) {
-      this.chart.data.labels = this.labels;
-      this.chart.data.datasets = this.data;
-      this.chart.update();
+    if (this.chart()) {
+      this.chart()!.data.labels = this.labels();
+      this.chart()!.data.datasets = this.data();
+      this.chart()!.update();
     }
   }
 }
