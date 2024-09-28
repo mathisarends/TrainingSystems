@@ -3,6 +3,7 @@ import {
   AfterViewInit,
   Component,
   ComponentRef,
+  DestroyRef,
   EnvironmentInjector,
   EventEmitter,
   Injector,
@@ -15,9 +16,11 @@ import {
   effect,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { ModalSize } from '../../../core/services/modal/modalSize';
 import { DraggableDirective } from '../../directives/draggable.directive';
+import { KeyboardService } from '../../service/keyboard.service';
 import { DataMap } from '../../types/data-map';
 import { ButtonComponent } from '../button/button.component';
 import { OnConfirm } from './on-confirm';
@@ -29,6 +32,7 @@ import { OnToggleView } from './on-toggle-view';
   imports: [ButtonComponent, CommonModule, DraggableDirective],
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
+  providers: [KeyboardService],
 })
 export class ModalComponent implements AfterViewInit, OnInit {
   @ViewChild('modalContent', { read: ViewContainerRef })
@@ -93,6 +97,8 @@ export class ModalComponent implements AfterViewInit, OnInit {
   constructor(
     private environmentInjector: EnvironmentInjector,
     private modalService: ModalService,
+    private keyboardService: KeyboardService,
+    private destroyRef: DestroyRef,
     private injector: Injector,
   ) {}
 
@@ -105,6 +111,20 @@ export class ModalComponent implements AfterViewInit, OnInit {
       },
       { injector: this.injector, allowSignalWrites: true },
     );
+
+    this.keyboardService
+      .escapePressed$()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.modalService.close();
+      });
+
+    this.keyboardService
+      .enterPressed$()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.confirm();
+      });
   }
 
   ngAfterViewInit() {

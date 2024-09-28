@@ -7,7 +7,7 @@ import { ModalService } from '../../core/services/modal/modalService';
 import { IconBackgroundColor } from '../../shared/components/icon-list-item/icon-background-color';
 import { IconListItem } from '../../shared/components/icon-list-item/icon-list-item';
 import { IconListeItemComponent } from '../../shared/components/icon-list-item/icon-list-item.component';
-import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
+import { ChartSkeletonComponent } from '../../shared/components/loader/chart-skeleton/chart-skeleton.component';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 import { ToastService } from '../../shared/components/toast/toast.service';
 import { IconName } from '../../shared/icon/icon-name';
@@ -33,12 +33,12 @@ import { SettingsComponent } from './settings/settings.component';
     RestPauseTimeIndicatorComponent,
     ActivityCalendar,
     CommonModule,
-    SkeletonComponent,
+    ChartSkeletonComponent,
   ],
   selector: 'app-profile',
   templateUrl: 'profile.component.html',
   styleUrls: ['profile.component.scss'],
-  providers: [GymTicketService, UsageStatisticsService, SkeletonComponent],
+  providers: [GymTicketService, UsageStatisticsService],
 })
 export class ProfileComponent2 implements OnInit {
   protected IconName = IconName;

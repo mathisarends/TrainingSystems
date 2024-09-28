@@ -25,4 +25,12 @@ export class KeyboardService {
       filter((event: KeyboardEvent) => event.key === 'Escape' || event.key === 'Esc'),
     );
   }
+
+  /**
+   * Emits an event when the "Enter" key is pressed.
+   * @returns An Observable of KeyboardEvent for "Enter".
+   */
+  enterPressed$(): Observable<KeyboardEvent> {
+    return fromEvent<KeyboardEvent>(document, 'keydown').pipe(filter((event: KeyboardEvent) => event.key === 'Enter'));
+  }
 }
