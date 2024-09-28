@@ -7,10 +7,12 @@ import { GroupedBarChartComponent } from '../../../shared/components/charts/grou
 import { LineChartDataset } from '../../../shared/components/charts/line-chart/lilne-chart-data-set';
 import { LineChartData } from '../../../shared/components/charts/line-chart/line-chart-data';
 import { LineChartComponent } from '../../../shared/components/charts/line-chart/line-chart.component';
+import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
 import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
 import { ChartSkeletonComponent } from '../../../shared/components/loader/chart-skeleton/chart-skeleton.component';
 import { MultiSelectComponent } from '../../../shared/components/multi-select/multi-select.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+import { SingleSelectComponent } from '../../../shared/components/single-select/single-select.component';
 import { KeyboardService } from '../../../shared/service/keyboard.service';
 import { HeaderService } from '../../header/header.service';
 import { ChangeProfilePictureConfirmationComponent } from '../../profile-2/change-profile-picture-confirmation/change-profile-picture-confirmation.component';
@@ -28,14 +30,16 @@ import { TrainingStatisticsService } from './training-statistics.service';
   standalone: true,
   imports: [
     MultiSelectComponent,
+    DropdownComponent,
     LineChartComponent,
     GroupedBarChartComponent,
     HeadlineComponent,
     ChartSkeletonComponent,
     ChangeProfilePictureConfirmationComponent,
     PaginationComponent,
+    SingleSelectComponent,
   ],
-  providers: [TrainingStatisticsService, KeyboardService, PaginationComponent],
+  providers: [TrainingStatisticsService, KeyboardService, PaginationComponent, SingleSelectComponent],
   templateUrl: './training-day-statistics.component.html',
   styleUrls: ['./training-day-statistics.component.scss'],
 })
@@ -70,6 +74,10 @@ export class TrainingDayStatisticsComponent implements OnInit {
    */
   trainingPlanId = signal('');
 
+  private isDetailView = signal(false);
+
+  example = signal('Test');
+
   constructor(
     private router: Router,
     private chartColorService: ChartColorService,
@@ -99,6 +107,15 @@ export class TrainingDayStatisticsComponent implements OnInit {
       },
       { allowSignalWrites: true, injector: this.injector },
     );
+  }
+
+  protected onPageChanged(page: number) {
+    console.log('🚀 ~ TrainingDayStatisticsComponent ~ onPageChanged ~ page:', page);
+    if (page === 0) {
+      this.isDetailView.set(false);
+    } else {
+      this.isDetailView.set(true);
+    }
   }
 
   /**

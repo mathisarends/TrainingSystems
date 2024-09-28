@@ -41,4 +41,5 @@ export enum IconName {
   SKIP_FORWARD = 'skip-forward',
   SKIP_BACK = 'skip-back',
   DOWNLOAD = 'download',
+  COMPARE = 'git-pull-request',
 }

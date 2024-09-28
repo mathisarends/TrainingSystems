@@ -1,6 +1,8 @@
 @if (isLoaded()) {
   <app-multi-select [items]="allExercises()" [(selectedItems)]="selectedExercises" [toggleOnSelect]="true" />
 
+  <app-single-select [options]="['Test', 'Fest']" [(value)]="example" />
+
   <div class="chart-grid">
     <app-line-chart [data]="lineChartData()" yAxisTitle="Tonnage (kg)" />
 
