@@ -53,7 +53,7 @@ export class TrainingDayStatisticsComponent implements OnInit {
   groupedBarChartDatasets!: BarChartData[];
   groupedBarChartLabels!: string[];
 
-  id!: string;
+  trainingPlanId = signal('');
 
   constructor(
     private router: Router,
@@ -67,31 +67,35 @@ export class TrainingDayStatisticsComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.headerService.setLoading();
 
-    this.id = this.router.url.split('/').pop()!;
-    if (this.id) {
-      await this.fetchInitialData(this.id);
-    }
+    this.parseAndSetTrainingPlanId();
+
+    await this.fetchInitialData(this.trainingPlanId());
 
     effect(
       () => {
         this.changeDisplayCategories();
-        console.log('called');
       },
       { allowSignalWrites: true, injector: this.injector },
     );
   }
 
   async changeDisplayCategories() {
-    this.trainingStatisticService.updateLastViewedCategories(this.id, this.selectedExercises()).subscribe(() => {});
+    this.trainingStatisticService
+      .updateLastViewedCategories(this.trainingPlanId(), this.selectedExercises())
+      .subscribe(() => {});
 
-    if (this.id) {
-      await this.fetchStatistics(this.id, this.selectedExercises());
+    if (this.trainingPlanId()) {
+      await this.fetchStatistics(this.trainingPlanId(), this.selectedExercises());
     }
   }
 
   showDrillThroughGraph(drillThroughData: ExerciseDrillThroughEvent) {
     this.trainingStatisticService
-      .getDrillThroughForSpecificExerciseCategory(this.id, drillThroughData.exerciseName, drillThroughData.weekNumber)
+      .getDrillThroughForSpecificExerciseCategory(
+        this.trainingPlanId(),
+        drillThroughData.exerciseName,
+        drillThroughData.weekNumber,
+      )
       .subscribe((response: any) => {
         const data: number[] = response.exercises.map((exercise: any) => exercise.tonnage);
         const labels: string[] = response.exercises.map((exercise: any) => exercise.exercise);
@@ -179,6 +183,10 @@ export class TrainingDayStatisticsComponent implements OnInit {
       borderColor: colors.borderColor,
       borderWidth: 1,
     };
+  }
+
+  private parseAndSetTrainingPlanId(): void {
+    this.trainingPlanId.set(this.router.url.split('/').pop()!);
   }
 
   private extractTonnageData(data: Tonnage[]): number[] {
