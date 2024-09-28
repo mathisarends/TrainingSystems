@@ -1,20 +1,24 @@
-@if (profileService.email()) {
-  <div class="profile-wrapper">
-    <div class="profile-header-container">
-      <div class="profile-info">
-        <h2>{{ profileService.username() }}</h2>
-        <p>{{ profileService.email() }}</p>
+@if (profileService.isInitalized()) {
+  @if (activityCalendarData$ | async; as activityCalendarData) {
+    <div class="profile-wrapper">
+      <div class="profile-header-container">
+        <div class="profile-info">
+          <h2>{{ profileService.username() }}</h2>
+          <p>{{ profileService.email() }}</p>
+        </div>
+        <img #profilePicture [src]="profileService.pictureUrl() || '/images/profile-placeholder.webp'" alt="Profile" />
+        <input type="file" id="file-input" (change)="showProfilePictureChangeDialog($event)" />
       </div>
-      <img #profilePicture [src]="profileService.pictureUrl() || '/images/profile-placeholder.webp'" alt="Profile" />
-      <input type="file" id="file-input" (change)="showProfilePictureChangeDialog($event)" />
-    </div>
 
-    <div class="list-item-container">
-      @for (item of listItems; track item) {
-        <app-icon-list-item [item]="item" (itemClicked)="onListItemClicked($any($event))" />
-      }
+      <app-activity-calendar [activityData]="activityCalendarData" />
+
+      <div class="list-item-container">
+        @for (item of listItems; track item) {
+          <app-icon-list-item [item]="item" (itemClicked)="onListItemClicked($any($event))" />
+        }
+      </div>
     </div>
-  </div>
-} @else {
-  <app-spinner />
+  } @else {
+    <app-spinner />
+  }
 }

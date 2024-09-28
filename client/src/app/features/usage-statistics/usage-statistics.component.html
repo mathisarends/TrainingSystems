@@ -1,10 +1,10 @@
 @if (usageStatisticsData$ | async; as usageData) {
   <app-activity-calendar [activityData]="usageData.activityCalendarData" />
 
-  <app-grouped-bar-chart
+  <!-- <app-grouped-bar-chart
     [yAxisLabel]="'Trainingsdauer (in Minuten)'"
     [groupedBarChartData]="usageData.recentTrainingDurations"
-  />
+  /> -->
 
   <app-training-day-notification [notificationsInput]="notificationService.trainingDayNotifications()" />
 } @else {

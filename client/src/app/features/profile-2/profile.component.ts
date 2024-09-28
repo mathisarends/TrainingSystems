@@ -1,10 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { ModalService } from '../../core/services/modal/modalService';
 import { IconBackgroundColor } from '../../shared/components/icon-list-item/icon-background-color';
 import { IconListItem } from '../../shared/components/icon-list-item/icon-list-item';
 import { IconListeItemComponent } from '../../shared/components/icon-list-item/icon-list-item.component';
+import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 import { ToastService } from '../../shared/components/toast/toast.service';
 import { IconName } from '../../shared/icon/icon-name';
@@ -14,23 +17,36 @@ import { GymTicketComponent } from '../gym-ticket/gym-ticket.component';
 import { GymTicketService } from '../gym-ticket/gym-ticket.service';
 import { HeaderService } from '../header/header.service';
 import { RestPauseTimeIndicatorComponent } from '../training-plans/training-view/rest-pause-time-indicator/rest-pause-time-indicator.component';
+import { ActivityCalendarData } from '../usage-statistics/activity-calendar-data';
+import { ActivityCalendar } from '../usage-statistics/activity-calendar/activity-calendar.component';
+import { UsageStatisticsService } from '../usage-statistics/usage.-statistics.service';
 import { ChangeProfilePictureConfirmationComponent } from './change-profile-picture-confirmation/change-profile-picture-confirmation.component';
 import { ProfileService } from './service/profileService';
 import { SettingsComponent } from './settings/settings.component';
 
 @Component({
   standalone: true,
-  imports: [IconComponent, SpinnerComponent, IconListeItemComponent, RestPauseTimeIndicatorComponent],
+  imports: [
+    IconComponent,
+    SpinnerComponent,
+    IconListeItemComponent,
+    RestPauseTimeIndicatorComponent,
+    ActivityCalendar,
+    CommonModule,
+    SkeletonComponent,
+  ],
   selector: 'app-profile',
   templateUrl: 'profile.component.html',
   styleUrls: ['profile.component.scss'],
-  providers: [GymTicketService],
+  providers: [GymTicketService, UsageStatisticsService, SkeletonComponent],
 })
 export class ProfileComponent2 implements OnInit {
   protected IconName = IconName;
 
   @ViewChild('profilePicture', { static: false })
   profilePictureElement!: ElementRef;
+
+  activityCalendarData$!: Observable<ActivityCalendarData>;
 
   inputSignal = signal('');
 
@@ -51,6 +67,7 @@ export class ProfileComponent2 implements OnInit {
     private toastService: ToastService,
     private gymTicketService: GymTicketService,
     private imageUploadService: ImageUploadService,
+    private usageStatisticsService: UsageStatisticsService,
     private router: Router,
     private route: ActivatedRoute,
   ) {}
@@ -58,11 +75,17 @@ export class ProfileComponent2 implements OnInit {
   ngOnInit() {
     this.setHeadlineInfo();
 
+    this.initializeActivityCalendar();
+
     this.route.queryParams.subscribe((params) => {
       if (params['openSettings'] === 'true') {
         this.displaySettingsModal();
       }
     });
+  }
+
+  private initializeActivityCalendar(): void {
+    this.activityCalendarData$ = this.usageStatisticsService.getActivityCalendarData();
   }
 
   protected async onListItemClicked(listItem: IconListItem) {

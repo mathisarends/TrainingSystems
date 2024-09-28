@@ -64,3 +64,8 @@ select.form-control,
 textarea.form-control {
   background: inherit;
 }
+
+.center {
+  display: grid;
+  place-items: center;
+}

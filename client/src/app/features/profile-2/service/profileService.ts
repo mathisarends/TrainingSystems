@@ -24,6 +24,8 @@ export class ProfileService {
    */
   pictureUrl = signal<string | undefined>(undefined);
 
+  isInitalized = signal(false);
+
   constructor(private httpClientService: HttpService) {}
 
   /**
@@ -35,6 +37,8 @@ export class ProfileService {
         this.username.set(data.username);
         this.email.set(data.email);
         this.pictureUrl.set(data.pictureUrl);
+
+        this.isInitalized.set(true);
       }),
     );
   }
