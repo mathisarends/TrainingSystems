@@ -19,6 +19,7 @@ import { IconComponent } from '../../icon/icon.component';
 import { KeyboardService } from '../../service/keyboard.service';
 import { CheckboxItem } from '../checbkox/checkbox-item';
 import { CheckboxComponent } from '../checbkox/checkbox.component';
+import { ToCheckboxItemPipe } from '../checbkox/to-checkbox-iten.pipe';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
 
 /**
@@ -27,7 +28,7 @@ import { SearchBarComponent } from '../search-bar/search-bar.component';
 @Component({
   selector: 'app-select',
   standalone: true,
-  imports: [FormsModule, IconComponent, SearchBarComponent, CheckboxComponent],
+  imports: [FormsModule, IconComponent, SearchBarComponent, CheckboxComponent, ToCheckboxItemPipe],
   templateUrl: './select.component.html',
   styleUrls: ['./select.component.scss'],
   animations: [toggleCollapseAnimation],
@@ -81,10 +82,6 @@ export class SelectComponent implements OnInit {
     private keyboardService: KeyboardService,
   ) {}
 
-  /**
-   * Initializes the component by setting up keyboard event listeners,
-   * the filtering logic, and handling changes to the selection mode.
-   */
   ngOnInit(): void {
     this.setupKeyboardEventListeners();
 
@@ -93,10 +90,6 @@ export class SelectComponent implements OnInit {
     this.setupSelectionModeChanged();
   }
 
-  /**
-   * Toggles the dropdown open or closed when the component is clicked.
-   * Focuses the search bar input when the dropdown is opened.
-   */
   @HostListener('click')
   toggleOptionsContainer(): void {
     this.isOpen.set(!this.isOpen());
@@ -106,11 +99,6 @@ export class SelectComponent implements OnInit {
     }
   }
 
-  /**
-   * Closes the dropdown if a click occurs outside of the component.
-   * This method is decorated with @HostListener to listen to global click events.
-   * @param event The DOM event triggered by the document click.
-   */
   @HostListener('document:click', ['$event'])
   closeOptionsContainer(event: MouseEvent): void {
     const target = event.target as HTMLElement;
@@ -119,13 +107,6 @@ export class SelectComponent implements OnInit {
     }
   }
 
-  /**
-   * Handles changes to the selection state when an option is selected or deselected.
-   * Updates the `selectedItems` signal accordingly.
-   *
-   * If in single-selection mode, it selects only one item at a time and closes the dropdown.
-   * In multi-selection mode, it adds or removes items from the selection based on checkbox state..
-   */
   protected onSelectionChange(option: string, checkboxItem: CheckboxItem): void {
     if (this.isSingleSelectionModeActive()) {
       this.selectedOptions.set([option]);
@@ -144,10 +125,6 @@ export class SelectComponent implements OnInit {
     }
   }
 
-  /**
-   * Sets up the event listeners for keyboard interactions.
-   * Closes the dropdown and clears the search query when the escape key is pressed.
-   */
   private setupKeyboardEventListeners(): void {
     this.keyboardService
       .escapePressed$()
@@ -158,10 +135,6 @@ export class SelectComponent implements OnInit {
       });
   }
 
-  /**
-   * Sets up the logic to filter the items based on the search query.
-   * This effect runs whenever the search query or item list changes.
-   */
   private setupFilterLogic(): void {
     this.filteredItems.set(this.options());
 
@@ -176,10 +149,6 @@ export class SelectComponent implements OnInit {
     );
   }
 
-  /**
-   * Sets up the logic to handle changes in the selection mode (single/multiple).
-   * If the mode is changed to single-selection, the first item is automatically selected.
-   */
   private setupSelectionModeChanged(): void {
     effect(
       () => {
@@ -192,9 +161,6 @@ export class SelectComponent implements OnInit {
     );
   }
 
-  /**
-   * Determines if the component is in single-selection mode.
-   */
   private isSingleSelectionModeActive(): boolean {
     return this.selectionMode() === 'single';
   }

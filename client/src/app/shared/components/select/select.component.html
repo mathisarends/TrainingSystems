@@ -16,11 +16,8 @@
   <app-search-bar [(searchQuery)]="searchQuery" />
 
   <div class="checkbox-container">
-    @for (option of filteredItems(); track option) {
-      <app-checkbox
-        [item]="{ label: option, isChecked: selectedOptions().includes(option) }"
-        (valueChanged)="onSelectionChange(option, $event)"
-      />
+    @for (checkboxItem of filteredItems() | toCheckboxItem: selectedOptions(); track checkboxItem.label) {
+      <app-checkbox [item]="checkboxItem" (valueChanged)="onSelectionChange(checkboxItem.label, $event)" />
     }
   </div>
 </div>
