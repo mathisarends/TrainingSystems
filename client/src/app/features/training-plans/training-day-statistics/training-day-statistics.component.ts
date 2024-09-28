@@ -114,7 +114,7 @@ export class TrainingDayStatisticsComponent implements OnInit {
       .subscribe(([allExercisesResponse, selectedExercisesResponse]) => {
         this.allExercises.set(allExercisesResponse);
         this.selectedExercises.set(selectedExercisesResponse);
-        this.fetchStatistics(this.trainingPlanId(), this.selectedExercises());
+        this.isLoaded.set(true);
       });
   }
 

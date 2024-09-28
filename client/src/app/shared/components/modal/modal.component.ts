@@ -112,19 +112,7 @@ export class ModalComponent implements AfterViewInit, OnInit {
       { injector: this.injector, allowSignalWrites: true },
     );
 
-    this.keyboardService
-      .escapePressed$()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.modalService.close();
-      });
-
-    this.keyboardService
-      .enterPressed$()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.confirm();
-      });
+    this.initializeKeyboardListeners();
   }
 
   ngAfterViewInit() {
@@ -207,6 +195,25 @@ export class ModalComponent implements AfterViewInit, OnInit {
     if (this.implementsOnToggleView(componentInstance)) {
       componentInstance.onToggleView();
     }
+  }
+
+  /**
+   * Initializes keyboard listeners for 'Escape' and 'Enter' keys.
+   */
+  private initializeKeyboardListeners(): void {
+    this.keyboardService
+      .escapePressed$()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.modalService.close();
+      });
+
+    this.keyboardService
+      .enterPressed$()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.confirm();
+      });
   }
 
   /**
