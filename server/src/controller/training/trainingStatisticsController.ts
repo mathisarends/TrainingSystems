@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+
 import { User } from '../../models/collections/user/user.js';
 import { MongoGenericDAO } from '../../models/dao/mongo-generic.dao.js';
 import { ExerciseCategoryType } from '../../models/training/exercise-category-type.js';
@@ -8,6 +9,9 @@ import { TrainingPlan } from '../../models/training/trainingPlan.js';
 import * as trainingService from '../../service/trainingService.js';
 import { getUser } from '../../service/userService.js';
 import { mapToExerciseCategory } from '../../utils/exerciseUtils.js';
+
+import _ from 'lodash';
+const { capitalize } = _;
 
 /**
  * Updates the list of recently viewed exercise categories for the statistics section of a specific training plan.
@@ -57,7 +61,7 @@ export async function getSetsForCategories(req: Request, res: Response): Promise
   exerciseCategories.forEach(category => {
     const exerciseCategory = mapToExerciseCategory(category);
     if (exerciseCategory) {
-      responseData[category.toLowerCase()] = getSetsPerWeek(trainingPlan, exerciseCategory);
+      responseData[capitalize(category)] = getSetsPerWeek(trainingPlan, exerciseCategory);
     }
   });
 
@@ -81,7 +85,7 @@ export async function getTonnageForCategories(req: Request, res: Response): Prom
   exerciseCategories.forEach(category => {
     const exerciseCategory = mapToExerciseCategory(category);
     if (exerciseCategory) {
-      responseData[category.toLowerCase()] = prepareTrainingWeeksForExercise(trainingPlan, exerciseCategory);
+      responseData[capitalize(category)] = prepareTrainingWeeksForExercise(trainingPlan, exerciseCategory);
     }
   });
 

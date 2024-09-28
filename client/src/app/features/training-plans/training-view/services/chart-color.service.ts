@@ -7,43 +7,43 @@ export class ChartColorService {
   private colors: {
     [key: string]: { borderColor: string; backgroundColor: string };
   } = {
-    squat: {
+    Squat: {
       borderColor: 'rgba(255, 99, 132, 1)',
       backgroundColor: 'rgba(255, 99, 132, 0.2)',
     },
-    bench: {
+    Bench: {
       borderColor: 'rgba(54, 162, 235, 1)',
       backgroundColor: 'rgba(54, 162, 235, 0.2)',
     },
-    deadlift: {
+    Deadlift: {
       borderColor: 'rgba(75, 192, 192, 1)',
       backgroundColor: 'rgba(75, 192, 192, 0.2)',
     },
-    overheadpress: {
+    Overheadpress: {
       borderColor: 'rgba(153, 102, 255, 1)',
       backgroundColor: 'rgba(153, 102, 255, 0.2)',
     },
-    back: {
+    Back: {
       borderColor: 'rgba(255, 159, 64, 1)',
       backgroundColor: 'rgba(255, 159, 64, 0.2)',
     },
-    chest: {
+    Chest: {
       borderColor: 'rgba(255, 206, 86, 1)',
       backgroundColor: 'rgba(255, 206, 86, 0.2)',
     },
-    shoulder: {
+    Shoulder: {
       borderColor: 'rgba(75, 192, 192, 1)',
       backgroundColor: 'rgba(75, 192, 192, 0.2)',
     },
-    biceps: {
+    Biceps: {
       borderColor: 'rgba(153, 102, 255, 1)',
       backgroundColor: 'rgba(153, 102, 255, 0.2)',
     },
-    triceps: {
+    Triceps: {
       borderColor: 'rgba(201, 203, 207, 1)',
       backgroundColor: 'rgba(201, 203, 207, 0.2)',
     },
-    legs: {
+    Legs: {
       borderColor: 'rgba(54, 162, 235, 1)',
       backgroundColor: 'rgba(54, 162, 235, 0.2)',
     },
