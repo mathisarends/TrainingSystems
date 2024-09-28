@@ -4,6 +4,11 @@
  */
 export interface CheckboxItem {
   /**
+   * An unique identifier for the chekbox item.
+   */
+  id?: string;
+
+  /**
    * The label for the checkbox.
    */
   label: string;
