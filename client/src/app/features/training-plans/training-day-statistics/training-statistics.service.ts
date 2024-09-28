@@ -1,24 +1,29 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
+import { ExerciseCategories } from '../model/exercise-categories';
 import { TrainingExerciseTonnageDto } from './main-exercise-tonnage-dto';
 
 @Injectable()
 export class TrainingStatisticsService {
   constructor(private httpService: HttpService) {}
 
+  getTrainingPlanTitle(id: string): Observable<string> {
+    return this.httpService.get<string>(`/training/plan/${id}/title`);
+  }
+
   /**
    * Retrieves a list of all exercise categories.
    */
-  getAllCategories(): Observable<string[]> {
-    return this.httpService.get<string[]>('/exercise/categories');
+  getAllCategories(): Observable<ExerciseCategories[]> {
+    return this.httpService.get<ExerciseCategories[]>('/exercise/categories');
   }
 
   /**
    * Retrieves the list of categories that have been viewed by the user in a specific training plan.
    */
-  getSelectedCategories(id: string): Observable<string[]> {
-    return this.httpService.get<string[]>(`/training/statistics/${id}/viewedCategories`);
+  getSelectedCategories(id: string): Observable<ExerciseCategories[]> {
+    return this.httpService.get<ExerciseCategories[]>(`/training/statistics/${id}/viewedCategories`);
   }
 
   /**

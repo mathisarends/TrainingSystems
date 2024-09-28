@@ -40,16 +40,34 @@ import { TrainingStatisticsService } from './training-statistics.service';
   styleUrls: ['./training-day-statistics.component.scss'],
 })
 export class TrainingDayStatisticsComponent implements OnInit {
+  /**
+   * Indicates whether the data has been fully loaded.
+   */
   isLoaded = signal(false);
 
+  /**
+   *  Holds the list of selected exercises.
+   */
   selectedExercises: WritableSignal<string[]> = signal([]);
 
+  /**
+   * Holds the list of all available exercises.
+   */
   allExercises: WritableSignal<string[]> = signal([]);
 
+  /**
+   * Holds the data for a line chart, including datasets and labels.
+   */
   lineChartData = signal<LineChartData>({ datasets: [], labels: [] });
 
+  /**
+   * Holds the data for a grouped bar chart, including datasets and labels.
+   */
   groupedBarChartData = signal<BarChartData>({ datasets: [], labels: [] });
 
+  /**
+   * The current training plan ID.
+   */
   trainingPlanId = signal('');
 
   constructor(
@@ -61,59 +79,79 @@ export class TrainingDayStatisticsComponent implements OnInit {
     private injector: Injector,
   ) {}
 
+  /**
+   * Initializes the component by setting up data loading and category synchronization.
+   */
   ngOnInit(): void {
     this.headerService.setLoading();
 
-    this.parseAndSetTrainingPlanId();
+    this.trainingPlanId.set(this.parseTrainingPlanIdFromUrl());
 
-    this.fetchAndSetCategoryMetadata(this.trainingPlanId());
+    this.fetchAndSetCategoryMetadata();
 
-    this.setupNavigationSync();
+    this.setupSelectedCategorySaveOnNavigationSync();
 
     effect(
       () => {
         if (this.isLoaded()) {
-          this.changeDisplayCategories();
+          this.fetchStatistics(this.trainingPlanId(), this.selectedExercises());
         }
       },
       { allowSignalWrites: true, injector: this.injector },
     );
   }
 
-  private fetchAndSetCategoryMetadata(id: string): void {
+  /**
+   * Fetches category metadata including all categories and selected categories for a given ID,
+   * then updates the component's state and fetches additional statistics.
+   */
+  private fetchAndSetCategoryMetadata(): void {
     forkJoin([
       this.trainingStatisticService.getAllCategories(),
-      this.trainingStatisticService.getSelectedCategories(id),
+      this.trainingStatisticService.getSelectedCategories(this.trainingPlanId()),
     ])
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(([allExercisesResponse, selectedExercisesResponse]) => {
         this.allExercises.set(allExercisesResponse);
         this.selectedExercises.set(selectedExercisesResponse);
-        this.fetchStatistics(id, this.selectedExercises());
+        this.fetchStatistics(this.trainingPlanId(), this.selectedExercises());
       });
   }
 
+  /**
+   * Fetches statistics data (tonnage and sets) for the selected exercises and initializes charts.
+   *
+   * @param {string} id - The ID of the training plan or entity to fetch statistics for.
+   * @param {string[]} exercises - The list of selected exercises to fetch statistics for.
+   */
   private fetchStatistics(id: string, exercises: string[]): void {
-    forkJoin([
-      this.trainingStatisticService.getTonnageDataForSelectedExercises(id, exercises),
-      this.trainingStatisticService.getSetDataForSelectedExercises(id, exercises),
-    ])
+    forkJoin({
+      tonnage: this.trainingStatisticService.getTonnageDataForSelectedExercises(id, exercises),
+      sets: this.trainingStatisticService.getSetDataForSelectedExercises(id, exercises),
+      title: this.trainingStatisticService.getTrainingPlanTitle(id),
+    })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(([tonnageResponse, setsResponse]) => {
+      .subscribe(({ tonnage, sets, title }) => {
         this.isLoaded.set(true);
-        this.initializeCharts(tonnageResponse.data, setsResponse, tonnageResponse.title);
+        this.setHeadlineInfo(title);
+        this.initializeCharts(tonnage.data, sets);
       });
   }
-  private initializeCharts(
-    tonnageData: Partial<TrainingExerciseTonnageDto>,
-    setsResponse: { [key: string]: number[] },
-    title: string,
-  ): void {
+
+  /**
+   * Sets the headline information for the page.
+   * Updates the header with the given title and a fixed subtitle ('stats').
+   *
+   * @param title - The main title to display in the header.
+   */
+  private setHeadlineInfo(title: string): void {
     this.headerService.setHeadlineInfo({
       title: title,
       subTitle: 'stats',
     });
+  }
 
+  private initializeCharts(tonnageData: TrainingExerciseTonnageDto, setsResponse: { [key: string]: number[] }): void {
     // Line chart setup
     const lineDatasets = Object.keys(tonnageData).map((categoryKey) => {
       const categoryData = tonnageData[categoryKey as keyof TrainingExerciseTonnageDto];
@@ -154,10 +192,6 @@ export class TrainingDayStatisticsComponent implements OnInit {
     };
   }
 
-  private parseAndSetTrainingPlanId(): void {
-    this.trainingPlanId.set(this.router.url.split('/').pop()!);
-  }
-
   private extractTonnageData(data: Tonnage[]): number[] {
     return data.map((week) => week.tonnageInCategory);
   }
@@ -170,14 +204,14 @@ export class TrainingDayStatisticsComponent implements OnInit {
     return category.charAt(0).toUpperCase() + category.slice(1);
   }
 
-  private changeDisplayCategories() {
-    this.fetchStatistics(this.trainingPlanId(), this.selectedExercises());
+  private parseTrainingPlanIdFromUrl(): string {
+    return this.router.url.split('/').pop()!;
   }
 
   /**
    * Sets up synchronization between navigation events and the backend.
    */
-  private setupNavigationSync(): void {
+  private setupSelectedCategorySaveOnNavigationSync(): void {
     this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
       if (event instanceof NavigationStart) {
         this.syncCategoriesWithBackend();

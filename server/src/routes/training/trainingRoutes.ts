@@ -20,16 +20,4 @@ router.get(
 router.post('/reorder', authService.authenticationMiddleware, asyncHandler(trainingController.updateTrainingPlanOrder));
 router.post('/create', authService.authenticationMiddleware, asyncHandler(trainingController.createPlan));
 
-/* router.get(
-  '/training-state',
-  authService.authenticationMiddleware,
-  asyncHandler(trainingController.updateTrainingPlanOrder)
-);
-
-router.post(
-  '/training-state',
-  authService.authenticationMiddleware,
-  asyncHandler(trainingController.updateTrainingPlanOrder)
-);
- */
 export default router;

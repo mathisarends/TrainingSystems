@@ -266,6 +266,17 @@ export async function autoProgressionForTrainingPlan(req: Request, res: Response
 }
 
 /**
+ *  Returnes the title of the training plan with the current id.
+ */
+export async function getTrainingPlanTitle(req: Request, res: Response): Promise<void> {
+  const id = req.params.id;
+  const user = await getUser(req, res);
+  const trainingPlan = findTrainingPlanById(user.trainingPlans, id);
+
+  res.status(200).json(trainingPlan.title);
+}
+
+/**
  * Determines if the current week is the last week of the training plan.
  */
 function isLastWeek(trainingPlan: TrainingPlan, weekIndex: number): boolean {

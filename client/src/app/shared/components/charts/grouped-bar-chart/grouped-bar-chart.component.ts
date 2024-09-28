@@ -1,14 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  computed,
-  effect,
-  ElementRef,
-  Injector,
-  input,
-  signal,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, Component, effect, ElementRef, Injector, input, signal, ViewChild } from '@angular/core';
 import Chart from 'chart.js/auto';
 import { BarChartData } from './bar-chart-data';
 
@@ -35,11 +25,6 @@ export class GroupedBarChartComponent implements AfterViewInit {
    * Signal to hold the Chart.js instance of the bar chart.
    */
   chart = signal<Chart<'bar'> | null>(null);
-
-  /**
-   * Computed value that returns the current grouped bar chart data.
-   */
-  chartData = computed(() => this.groupedBarChartData());
 
   constructor(private injector: Injector) {}
 
@@ -71,7 +56,7 @@ export class GroupedBarChartComponent implements AfterViewInit {
 
     const newChart = new Chart(context, {
       type: 'bar',
-      data: this.chartData(),
+      data: this.groupedBarChartData(),
       options: {
         responsive: true,
         scales: {
@@ -95,8 +80,8 @@ export class GroupedBarChartComponent implements AfterViewInit {
    */
   updateChart(): void {
     if (this.chart()) {
-      this.chart()!.data.labels = this.chartData().labels;
-      this.chart()!.data.datasets = this.chartData().datasets;
+      this.chart()!.data.labels = this.groupedBarChartData().labels;
+      this.chart()!.data.datasets = this.groupedBarChartData().datasets;
       this.chart()!.update();
     }
   }

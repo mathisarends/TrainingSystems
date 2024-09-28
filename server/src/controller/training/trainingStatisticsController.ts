@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
-import { getUser } from '../../service/userService.js';
-import * as trainingService from '../../service/trainingService.js';
-import { TrainingPlan } from '../../models/training/trainingPlan.js';
-import { TrainingDay } from '../../models/training/trainingDay.js';
-import { ExerciseCategoryType } from '../../models/training/exercise-category-type.js';
-import { MongoGenericDAO } from '../../models/dao/mongo-generic.dao.js';
 import { User } from '../../models/collections/user/user.js';
-import { mapToExerciseCategory } from '../../utils/exerciseUtils.js';
+import { MongoGenericDAO } from '../../models/dao/mongo-generic.dao.js';
+import { ExerciseCategoryType } from '../../models/training/exercise-category-type.js';
 import { Exercise } from '../../models/training/exercise.js';
+import { TrainingDay } from '../../models/training/trainingDay.js';
+import { TrainingPlan } from '../../models/training/trainingPlan.js';
+import * as trainingService from '../../service/trainingService.js';
+import { getUser } from '../../service/userService.js';
+import { mapToExerciseCategory } from '../../utils/exerciseUtils.js';
 
 /**
  * Updates the list of recently viewed exercise categories for the statistics section of a specific training plan.
@@ -76,10 +76,8 @@ export async function getTonnageForCategories(req: Request, res: Response): Prom
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
   const responseData: {
-    title: string;
     data: { [key: string]: ReturnType<typeof prepareTrainingWeeksForExercise> };
   } = {
-    title: trainingPlan.title,
     data: {}
   };
 

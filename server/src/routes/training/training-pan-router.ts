@@ -48,4 +48,10 @@ trainingPlanRouter.post(
   asyncHandler(trainingController.autoProgressionForTrainingPlan)
 );
 
+trainingPlanRouter.get(
+  '/:id/title',
+  authService.authenticationMiddleware,
+  asyncHandler(trainingController.getTrainingPlanTitle)
+);
+
 export default trainingPlanRouter;
