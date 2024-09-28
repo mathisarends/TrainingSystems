@@ -29,15 +29,11 @@ export class TrainingStatisticsService {
   /**
    * Retrieves the tonnage data for selected exercises in a specific training plan.
    */
-  getTonnageDataForSelectedExercises(
-    id: string,
-    exercises: string[],
-  ): Observable<{
-    title: string;
-    data: Partial<TrainingExerciseTonnageDto>;
-  }> {
+  getTonnageDataForSelectedExercises(id: string, exercises: string[]): Observable<TrainingExerciseTonnageDto> {
     const exercisesQueryParam = this.toQueryParam(exercises);
-    return this.httpService.get<any>(`/training/statistics/${id}?exercises=${exercisesQueryParam}`);
+    return this.httpService.get<TrainingExerciseTonnageDto>(
+      `/training/statistics/${id}?exercises=${exercisesQueryParam}`,
+    );
   }
 
   /**

@@ -134,7 +134,9 @@ export class TrainingDayStatisticsComponent implements OnInit {
       .subscribe(({ tonnage, sets, title }) => {
         this.isLoaded.set(true);
         this.setHeadlineInfo(title);
-        this.initializeCharts(tonnage.data, sets);
+
+        this.initializeTonnageChartData(tonnage);
+        this.initializeSetsBarChartData(sets);
       });
   }
 
@@ -151,8 +153,29 @@ export class TrainingDayStatisticsComponent implements OnInit {
     });
   }
 
-  private initializeCharts(tonnageData: TrainingExerciseTonnageDto, setsResponse: { [key: string]: number[] }): void {
-    // Line chart setup
+  /**
+   * Initializes the grouped bar chart data with the sets response data.
+   *
+   * @param setsResponse - An object where each key represents a category,
+   *                       and the value is an array of numbers representing sets per week.
+   */
+  private initializeSetsBarChartData(setsResponse: { [key: string]: number[] }): void {
+    const barDatasets = Object.keys(setsResponse).map((categoryKey) => {
+      const setsData = setsResponse[categoryKey];
+      return this.createBarDataset(categoryKey, setsData || []);
+    });
+
+    const weekLabels = this.generateWeekLabels(barDatasets[0].data.length || 0);
+
+    this.groupedBarChartData.set({ datasets: barDatasets, labels: weekLabels });
+  }
+
+  /**
+   * Initializes the line chart data with the tonnage data for each category.
+   *
+   * @param tonnageData - An object containing tonnage data for each exercise category.
+   */
+  private initializeTonnageChartData(tonnageData: TrainingExerciseTonnageDto) {
     const lineDatasets = Object.keys(tonnageData).map((categoryKey) => {
       const categoryData = tonnageData[categoryKey as keyof TrainingExerciseTonnageDto];
       return this.createTonnageDataSet(categoryKey, categoryData || []);
@@ -160,20 +183,19 @@ export class TrainingDayStatisticsComponent implements OnInit {
 
     const lineLabels = this.generateWeekLabels(lineDatasets[0]?.data.length || 0);
     this.lineChartData.set({ datasets: lineDatasets, labels: lineLabels });
-
-    // Bar chart setup
-    const barDatasets = Object.keys(setsResponse).map((categoryKey) => {
-      const setsData = setsResponse[categoryKey];
-      return this.createBarDataset(categoryKey, setsData || []);
-    });
-
-    this.groupedBarChartData.set({ datasets: barDatasets, labels: lineLabels });
   }
 
+  /**
+   * Creates a dataset for the line chart, representing the tonnage for a specific category.
+   *
+   * @param category - The name of the exercise category (e.g., 'squat').
+   * @param data - An array of tonnage data points.
+   * @returns A dataset formatted for the line chart.
+   */
   private createTonnageDataSet(category: string, data: Tonnage[]): LineChartDataset {
     const colors = this.chartColorService.getCategoryColor(category);
     return {
-      label: this.formatCategoryLabel(category),
+      label: category,
       data: this.extractTonnageData(data),
       borderColor: colors.borderColor,
       backgroundColor: colors.backgroundColor,
@@ -181,29 +203,43 @@ export class TrainingDayStatisticsComponent implements OnInit {
     };
   }
 
+  /**
+   * Creates a dataset for the bar chart, representing the sets for a specific category.
+   *
+   * @param category - The name of the exercise category (e.g., 'squat').
+   * @param data - An array of set counts per week.
+   * @returns A dataset formatted for the bar chart.
+   */
   private createBarDataset(category: string, data: number[]): any {
     const colors = this.chartColorService.getCategoryColor(category);
     return {
-      label: this.formatCategoryLabel(category),
-      data: data, // Use the raw numbers of sets per week
+      label: category,
+      data: data,
       backgroundColor: colors.backgroundColor,
       borderColor: colors.borderColor,
       borderWidth: 1,
     };
   }
 
+  /**
+   * Extracts the tonnage data from an array of Tonnage objects.
+   */
   private extractTonnageData(data: Tonnage[]): number[] {
     return data.map((week) => week.tonnageInCategory);
   }
 
+  /**
+   * Generates week labels for the charts based on the given number of weeks.
+   */
   private generateWeekLabels(length: number): string[] {
     return Array.from({ length }, (_, index) => `Woche ${index + 1}`);
   }
 
-  private formatCategoryLabel(category: string): string {
-    return category.charAt(0).toUpperCase() + category.slice(1);
-  }
-
+  /**
+   * Parses the training plan ID from the current URL.
+   *
+   * @returns The training plan ID extracted from the URL.
+   */
   private parseTrainingPlanIdFromUrl(): string {
     return this.router.url.split('/').pop()!;
   }

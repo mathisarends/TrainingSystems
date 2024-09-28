@@ -75,17 +75,13 @@ export async function getTonnageForCategories(req: Request, res: Response): Prom
 
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
-  const responseData: {
-    data: { [key: string]: ReturnType<typeof prepareTrainingWeeksForExercise> };
-  } = {
-    data: {}
-  };
+  const responseData = {} as { [key: string]: ReturnType<typeof prepareTrainingWeeksForExercise> };
 
   // Fügt Tonnage-Daten für jede Übungskategorie hinzu
   exerciseCategories.forEach(category => {
     const exerciseCategory = mapToExerciseCategory(category);
     if (exerciseCategory) {
-      responseData.data[category.toLowerCase()] = prepareTrainingWeeksForExercise(trainingPlan, exerciseCategory);
+      responseData[category.toLowerCase()] = prepareTrainingWeeksForExercise(trainingPlan, exerciseCategory);
     }
   });
 
