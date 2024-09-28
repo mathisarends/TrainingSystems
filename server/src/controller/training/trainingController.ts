@@ -39,6 +39,22 @@ export async function getPlans(req: Request, res: Response): Promise<void> {
   res.status(200).json(trainingPlanCards);
 }
 
+/**
+ * Retrieves a mapping of training plan IDs and titles for the current user.
+ */
+export async function getPlansTitleIdMapping(req: Request, res: Response): Promise<Response> {
+  const user = await getUser(req, res);
+
+  const trainingPlanMappings = user.trainingPlans.map(trainingPlan => {
+    return {
+      id: trainingPlan.id,
+      title: trainingPlan.title
+    };
+  });
+
+  return res.status(200).json(trainingPlanMappings);
+}
+
 export async function getMostRecentTrainingPlanLink(req: Request, res: Response): Promise<Response> {
   const user = await getUser(req, res);
 

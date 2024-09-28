@@ -1,17 +1,17 @@
 @if (isLoaded()) {
   <div class="select-container">
     <app-select
-      [items]="allExercises()"
-      [(selectedItems)]="selectedExercises"
+      [options]="allExercises()"
+      [(selectedOptions)]="selectedExercises"
       [toggleOnSelect]="true"
-      [isSingleSelect]="isDetailView()"
+      [selectionMode]="isDetailView() ? 'single' : 'multiple'"
     />
 
     <app-select
-      [items]="allExercises()"
-      [(selectedItems)]="selectedExercises"
+      [options]="allExercises()"
+      [(selectedOptions)]="selectedExercises"
       [toggleOnSelect]="true"
-      [isSingleSelect]="isDetailView()"
+      [selectionMode]="isDetailView() ? 'single' : 'multiple'"
     />
   </div>
 

@@ -42,13 +42,13 @@ export class SelectComponent implements OnInit {
    * The list of options available for selection.
    * This input is required and must be provided by the parent component.
    */
-  items = input.required<string[]>();
+  options = input.required<string[]>();
 
   /**
-   * The list of currently selected items.
+   * The list of currently selected options.
    * This input is optional and can be initialized with a predefined selection.
    */
-  selectedItems = model.required<string[]>();
+  selectedOptions = model.required<string[]>();
 
   /**
    * Determines wheter the select shall be toggled after an item was selected.
@@ -58,7 +58,7 @@ export class SelectComponent implements OnInit {
   /**
    * Determines wheter mulitple items can be selected.
    */
-  isSingleSelect = input<boolean>(false);
+  selectionMode = input<'single' | 'multiple'>('multiple');
 
   /**
    * A signal representing the open/closed state of the dropdown.
@@ -81,58 +81,24 @@ export class SelectComponent implements OnInit {
     private keyboardService: KeyboardService,
   ) {}
 
+  /**
+   * Initializes the component by setting up keyboard event listeners,
+   * the filtering logic, and handling changes to the selection mode.
+   */
   ngOnInit(): void {
-    this.filteredItems.set(this.items());
+    this.setupKeyboardEventListeners();
 
-    this.keyboardService
-      .escapePressed$()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.searchQuery.set('');
-        this.isOpen.set(false);
-      });
+    this.setupFilterLogic();
 
-    effect(
-      () => {
-        if (this.isSingleSelect()) {
-          const firstItem = this.items()[0];
-          this.selectedItems.set([firstItem]);
-        }
-        const filtered = this.items().filter((option) =>
-          option.toLowerCase().includes(this.searchQuery().toLowerCase()),
-        );
-        this.filteredItems.set(filtered);
-      },
-      { injector: this.injector, allowSignalWrites: true },
-    );
+    this.setupSelectionModeChanged();
   }
 
   /**
-   * Handles changes to the selection state when an option is selected or deselected.
-   * Updates the selected signal and emits the selectionChange event.
-   * @param option The option that was selected or deselected.
-   * @param event The DOM event triggered by the selection change.
+   * Toggles the dropdown open or closed when the component is clicked.
+   * Focuses the search bar input when the dropdown is opened.
    */
-  onSelectionChange(option: string, checkboxItem: CheckboxItem): void {
-    if (this.isSingleSelect()) {
-      this.selectedItems.set([option]);
-      this.isOpen.set(false);
-      return;
-    }
-
-    const newSelected = checkboxItem.isChecked
-      ? [...this.selectedItems(), option]
-      : this.selectedItems().filter((item) => item !== option);
-
-    this.selectedItems.set(newSelected);
-
-    if (this.toggleOnSelect()) {
-      this.isOpen.set(false);
-    }
-  }
-
   @HostListener('click')
-  onHostClick(): void {
+  toggleOptionsContainer(): void {
     this.isOpen.set(!this.isOpen());
 
     if (this.isOpen()) {
@@ -146,10 +112,90 @@ export class SelectComponent implements OnInit {
    * @param event The DOM event triggered by the document click.
    */
   @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
+  closeOptionsContainer(event: MouseEvent): void {
     const target = event.target as HTMLElement;
     if (this.isOpen() && !target.closest('app-select')) {
       this.isOpen.set(false);
     }
+  }
+
+  /**
+   * Handles changes to the selection state when an option is selected or deselected.
+   * Updates the `selectedItems` signal accordingly.
+   *
+   * If in single-selection mode, it selects only one item at a time and closes the dropdown.
+   * In multi-selection mode, it adds or removes items from the selection based on checkbox state..
+   */
+  protected onSelectionChange(option: string, checkboxItem: CheckboxItem): void {
+    if (this.isSingleSelectionModeActive()) {
+      this.selectedOptions.set([option]);
+      this.isOpen.set(false);
+      return;
+    }
+
+    const newSelected = checkboxItem.isChecked
+      ? [...this.selectedOptions(), option]
+      : this.selectedOptions().filter((item) => item !== option);
+
+    this.selectedOptions.set(newSelected);
+
+    if (this.toggleOnSelect()) {
+      this.isOpen.set(false);
+    }
+  }
+
+  /**
+   * Sets up the event listeners for keyboard interactions.
+   * Closes the dropdown and clears the search query when the escape key is pressed.
+   */
+  private setupKeyboardEventListeners(): void {
+    this.keyboardService
+      .escapePressed$()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.searchQuery.set('');
+        this.isOpen.set(false);
+      });
+  }
+
+  /**
+   * Sets up the logic to filter the items based on the search query.
+   * This effect runs whenever the search query or item list changes.
+   */
+  private setupFilterLogic(): void {
+    this.filteredItems.set(this.options());
+
+    effect(
+      () => {
+        const filtered = this.options().filter((option) =>
+          option.toLowerCase().includes(this.searchQuery().toLowerCase()),
+        );
+        this.filteredItems.set(filtered);
+      },
+      { injector: this.injector, allowSignalWrites: true },
+    );
+  }
+
+  /**
+   * Sets up the logic to handle changes in the selection mode (single/multiple).
+   * If the mode is changed to single-selection, the first item is automatically selected.
+   */
+  private setupSelectionModeChanged(): void {
+    effect(
+      () => {
+        if (this.isSingleSelectionModeActive()) {
+          const firstItem = this.selectedOptions()[0];
+          this.selectedOptions.set([firstItem]);
+        }
+      },
+      { injector: this.injector, allowSignalWrites: true },
+    );
+  }
+
+  /**
+   * Determines if the component is in single-selection mode.
+   */
+  private isSingleSelectionModeActive(): boolean {
+    return this.selectionMode() === 'single';
   }
 }
