@@ -10,9 +10,8 @@ import { LineChartComponent } from '../../../shared/components/charts/line-chart
 import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
 import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
 import { ChartSkeletonComponent } from '../../../shared/components/loader/chart-skeleton/chart-skeleton.component';
-import { MultiSelectComponent } from '../../../shared/components/multi-select/multi-select.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
-import { SingleSelectComponent } from '../../../shared/components/single-select/single-select.component';
+import { SelectComponent } from '../../../shared/components/select/select.component';
 import { KeyboardService } from '../../../shared/service/keyboard.service';
 import { HeaderService } from '../../header/header.service';
 import { ChangeProfilePictureConfirmationComponent } from '../../profile-2/change-profile-picture-confirmation/change-profile-picture-confirmation.component';
@@ -29,7 +28,7 @@ import { TrainingStatisticsService } from './training-statistics.service';
   selector: 'app-statistics',
   standalone: true,
   imports: [
-    MultiSelectComponent,
+    SelectComponent,
     DropdownComponent,
     LineChartComponent,
     GroupedBarChartComponent,
@@ -37,9 +36,8 @@ import { TrainingStatisticsService } from './training-statistics.service';
     ChartSkeletonComponent,
     ChangeProfilePictureConfirmationComponent,
     PaginationComponent,
-    SingleSelectComponent,
   ],
-  providers: [TrainingStatisticsService, KeyboardService, PaginationComponent, SingleSelectComponent],
+  providers: [TrainingStatisticsService, KeyboardService, PaginationComponent],
   templateUrl: './training-day-statistics.component.html',
   styleUrls: ['./training-day-statistics.component.scss'],
 })
@@ -74,9 +72,17 @@ export class TrainingDayStatisticsComponent implements OnInit {
    */
   trainingPlanId = signal('');
 
-  private isDetailView = signal(false);
+  /**
+   * Rerpresents whether the component is currently in detail view mode.
+   * This view is accessible through pagination, allowing the user to see more detailed information.
+   */
+  isDetailView = signal(false);
 
-  example = signal('Test');
+  /**
+   * Rerpresents the currently selected category in the single select dropdown.
+   * This value is used in the detail view to display detailed information for the selected category.
+   */
+  singleCategorySelectionValue = signal('');
 
   constructor(
     private router: Router,
@@ -110,7 +116,6 @@ export class TrainingDayStatisticsComponent implements OnInit {
   }
 
   protected onPageChanged(page: number) {
-    console.log('🚀 ~ TrainingDayStatisticsComponent ~ onPageChanged ~ page:', page);
     if (page === 0) {
       this.isDetailView.set(false);
     } else {
@@ -131,6 +136,8 @@ export class TrainingDayStatisticsComponent implements OnInit {
       .subscribe(([allExercisesResponse, selectedExercisesResponse]) => {
         this.allExercises.set(allExercisesResponse);
         this.selectedExercises.set(selectedExercisesResponse);
+
+        this.singleCategorySelectionValue.set(selectedExercisesResponse[0]);
         this.isLoaded.set(true);
       });
   }

@@ -25,16 +25,16 @@ import { SearchBarComponent } from '../search-bar/search-bar.component';
  * Represents a generic multi-select-dropdown
  */
 @Component({
-  selector: 'app-multi-select',
+  selector: 'app-select',
   standalone: true,
   imports: [FormsModule, IconComponent, SearchBarComponent, CheckboxComponent],
-  templateUrl: './multi-select.component.html',
-  styleUrls: ['./multi-select.component.scss'],
+  templateUrl: './select.component.html',
+  styleUrls: ['./select.component.scss'],
   animations: [toggleCollapseAnimation],
   providers: [KeyboardService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MultiSelectComponent implements OnInit {
+export class SelectComponent implements OnInit {
   @ViewChild(SearchBarComponent) searchBar!: SearchBarComponent;
   protected IconName = IconName;
 
@@ -51,9 +51,14 @@ export class MultiSelectComponent implements OnInit {
   selectedItems = model.required<string[]>();
 
   /**
-   * Determines wheter the multi select shall be toggled after an item was selected.
+   * Determines wheter the select shall be toggled after an item was selected.
    */
   toggleOnSelect = input<boolean>(false);
+
+  /**
+   * Determines wheter mulitple items can be selected.
+   */
+  isSingleSelect = input<boolean>(false);
 
   /**
    * A signal representing the open/closed state of the dropdown.
@@ -89,6 +94,10 @@ export class MultiSelectComponent implements OnInit {
 
     effect(
       () => {
+        if (this.isSingleSelect()) {
+          const firstItem = this.items()[0];
+          this.selectedItems.set([firstItem]);
+        }
         const filtered = this.items().filter((option) =>
           option.toLowerCase().includes(this.searchQuery().toLowerCase()),
         );
@@ -105,6 +114,12 @@ export class MultiSelectComponent implements OnInit {
    * @param event The DOM event triggered by the selection change.
    */
   onSelectionChange(option: string, checkboxItem: CheckboxItem): void {
+    if (this.isSingleSelect()) {
+      this.selectedItems.set([option]);
+      this.isOpen.set(false);
+      return;
+    }
+
     const newSelected = checkboxItem.isChecked
       ? [...this.selectedItems(), option]
       : this.selectedItems().filter((item) => item !== option);
@@ -133,7 +148,7 @@ export class MultiSelectComponent implements OnInit {
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement;
-    if (this.isOpen() && !target.closest('app-multi-select')) {
+    if (this.isOpen() && !target.closest('app-select')) {
       this.isOpen.set(false);
     }
   }

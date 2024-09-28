@@ -1,7 +1,19 @@
 @if (isLoaded()) {
-  <app-multi-select [items]="allExercises()" [(selectedItems)]="selectedExercises" [toggleOnSelect]="true" />
+  <div class="select-container">
+    <app-select
+      [items]="allExercises()"
+      [(selectedItems)]="selectedExercises"
+      [toggleOnSelect]="true"
+      [isSingleSelect]="isDetailView()"
+    />
 
-  <app-single-select [options]="['Test', 'Fest']" [(value)]="example" />
+    <app-select
+      [items]="allExercises()"
+      [(selectedItems)]="selectedExercises"
+      [toggleOnSelect]="true"
+      [isSingleSelect]="isDetailView()"
+    />
+  </div>
 
   <div class="chart-grid">
     <app-line-chart [data]="lineChartData()" yAxisTitle="Tonnage (kg)" />
@@ -10,7 +22,7 @@
   </div>
 
   <div class="pagination-container">
-    <app-pagination [currentPage]="0" [totalPages]="2" />
+    <app-pagination [currentPage]="0" [totalPages]="2" (pageChanged)="onPageChanged($event)" />
   </div>
 } @else {
   <div class="chart-grid">
