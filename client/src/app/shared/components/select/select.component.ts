@@ -21,9 +21,11 @@ import { CheckboxItem } from '../checbkox/checkbox-item';
 import { CheckboxComponent } from '../checbkox/checkbox.component';
 import { ToCheckboxItemPipe } from '../checbkox/to-checkbox-iten.pipe';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
+import { SelectOption, SelectOptionItem } from './select-option-item';
 
 /**
- * Represents a generic multi-select-dropdown
+ * Represents a generic select component that can handle both simple strings
+ * and complex objects (SelectOptionItem) as options.
  */
 @Component({
   selector: 'app-select',
@@ -41,23 +43,23 @@ export class SelectComponent implements OnInit {
 
   /**
    * The list of options available for selection.
-   * This input is required and must be provided by the parent component.
+   * This can be either an array of strings or complex SelectOptionItem objects.
    */
-  options = input.required<string[]>();
+  options = input.required<SelectOption[]>();
 
   /**
    * The list of currently selected options.
    * This input is optional and can be initialized with a predefined selection.
    */
-  selectedOptions = model.required<string[]>();
+  selectedOptions = model.required<SelectOption[]>();
 
   /**
-   * Determines wheter the select shall be toggled after an item was selected.
+   * Determines whether the select shall be toggled after an item was selected.
    */
   toggleOnSelect = input<boolean>(false);
 
   /**
-   * Determines wheter mulitple items can be selected.
+   * Determines whether multiple items can be selected.
    */
   selectionMode = input<'single' | 'multiple'>('multiple');
 
@@ -74,7 +76,7 @@ export class SelectComponent implements OnInit {
   /**
    * A signal representing the filtered items based on the search term.
    */
-  filteredItems = signal<string[]>([]);
+  filteredItems = signal<SelectOption[]>([]);
 
   constructor(
     private injector: Injector,
@@ -84,9 +86,7 @@ export class SelectComponent implements OnInit {
 
   ngOnInit(): void {
     this.setupKeyboardEventListeners();
-
     this.setupFilterLogic();
-
     this.setupSelectionModeChanged();
   }
 
@@ -107,16 +107,24 @@ export class SelectComponent implements OnInit {
     }
   }
 
-  protected onSelectionChange(option: string, checkboxItem: CheckboxItem): void {
+  /**
+   * Handles changes to the selection state when an option is selected or deselected.
+   * The `option` can either be a string or a SelectOptionItem.
+   *
+   * For complex objects, the `id` is emitted, while for strings, the string itself is emitted.
+   */
+  protected onSelectionChange(option: string | SelectOptionItem, checkboxItem: CheckboxItem): void {
+    const optionValue = this.isOptionObject(option) ? option.id : option;
+
     if (this.isSingleSelectionModeActive()) {
-      this.selectedOptions.set([option]);
+      this.selectedOptions.set([optionValue]);
       this.isOpen.set(false);
       return;
     }
 
     const newSelected = checkboxItem.isChecked
-      ? [...this.selectedOptions(), option]
-      : this.selectedOptions().filter((item) => item !== option);
+      ? [...this.selectedOptions(), optionValue]
+      : this.selectedOptions().filter((item) => item !== optionValue);
 
     this.selectedOptions.set(newSelected);
 
@@ -140,9 +148,10 @@ export class SelectComponent implements OnInit {
 
     effect(
       () => {
-        const filtered = this.options().filter((option) =>
-          option.toLowerCase().includes(this.searchQuery().toLowerCase()),
-        );
+        const filtered = this.options().filter((option) => {
+          const label = this.isOptionObject(option) ? option.label : option;
+          return label.toLowerCase().includes(this.searchQuery().toLowerCase());
+        });
         this.filteredItems.set(filtered);
       },
       { injector: this.injector, allowSignalWrites: true },
@@ -161,7 +170,17 @@ export class SelectComponent implements OnInit {
     );
   }
 
+  /**
+   * Determines if the component is in single-selection mode.
+   */
   private isSingleSelectionModeActive(): boolean {
     return this.selectionMode() === 'single';
+  }
+
+  /**
+   * Utility to check if the option is a `SelectOptionItem` object.
+   */
+  private isOptionObject(option: string | SelectOptionItem): option is SelectOptionItem {
+    return typeof option === 'object' && 'id' in option && 'label' in option;
   }
 }

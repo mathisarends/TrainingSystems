@@ -14,3 +14,16 @@ export interface SelectOptionItem {
    */
   label: string;
 }
+
+/**
+ * Represents the possible types of options that can be used in the select component.
+ * It can either be a simple string or an object with an `id` and `label`.
+ */
+export type SelectOption = string | SelectOptionItem;
+
+/**
+ * Type guard to check if an item is of type `SelectOptionItem`.
+ */
+export function isSelectOptionItem(item: any): item is SelectOptionItem {
+  return typeof item === 'object' && 'id' in item && 'label' in item;
+}
