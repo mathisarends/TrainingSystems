@@ -7,12 +7,9 @@
       [selectionMode]="isDetailView() ? 'single' : 'multiple'"
     />
 
-    <app-select
-      [options]="allExercises()"
-      [(selectedOptions)]="selectedExercises"
-      [toggleOnSelect]="true"
-      [selectionMode]="isDetailView() ? 'single' : 'multiple'"
-    />
+    @if (isDetailView() && trainingPlanTitles()) {
+      <app-single-select [options]="trainingPlanTitles()" [(value)]="selectedTrainingPlanTitle" />
+    }
   </div>
 
   <div class="chart-grid">
@@ -22,7 +19,7 @@
   </div>
 
   <div class="pagination-container">
-    <app-pagination [currentPage]="0" [totalPages]="2" (pageChanged)="onPageChanged($event)" />
+    <app-pagination [currentPage]="isDetailView() ? 1 : 0" [totalPages]="2" (pageChanged)="onPageChanged($event)" />
   </div>
 } @else {
   <div class="chart-grid">

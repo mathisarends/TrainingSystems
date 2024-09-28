@@ -12,10 +12,13 @@ import { HeadlineComponent } from '../../../shared/components/headline/headline.
 import { ChartSkeletonComponent } from '../../../shared/components/loader/chart-skeleton/chart-skeleton.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { SelectComponent } from '../../../shared/components/select/select.component';
+import { ToSelectItemPipe } from '../../../shared/components/select/to-select-item.pipe';
+import { SingleSelectComponent } from '../../../shared/components/single-select/single-select.component';
 import { KeyboardService } from '../../../shared/service/keyboard.service';
 import { HeaderService } from '../../header/header.service';
 import { ChangeProfilePictureConfirmationComponent } from '../../profile-2/change-profile-picture-confirmation/change-profile-picture-confirmation.component';
 import { ChartColorService } from '../training-view/services/chart-color.service';
+import { TrainingPlanService } from '../training-view/services/training-plan.service';
 import { TrainingExerciseTonnageDto } from './main-exercise-tonnage-dto';
 import { Tonnage } from './tonnage';
 import { TrainingStatisticsService } from './training-statistics.service';
@@ -36,6 +39,8 @@ import { TrainingStatisticsService } from './training-statistics.service';
     ChartSkeletonComponent,
     ChangeProfilePictureConfirmationComponent,
     PaginationComponent,
+    SingleSelectComponent,
+    ToSelectItemPipe,
   ],
   providers: [TrainingStatisticsService, KeyboardService, PaginationComponent],
   templateUrl: './training-day-statistics.component.html',
@@ -84,7 +89,12 @@ export class TrainingDayStatisticsComponent implements OnInit {
    */
   singleCategorySelectionValue = signal('');
 
+  trainingPlanTitles = signal<string[]>([]);
+
+  selectedTrainingPlanTitle = signal<string>('');
+
   constructor(
+    protected trainingPlanService: TrainingPlanService,
     private router: Router,
     private chartColorService: ChartColorService,
     private trainingStatisticService: TrainingStatisticsService,
@@ -105,6 +115,8 @@ export class TrainingDayStatisticsComponent implements OnInit {
 
     this.setupSelectedCategorySaveOnNavigationSync();
 
+    this.initalizeTrainingPlanComparisonOptions();
+
     effect(
       () => {
         if (this.isLoaded()) {
@@ -113,6 +125,17 @@ export class TrainingDayStatisticsComponent implements OnInit {
       },
       { allowSignalWrites: true, injector: this.injector },
     );
+  }
+
+  private initalizeTrainingPlanComparisonOptions() {
+    this.trainingPlanService.loadAndCacheTrainingPlans().subscribe((trainingPlans) => {
+      const trainingPlanTitles = trainingPlans.map((trainingPlan) => trainingPlan.title);
+      this.trainingPlanTitles.set(trainingPlanTitles);
+
+      if (trainingPlanTitles.length > 0) {
+        this.selectedTrainingPlanTitle.set(trainingPlanTitles[0]);
+      }
+    });
   }
 
   protected onPageChanged(page: number) {

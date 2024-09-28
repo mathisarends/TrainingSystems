@@ -1,35 +1,26 @@
-import {
-  AfterViewInit,
-  Component,
-  computed,
-  effect,
-  ElementRef,
-  Injector,
-  input,
-  signal,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, Component, effect, ElementRef, Injector, input, signal, ViewChild } from '@angular/core';
 import Chart from 'chart.js/auto';
+import { IconName } from '../../../icon/icon-name';
+import { CircularIconButtonComponent } from '../../circular-icon-button/circular-icon-button.component';
 import { LineChartData } from './line-chart-data';
 import { LineChartOptions } from './line-chart-options';
 
 @Component({
   selector: 'app-line-chart',
+  imports: [CircularIconButtonComponent],
   standalone: true,
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.scss'],
 })
 export class LineChartComponent implements AfterViewInit {
+  protected readonly IconName = IconName;
   @ViewChild('canvas') canvas!: ElementRef;
 
-  // Simplified inputs using the new interfaces
   chartId = input<string>('lineChart');
   data = input<LineChartData>({ labels: [], datasets: [] });
   options = input<LineChartOptions>({ yAxisTitle: 'Value', maintainAspectRatio: true, responsive: true });
 
   chart = signal<Chart<'line'> | null>(null);
-
-  chartData = computed(() => this.data());
 
   constructor(private injector: Injector) {}
 
@@ -57,7 +48,7 @@ export class LineChartComponent implements AfterViewInit {
 
     const newChart = new Chart(context, {
       type: 'line',
-      data: this.chartData(),
+      data: this.data(),
       options: {
         responsive: this.options().responsive ?? true,
         maintainAspectRatio: this.options().maintainAspectRatio ?? true,
