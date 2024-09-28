@@ -2,9 +2,10 @@ import { Component, DestroyRef, effect, Injector, OnInit, signal, WritableSignal
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationStart, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
-import { BarChartData } from '../../../shared/components/charts/grouped-bar-chart/bar-chart.-data';
+import { BarChartData } from '../../../shared/components/charts/grouped-bar-chart/bar-chart-data';
 import { GroupedBarChartComponent } from '../../../shared/components/charts/grouped-bar-chart/grouped-bar-chart.component';
 import { LineChartDataset } from '../../../shared/components/charts/line-chart/lilne-chart-data-set';
+import { LineChartData } from '../../../shared/components/charts/line-chart/line-chart-data';
 import { LineChartComponent } from '../../../shared/components/charts/line-chart/line-chart.component';
 import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
 import { ChartSkeletonComponent } from '../../../shared/components/loader/chart-skeleton/chart-skeleton.component';
@@ -45,15 +46,10 @@ export class TrainingDayStatisticsComponent implements OnInit {
 
   allExercises: WritableSignal<string[]> = signal([]);
 
-  lineChartData = signal<{
-    datasets: LineChartDataset[];
-    labels: string[];
-  }>({ datasets: [], labels: [] });
+  lineChartData = signal<LineChartData>({ datasets: [], labels: [] });
 
-  groupedBarChartData = signal<{
-    datasets: BarChartData[];
-    labels: string[];
-  }>({ datasets: [], labels: [] });
+  groupedBarChartData = signal<BarChartData>({ datasets: [], labels: [] });
+
   trainingPlanId = signal('');
 
   constructor(

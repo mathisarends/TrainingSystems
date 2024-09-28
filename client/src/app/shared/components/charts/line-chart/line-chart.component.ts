@@ -29,7 +29,6 @@ export class LineChartComponent implements AfterViewInit {
 
   chart = signal<Chart<'line'> | null>(null);
 
-  // Computed signal to track the current chart data based on inputs
   chartData = computed(() => this.data());
 
   constructor(private injector: Injector) {}

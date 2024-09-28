@@ -3,8 +3,7 @@
 
   <app-grouped-bar-chart
     [yAxisLabel]="'Trainingsdauer (in Minuten)'"
-    [labels]="usageData.recentTrainingDurations.labels"
-    [barChartDataSets]="usageData.recentTrainingDurations.chartData"
+    [groupedBarChartData]="usageData.recentTrainingDurations"
   />
 
   <app-training-day-notification [notificationsInput]="notificationService.trainingDayNotifications()" />

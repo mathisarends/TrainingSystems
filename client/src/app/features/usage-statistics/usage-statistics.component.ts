@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { forkJoin, map, Observable } from 'rxjs';
-import { BarChartData } from '../../shared/components/charts/grouped-bar-chart/bar-chart.-data';
+import { BarChartDataset } from '../../shared/components/charts/grouped-bar-chart/bar-chart.-data-set';
 import { GroupedBarChartComponent } from '../../shared/components/charts/grouped-bar-chart/grouped-bar-chart.component';
 import { ChartSkeletonComponent } from '../../shared/components/loader/chart-skeleton/chart-skeleton.component';
 import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
@@ -34,7 +34,7 @@ export class UsageStatisticsComponent implements OnInit {
    */
   usageStatisticsData$!: Observable<{
     activityCalendarData: ActivityCalendarData;
-    recentTrainingDurations: { chartData: BarChartData[]; labels: string[] };
+    recentTrainingDurations: { datasets: BarChartDataset[]; labels: string[] };
   }>;
 
   constructor(
@@ -55,7 +55,7 @@ export class UsageStatisticsComponent implements OnInit {
           const dateLabels = trainingDurations.map((duration) => duration.date);
           const data = trainingDurations.map((duration) => duration.durationInMinutes);
 
-          const groupedBarChartData: BarChartData[] = [
+          const groupedBarChartData: BarChartDataset[] = [
             {
               label: 'Trainingsdauer (Minuten)',
               data: data,
@@ -65,7 +65,7 @@ export class UsageStatisticsComponent implements OnInit {
             },
           ];
 
-          return { chartData: groupedBarChartData, labels: dateLabels };
+          return { datasets: groupedBarChartData, labels: dateLabels };
         }),
       ),
     });
