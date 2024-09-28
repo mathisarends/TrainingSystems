@@ -163,7 +163,9 @@ export class SelectComponent implements OnInit {
       () => {
         if (this.isSingleSelectionModeActive()) {
           const firstItem = this.selectedOptions()[0];
-          this.selectedOptions.set([firstItem]);
+          if (this.selectedOptions().length !== 1 || this.selectedOptions()[0] !== firstItem) {
+            this.selectedOptions.set([firstItem]);
+          }
         }
       },
       { injector: this.injector, allowSignalWrites: true },

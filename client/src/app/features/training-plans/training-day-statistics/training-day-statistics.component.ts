@@ -128,16 +128,16 @@ export class TrainingDayStatisticsComponent implements OnInit {
    * then updates the component's state and fetches additional statistics.
    */
   private fetchAndSetCategoryMetadata(): void {
-    forkJoin([
-      this.trainingStatisticService.getAllCategories(),
-      this.trainingStatisticService.getSelectedCategories(this.trainingPlanId()),
-    ])
+    forkJoin({
+      allCategories: this.trainingStatisticService.getAllCategories(),
+      selectedCategories: this.trainingStatisticService.getSelectedCategories(this.trainingPlanId()),
+    })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(([allExercisesResponse, selectedExercisesResponse]) => {
-        this.allExercises.set(allExercisesResponse);
-        this.selectedExercises.set(selectedExercisesResponse);
+      .subscribe(({ allCategories, selectedCategories }) => {
+        this.allExercises.set(allCategories);
+        this.selectedExercises.set(selectedCategories);
 
-        this.singleCategorySelectionValue.set(selectedExercisesResponse[0]);
+        this.singleCategorySelectionValue.set(selectedCategories[0]);
         this.isLoaded.set(true);
       });
   }
