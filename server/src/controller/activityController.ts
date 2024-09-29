@@ -133,7 +133,7 @@ function getIndexOfDayPerYearFromDate(date: Date): number {
  * @param date - The date to format.
  * @returns A string with the format "Montag, 24.08".
  */
-function formatDateWithWeekday(date: Date): string {
+export function formatDateWithWeekday(date: Date): string {
   const germanWeekDays = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
 
   const dayName = germanWeekDays[date.getDay()];
