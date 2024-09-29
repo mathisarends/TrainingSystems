@@ -2,31 +2,58 @@
   <app-search-bar [(searchQuery)]="trainingPlanSearchQuery" />
 </div>
 
-<div class="row" cdkDropList (cdkDropListDropped)="updateTrainingPlanOrder($event)">
-  @if (trainingPlans$ | async; as allTrainingPlans) {
-    @if (filteredTrainingPlans$ | async; as filteredTrainingPlans) {
-      @if (allTrainingPlans.length === 0) {
-        <app-alert
-          alertType="light"
-          alertText="Du hast noch keine eigenen Trainingspläne erstellt. Erstelle welche mit dem Button oben!"
-        />
-      } @else if (filteredTrainingPlans.length === 0) {
-        <app-alert alertType="light" alertText="Keine deiner bestehenden Trainingpläne passen zu dieser Suchanfrage!" />
-      } @else {
-        @for (trainingPlan of filteredTrainingPlans; track trainingPlan.id) {
-          <div class="training-plan-card-container" [ngClass]="columnClass" cdkDrag>
-            <app-training-plan-card [trainingPlan]="trainingPlan" [columnClass]="columnClass" />
+@if (isDragMode()) {
+  <div class="row" cdkDropList (cdkDropListDropped)="updateTrainingPlanOrder($event)">
+    @if (trainingPlans$ | async; as allTrainingPlans) {
+      @if (filteredTrainingPlans$ | async; as filteredTrainingPlans) {
+        @if (allTrainingPlans.length === 0) {
+          <app-alert
+            alertText="Du hast noch keine eigenen Trainingspläne erstellt. Erstelle welche mit dem Button oben!"
+          />
+        } @else if (filteredTrainingPlans.length === 0) {
+          <app-alert alertText="Keine deiner bestehenden Trainingpläne passen zu dieser Suchanfrage!" />
+        } @else {
+          @for (trainingPlan of filteredTrainingPlans; track trainingPlan.id) {
+            <div class="training-plan-card-container" [ngClass]="columnClass" cdkDrag>
+              <app-training-plan-card [trainingPlan]="trainingPlan" [columnClass]="columnClass" />
 
-            <app-circular-icon-button [iconSize]="18" cdkDragHandle [icon]="IconName.DRAG" />
-          </div>
+              <app-circular-icon-button [iconSize]="18" cdkDragHandle [icon]="IconName.DRAG" />
+            </div>
+          }
         }
       }
+    } @else {
+      @for (k of [1, 2, 3]; track k) {
+        <div [ngClass]="columnClass">
+          <app-skeleton-card />
+        </div>
+      }
     }
-  } @else {
-    @for (k of [1, 2, 3]; track k) {
-      <div [ngClass]="columnClass">
-        <app-skeleton-card />
-      </div>
+  </div>
+} @else {
+  <div class="row">
+    @if (trainingPlans$ | async; as allTrainingPlans) {
+      @if (filteredTrainingPlans$ | async; as filteredTrainingPlans) {
+        @if (allTrainingPlans.length === 0) {
+          <app-alert
+            alertText="Du hast noch keine eigenen Trainingspläne erstellt. Erstelle welche mit dem Button oben!"
+          />
+        } @else if (filteredTrainingPlans.length === 0) {
+          <app-alert alertText="Keine deiner bestehenden Trainingpläne passen zu dieser Suchanfrage!" />
+        } @else {
+          @for (trainingPlan of filteredTrainingPlans; track trainingPlan.id) {
+            <div class="training-plan-card-container" [ngClass]="columnClass">
+              <app-training-plan-card [trainingPlan]="trainingPlan" [columnClass]="columnClass" />
+            </div>
+          }
+        }
+      }
+    } @else {
+      @for (k of [1, 2, 3]; track k) {
+        <div [ngClass]="columnClass">
+          <app-skeleton-card />
+        </div>
+      }
     }
-  }
-</div>
+  </div>
+}

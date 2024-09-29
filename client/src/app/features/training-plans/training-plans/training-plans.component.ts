@@ -58,6 +58,10 @@ export class TrainingPlansComponent implements OnInit {
 
   isSearchbarCollapsed = signal<boolean>(true);
 
+  isDragMode = signal<boolean>(false);
+
+  selectedPlanCategory = signal('Fest');
+
   constructor(
     private modalService: ModalService,
     private headerService: HeaderService,
@@ -86,13 +90,7 @@ export class TrainingPlansComponent implements OnInit {
       }
     });
 
-    this.keyboardService
-      .ctrlFPressed$()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((event: KeyboardEvent) => {
-        event.preventDefault();
-        this.toggleSearchBarVisibility();
-      });
+    this.setupKeyBoardEventListeners();
 
     effect(
       () => {
@@ -154,7 +152,7 @@ export class TrainingPlansComponent implements OnInit {
   private setHeaderInfo(): void {
     const options = [
       { icon: IconName.SEARCH, label: 'Suchen', callback: this.toggleSearchBarVisibility.bind(this) },
-      { icon: IconName.DRAG, label: 'Anordnen', callback: () => {} },
+      { icon: IconName.DRAG, label: 'Anordnen', callback: this.toggleDragMode.bind(this) },
     ];
 
     this.headerService.setHeadlineInfo({
@@ -164,6 +162,13 @@ export class TrainingPlansComponent implements OnInit {
         { icon: IconName.MORE_VERTICAL, options },
       ],
     });
+  }
+
+  /**
+   * Toggles the mode in which training plan cards may be dragged
+   */
+  private toggleDragMode(): void {
+    this.isDragMode.set(!this.isDragMode());
   }
 
   /**
@@ -189,6 +194,19 @@ export class TrainingPlansComponent implements OnInit {
       .filter((plan) => plan.title.toLowerCase().includes(searchQuery));
 
     this.filteredTrainingPlans$.next(filteredPlans);
+  }
+
+  /**
+   * Sets up the keyboard event listener for the search functionality.
+   */
+  private setupKeyBoardEventListeners(): void {
+    this.keyboardService
+      .ctrlFPressed$()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((event: KeyboardEvent) => {
+        event.preventDefault();
+        this.toggleSearchBarVisibility();
+      });
   }
 
   /**

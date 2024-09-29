@@ -53,6 +53,6 @@ export class LineChartComponent extends BaseChartComponent<'line'> {
       },
     });
 
-    this.chart.set(newChart); // Verwende den spezifischen Typ hier
+    this.chart.set(newChart);
   }
 }
