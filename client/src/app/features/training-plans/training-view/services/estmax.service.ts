@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormService } from '../../../../core/services/form.service';
-import { Exercise } from '../training-exercise';
 import { ExerciseTableRowService } from './exercise-table-row.service';
-import { TrainingPlanDataService } from './training-plan-data.service';
 
 @Injectable()
 export class EstMaxService {
@@ -11,12 +9,10 @@ export class EstMaxService {
   constructor(
     private formService: FormService,
     private exerciseTableRowService: ExerciseTableRowService,
-    private trainingPlanDataService: TrainingPlanDataService,
   ) {}
 
   calculateMaxAfterInputChange(inputElement: HTMLInputElement) {
     const category = this.exerciseTableRowService.getExerciseCategorySelectorByElement(inputElement).value;
-    const exerciseData = this.getExerciseFromTargetNameAttribut(inputElement.name);
 
     if (this.shouldCalculateEstMaxForCategory(category)) {
       const { exerciseSelect, weightInput, repsInput, rpeInput, estMaxInput } =
@@ -29,7 +25,6 @@ export class EstMaxService {
       if (weight && reps && rpe) {
         const estMax = this.calcEstMax(weight, reps, rpe);
         estMaxInput.value = estMax.toString();
-        exerciseData.estMax = estMax;
 
         this.formService.addChange(estMaxInput.name, estMaxInput.value);
 
@@ -55,17 +50,7 @@ export class EstMaxService {
     }
   }
 
-  private getExerciseFromTargetNameAttribut(nameAttr: string): Exercise {
-    const exerciseIndex = this.extractExerciseIndexFromName(nameAttr) - 1;
 
-    const exercise = this.trainingPlanDataService.trainingPlanData?.trainingDay?.exercises?.[exerciseIndex];
-
-    if (!exercise) {
-      throw new Error('Invalid exercise values for calculating max');
-    }
-
-    return exercise;
-  }
 
   /**
    * Calculates the estimated maximum weight using the Wathan formula, incorporating actual reps adjusted for RPE.

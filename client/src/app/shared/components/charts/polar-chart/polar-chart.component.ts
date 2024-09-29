@@ -23,6 +23,7 @@ export class PolarChartComponent implements AfterViewInit {
   @ViewChild('canvas') canvas!: ElementRef;
 
   chartId = input<string>('polarAreaChart');
+
   data = input<LineChartData>({ labels: [], datasets: [] });
 
   chart = signal<Chart<'polarArea'> | null>(null);
