@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, effect, ElementRef, Injector, input, signal, ViewChild } from '@angular/core';
 import Chart from 'chart.js/auto';
+import { TooltipDirective } from '../../../directives/tooltip.directive';
 import { IconName } from '../../../icon/icon-name';
 import { CircularIconButtonComponent } from '../../circular-icon-button/circular-icon-button.component';
 import { LineChartData } from './line-chart-data';
@@ -7,7 +8,7 @@ import { LineChartOptions } from './line-chart-options';
 
 @Component({
   selector: 'app-line-chart',
-  imports: [CircularIconButtonComponent],
+  imports: [CircularIconButtonComponent, TooltipDirective],
   standalone: true,
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.scss'],
@@ -85,5 +86,21 @@ export class LineChartComponent implements AfterViewInit {
       this.chart()!.data.datasets = this.data().datasets;
       this.chart()!.update();
     }
+  }
+
+  // Method to download chart as an image
+  protected downloadChart(): void {
+    const chartInstance = this.chart();
+    if (!chartInstance) {
+      return;
+    }
+
+    const base64Image = chartInstance.toBase64Image();
+
+    const link = document.createElement('a');
+    link.href = base64Image;
+    link.download = `${this.chartId() || 'chart'}.png`;
+
+    link.click();
   }
 }

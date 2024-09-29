@@ -1,3 +1,8 @@
 <canvas #canvas id="{{ chartId() }}"></canvas>
 
-<app-circular-icon-button [icon]="IconName.DOWNLOAD" [iconSize]="18" />
+<app-circular-icon-button
+  (clicked)="downloadChart()"
+  [appTooltip]="'Herunterladen'"
+  [icon]="IconName.DOWNLOAD"
+  [iconSize]="18"
+/>
