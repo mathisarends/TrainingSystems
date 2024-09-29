@@ -13,14 +13,12 @@ import { ChartSkeletonComponent } from '../../../shared/components/loader/chart-
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { SelectComponent } from '../../../shared/components/select/select.component';
 import { ToSelectItemPipe } from '../../../shared/components/select/to-select-item.pipe';
-import { SingleSelectComponent } from '../../../shared/components/single-select/single-select.component';
 import { KeyboardService } from '../../../shared/service/keyboard.service';
 import { HeaderService } from '../../header/header.service';
 import { ChangeProfilePictureConfirmationComponent } from '../../profile-2/change-profile-picture-confirmation/change-profile-picture-confirmation.component';
 import { ChartColorService } from '../training-view/services/chart-color.service';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
-import { TrainingExerciseTonnageDto } from './main-exercise-tonnage-dto';
-import { Tonnage } from './tonnage';
+import { LineChartDataDTO } from './line-chart-data-dto';
 import { TrainingStatisticsService } from './training-statistics.service';
 
 /**
@@ -38,8 +36,6 @@ import { TrainingStatisticsService } from './training-statistics.service';
     HeadlineComponent,
     ChartSkeletonComponent,
     ChangeProfilePictureConfirmationComponent,
-    PaginationComponent,
-    SingleSelectComponent,
     ToSelectItemPipe,
   ],
   providers: [TrainingStatisticsService, KeyboardService, PaginationComponent],
@@ -83,16 +79,6 @@ export class TrainingDayStatisticsComponent implements OnInit {
    */
   isDetailView = signal(false);
 
-  /**
-   * Rerpresents the currently selected category in the single select dropdown.
-   * This value is used in the detail view to display detailed information for the selected category.
-   */
-  singleCategorySelectionValue = signal('');
-
-  trainingPlanTitles = signal<string[]>([]);
-
-  selectedTrainingPlanTitle = signal<string>('');
-
   constructor(
     protected trainingPlanService: TrainingPlanService,
     private router: Router,
@@ -115,8 +101,6 @@ export class TrainingDayStatisticsComponent implements OnInit {
 
     this.setupSelectedCategorySaveOnNavigationSync();
 
-    this.initalizeTrainingPlanComparisonOptions();
-
     effect(
       () => {
         if (this.isLoaded()) {
@@ -125,25 +109,6 @@ export class TrainingDayStatisticsComponent implements OnInit {
       },
       { allowSignalWrites: true, injector: this.injector },
     );
-  }
-
-  private initalizeTrainingPlanComparisonOptions() {
-    this.trainingPlanService.loadAndCacheTrainingPlans().subscribe((trainingPlans) => {
-      const trainingPlanTitles = trainingPlans.map((trainingPlan) => trainingPlan.title);
-      this.trainingPlanTitles.set(trainingPlanTitles);
-
-      if (trainingPlanTitles.length > 0) {
-        this.selectedTrainingPlanTitle.set(trainingPlanTitles[0]);
-      }
-    });
-  }
-
-  protected onPageChanged(page: number) {
-    if (page === 0) {
-      this.isDetailView.set(false);
-    } else {
-      this.isDetailView.set(true);
-    }
   }
 
   /**
@@ -160,7 +125,6 @@ export class TrainingDayStatisticsComponent implements OnInit {
         this.allExercises.set(allCategories);
         this.selectedExercises.set(selectedCategories);
 
-        this.singleCategorySelectionValue.set(selectedCategories[0]);
         this.isLoaded.set(true);
       });
   }
@@ -222,9 +186,9 @@ export class TrainingDayStatisticsComponent implements OnInit {
    *
    * @param tonnageData - An object containing tonnage data for each exercise category.
    */
-  private initializeTonnageChartData(tonnageData: TrainingExerciseTonnageDto) {
+  private initializeTonnageChartData(tonnageData: LineChartDataDTO) {
     const lineDatasets = Object.keys(tonnageData).map((categoryKey) => {
-      const categoryData = tonnageData[categoryKey as keyof TrainingExerciseTonnageDto];
+      const categoryData = tonnageData[categoryKey];
       return this.createTonnageDataSet(categoryKey, categoryData || []);
     });
 
@@ -239,11 +203,11 @@ export class TrainingDayStatisticsComponent implements OnInit {
    * @param data - An array of tonnage data points.
    * @returns A dataset formatted for the line chart.
    */
-  private createTonnageDataSet(category: string, data: Tonnage[]): LineChartDataset {
+  private createTonnageDataSet(category: string, data: number[]): LineChartDataset {
     const colors = this.chartColorService.getCategoryColor(category);
     return {
       label: category,
-      data: this.extractTonnageData(data),
+      data: data,
       borderColor: colors.borderColor,
       backgroundColor: colors.backgroundColor,
       fill: false,
@@ -266,13 +230,6 @@ export class TrainingDayStatisticsComponent implements OnInit {
       borderColor: colors.borderColor,
       borderWidth: 1,
     };
-  }
-
-  /**
-   * Extracts the tonnage data from an array of Tonnage objects.
-   */
-  private extractTonnageData(data: Tonnage[]): number[] {
-    return data.map((week) => week.tonnageInCategory);
   }
 
   /**

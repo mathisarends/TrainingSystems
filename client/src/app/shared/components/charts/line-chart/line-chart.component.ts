@@ -4,7 +4,6 @@ import { TooltipDirective } from '../../../directives/tooltip.directive';
 import { IconName } from '../../../icon/icon-name';
 import { CircularIconButtonComponent } from '../../circular-icon-button/circular-icon-button.component';
 import { LineChartData } from './line-chart-data';
-import { LineChartOptions } from './line-chart-options';
 
 @Component({
   selector: 'app-line-chart',
@@ -19,7 +18,7 @@ export class LineChartComponent implements AfterViewInit {
 
   chartId = input<string>('lineChart');
   data = input<LineChartData>({ labels: [], datasets: [] });
-  options = input<LineChartOptions>({ yAxisTitle: 'Value', maintainAspectRatio: true, responsive: true });
+  yAxisTitle = input.required<string>();
 
   chart = signal<Chart<'line'> | null>(null);
 
@@ -51,14 +50,14 @@ export class LineChartComponent implements AfterViewInit {
       type: 'line',
       data: this.data(),
       options: {
-        responsive: this.options().responsive ?? true,
-        maintainAspectRatio: this.options().maintainAspectRatio ?? true,
+        responsive: true,
+        maintainAspectRatio: true,
         scales: {
           y: {
             beginAtZero: true,
             title: {
               display: true,
-              text: this.options().yAxisTitle ?? 'Value',
+              text: this.yAxisTitle(),
             },
           },
         },

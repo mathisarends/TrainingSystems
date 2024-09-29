@@ -11,6 +11,7 @@ import { getUser } from '../../service/userService.js';
 import { mapToExerciseCategory } from '../../utils/exerciseUtils.js';
 
 import _ from 'lodash';
+import { LineChartDataDTO } from '../../interfaces/lineChartDataDto.js';
 const { capitalize } = _;
 
 /**
@@ -76,12 +77,11 @@ export async function getTonnageForCategories(req: Request, res: Response): Prom
   const exerciseCategories = (req.query.exercises as string).split(',');
 
   const user = await getUser(req, res);
-
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
-  const responseData = {} as { [key: string]: ReturnType<typeof prepareTrainingWeeksForExercise> };
+  const responseData: LineChartDataDTO = {};
 
-  // Fügt Tonnage-Daten für jede Übungskategorie hinzu
+  // Add tonnage data for each exercise category
   exerciseCategories.forEach(category => {
     const exerciseCategory = mapToExerciseCategory(category);
     if (exerciseCategory) {
@@ -140,32 +140,27 @@ export async function getPerformanceCharts(req: Request, res: Response): Promise
 
   const mappedExerciseCategories = exerciseCategories.map((category: string) => mapToExerciseCategory(category));
 
-  // bislang werden nur für diese Kategorien 1RM erlaubt
-  const mainExercises = [ExerciseCategoryType.SQUAT, ExerciseCategoryType.BENCH, ExerciseCategoryType.DEADLIFT];
+  const mainExercises = [
+    ExerciseCategoryType.SQUAT,
+    ExerciseCategoryType.BENCH,
+    ExerciseCategoryType.DEADLIFT,
+    ExerciseCategoryType.OVERHEADPRESS
+  ];
 
-  if (mappedExerciseCategories.some(exercise => !mainExercises.includes(exercise))) {
-    res.status(400).json({ error: 'Invalid exercise category provided' });
-    return;
-  }
+  const validExercises = mappedExerciseCategories.filter(exercise => mainExercises.includes(exercise));
 
   const user = await getUser(req, res);
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
-  const performanceData = mappedExerciseCategories.reduce(
-    (result, category) => {
-      result[category] = getBestPerformanceByExercise(trainingPlan, category);
-      return result;
-    },
-    {} as Record<ExerciseCategoryType, { bestPerformance: number }[]>
-  );
+  const performanceData = validExercises.reduce((result, category) => {
+    result[capitalize(category)] = getBestPerformanceByExercise(trainingPlan, category);
+    return result;
+  }, {} as LineChartDataDTO);
 
   res.status(200).json(performanceData);
 }
 
-function getBestPerformanceByExercise(
-  trainingPlan: TrainingPlan,
-  exerciseCategory: ExerciseCategoryType
-): { bestPerformance: number }[] {
+function getBestPerformanceByExercise(trainingPlan: TrainingPlan, exerciseCategory: ExerciseCategoryType): number[] {
   return trainingPlan.trainingWeeks
     .map((week, index) => {
       let bestPerformance = 0;
@@ -184,7 +179,7 @@ function getBestPerformanceByExercise(
       };
     })
     .filter(weekData => weekData.bestPerformance > 0 || weekData.isInitialWeek)
-    .map(weekData => ({ bestPerformance: weekData.bestPerformance }));
+    .map(weekData => weekData.bestPerformance); // Now return only the number
 }
 
 /**
@@ -209,10 +204,7 @@ function getSetsPerWeek(trainingPlan: TrainingPlan, exerciseCategory: ExerciseCa
 /**
  * Prepares tonnage data for a specific exercise category over the training weeks in a training plan.
  */
-function prepareTrainingWeeksForExercise(
-  trainingPlan: TrainingPlan,
-  exerciseCategory: ExerciseCategoryType
-): { tonnageInCategory: number }[] {
+function prepareTrainingWeeksForExercise(trainingPlan: TrainingPlan, exerciseCategory: ExerciseCategoryType): number[] {
   return trainingPlan.trainingWeeks
     .map((week, index) => {
       let tonnageInCategory = 0;
@@ -232,5 +224,5 @@ function prepareTrainingWeeksForExercise(
       };
     })
     .filter(weekData => weekData.tonnageInCategory > 0 || weekData.index === 0 || weekData.index === 1) // Include first and second weeks even if tonnage is 0
-    .map(weekData => ({ tonnageInCategory: weekData.tonnageInCategory })); //
+    .map(weekData => weekData.tonnageInCategory);
 }

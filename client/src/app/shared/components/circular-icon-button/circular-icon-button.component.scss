@@ -5,8 +5,24 @@
   height: 2.25rem;
   aspect-ratio: 1;
   border-radius: 50%;
+  transition:
+    background 0.3s,
+    box-shadow 0.3s,
+    transform 0.1s;
 
   &:hover {
     cursor: pointer;
+    background: #cdcdcd;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+    background: #d1d1d1;
+  }
+
+  &:active {
+    background: #bdbdbd;
+    transform: scale(0.95);
   }
 }

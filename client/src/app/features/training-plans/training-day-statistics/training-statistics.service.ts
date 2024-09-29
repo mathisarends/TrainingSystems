@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { ExerciseCategories } from '../model/exercise-categories';
-import { TrainingExerciseTonnageDto } from './main-exercise-tonnage-dto';
+import { LineChartDataDTO } from './line-chart-data-dto';
 import { TrainingPlanTitleIdDto } from './training-plan-title-id-dto';
 
 @Injectable()
@@ -34,9 +34,9 @@ export class TrainingStatisticsService {
   /**
    * Retrieves the tonnage data for selected exercises in a specific training plan.
    */
-  getTonnageDataForSelectedExercises(id: string, exercises: string[]): Observable<TrainingExerciseTonnageDto> {
+  getTonnageDataForSelectedExercises(id: string, exercises: string[]): Observable<LineChartDataDTO> {
     const exercisesQueryParam = this.toQueryParam(exercises);
-    return this.httpService.get<TrainingExerciseTonnageDto>(
+    return this.httpService.get<LineChartDataDTO>(
       `/training/statistics/${id}?exercises=${exercisesQueryParam}`,
     );
   }

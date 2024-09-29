@@ -6,20 +6,12 @@
       [toggleOnSelect]="true"
       [selectionMode]="isDetailView() ? 'single' : 'multiple'"
     />
-
-    @if (isDetailView() && trainingPlanTitles()) {
-      <app-single-select [options]="trainingPlanTitles()" [(value)]="selectedTrainingPlanTitle" />
-    }
   </div>
 
   <div class="chart-grid">
-    <app-line-chart [data]="lineChartData()" yAxisTitle="Tonnage (kg)" />
+    <app-line-chart [chartId]="'tonnageChart'" [data]="lineChartData()" yAxisTitle="Tonnage (kg)" />
 
     <app-grouped-bar-chart [groupedBarChartData]="groupedBarChartData()" />
-  </div>
-
-  <div class="pagination-container">
-    <app-pagination [currentPage]="isDetailView() ? 1 : 0" [totalPages]="2" (pageChanged)="onPageChanged($event)" />
   </div>
 } @else {
   <div class="chart-grid">
