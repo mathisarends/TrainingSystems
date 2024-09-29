@@ -11,7 +11,7 @@ import { BaseChartComponent } from '../base-chart.component';
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.scss'],
 })
-export class LineChartComponent extends BaseChartComponent {
+export class LineChartComponent extends BaseChartComponent<'line'> {
   /**
    * Initializes the line chart. Destroys any existing chart to prevent memory leaks.
    */
@@ -24,7 +24,7 @@ export class LineChartComponent extends BaseChartComponent {
       return;
     }
 
-    const newChart = new Chart(context, {
+    const newChart = new Chart<'line'>(context, {
       type: 'line',
       data: this.data(),
       options: {
@@ -53,6 +53,6 @@ export class LineChartComponent extends BaseChartComponent {
       },
     });
 
-    this.chart.set(newChart);
+    this.chart.set(newChart); // Verwende den spezifischen Typ hier
   }
 }

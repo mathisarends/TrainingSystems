@@ -1,21 +1,20 @@
-import { ChartDataset } from './chart-dataset';
+import { LineChartDataset } from './line-chart/line-chart-data-set';
+import { PolarAreaChartDataset } from './polar-chart/polar-area-chart-data-set';
 
 /**
- * Represents the full data structure for a chart, including labels and datasets.
+ * Represents the chart data structure, including labels and datasets.
  *
- * @property labels - An array of strings representing the labels on the x-axis (e.g., 'January', 'February').
- * @property datasets - An array of datasets representing the data series to be plotted on the chart.
+ * @template T - The type of the dataset (e.g., LineChartDataset or PolarAreaChartDataset).
  */
-export interface ChartData {
+export interface ChartData<T extends LineChartDataset | PolarAreaChartDataset> {
   /**
-   * Labels for the x-axis, describing each category or data point.
-   * For example: ['Week 1', 'Week 2', 'Week 3']
+   * X-axis labels for each data point (e.g., ['Week 1', 'Week 2']).
    */
   labels: string[];
 
   /**
-   * Array of datasets, where each dataset contains a label (for the legend) and data points to be plotted.
-   * For example: [{ label: 'Squats', data: [200, 250, 300] }]
+   * Array of datasets, each containing a label and data points.
+   * @template T - The specific dataset type (e.g., LineChartDataset[] or PolarAreaChartDataset[]).
    */
-  datasets: ChartDataset[];
+  datasets: T[];
 }

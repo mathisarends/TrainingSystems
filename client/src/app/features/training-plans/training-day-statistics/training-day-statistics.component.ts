@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { ChartData } from '../../../shared/components/charts/chart-data';
-import { ChartDataset } from '../../../shared/components/charts/chart-dataset';
+import { LineChartDataset, PolarAreaChartDataset } from '../../../shared/components/charts/chart-dataset';
 import { GroupedBarChartComponent } from '../../../shared/components/charts/grouped-bar-chart/grouped-bar-chart.component';
 import { LineChartComponent } from '../../../shared/components/charts/line-chart/line-chart.component';
 import { PolarChartComponent } from '../../../shared/components/charts/polar-chart/polar-chart.component';
@@ -69,11 +69,11 @@ export class TrainingDayStatisticsComponent implements OnInit {
   /**
    * Holds the data for a line chart, including datasets and labels.
    */
-  volumeChartData = signal<ChartData>({ datasets: [], labels: [] });
+  volumeChartData = signal<ChartData<LineChartDataset>>({ datasets: [], labels: [] });
 
-  performanceChartData = signal<ChartData>({ datasets: [], labels: [] });
+  performanceChartData = signal<ChartData<LineChartDataset>>({ datasets: [], labels: [] });
 
-  sessionDurationChartData = signal<ChartData>({ datasets: [], labels: [] });
+  sessionDurationChartData = signal<ChartData<PolarAreaChartDataset>>({ datasets: [], labels: [] });
 
   /**
    * Rerpresents whether the component is currently in detail view mode.
@@ -163,11 +163,10 @@ export class TrainingDayStatisticsComponent implements OnInit {
       (session) => this.chartColorService.getCategoryColor(session.dayOfWeek).backgroundColor,
     );
 
-    const sessionDataset: ChartDataset = {
+    const sessionDataset: PolarAreaChartDataset = {
       label: 'Trainingsdauer pro Einheit',
       data: data,
       backgroundColor: color,
-      fill: false,
     };
 
     // Set the chart data with the mapped labels and dataset
@@ -219,7 +218,7 @@ export class TrainingDayStatisticsComponent implements OnInit {
    * @param data - An array of tonnage data points.
    * @returns A dataset formatted for the line chart.
    */
-  private createTonnageDataSet(category: string, data: number[]): ChartDataset {
+  private createTonnageDataSet(category: string, data: number[]): LineChartDataset {
     const colors = this.chartColorService.getCategoryColor(category);
     return {
       label: category,
