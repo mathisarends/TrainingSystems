@@ -82,6 +82,7 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
   }
 
   const changedData: ApiData = req.body;
+  console.log('🚀 ~ updateTrainingDataForTrainingDay ~ changedData:', changedData);
 
   const user = await getUser(req, res);
 
@@ -92,6 +93,8 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
 
   updateTrainingDay(trainingDay, changedData, trainingDayIndex);
   propagateChangesToFutureWeeks(trainingPlan, trainingWeekIndex, trainingDayIndex, changedData);
+
+  console.log('🚀 ~ updateTrainingDataForTrainingDay ~ trainingDay: exercises', trainingDay.exercises);
 
   await userDAO.update(user);
 
@@ -137,6 +140,8 @@ export async function getLatestTrainingDay(req: Request, res: Response) {
  * @param trainingDayIndex - The index of the day being updated.
  */
 function updateTrainingDay(trainingDay: TrainingDay, changedData: ApiData, trainingDayIndex: number): void {
+  let deleteLogicHappend = false;
+
   for (const [fieldName, fieldValue] of Object.entries(changedData)) {
     const dayIndex = parseInt(fieldName.charAt(3));
 
@@ -144,8 +149,8 @@ function updateTrainingDay(trainingDay: TrainingDay, changedData: ApiData, train
       throw new Error('Die gesendeten Daten passen logisch nicht auf die angegebene Trainingswoche');
     }
 
-    const exerciseIndex = parseInt(fieldName.charAt(13));
-    const exercise = trainingDay.exercises[exerciseIndex - 1];
+    const exerciseNumber = parseInt(fieldName.charAt(13));
+    const exercise = trainingDay.exercises[exerciseNumber - 1];
 
     // If no exercise exists and the field indicates a new category, create a new exercise
     if (!exercise && fieldName.endsWith('category')) {
@@ -153,10 +158,28 @@ function updateTrainingDay(trainingDay: TrainingDay, changedData: ApiData, train
       trainingDay.exercises.push(newExercise);
     }
 
-    if (exercise) {
-      updateExercise(fieldName, fieldValue, exercise, trainingDay, exerciseIndex);
+    // handle deleted exercise which is not the last one
+    if (isDeletedExercise(exercise, fieldName, fieldValue)) {
+      let exerciseIndex = trainingDay.exercises.findIndex(ex => ex === exercise);
+
+      // Shift exercises one position up
+      while (exerciseIndex < trainingDay.exercises.length - 1) {
+        trainingDay.exercises[exerciseIndex] = trainingDay.exercises[exerciseIndex + 1];
+
+        exerciseIndex++;
+      }
+      trainingDay.exercises.pop();
+      deleteLogicHappend = true;
+    }
+
+    if (exercise && !deleteLogicHappend) {
+      updateExercise(fieldName, fieldValue, exercise, trainingDay, exerciseNumber);
     }
   }
+}
+
+function isDeletedExercise(exercise: Exercise, fieldName: string, fieldValue: string) {
+  return exercise && fieldName.endsWith('category') && !fieldValue;
 }
 
 /**
