@@ -169,10 +169,6 @@ export class TrainingViewComponent implements OnInit {
       .pipe(
         tap(({ trainingPlan, exerciseData }) => {
           this.trainingDataService.trainingPlanData = trainingPlan;
-          console.log(
-            '🚀 ~ TrainingViewComponent ~ tap ~ this.trainingDataService.trainingPlanData:',
-            this.trainingDataService.trainingPlanData,
-          );
 
           this.exerciseData = exerciseData;
           this.exerciseDataService.exerciseData = exerciseData;
