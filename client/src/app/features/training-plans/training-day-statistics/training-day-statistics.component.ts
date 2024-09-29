@@ -3,9 +3,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { ChartData } from '../../../shared/components/charts/chart-data';
-import { LineChartDataset, PolarAreaChartDataset } from '../../../shared/components/charts/chart-dataset';
 import { GroupedBarChartComponent } from '../../../shared/components/charts/grouped-bar-chart/grouped-bar-chart.component';
+import { LineChartDataset } from '../../../shared/components/charts/line-chart/line-chart-data-set';
 import { LineChartComponent } from '../../../shared/components/charts/line-chart/line-chart.component';
+import { PolarAreaChartDataset } from '../../../shared/components/charts/polar-chart/polar-area-chart-data-set';
 import { PolarChartComponent } from '../../../shared/components/charts/polar-chart/polar-chart.component';
 import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
 import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
@@ -225,7 +226,7 @@ export class TrainingDayStatisticsComponent implements OnInit {
       data: data,
       borderColor: colors.borderColor,
       backgroundColor: colors.backgroundColor,
-      fill: false,
+      fill: true,
     };
   }
 
