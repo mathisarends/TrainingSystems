@@ -1,8 +1,7 @@
 import { Component, DestroyRef, effect, Injector, OnInit, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { NavigationStart, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
-import { BarChartData } from '../../../shared/components/charts/grouped-bar-chart/bar-chart-data';
 import { GroupedBarChartComponent } from '../../../shared/components/charts/grouped-bar-chart/grouped-bar-chart.component';
 import { LineChartDataset } from '../../../shared/components/charts/line-chart/lilne-chart-data-set';
 import { LineChartData } from '../../../shared/components/charts/line-chart/line-chart-data';
@@ -19,6 +18,7 @@ import { ChangeProfilePictureConfirmationComponent } from '../../profile-2/chang
 import { ChartColorService } from '../training-view/services/chart-color.service';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
 import { LineChartDataDTO } from './line-chart-data-dto';
+import { TrainingDayChartType } from './training-day-chart-type';
 import { TrainingStatisticsService } from './training-statistics.service';
 
 /**
@@ -49,6 +49,11 @@ export class TrainingDayStatisticsComponent implements OnInit {
   isLoaded = signal(false);
 
   /**
+   * The current training plan ID.
+   */
+  trainingPlanId = signal('');
+
+  /**
    *  Holds the list of selected exercises.
    */
   selectedExercises: WritableSignal<string[]> = signal([]);
@@ -61,17 +66,9 @@ export class TrainingDayStatisticsComponent implements OnInit {
   /**
    * Holds the data for a line chart, including datasets and labels.
    */
-  lineChartData = signal<LineChartData>({ datasets: [], labels: [] });
+  volumeChartData = signal<LineChartData>({ datasets: [], labels: [] });
 
-  /**
-   * Holds the data for a grouped bar chart, including datasets and labels.
-   */
-  groupedBarChartData = signal<BarChartData>({ datasets: [], labels: [] });
-
-  /**
-   * The current training plan ID.
-   */
-  trainingPlanId = signal('');
+  performanceChartData = signal<LineChartData>({ datasets: [], labels: [] });
 
   /**
    * Rerpresents whether the component is currently in detail view mode.
@@ -99,11 +96,11 @@ export class TrainingDayStatisticsComponent implements OnInit {
 
     this.fetchAndSetCategoryMetadata();
 
-    this.setupSelectedCategorySaveOnNavigationSync();
-
     effect(
       () => {
         if (this.isLoaded()) {
+          this.trainingStatisticService.updateLastViewedCategories(this.trainingPlanId(), this.selectedExercises());
+
           this.fetchStatistics(this.trainingPlanId(), this.selectedExercises());
         }
       },
@@ -138,16 +135,16 @@ export class TrainingDayStatisticsComponent implements OnInit {
   private fetchStatistics(id: string, exercises: string[]): void {
     forkJoin({
       tonnage: this.trainingStatisticService.getTonnageDataForSelectedExercises(id, exercises),
-      sets: this.trainingStatisticService.getSetDataForSelectedExercises(id, exercises),
+      performance: this.trainingStatisticService.getPerformanceDataForSelectedExercises(id, exercises),
       title: this.trainingStatisticService.getTrainingPlanTitle(id),
     })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ tonnage, sets, title }) => {
+      .subscribe(({ tonnage, performance, title }) => {
         this.isLoaded.set(true);
         this.setHeadlineInfo(title);
 
-        this.initializeTonnageChartData(tonnage);
-        this.initializeSetsBarChartData(sets);
+        this.initializeLineChartData(tonnage, TrainingDayChartType.VOLUME);
+        this.initializeLineChartData(performance, TrainingDayChartType.PERFORMANCE);
       });
   }
 
@@ -165,35 +162,25 @@ export class TrainingDayStatisticsComponent implements OnInit {
   }
 
   /**
-   * Initializes the grouped bar chart data with the sets response data.
-   *
-   * @param setsResponse - An object where each key represents a category,
-   *                       and the value is an array of numbers representing sets per week.
-   */
-  private initializeSetsBarChartData(setsResponse: { [key: string]: number[] }): void {
-    const barDatasets = Object.keys(setsResponse).map((categoryKey) => {
-      const setsData = setsResponse[categoryKey];
-      return this.createBarDataset(categoryKey, setsData || []);
-    });
-
-    const weekLabels = this.generateWeekLabels(barDatasets[0].data.length || 0);
-
-    this.groupedBarChartData.set({ datasets: barDatasets, labels: weekLabels });
-  }
-
-  /**
-   * Initializes the line chart data with the tonnage data for each category.
+   * Initializes the line chart data with the tonnage data for each category
+   * and assigns it to the appropriate chart signal based on the provided chart type.
    *
    * @param tonnageData - An object containing tonnage data for each exercise category.
+   * @param chartType - The type of chart to initialize (volume or performance).
    */
-  private initializeTonnageChartData(tonnageData: LineChartDataDTO) {
+  private initializeLineChartData(tonnageData: LineChartDataDTO, chartType: TrainingDayChartType) {
     const lineDatasets = Object.keys(tonnageData).map((categoryKey) => {
       const categoryData = tonnageData[categoryKey];
       return this.createTonnageDataSet(categoryKey, categoryData || []);
     });
 
     const lineLabels = this.generateWeekLabels(lineDatasets[0]?.data.length || 0);
-    this.lineChartData.set({ datasets: lineDatasets, labels: lineLabels });
+
+    if (chartType === TrainingDayChartType.VOLUME) {
+      this.volumeChartData.set({ datasets: lineDatasets, labels: lineLabels });
+    } else if (chartType === TrainingDayChartType.PERFORMANCE) {
+      this.performanceChartData.set({ datasets: lineDatasets, labels: lineLabels });
+    }
   }
 
   /**
@@ -215,24 +202,6 @@ export class TrainingDayStatisticsComponent implements OnInit {
   }
 
   /**
-   * Creates a dataset for the bar chart, representing the sets for a specific category.
-   *
-   * @param category - The name of the exercise category (e.g., 'squat').
-   * @param data - An array of set counts per week.
-   * @returns A dataset formatted for the bar chart.
-   */
-  private createBarDataset(category: string, data: number[]): any {
-    const colors = this.chartColorService.getCategoryColor(category);
-    return {
-      label: category,
-      data: data,
-      backgroundColor: colors.backgroundColor,
-      borderColor: colors.borderColor,
-      borderWidth: 1,
-    };
-  }
-
-  /**
    * Generates week labels for the charts based on the given number of weeks.
    */
   private generateWeekLabels(length: number): string[] {
@@ -246,27 +215,5 @@ export class TrainingDayStatisticsComponent implements OnInit {
    */
   private parseTrainingPlanIdFromUrl(): string {
     return this.router.url.split('/').pop()!;
-  }
-
-  /**
-   * Sets up synchronization between navigation events and the backend.
-   */
-  private setupSelectedCategorySaveOnNavigationSync(): void {
-    this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
-      if (event instanceof NavigationStart) {
-        this.syncCategoriesWithBackend();
-      }
-    });
-  }
-
-  /**
-   * Synchronizes selected categories with the backend.
-   */
-  private syncCategoriesWithBackend(): void {
-    this.trainingStatisticService
-      .updateLastViewedCategories(this.trainingPlanId(), this.selectedExercises())
-      .subscribe(() => {
-        console.log('Categories synchronized with backend.');
-      });
   }
 }

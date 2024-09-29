@@ -9,9 +9,9 @@
   </div>
 
   <div class="chart-grid">
-    <app-line-chart [chartId]="'tonnageChart'" [data]="lineChartData()" yAxisTitle="Tonnage (kg)" />
+    <app-line-chart [chartId]="'tonnageChart'" [data]="volumeChartData()" yAxisTitle="Tonnage (kg)" />
 
-    <app-grouped-bar-chart [groupedBarChartData]="groupedBarChartData()" />
+    <app-line-chart [chartId]="'performanceChart'" [data]="performanceChartData()" yAxisTitle="Est. Max (kg)" />
   </div>
 } @else {
   <div class="chart-grid">

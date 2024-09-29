@@ -36,8 +36,16 @@ export class TrainingStatisticsService {
    */
   getTonnageDataForSelectedExercises(id: string, exercises: string[]): Observable<LineChartDataDTO> {
     const exercisesQueryParam = this.toQueryParam(exercises);
+    return this.httpService.get<LineChartDataDTO>(`/training/statistics/${id}?exercises=${exercisesQueryParam}`);
+  }
+
+  /**
+   * Retrieves the tonnage data for selected exercises in a specific training plan.
+   */
+  getPerformanceDataForSelectedExercises(id: string, exercises: string[]): Observable<LineChartDataDTO> {
+    const exercisesQueryParam = this.toQueryParam(exercises);
     return this.httpService.get<LineChartDataDTO>(
-      `/training/statistics/${id}?exercises=${exercisesQueryParam}`,
+      `/training/statistics/${id}/performance?exercises=${exercisesQueryParam}`,
     );
   }
 
