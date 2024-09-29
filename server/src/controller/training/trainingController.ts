@@ -5,7 +5,6 @@ import { MongoGenericDAO } from '../../models/dao/mongo-generic.dao.js';
 import { TrainingPlanCardViewDto } from '../../models/dto/training-plan-card-view-dto.js';
 import { ExerciseCategoryType } from '../../models/training/exercise-category-type.js';
 import { TrainingPlan } from '../../models/training/trainingPlan.js';
-import { WeightRecommendationBase } from '../../models/training/weight-recommandation.enum.js';
 import { TrainingPlanDtoMapper } from '../../service/training-plan-dto-mapper.js';
 import * as trainingService from '../../service/trainingService.js';
 import {
@@ -112,7 +111,7 @@ export async function createPlan(req: Request, res: Response): Promise<void> {
   const title = trainingPlanEditDto.title;
   const trainingFrequency = Number(trainingPlanEditDto.trainingFrequency);
   const trainingWeeks = Number(trainingPlanEditDto.trainingBlockLength);
-  const weightRecommandation = trainingPlanEditDto.weightRecommandationBase as WeightRecommendationBase;
+  const weightRecommandation = trainingPlanEditDto.weightRecommandationBase;
   const coverImage = trainingPlanEditDto.coverImageBase64;
 
   const referencePlanId = req.body.referencePlanId;

@@ -37,7 +37,11 @@ trainingSessionRouter.get(
  * @description Creates a new session.
  * @route {POST} /create
  */
-trainingSessionRouter.post('/create', authService.authenticationMiddleware, () => {});
+trainingSessionRouter.post(
+  '/create',
+  authService.authenticationMiddleware,
+  trainingSessionController.createTrainingSession
+);
 
 /**
  * POST /edit/:id
@@ -46,7 +50,11 @@ trainingSessionRouter.post('/create', authService.authenticationMiddleware, () =
  * @route {POST} /edit/:id
  * @param {string} id - The ID of the session to edit.
  */
-trainingSessionRouter.post('/edit/:id', authService.authenticationMiddleware, () => {});
+trainingSessionRouter.post(
+  '/edit/:id',
+  authService.authenticationMiddleware,
+  trainingSessionController.editTrainingSesssion
+);
 
 /**
  * DELETE /:id
@@ -55,7 +63,11 @@ trainingSessionRouter.post('/edit/:id', authService.authenticationMiddleware, ()
  * @route {DELETE} /:id
  * @param {string} id - The ID of the session to delete.
  */
-trainingSessionRouter.delete('/:id', authService.authenticationMiddleware, () => {});
+trainingSessionRouter.delete(
+  '/:id',
+  authService.authenticationMiddleware,
+  trainingSessionController.deleteTrainingSession
+);
 
 /**
  * PATCH /id
@@ -63,6 +75,37 @@ trainingSessionRouter.delete('/:id', authService.authenticationMiddleware, () =>
  * @description Updates specific data of an existing session.
  * @route {PATCH} /id
  */
-trainingSessionRouter.patch('/id', authService.authenticationMiddleware, () => {});
+trainingSessionRouter.patch(
+  '/start/:id',
+  authService.authenticationMiddleware,
+  trainingSessionController.startTrainingSession
+);
+
+/**
+ * GET /:id/:version
+ *
+ * @description Retrieves a specific version of a training session by its ID and version number.
+ * @route {GET} /:id/:version
+ * @param {string} id - The ID of the training session.
+ * @param {number} version - The version number of the training session to retrieve.
+ * @middleware `authService.authenticationMiddleware` - Ensures the user is authenticated.
+ */
+trainingSessionRouter.get(
+  '/:id/:version',
+  authService.authenticationMiddleware,
+  trainingSessionController.getTrainingSessionByVersion
+);
+
+/**
+ * PATCH /id
+ *
+ * @description Updates specific data of an existing session.
+ * @route {PATCH} /id
+ */
+trainingSessionRouter.patch(
+  '/:id',
+  authService.authenticationMiddleware,
+  trainingSessionController.updateTrainingSessionVersion
+);
 
 export default trainingSessionRouter;
