@@ -9,7 +9,7 @@
     <div class="training-notification-body">
       <p>
         @if (notification.startTime) {
-          <strong>Date:</strong> {{ notification.startTime }}<br />
+          <strong>Date:</strong> {{ notification.startTime | formatDate }}<br />
         }
         <strong>Duration:</strong> {{ notification.durationInMinutes }} minutes<br />
         <strong>Total Tonnage:</strong> {{ notification.trainingDayTonnage }} kg
@@ -35,8 +35,14 @@
           </div>
         }
       </div>
-      <div class="mt-3">
+      <div class="d-flex g-3">
         <button class="btn btn-light" (click)="goToTrainingPlan(notification.id)">Zum Trainingsplan gehen</button>
+        <app-circular-icon-button
+          [appTooltip]="'Teilen'"
+          [icon]="IconName.SHARE"
+          [iconSize]="16"
+          (clicked)="shareTrainingLog(notification)"
+        />
       </div>
     </div>
   </div>
