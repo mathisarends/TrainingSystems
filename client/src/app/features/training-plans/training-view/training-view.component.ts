@@ -4,7 +4,7 @@ import { Component, DestroyRef, ElementRef, OnInit, signal, ViewChild } from '@a
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, forkJoin } from 'rxjs';
+import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { FormService } from '../../../core/services/form.service';
 import { ModalService } from '../../../core/services/modal/modalService';
@@ -117,8 +117,13 @@ export class TrainingViewComponent implements OnInit {
 
     this.autoSaveService.inputChanged$
       .pipe(takeUntilDestroyed(this.destroyRef)) // Automatically unsubscribe
-      .subscribe(() => {
-        this.saveTrainingData();
+      .subscribe((option) => {
+        this.saveTrainingData$().subscribe(() => {
+          if (option === 'reload') {
+            this.dataViewLoaded.next(false);
+            this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
+          }
+        });
       });
   }
 
@@ -164,6 +169,10 @@ export class TrainingViewComponent implements OnInit {
       .pipe(
         tap(({ trainingPlan, exerciseData }) => {
           this.trainingDataService.trainingPlanData = trainingPlan;
+          console.log(
+            '🚀 ~ TrainingViewComponent ~ tap ~ this.trainingDataService.trainingPlanData:',
+            this.trainingDataService.trainingPlanData,
+          );
 
           this.exerciseData = exerciseData;
           this.exerciseDataService.exerciseData = exerciseData;
@@ -186,17 +195,14 @@ export class TrainingViewComponent implements OnInit {
    * Prevents default form submission, collects changed data, and submits the training plan.
    * @param event - The form submission event.
    */
-  saveTrainingData(): void {
-    const changedData = this.formService.getChanges();
-
-    this.trainingViewService
-      .submitTrainingPlan(this.planId, this.trainingWeekIndex, this.trainingDayIndex, changedData)
+  saveTrainingData$(): Observable<void> {
+    return this.trainingViewService
+      .submitTrainingPlan(this.planId, this.trainingWeekIndex, this.trainingDayIndex, this.formService.getChanges())
       .pipe(
         tap(() => {
           this.formService.clearChanges();
         }),
-      )
-      .subscribe();
+      );
   }
 
   navigateDay(day: number, weekIndex: number) {
@@ -291,7 +297,7 @@ export class TrainingViewComponent implements OnInit {
     this.trackExerciseChanges(event.currentIndex);
 
     // Save the tracked changes
-    this.saveTrainingData();
+    this.saveTrainingData$().subscribe();
   }
 
   /**

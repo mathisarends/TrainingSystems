@@ -10,7 +10,7 @@ export class AutoSaveService {
   /**
    * A Subject that emits when an input change has occurred and data should be saved.
    */
-  private inputChangedSubject = new Subject<void>();
+  private inputChangedSubject = new Subject<string | void>();
 
   /**
    * Observable that can be subscribed to in order to react to input changes and trigger auto-saving.
@@ -20,7 +20,7 @@ export class AutoSaveService {
   /**
    * Triggers an event to notify that an input has changed and data should be persisted.
    */
-  save(): void {
-    this.inputChangedSubject.next();
+  save(option?: string): void {
+    this.inputChangedSubject.next(option);
   }
 }

@@ -35,8 +35,6 @@ export class CategorySelectDirective {
   async onChange(event: Event): Promise<void> {
     const categorySelector = event.target as HTMLSelectElement;
     await this.updateInputValues(categorySelector, this.exerciseDataService.getDefaultRepSchemeByCategory());
-
-    this.autoSaveService.save();
   }
 
   /**
@@ -52,12 +50,14 @@ export class CategorySelectDirective {
 
     if (this.isPlaceholderCategory(category)) {
       this.resetAndUpdateForm(categorySelector);
+      this.autoSaveService.save('reload');
       return;
     }
 
     await this.setDefaultValuesForCategory(categorySelector, defaultRepSchemeByCategory);
 
     this.updateFormService(categorySelector);
+    this.autoSaveService.save();
   }
 
   /**
