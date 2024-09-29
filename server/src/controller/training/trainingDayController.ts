@@ -139,7 +139,7 @@ export async function getLatestTrainingDay(req: Request, res: Response) {
  * @param changedData - The new data to be applied.
  * @param trainingDayIndex - The index of the day being updated.
  */
-function updateTrainingDay(trainingDay: TrainingDay, changedData: ApiData, trainingDayIndex: number): void {
+export function updateTrainingDay(trainingDay: TrainingDay, changedData: ApiData, trainingDayIndex: number): void {
   let deleteLogicHappend = false;
 
   for (const [fieldName, fieldValue] of Object.entries(changedData)) {

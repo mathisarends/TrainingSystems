@@ -50,7 +50,7 @@ trainingSessionRouter.post(
  * @route {POST} /edit/:id
  * @param {string} id - The ID of the session to edit.
  */
-trainingSessionRouter.post(
+trainingSessionRouter.put(
   '/edit/:id',
   authService.authenticationMiddleware,
   trainingSessionController.editTrainingSesssion
@@ -103,7 +103,7 @@ trainingSessionRouter.get(
  * @route {PATCH} /id
  */
 trainingSessionRouter.patch(
-  '/:id',
+  '/:id/:version',
   authService.authenticationMiddleware,
   trainingSessionController.updateTrainingSessionVersion
 );

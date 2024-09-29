@@ -5,7 +5,7 @@ import { TrainingSessionCardDto } from '../../models/dto/training-session-card-d
 import { TrainingSession } from '../../models/training/training-session.js';
 import { TrainingDay } from '../../models/training/trainingDay.js';
 import * as userService from '../../service/userService.js';
-import { TrainingPlanMetaDataDto } from './trainingSessionMetaDataDto.js';
+import { TrainingSessionMetaDataDto } from './trainingSessionMetaDataDto.js';
 
 import _ from 'lodash';
 
@@ -17,9 +17,21 @@ export async function getTrainingSessionById(req: Request, res: Response): Promi
 
   const user = await userService.getUser(req, res);
 
-  const plan = user.trainingSessions.find(session => session.id === trainingSessionId);
+  const trainingSession = user.trainingSessions.find(session => session.id === trainingSessionId);
 
-  return res.status(200).json(plan);
+  if (!trainingSession) {
+    return res.status(404).json({ error: 'Training Session nicht gefunden' });
+  }
+
+  const mappedTrainingSession = {
+    id: trainingSession.id,
+    title: trainingSession.title,
+    lastUpdated: trainingSession.lastUpdated,
+    coverImageBase64: trainingSession.coverImageBase64 ?? '',
+    pictureUrl: user.pictureUrl
+  };
+
+  return res.status(200).json(mappedTrainingSession);
 }
 
 /**
@@ -48,7 +60,7 @@ export async function createTrainingSession(req: Request, res: Response): Promis
   const user = await userService.getUser(req, res);
   const userDAO = userService.getUserGenericDAO(req);
 
-  const trainingSessionCreateDto = req.body as TrainingPlanMetaDataDto;
+  const trainingSessionCreateDto = req.body as TrainingSessionMetaDataDto;
 
   const newTrainingSession: TrainingSession = {
     id: uuidv4(),
@@ -74,7 +86,7 @@ export async function editTrainingSesssion(req: Request, res: Response): Promise
   const user = await userService.getUser(req, res);
   const userDAO = userService.getUserGenericDAO(req);
 
-  const trainingSessionEditDto = req.body as TrainingPlanMetaDataDto;
+  const trainingSessionEditDto = req.body as TrainingSessionMetaDataDto;
 
   const plan = user.trainingSessions.find(session => session.id === trainingSessionId);
 
@@ -209,6 +221,8 @@ export async function updateTrainingSessionVersion(req: Request, res: Response):
   if (!trainingSession.trainingDays[version - 1]) {
     return res.status(404).json({ error: 'Version der Session nicht gefunden' });
   }
+
+  // Das hier soweit implementieren wenn die Anwendung auch tatsächlich Daten schickt
 
   return res.status(200);
 }

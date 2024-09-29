@@ -1,4 +1,4 @@
-import { TrainingSession } from '../../models/training/training-session.js';
+import { TrainingSession } from './model/training-session';
 
 /**
  * Interface representing a metadata DTO for a training plan,
