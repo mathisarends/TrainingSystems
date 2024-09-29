@@ -1,6 +1,8 @@
 import express from 'express';
 import { authService } from '../../service/authService.js';
 
+import * as trainingSessionController from '../../controller/session/sessionController.js';
+
 const trainingSessionRouter = express.Router();
 
 /**
@@ -9,7 +11,25 @@ const trainingSessionRouter = express.Router();
  * @description Retrieves all sessions.
  * @route {GET} /
  */
-trainingSessionRouter.get('/', authService.authenticationMiddleware, () => {});
+trainingSessionRouter.get(
+  '/',
+  authService.authenticationMiddleware,
+  trainingSessionController.getTrainingSessionCardViews
+);
+
+/**
+ * GET /:id
+ *
+ * @description Retrieves an existing session.
+ * @route {GET} /:id
+ * @param {string} id - The ID of the session to retrieve.
+ */
+
+trainingSessionRouter.get(
+  '/:id',
+  authService.authenticationMiddleware,
+  trainingSessionController.getTrainingSessionById
+);
 
 /**
  * POST /create
@@ -36,16 +56,6 @@ trainingSessionRouter.post('/edit/:id', authService.authenticationMiddleware, ()
  * @param {string} id - The ID of the session to delete.
  */
 trainingSessionRouter.delete('/:id', authService.authenticationMiddleware, () => {});
-
-/**
- * GET /:id
- *
- * @description Retrieves an existing session.
- * @route {GET} /:id
- * @param {string} id - The ID of the session to retrieve.
- */
-
-trainingSessionRouter.get('/:id', authService.authenticationMiddleware, () => {});
 
 /**
  * PATCH /id

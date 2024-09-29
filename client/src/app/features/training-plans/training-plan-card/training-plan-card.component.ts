@@ -8,6 +8,7 @@ import { ToastService } from '../../../shared/components/toast/toast.service';
 import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
 import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
+import { FormatDatePipe } from '../../../shared/pipes/format-date.pipe';
 import { EditTrainingPlanComponent } from '../edit-training-plan/edit-training-plan.component';
 import { TrainingPlanCardView } from '../training-view/models/exercise/training-plan-card-view-dto';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
@@ -20,7 +21,7 @@ import { TrainingWeekDayDto } from './training-week-day-dto';
 @Component({
   selector: 'app-training-plan-card',
   standalone: true,
-  imports: [CommonModule, TooltipDirective, IconButtonComponent, IconComponent],
+  imports: [CommonModule, TooltipDirective, IconButtonComponent, IconComponent, FormatDatePipe],
   templateUrl: './training-plan-card.component.html',
   styleUrls: ['./training-plan-card.component.scss'],
   providers: [TrainingPlanCardService],

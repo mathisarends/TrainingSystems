@@ -12,7 +12,7 @@ export interface TrainingPlanCardViewDto {
   trainingFrequency: number;
   blockLength: number;
   weightRecomamndationBase: WeightRecommendationBase;
-  lastUpdated: string;
+  lastUpdated: Date;
   pictureUrl?: string;
   coverImageBase64?: string;
   percentageFinished?: number;

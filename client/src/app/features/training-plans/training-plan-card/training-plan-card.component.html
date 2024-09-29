@@ -13,7 +13,7 @@
     <p class="card-text">{{ trainingPlan().trainingFrequency }} Trainings / Woche</p>
 
     <p class="card-text ml-3">
-      {{ trainingPlan().lastUpdated }}
+      {{ trainingPlan().lastUpdated | formatDate }}
     </p>
 
     @if (trainingPlan().averageTrainingDayDuration) {

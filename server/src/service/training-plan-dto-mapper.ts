@@ -1,6 +1,6 @@
-import { TrainingPlan } from '../models/training/trainingPlan.js';
 import { TrainingPlanCardViewDto } from '../models/dto/training-plan-card-view-dto.js';
 import { TrainingPlanEditViewDto } from '../models/dto/training-plan-edit-view-dto.js';
+import { TrainingPlan } from '../models/training/trainingPlan.js';
 
 export class TrainingPlanDtoMapper {
   /**
@@ -15,7 +15,7 @@ export class TrainingPlanDtoMapper {
       blockLength: plan.trainingWeeks.length,
       weightRecomamndationBase: plan.weightRecommandationBase,
       trainingFrequency: plan.trainingFrequency,
-      lastUpdated: this.formatDate(new Date(plan.lastUpdated)),
+      lastUpdated: plan.lastUpdated,
       coverImageBase64: plan.coverImageBase64 ?? ''
     };
   }
@@ -29,22 +29,5 @@ export class TrainingPlanDtoMapper {
       trainingBlockLength: plan.trainingWeeks.length,
       coverImageBase64: plan.coverImageBase64 ?? ''
     };
-  }
-
-  /**
-   * Formats a date to 'dd.mm.yyyy, hh:mm' format.
-   * @param date The date to format.
-   * @returns The formatted date string.
-   */
-  static formatDate(date: Date): string {
-    const options: Intl.DateTimeFormatOptions = {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false
-    };
-    return new Intl.DateTimeFormat('de-DE', options).format(date);
   }
 }
