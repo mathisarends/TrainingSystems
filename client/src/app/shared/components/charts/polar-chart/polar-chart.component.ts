@@ -3,7 +3,7 @@ import Chart from 'chart.js/auto';
 import { TooltipDirective } from '../../../directives/tooltip.directive';
 import { IconName } from '../../../icon/icon-name';
 import { CircularIconButtonComponent } from '../../circular-icon-button/circular-icon-button.component';
-import { LineChartData } from '../line-chart/line-chart-data';
+import { ChartData } from '../chart-data';
 
 /**
  * PolarChartComponent
@@ -24,7 +24,7 @@ export class PolarChartComponent implements AfterViewInit {
 
   chartId = input<string>('polarAreaChart');
 
-  data = input<LineChartData>({ labels: [], datasets: [] });
+  data = input<ChartData>({ labels: [], datasets: [] });
 
   chart = signal<Chart<'polarArea'> | null>(null);
 
@@ -70,6 +70,7 @@ export class PolarChartComponent implements AfterViewInit {
 
   updateChart(): void {
     if (this.chart()) {
+      console.log('🚀 ~ PolarChartComponent ~ updateChart ~ this.chart():', this.chart());
       this.chart()!.data.labels = this.data().labels;
       this.chart()!.data.datasets = this.data().datasets;
       this.chart()!.update();

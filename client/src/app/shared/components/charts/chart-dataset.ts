@@ -5,7 +5,7 @@
  * Each dataset corresponds to a specific exercise category or metric and includes
  * necessary properties to render it on the chart.
  */
-export interface LineChartDataset {
+export interface ChartDataset {
   /**
    * The data points for the dataset, representing the values to be plotted on the chart.
    * Each value corresponds to a data point on the x-axis (e.g., weeks).
@@ -25,14 +25,14 @@ export interface LineChartDataset {
    * This property is used when the 'fill' option is enabled.
    * @example 'rgba(255, 99, 132, 0.2)'
    */
-  backgroundColor?: string;
+  backgroundColor?: string | string[];
 
   /**
    * Determines whether the area under the line should be filled with the background color.
    * Set to `true` to fill the area under the line; otherwise, `false`.
    * @example false
    */
-  fill: boolean;
+  fill?: boolean;
 
   label: string;
 }

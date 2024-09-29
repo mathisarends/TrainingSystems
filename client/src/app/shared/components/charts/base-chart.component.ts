@@ -1,7 +1,7 @@
 import { AfterViewInit, Directive, effect, ElementRef, Injector, input, signal, ViewChild } from '@angular/core';
 import Chart from 'chart.js/auto';
 import { IconName } from '../../icon/icon-name';
-import { LineChartData } from './line-chart/line-chart-data';
+import { ChartData } from './chart-data';
 
 @Directive()
 export abstract class BaseChartComponent implements AfterViewInit {
@@ -16,7 +16,7 @@ export abstract class BaseChartComponent implements AfterViewInit {
   /**
    * Input data for the chart, including labels and datasets.
    */
-  data = input<LineChartData>({ labels: [], datasets: [] });
+  data = input<ChartData>({ labels: [], datasets: [] });
 
   /**
    * Title for the Y-axis, required input.

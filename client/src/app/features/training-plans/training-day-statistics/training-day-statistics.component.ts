@@ -2,9 +2,9 @@ import { Component, DestroyRef, effect, Injector, OnInit, signal, WritableSignal
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { ChartData } from '../../../shared/components/charts/chart-data';
+import { ChartDataset } from '../../../shared/components/charts/chart-dataset';
 import { GroupedBarChartComponent } from '../../../shared/components/charts/grouped-bar-chart/grouped-bar-chart.component';
-import { LineChartDataset } from '../../../shared/components/charts/line-chart/lilne-chart-data-set';
-import { LineChartData } from '../../../shared/components/charts/line-chart/line-chart-data';
 import { LineChartComponent } from '../../../shared/components/charts/line-chart/line-chart.component';
 import { PolarChartComponent } from '../../../shared/components/charts/polar-chart/polar-chart.component';
 import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
@@ -69,11 +69,11 @@ export class TrainingDayStatisticsComponent implements OnInit {
   /**
    * Holds the data for a line chart, including datasets and labels.
    */
-  volumeChartData = signal<LineChartData>({ datasets: [], labels: [] });
+  volumeChartData = signal<ChartData>({ datasets: [], labels: [] });
 
-  performanceChartData = signal<LineChartData>({ datasets: [], labels: [] });
+  performanceChartData = signal<ChartData>({ datasets: [], labels: [] });
 
-  sessionDurationChartData = signal<LineChartData>({ datasets: [], labels: [] });
+  sessionDurationChartData = signal<ChartData>({ datasets: [], labels: [] });
 
   /**
    * Rerpresents whether the component is currently in detail view mode.
@@ -159,13 +159,14 @@ export class TrainingDayStatisticsComponent implements OnInit {
   initializeSessionDurationData(sessionDurationData: AverageTrainingDayDurationDto[]): void {
     const labels = sessionDurationData.map((session) => session.dayOfWeek);
     const data = sessionDurationData.map((session) => session.averageDuration);
-    const color = sessionDurationData.map((session) => this.chartColorService.getCategoryColor(session.dayOfWeek));
+    const color = sessionDurationData.map(
+      (session) => this.chartColorService.getCategoryColor(session.dayOfWeek).backgroundColor,
+    );
 
-    const sessionDataset: LineChartDataset = {
+    const sessionDataset: ChartDataset = {
       label: 'Trainingsdauer pro Einheit',
       data: data,
-      borderColor: this.chartColorService.getCategoryColor('sessionDuration').borderColor,
-      backgroundColor: this.chartColorService.getCategoryColor('sessionDuration').backgroundColor,
+      backgroundColor: color,
       fill: false,
     };
 
@@ -218,7 +219,7 @@ export class TrainingDayStatisticsComponent implements OnInit {
    * @param data - An array of tonnage data points.
    * @returns A dataset formatted for the line chart.
    */
-  private createTonnageDataSet(category: string, data: number[]): LineChartDataset {
+  private createTonnageDataSet(category: string, data: number[]): ChartDataset {
     const colors = this.chartColorService.getCategoryColor(category);
     return {
       label: category,
