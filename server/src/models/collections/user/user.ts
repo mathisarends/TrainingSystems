@@ -1,5 +1,6 @@
 /* Autor: Mathis Kristoffer Arends */
 import { ExerciseCategoryType } from '../../training/exercise-category-type.js';
+import { TrainingSession } from '../../training/training-session.js';
 import { TrainingPlan } from '../../training/trainingPlan.js';
 import { Entity } from '../entity.js';
 import { TrainingDAyFinishedNotification } from './training-fninished-notifcation.js';
@@ -42,6 +43,11 @@ export interface User extends Entity {
    * The list of training plans associated with the user.
    */
   trainingPlans: TrainingPlan[];
+
+  /**
+   * The list of training session
+   */
+  trainingSessions: TrainingSession[];
 
   /**
    * A record of exercises categorized by exercise type.

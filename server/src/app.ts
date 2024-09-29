@@ -15,6 +15,7 @@ import requestLogger from './middleware/request-middleware.js';
 import exerciseRouter from './routes/exerciseRoutes.js';
 import friendShipRouter from './routes/friendshipRoutes.js';
 import trainingRouter from './routes/training/trainingRoutes.js';
+import trainingSessionRouter from './routes/trainingSession/trainingSessionRouter.js';
 import userRouter from './routes/user/userRoutes.js';
 
 dotenv.config();
@@ -45,6 +46,7 @@ async function configureApp(app: Express) {
   app.use('/api/', limiter);
   app.use('/api/user', userRouter);
   app.use('/api/training', trainingRouter);
+  app.use('/api/training-session', trainingSessionRouter);
   app.use('/api/exercise', exerciseRouter);
   app.use('/api/friendship', friendShipRouter);
   app.use('/api/test', emailTestRouter);

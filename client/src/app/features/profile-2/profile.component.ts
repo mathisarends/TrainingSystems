@@ -16,6 +16,7 @@ import { ImageUploadService } from '../../shared/service/image-upload.service';
 import { GymTicketComponent } from '../gym-ticket/gym-ticket.component';
 import { GymTicketService } from '../gym-ticket/gym-ticket.service';
 import { HeaderService } from '../header/header.service';
+import { FriendModalComponent } from '../profile/friend-modal/friend-modal.component';
 import { RestPauseTimeIndicatorComponent } from '../training-plans/training-view/rest-pause-time-indicator/rest-pause-time-indicator.component';
 import { ActivityCalendarData } from '../usage-statistics/activity-calendar-data';
 import { ActivityCalendar } from '../usage-statistics/activity-calendar/activity-calendar.component';
@@ -110,6 +111,12 @@ export class ProfileComponent2 implements OnInit {
       this.showDeleteAccountDialog();
     } else if (listItem.label === 'Settings') {
       this.displaySettingsModal();
+    } else if (listItem.label === 'Social') {
+      this.modalService.open({
+        component: FriendModalComponent,
+        title: 'Test',
+        buttonText: 'Test',
+      });
     } else {
       this.modalService.openBasicInfoModal({
         title: listItem.label,
