@@ -6,7 +6,12 @@
           <h2>{{ profileService.username() }}</h2>
           <p>{{ profileService.email() }}</p>
         </div>
-        <img #profilePicture [src]="profileService.pictureUrl() || '/images/profile-placeholder.webp'" alt="Profile" />
+        <img
+          #profilePicture
+          [src]="profileService.pictureUrl() || '/images/profile-placeholder.webp'"
+          class="profile-picture"
+          alt="Profile"
+        />
         <input type="file" id="file-input" (change)="showProfilePictureChangeDialog($event)" />
       </div>
 
