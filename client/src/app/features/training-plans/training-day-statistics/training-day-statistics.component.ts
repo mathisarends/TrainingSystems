@@ -6,6 +6,7 @@ import { GroupedBarChartComponent } from '../../../shared/components/charts/grou
 import { LineChartDataset } from '../../../shared/components/charts/line-chart/lilne-chart-data-set';
 import { LineChartData } from '../../../shared/components/charts/line-chart/line-chart-data';
 import { LineChartComponent } from '../../../shared/components/charts/line-chart/line-chart.component';
+import { PolarChartComponent } from '../../../shared/components/charts/polar-chart/polar-chart.component';
 import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
 import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
 import { ChartSkeletonComponent } from '../../../shared/components/loader/chart-skeleton/chart-skeleton.component';
@@ -17,6 +18,7 @@ import { HeaderService } from '../../header/header.service';
 import { ChangeProfilePictureConfirmationComponent } from '../../profile-2/change-profile-picture-confirmation/change-profile-picture-confirmation.component';
 import { ChartColorService } from '../training-view/services/chart-color.service';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
+import { AverageTrainingDayDurationDto } from './average-training-duration-dto';
 import { LineChartDataDTO } from './line-chart-data-dto';
 import { TrainingDayChartType } from './training-day-chart-type';
 import { TrainingStatisticsService } from './training-statistics.service';
@@ -37,6 +39,7 @@ import { TrainingStatisticsService } from './training-statistics.service';
     ChartSkeletonComponent,
     ChangeProfilePictureConfirmationComponent,
     ToSelectItemPipe,
+    PolarChartComponent,
   ],
   providers: [TrainingStatisticsService, KeyboardService, PaginationComponent],
   templateUrl: './training-day-statistics.component.html',
@@ -69,6 +72,8 @@ export class TrainingDayStatisticsComponent implements OnInit {
   volumeChartData = signal<LineChartData>({ datasets: [], labels: [] });
 
   performanceChartData = signal<LineChartData>({ datasets: [], labels: [] });
+
+  sessionDurationChartData = signal<LineChartData>({ datasets: [], labels: [] });
 
   /**
    * Rerpresents whether the component is currently in detail view mode.
@@ -136,16 +141,39 @@ export class TrainingDayStatisticsComponent implements OnInit {
     forkJoin({
       tonnage: this.trainingStatisticService.getTonnageDataForSelectedExercises(id, exercises),
       performance: this.trainingStatisticService.getPerformanceDataForSelectedExercises(id, exercises),
+      sessionDurationData: this.trainingStatisticService.getAverageSessionDurationDataForTrainingPlanDay(id),
       title: this.trainingStatisticService.getTrainingPlanTitle(id),
     })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ tonnage, performance, title }) => {
-        this.isLoaded.set(true);
+      .subscribe(({ tonnage, performance, sessionDurationData, title }) => {
         this.setHeadlineInfo(title);
+        this.isLoaded.set(true);
+
+        this.initializeSessionDurationData(sessionDurationData);
 
         this.initializeLineChartData(tonnage, TrainingDayChartType.VOLUME);
         this.initializeLineChartData(performance, TrainingDayChartType.PERFORMANCE);
       });
+  }
+
+  initializeSessionDurationData(sessionDurationData: AverageTrainingDayDurationDto[]): void {
+    const labels = sessionDurationData.map((session) => session.dayOfWeek);
+    const data = sessionDurationData.map((session) => session.averageDuration);
+    const color = sessionDurationData.map((session) => this.chartColorService.getCategoryColor(session.dayOfWeek));
+
+    const sessionDataset: LineChartDataset = {
+      label: 'Trainingsdauer pro Einheit',
+      data: data,
+      borderColor: this.chartColorService.getCategoryColor('sessionDuration').borderColor,
+      backgroundColor: this.chartColorService.getCategoryColor('sessionDuration').backgroundColor,
+      fill: false,
+    };
+
+    // Set the chart data with the mapped labels and dataset
+    this.sessionDurationChartData.set({
+      labels: labels,
+      datasets: [sessionDataset],
+    });
   }
 
   /**

@@ -3,7 +3,6 @@
     <app-select
       [options]="allExercises()"
       [(selectedOptions)]="selectedExercises"
-      [toggleOnSelect]="true"
       [selectionMode]="isDetailView() ? 'single' : 'multiple'"
     />
   </div>
@@ -12,6 +11,10 @@
     <app-line-chart [chartId]="'tonnageChart'" [data]="volumeChartData()" yAxisTitle="Tonnage (kg)" />
 
     <app-line-chart [chartId]="'performanceChart'" [data]="performanceChartData()" yAxisTitle="Est. Max (kg)" />
+  </div>
+
+  <div class="chart-grid">
+    <app-polar-chart [data]="sessionDurationChartData()" />
   </div>
 } @else {
   <div class="chart-grid">

@@ -11,6 +11,7 @@ import { getUser } from '../../service/userService.js';
 import { mapToExerciseCategory } from '../../utils/exerciseUtils.js';
 
 import _ from 'lodash';
+import { AverageTrainingDayDurationDto } from '../../interfaces/averageTrainingDayDurationDto.js';
 import { LineChartDataDTO } from '../../interfaces/lineChartDataDto.js';
 const { capitalize } = _;
 
@@ -92,6 +93,63 @@ export async function getTonnageForCategories(req: Request, res: Response): Prom
   res.status(200).json(responseData);
 }
 
+export async function getAverageSessionDurationDataForTrainingPlanDay(req: Request, res: Response): Promise<Response> {
+  const trainingPlanId = req.params.id;
+
+  const user = await getUser(req, res);
+  const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
+
+  const trainingDaysWithDuration = trainingPlan.trainingWeeks
+    .flatMap(week => week.trainingDays)
+    .filter(day => !!day.durationInMinutes)
+    .map(day => ({
+      durationInMinutes: day.durationInMinutes!,
+      date: new Date(day.endTime!)
+    }));
+
+  const dayOfWeekDurations: Record<number, { totalDuration: number; count: number }> = {
+    0: { totalDuration: 0, count: 0 }, // Sunday
+    1: { totalDuration: 0, count: 0 }, // Monday
+    2: { totalDuration: 0, count: 0 }, // Tuesday
+    3: { totalDuration: 0, count: 0 }, // Wednesday
+    4: { totalDuration: 0, count: 0 }, // Thursday
+    5: { totalDuration: 0, count: 0 }, // Friday
+    6: { totalDuration: 0, count: 0 } // Saturday
+  };
+
+  trainingDaysWithDuration.forEach(trainingDay => {
+    const dayOfWeek = trainingDay.date.getDay();
+    dayOfWeekDurations[dayOfWeek].totalDuration += trainingDay.durationInMinutes;
+    dayOfWeekDurations[dayOfWeek].count += 1;
+  });
+
+  const daysOfWeekLabels = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+
+  const averageDurationsByDayOfWeek: AverageTrainingDayDurationDto[] = Object.entries(dayOfWeekDurations)
+    .filter(([, dayData]) => dayData.count > 0) // Filter out days with no training (count === 0)
+    .map(([dayIndex, dayData]) => {
+      const averageDuration = dayData.totalDuration / dayData.count;
+      return {
+        dayOfWeek: daysOfWeekLabels[Number(dayIndex)],
+        averageDuration: averageDuration
+      };
+    });
+
+  if (process.env.NODE_ENV === 'development') {
+    const mockAverageDurationsByDayOfWeek: AverageTrainingDayDurationDto[] = [
+      { dayOfWeek: 'Sunday', averageDuration: 45 },
+      { dayOfWeek: 'Monday', averageDuration: 60 },
+      { dayOfWeek: 'Tuesday', averageDuration: 55 },
+      { dayOfWeek: 'Wednesday', averageDuration: 70 },
+      { dayOfWeek: 'Thursday', averageDuration: 40 },
+      { dayOfWeek: 'Friday', averageDuration: 50 },
+      { dayOfWeek: 'Saturday', averageDuration: 65 }
+    ];
+    return res.status(200).json(mockAverageDurationsByDayOfWeek);
+  }
+
+  return res.status(200).json(averageDurationsByDayOfWeek);
+}
 /**
  * Retrieves detailed drill-down statistics for a specific exercise category and week in a training plan.
  */

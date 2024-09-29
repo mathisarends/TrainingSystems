@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { ExerciseCategories } from '../model/exercise-categories';
+import { AverageTrainingDayDurationDto } from './average-training-duration-dto';
 import { LineChartDataDTO } from './line-chart-data-dto';
 import { TrainingPlanTitleIdDto } from './training-plan-title-id-dto';
 
@@ -47,6 +48,13 @@ export class TrainingStatisticsService {
     return this.httpService.get<LineChartDataDTO>(
       `/training/statistics/${id}/performance?exercises=${exercisesQueryParam}`,
     );
+  }
+
+  /**
+   * Retrieves the tonnage data for selected exercises in a specific training plan.
+   */
+  getAverageSessionDurationDataForTrainingPlanDay(id: string): Observable<AverageTrainingDayDurationDto[]> {
+    return this.httpService.get<AverageTrainingDayDurationDto[]>(`/training/statistics/${id}/session-durations`);
   }
 
   /**

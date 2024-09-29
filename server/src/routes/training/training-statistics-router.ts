@@ -37,6 +37,12 @@ statisticsRouter.get(
 );
 
 statisticsRouter.get(
+  '/:id/session-durations',
+  authService.authenticationMiddleware,
+  asyncHandler(trainingStatisticsController.getAverageSessionDurationDataForTrainingPlanDay)
+);
+
+statisticsRouter.get(
   '/:id/drilldown/:category/:week',
   authService.authenticationMiddleware,
   asyncHandler(trainingStatisticsController.getDrilldownForCategory)

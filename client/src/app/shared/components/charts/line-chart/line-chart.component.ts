@@ -16,14 +16,32 @@ export class LineChartComponent implements AfterViewInit {
   protected readonly IconName = IconName;
   @ViewChild('canvas') canvas!: ElementRef;
 
+  /**
+   * ID used for the chart. Defaults to 'lineChart' if not provided.
+   */
   chartId = input<string>('lineChart');
+
+  /**
+   * Input data for the chart, including labels and datasets.
+   */
   data = input<LineChartData>({ labels: [], datasets: [] });
+
+  /**
+   * Title for the Y-axis, required input.
+   */
   yAxisTitle = input.required<string>();
 
+  /**
+   * Signal to store the chart instance, initialized as null.
+   */
   chart = signal<Chart<'line'> | null>(null);
 
   constructor(private injector: Injector) {}
 
+  /**
+   * Lifecycle hook to initialize the chart after the view is loaded.
+   * Sets up reactive updates when input data changes.
+   */
   ngAfterViewInit(): void {
     this.initializeChart();
 
@@ -37,8 +55,11 @@ export class LineChartComponent implements AfterViewInit {
     );
   }
 
+  /**
+   * Initializes the line chart. Destroys any existing chart to prevent memory leaks.
+   */
   initializeChart(): void {
-    this.chart()?.destroy(); // prevent memory leaks
+    this.chart()?.destroy();
 
     const context = this.canvas.nativeElement.getContext('2d');
     if (!context) {
@@ -79,15 +100,9 @@ export class LineChartComponent implements AfterViewInit {
     this.chart.set(newChart);
   }
 
-  updateChart(): void {
-    if (this.chart()) {
-      this.chart()!.data.labels = this.data().labels;
-      this.chart()!.data.datasets = this.data().datasets;
-      this.chart()!.update();
-    }
-  }
-
-  // Method to download chart as an image
+  /**
+   * Downloads the chart as a PNG image.
+   */
   protected downloadChart(): void {
     const chartInstance = this.chart();
     if (!chartInstance) {
@@ -101,5 +116,16 @@ export class LineChartComponent implements AfterViewInit {
     link.download = `${this.chartId() || 'chart'}.png`;
 
     link.click();
+  }
+
+  /**
+   * Updates the chart with new data when inputs change.
+   */
+  private updateChart(): void {
+    if (this.chart()) {
+      this.chart()!.data.labels = this.data().labels;
+      this.chart()!.data.datasets = this.data().datasets;
+      this.chart()!.update();
+    }
   }
 }
