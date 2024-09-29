@@ -42,4 +42,5 @@ export enum IconName {
   SKIP_BACK = 'skip-back',
   DOWNLOAD = 'download',
   COMPARE = 'git-pull-request',
+  SHARE = 'share',
 }
