@@ -10,15 +10,21 @@
   </div>
   <div class="card-body" style="overflow-y: auto">
     <h4 class="card-title">{{ trainingPlan().title }}</h4>
-    <p class="card-text">{{ trainingPlan().trainingFrequency }} Trainings / Woche</p>
 
-    <p class="card-text ml-3">
+    @if (trainingPlan().trainingFrequency) {
+      <p class="card-text">{{ trainingPlan().trainingFrequency }} Trainings / Woche</p>
+    }
+
+    <p class="card-text ml-3"></p>
+
+    <p class="card-text d-flex gap-2">
+      <app-icon [name]="IconName.CALENDAR" [size]="15" />
       {{ trainingPlan().lastUpdated | formatDate }}
     </p>
 
     @if (trainingPlan().averageTrainingDayDuration) {
       <p class="card-text d-flex gap-2">
-        <app-icon [name]="IconName.Activity" [size]="15" />
+        <app-icon [name]="IconName.CLOCK" [size]="15" />
         {{ trainingPlan().averageTrainingDayDuration }}
       </p>
     }
@@ -49,6 +55,8 @@
         (buttonClick)="showDeleteTrainingPlanModal()"
       />
     </div>
-    <div>{{ trainingPlan().percentageFinished }}%</div>
+    @if (trainingPlan().percentageFinished) {
+      <div>{{ trainingPlan().percentageFinished }}%</div>
+    }
   </div>
 </div>
