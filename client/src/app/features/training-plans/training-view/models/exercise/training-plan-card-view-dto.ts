@@ -1,3 +1,5 @@
+import { Percentage } from '../../../../../shared/components/percentage-circle-visualisation/percentage.type';
+
 enum WeightRecommendationBase {
   LASTWEEK = 'lastWeek',
   OFF = 'off',
@@ -12,6 +14,6 @@ export interface TrainingPlanCardView {
   lastUpdated: Date;
   pictureUrl?: string;
   coverImageBase64?: string;
-  percentageFinished?: number;
+  percentageFinished?: Percentage;
   averageTrainingDayDuration?: string;
 }

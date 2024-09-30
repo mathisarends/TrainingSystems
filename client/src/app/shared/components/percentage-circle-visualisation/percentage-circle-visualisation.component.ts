@@ -1,14 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  effect,
-  ElementRef,
-  HostListener,
-  Injector,
-  input,
-  output,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, Component, effect, ElementRef, Injector, input, output, ViewChild } from '@angular/core';
 import { Percentage } from './percentage.type';
 
 @Component({
@@ -28,6 +18,8 @@ export class PercentageCircleVisualisationComponent implements AfterViewInit {
   percentage = input.required<Percentage>();
 
   percentageChanged = output<Percentage>();
+
+  strokeWidth = input<number>(10);
 
   /**
    * The size of the visualized circle in pixels.
@@ -64,43 +56,4 @@ export class PercentageCircleVisualisationComponent implements AfterViewInit {
       { allowSignalWrites: true, injector: this.injector },
     );
   }
-
-  // Mouse down event to start dragging
-  @HostListener('mousedown', ['$event'])
-  onMouseDown(event: MouseEvent) {
-    this.updatePercentageFromEvent(event);
-  }
-
-  // Calculate the percentage based on mouse position
-  private updatePercentageFromEvent(event: MouseEvent) {
-    const rect = this.progressRing.nativeElement.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-
-    // Calculate the angle between the center of the circle and the mouse position
-    const deltaX = event.clientX - centerX;
-    const deltaY = event.clientY - centerY;
-    let angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
-
-    // Convert angle to percentage (normalize the angle from -180 to 180 into 0 to 100%)
-    angle = (angle + 90) % 360;
-    if (angle < 0) angle += 360;
-
-    const newPercentage = ((angle / 360) * 100) as Percentage;
-    this.percentageChanged.emit(newPercentage);
-  }
-
-  // Toggle for Drag logic
-  /* handlePosition() {
-    const radius = this.size() / 2 - 5;
-    const angle = (this.percentage() / 100) * 360;
-
-    const radians = (-angle - 90) * (Math.PI / 180);
-
-    // Berechne die X- und Y-Position auf dem Kreis
-    const x = this.size() / 2 + radius * Math.cos(radians);
-    const y = this.size() / 2 + radius * Math.sin(radians);
-
-    return { x, y };
-  } */
 }

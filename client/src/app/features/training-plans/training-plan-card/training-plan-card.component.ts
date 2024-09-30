@@ -9,6 +9,7 @@ import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
 import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
 import { FormatDatePipe } from '../../../shared/pipes/format-date.pipe';
+import { TrainingSessionService } from '../../training-session/training-session-service';
 import { EditTrainingPlanComponent } from '../edit-training-plan/edit-training-plan.component';
 import { TrainingPlanCardView } from '../training-view/models/exercise/training-plan-card-view-dto';
 import { isTrainingPlanCardView, TrainingPlanType } from '../training-view/models/training-plan-type';
@@ -25,7 +26,7 @@ import { TrainingWeekDayDto } from './training-week-day-dto';
   imports: [CommonModule, TooltipDirective, IconButtonComponent, IconComponent, FormatDatePipe],
   templateUrl: './training-plan-card.component.html',
   styleUrls: ['./training-plan-card.component.scss'],
-  providers: [TrainingPlanCardService],
+  providers: [TrainingPlanCardService, TrainingSessionService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TrainingPlanCardComponent implements OnInit {
@@ -44,21 +45,17 @@ export class TrainingPlanCardComponent implements OnInit {
 
   trainingPlanType = signal(TrainingPlanType.PLAN);
 
-  isTrainingPlan(): boolean {
-    return isTrainingPlanCardView(this.trainingPlan());
-  }
-
   constructor(
     private router: Router,
     private modalService: ModalService,
     private toastService: ToastService,
     private trainingPlanCardService: TrainingPlanCardService,
     private trainingPlanService: TrainingPlanService,
+    private trainingSessionService: TrainingSessionService,
     private injector: Injector,
   ) {}
 
   ngOnInit(): void {
-    console.log('called ');
     effect(
       () => {
         if (isTrainingPlanCardView(this.trainingPlan())) {
@@ -98,7 +95,9 @@ export class TrainingPlanCardComponent implements OnInit {
       buttonText: 'Übernehmen',
       secondaryButtonText: 'Zuschneiden',
       size: ModalSize.LARGE,
-      componentData: { id },
+      componentData: {
+        id: id,
+      },
     });
 
     if (edited) {
@@ -111,8 +110,7 @@ export class TrainingPlanCardComponent implements OnInit {
   }
 
   /**
-   * Opens the modal to delete a training plan.
-   * @param index - The index of the training plan to delete.
+   * Handles deletion depending on the type of the training plan.
    */
   async showDeleteTrainingPlanModal(): Promise<void> {
     const confirmed = await this.modalService.openBasicInfoModal({
@@ -123,23 +121,43 @@ export class TrainingPlanCardComponent implements OnInit {
         'Bist du dir sicher, dass du dieses Element löschen willst? Diese Änderung kann nicht mehr rückgängig gemacht werden!',
     });
 
-    if (confirmed) {
-      this.handleDelete();
+    if (!confirmed) {
+      return;
+    }
+
+    // Call the appropriate delete handler based on the type
+    if (this.trainingPlanType() === TrainingPlanType.PLAN) {
+      this.handleDeleteForTrainingPlan();
+    } else {
+      this.handleDeleteForTrainingSession();
     }
   }
 
   /**
-   * Deletes the training plan.
-   * @param id - The ID of the training plan to delete.
+   * Deletes a training plan.
    */
-  private handleDelete(): void {
+  private handleDeleteForTrainingPlan(): void {
     this.trainingPlanCardService.deleteTrainingPlan(this.trainingPlan().id).subscribe(() => {
-      this.modalService.close();
       this.toastService.success('Plan gelöscht');
-
-      this.trainingPlanService.trainingPlanChanged();
-
-      this.changedPlanConstellation.emit();
+      this.emitChanges();
     });
+  }
+
+  /**
+   * Deletes a training session.
+   */
+  private handleDeleteForTrainingSession(): void {
+    this.trainingSessionService.deleteTrainingSession(this.trainingPlan().id).subscribe(() => {
+      this.toastService.success('Session gelöscht');
+      this.emitChanges();
+    });
+  }
+
+  /**
+   * Common method to handle changes after deletion or modification.
+   */
+  private emitChanges(): void {
+    this.trainingPlanService.trainingPlanChanged();
+    this.changedPlanConstellation.emit();
   }
 }
