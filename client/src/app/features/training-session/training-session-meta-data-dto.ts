@@ -1,4 +1,4 @@
-import { TrainingSession } from './model/training-session';
+import { TrainingSessionDto } from './model/training-session-dto';
 
 /**
  * Interface representing a metadata DTO for a training plan,
@@ -6,4 +6,7 @@ import { TrainingSession } from './model/training-session';
  * and 'recentlyViewedCategoriesInStatisticSection' properties.
  */
 export interface TrainingSessionMetaDataDto
-  extends Omit<TrainingSession, 'id' | 'lastUpdated' | 'recentlyViewedCategoriesInStatisticSection' | 'trainingDays'> {}
+  extends Omit<
+    TrainingSessionDto,
+    'id' | 'lastUpdated' | 'recentlyViewedCategoriesInStatisticSection' | 'trainingDays'
+  > {}

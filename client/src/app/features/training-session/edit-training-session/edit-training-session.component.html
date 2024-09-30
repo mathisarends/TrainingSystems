@@ -1,0 +1,41 @@
+@if (loading()) {
+  <app-skeleton [height]="'12rem'" />
+  @for (k of [1, 2]; track k) {
+    <app-skeleton [height]="'4.25rem'" />
+  }
+} @else {
+  <form (ngSubmit)="onConfirm()">
+    @if (isCropView()) {
+      <image-cropper
+        id="cover-image"
+        [imageBase64]="image()!"
+        [maintainAspectRatio]="false"
+        (imageCropped)="imageCropped($event)"
+        format="png"
+      />
+    } @else {
+      <img #coverImage [src]="image() || placeholderCoverImage" alt="Cover Placeholder" id="cover-image" />
+    }
+    <input
+      type="file"
+      name="cover-image"
+      id="cover-image"
+      class="form-control-file position-absolute"
+      style="opacity: 0; width: 100%; height: 100%; top: 0; left: 0; cursor: pointer"
+      (change)="handleImageUpload($event)"
+    />
+
+    <app-floating-label-input [label]="'Title'" [(value)]="trainingSession()!.title" [required]="true" />
+
+    <app-floating-label-input
+      [label]="'Gewichtsempfehlungen'"
+      [(value)]="trainingSession()!.weightRecommandationBase"
+      [required]="true"
+      type="select"
+      [options]="[
+        { value: 'lastWeek', label: 'Vorherige Woche' },
+        { value: 'off', label: 'Keine' },
+      ]"
+    />
+  </form>
+}

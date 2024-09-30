@@ -9,6 +9,7 @@ import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
 import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
 import { FormatDatePipe } from '../../../shared/pipes/format-date.pipe';
+import { EditTrainingSessionComponent } from '../../training-session/edit-training-session/edit-training-session.component';
 import { TrainingSessionService } from '../../training-session/training-session-service';
 import { EditTrainingPlanComponent } from '../edit-training-plan/edit-training-plan.component';
 import { TrainingPlanCardView } from '../training-view/models/exercise/training-plan-card-view-dto';
@@ -89,19 +90,28 @@ export class TrainingPlanCardComponent implements OnInit {
    * @param index - The index of the training plan to edit.
    */
   async showEditTrainingPlanModal(id: string): Promise<void> {
-    const edited = await this.modalService.open({
-      component: EditTrainingPlanComponent,
-      title: 'Trainingsplan bearbeiten',
-      buttonText: 'Übernehmen',
-      secondaryButtonText: 'Zuschneiden',
-      size: ModalSize.LARGE,
-      componentData: {
-        id: id,
-      },
-    });
-
-    if (edited) {
-      this.changedPlanConstellation.emit();
+    if (this.isTrainingSessionCard()) {
+      await this.modalService.open({
+        component: EditTrainingSessionComponent,
+        title: 'Session bearbeiten',
+        buttonText: 'Übernehmen',
+        secondaryButtonText: 'Zuschneiden',
+        size: ModalSize.LARGE,
+        componentData: {
+          id: id,
+        },
+      });
+    } else {
+      await this.modalService.open({
+        component: EditTrainingPlanComponent,
+        title: 'Trainingsplan bearbeiten',
+        buttonText: 'Übernehmen',
+        secondaryButtonText: 'Zuschneiden',
+        size: ModalSize.LARGE,
+        componentData: {
+          id: id,
+        },
+      });
     }
   }
 
@@ -159,5 +169,9 @@ export class TrainingPlanCardComponent implements OnInit {
   private emitChanges(): void {
     this.trainingPlanService.trainingPlanChanged();
     this.changedPlanConstellation.emit();
+  }
+
+  private isTrainingSessionCard() {
+    return this.trainingPlanType() === TrainingPlanType.SESSION;
   }
 }

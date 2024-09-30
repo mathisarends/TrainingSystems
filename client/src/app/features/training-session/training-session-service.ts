@@ -4,7 +4,7 @@ import { HttpService } from '../../core/services/http-client.service';
 import { BasicConfirmationResponse } from '../../shared/dto/basic-confirmation-response';
 import { TrainingDay } from '../training-plans/training-view/training-day';
 import { StartTrainingVersionDto } from './model/start-training-session-dto';
-import { TrainingSession } from './model/training-session';
+import { TrainingSessionDto } from './model/training-session-dto';
 import { TrainingSessionMetaDataDto } from './training-session-meta-data-dto';
 
 /**
@@ -19,7 +19,7 @@ export class TrainingSessionService {
   /**
    * Retrieves a specific training session by ID.
    */
-  getTrainingSessionCardViewById(id: string): Observable<TrainingSession> {
+  getTrainingSessionById(id: string): Observable<TrainingSessionDto> {
     return this.httpService.get(`/training-session/${id}`);
   }
 

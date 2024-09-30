@@ -4,7 +4,7 @@ import { Exercise } from '../../training-plans/training-view/training-exercise.j
 /**
  * Interface representing a training plan.
  */
-export interface TrainingSession {
+export interface TrainingSessionDto {
   /**
    * The unique id for the training plan.
    */

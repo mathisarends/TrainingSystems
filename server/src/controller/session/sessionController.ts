@@ -23,12 +23,13 @@ export async function getTrainingSessionById(req: Request, res: Response): Promi
     return res.status(404).json({ error: 'Training Session nicht gefunden' });
   }
 
-  const mappedTrainingSession = {
+  const mappedTrainingSession: TrainingSession = {
     id: trainingSession.id,
     title: trainingSession.title,
     lastUpdated: trainingSession.lastUpdated,
-    coverImageBase64: trainingSession.coverImageBase64 ?? '',
-    pictureUrl: user.pictureUrl
+    weightRecommandationBase: trainingSession.weightRecommandationBase,
+    trainingDays: trainingSession.trainingDays,
+    coverImageBase64: trainingSession.coverImageBase64 ?? ''
   };
 
   return res.status(200).json(mappedTrainingSession);
