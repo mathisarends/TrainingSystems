@@ -9,7 +9,6 @@ import { tap } from 'rxjs/operators';
 import { FormService } from '../../../core/services/form.service';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { SwipeService } from '../../../core/services/swipe.service';
-import { MobileDeviceDetectionService } from '../../../platform/mobile-device-detection.service';
 import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
 import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
 import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
@@ -95,7 +94,6 @@ export class TrainingViewComponent implements OnInit {
     private exerciseDataService: ExerciseDataService,
     private destroyRef: DestroyRef,
     protected trainingDataService: TrainingPlanDataService,
-    protected mobileDeviceDetectionService: MobileDeviceDetectionService,
     protected pauseTimeService: PauseTimeService,
   ) {}
 

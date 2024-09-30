@@ -75,8 +75,13 @@ export class TrainingPlanCardComponent implements OnInit {
    */
   viewTrainingPlan(id: string): void {
     if (this.isTrainingSessionCard()) {
-      const latestVersion = this.trainingSessionService.getLatestVersionOfSession(id).subscribe((response) => {
-        console.log('🚀 ~ TrainingPlanCardComponent ~ latestVersion ~ response:', response);
+      this.trainingSessionService.getLatestVersionOfSession(id).subscribe((version) => {
+        this.router.navigate(['/session/view'], {
+          queryParams: {
+            sessionId: id,
+            version: version,
+          },
+        });
       });
     } else {
       this.trainingPlanCardService.getLatestTrainingPlan(id).subscribe((response: TrainingWeekDayDto) => {
