@@ -120,7 +120,6 @@ export class TrainingViewComponent implements OnInit {
       .subscribe((option) => {
         this.saveTrainingData$().subscribe(() => {
           if (option === 'reload') {
-            this.dataViewLoaded.next(false);
             this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
           }
         });
@@ -162,6 +161,8 @@ export class TrainingViewComponent implements OnInit {
    * @param day - Index of the training day.
    */
   loadData(planId: string, week: number, day: number): void {
+    this.dataViewLoaded.next(false);
+
     forkJoin({
       trainingPlan: this.trainingViewService.loadTrainingPlan(planId, week, day),
       exerciseData: this.trainingViewService.loadExerciseData(),
