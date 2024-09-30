@@ -3,7 +3,6 @@ import { CanActivate, Router } from '@angular/router';
 import { map, Observable, of } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { BrowserCheckService } from '../services/browser-check.service';
-import { ModalService } from '../services/modal/modalService';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +12,6 @@ export class AuthGuard implements CanActivate {
     private authService: AuthService,
     private browserCheckService: BrowserCheckService,
     private router: Router,
-    private modalService: ModalService,
   ) {}
 
   /**
@@ -29,7 +27,7 @@ export class AuthGuard implements CanActivate {
     }
 
     if (this.authService.isAuthenticated() === false) {
-      this.authService.showLoginModalDialog();
+      this.router.navigate(['login']);
       return of(false);
     }
 
@@ -38,7 +36,7 @@ export class AuthGuard implements CanActivate {
       map(() => {
         const isAuthenticated = this.authService.isAuthenticated();
         if (!isAuthenticated) {
-          this.authService.showLoginModalDialog();
+          this.router.navigate(['login']);
         }
         return isAuthenticated as boolean;
       }),

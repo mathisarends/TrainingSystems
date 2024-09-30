@@ -10,6 +10,7 @@ import { AlertComponent } from '../../../shared/components/alert/alert.component
 import { CircularIconButtonComponent } from '../../../shared/components/circular-icon-button/circular-icon-button.component';
 import { SkeletonCardComponent } from '../../../shared/components/loader/skeleton-card/skeleton-card.component';
 import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component';
+import { SelectComponent } from '../../../shared/components/select/select.component';
 import { IconName } from '../../../shared/icon/icon-name';
 import { KeyboardService } from '../../../shared/service/keyboard.service';
 import { HeaderService } from '../../header/header.service';
@@ -32,6 +33,7 @@ import { TrainingPlanService } from '../training-view/services/training-plan.ser
     CircularIconButtonComponent,
     SearchBarComponent,
     DragDropModule,
+    SelectComponent,
   ],
   templateUrl: './training-plans.component.html',
   styleUrls: ['./training-plans.component.scss'],
@@ -59,8 +61,6 @@ export class TrainingPlansComponent implements OnInit {
   isSearchbarCollapsed = signal<boolean>(true);
 
   isDragMode = signal<boolean>(false);
-
-  selectedPlanCategory = signal('Fest');
 
   constructor(
     private modalService: ModalService,
@@ -159,6 +159,7 @@ export class TrainingPlansComponent implements OnInit {
       title: 'Training',
       buttons: [
         { icon: IconName.PLUS, callback: this.createNewPlan.bind(this) },
+        { icon: IconName.Zap, callback: this.toggleDragMode.bind(this) },
         { icon: IconName.MORE_VERTICAL, options },
       ],
     });

@@ -43,4 +43,6 @@ export enum IconName {
   DOWNLOAD = 'download',
   COMPARE = 'git-pull-request',
   SHARE = 'share',
+  INFO = 'info',
+  TAG = 'tag',
 }
