@@ -58,7 +58,7 @@ export class EditTrainingSessionComponent extends AbstractImageCropperComponent 
   override onConfirm(): void {
     const sessionMetadataDto = this.trainingSession()!.toSessionMetadataDto();
 
-    this.trainingSessionService.editTrainingSession(sessionMetadataDto).subscribe((response) => {
+    this.trainingSessionService.editTrainingSession(this.id(), sessionMetadataDto).subscribe((response) => {
       this.trainingPlanService.trainingPlanChanged();
       this.toastService.success(response.message);
     });

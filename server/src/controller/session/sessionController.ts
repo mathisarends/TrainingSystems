@@ -106,7 +106,7 @@ export async function editTrainingSesssion(req: Request, res: Response): Promise
   plan.title = trainingSessionEditDto.title;
   plan.lastUpdated = new Date();
   plan.weightRecommandationBase = trainingSessionEditDto.weightRecommandationBase;
-  plan.coverImageBase64 = trainingSessionEditDto.weightRecommandationBase;
+  plan.coverImageBase64 = trainingSessionEditDto.coverImageBase64;
 
   await userDAO.update(user);
 

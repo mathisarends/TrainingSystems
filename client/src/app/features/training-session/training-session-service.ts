@@ -35,8 +35,11 @@ export class TrainingSessionService {
   /**
    * Edits an existing training session by sending updated metadata.
    */
-  editTrainingSession(trainingSessionEditDto: TrainingSessionMetaDataDto): Observable<BasicConfirmationResponse> {
-    return this.httpService.put('/training-session/create', trainingSessionEditDto);
+  editTrainingSession(
+    id: string,
+    trainingSessionEditDto: TrainingSessionMetaDataDto,
+  ): Observable<BasicConfirmationResponse> {
+    return this.httpService.put(`/training-session/edit/${id}`, trainingSessionEditDto);
   }
 
   /**
