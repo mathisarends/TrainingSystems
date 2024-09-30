@@ -1,7 +1,8 @@
 import { Injectable, signal } from '@angular/core';
-import { Observable, Subject, tap } from 'rxjs';
+import { forkJoin, map, Observable, Subject, tap } from 'rxjs';
 import { HttpService } from '../../../../core/services/http-client.service';
 import { BasicConfirmationResponse } from '../../../../shared/dto/basic-confirmation-response';
+import { TrainingSessionCardViewDto } from '../../../training-session/model/training-session-card-view-dto';
 import { TrainingPlanCardView } from '../models/exercise/training-plan-card-view-dto';
 
 @Injectable({
@@ -34,16 +35,20 @@ export class TrainingPlanService {
   }
 
   /**
-   * Fetches the training plans from the backend and updates the trainingPlans signal.
-   * If the plans are already cached, it uses the cached version for local filtering operations.
-   * @returns An Observable of the fetched TrainingPlanCardView array.
+   * Fetches the training plans and session card views from the backend
+   * and updates the trainingPlans signal.
+   * Combines both results into one array for further use.
+   * @returns An Observable of the combined result array.
    */
-  loadAndCacheTrainingPlans(): Observable<TrainingPlanCardView[]> {
-    return this.httpService
-      .get<TrainingPlanCardView[]>('/training/plans')
-      .pipe(tap((plans) => this.trainingPlans.set(plans)));
-  }
+  loadAndCacheTrainingPlans(): Observable<(TrainingPlanCardView | TrainingSessionCardViewDto)[]> {
+    const trainingPlans$: Observable<TrainingPlanCardView[]> = this.httpService.get('/training/plans');
+    const trainingSessions$: Observable<TrainingSessionCardViewDto[]> = this.httpService.get('/training-session');
 
+    return forkJoin([trainingPlans$, trainingSessions$]).pipe(
+      map(([trainingPlans, trainingSessions]) => [...trainingPlans, ...trainingSessions]),
+      tap((combinedResults) => this.trainingPlans.set(combinedResults)),
+    );
+  }
   /**
    * Gets the current training plans from the signal.
    * Can be used for filtering and other local operations without making additional HTTP requests.

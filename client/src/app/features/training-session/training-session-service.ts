@@ -5,7 +5,6 @@ import { BasicConfirmationResponse } from '../../shared/dto/basic-confirmation-r
 import { TrainingDay } from '../training-plans/training-view/training-day';
 import { StartTrainingVersionDto } from './model/start-training-session-dto';
 import { TrainingSession } from './model/training-session';
-import { TrainingSessionCardViewDto } from './model/training-session-card-view-dto';
 import { TrainingSessionMetaDataDto } from './training-session-meta-data-dto';
 
 /**
@@ -16,13 +15,6 @@ import { TrainingSessionMetaDataDto } from './training-session-meta-data-dto';
 @Injectable()
 export class TrainingSessionService {
   constructor(private httpService: HttpService) {}
-
-  /**
-   * Retrieves all training sessions in a card format.
-   */
-  getTrainingSessionCardViews(): Observable<TrainingSessionCardViewDto[]> {
-    return this.httpService.get('/training-session');
-  }
 
   /**
    * Retrieves a specific training session by ID.

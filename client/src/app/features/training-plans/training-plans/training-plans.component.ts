@@ -2,7 +2,7 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, effect, Injector, OnInit, signal, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { ModalSize } from '../../../core/services/modal/modalSize';
 import { toggleCollapseAnimation } from '../../../shared/animations/toggle-collapse';
@@ -17,7 +17,11 @@ import { TrainingSessionService } from '../../training-session/training-session-
 import { TrainingPlanCardComponent } from '../training-plan-card/training-plan-card.component';
 import { CreateTrainingComponent } from '../training-view/create-training/create-training.component';
 import { TrainingPlanCardView } from '../training-view/models/exercise/training-plan-card-view-dto';
-import { TrainingPlanType } from '../training-view/models/training-plan-type';
+import {
+  isTrainingPlanCardView,
+  isTrainingSessionCardViewDto,
+  TrainingPlanType,
+} from '../training-view/models/training-plan-type';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
 import { TrainingTypeSelect } from './training-type-select/training-type-select.component';
 
@@ -70,7 +74,6 @@ export class TrainingPlansComponent implements OnInit {
     private modalService: ModalService,
     private headerService: HeaderService,
     private trainingPlanService: TrainingPlanService,
-    private trainingSessionService: TrainingSessionService,
     private keyboardService: KeyboardService,
     private injector: Injector,
     private destroyRef: DestroyRef,
@@ -98,7 +101,7 @@ export class TrainingPlansComponent implements OnInit {
 
     this.setupKeyBoardEventListeners();
 
-    /* this.setupFilterLogic(); */
+    this.setupFilterLogic();
   }
 
   /**
@@ -120,17 +123,12 @@ export class TrainingPlansComponent implements OnInit {
    * Loads training plans from the server.
    */
   protected loadTrainingPlans(): void {
-    // Load training plans and session card views
-    const trainingPlans$ = this.trainingPlanService.loadAndCacheTrainingPlans();
-    const trainingSessions$ = this.trainingSessionService.getTrainingSessionCardViews();
-
-    combineLatest([trainingPlans$, trainingSessions$])
-      .pipe(map(([trainingPlans, trainingSessions]) => [...trainingPlans, ...trainingSessions]))
-      .subscribe((combinedResults) => {
-        console.log('🚀 ~ TrainingPlansComponent ~ .subscribe ~ combinedResults:', combinedResults);
-        this.filteredTrainingPlans$.next(combinedResults);
-      });
+    this.trainingPlanService.loadAndCacheTrainingPlans().subscribe((combinedResults) => {
+      console.log('🚀 ~ TrainingPlansComponent ~ .subscribe ~ combinedResults:', combinedResults);
+      this.filteredTrainingPlans$.next(combinedResults);
+    });
   }
+
   private openCreateTrainingSessionModal(): void {
     this.modalService.open({
       component: CreateTrainingComponent,
@@ -202,16 +200,25 @@ export class TrainingPlansComponent implements OnInit {
 
   /**
    * Setup for filter logic.
-   * Filters the training plans based on the search query and updates the filtered plans.
+   * Filters the training plans based on the search query and the allowed training plan types and updates the filtered plans.
    */
   private setupFilterLogic(): void {
     effect(
       () => {
         const searchQuery = this.trainingPlanSearchQuery().toLowerCase();
+        const newSelectedFilterTrainingTypes = this.selectedTrainingTypes();
+        const currentPlans = this.filteredTrainingPlans$.value;
 
-        const filteredPlans = this.trainingPlanService
-          .getTrainingPlans()
-          .filter((plan) => plan.title.toLowerCase().includes(searchQuery));
+        if (!currentPlans) return;
+
+        const filteredPlans = currentPlans.filter((plan) => {
+          const matchesSearchQuery = plan.title.toLowerCase().includes(searchQuery);
+          const matchesTypeFilter =
+            (newSelectedFilterTrainingTypes.includes('Trainingspläne') && isTrainingPlanCardView(plan)) ||
+            (newSelectedFilterTrainingTypes.includes('Training Session') && isTrainingSessionCardViewDto(plan));
+
+          return matchesSearchQuery && matchesTypeFilter;
+        });
 
         this.filteredTrainingPlans$.next(filteredPlans);
       },
