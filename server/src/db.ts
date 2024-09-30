@@ -11,7 +11,9 @@ export default async function startDB(app: Express) {
     const isProduction = process.env.NODE_ENV === 'production';
     const dbURI = isProduction ? process.env.mongo_uri_prod! : process.env.mongo_uri_2!;
 
-    await mongoose.connect(dbURI);
+    await mongoose.connect(dbURI, {
+      serverSelectionTimeoutMS: 50000
+    });
     console.log('Database connected');
 
     const client = new MongoClient(dbURI);

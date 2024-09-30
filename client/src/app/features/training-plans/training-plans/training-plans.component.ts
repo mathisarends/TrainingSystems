@@ -93,7 +93,6 @@ export class TrainingPlansComponent implements OnInit {
     });
 
     this.filteredTrainingPlans$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((trainingPlans) => {
-      console.log('🚀 ~ TrainingPlansComponent ~ this.filteredTrainingPlans$.pipe ~ trainingPlans:', trainingPlans);
       if (trainingPlans) {
         this.updateColumnClass(trainingPlans.length);
       }
@@ -124,7 +123,6 @@ export class TrainingPlansComponent implements OnInit {
    */
   protected loadTrainingPlans(): void {
     this.trainingPlanService.loadAndCacheTrainingPlans().subscribe((combinedResults) => {
-      console.log('🚀 ~ TrainingPlansComponent ~ .subscribe ~ combinedResults:', combinedResults);
       this.filteredTrainingPlans$.next(combinedResults);
     });
   }
@@ -207,11 +205,11 @@ export class TrainingPlansComponent implements OnInit {
       () => {
         const searchQuery = this.trainingPlanSearchQuery().toLowerCase();
         const newSelectedFilterTrainingTypes = this.selectedTrainingTypes();
-        const currentPlans = this.filteredTrainingPlans$.value;
+        const allPlans = this.trainingPlanService.getTrainingPlans();
 
-        if (!currentPlans) return;
+        if (!allPlans) return;
 
-        const filteredPlans = currentPlans.filter((plan) => {
+        const filteredPlans = allPlans.filter((plan) => {
           const matchesSearchQuery = plan.title.toLowerCase().includes(searchQuery);
           const matchesTypeFilter =
             (newSelectedFilterTrainingTypes.includes('Trainingspläne') && isTrainingPlanCardView(plan)) ||
