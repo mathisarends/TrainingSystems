@@ -17,7 +17,7 @@
         } @else {
           @for (trainingPlan of filteredTrainingPlans; track trainingPlan.id) {
             <div class="training-plan-card-container" [ngClass]="columnClass" cdkDrag>
-              <app-training-plan-card [trainingPlan]="trainingPlan" [columnClass]="columnClass" />
+              <app-training-plan-card [trainingPlan]="trainingPlan" />
 
               <app-circular-icon-button [iconSize]="18" cdkDragHandle [icon]="IconName.DRAG" />
             </div>
@@ -45,7 +45,7 @@
         } @else {
           @for (trainingPlan of filteredTrainingPlans; track trainingPlan.id) {
             <div class="training-plan-card-container" [ngClass]="columnClass">
-              <app-training-plan-card [trainingPlan]="trainingPlan" [columnClass]="columnClass" />
+              <app-training-plan-card [trainingPlan]="trainingPlan" />
             </div>
           }
         }

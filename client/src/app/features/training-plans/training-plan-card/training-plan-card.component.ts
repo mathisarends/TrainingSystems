@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, Injector, input, OnInit, output, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { ModalSize } from '../../../core/services/modal/modalSize';
@@ -11,6 +11,7 @@ import { IconComponent } from '../../../shared/icon/icon.component';
 import { FormatDatePipe } from '../../../shared/pipes/format-date.pipe';
 import { EditTrainingPlanComponent } from '../edit-training-plan/edit-training-plan.component';
 import { TrainingPlanCardView } from '../training-view/models/exercise/training-plan-card-view-dto';
+import { isTrainingPlanCardView, TrainingPlanType } from '../training-view/models/training-plan-type';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
 import { TrainingPlanCardService } from './training-plan-card.service';
 import { TrainingWeekDayDto } from './training-week-day-dto';
@@ -27,7 +28,7 @@ import { TrainingWeekDayDto } from './training-week-day-dto';
   providers: [TrainingPlanCardService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TrainingPlanCardComponent {
+export class TrainingPlanCardComponent implements OnInit {
   protected readonly IconName = IconName;
 
   /**
@@ -36,14 +37,11 @@ export class TrainingPlanCardComponent {
   trainingPlan = input.required<TrainingPlanCardView>();
 
   /**
-   * Determines the CSS layout based on screen size (e.g., different column widths for mobile and desktop views).
-   */
-  columnClass = input.required<string>();
-
-  /**
    * Output: Emits an event when the training plan's constellation has changed.
    */
   changedPlanConstellation = output<void>();
+
+  trainingPlanType = signal(TrainingPlanType.PLAN);
 
   constructor(
     private router: Router,
@@ -51,7 +49,21 @@ export class TrainingPlanCardComponent {
     private toastService: ToastService,
     private trainingPlanCardService: TrainingPlanCardService,
     private trainingPlanService: TrainingPlanService,
+    private injector: Injector,
   ) {}
+
+  ngOnInit(): void {
+    effect(
+      () => {
+        if (isTrainingPlanCardView(this.trainingPlan())) {
+          this.trainingPlanType.set(TrainingPlanType.PLAN);
+        } else {
+          this.trainingPlanType.set(TrainingPlanType.SESSION);
+        }
+      },
+      { allowSignalWrites: true, injector: this.injector },
+    );
+  }
 
   /**
    * Navigates to the view page of the training plan.
@@ -59,10 +71,6 @@ export class TrainingPlanCardComponent {
    */
   viewTrainingPlan(id: string): void {
     this.trainingPlanCardService.getLatestTrainingPlan(id).subscribe((response: TrainingWeekDayDto) => {
-      console.log(
-        '🚀 ~ TrainingPlanCardComponent ~ this.trainingPlanCardService.getLatestTrainingPlan ~ response:',
-        response,
-      );
       this.router.navigate(['/training/view'], {
         queryParams: {
           planId: id,
