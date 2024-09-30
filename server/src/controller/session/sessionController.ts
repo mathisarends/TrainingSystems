@@ -8,6 +8,9 @@ import * as userService from '../../service/userService.js';
 import { TrainingSessionMetaDataDto } from './trainingSessionMetaDataDto.js';
 
 import _ from 'lodash';
+import { ApiData } from '../../models/apiData.js';
+import { Exercise } from '../../models/training/exercise.js';
+import { createExerciseObject, updateExercise } from '../../service/trainingService.js';
 
 /**
  * Retrieves a specific training session by its ID.
@@ -58,11 +61,8 @@ export async function getTrainingSessionCardViews(req: Request, res: Response): 
  * Creates a new training session for the user.
  */
 export async function createTrainingSession(req: Request, res: Response): Promise<Response> {
-  console.log('here we are');
   const user = await userService.getUser(req, res);
   const userDAO = userService.getUserGenericDAO(req);
-
-  user.trainingSessions = [];
 
   const trainingSessionCreateDto = req.body as TrainingSessionMetaDataDto;
 
@@ -79,12 +79,21 @@ export async function createTrainingSession(req: Request, res: Response): Promis
     versions: []
   };
 
+  createPlaceholderVersion(newTrainingSession);
+
   user.trainingSessions.unshift(newTrainingSession);
 
   await userDAO.update(user);
   console.log('user sessions', user.trainingSessions);
 
   return res.status(200).json({ message: 'Erfolgreich erstellt ' });
+}
+
+function createPlaceholderVersion(trainingSession: TrainingSession): void {
+  trainingSession.versions.push({
+    id: uuidv4(),
+    exercises: []
+  });
 }
 
 /**
@@ -236,6 +245,7 @@ export async function updateTrainingSessionVersion(req: Request, res: Response):
   }
 
   const user = await userService.getUser(req, res);
+  const userDAO = userService.getUserGenericDAO(req);
 
   const trainingSession = user.trainingSessions.find(session => session.id === trainingSessionId);
 
@@ -243,11 +253,54 @@ export async function updateTrainingSessionVersion(req: Request, res: Response):
     return res.status(404).json({ error: 'Training Session nicht gefunden' });
   }
 
-  if (!trainingSession.versions[version - 1]) {
+  const trainingSessionVersion = trainingSession.versions[version - 1];
+
+  if (!trainingSessionVersion) {
     return res.status(404).json({ error: 'Version der Session nicht gefunden' });
   }
 
-  // Das hier soweit implementieren wenn die Anwendung auch tatsächlich Daten schickt
+  const changedData: ApiData = req.body;
 
-  return res.status(200);
+  updateExercisesInSessionVersion(trainingSessionVersion, changedData);
+
+  await userDAO.update(user);
+  console.log('🚀 ~ updateTrainingSessionVersion ~ trainingSession:', trainingSession);
+
+  return res.status(200).json({ message: 'Änderungen gespeichert ' });
+}
+
+function updateExercisesInSessionVersion(session: TrainingDay, changedData: ApiData) {
+  let deleteLogicHappend = false;
+
+  for (const [fieldName, fieldValue] of Object.entries(changedData)) {
+    const exerciseIndex = parseInt(fieldName.charAt(17)) - 1;
+
+    const exercise = session.exercises[exerciseIndex];
+
+    if (!exercise && fieldName.endsWith('category')) {
+      const newExercise = createExerciseObject(fieldName, fieldValue) as Exercise;
+      session.exercises.push(newExercise);
+    }
+
+    if (isDeletedExercise(exercise, fieldName, fieldValue)) {
+      let exerciseIndex = session.exercises.findIndex(ex => ex === exercise);
+
+      // Shift exercises one position up
+      while (exerciseIndex < session.exercises.length - 1) {
+        session.exercises[exerciseIndex] = session.exercises[exerciseIndex + 1];
+
+        exerciseIndex++;
+      }
+      session.exercises.pop();
+      deleteLogicHappend = true;
+    }
+
+    if (exercise && !deleteLogicHappend) {
+      updateExercise(fieldName, fieldValue, exercise, session, exerciseIndex + 1);
+    }
+  }
+
+  function isDeletedExercise(exercise: Exercise, fieldName: string, fieldValue: string) {
+    return exercise && fieldName.endsWith('category') && !fieldValue;
+  }
 }

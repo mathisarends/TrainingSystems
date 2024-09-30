@@ -3,10 +3,14 @@ import { Component, DestroyRef, OnInit, signal, WritableSignal } from '@angular/
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { FormService } from '../../../core/services/form.service';
 import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
 import { InputComponent } from '../../../shared/components/input/input.component';
 import { SkeletonTrainingTableComponent } from '../../../shared/components/loader/skeleton-training-table/skeleton-training-table.component';
+import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
 import { IconName } from '../../../shared/icon/icon-name';
+import { IconComponent } from '../../../shared/icon/icon.component';
 import { AutoSaveService } from '../../../shared/service/auto-save.service';
 import { HeaderService } from '../../header/header.service';
 import { ExerciseDataService } from '../../training-plans/training-view/exercise-data.service';
@@ -19,21 +23,22 @@ import { TrainingSessionService } from '../training-session-service';
 
 @Component({
   standalone: true,
-  imports: [SkeletonTrainingTableComponent, InputComponent, DropdownComponent, CommonModule],
+  imports: [
+    SkeletonTrainingTableComponent,
+    InputComponent,
+    DropdownComponent,
+    CommonModule,
+    PaginationComponent,
+    IconComponent,
+    TooltipDirective,
+  ],
   selector: 'app-session-view',
   templateUrl: './session-view.component.html',
   styleUrls: ['./session-view.component.scss'],
   providers: [TrainingSessionService, EstMaxService],
 })
 export class SessionViewComponent implements OnInit {
-  constructor(
-    private route: ActivatedRoute,
-    private destroyRef: DestroyRef,
-    private headerService: HeaderService,
-    private trainingSessionService: TrainingSessionService,
-    protected exerciseDataService: ExerciseDataService,
-    private autoSaveService: AutoSaveService,
-  ) {}
+  protected readonly IconName = IconName;
 
   /**
    * The ID of the current training session.
@@ -65,6 +70,16 @@ export class SessionViewComponent implements OnInit {
    */
 
   trainingSessionExercises: WritableSignal<Exercise[]> = signal([]);
+
+  constructor(
+    private route: ActivatedRoute,
+    private destroyRef: DestroyRef,
+    private headerService: HeaderService,
+    private trainingSessionService: TrainingSessionService,
+    protected exerciseDataService: ExerciseDataService,
+    private formService: FormService,
+    private autoSaveService: AutoSaveService,
+  ) {}
 
   ngOnInit() {
     this.initalizeAutoSaveServiceLogic();
@@ -127,7 +142,7 @@ export class SessionViewComponent implements OnInit {
   private setHeadlineInfo(trainingSesssion: TrainingSessionDto) {
     this.headerService.setHeadlineInfo({
       title: trainingSesssion.title,
-      subTitle: `V${this.version() + 1}`,
+      subTitle: `V${this.version()}`,
       buttons: [
         {
           icon: IconName.MORE_VERTICAL,
@@ -141,7 +156,10 @@ export class SessionViewComponent implements OnInit {
    */
   private initalizeAutoSaveServiceLogic() {
     this.autoSaveService.inputChanged$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((option) => {
-      console.log('emit changes');
+      const changes = this.formService.getChanges();
+      this.trainingSessionService
+        .updateTrainingSessionVersionData(this.sessionId(), this.version(), changes)
+        .subscribe((response) => {});
     });
   }
 }

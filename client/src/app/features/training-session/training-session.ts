@@ -54,6 +54,6 @@ export class TrainingSession {
       return [];
     }
 
-    return this.versions()[version].exercises;
+    return this.versions()[version - 1].exercises;
   }
 }

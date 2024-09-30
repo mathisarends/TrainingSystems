@@ -72,7 +72,7 @@ export async function getPlanForDay(req: Request, res: Response): Promise<void> 
  * the specified day but can also propagate to the same day in subsequent weeks, maintaining consistency.
  */
 export async function updateTrainingDataForTrainingDay(req: Request, res: Response) {
-  const userDAO = req.app.locals.userDAO;
+  const userDAO = getUserGenericDAO(req);
   const trainingPlanId = req.params.id;
   const trainingWeekIndex = Number(req.params.week);
   const trainingDayIndex = Number(req.params.day);
@@ -82,7 +82,6 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
   }
 
   const changedData: ApiData = req.body;
-  console.log('🚀 ~ updateTrainingDataForTrainingDay ~ changedData:', changedData);
 
   const user = await getUser(req, res);
 
@@ -91,14 +90,11 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
 
   const trainingDay = trainingPlan.trainingWeeks[trainingWeekIndex]?.trainingDays[trainingDayIndex];
 
-  updateTrainingDay(trainingDay, changedData, trainingDayIndex);
+  updateTrainingDay(trainingDay, changedData);
   propagateChangesToFutureWeeks(trainingPlan, trainingWeekIndex, trainingDayIndex, changedData);
-
-  console.log('🚀 ~ updateTrainingDataForTrainingDay ~ trainingDay: exercises', trainingDay.exercises);
 
   await userDAO.update(user);
 
-  // check for activity data and only when add tracker
   for (const [fieldName, fieldValue] of Object.entries(changedData)) {
     if (isTrainingActivitySignal(fieldName, fieldValue)) {
       const trainingPlanIndex = trainingService.findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
@@ -137,18 +133,11 @@ export async function getLatestTrainingDay(req: Request, res: Response) {
  *
  * @param trainingDay - The training day to be updated.
  * @param changedData - The new data to be applied.
- * @param trainingDayIndex - The index of the day being updated.
  */
-export function updateTrainingDay(trainingDay: TrainingDay, changedData: ApiData, trainingDayIndex: number): void {
+export function updateTrainingDay(trainingDay: TrainingDay, changedData: ApiData): void {
   let deleteLogicHappend = false;
 
   for (const [fieldName, fieldValue] of Object.entries(changedData)) {
-    const dayIndex = parseInt(fieldName.charAt(3));
-
-    if (dayIndex !== trainingDayIndex) {
-      throw new Error('Die gesendeten Daten passen logisch nicht auf die angegebene Trainingswoche');
-    }
-
     const exerciseNumber = parseInt(fieldName.charAt(13));
     const exercise = trainingDay.exercises[exerciseNumber - 1];
 

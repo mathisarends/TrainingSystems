@@ -28,7 +28,6 @@ import { RpeInputDirective } from './directives/rpe-input.directive';
 import { WeightInputDirective } from './directives/weight-input.directive';
 import { ExerciseDataService } from './exercise-data.service';
 import { ExerciseDataDTO } from './exerciseDataDto';
-import { RestTimerComponent } from './rest-timer/rest-timer.component';
 import { EstMaxService } from './services/estmax.service';
 import { TrainingPlanDataService } from './services/training-plan-data.service';
 import { TrainingViewNavigationService } from './training-view-navigation.service';
@@ -219,15 +218,6 @@ export class TrainingViewComponent implements OnInit {
       this.trainingDataService.trainingPlanData,
       this.trainingDayIndex,
     );
-  }
-
-  switchToTimerView() {
-    this.modalService.open({
-      component: RestTimerComponent,
-      title: 'Pause Timer',
-      buttonText: 'Abbrechen',
-      hasFooter: false,
-    });
   }
 
   openAutoProgressionModal() {

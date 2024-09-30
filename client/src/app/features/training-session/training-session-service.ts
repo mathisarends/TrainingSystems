@@ -78,7 +78,11 @@ export class TrainingSessionService {
   /**
    * Updates the data of a specific version of a training session.
    */
-  updateTrainingSessionVersionData(id: string, version: number): Observable<BasicConfirmationResponse> {
-    return this.httpService.delete(`/training-session/${id}/${version}`);
+  updateTrainingSessionVersionData(
+    id: string,
+    version: number,
+    data: Record<string, string>,
+  ): Observable<BasicConfirmationResponse> {
+    return this.httpService.patch(`/training-session/${id}/${version}`, data);
   }
 }

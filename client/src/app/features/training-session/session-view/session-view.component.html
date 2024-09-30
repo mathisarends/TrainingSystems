@@ -111,4 +111,23 @@
       }
     </tbody>
   </table>
+
+  <div class="navigation-container">
+    <app-pagination [currentPage]="version() - 1" [totalPages]="trainingSession()?.versions()?.length ?? 0" />
+
+    <div>
+      <app-icon
+        class="week-navigation-icon"
+        [appTooltip]="'Vorherige Woche'"
+        [name]="IconName.CHEVRON_LEFT"
+        [size]="28"
+      />
+      <app-icon
+        class="week-navigation-icon"
+        [appTooltip]="'Näcshte Woche'"
+        [name]="IconName.CHEVRON_RIGHT"
+        [size]="28"
+      />
+    </div>
+  </div>
 }
