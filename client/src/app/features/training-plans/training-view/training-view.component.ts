@@ -111,15 +111,7 @@ export class TrainingViewComponent implements OnInit {
       this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
     });
 
-    this.autoSaveService.inputChanged$
-      .pipe(takeUntilDestroyed(this.destroyRef)) // Automatically unsubscribe
-      .subscribe((option) => {
-        this.saveTrainingData$().subscribe(() => {
-          if (option === 'reload') {
-            this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
-          }
-        });
-      });
+    this.initializeAutoSaveLogic();
   }
 
   ngAfterViewChecked(): void {
@@ -275,6 +267,18 @@ export class TrainingViewComponent implements OnInit {
 
   private toggleIsDragMode() {
     this.isDragMode.set(!this.isDragMode());
+  }
+
+  private initializeAutoSaveLogic() {
+    this.autoSaveService.inputChanged$
+      .pipe(takeUntilDestroyed(this.destroyRef)) // Automatically unsubscribe
+      .subscribe((option) => {
+        this.saveTrainingData$().subscribe(() => {
+          if (option === 'reload') {
+            this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
+          }
+        });
+      });
   }
 
   drop(event: CdkDragDrop<any, any, any>) {
