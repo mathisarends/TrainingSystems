@@ -1,1 +1,114 @@
-<p>Session view works</p>
+@if (!isLoaded()) {
+  <app-skeleton-training-table />
+} @else {
+  <table #trainingTable class="table table-striped training-table responsive-table caption-top mb-4">
+    <thead>
+      <tr>
+        <th scope="col">Category</th>
+        <th scope="col">Exercise</th>
+        <th scope="col" class="text-center">Sets</th>
+        <th scope="col" class="text-center">Reps</th>
+        <th scope="col" class="text-center">Weight</th>
+        <th scope="col" class="text-center">RPE</th>
+        <th scope="col" class="text-center">&#64;RPE</th>
+        <th scope="col" class="text-center">Max</th>
+        <th scope="col" class="text-center">Notes</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (k of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track k; let i = $index) {
+        @let exercise =
+          trainingSessionExercises()[i] || {
+            category: '',
+            exercise: '',
+            sets: '',
+            reps: '',
+            weight: '',
+            targetRPE: '',
+            actualRPE: '',
+            estMax: '',
+          };
+
+        @let namePrefix = 'version' + version() + '_exercise' + k + '_';
+
+        <tr>
+          <td data-cell="Category">
+            <app-dropdown
+              [name]="namePrefix + 'category'"
+              class="exercise-category-selector"
+              [options]="exerciseData()!.exerciseCategories"
+              [directiveUsed]="'category-select'"
+              [(selectedValue)]="exercise.category"
+              [ngStyle]="{
+                opacity: exercise.category === '- Bitte Auswählen -' || !exercise.category ? 0 : 1,
+              }"
+            />
+          </td>
+          <td data-cell="Exercise">
+            <app-dropdown
+              [name]="namePrefix + 'exercise_name'"
+              class="exercise-name-selector"
+              [options]="exerciseData()!.categorizedExercises[exercise.category]"
+              [(selectedValue)]="exercise.exercise"
+              [ngStyle]="{
+                opacity: exercise.category === '- Bitte Auswählen -' || !exercise.category ? 0 : 1,
+              }"
+            />
+          </td>
+          <td data-cell="Sets">
+            <app-input class="sets" [type]="'number'" [name]="namePrefix + 'sets'" [value]="exercise.sets" />
+          </td>
+          <td data-cell="Reps">
+            <app-input
+              [directiveUsed]="'repInputDirective'"
+              class="reps"
+              [type]="'number'"
+              [name]="namePrefix + 'reps'"
+              [value]="exercise.reps"
+            />
+          </td>
+          <td class="weight-data-cell" data-cell="Weight">
+            <app-input
+              class="weight"
+              [type]="'text'"
+              [name]="namePrefix + 'weight'"
+              [directiveUsed]="'weightInputDirective'"
+              [value]="exercise.weight || ''"
+            />
+          </td>
+          <td data-cell="RPE">
+            <app-input
+              class="targetRPE"
+              [type]="'text'"
+              [name]="namePrefix + 'targetRPE'"
+              [directiveUsed]="'rpeInputDirective'"
+              [value]="exercise.targetRPE"
+            />
+          </td>
+          <td data-cell="@RPE">
+            <app-input
+              class="actualRPE"
+              [type]="'text'"
+              [name]="namePrefix + 'actualRPE'"
+              [directiveUsed]="'rpeInputDirective'"
+              [value]="exercise.actualRPE || ''"
+            />
+          </td>
+          <td data-cell="Est. Max">
+            <app-input
+              class="estMax"
+              [type]="'number'"
+              [name]="namePrefix + 'estMax'"
+              [value]="exercise.estMax"
+              [ngClass]="{ 'opacity-0': exercise.estMax === undefined || exercise.estMax === 0 }"
+            />
+          </td>
+          <td data-cell="Notes">
+            <app-input class="notes" [type]="'text'" [name]="namePrefix + 'notes'" [value]="exercise.notes ?? ''" />
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

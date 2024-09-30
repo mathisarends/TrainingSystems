@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../core/services/http-client.service';
 import { BasicConfirmationResponse } from '../../shared/dto/basic-confirmation-response';
+import { ExerciseDataDTO } from '../training-plans/training-view/exerciseDataDto';
 import { TrainingDay } from '../training-plans/training-view/training-day';
 import { StartTrainingVersionDto } from './model/start-training-session-dto';
 import { TrainingSessionDto } from './model/training-session-dto';
@@ -21,6 +22,13 @@ export class TrainingSessionService {
    */
   getTrainingSessionById(id: string): Observable<TrainingSessionDto> {
     return this.httpService.get(`/training-session/${id}`);
+  }
+
+  /**
+   * Loads the exercise data for the application.
+   */
+  loadExerciseData(): Observable<ExerciseDataDTO> {
+    return this.httpService.get<ExerciseDataDTO>('/exercise');
   }
 
   /**

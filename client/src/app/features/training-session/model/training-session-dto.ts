@@ -1,5 +1,5 @@
 import { WeightRecommendationBase } from '../../training-plans/edit-training-plan/training-plan-edit-view-dto.js';
-import { Exercise } from '../../training-plans/training-view/training-exercise.js';
+import { TrainingDay } from '../../training-plans/training-view/training-day.js';
 
 /**
  * Interface representing a training plan.
@@ -25,7 +25,7 @@ export interface TrainingSessionDto {
    */
   weightRecommandationBase: WeightRecommendationBase;
 
-  trainingDays: Exercise[];
+  versions: TrainingDay[];
 
   /**
    * The BASE-64 encoded coverImage of the training plan.

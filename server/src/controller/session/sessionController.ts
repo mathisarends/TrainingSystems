@@ -28,7 +28,7 @@ export async function getTrainingSessionById(req: Request, res: Response): Promi
     title: trainingSession.title,
     lastUpdated: trainingSession.lastUpdated,
     weightRecommandationBase: trainingSession.weightRecommandationBase,
-    trainingDays: trainingSession.trainingDays,
+    versions: trainingSession.versions,
     coverImageBase64: trainingSession.coverImageBase64 ?? ''
   };
 
@@ -76,7 +76,7 @@ export async function createTrainingSession(req: Request, res: Response): Promis
     lastUpdated: new Date(),
     weightRecommandationBase: trainingSessionCreateDto.weightRecommandationBase,
     coverImageBase64: trainingSessionCreateDto.coverImageBase64 ?? '',
-    trainingDays: []
+    versions: []
   };
 
   user.trainingSessions.unshift(newTrainingSession);
@@ -150,16 +150,16 @@ export async function startTrainingSession(req: Request, res: Response): Promise
   }
 
   // Erste Session neu erstellen
-  if (trainingSession.trainingDays.length === 0) {
+  if (trainingSession.versions.length === 0) {
     return res.status(200).json({ trainingSessionTemplate: undefined, version: 1 });
   }
 
   const trainingSessionTemplate = prepareTrainingSessionTemplate(trainingSession);
-  trainingSession.trainingDays.push(trainingSessionTemplate);
+  trainingSession.versions.push(trainingSessionTemplate);
 
   await userDAO.update(user);
 
-  return res.status(200).json({ trainingSessionTemplate, version: trainingSession.trainingDays.length });
+  return res.status(200).json({ trainingSessionTemplate, version: trainingSession.versions.length });
 }
 
 /**
@@ -168,7 +168,7 @@ export async function startTrainingSession(req: Request, res: Response): Promise
  * - Copies the most recent training day and resets fields like `estMax`, `notes`, `weight`, and `actualRPE` for each exercise.
  */
 function prepareTrainingSessionTemplate(trainingSession: TrainingSession): TrainingDay {
-  const mostRecentSession = trainingSession.trainingDays[0];
+  const mostRecentSession = trainingSession.versions[0];
   const deepCopyOfMostRecentSession = _.cloneDeep(mostRecentSession);
 
   for (const exericse of deepCopyOfMostRecentSession.exercises) {
@@ -204,11 +204,11 @@ export async function getTrainingSessionByVersion(req: Request, res: Response): 
     return res.status(404).json({ error: 'Training Session nicht gefunden' });
   }
 
-  if (!trainingSession.trainingDays[version - 1]) {
+  if (!trainingSession.versions[version - 1]) {
     return res.status(404).json({ error: 'Version der Session nicht gefunden' });
   }
 
-  return res.status(200).json(trainingSession.trainingDays[version - 1]);
+  return res.status(200).json(trainingSession.versions[version - 1]);
 }
 
 export async function getLatestVersionOfSession(req: Request, res: Response): Promise<Response> {
@@ -222,7 +222,7 @@ export async function getLatestVersionOfSession(req: Request, res: Response): Pr
     return res.status(404).json({ error: 'Training Session nicht gefunden' });
   }
 
-  const latestVersion = trainingSession.trainingDays.length;
+  const latestVersion = trainingSession.versions.length;
 
   return res.status(200).json(latestVersion);
 }
@@ -243,7 +243,7 @@ export async function updateTrainingSessionVersion(req: Request, res: Response):
     return res.status(404).json({ error: 'Training Session nicht gefunden' });
   }
 
-  if (!trainingSession.trainingDays[version - 1]) {
+  if (!trainingSession.versions[version - 1]) {
     return res.status(404).json({ error: 'Version der Session nicht gefunden' });
   }
 

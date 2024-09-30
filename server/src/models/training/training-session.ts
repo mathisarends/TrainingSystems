@@ -9,5 +9,5 @@ export interface TrainingSession extends Omit<TrainingPlan, 'trainingWeeks' | 't
    * The exercises included in the training session.
    */
 
-  trainingDays: TrainingDay[];
+  versions: TrainingDay[];
 }

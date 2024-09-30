@@ -30,7 +30,6 @@ import { ExerciseDataService } from './exercise-data.service';
 import { ExerciseDataDTO } from './exerciseDataDto';
 import { RestTimerComponent } from './rest-timer/rest-timer.component';
 import { EstMaxService } from './services/estmax.service';
-import { PauseTimeService } from './services/pause-time.service';
 import { TrainingPlanDataService } from './services/training-plan-data.service';
 import { TrainingViewNavigationService } from './training-view-navigation.service';
 import { TrainingViewService } from './training-view-service';
@@ -94,7 +93,6 @@ export class TrainingViewComponent implements OnInit {
     private exerciseDataService: ExerciseDataService,
     private destroyRef: DestroyRef,
     protected trainingDataService: TrainingPlanDataService,
-    protected pauseTimeService: PauseTimeService,
   ) {}
 
   /**
