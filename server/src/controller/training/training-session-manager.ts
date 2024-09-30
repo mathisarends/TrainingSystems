@@ -118,9 +118,6 @@ export class TrainingSessionManager {
 
     const trainingData = this.getTracker(trainingDayId)!.getTrainingDay();
 
-    const trainingDay =
-      user.trainingPlans[trainingPlanIndex].trainingWeeks[trainingWeekIndex].trainingDays[trainingDayIndex];
-
     // CHECK FOR REAL SESSION NOT JUST MINOR CHANGES
     if (trainingData.durationInMinutes! >= 30) {
       user.trainingPlans[trainingPlanIndex].trainingWeeks[trainingWeekIndex].trainingDays[trainingDayIndex] =
@@ -128,7 +125,7 @@ export class TrainingSessionManager {
 
       const trainingDayNotification: TrainingDAyFinishedNotification = {
         ...trainingData,
-        trainingDayTonnage: getTonnagePerTrainingDay(trainingDay)
+        trainingDayTonnage: getTonnagePerTrainingDay(trainingData)
       };
 
       user.trainingDayNotifications.push(trainingDayNotification);

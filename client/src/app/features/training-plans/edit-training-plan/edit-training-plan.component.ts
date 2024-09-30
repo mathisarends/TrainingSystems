@@ -73,7 +73,6 @@ export class EditTrainingPlanComponent extends AbstractImageCropperComponent imp
 
       this.editTrainingPlanService.editTrainingPlan(this.trainingPlanEditView.id(), formData).subscribe((response) => {
         this.trainingPlanService.trainingPlanChanged();
-        this.modalService.close();
         this.toastService.success(response.message);
       });
     }
