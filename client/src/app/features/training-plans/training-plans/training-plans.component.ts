@@ -94,14 +94,7 @@ export class TrainingPlansComponent implements OnInit {
 
     this.setupKeyBoardEventListeners();
 
-    effect(
-      () => {
-        this.updateColumnClass(this.trainingPlanService.getTrainingPlans().length);
-
-        this.filterTrainingPlans();
-      },
-      { injector: this.injector, allowSignalWrites: true },
-    );
+    this.setupFilterLogic();
   }
 
   /**
@@ -187,16 +180,22 @@ export class TrainingPlansComponent implements OnInit {
   }
 
   /**
+   * Setup for filter logic.
    * Filters the training plans based on the search query and updates the filtered plans.
    */
-  private filterTrainingPlans(): void {
-    const searchQuery = this.trainingPlanSearchQuery().toLowerCase();
+  private setupFilterLogic(): void {
+    effect(
+      () => {
+        const searchQuery = this.trainingPlanSearchQuery().toLowerCase();
 
-    const filteredPlans = this.trainingPlanService
-      .getTrainingPlans()
-      .filter((plan) => plan.title.toLowerCase().includes(searchQuery));
+        const filteredPlans = this.trainingPlanService
+          .getTrainingPlans()
+          .filter((plan) => plan.title.toLowerCase().includes(searchQuery));
 
-    this.filteredTrainingPlans$.next(filteredPlans);
+        this.filteredTrainingPlans$.next(filteredPlans);
+      },
+      { injector: this.injector, allowSignalWrites: true },
+    );
   }
 
   /**

@@ -1,8 +1,8 @@
+<app-training-type-select [(selectedOptions)]="selectedTrainingTypes" />
+
 <div class="search-bar-container" [@toggleCollapse]="isSearchbarCollapsed() ? 'collapsed' : 'expanded'">
   <app-search-bar [(searchQuery)]="trainingPlanSearchQuery" />
 </div>
-
-<app-training-type-select [(selectedOptions)]="selectedTrainingTypes" />
 
 @if (isDragMode()) {
   <div class="row" cdkDropList (cdkDropListDropped)="updateTrainingPlanOrder($event)">

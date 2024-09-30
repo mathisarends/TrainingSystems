@@ -1,10 +1,6 @@
 @if (isLoaded()) {
   <div class="select-container">
-    <app-select
-      [options]="allExercises()"
-      [(selectedOptions)]="selectedExercises"
-      [selectionMode]="isDetailView() ? 'single' : 'multiple'"
-    />
+    <app-select [options]="allExercises()" [(selectedOptions)]="selectedExercises" [isSearchable]="false" />
   </div>
 
   <div class="chart-grid">

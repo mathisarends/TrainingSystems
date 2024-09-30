@@ -76,12 +76,6 @@ export class TrainingDayStatisticsComponent implements OnInit {
 
   sessionDurationChartData = signal<ChartData<PolarAreaChartDataset>>({ datasets: [], labels: [] });
 
-  /**
-   * Rerpresents whether the component is currently in detail view mode.
-   * This view is accessible through pagination, allowing the user to see more detailed information.
-   */
-  isDetailView = signal(false);
-
   constructor(
     protected trainingPlanService: TrainingPlanService,
     private router: Router,
