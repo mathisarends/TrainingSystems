@@ -6,4 +6,4 @@ import { TrainingSession } from './model/training-session';
  * and 'recentlyViewedCategoriesInStatisticSection' properties.
  */
 export interface TrainingSessionMetaDataDto
-  extends Omit<TrainingSession, 'id' | 'lastUpdated' | 'recentlyViewedCategoriesInStatisticSection'> {}
+  extends Omit<TrainingSession, 'id' | 'lastUpdated' | 'recentlyViewedCategoriesInStatisticSection' | 'trainingDays'> {}

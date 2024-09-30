@@ -13,9 +13,11 @@ import { SearchBarComponent } from '../../../shared/components/search-bar/search
 import { IconName } from '../../../shared/icon/icon-name';
 import { KeyboardService } from '../../../shared/service/keyboard.service';
 import { HeaderService } from '../../header/header.service';
+import { TrainingSessionService } from '../../training-session/training-session-service';
 import { TrainingPlanCardComponent } from '../training-plan-card/training-plan-card.component';
 import { CreateTrainingComponent } from '../training-view/create-training/create-training.component';
 import { TrainingPlanCardView } from '../training-view/models/exercise/training-plan-card-view-dto';
+import { TrainingPlanType } from '../training-view/models/training-plan-type';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
 import { TrainingTypeSelect } from './training-type-select/training-type-select.component';
 
@@ -37,7 +39,7 @@ import { TrainingTypeSelect } from './training-type-select/training-type-select.
   ],
   templateUrl: './training-plans.component.html',
   styleUrls: ['./training-plans.component.scss'],
-  providers: [KeyboardService],
+  providers: [KeyboardService, TrainingSessionService],
   animations: [toggleCollapseAnimation],
 })
 export class TrainingPlansComponent implements OnInit {
@@ -68,6 +70,7 @@ export class TrainingPlansComponent implements OnInit {
     private modalService: ModalService,
     private headerService: HeaderService,
     private trainingPlanService: TrainingPlanService,
+    private trainingSessionService: TrainingSessionService,
     private keyboardService: KeyboardService,
     private injector: Injector,
     private destroyRef: DestroyRef,
@@ -118,8 +121,28 @@ export class TrainingPlansComponent implements OnInit {
   protected loadTrainingPlans(): void {
     this.trainingPlans$ = this.trainingPlanService.loadAndCacheTrainingPlans();
 
+    this.trainingSessionService.getTrainingSessionCardViews().subscribe((response) => {
+      console.log(
+        '🚀 ~ TrainingPlansComponent ~ this.trainingSessionService.getTrainingSessionCardViews ~ response:',
+        response,
+      );
+    });
+
     this.trainingPlans$.subscribe((trainingPlans) => {
       this.filteredTrainingPlans$.next(trainingPlans);
+    });
+  }
+
+  private openCreateTrainingSessionModal(): void {
+    this.modalService.open({
+      component: CreateTrainingComponent,
+      title: 'Training erstellen',
+      buttonText: 'Erstellen',
+      size: ModalSize.LARGE,
+      confirmationRequired: true,
+      componentData: {
+        trainingPlanTyp: TrainingPlanType.SESSION,
+      },
     });
   }
 
@@ -154,7 +177,7 @@ export class TrainingPlansComponent implements OnInit {
       title: 'Training',
       buttons: [
         { icon: IconName.PLUS, callback: this.createNewPlan.bind(this) },
-        { icon: IconName.Zap, callback: this.toggleDragMode.bind(this) },
+        { icon: IconName.Zap, callback: this.openCreateTrainingSessionModal.bind(this) },
         { icon: IconName.MORE_VERTICAL, options },
       ],
     });

@@ -21,7 +21,7 @@ export class TrainingSessionService {
    * Retrieves all training sessions in a card format.
    */
   getTrainingSessionCardViews(): Observable<TrainingSessionCardViewDto[]> {
-    return this.httpService.get('/training-session/edit');
+    return this.httpService.get('/training-session');
   }
 
   /**
@@ -34,15 +34,17 @@ export class TrainingSessionService {
   /**
    * Creates a new training session.
    */
-  createNewTrainingSession(): Observable<BasicConfirmationResponse> {
-    return this.httpService.post('/training-session/create');
+  createNewTrainingSession(
+    trainingSessionMetaDataDto: TrainingSessionMetaDataDto,
+  ): Observable<BasicConfirmationResponse> {
+    return this.httpService.post('/training-session/create', trainingSessionMetaDataDto);
   }
 
   /**
    * Edits an existing training session by sending updated metadata.
    */
   editTrainingSession(trainingSessionEditDto: TrainingSessionMetaDataDto): Observable<BasicConfirmationResponse> {
-    return this.httpService.put('/training-session/create', { trainingSessionEditDto });
+    return this.httpService.put('/training-session/create', trainingSessionEditDto);
   }
 
   /**

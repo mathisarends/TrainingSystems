@@ -57,10 +57,17 @@ export async function getTrainingSessionCardViews(req: Request, res: Response): 
  * Creates a new training session for the user.
  */
 export async function createTrainingSession(req: Request, res: Response): Promise<Response> {
+  console.log('here we are');
   const user = await userService.getUser(req, res);
   const userDAO = userService.getUserGenericDAO(req);
 
+  user.trainingSessions = [];
+
   const trainingSessionCreateDto = req.body as TrainingSessionMetaDataDto;
+
+  if (!user.trainingSessions) {
+    user.trainingSessions = [];
+  }
 
   const newTrainingSession: TrainingSession = {
     id: uuidv4(),
@@ -74,6 +81,7 @@ export async function createTrainingSession(req: Request, res: Response): Promis
   user.trainingSessions.unshift(newTrainingSession);
 
   await userDAO.update(user);
+  console.log('user sessions', user.trainingSessions);
 
   return res.status(200).json({ message: 'Erfolgreich erstellt ' });
 }

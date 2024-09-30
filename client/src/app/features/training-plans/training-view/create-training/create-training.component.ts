@@ -7,8 +7,11 @@ import { OnConfirm } from '../../../../shared/components/modal/on-confirm';
 import { OnToggleView } from '../../../../shared/components/modal/on-toggle-view';
 import { ToastService } from '../../../../shared/components/toast/toast.service';
 import { ImageUploadService } from '../../../../shared/service/image-upload.service';
+import { TrainingSessionMetaDataDto } from '../../../training-session/training-session-meta-data-dto';
+import { TrainingSessionService } from '../../../training-session/training-session-service';
 import { TrainingPlanEditView } from '../../model/training-plan-edit-view';
 import { TrainingPlanCardView } from '../models/exercise/training-plan-card-view-dto';
+import { TrainingPlanType } from '../models/training-plan-type';
 import { TrainingPlanService } from '../services/training-plan.service';
 
 /**
@@ -20,10 +23,12 @@ import { TrainingPlanService } from '../services/training-plan.service';
   imports: [CommonModule, FloatingLabelInputComponent, ToDropDownOptionsPipe],
   templateUrl: './create-training.component.html',
   styleUrls: ['./create-training.component.scss'],
+  providers: [TrainingSessionService],
 })
 export class CreateTrainingComponent implements OnInit, OnConfirm, OnToggleView {
   @ViewChild('coverImage') coverImage!: ElementRef<HTMLImageElement>;
   protected readonly placeholderCoverImage = '/images/training/training_3.png';
+  protected readonly TrainingPlanType = TrainingPlanType;
 
   existingPlans = signal<TrainingPlanCardView[]>([]);
 
@@ -35,6 +40,11 @@ export class CreateTrainingComponent implements OnInit, OnConfirm, OnToggleView 
   trainingPlanEditView!: TrainingPlanEditView;
 
   /**
+   * The training plan object that contains the form fields using Angular signals.
+   */
+  trainingPlanTyp = signal(TrainingPlanType.PLAN);
+
+  /**
    * Signal indicating whether the training plan is loading.
    */
   loading = signal(true);
@@ -43,6 +53,7 @@ export class CreateTrainingComponent implements OnInit, OnConfirm, OnToggleView 
 
   constructor(
     private trainingPlanService: TrainingPlanService,
+    private trainingSessionService: TrainingSessionService,
     private httpClient: HttpService,
     private imageUploadService: ImageUploadService,
     private toastService: ToastService,
@@ -84,6 +95,11 @@ export class CreateTrainingComponent implements OnInit, OnConfirm, OnToggleView 
    * Handles form submission using signals.
    */
   onConfirm(): void {
+    if (this.trainingPlanTyp() === TrainingPlanType.SESSION) {
+      this.confirmSession();
+      return;
+    }
+
     if (!this.trainingPlanEditView.isValid()) {
       return;
     }
@@ -93,6 +109,23 @@ export class CreateTrainingComponent implements OnInit, OnConfirm, OnToggleView 
     }
 
     this.httpClient.post('/training/create', this.trainingPlanEditView.toDto()).subscribe(() => {
+      this.toastService.success('Plan erstellt');
+      this.trainingPlanService.trainingPlanChanged();
+    });
+  }
+
+  confirmSession() {
+    if (!this.trainingPlanEditView.title()) {
+      return;
+    }
+
+    const trainingSessionCreateDto: TrainingSessionMetaDataDto = {
+      title: this.trainingPlanEditView.title(),
+      weightRecommandationBase: this.trainingPlanEditView.weightRecommendationBase(),
+      coverImageBase64: this.trainingPlanEditView.coverImageBase64(),
+    };
+
+    this.trainingSessionService.createNewTrainingSession(trainingSessionCreateDto).subscribe(() => {
       this.toastService.success('Plan erstellt');
       this.trainingPlanService.trainingPlanChanged();
     });
