@@ -30,6 +30,7 @@ import { TrainingWeekDayDto } from './training-week-day-dto';
 })
 export class TrainingPlanCardComponent implements OnInit {
   protected readonly IconName = IconName;
+  protected readonly TrainingPlanType = TrainingPlanType;
 
   /**
    * The training plan data that will be displayed in the card.
@@ -43,6 +44,10 @@ export class TrainingPlanCardComponent implements OnInit {
 
   trainingPlanType = signal(TrainingPlanType.PLAN);
 
+  isTrainingPlan(): boolean {
+    return isTrainingPlanCardView(this.trainingPlan());
+  }
+
   constructor(
     private router: Router,
     private modalService: ModalService,
@@ -53,6 +58,7 @@ export class TrainingPlanCardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log('called ');
     effect(
       () => {
         if (isTrainingPlanCardView(this.trainingPlan())) {

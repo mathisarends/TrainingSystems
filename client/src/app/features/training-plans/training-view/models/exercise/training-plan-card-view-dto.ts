@@ -6,9 +6,9 @@ enum WeightRecommendationBase {
 export interface TrainingPlanCardView {
   id: string;
   title: string;
-  trainingFrequency: number;
-  blockLength: number;
-  weightRecomamndationBase: WeightRecommendationBase;
+  trainingFrequency?: number;
+  blockLength?: number;
+  weightRecomamndationBase?: WeightRecommendationBase;
   lastUpdated: Date;
   pictureUrl?: string;
   coverImageBase64?: string;

@@ -2,7 +2,7 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, effect, Injector, OnInit, signal, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { ModalSize } from '../../../core/services/modal/modalSize';
 import { toggleCollapseAnimation } from '../../../shared/animations/toggle-collapse';
@@ -90,6 +90,7 @@ export class TrainingPlansComponent implements OnInit {
     });
 
     this.filteredTrainingPlans$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((trainingPlans) => {
+      console.log('🚀 ~ TrainingPlansComponent ~ this.filteredTrainingPlans$.pipe ~ trainingPlans:', trainingPlans);
       if (trainingPlans) {
         this.updateColumnClass(trainingPlans.length);
       }
@@ -97,7 +98,7 @@ export class TrainingPlansComponent implements OnInit {
 
     this.setupKeyBoardEventListeners();
 
-    this.setupFilterLogic();
+    /* this.setupFilterLogic(); */
   }
 
   /**
@@ -119,20 +120,17 @@ export class TrainingPlansComponent implements OnInit {
    * Loads training plans from the server.
    */
   protected loadTrainingPlans(): void {
-    this.trainingPlans$ = this.trainingPlanService.loadAndCacheTrainingPlans();
+    // Load training plans and session card views
+    const trainingPlans$ = this.trainingPlanService.loadAndCacheTrainingPlans();
+    const trainingSessions$ = this.trainingSessionService.getTrainingSessionCardViews();
 
-    this.trainingSessionService.getTrainingSessionCardViews().subscribe((response) => {
-      console.log(
-        '🚀 ~ TrainingPlansComponent ~ this.trainingSessionService.getTrainingSessionCardViews ~ response:',
-        response,
-      );
-    });
-
-    this.trainingPlans$.subscribe((trainingPlans) => {
-      this.filteredTrainingPlans$.next(trainingPlans);
-    });
+    combineLatest([trainingPlans$, trainingSessions$])
+      .pipe(map(([trainingPlans, trainingSessions]) => [...trainingPlans, ...trainingSessions]))
+      .subscribe((combinedResults) => {
+        console.log('🚀 ~ TrainingPlansComponent ~ .subscribe ~ combinedResults:', combinedResults);
+        this.filteredTrainingPlans$.next(combinedResults);
+      });
   }
-
   private openCreateTrainingSessionModal(): void {
     this.modalService.open({
       component: CreateTrainingComponent,

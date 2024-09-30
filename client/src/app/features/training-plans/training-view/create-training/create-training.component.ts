@@ -9,6 +9,7 @@ import { ToastService } from '../../../../shared/components/toast/toast.service'
 import { ImageUploadService } from '../../../../shared/service/image-upload.service';
 import { TrainingSessionMetaDataDto } from '../../../training-session/training-session-meta-data-dto';
 import { TrainingSessionService } from '../../../training-session/training-session-service';
+import { WeightRecommendationBase } from '../../edit-training-plan/training-plan-edit-view-dto';
 import { TrainingPlanEditView } from '../../model/training-plan-edit-view';
 import { TrainingPlanCardView } from '../models/exercise/training-plan-card-view-dto';
 import { TrainingPlanType } from '../models/training-plan-type';
@@ -85,9 +86,9 @@ export class CreateTrainingComponent implements OnInit, OnConfirm, OnToggleView 
    */
   populateFormWithPlan(plan: TrainingPlanCardView): void {
     this.trainingPlanEditView.title.set(plan.title + ' RE');
-    this.trainingPlanEditView.trainingFrequency.set(plan.trainingFrequency);
-    this.trainingPlanEditView.trainingBlockLength.set(plan.blockLength);
-    this.trainingPlanEditView.weightRecommendationBase.set(plan.weightRecomamndationBase);
+    this.trainingPlanEditView.trainingFrequency.set(plan.trainingFrequency as number);
+    this.trainingPlanEditView.trainingBlockLength.set(plan.blockLength as number);
+    this.trainingPlanEditView.weightRecommendationBase.set(plan.weightRecomamndationBase as WeightRecommendationBase);
     this.trainingPlanEditView.coverImageBase64.set(plan.coverImageBase64 ?? this.placeholderCoverImage);
   }
 

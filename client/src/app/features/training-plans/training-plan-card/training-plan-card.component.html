@@ -9,7 +9,12 @@
     <img class="img-fluid" [src]="trainingPlan().pictureUrl ?? '/images/profile-placeholder.webp'" alt="Avatar" />
   </div>
   <div class="card-body" style="overflow-y: auto">
-    <h4 class="card-title">{{ trainingPlan().title }}</h4>
+    @let titlePrefix = isTrainingPlan() ? 'Plan' : 'Session';
+
+    <h4 class="card-title">
+      <span class="title-prefix">{{ titlePrefix }}</span
+      >{{ trainingPlan().title }}
+    </h4>
 
     @if (trainingPlan().trainingFrequency) {
       <p class="card-text">{{ trainingPlan().trainingFrequency }} Trainings / Woche</p>
@@ -55,8 +60,6 @@
         (buttonClick)="showDeleteTrainingPlanModal()"
       />
     </div>
-    @if (trainingPlan().percentageFinished) {
-      <div>{{ trainingPlan().percentageFinished }}%</div>
-    }
+    <div>{{ trainingPlan().percentageFinished }}%</div>
   </div>
 </div>
