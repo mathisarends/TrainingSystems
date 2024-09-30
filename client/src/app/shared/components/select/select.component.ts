@@ -9,7 +9,6 @@ import {
   model,
   OnInit,
   signal,
-  ViewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
@@ -38,7 +37,6 @@ import { SelectOption, SelectOptionItem } from './select-option-item';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectComponent implements OnInit {
-  @ViewChild(SearchBarComponent) searchBar!: SearchBarComponent;
   protected IconName = IconName;
 
   /**
@@ -54,9 +52,9 @@ export class SelectComponent implements OnInit {
   selectedOptions = model.required<SelectOption[]>();
 
   /**
-   * Determines whether the select shall be toggled after an item was selected.
+   * Determines whether the list of options is searchable
    */
-  toggleOnSelect = input<boolean>(false);
+  isSearchable = input<boolean>(true);
 
   /**
    * Determines whether multiple items can be selected.
@@ -93,10 +91,6 @@ export class SelectComponent implements OnInit {
   @HostListener('click')
   toggleOptionsContainer(): void {
     this.isOpen.set(!this.isOpen());
-
-    if (this.isOpen()) {
-      this.searchBar.focusInput();
-    }
   }
 
   @HostListener('document:click', ['$event'])
@@ -127,10 +121,6 @@ export class SelectComponent implements OnInit {
       : this.selectedOptions().filter((item) => item !== optionValue);
 
     this.selectedOptions.set(newSelected);
-
-    if (this.toggleOnSelect()) {
-      this.isOpen.set(false);
-    }
   }
 
   private setupKeyboardEventListeners(): void {

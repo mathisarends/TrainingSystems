@@ -13,7 +13,9 @@
   </div>
 </div>
 <div class="dropdown-menu" [@toggleCollapse]="isOpen() ? 'expanded' : 'collapsed'" (click)="$event.stopPropagation()">
-  <app-search-bar [(searchQuery)]="searchQuery" />
+  @if (isSearchable()) {
+    <app-search-bar [(searchQuery)]="searchQuery" />
+  }
 
   <div class="checkbox-container">
     @for (checkboxItem of filteredItems() | toCheckboxItem: selectedOptions(); track checkboxItem.label) {

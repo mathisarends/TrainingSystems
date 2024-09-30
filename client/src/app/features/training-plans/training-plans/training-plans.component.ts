@@ -10,7 +10,6 @@ import { AlertComponent } from '../../../shared/components/alert/alert.component
 import { CircularIconButtonComponent } from '../../../shared/components/circular-icon-button/circular-icon-button.component';
 import { SkeletonCardComponent } from '../../../shared/components/loader/skeleton-card/skeleton-card.component';
 import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component';
-import { SelectComponent } from '../../../shared/components/select/select.component';
 import { IconName } from '../../../shared/icon/icon-name';
 import { KeyboardService } from '../../../shared/service/keyboard.service';
 import { HeaderService } from '../../header/header.service';
@@ -18,6 +17,7 @@ import { TrainingPlanCardComponent } from '../training-plan-card/training-plan-c
 import { CreateTrainingComponent } from '../training-view/create-training/create-training.component';
 import { TrainingPlanCardView } from '../training-view/models/exercise/training-plan-card-view-dto';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
+import { TrainingTypeSelect } from './training-type-select/training-type-select.component';
 
 /**
  * Component to manage and display training plans.
@@ -33,7 +33,7 @@ import { TrainingPlanService } from '../training-view/services/training-plan.ser
     CircularIconButtonComponent,
     SearchBarComponent,
     DragDropModule,
-    SelectComponent,
+    TrainingTypeSelect,
   ],
   templateUrl: './training-plans.component.html',
   styleUrls: ['./training-plans.component.scss'],
@@ -61,6 +61,8 @@ export class TrainingPlansComponent implements OnInit {
   isSearchbarCollapsed = signal<boolean>(true);
 
   isDragMode = signal<boolean>(false);
+
+  selectedTrainingTypes = signal(['Trainingspläne', 'Training Session']);
 
   constructor(
     private modalService: ModalService,
