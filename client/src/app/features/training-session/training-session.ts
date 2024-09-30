@@ -15,7 +15,6 @@ export class TrainingSession {
 
   // Private constructor
   private constructor(dto: TrainingSessionDto) {
-    console.log('🚀 ~ TrainingSession ~ constructor ~ dto:', dto);
     this.id.set(dto.id);
     this.title.set(dto.title);
     this.lastUpdated.set(dto.lastUpdated);

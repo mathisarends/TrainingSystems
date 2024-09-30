@@ -81,6 +81,12 @@ trainingSessionRouter.patch(
   trainingSessionController.startTrainingSession
 );
 
+trainingSessionRouter.get(
+  '/:id/latest-version',
+  authService.authenticationMiddleware,
+  trainingSessionController.getLatestVersionOfSession
+);
+
 /**
  * GET /:id/:version
  *

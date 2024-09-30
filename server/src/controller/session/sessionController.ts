@@ -211,6 +211,22 @@ export async function getTrainingSessionByVersion(req: Request, res: Response): 
   return res.status(200).json(trainingSession.trainingDays[version - 1]);
 }
 
+export async function getLatestVersionOfSession(req: Request, res: Response): Promise<Response> {
+  const trainingSessionId = req.params.id;
+
+  const user = await userService.getUser(req, res);
+
+  const trainingSession = user.trainingSessions.find(session => session.id === trainingSessionId);
+
+  if (!trainingSession) {
+    return res.status(404).json({ error: 'Training Session nicht gefunden' });
+  }
+
+  const latestVersion = trainingSession.trainingDays.length;
+
+  return res.status(200).json(latestVersion);
+}
+
 export async function updateTrainingSessionVersion(req: Request, res: Response): Promise<Response> {
   const trainingSessionId = req.params.id;
   const version = Number(req.params.version);

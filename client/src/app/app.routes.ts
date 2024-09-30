@@ -12,6 +12,7 @@ import { ProfileComponent2 } from './features/profile-2/profile.component';
 import { TrainingDayStatisticsComponent } from './features/training-plans/training-day-statistics/training-day-statistics.component';
 import { TrainingPlansComponent } from './features/training-plans/training-plans/training-plans.component';
 import { TrainingViewComponent } from './features/training-plans/training-view/training-view.component';
+import { SessionViewComponent } from './features/training-session/session-view/session-view.component';
 import { UsageStatisticsComponent } from './features/usage-statistics/usage-statistics.component';
 
 export const routes: Routes = [
@@ -40,6 +41,11 @@ export const routes: Routes = [
   {
     path: 'training/view',
     component: TrainingViewComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'session/view',
+    component: SessionViewComponent,
     canActivate: [AuthGuard],
   },
 ];

@@ -49,6 +49,10 @@ export class TrainingSessionService {
     return this.httpService.delete(`/training-session/${id}`);
   }
 
+  getLatestVersionOfSession(id: string): Observable<number> {
+    return this.httpService.get(`/training-session/${id}/latest-version`);
+  }
+
   /**
    * Starts a new training session by its ID.
    */

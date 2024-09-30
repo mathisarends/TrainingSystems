@@ -74,15 +74,21 @@ export class TrainingPlanCardComponent implements OnInit {
    * @param id - The ID of the training plan to view.
    */
   viewTrainingPlan(id: string): void {
-    this.trainingPlanCardService.getLatestTrainingPlan(id).subscribe((response: TrainingWeekDayDto) => {
-      this.router.navigate(['/training/view'], {
-        queryParams: {
-          planId: id,
-          week: response.weekIndex,
-          day: response.dayIndex,
-        },
+    if (this.isTrainingSessionCard()) {
+      const latestVersion = this.trainingSessionService.getLatestVersionOfSession(id).subscribe((response) => {
+        console.log('🚀 ~ TrainingPlanCardComponent ~ latestVersion ~ response:', response);
       });
-    });
+    } else {
+      this.trainingPlanCardService.getLatestTrainingPlan(id).subscribe((response: TrainingWeekDayDto) => {
+        this.router.navigate(['/training/view'], {
+          queryParams: {
+            planId: id,
+            week: response.weekIndex,
+            day: response.dayIndex,
+          },
+        });
+      });
+    }
   }
 
   /**
