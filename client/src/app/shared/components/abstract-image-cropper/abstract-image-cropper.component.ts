@@ -1,4 +1,4 @@
-import { Directive, OnInit, signal } from '@angular/core';
+import { Directive, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { ImageUploadService } from '../../service/image-upload.service';
 import { OnConfirm } from '../modal/on-confirm';
@@ -10,6 +10,12 @@ import { ToastService } from '../toast/toast.service';
  */
 @Directive()
 export abstract class AbstractImageCropperComponent implements OnInit, OnConfirm, OnToggleView {
+  @ViewChild('confirmCropIcon') confirmCropIcon!: ElementRef;
+  svgStyles: { [key: string]: string } = {
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+  };
   /**
    * Signal that holds the state of "no image available".
    */
@@ -23,6 +29,8 @@ export abstract class AbstractImageCropperComponent implements OnInit, OnConfirm
    * Signal indicating whether the crop view is active.
    */
   isCropView = signal<boolean>(false);
+
+  croppedImage = signal('');
 
   constructor(
     protected imageUploadService: ImageUploadService,
@@ -80,16 +88,38 @@ export abstract class AbstractImageCropperComponent implements OnInit, OnConfirm
    * into a Base64 string and updates `imageSignal`.
    */
   protected async imageCropped(event: ImageCroppedEvent) {
+    console.log('🚀 ~ AbstractImageCropperComponent ~ imageCropped ~ event:', event);
     if (!event.blob) {
       console.error('Blob is not defined in ImageCroppedEvent');
       return;
     }
 
+    this.svgStyles = {
+      top: `${event.imagePosition.y1 + event.imagePosition.y2 / 2}px`,
+      left: `${event.imagePosition.x2 + 10}px`,
+    };
+
     try {
       const base64 = await this.convertBlobToBase64(event.blob);
       if (typeof base64 === 'string') {
-        this.setImage(base64);
+        this.croppedImage.set(base64);
       }
+    } catch (error) {
+      console.error('Error converting blob to Base64', error);
+    }
+  }
+
+  /**
+   * Called when the user confirms the crop action. Processes the cropped image.
+   */
+  async confirmCrop() {
+    if (!this.croppedImage()) {
+      console.error('No cropped image available');
+      return;
+    }
+
+    try {
+      this.setImage(this.croppedImage());
     } catch (error) {
       console.error('Error converting blob to Base64', error);
     }

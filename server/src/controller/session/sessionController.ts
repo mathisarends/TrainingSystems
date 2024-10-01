@@ -44,6 +44,10 @@ export async function getTrainingSessionById(req: Request, res: Response): Promi
 export async function getTrainingSessionCardViews(req: Request, res: Response): Promise<Response> {
   const user = await userService.getUser(req, res);
 
+  if (!user.trainingSessions) {
+    user.trainingSessions = [];
+  }
+
   const trainingSessions: TrainingSessionCardDto[] = user.trainingSessions.map(trainingSession => {
     return {
       id: trainingSession.id,
@@ -65,10 +69,6 @@ export async function createTrainingSession(req: Request, res: Response): Promis
   const userDAO = userService.getUserGenericDAO(req);
 
   const trainingSessionCreateDto = req.body as TrainingSessionMetaDataDto;
-
-  if (!user.trainingSessions) {
-    user.trainingSessions = [];
-  }
 
   const newTrainingSession: TrainingSession = {
     id: uuidv4(),

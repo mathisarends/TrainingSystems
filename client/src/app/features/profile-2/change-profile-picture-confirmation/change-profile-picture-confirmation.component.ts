@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ImageCropperComponent } from 'ngx-image-cropper';
 import { AbstractImageCropperComponent } from '../../../shared/components/abstract-image-cropper/abstract-image-cropper.component';
@@ -18,7 +19,7 @@ import { UpdateProfilePictureDto } from '../service/update-profile-picture-dto';
 @Component({
   selector: 'app-change-profile-picture-confirmation',
   standalone: true,
-  imports: [IconComponent, ImageCropperComponent],
+  imports: [IconComponent, ImageCropperComponent, CommonModule],
   templateUrl: './change-profile-picture-confirmation.component.html',
   styleUrl: './change-profile-picture-confirmation.component.scss',
 })

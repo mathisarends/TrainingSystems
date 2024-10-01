@@ -47,4 +47,5 @@ export enum IconName {
   TAG = 'tag',
   CALENDAR = 'calendar',
   SAVE = 'save',
+  CHECK = 'check',
 }

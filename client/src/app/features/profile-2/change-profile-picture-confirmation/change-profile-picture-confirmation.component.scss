@@ -3,3 +3,12 @@
     flex-direction: column !important;
   }
 }
+
+.cropper-container {
+  position: relative;
+  display: inline-block;
+}
+
+app-icon {
+  position: absolute;
+}

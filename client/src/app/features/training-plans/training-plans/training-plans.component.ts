@@ -17,11 +17,7 @@ import { TrainingSessionService } from '../../training-session/training-session-
 import { TrainingPlanCardComponent } from '../training-plan-card/training-plan-card.component';
 import { CreateTrainingComponent } from '../training-view/create-training/create-training.component';
 import { TrainingPlanCardView } from '../training-view/models/exercise/training-plan-card-view-dto';
-import {
-  isTrainingPlanCardView,
-  isTrainingSessionCardViewDto,
-  TrainingPlanType,
-} from '../training-view/models/training-plan-type';
+import { TrainingPlanType } from '../training-view/models/training-plan-type';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
 import { TrainingTypeSelect } from './training-type-select/training-type-select.component';
 
@@ -67,8 +63,6 @@ export class TrainingPlansComponent implements OnInit {
   isSearchbarCollapsed = signal<boolean>(true);
 
   isDragMode = signal<boolean>(false);
-
-  selectedTrainingTypes = signal(['Trainingspläne', 'Training Session']);
 
   constructor(
     private modalService: ModalService,
@@ -198,24 +192,19 @@ export class TrainingPlansComponent implements OnInit {
 
   /**
    * Setup for filter logic.
-   * Filters the training plans based on the search query and the allowed training plan types and updates the filtered plans.
+   * Filters the training plans based on the search query and updates the filtered plans.
    */
   private setupFilterLogic(): void {
     effect(
       () => {
         const searchQuery = this.trainingPlanSearchQuery().toLowerCase();
-        const newSelectedFilterTrainingTypes = this.selectedTrainingTypes();
         const allPlans = this.trainingPlanService.getTrainingPlans();
 
         if (!allPlans) return;
 
         const filteredPlans = allPlans.filter((plan) => {
           const matchesSearchQuery = plan.title.toLowerCase().includes(searchQuery);
-          const matchesTypeFilter =
-            (newSelectedFilterTrainingTypes.includes('Trainingspläne') && isTrainingPlanCardView(plan)) ||
-            (newSelectedFilterTrainingTypes.includes('Training Session') && isTrainingSessionCardViewDto(plan));
-
-          return matchesSearchQuery && matchesTypeFilter;
+          return matchesSearchQuery;
         });
 
         this.filteredTrainingPlans$.next(filteredPlans);

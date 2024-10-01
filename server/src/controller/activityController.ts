@@ -57,7 +57,11 @@ export async function getRecentTrainingDurations(req: Request, res: Response): P
  * Retrieves training day notifications for a user.
  */
 export async function getTrainingDayNotifications(req: Request, res: Response): Promise<Response> {
+  const userDAO = userService.getUserGenericDAO(req);
+
   const user = await userService.getUser(req, res);
+
+  await userDAO.update(user);
 
   return res.status(200).json(user.trainingDayNotifications);
 }

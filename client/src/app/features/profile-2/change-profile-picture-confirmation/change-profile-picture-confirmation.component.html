@@ -1,10 +1,15 @@
 @if (isCropView()) {
-  <image-cropper
-    [imageBase64]="image()!"
-    [maintainAspectRatio]="false"
-    (imageCropped)="imageCropped($event)"
-    format="png"
-  />
+  <div class="cropper-container">
+    <image-cropper
+      [imageBase64]="image()!"
+      [maintainAspectRatio]="false"
+      (imageCropped)="imageCropped($event)"
+      format="png"
+    />
+
+    <!-- Dynamisch positioniertes SVG -->
+    <app-icon [style]="svgStyles" #confirmCropIcon [name]="IconName.CHECK" (clicked)="confirmCrop()" />
+  </div>
 } @else {
   <div class="text-center p-3">
     <div class="d-flex justify-content-center align-items-center">
