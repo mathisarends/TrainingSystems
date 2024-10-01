@@ -12,7 +12,7 @@ import { TrainingSummary } from './training-summary/training-summary.js';
  * Manages multiple training session trackers for different users.
  * Each tracker is uniquely identified by a combination of user ID and training day ID.
  */
-export class TrainingSessionManager {
+class TrainingSessionManager {
   private trackers: Map<string, TrainingSessionTracker> = new Map();
 
   private readonly cleanupInterval = 30 * 60 * 1000;
@@ -147,3 +147,5 @@ export class TrainingSessionManager {
     this.removeTracker(trainingDayId);
   }
 }
+
+export default new TrainingSessionManager();

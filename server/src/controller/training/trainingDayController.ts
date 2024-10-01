@@ -15,9 +15,8 @@ import {
 import { ApiData } from '../../models/apiData.js';
 import { WeightRecommendationBase } from '../../models/training/weight-recommandation.enum.js';
 import { TrainingDayDataLocator } from './training-day-data-locator.js';
-import { TrainingSessionManager } from './training-session-manager.js';
 
-const trainingSessionManager = new TrainingSessionManager();
+import trainingSessionManager from './training-session-manager.js';
 
 /**
  * Updates an existing training plan based on user input. Adjustments can include changes
