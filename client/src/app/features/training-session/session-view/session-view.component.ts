@@ -1,9 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, OnInit, signal, WritableSignal } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  effect,
+  ElementRef,
+  Injector,
+  OnInit,
+  signal,
+  ViewChild,
+  WritableSignal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { FormService } from '../../../core/services/form.service';
+import { SwipeService } from '../../../core/services/swipe.service';
 import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
 import { InputComponent } from '../../../shared/components/input/input.component';
 import { SkeletonTrainingTableComponent } from '../../../shared/components/loader/skeleton-training-table/skeleton-training-table.component';
@@ -38,6 +50,7 @@ import { TrainingSessionService } from '../training-session-service';
   providers: [TrainingSessionService, EstMaxService],
 })
 export class SessionViewComponent implements OnInit {
+  @ViewChild('trainingTable') trainingTable!: ElementRef;
   protected readonly IconName = IconName;
 
   /**
@@ -79,7 +92,10 @@ export class SessionViewComponent implements OnInit {
     private trainingSessionService: TrainingSessionService,
     protected exerciseDataService: ExerciseDataService,
     private formService: FormService,
+    private swipeService: SwipeService,
     private autoSaveService: AutoSaveService,
+    private cdr: ChangeDetectorRef,
+    private injector: Injector,
   ) {}
 
   ngOnInit() {
@@ -94,6 +110,21 @@ export class SessionViewComponent implements OnInit {
 
       this.loadSessionData();
     });
+  }
+
+  ngAfterViewInit() {
+    effect(
+      () => {
+        if (this.isLoaded()) {
+          this.cdr.detectChanges(); // wait for dom update after view is loaded
+
+          if (this.trainingTable) {
+            this.initalizeSwipeService();
+          }
+        }
+      },
+      { injector: this.injector },
+    );
   }
 
   /**
@@ -187,5 +218,17 @@ export class SessionViewComponent implements OnInit {
         .updateTrainingSessionVersionData(this.sessionId(), this.version(), changes)
         .subscribe((response) => {});
     });
+  }
+
+  private initalizeSwipeService(): void {
+    this.swipeService.addSwipeListener(
+      this.trainingTable.nativeElement,
+      () => {
+        console.log('right');
+      },
+      () => {
+        console.log('left');
+      },
+    );
   }
 }
