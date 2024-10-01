@@ -1,0 +1,8 @@
+<image-cropper
+  [imageBase64]="image()!"
+  [maintainAspectRatio]="false"
+  (imageCropped)="imageCropped($event)"
+  format="png"
+/>
+
+<app-circular-icon-button [icon]="IconName.CHECK" (clicked)="confirmCrop()" />

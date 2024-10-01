@@ -1,21 +1,11 @@
 @if (isCropView()) {
-  <div class="cropper-container">
-    <image-cropper
-      [imageBase64]="image()!"
-      [maintainAspectRatio]="false"
-      (imageCropped)="imageCropped($event)"
-      format="png"
-    />
-
-    <!-- Dynamisch positioniertes SVG -->
-    <app-icon [style]="svgStyles" #confirmCropIcon [name]="IconName.CHECK" (clicked)="confirmCrop()" />
-  </div>
+  <app-image-cropper-with-icon [(image)]="image" />
 } @else {
   <div class="text-center p-3">
     <div class="d-flex justify-content-center align-items-center">
       <div>
         <img
-          [src]="oldProfilePicture || '/images/profile-placeholder.webp'"
+          [src]="oldProfilePicture() || '/images/profile-placeholder.webp'"
           alt="Altes Profilbild"
           class="img-thumbnail"
           style="width: 150px; height: 150px"
