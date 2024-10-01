@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, OnInit, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { FormService } from '../../../core/services/form.service';
 import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
@@ -73,6 +73,7 @@ export class SessionViewComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private destroyRef: DestroyRef,
     private headerService: HeaderService,
     private trainingSessionService: TrainingSessionService,
@@ -116,6 +117,23 @@ export class SessionViewComponent implements OnInit {
     });
   }
 
+  protected navigateToVersion(version: number) {
+    if (version < 1) {
+      return;
+    }
+
+    if (version > this.trainingSession()!.versions().length) {
+      return;
+    }
+
+    this.router.navigate(['/session/view'], {
+      queryParams: {
+        sessionId: this.sessionId(),
+        version: version,
+      },
+    });
+  }
+
   /**
    * Sets the exercise metadata for the current training session.
    *
@@ -146,8 +164,16 @@ export class SessionViewComponent implements OnInit {
       buttons: [
         {
           icon: IconName.MORE_VERTICAL,
+          options: [{ label: 'Trainieren', icon: IconName.Activity, callback: this.startNewSesson.bind(this) }],
         },
       ],
+    });
+  }
+
+  private startNewSesson() {
+    console.log('start new session');
+    this.trainingSessionService.startNewTrainingSession(this.sessionId()).subscribe((response) => {
+      this.navigateToVersion(response.version);
     });
   }
 

@@ -75,7 +75,7 @@ trainingSessionRouter.delete(
  * @description Updates specific data of an existing session.
  * @route {PATCH} /id
  */
-trainingSessionRouter.patch(
+trainingSessionRouter.post(
   '/start/:id',
   authService.authenticationMiddleware,
   trainingSessionController.startTrainingSession

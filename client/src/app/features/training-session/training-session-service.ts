@@ -65,7 +65,7 @@ export class TrainingSessionService {
    * Starts a new training session by its ID.
    */
   startNewTrainingSession(id: string): Observable<StartTrainingVersionDto> {
-    return this.httpService.delete(`/training-session/start/${id}`);
+    return this.httpService.post(`/training-session/start/${id}`);
   }
 
   /**

@@ -158,11 +158,6 @@ export async function startTrainingSession(req: Request, res: Response): Promise
     return res.status(404).json({ error: 'Training Session nicht gefunden' });
   }
 
-  // Erste Session neu erstellen
-  if (trainingSession.versions.length === 0) {
-    return res.status(200).json({ trainingSessionTemplate: undefined, version: 1 });
-  }
-
   const trainingSessionTemplate = prepareTrainingSessionTemplate(trainingSession);
   trainingSession.versions.push(trainingSessionTemplate);
 
