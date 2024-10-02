@@ -9,6 +9,8 @@ import { LoginDto } from '../interfaces/loginDto.js';
 import { RegisterUserDto } from '../interfaces/registerUserDto.js';
 
 import logger from '../config/logger.js';
+import { User } from '../models/collections/user/user.js';
+import { MongoGenericDAO } from '../models/dao/mongo-generic.dao.js';
 import userManager from '../service/userManager.js';
 
 /**
@@ -25,7 +27,7 @@ export async function getAuthState(req: Request, res: Response): Promise<Respons
  * If the login is successful, a token is created and set in the response.
  */
 export async function login(req: Request, res: Response) {
-  const userDAO = userService.getUserGenericDAO(req);
+  const userDAO = req.app.locals.userDAO as MongoGenericDAO<User>;
 
   const { email, password }: LoginDto = req.body;
 
@@ -74,7 +76,7 @@ export function logOut(req: Request, res: Response): void {
  * Registers a new user and creates a token after successful registration.
  */
 export async function register(req: Request, res: Response): Promise<Response> {
-  const userDAO = userService.getUserGenericDAO(req);
+  const userDAO = req.app.locals.userDAO as MongoGenericDAO<User>;
   const { username, email, password, confirmPassword }: RegisterUserDto = req.body;
 
   if (password !== confirmPassword) {
@@ -102,7 +104,7 @@ export async function register(req: Request, res: Response): Promise<Response> {
  * Sends a password reset email to the user.
  */
 export async function sendPasswordResetEmail(req: Request, res: Response) {
-  const userDAO = userService.getUserGenericDAO(req);
+  const userDAO = req.app.locals.userDAO as MongoGenericDAO<User>;
 
   const email = req.body.email;
 

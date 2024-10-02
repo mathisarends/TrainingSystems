@@ -1,5 +1,4 @@
 import bcrypt from 'bcryptjs';
-import { Request } from 'express';
 import { OAuth2Client } from 'google-auth-library';
 import { User } from '../models/collections/user/user.js';
 import { MongoGenericDAO } from '../models/dao/mongo-generic.dao.js';
@@ -21,10 +20,6 @@ import { encrypt } from '../utils/cryption.js';
 import { NewUserParams } from './new-user-params.js';
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
-export function getUserGenericDAO(req: Request): MongoGenericDAO<User> {
-  return req.app.locals.userDAO as MongoGenericDAO<User>;
-}
 
 export async function loginOAuth2User(userDAO: MongoGenericDAO<User>, token: string): Promise<User> {
   const ticket = await googleClient.verifyIdToken({

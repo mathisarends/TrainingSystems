@@ -29,6 +29,10 @@ class UserManager {
   async update(user: User): Promise<void> {
     await this.userDAO.update(user);
   }
+
+  async deleteById(userId: string): Promise<void> {
+    await this.userDAO.delete(userId);
+  }
 }
 
 export default new UserManager();
