@@ -45,21 +45,35 @@ export class TrainingPlansComponent implements OnInit {
   @ViewChild(SearchBarComponent) searchBar!: SearchBarComponent;
   protected readonly IconName = IconName;
 
+  /**
+   * Holds the filtered training plans to display.
+   */
   filteredTrainingPlans: WritableSignal<TrainingPlanCardView[]> = signal([]);
 
+  /**
+   * Stores the users search quey for training plans.
+   */
   trainingPlanSearchQuery = signal<string>('');
 
+  /**
+   * Determines if the search bar is collapsed.
+   */
   isSearchbarCollapsed = signal<boolean>(true);
 
+  /**
+   * Toggling drag mode for training plans.
+   */
   isDragMode = signal(false);
 
+  /**
+   * Signal indicating whether the data is still loading.
+   */
   isLoading = signal(true);
 
   columnClass!: string;
 
   constructor(
-    protected trainingPlanService: TrainingPlanService,
-
+    private trainingPlanService: TrainingPlanService,
     private modalService: ModalService,
     private headerService: HeaderService,
     private keyboardService: KeyboardService,

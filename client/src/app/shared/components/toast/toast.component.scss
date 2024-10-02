@@ -1,7 +1,7 @@
-.toast-container {
+:host {
   position: fixed;
-  bottom: 4.75rem;
   left: 50%;
+  bottom: 6rem;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
@@ -70,4 +70,10 @@
 
 .close-icon-container:hover {
   opacity: 1;
+}
+
+@media screen and (max-width: 768px) {
+  :host {
+    bottom: 4.75rem;
+  }
 }
