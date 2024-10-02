@@ -22,6 +22,8 @@ export class NavBarComponent implements OnInit {
    */
   protected notificationCount = computed(() => this.notificationService.trainingDayNotifications().length);
 
+  // Routen ideen heir allowed routes ergänzen
+
   /**
    * Array of navigation items defining the label, route, and associated icon for each navigation button.
    */
@@ -55,6 +57,10 @@ export class NavBarComponent implements OnInit {
         let currentRoute = this.routeWatcherService.getCurrentRouteSignal()();
 
         if (!this.isRouteRepresentedInNavbar(currentRoute)) {
+          if (this.isLoginSucessRoute(currentRoute)) {
+            currentRoute = '/';
+          }
+
           if (this.isTrainingPlanUuidInRoute(currentRoute)) {
             currentRoute = '';
           } else {
@@ -108,5 +114,9 @@ export class NavBarComponent implements OnInit {
 
   private isActivityRoute(route: string) {
     return !route;
+  }
+
+  private isLoginSucessRoute(url: string): boolean {
+    return url.includes('?login=success');
   }
 }

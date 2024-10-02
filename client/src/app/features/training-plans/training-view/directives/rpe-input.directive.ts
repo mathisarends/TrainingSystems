@@ -13,10 +13,6 @@ import { AbstractDoubleClickDirective } from './abstract-double-click.directive'
   standalone: true,
 })
 export class RpeInputDirective extends AbstractDoubleClickDirective {
-  /**
-   * The minimum and maximum allowable RPE (Rate of Perceived Exertion) values.
-   * Used to validate that input falls within the valid range (5 to 10).
-   */
   private readonly MIN_RPE = 5;
   private readonly MAX_RPE = 10;
 
@@ -25,24 +21,19 @@ export class RpeInputDirective extends AbstractDoubleClickDirective {
     protected override formService: FormService,
     protected override exerciseTableRowService: ExerciseTableRowService,
     protected override elementRef: ElementRef,
-
     private estMaxService: EstMaxService,
   ) {
     super(autoSaveService, formService, exerciseTableRowService, elementRef);
   }
 
-  /**
-   * Handles the change event of the input element.
-   * Validates the RPE input and triggers the EstMaxService if necessary.
-   */
   @HostListener('change', ['$event'])
   override onChange(event: Event): void {
     const rpeValues = this.parseInputValues();
 
     if (rpeValues.length === 1) {
-      this.validateSingleRPE(this.inputElement);
+      this.updateSingleRPE(rpeValues[0]);
     } else {
-      this.validateMultipleRPEs(this.inputElement, rpeValues);
+      this.updateMultipleRPEs(rpeValues);
     }
 
     if (this.isActualRpeInput()) {
@@ -53,39 +44,38 @@ export class RpeInputDirective extends AbstractDoubleClickDirective {
   }
 
   /**
-   * Validates a single RPE value to ensure it falls within the acceptable range.
-   * Dispatches a change event to reflect the updates.
+   * Validates and updates a single RPE value.
    */
-  private validateSingleRPE(rpeInput: HTMLInputElement): void {
-    const rpe = Number(this.inputElement.value);
+  private updateSingleRPE(rpe: number): void {
+    const validRPE = this.validateRPE(rpe);
+    this.updateInputValue(validRPE);
+  }
 
-    if (this.isValidRPE(rpe)) {
-      rpeInput.value = rpe.toString();
-      return;
-    }
+  /**
+   * Validates and updates multiple RPE values.
+   */
+  private updateMultipleRPEs(rpeValues: number[]): void {
+    const setInput = this.exerciseTableRowService.getSetInputByElement(this.inputElement);
 
-    if (rpe > this.MAX_RPE) {
-      rpeInput.value = this.MAX_RPE.toString();
-    } else {
-      rpeInput.value = this.MIN_RPE.toString();
+    if (rpeValues.length === Number(setInput.value)) {
+      const averageRPE = this.getRoundedAverageWithStep(0.5);
+      const validRPE = this.validateRPE(averageRPE);
+      this.updateInputValue(validRPE);
     }
   }
 
   /**
-   * Validates multiple RPE values and updates the corresponding elements.
-   * Calculates the average RPE and updates the input accordingly.
+   * Updates the input element's value.
    */
-  private validateMultipleRPEs(rpeInput: HTMLInputElement, numbers: number[]): void {
-    const setInput = this.exerciseTableRowService.getSetInputByElement(rpeInput);
-
-    if (numbers.length === Number(setInput.value)) {
-      this.inputElement.value = this.getRoundedAverageWithStep(0.5).toString();
-      this.validateSingleRPE(rpeInput);
-    }
+  private updateInputValue(value: number): void {
+    this.inputElement.value = value.toString();
   }
 
-  private isValidRPE(rpe: number): boolean {
-    return rpe >= this.MIN_RPE && rpe <= this.MAX_RPE;
+  /**
+   * Validates an RPE value to ensure it falls within the acceptable range.
+   */
+  private validateRPE(rpe: number): number {
+    return Math.min(Math.max(rpe, this.MIN_RPE), this.MAX_RPE);
   }
 
   /**
