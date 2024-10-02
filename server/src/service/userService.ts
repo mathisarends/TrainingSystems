@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { OAuth2Client } from 'google-auth-library';
 import { User } from '../models/collections/user/user.js';
 import { MongoGenericDAO } from '../models/dao/mongo-generic.dao.js';
@@ -21,17 +21,6 @@ import { encrypt } from '../utils/cryption.js';
 import { NewUserParams } from './new-user-params.js';
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
-export async function getUser(req: Request, res: Response): Promise<User> {
-  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
-  const userClaimsSet = res.locals.user;
-
-  const user = await userDAO.findOne({ id: userClaimsSet.id });
-  if (!user) {
-    throw new Error('Benutzer nicht gefunden');
-  }
-  return user;
-}
 
 export function getUserGenericDAO(req: Request): MongoGenericDAO<User> {
   return req.app.locals.userDAO as MongoGenericDAO<User>;

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { GymTicketDto } from '../interfaces/gymTicketDto.js';
+import userManager from '../service/userManager.js';
 import * as userService from '../service/userService.js';
 import { decrypt, encrypt } from '../utils/cryption.js';
 
@@ -7,7 +8,7 @@ import { decrypt, encrypt } from '../utils/cryption.js';
  * Retrieves the user's gym ticket from the database and decrypts it.
  */
 export async function getGymTicket(req: Request, res: Response): Promise<Response> {
-  const user = await userService.getUser(req, res);
+  const user = await userManager.getUser(req, res);
 
   const decryptedGymTicket = decrypt(user.gymtTicket);
 
@@ -18,8 +19,8 @@ export async function getGymTicket(req: Request, res: Response): Promise<Respons
  * Encrypts and uploads a new gym ticket for the user.
  */
 export async function uploadGymTicket(req: Request, res: Response): Promise<Response> {
+  const user = await userManager.getUser(req, res);
   const userDAO = userService.getUserGenericDAO(req);
-  const user = await userService.getUser(req, res);
 
   const body: GymTicketDto = req.body;
 

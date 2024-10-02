@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { TrainingDay } from '../../models/training/trainingDay.js';
 import * as trainingService from '../../service/trainingService.js';
-import { getUser, getUserGenericDAO } from '../../service/userService.js';
+import { getUserGenericDAO } from '../../service/userService.js';
 
 import { Exercise } from '../../models/training/exercise.js';
 import { TrainingPlan } from '../../models/training/trainingPlan.js';
@@ -17,6 +17,7 @@ import { TrainingDayDataLocator } from './training-day-data-locator.js';
 
 import { ValidationError } from '../../errors/validationError.js';
 import trainingPlanManager from '../../service/trainingPlanManager.js';
+import userManager from '../../service/userManager.js';
 import trainingSessionManager from './training-session-manager.js';
 
 /**
@@ -76,7 +77,7 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
 
   const changedData: ApiData = req.body;
 
-  const user = await getUser(req, res);
+  const user = await userManager.getUser(req, res);
 
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
   trainingPlan.lastUpdated = new Date();
@@ -112,12 +113,10 @@ function isTrainingActivitySignal(fieldName: string, fieldValue: string): boolea
  */
 export async function getLatestTrainingDay(req: Request, res: Response) {
   const trainingPlanId = req.params.id;
-
-  const user = await getUser(req, res);
-
-  const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
+  const trainingPlan = await trainingPlanManager.findTrainingPlanById(req, res, trainingPlanId);
 
   const { weekIndex, dayIndex } = findLatestTrainingDayWithWeight(trainingPlan);
+
   return res.status(200).json({ weekIndex, dayIndex });
 }
 

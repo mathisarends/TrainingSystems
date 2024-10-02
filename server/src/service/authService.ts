@@ -13,14 +13,13 @@ class AuthService {
   authenticationMiddleware = (req: Request, res: Response, next: NextFunction) => {
     if (res.locals.user) {
       next();
-    } else {
-      const token = req.cookies['jwt-token'] || '';
-      try {
-        res.locals.user = this.verifyToken(token);
-        next();
-      } catch {
-        res.status(401).json({ error: 'Invalid jwt ' });
-      }
+    }
+    const token = req.cookies['jwt-token'] || '';
+    try {
+      res.locals.user = this.verifyToken(token);
+      next();
+    } catch {
+      res.status(401).json({ error: 'Invalid jwt ' });
     }
   };
 

@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import { MongoGenericDAO } from '../models/dao/mongo-generic.dao.js';
-import { User } from '../models/collections/user/user.js';
 import { Friendship, InviteStatus } from '../models/collections/friendShip.js';
-import { getUser } from '../service/userService.js';
+import { User } from '../models/collections/user/user.js';
+import { MongoGenericDAO } from '../models/dao/mongo-generic.dao.js';
+import userManager from '../service/userManager.js';
 
 export async function getAllFriends(req: Request, res: Response) {
-  const user = await getUser(req, res);
+  const user = await userManager.getUser(req, res);
 
   const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
   const friendshipDAO: MongoGenericDAO<Friendship> = req.app.locals.friendshipDAO;
@@ -41,7 +41,7 @@ export async function getAllFriends(req: Request, res: Response) {
 }
 
 export async function sendFriendRequest(req: Request, res: Response) {
-  const user = await getUser(req, res);
+  const user = await userManager.getUser(req, res);
 
   const friendshipDAO: MongoGenericDAO<Friendship> = req.app.locals.friendshipDAO;
 
@@ -69,7 +69,7 @@ export async function sendFriendRequest(req: Request, res: Response) {
 }
 
 export async function deleteFriend(req: Request, res: Response) {
-  const user = await getUser(req, res);
+  const user = await userManager.getUser(req, res);
 
   const friendshipDAO: MongoGenericDAO<Friendship> = req.app.locals.friendshipDAO;
 
@@ -90,7 +90,7 @@ export async function deleteFriend(req: Request, res: Response) {
 }
 
 export async function acceptFriendRequest(req: Request, res: Response) {
-  const user = await getUser(req, res);
+  const user = await userManager.getUser(req, res);
 
   const friendshipDAO: MongoGenericDAO<Friendship> = req.app.locals.friendshipDAO;
 
@@ -110,7 +110,7 @@ export async function acceptFriendRequest(req: Request, res: Response) {
 }
 
 export async function getAllFriendRequests(req: Request, res: Response) {
-  const user = await getUser(req, res);
+  const user = await userManager.getUser(req, res);
 
   const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
   const friendshipDAO: MongoGenericDAO<Friendship> = req.app.locals.friendshipDAO;
@@ -135,7 +135,7 @@ export async function getAllFriendRequests(req: Request, res: Response) {
 }
 
 export async function getFriendSuggestions(req: Request, res: Response) {
-  const user = await getUser(req, res);
+  const user = await userManager.getUser(req, res);
 
   const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
   const friendshipDAO: MongoGenericDAO<Friendship> = req.app.locals.friendshipDAO;

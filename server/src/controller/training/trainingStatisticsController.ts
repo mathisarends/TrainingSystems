@@ -7,12 +7,12 @@ import { Exercise } from '../../models/training/exercise.js';
 import { TrainingDay } from '../../models/training/trainingDay.js';
 import { TrainingPlan } from '../../models/training/trainingPlan.js';
 import * as trainingService from '../../service/trainingService.js';
-import { getUser } from '../../service/userService.js';
 import { mapToExerciseCategory } from '../../utils/exerciseUtils.js';
 
 import _ from 'lodash';
 import { AverageTrainingDayDurationDto } from '../../interfaces/averageTrainingDayDurationDto.js';
 import { LineChartDataDTO } from '../../interfaces/lineChartDataDto.js';
+import userManager from '../../service/userManager.js';
 const { capitalize } = _;
 
 /**
@@ -23,7 +23,7 @@ export async function updateViewedCategories(req: Request, res: Response): Promi
   const trainingPlanId = req.params.id;
   const exerciseCategories = (req.query.exercises as string).split(',');
 
-  const user = await getUser(req, res);
+  const user = await userManager.getUser(req, res);
 
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
@@ -40,7 +40,7 @@ export async function updateViewedCategories(req: Request, res: Response): Promi
 export async function getViewedCategories(req: Request, res: Response): Promise<void> {
   const trainingPlanId = req.params.id;
 
-  const user = await getUser(req, res);
+  const user = await userManager.getUser(req, res);
 
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
@@ -54,7 +54,7 @@ export async function getSetsForCategories(req: Request, res: Response): Promise
   const trainingPlanId = req.params.id;
   const exerciseCategories = (req.query.exercises as string).split(',');
 
-  const user = await getUser(req, res);
+  const user = await userManager.getUser(req, res);
 
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
@@ -77,7 +77,7 @@ export async function getTonnageForCategories(req: Request, res: Response): Prom
   const trainingPlanId = req.params.id;
   const exerciseCategories = (req.query.exercises as string).split(',');
 
-  const user = await getUser(req, res);
+  const user = await userManager.getUser(req, res);
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
   const responseData: LineChartDataDTO = {};
@@ -96,7 +96,7 @@ export async function getTonnageForCategories(req: Request, res: Response): Prom
 export async function getAverageSessionDurationDataForTrainingPlanDay(req: Request, res: Response): Promise<Response> {
   const trainingPlanId = req.params.id;
 
-  const user = await getUser(req, res);
+  const user = await userManager.getUser(req, res);
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
   const trainingDaysWithDuration = trainingPlan.trainingWeeks
@@ -160,7 +160,7 @@ export async function getDrilldownForCategory(req: Request, res: Response): Prom
 
   const mappedCategory = mapToExerciseCategory(category);
 
-  const user = await getUser(req, res);
+  const user = await userManager.getUser(req, res);
 
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
@@ -207,7 +207,7 @@ export async function getPerformanceCharts(req: Request, res: Response): Promise
 
   const validExercises = mappedExerciseCategories.filter(exercise => mainExercises.includes(exercise));
 
-  const user = await getUser(req, res);
+  const user = await userManager.getUser(req, res);
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
   const performanceData = validExercises.reduce((result, category) => {

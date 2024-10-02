@@ -9,13 +9,14 @@ import { LoginDto } from '../interfaces/loginDto.js';
 import { RegisterUserDto } from '../interfaces/registerUserDto.js';
 
 import logger from '../config/logger.js';
+import userManager from '../service/userManager.js';
 
 /**
  * Verifies the user's authentication state by checking the token.
  */
 export async function getAuthState(req: Request, res: Response): Promise<Response> {
   logger.info('GET Request on / route');
-  await userService.getUser(req, res);
+  await userManager.getUser(req, res);
   return res.status(200).json({ message: 'auth verified' });
 }
 
@@ -139,7 +140,7 @@ export async function authenticatePasswordResetPage(req: Request, res: Response)
 
   res.locals.user = authService.verifyToken(token);
 
-  const user = await userService.getUser(req, res);
+  const user = await userManager.getUser(req, res);
 
   if (user.passwordResetToken !== token) {
     return res.status(403).json({ error: 'Invalid password resetToken' });
@@ -156,7 +157,9 @@ export async function resetPassword(req: Request, res: Response): Promise<Respon
   const token = req.params.token;
   res.locals.user = authService.verifyToken(token);
 
-  const user = await userService.getUser(req, res);
+  const user = await userManager.getUser(req, res);
+
+  await userManager.getUser(req, res);
   const userDAO = userService.getUserGenericDAO(req);
 
   if (req.body.password !== req.body.repeatPassword) {

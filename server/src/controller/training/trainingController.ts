@@ -13,11 +13,12 @@ import {
   findTrainingPlanById,
   handleWeekDifference
 } from '../../service/trainingService.js';
-import { getUser, getUserGenericDAO } from '../../service/userService.js';
+import { getUserGenericDAO } from '../../service/userService.js';
 
 import _ from 'lodash';
 import { TrainingPlanEditViewDto } from '../../models/dto/training-plan-edit-view-dto.js';
 
+import userManager from '../../service/userManager.js';
 import { sendMailForTrainingDaySummary } from './training-summary/training-day-summary.js';
 import { TrainingSummary } from './training-summary/training-summary.js';
 
@@ -26,7 +27,7 @@ import { TrainingSummary } from './training-summary/training-summary.js';
  * The result is intended to be a lightweight representation of the user's training plans.
  */
 export async function getPlans(req: Request, res: Response): Promise<void> {
-  const user = await getUser(req, res);
+  const user = await userManager.getUser(req, res);
 
   const trainingPlanCards: TrainingPlanCardViewDto[] = user.trainingPlans.map((plan: TrainingPlan) => ({
     ...TrainingPlanDtoMapper.getCardView(plan),
@@ -42,7 +43,7 @@ export async function getPlans(req: Request, res: Response): Promise<void> {
  * Retrieves a mapping of training plan IDs and titles for the current user.
  */
 export async function getPlansTitleIdMapping(req: Request, res: Response): Promise<Response> {
-  const user = await getUser(req, res);
+  const user = await userManager.getUser(req, res);
 
   const trainingPlanMappings = user.trainingPlans.map(trainingPlan => {
     return {
@@ -55,7 +56,7 @@ export async function getPlansTitleIdMapping(req: Request, res: Response): Promi
 }
 
 export async function getMostRecentTrainingPlanLink(req: Request, res: Response): Promise<Response> {
-  const user = await getUser(req, res);
+  const user = await userManager.getUser(req, res);
 
   const baseURL = process.env.NODE_ENV === 'development' ? process.env.DEV_BASE_URL : process.env.PROD_BASE_URL;
 
@@ -74,7 +75,7 @@ export async function getMostRecentTrainingPlanLink(req: Request, res: Response)
 }
 
 export async function updateTrainingPlanOrder(req: Request, res: Response): Promise<Response> {
-  const user = await getUser(req, res);
+  const user = await userManager.getUser(req, res);
   const userDAO = getUserGenericDAO(req);
 
   const { updatedOrder } = req.body;
@@ -103,7 +104,7 @@ export async function updateTrainingPlanOrder(req: Request, res: Response): Prom
  * This plan includes placeholders for exercises based on the provided frequency and number of weeks.
  */
 export async function createPlan(req: Request, res: Response): Promise<void> {
-  const user = await getUser(req, res);
+  const user = await userManager.getUser(req, res);
   const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
 
   const trainingPlanEditDto = req.body as TrainingPlanEditViewDto;
@@ -148,7 +149,7 @@ export async function deletePlan(req: Request, res: Response): Promise<void> {
   const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
   const planId = req.params.planId;
 
-  const user = await getUser(req, res);
+  const user = await userManager.getUser(req, res);
   const trainingPlanIndex = trainingService.findTrainingPlanIndexById(user.trainingPlans, planId);
 
   user.trainingPlans.splice(trainingPlanIndex, 1);
@@ -164,7 +165,7 @@ export async function deletePlan(req: Request, res: Response): Promise<void> {
 export async function getPlanForEdit(req: Request, res: Response): Promise<void> {
   const planId = req.params.id;
 
-  const user = await getUser(req, res);
+  const user = await userManager.getUser(req, res);
 
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, planId);
 
@@ -182,7 +183,7 @@ export async function updatePlan(req: Request, res: Response): Promise<void> {
   const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
   const planId = req.params.id;
 
-  const user = await getUser(req, res);
+  const user = await userManager.getUser(req, res);
 
   const trainingPlan = findTrainingPlanById(user.trainingPlans, planId);
 
@@ -263,7 +264,7 @@ export async function autoProgressionForTrainingPlan(req: Request, res: Response
   const rpeIncrease = parseFloat(req.query.rpeProgression as string) || 0.5; // Default to 0.5 if not provided
 
   const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
-  const user = await getUser(req, res);
+  const user = await userManager.getUser(req, res);
 
   const trainingPlan = findTrainingPlanById(user.trainingPlans, id);
 
@@ -285,7 +286,7 @@ export async function autoProgressionForTrainingPlan(req: Request, res: Response
  */
 export async function getTrainingPlanTitle(req: Request, res: Response): Promise<void> {
   const id = req.params.id;
-  const user = await getUser(req, res);
+  const user = await userManager.getUser(req, res);
   const trainingPlan = findTrainingPlanById(user.trainingPlans, id);
 
   res.status(200).json(trainingPlan.title);

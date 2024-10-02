@@ -11,6 +11,7 @@ import _ from 'lodash';
 import { ApiData } from '../../models/apiData.js';
 import { Exercise } from '../../models/training/exercise.js';
 import { createExerciseObject, updateExercise } from '../../service/trainingService.js';
+import userManager from '../../service/userManager.js';
 
 /**
  * Retrieves a specific training session by its ID.
@@ -18,8 +19,7 @@ import { createExerciseObject, updateExercise } from '../../service/trainingServ
 export async function getTrainingSessionById(req: Request, res: Response): Promise<Response> {
   const trainingSessionId = req.params.id;
 
-  const user = await userService.getUser(req, res);
-
+  const user = await userManager.getUser(req, res);
   const trainingSession = user.trainingSessions.find(session => session.id === trainingSessionId);
 
   if (!trainingSession) {
@@ -42,7 +42,7 @@ export async function getTrainingSessionById(req: Request, res: Response): Promi
  * Retrieves a summarized view of all training sessions in a card format.
  */
 export async function getTrainingSessionCardViews(req: Request, res: Response): Promise<Response> {
-  const user = await userService.getUser(req, res);
+  const user = await userManager.getUser(req, res);
 
   if (!user.trainingSessions) {
     user.trainingSessions = [];
@@ -65,7 +65,7 @@ export async function getTrainingSessionCardViews(req: Request, res: Response): 
  * Creates a new training session for the user.
  */
 export async function createTrainingSession(req: Request, res: Response): Promise<Response> {
-  const user = await userService.getUser(req, res);
+  const user = await userManager.getUser(req, res);
   const userDAO = userService.getUserGenericDAO(req);
 
   const trainingSessionCreateDto = req.body as TrainingSessionMetaDataDto;
@@ -84,7 +84,6 @@ export async function createTrainingSession(req: Request, res: Response): Promis
   user.trainingSessions.unshift(newTrainingSession);
 
   await userDAO.update(user);
-  console.log('user sessions', user.trainingSessions);
 
   return res.status(200).json({ message: 'Erfolgreich erstellt ' });
 }
@@ -101,7 +100,8 @@ function createPlaceholderVersion(trainingSession: TrainingSession): void {
  */
 export async function editTrainingSesssion(req: Request, res: Response): Promise<Response> {
   const trainingSessionId = req.params.id;
-  const user = await userService.getUser(req, res);
+  const user = await userManager.getUser(req, res);
+
   const userDAO = userService.getUserGenericDAO(req);
 
   const trainingSessionEditDto = req.body as TrainingSessionMetaDataDto;
@@ -127,7 +127,7 @@ export async function editTrainingSesssion(req: Request, res: Response): Promise
  */
 export async function deleteTrainingSession(req: Request, res: Response): Promise<Response> {
   const trainingSessionId = req.params.id;
-  const user = await userService.getUser(req, res);
+  const user = await userManager.getUser(req, res);
   const userDAO = userService.getUserGenericDAO(req);
 
   const sessionIndex = user.trainingSessions.findIndex(session => session.id === trainingSessionId);
@@ -149,7 +149,7 @@ export async function deleteTrainingSession(req: Request, res: Response): Promis
 export async function startTrainingSession(req: Request, res: Response): Promise<Response> {
   const trainingSessionId = req.params.id;
 
-  const user = await userService.getUser(req, res);
+  const user = await userManager.getUser(req, res);
   const userDAO = userService.getUserGenericDAO(req);
 
   const trainingSession = user.trainingSessions.find(session => session.id === trainingSessionId);
@@ -200,7 +200,7 @@ export async function getTrainingSessionByVersion(req: Request, res: Response): 
     return res.status(404).json({ error: 'Ungülitger Wert für die Version' });
   }
 
-  const user = await userService.getUser(req, res);
+  const user = await userManager.getUser(req, res);
 
   const trainingSession = user.trainingSessions.find(session => session.id === trainingSessionId);
 
@@ -218,7 +218,7 @@ export async function getTrainingSessionByVersion(req: Request, res: Response): 
 export async function getLatestVersionOfSession(req: Request, res: Response): Promise<Response> {
   const trainingSessionId = req.params.id;
 
-  const user = await userService.getUser(req, res);
+  const user = await userManager.getUser(req, res);
 
   const trainingSession = user.trainingSessions.find(session => session.id === trainingSessionId);
 
@@ -239,7 +239,7 @@ export async function updateTrainingSessionVersion(req: Request, res: Response):
     return res.status(404).json({ error: 'Ungülitger Wert für die Version' });
   }
 
-  const user = await userService.getUser(req, res);
+  const user = await userManager.getUser(req, res);
   const userDAO = userService.getUserGenericDAO(req);
 
   const trainingSession = user.trainingSessions.find(session => session.id === trainingSessionId);
