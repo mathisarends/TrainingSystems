@@ -1,6 +1,8 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
 
 import logger from '../config/logger.js';
+import { NotFoundError } from '../errors/notFoundError.js';
+import { ValidationError } from '../errors/validationError.js';
 
 /**
  * Central error handling middleware.
@@ -10,6 +12,11 @@ import logger from '../config/logger.js';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
   logger.error(`Error occurred on ${req.method} ${req.url}: ${err.message}`);
+
+  if (err instanceof NotFoundError || err instanceof ValidationError) {
+    return res.status(err.statusCode).json({ message: err.message });
+  }
+
   res.status(500).json({ error: 'Interner Serverfehler' });
 }
 
