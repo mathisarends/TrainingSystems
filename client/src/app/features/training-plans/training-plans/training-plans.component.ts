@@ -70,8 +70,6 @@ export class TrainingPlansComponent implements OnInit {
    */
   isLoading = signal(true);
 
-  columnClass!: string;
-
   constructor(
     private trainingPlanService: TrainingPlanService,
     private modalService: ModalService,
@@ -93,13 +91,6 @@ export class TrainingPlansComponent implements OnInit {
     this.trainingPlanService.trainingPlansChanged$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.loadTrainingPlans();
     });
-
-    effect(
-      () => {
-        this.updateColumnClass(this.filteredTrainingPlans().length);
-      },
-      { allowSignalWrites: true, injector: this.injector },
-    );
 
     this.setupKeyBoardEventListeners();
 
@@ -229,26 +220,5 @@ export class TrainingPlansComponent implements OnInit {
         event.preventDefault();
         this.toggleSearchBarVisibility();
       });
-  }
-
-  /**
-   * Updates the column class based on the number of training plans.
-   * @param amountOfPlans - The number of training plans.
-   */
-  private updateColumnClass(amountOfPlans: number): void {
-    switch (true) {
-      case amountOfPlans === 1:
-        this.columnClass = 'col-lg-12 col-md-12 col-sm-12';
-        break;
-      case amountOfPlans % 3 === 0:
-        this.columnClass = 'col-lg-4 col-md-6 col-sm-12';
-        break;
-      case amountOfPlans % 2 === 0:
-        this.columnClass = 'col-lg-6 col-md-6 col-sm-12';
-        break;
-      default:
-        this.columnClass = 'col-lg-4 col-md-6 col-sm-12';
-        break;
-    }
   }
 }

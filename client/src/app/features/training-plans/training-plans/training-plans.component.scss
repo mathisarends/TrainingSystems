@@ -28,7 +28,19 @@
   border-radius: 8px;
 }
 
+.training-plan-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+  max-width: 100%;
+  margin: 0 auto;
+}
+
 @media screen and (max-width: 768px) {
+  .training-plan-grid {
+    grid-template-columns: 1fr;
+  }
+
   .container.heading-container {
     padding-left: 0;
     padding-right: 0;

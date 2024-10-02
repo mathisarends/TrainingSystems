@@ -8,15 +8,17 @@
       @if (filteredTrainingPlans().length === 0) {
         <app-alert alertText="Keine deiner bestehenden Trainingpläne passen zu dieser Suchanfrage!" />
       } @else {
-        @for (trainingPlan of filteredTrainingPlans(); track trainingPlan.id) {
-          <div class="training-plan-card-container" [ngClass]="columnClass" cdkDrag>
-            <app-training-plan-card [trainingPlan]="trainingPlan" cdkDragHandle />
-          </div>
-        }
+        <div class="training-plan-grid">
+          @for (trainingPlan of filteredTrainingPlans(); track trainingPlan.id) {
+            <div class="training-plan-card-container" cdkDrag>
+              <app-training-plan-card [trainingPlan]="trainingPlan" cdkDragHandle />
+            </div>
+          }
+        </div>
       }
     } @else {
       @for (k of [1, 2, 3]; track k) {
-        <div [ngClass]="columnClass">
+        <div class="training-plan-grid">
           <app-skeleton-card />
         </div>
       }
@@ -28,15 +30,17 @@
       @if (filteredTrainingPlans().length === 0) {
         <app-alert alertText="Keine deiner bestehenden Trainingpläne passen zu dieser Suchanfrage!" />
       } @else {
-        @for (trainingPlan of filteredTrainingPlans(); track trainingPlan.id) {
-          <div class="training-plan-card-container" [ngClass]="columnClass">
-            <app-training-plan-card [trainingPlan]="trainingPlan" />
-          </div>
-        }
+        <div class="training-plan-grid">
+          @for (trainingPlan of filteredTrainingPlans(); track trainingPlan.id) {
+            <div class="training-plan-card-container">
+              <app-training-plan-card [trainingPlan]="trainingPlan" />
+            </div>
+          }
+        </div>
       }
     } @else {
       @for (k of [1, 2, 3]; track k) {
-        <div [ngClass]="columnClass">
+        <div class="training-plan-grid">
           <app-skeleton-card />
         </div>
       }
