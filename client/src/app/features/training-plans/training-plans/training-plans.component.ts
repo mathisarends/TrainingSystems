@@ -1,8 +1,7 @@
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, effect, Injector, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, DestroyRef, effect, Injector, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { ModalSize } from '../../../core/services/modal/modalSize';
 import { toggleCollapseAnimation } from '../../../shared/animations/toggle-collapse';
@@ -46,28 +45,23 @@ export class TrainingPlansComponent implements OnInit {
   @ViewChild(SearchBarComponent) searchBar!: SearchBarComponent;
   protected readonly IconName = IconName;
 
-  /**
-   * Observable for fetching the training plans from the service
-   */
-  trainingPlans$!: Observable<TrainingPlanCardView[]>;
-
-  /**
-   * BehaviorSubject for managing and emitting the filtered list of training plans.
-   */
-  filteredTrainingPlans$ = new BehaviorSubject<TrainingPlanCardView[] | null>(null);
-
-  columnClass!: string;
+  filteredTrainingPlans: WritableSignal<TrainingPlanCardView[]> = signal([]);
 
   trainingPlanSearchQuery = signal<string>('');
 
   isSearchbarCollapsed = signal<boolean>(true);
 
-  isDragMode = signal<boolean>(false);
+  isDragMode = signal(false);
+
+  isLoading = signal(true);
+
+  columnClass!: string;
 
   constructor(
+    protected trainingPlanService: TrainingPlanService,
+
     private modalService: ModalService,
     private headerService: HeaderService,
-    private trainingPlanService: TrainingPlanService,
     private keyboardService: KeyboardService,
     private injector: Injector,
     private destroyRef: DestroyRef,
@@ -86,11 +80,12 @@ export class TrainingPlansComponent implements OnInit {
       this.loadTrainingPlans();
     });
 
-    this.filteredTrainingPlans$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((trainingPlans) => {
-      if (trainingPlans) {
-        this.updateColumnClass(trainingPlans.length);
-      }
-    });
+    effect(
+      () => {
+        this.updateColumnClass(this.filteredTrainingPlans().length);
+      },
+      { allowSignalWrites: true, injector: this.injector },
+    );
 
     this.setupKeyBoardEventListeners();
 
@@ -102,13 +97,8 @@ export class TrainingPlansComponent implements OnInit {
    * @param event - The drag-and-drop event that contains the previous and new indices.
    */
   protected updateTrainingPlanOrder(event: CdkDragDrop<TrainingPlanCardView[]>) {
-    if (!this.filteredTrainingPlans$.value) {
-      return;
-    }
-
-    moveItemInArray(this.filteredTrainingPlans$.value, event.previousIndex, event.currentIndex);
-    this.filteredTrainingPlans$.next([...this.filteredTrainingPlans$.value]);
-    const reorderedIds = this.filteredTrainingPlans$.value.map((plan) => plan.id);
+    moveItemInArray(this.filteredTrainingPlans(), event.previousIndex, event.currentIndex);
+    const reorderedIds = this.filteredTrainingPlans().map((plan) => plan.id);
     this.trainingPlanService.reorderTrainingPlans(reorderedIds).subscribe();
   }
 
@@ -117,7 +107,8 @@ export class TrainingPlansComponent implements OnInit {
    */
   protected loadTrainingPlans(): void {
     this.trainingPlanService.loadAndCacheTrainingPlans().subscribe((combinedResults) => {
-      this.filteredTrainingPlans$.next(combinedResults);
+      this.filteredTrainingPlans.set(combinedResults);
+      this.isLoading.set(false);
     });
   }
 
@@ -207,7 +198,7 @@ export class TrainingPlansComponent implements OnInit {
           return matchesSearchQuery;
         });
 
-        this.filteredTrainingPlans$.next(filteredPlans);
+        this.filteredTrainingPlans.set(filteredPlans);
       },
       { injector: this.injector, allowSignalWrites: true },
     );

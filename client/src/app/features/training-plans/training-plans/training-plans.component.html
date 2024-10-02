@@ -4,15 +4,13 @@
 
 @if (isDragMode()) {
   <div class="row" cdkDropList (cdkDropListDropped)="updateTrainingPlanOrder($event)">
-    @if (filteredTrainingPlans$ | async; as filteredTrainingPlans) {
-      @if (filteredTrainingPlans.length === 0) {
+    @if (!isLoading()) {
+      @if (filteredTrainingPlans().length === 0) {
         <app-alert alertText="Keine deiner bestehenden Trainingpläne passen zu dieser Suchanfrage!" />
       } @else {
-        @for (trainingPlan of filteredTrainingPlans; track trainingPlan.id) {
+        @for (trainingPlan of filteredTrainingPlans(); track trainingPlan.id) {
           <div class="training-plan-card-container" [ngClass]="columnClass" cdkDrag>
-            <app-training-plan-card [trainingPlan]="trainingPlan" />
-
-            <app-circular-icon-button [iconSize]="18" cdkDragHandle [icon]="IconName.DRAG" />
+            <app-training-plan-card [trainingPlan]="trainingPlan" cdkDragHandle />
           </div>
         }
       }
@@ -26,11 +24,11 @@
   </div>
 } @else {
   <div class="row">
-    @if (filteredTrainingPlans$ | async; as filteredTrainingPlans) {
-      @if (filteredTrainingPlans.length === 0) {
+    @if (!isLoading()) {
+      @if (filteredTrainingPlans().length === 0) {
         <app-alert alertText="Keine deiner bestehenden Trainingpläne passen zu dieser Suchanfrage!" />
       } @else {
-        @for (trainingPlan of filteredTrainingPlans; track trainingPlan.id) {
+        @for (trainingPlan of filteredTrainingPlans(); track trainingPlan.id) {
           <div class="training-plan-card-container" [ngClass]="columnClass">
             <app-training-plan-card [trainingPlan]="trainingPlan" />
           </div>
