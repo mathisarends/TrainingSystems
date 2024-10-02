@@ -1,7 +1,5 @@
 import { Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { User } from '../../models/collections/user/user.js';
-import { MongoGenericDAO } from '../../models/dao/mongo-generic.dao.js';
 import { TrainingPlanCardViewDto } from '../../models/dto/training-plan-card-view-dto.js';
 import { ExerciseCategoryType } from '../../models/training/exercise-category-type.js';
 import { TrainingPlan } from '../../models/training/trainingPlan.js';
@@ -13,21 +11,18 @@ import {
   findTrainingPlanById,
   handleWeekDifference
 } from '../../service/trainingService.js';
-import { getUserGenericDAO } from '../../service/userService.js';
 
 import _ from 'lodash';
 import { TrainingPlanEditViewDto } from '../../models/dto/training-plan-edit-view-dto.js';
 
 import userManager from '../../service/userManager.js';
-import { sendMailForTrainingDaySummary } from './training-summary/training-day-summary.js';
-import { TrainingSummary } from './training-summary/training-summary.js';
 
 /**
  * Retrieves the list of training plans for the user, summarizing them into card views.
  * The result is intended to be a lightweight representation of the user's training plans.
  */
 export async function getPlans(req: Request, res: Response): Promise<void> {
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
 
   const trainingPlanCards: TrainingPlanCardViewDto[] = user.trainingPlans.map((plan: TrainingPlan) => ({
     ...TrainingPlanDtoMapper.getCardView(plan),
@@ -43,7 +38,7 @@ export async function getPlans(req: Request, res: Response): Promise<void> {
  * Retrieves a mapping of training plan IDs and titles for the current user.
  */
 export async function getPlansTitleIdMapping(req: Request, res: Response): Promise<Response> {
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
 
   const trainingPlanMappings = user.trainingPlans.map(trainingPlan => {
     return {
@@ -56,7 +51,7 @@ export async function getPlansTitleIdMapping(req: Request, res: Response): Promi
 }
 
 export async function getMostRecentTrainingPlanLink(req: Request, res: Response): Promise<Response> {
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
 
   const baseURL = process.env.NODE_ENV === 'development' ? process.env.DEV_BASE_URL : process.env.PROD_BASE_URL;
 
@@ -75,8 +70,7 @@ export async function getMostRecentTrainingPlanLink(req: Request, res: Response)
 }
 
 export async function updateTrainingPlanOrder(req: Request, res: Response): Promise<Response> {
-  const user = await userManager.getUser(req, res);
-  const userDAO = getUserGenericDAO(req);
+  const user = await userManager.getUser(res);
 
   const { updatedOrder } = req.body;
 
@@ -94,7 +88,7 @@ export async function updateTrainingPlanOrder(req: Request, res: Response): Prom
 
   user.trainingPlans = sortedTrainingPlans;
 
-  await userDAO.update(user);
+  await userManager.update(user);
 
   return res.status(200).json({ message: 'Reihenfolge geupdated' });
 }
@@ -104,8 +98,7 @@ export async function updateTrainingPlanOrder(req: Request, res: Response): Prom
  * This plan includes placeholders for exercises based on the provided frequency and number of weeks.
  */
 export async function createPlan(req: Request, res: Response): Promise<void> {
-  const user = await userManager.getUser(req, res);
-  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
+  const user = await userManager.getUser(res);
 
   const trainingPlanEditDto = req.body as TrainingPlanEditViewDto;
 
@@ -136,7 +129,7 @@ export async function createPlan(req: Request, res: Response): Promise<void> {
   };
 
   user.trainingPlans.unshift(newTrainingPlan);
-  await userDAO.update(user);
+  await userManager.update(user);
 
   res.status(200).json({ message: 'Plan erfolgreich erstellt' });
 }
@@ -146,14 +139,13 @@ export async function createPlan(req: Request, res: Response): Promise<void> {
  * This method ensures that the specified plan is removed from the user's data in the database.
  */
 export async function deletePlan(req: Request, res: Response): Promise<void> {
-  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
   const planId = req.params.planId;
 
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
   const trainingPlanIndex = trainingService.findTrainingPlanIndexById(user.trainingPlans, planId);
 
   user.trainingPlans.splice(trainingPlanIndex, 1);
-  await userDAO.update(user);
+  await userManager.update(user);
 
   res.status(201).json({ message: 'Trainingsplan erfolgreich gelöscht' });
 }
@@ -165,7 +157,7 @@ export async function deletePlan(req: Request, res: Response): Promise<void> {
 export async function getPlanForEdit(req: Request, res: Response): Promise<void> {
   const planId = req.params.id;
 
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
 
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, planId);
 
@@ -180,10 +172,9 @@ export async function getPlanForEdit(req: Request, res: Response): Promise<void>
  * number of weeks by either adding or removing weeks from the plan.
  */
 export async function updatePlan(req: Request, res: Response): Promise<void> {
-  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
   const planId = req.params.id;
 
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
 
   const trainingPlan = findTrainingPlanById(user.trainingPlans, planId);
 
@@ -202,55 +193,7 @@ export async function updatePlan(req: Request, res: Response): Promise<void> {
     handleWeekDifference(trainingPlan, difference);
   }
 
-  const latestTrainingPlan = user.trainingPlans.sort((a, b) => {
-    return new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime();
-  })[0];
-
-  const trainingData: TrainingSummary = {
-    id: '1234',
-    trainingPlanTitle: latestTrainingPlan.title,
-    trainingDayDayNumber: 3,
-    trainingDayWeekNumber: 4,
-    endTime: new Date(),
-    startTime: new Date(new Date().getTime() - 90 * 60000),
-    durationInMinutes: 90,
-    trainingDayTonnage: 24000,
-    exercises: [
-      {
-        exercise: 'Squat',
-        category: 'Strength',
-        sets: 4,
-        reps: 8,
-        weight: '100kg',
-        targetRPE: '8',
-        actualRPE: '7',
-        estMax: 135
-      },
-      {
-        exercise: 'Bench Press',
-        category: 'Strength',
-        sets: 3,
-        reps: 10,
-        weight: '75kg',
-        targetRPE: '8',
-        actualRPE: '7',
-        estMax: 100
-      },
-      {
-        exercise: 'Deadlift',
-        category: 'Strength',
-        sets: 3,
-        reps: 6,
-        weight: '120kg',
-        targetRPE: '8',
-        actualRPE: '7'
-      }
-    ]
-  };
-
-  await sendMailForTrainingDaySummary(trainingData, user.email);
-
-  await userDAO.update(user);
+  await userManager.update(user);
   res.status(200).json({ message: 'Trainingsplan erfolgreich aktualisiert' });
 }
 
@@ -263,8 +206,7 @@ export async function autoProgressionForTrainingPlan(req: Request, res: Response
   const planDeload = req.query.deloadWeek === 'true';
   const rpeIncrease = parseFloat(req.query.rpeProgression as string) || 0.5; // Default to 0.5 if not provided
 
-  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
 
   const trainingPlan = findTrainingPlanById(user.trainingPlans, id);
 
@@ -276,7 +218,7 @@ export async function autoProgressionForTrainingPlan(req: Request, res: Response
     }
   });
 
-  await userDAO.update(user);
+  await userManager.update(user);
 
   res.status(200).json('Automatic Progression completed');
 }
@@ -286,7 +228,7 @@ export async function autoProgressionForTrainingPlan(req: Request, res: Response
  */
 export async function getTrainingPlanTitle(req: Request, res: Response): Promise<void> {
   const id = req.params.id;
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
   const trainingPlan = findTrainingPlanById(user.trainingPlans, id);
 
   res.status(200).json(trainingPlan.title);

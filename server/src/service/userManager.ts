@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { NotFoundError } from '../errors/notFoundError.js';
 import { User } from '../models/collections/user/user.js';
 import { MongoGenericDAO } from '../models/dao/mongo-generic.dao';
@@ -14,7 +14,7 @@ class UserManager {
     return this.userDAO;
   }
 
-  async getUser(req: Request, res: Response): Promise<User> {
+  async getUser(res: Response): Promise<User> {
     const userClaimsSet = res.locals.user;
 
     const user = await this.userDAO.findOne({ id: userClaimsSet.id });
@@ -24,6 +24,10 @@ class UserManager {
     }
 
     return user;
+  }
+
+  async update(user: User): Promise<void> {
+    await this.userDAO.update(user);
   }
 }
 

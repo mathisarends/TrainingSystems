@@ -94,8 +94,7 @@ class TrainingSessionManager {
 
       user.trainingDayNotifications.push(trainingDayNotification);
 
-      const userDAO = userManager.getUserGenericDAO();
-      await userDAO.update(user);
+      await userManager.update(user);
 
       const trainingDaySummary: TrainingSummary = {
         trainingPlanTitle: user.trainingPlans[trainingPlanIndex].title,

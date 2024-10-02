@@ -2,7 +2,6 @@ import { format } from 'date-fns';
 import { Request, Response } from 'express';
 import { getTonnagePerTrainingDay } from '../service/trainingService.js';
 import userManager from '../service/userManager.js';
-import * as userService from '../service/userService.js';
 
 // TODO: Dtos hierfür bauen und die Logik entsprechend ein wenig refactoren?
 
@@ -15,7 +14,7 @@ import * as userService from '../service/userService.js';
  * @returns A Promise that resolves to void. Sends a JSON response with the activity map.
  */
 export async function getActivityCalendar(req: Request, res: Response): Promise<void> {
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
   const activityMap = user.trainingPlans
     .flatMap(plan => plan.trainingWeeks)
     .flatMap(week => week.trainingDays)
@@ -39,7 +38,7 @@ export async function getActivityCalendar(req: Request, res: Response): Promise<
  * @returns A Promise that resolves to void. Sends a JSON response with the durations array.
  */
 export async function getRecentTrainingDurations(req: Request, res: Response): Promise<void> {
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
 
   const trainingDurationsWithDate = user.trainingPlans
     .flatMap(plan => plan.trainingWeeks)
@@ -58,7 +57,7 @@ export async function getRecentTrainingDurations(req: Request, res: Response): P
  * Retrieves training day notifications for a user.
  */
 export async function getTrainingDayNotifications(req: Request, res: Response): Promise<Response> {
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
 
   return res.status(200).json(user.trainingDayNotifications);
 }
@@ -69,8 +68,7 @@ export async function getTrainingDayNotifications(req: Request, res: Response): 
 export async function deleteTrainingDayNotification(req: Request, res: Response): Promise<Response> {
   const notificationId = req.params.id;
 
-  const userDAO = userService.getUserGenericDAO(req);
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
 
   const notificationIndex = user.trainingDayNotifications.findIndex(notification => notification.id === notificationId);
 
@@ -80,7 +78,7 @@ export async function deleteTrainingDayNotification(req: Request, res: Response)
 
   user.trainingDayNotifications.splice(notificationIndex, 1);
 
-  await userDAO.update(user);
+  await userManager.update(user);
 
   return res.status(200).json({ message: 'Notification wurde erfolgreich entfernt' });
 }
@@ -91,7 +89,7 @@ export async function deleteTrainingDayNotification(req: Request, res: Response)
 export async function getTrainingDayById(req: Request, res: Response): Promise<Response> {
   const trainingDayId = req.params.id;
 
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
 
   for (const trainingPlan of user.trainingPlans) {
     const trainingPlanId = trainingPlan.id;

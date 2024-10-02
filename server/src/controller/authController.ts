@@ -16,7 +16,7 @@ import userManager from '../service/userManager.js';
  */
 export async function getAuthState(req: Request, res: Response): Promise<Response> {
   logger.info('GET Request on / route');
-  await userManager.getUser(req, res);
+  await userManager.getUser(res);
   return res.status(200).json({ message: 'auth verified' });
 }
 
@@ -126,7 +126,7 @@ export async function sendPasswordResetEmail(req: Request, res: Response) {
   await transporter.sendMail(mailOptions);
 
   user.passwordResetToken = token;
-  await userDAO.update(user);
+  await userManager.update(user);
 
   res.status(200).json({ message: 'Die Email wurde versandt' });
 }
@@ -140,7 +140,7 @@ export async function authenticatePasswordResetPage(req: Request, res: Response)
 
   res.locals.user = authService.verifyToken(token);
 
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
 
   if (user.passwordResetToken !== token) {
     return res.status(403).json({ error: 'Invalid password resetToken' });
@@ -157,10 +157,7 @@ export async function resetPassword(req: Request, res: Response): Promise<Respon
   const token = req.params.token;
   res.locals.user = authService.verifyToken(token);
 
-  const user = await userManager.getUser(req, res);
-
-  await userManager.getUser(req, res);
-  const userDAO = userService.getUserGenericDAO(req);
+  const user = await userManager.getUser(res);
 
   if (req.body.password !== req.body.repeatPassword) {
     return res.status(400).json({ error: 'Die angegebenen Passwörter stimmen nicht überein' });
@@ -176,7 +173,7 @@ export async function resetPassword(req: Request, res: Response): Promise<Respon
 
   user.password = await bcrypt.hash(req.body.password, 10);
   user.passwordResetToken = undefined;
-  await userDAO.update(user);
+  await userManager.update(user);
 
   authService.removeToken(res);
 

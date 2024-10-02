@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { TrainingDay } from '../../models/training/trainingDay.js';
 import * as trainingService from '../../service/trainingService.js';
-import { getUserGenericDAO } from '../../service/userService.js';
 
 import { Exercise } from '../../models/training/exercise.js';
 import { TrainingPlan } from '../../models/training/trainingPlan.js';
@@ -31,7 +30,9 @@ export async function getPlanForDay(req: Request, res: Response): Promise<void> 
   const trainingWeekIndex = Number(week);
   const trainingDayIndex = Number(day);
 
-  const trainingPlan = await trainingPlanManager.findTrainingPlanById(req, res, id);
+  const user = await userManager.getUser(res);
+
+  const trainingPlan = await trainingPlanManager.findTrainingPlanById(user, id);
 
   if (trainingWeekIndex > trainingPlan.trainingWeeks.length - 1) {
     throw new ValidationError('Die angefragte Woche gibt es nicht im Trainingsplan bitte erhöhe die Blocklänge');
@@ -66,7 +67,6 @@ export async function getPlanForDay(req: Request, res: Response): Promise<void> 
  * the specified day but can also propagate to the same day in subsequent weeks, maintaining consistency.
  */
 export async function updateTrainingDataForTrainingDay(req: Request, res: Response) {
-  const userDAO = getUserGenericDAO(req);
   const trainingPlanId = req.params.id;
   const trainingWeekIndex = Number(req.params.week);
   const trainingDayIndex = Number(req.params.day);
@@ -77,7 +77,7 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
 
   const changedData: ApiData = req.body;
 
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
 
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
   trainingPlan.lastUpdated = new Date();
@@ -87,7 +87,7 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
   updateTrainingDay(trainingDay, changedData);
   propagateChangesToFutureWeeks(trainingPlan, trainingWeekIndex, trainingDayIndex, changedData);
 
-  await userDAO.update(user);
+  await userManager.update(user);
 
   for (const [fieldName, fieldValue] of Object.entries(changedData)) {
     if (isTrainingActivitySignal(fieldName, fieldValue)) {
@@ -113,7 +113,8 @@ function isTrainingActivitySignal(fieldName: string, fieldValue: string): boolea
  */
 export async function getLatestTrainingDay(req: Request, res: Response) {
   const trainingPlanId = req.params.id;
-  const trainingPlan = await trainingPlanManager.findTrainingPlanById(req, res, trainingPlanId);
+  const user = await userManager.getUser(res);
+  const trainingPlan = await trainingPlanManager.findTrainingPlanById(user, trainingPlanId);
 
   const { weekIndex, dayIndex } = findLatestTrainingDayWithWeight(trainingPlan);
 

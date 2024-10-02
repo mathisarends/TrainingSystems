@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { TrainingSessionCardDto } from '../../models/dto/training-session-card-dto.js';
 import { TrainingSession } from '../../models/training/training-session.js';
 import { TrainingDay } from '../../models/training/trainingDay.js';
-import * as userService from '../../service/userService.js';
 import { TrainingSessionMetaDataDto } from './trainingSessionMetaDataDto.js';
 
 import _ from 'lodash';
@@ -19,7 +18,7 @@ import userManager from '../../service/userManager.js';
 export async function getTrainingSessionById(req: Request, res: Response): Promise<Response> {
   const trainingSessionId = req.params.id;
 
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
   const trainingSession = user.trainingSessions.find(session => session.id === trainingSessionId);
 
   if (!trainingSession) {
@@ -42,7 +41,7 @@ export async function getTrainingSessionById(req: Request, res: Response): Promi
  * Retrieves a summarized view of all training sessions in a card format.
  */
 export async function getTrainingSessionCardViews(req: Request, res: Response): Promise<Response> {
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
 
   if (!user.trainingSessions) {
     user.trainingSessions = [];
@@ -65,8 +64,7 @@ export async function getTrainingSessionCardViews(req: Request, res: Response): 
  * Creates a new training session for the user.
  */
 export async function createTrainingSession(req: Request, res: Response): Promise<Response> {
-  const user = await userManager.getUser(req, res);
-  const userDAO = userService.getUserGenericDAO(req);
+  const user = await userManager.getUser(res);
 
   const trainingSessionCreateDto = req.body as TrainingSessionMetaDataDto;
 
@@ -83,7 +81,7 @@ export async function createTrainingSession(req: Request, res: Response): Promis
 
   user.trainingSessions.unshift(newTrainingSession);
 
-  await userDAO.update(user);
+  await userManager.update(user);
 
   return res.status(200).json({ message: 'Erfolgreich erstellt ' });
 }
@@ -100,9 +98,7 @@ function createPlaceholderVersion(trainingSession: TrainingSession): void {
  */
 export async function editTrainingSesssion(req: Request, res: Response): Promise<Response> {
   const trainingSessionId = req.params.id;
-  const user = await userManager.getUser(req, res);
-
-  const userDAO = userService.getUserGenericDAO(req);
+  const user = await userManager.getUser(res);
 
   const trainingSessionEditDto = req.body as TrainingSessionMetaDataDto;
 
@@ -117,7 +113,7 @@ export async function editTrainingSesssion(req: Request, res: Response): Promise
   plan.weightRecommandationBase = trainingSessionEditDto.weightRecommandationBase;
   plan.coverImageBase64 = trainingSessionEditDto.coverImageBase64;
 
-  await userDAO.update(user);
+  await userManager.update(user);
 
   return res.status(200).json({ message: 'Änderungen gespeichert' });
 }
@@ -127,8 +123,7 @@ export async function editTrainingSesssion(req: Request, res: Response): Promise
  */
 export async function deleteTrainingSession(req: Request, res: Response): Promise<Response> {
   const trainingSessionId = req.params.id;
-  const user = await userManager.getUser(req, res);
-  const userDAO = userService.getUserGenericDAO(req);
+  const user = await userManager.getUser(res);
 
   const sessionIndex = user.trainingSessions.findIndex(session => session.id === trainingSessionId);
 
@@ -138,7 +133,7 @@ export async function deleteTrainingSession(req: Request, res: Response): Promis
 
   user.trainingSessions.splice(sessionIndex, 1);
 
-  await userDAO.update(user);
+  await userManager.update(user);
 
   return res.status(200).json({ message: 'Training Session erfolgreich gelöscht' });
 }
@@ -149,8 +144,7 @@ export async function deleteTrainingSession(req: Request, res: Response): Promis
 export async function startTrainingSession(req: Request, res: Response): Promise<Response> {
   const trainingSessionId = req.params.id;
 
-  const user = await userManager.getUser(req, res);
-  const userDAO = userService.getUserGenericDAO(req);
+  const user = await userManager.getUser(res);
 
   const trainingSession = user.trainingSessions.find(session => session.id === trainingSessionId);
 
@@ -161,7 +155,7 @@ export async function startTrainingSession(req: Request, res: Response): Promise
   const trainingSessionTemplate = prepareTrainingSessionTemplate(trainingSession);
   trainingSession.versions.push(trainingSessionTemplate);
 
-  await userDAO.update(user);
+  await userManager.update(user);
 
   return res.status(200).json({ trainingSessionTemplate, version: trainingSession.versions.length });
 }
@@ -200,7 +194,7 @@ export async function getTrainingSessionByVersion(req: Request, res: Response): 
     return res.status(404).json({ error: 'Ungülitger Wert für die Version' });
   }
 
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
 
   const trainingSession = user.trainingSessions.find(session => session.id === trainingSessionId);
 
@@ -218,7 +212,7 @@ export async function getTrainingSessionByVersion(req: Request, res: Response): 
 export async function getLatestVersionOfSession(req: Request, res: Response): Promise<Response> {
   const trainingSessionId = req.params.id;
 
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
 
   const trainingSession = user.trainingSessions.find(session => session.id === trainingSessionId);
 
@@ -239,8 +233,7 @@ export async function updateTrainingSessionVersion(req: Request, res: Response):
     return res.status(404).json({ error: 'Ungülitger Wert für die Version' });
   }
 
-  const user = await userManager.getUser(req, res);
-  const userDAO = userService.getUserGenericDAO(req);
+  const user = await userManager.getUser(res);
 
   const trainingSession = user.trainingSessions.find(session => session.id === trainingSessionId);
 
@@ -258,8 +251,7 @@ export async function updateTrainingSessionVersion(req: Request, res: Response):
 
   updateExercisesInSessionVersion(trainingSessionVersion, changedData);
 
-  await userDAO.update(user);
-  console.log('🚀 ~ updateTrainingSessionVersion ~ trainingSession:', trainingSession);
+  await userManager.update(user);
 
   return res.status(200).json({ message: 'Änderungen gespeichert ' });
 }

@@ -3,7 +3,6 @@ import { ApiData } from '../models/apiData.js';
 import { UserExercise } from '../models/collections/user/user-exercise.js';
 import { ExerciseCategoryType } from '../models/training/exercise-category-type.js';
 import userManager from '../service/userManager.js';
-import { getUserGenericDAO } from '../service/userService.js';
 import {
   getExerciseFieldByCategory,
   mapChangedDataToCategories,
@@ -29,7 +28,7 @@ export function getCategories(req: Request, res: Response): void {
 export async function getExercisesByCategory(req: Request, res: Response): Promise<void> {
   const category = req.params.category;
 
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
   const mappedCategory = mapToExerciseCategory(category);
   const exerciseNames = getExerciseFieldByCategory(mappedCategory, user).map((exercise: UserExercise) => exercise.name);
 
@@ -40,7 +39,7 @@ export async function getExercisesByCategory(req: Request, res: Response): Promi
  * Fetches all exercises data for the user.
  */
 export async function getExercises(req: Request, res: Response): Promise<void> {
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
   const { exerciseCategories, categoryPauseTimes, categorizedExercises, defaultRepSchemeByCategory, maxFactors } =
     prepareExercisesData(user);
 
@@ -57,10 +56,8 @@ export async function getExercises(req: Request, res: Response): Promise<void> {
  * Updates exercises for the user based on provided data.
  */
 export async function updateExercises(req: Request, res: Response): Promise<void> {
-  const userDAO = getUserGenericDAO(req);
-
   const changedData: ApiData = req.body;
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
   const changedCategoriesMap = mapChangedDataToCategories(changedData);
 
   Object.entries(changedCategoriesMap).forEach(([category, { fieldNames, newValues }]) => {
@@ -71,7 +68,7 @@ export async function updateExercises(req: Request, res: Response): Promise<void
     }
   });
 
-  await userDAO.update(user);
+  await userManager.update(user);
   res.status(200).json({ message: 'Erfolgreich aktualisiert.' });
 }
 
@@ -79,12 +76,10 @@ export async function updateExercises(req: Request, res: Response): Promise<void
  * Resets the user's exercise catalog to default values.
  */
 export async function resetExercises(req: Request, res: Response): Promise<void> {
-  const userDAO = getUserGenericDAO(req);
-
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
   resetUserExercises(user);
 
-  await userDAO.update(user);
+  await userManager.update(user);
 
   res.status(200).json({ message: 'Übungskatalog zurückgesetzt!' });
 }

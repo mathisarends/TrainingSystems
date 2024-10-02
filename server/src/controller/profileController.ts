@@ -8,7 +8,7 @@ import * as userService from '../service/userService.js';
  * Retrieves the user's profile information and returns a DTO containing the username, email, and picture URL.
  */
 export async function getProfile(req: Request, res: Response): Promise<void> {
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
 
   const userDto: UserProfileDto = {
     username: user.username,
@@ -24,7 +24,7 @@ export async function getProfile(req: Request, res: Response): Promise<void> {
  */
 export async function updateProfilePicture(req: Request, res: Response): Promise<Response> {
   const userDAO = req.app.locals.userDAO;
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
   const body: UpdateProfilePictureDto = req.body;
 
   if (!body.profilePicture) {
@@ -42,7 +42,7 @@ export async function updateProfilePicture(req: Request, res: Response): Promise
  */
 export async function deleteAccount(req: Request, res: Response): Promise<Response> {
   const userDAO = userService.getUserGenericDAO(req);
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
 
   await userDAO.delete(user.id);
 

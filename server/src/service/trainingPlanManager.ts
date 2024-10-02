@@ -1,13 +1,10 @@
-import { Request, Response } from 'express';
 import { NotFoundError } from '../errors/notFoundError.js';
+import { User } from '../models/collections/user/user.js';
 import { TrainingPlan } from '../models/training/trainingPlan.js';
 import { UUID } from '../models/uuid.js';
-import userManager from './userManager.js';
 
 class TrainingPlanManager {
-  async findTrainingPlanById(req: Request, res: Response, planId: UUID): Promise<TrainingPlan> {
-    const user = await userManager.getUser(req, res);
-
+  async findTrainingPlanById(user: User, planId: UUID): Promise<TrainingPlan> {
     const plan = user.trainingPlans.find(plan => plan.id === planId);
 
     if (!plan) {

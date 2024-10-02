@@ -1,7 +1,5 @@
 import { Request, Response } from 'express';
 
-import { User } from '../../models/collections/user/user.js';
-import { MongoGenericDAO } from '../../models/dao/mongo-generic.dao.js';
 import { ExerciseCategoryType } from '../../models/training/exercise-category-type.js';
 import { Exercise } from '../../models/training/exercise.js';
 import { TrainingDay } from '../../models/training/trainingDay.js';
@@ -19,17 +17,16 @@ const { capitalize } = _;
  * Updates the list of recently viewed exercise categories for the statistics section of a specific training plan.
  */
 export async function updateViewedCategories(req: Request, res: Response): Promise<void> {
-  const userDAO: MongoGenericDAO<User> = req.app.locals.userDAO;
   const trainingPlanId = req.params.id;
   const exerciseCategories = (req.query.exercises as string).split(',');
 
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
 
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
   trainingPlan.recentlyViewedCategoriesInStatisticSection = exerciseCategories;
 
-  await userDAO.update(user);
+  await userManager.update(user);
 
   res.status(200).json('Kategorien geupdated');
 }
@@ -40,7 +37,7 @@ export async function updateViewedCategories(req: Request, res: Response): Promi
 export async function getViewedCategories(req: Request, res: Response): Promise<void> {
   const trainingPlanId = req.params.id;
 
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
 
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
@@ -54,7 +51,7 @@ export async function getSetsForCategories(req: Request, res: Response): Promise
   const trainingPlanId = req.params.id;
   const exerciseCategories = (req.query.exercises as string).split(',');
 
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
 
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
@@ -77,7 +74,7 @@ export async function getTonnageForCategories(req: Request, res: Response): Prom
   const trainingPlanId = req.params.id;
   const exerciseCategories = (req.query.exercises as string).split(',');
 
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
   const responseData: LineChartDataDTO = {};
@@ -96,7 +93,7 @@ export async function getTonnageForCategories(req: Request, res: Response): Prom
 export async function getAverageSessionDurationDataForTrainingPlanDay(req: Request, res: Response): Promise<Response> {
   const trainingPlanId = req.params.id;
 
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
   const trainingDaysWithDuration = trainingPlan.trainingWeeks
@@ -160,7 +157,7 @@ export async function getDrilldownForCategory(req: Request, res: Response): Prom
 
   const mappedCategory = mapToExerciseCategory(category);
 
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
 
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
@@ -207,7 +204,7 @@ export async function getPerformanceCharts(req: Request, res: Response): Promise
 
   const validExercises = mappedExerciseCategories.filter(exercise => mainExercises.includes(exercise));
 
-  const user = await userManager.getUser(req, res);
+  const user = await userManager.getUser(res);
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
   const performanceData = validExercises.reduce((result, category) => {
