@@ -14,13 +14,6 @@ import { TrainingSummary } from './training-summary/training-summary.js';
 class TrainingSessionManager {
   private trackers: Map<string, TrainingSessionTracker> = new Map();
 
-  private readonly cleanupInterval = 30 * 60 * 1000;
-  private readonly maxInactivityDuration = 30 * 60 * 1000;
-
-  constructor() {
-    setInterval(() => this.cleanupInactiveTrackers(), this.cleanupInterval);
-  }
-
   /**
    * Adds or updates a training day tracker for a specific training day.
    * If a tracker for the training day is already present, this function updates the exercise data.
@@ -41,29 +34,20 @@ class TrainingSessionManager {
     const onTimeoutCallback = () => this.handleSessionTimeout(trainingDayId, trainingDayDataLocator);
     const newTracker = new TrainingSessionTracker(trainingDay, onTimeoutCallback);
 
-    this.trackers.set(trainingDayId, newTracker); // Store tracker with trainingDayId as the key
+    this.trackers.set(trainingDayId, newTracker);
 
     return newTracker;
   }
 
-  /**
-   * Retrieves the tracker for a given training day ID.
-   * @param trainingDayId - The unique training day ID.
-   * @returns The TrainingSessionTracker instance associated with the training day ID, or undefined if not found.
-   */
   getTracker(trainingDayId: string): TrainingSessionTracker | undefined {
     return this.trackers.get(trainingDayId);
   }
 
-  /**
-   * Removes the tracker for a given training day ID.
-   * @param trainingDayId - The unique training day ID.
-   */
   removeTracker(trainingDayId: string): void {
     const tracker = this.trackers.get(trainingDayId);
     if (tracker) {
       tracker.cleanup();
-      this.trackers.delete(trainingDayId); // Remove using trainingDayId
+      this.trackers.delete(trainingDayId);
     }
   }
 
@@ -80,21 +64,6 @@ class TrainingSessionManager {
     }
 
     tracker.handleActivitySignal();
-  }
-
-  /**
-   * Periodically checks and removes trackers that have been inactive for too long.
-   */
-  private cleanupInactiveTrackers(): void {
-    const now = Date.now();
-
-    this.trackers.forEach((sessionTracker, trainingDayId) => {
-      if (now - sessionTracker.lastActivity.getTime() > this.maxInactivityDuration) {
-        console.log(`Removing inactive tracker for trainingDayId: ${trainingDayId}`);
-        sessionTracker.cleanup();
-        this.trackers.delete(trainingDayId);
-      }
-    });
   }
 
   /**

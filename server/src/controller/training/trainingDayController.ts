@@ -17,7 +17,6 @@ import { TrainingDayDataLocator } from './training-day-data-locator.js';
 
 import { ValidationError } from '../../errors/validationError.js';
 import trainingPlanManager from '../../service/trainingPlanManager.js';
-import userManager from '../../service/userManager.js';
 import trainingSessionManager from './training-session-manager.js';
 
 /**
@@ -30,8 +29,6 @@ export async function getPlanForDay(req: Request, res: Response): Promise<void> 
 
   const trainingWeekIndex = Number(week);
   const trainingDayIndex = Number(day);
-
-  const user = await userManager.getUser(req, res);
 
   const trainingPlan = await trainingPlanManager.findTrainingPlanById(req, res, id);
 
@@ -59,10 +56,6 @@ export async function getPlanForDay(req: Request, res: Response): Promise<void> 
     trainingDay,
     previousTrainingDay
   };
-
-  const trainingPlanIndex = trainingService.findTrainingPlanIndexById(user.trainingPlans, id);
-  const trainingMetaData = new TrainingDayDataLocator(user, trainingPlanIndex, trainingWeekIndex, trainingDayIndex);
-  trainingSessionManager.addOrUpdateTracker(trainingMetaData);
 
   res.status(200).json(trainingPlanForTrainingDay);
 }
