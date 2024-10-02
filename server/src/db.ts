@@ -4,7 +4,6 @@ import { MongoClient } from 'mongodb';
 import mongoose from 'mongoose';
 import { User } from './models/collections/user/user.js';
 import { MongoGenericDAO } from './models/dao/mongo-generic.dao.js';
-import trainingPlanManager from './service/trainingPlanManager.js';
 import userManager from './service/userManager.js';
 
 dotenv.config();
@@ -28,7 +27,6 @@ export default async function startDB(app: Express) {
     app.locals.userDAO = userDAO;
     app.locals.friendshipDAO = new MongoGenericDAO(db, 'friendships');
 
-    trainingPlanManager.setUserGenericDAO(userDAO);
     userManager.setUserGenericDAO(userDAO);
   } catch (err) {
     console.error('Error connecting to the database: ', err);

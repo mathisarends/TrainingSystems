@@ -2,9 +2,8 @@ import { TrainingDayDataLocator } from './training-day-data-locator.js';
 import { TrainingSessionTracker } from './training-session-tracker.js';
 
 import { TrainingDAyFinishedNotification } from '../../models/collections/user/training-fninished-notifcation.js';
-import { User } from '../../models/collections/user/user.js';
-import { MongoGenericDAO } from '../../models/dao/mongo-generic.dao.js';
 import { getTonnagePerTrainingDay } from '../../service/trainingService.js';
+import userManager from '../../service/userManager.js';
 import { sendMailForTrainingDaySummary } from './training-summary/training-day-summary.js';
 import { TrainingSummary } from './training-summary/training-summary.js';
 
@@ -29,10 +28,7 @@ class TrainingSessionManager {
    * @param userId - The unique user ID.
    * @param trainingDayDataLocator - The data locator object that provides access to the training day data.
    */
-  async addOrUpdateTracker(
-    userDAO: MongoGenericDAO<User>,
-    trainingDayDataLocator: TrainingDayDataLocator
-  ): Promise<TrainingSessionTracker> {
+  async addOrUpdateTracker(trainingDayDataLocator: TrainingDayDataLocator): Promise<TrainingSessionTracker> {
     const trainingDay = trainingDayDataLocator.getTrainingDay();
     const trainingDayId = trainingDay.id;
     const tracker = this.getTracker(trainingDayId);
@@ -42,7 +38,7 @@ class TrainingSessionManager {
       return tracker;
     }
 
-    const onTimeoutCallback = () => this.handleSessionTimeout(trainingDayId, userDAO, trainingDayDataLocator);
+    const onTimeoutCallback = () => this.handleSessionTimeout(trainingDayId, trainingDayDataLocator);
     const newTracker = new TrainingSessionTracker(trainingDay, onTimeoutCallback);
 
     this.trackers.set(trainingDayId, newTracker); // Store tracker with trainingDayId as the key
@@ -111,7 +107,6 @@ class TrainingSessionManager {
    */
   private async handleSessionTimeout(
     trainingDayId: string,
-    userDAO: MongoGenericDAO<User>,
     trainingDayDataLocator: TrainingDayDataLocator
   ): Promise<void> {
     const { user, trainingPlanIndex, trainingWeekIndex, trainingDayIndex } = trainingDayDataLocator.getData();
@@ -130,6 +125,7 @@ class TrainingSessionManager {
 
       user.trainingDayNotifications.push(trainingDayNotification);
 
+      const userDAO = userManager.getUserGenericDAO();
       await userDAO.update(user);
 
       const trainingDaySummary: TrainingSummary = {

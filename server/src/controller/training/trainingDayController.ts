@@ -8,7 +8,6 @@ import { TrainingPlan } from '../../models/training/trainingPlan.js';
 import {
   createExerciseObject,
   findLatestTrainingDayWithWeight,
-  findTrainingPlanById,
   updateExercise
 } from '../../service/trainingService.js';
 
@@ -16,6 +15,9 @@ import { ApiData } from '../../models/apiData.js';
 import { WeightRecommendationBase } from '../../models/training/weight-recommandation.enum.js';
 import { TrainingDayDataLocator } from './training-day-data-locator.js';
 
+import { ValidationError } from '../../errors/validationError.js';
+import trainingPlanManager from '../../service/trainingPlanManager.js';
+import userManager from '../../service/userManager.js';
 import trainingSessionManager from './training-session-manager.js';
 
 /**
@@ -25,22 +27,21 @@ import trainingSessionManager from './training-session-manager.js';
  */
 export async function getPlanForDay(req: Request, res: Response): Promise<void> {
   const { id, week, day } = req.params;
-  const userDAO = getUserGenericDAO(req);
 
   const trainingWeekIndex = Number(week);
   const trainingDayIndex = Number(day);
 
-  const user = await getUser(req, res);
+  const user = await userManager.getUser(req, res);
 
-  const trainingPlan = findTrainingPlanById(user.trainingPlans, id);
+  const trainingPlan = await trainingPlanManager.findTrainingPlanById(req, res, id);
 
   if (trainingWeekIndex > trainingPlan.trainingWeeks.length - 1) {
-    throw new Error('Die angefragte Woche gibt es nicht im Trainingsplan bitte erhöhe die Blocklänge');
+    throw new ValidationError('Die angefragte Woche gibt es nicht im Trainingsplan bitte erhöhe die Blocklänge');
   }
 
   const trainingWeek = trainingPlan.trainingWeeks[trainingWeekIndex];
   if (trainingDayIndex > trainingWeek.trainingDays.length - 1) {
-    throw new Error('Der angefragte Tag ist zu hoch für die angegebene Trainingsfrequenz');
+    throw new ValidationError('Der angefragte Tag ist zu hoch für die angegebene Trainingsfrequenz');
   }
 
   const trainingDay = trainingWeek.trainingDays[trainingDayIndex];
@@ -61,7 +62,7 @@ export async function getPlanForDay(req: Request, res: Response): Promise<void> 
 
   const trainingPlanIndex = trainingService.findTrainingPlanIndexById(user.trainingPlans, id);
   const trainingMetaData = new TrainingDayDataLocator(user, trainingPlanIndex, trainingWeekIndex, trainingDayIndex);
-  trainingSessionManager.addOrUpdateTracker(userDAO, trainingMetaData);
+  trainingSessionManager.addOrUpdateTracker(trainingMetaData);
 
   res.status(200).json(trainingPlanForTrainingDay);
 }
@@ -99,7 +100,7 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
       const trainingPlanIndex = trainingService.findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
       const trainingMetaData = new TrainingDayDataLocator(user, trainingPlanIndex, trainingWeekIndex, trainingDayIndex);
 
-      const trainingSessionTracker = await trainingSessionManager.addOrUpdateTracker(userDAO, trainingMetaData);
+      const trainingSessionTracker = await trainingSessionManager.addOrUpdateTracker(trainingMetaData);
       trainingSessionTracker.handleActivitySignal();
       break;
     }
