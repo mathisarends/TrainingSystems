@@ -13,6 +13,8 @@
         <img [src]="image()" alt="Upload Ticket" class="ticket-image" />
 
         <input type="file" #fileInput (change)="displayUploadedImage($event)" accept="image/*" hidden />
+
+        <app-circular-icon-button (click)="downloadImage($event)" [icon]="IconName.DOWNLOAD" />
       </div>
     }
   } @else {

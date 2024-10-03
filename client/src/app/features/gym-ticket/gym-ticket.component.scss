@@ -14,6 +14,16 @@
   border-radius: 10px;
 }
 
+.upload-container {
+  position: relative;
+
+  app-circular-icon-button {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+  }
+}
+
 image-cropper.ticket-image {
   display: grid;
   place-items: center;
