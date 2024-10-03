@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import Chart from 'chart.js/auto';
 import { TooltipDirective } from '../../../directives/tooltip.directive';
 import { CircularIconButtonComponent } from '../../circular-icon-button/circular-icon-button.component';
@@ -10,6 +10,7 @@ import { ChartComponent } from '../chart.component';
   standalone: true,
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LineChartComponent extends ChartComponent<'line'> {
   /**

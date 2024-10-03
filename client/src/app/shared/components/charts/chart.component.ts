@@ -45,9 +45,7 @@ export abstract class ChartComponent<T extends ChartType> implements AfterViewIn
 
     effect(
       () => {
-        if (this.chart()) {
-          this.updateChart();
-        }
+        this.updateChart();
       },
       { injector: this.injector },
     );
@@ -64,7 +62,7 @@ export abstract class ChartComponent<T extends ChartType> implements AfterViewIn
    * It updates both the labels and the datasets of the chart and re-renders it.
    */
   protected updateChart(): void {
-    if (this.chart()) {
+    if (this.chart() || this.yAxisTitle()) {
       this.chart()!.data = this.data();
       this.chart()!.update();
     }

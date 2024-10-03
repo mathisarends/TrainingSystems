@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
+import { ModalService } from '../../core/services/modal/modalService';
 import { LineChartComponent } from '../../shared/components/charts/line-chart/line-chart.component';
 import { SelectComponent } from '../../shared/components/select/select.component';
+import { IconName } from '../../shared/icon/icon-name';
 import { ImageDownloadService } from '../../shared/service/image-download.service';
 import { NotificationService } from '../../shared/service/notification.service';
 import { HeaderService } from '../header/header.service';
@@ -30,11 +32,13 @@ export class StatisticsComponent implements OnInit {
     protected notificationService: NotificationService,
     private headerService: HeaderService,
     private statisticsService: StatisticsService,
+    private modalService: ModalService,
   ) {}
 
   ngOnInit(): void {
     this.headerService.setHeadlineInfo({
       title: 'Usage',
+      buttons: [{ icon: IconName.COMPARE, callback: this.openConfigModal.bind(this) }],
     });
 
     this.initializeTrainingPlanSelection();
@@ -44,6 +48,14 @@ export class StatisticsComponent implements OnInit {
     this.statisticsService.getIdTitleMappingsForTrainingPlans().subscribe((titles) => {
       this.trainingPlanTitles.set(titles);
       this.selectedTrainingPlans.set(titles);
+    });
+  }
+
+  protected openConfigModal(): void {
+    console.log('called ');
+    this.modalService.openBasicInfoModal({
+      title: 'test',
+      infoText: 'TEst 123',
     });
   }
 }

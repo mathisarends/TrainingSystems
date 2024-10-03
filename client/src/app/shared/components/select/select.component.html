@@ -18,7 +18,7 @@
   }
 
   <div class="checkbox-container">
-    @for (checkboxItem of filteredItems() | toCheckboxItem: selectedOptions(); track checkboxItem.label) {
+    @for (checkboxItem of filteredItems() | toCheckboxItem: selectedOptions(); track checkboxItem.id) {
       <app-checkbox [item]="checkboxItem" (valueChanged)="onSelectionChange(checkboxItem.label, $event)" />
     }
   </div>

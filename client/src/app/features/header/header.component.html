@@ -10,7 +10,7 @@
       @if (button.icon === IconName.MORE_VERTICAL) {
         <app-more-options-button [options]="button.options!" />
       } @else {
-        <app-circular-icon-button [icon]="button.icon" [iconSize]="20" (clicked)="onCircularButtonClick(button)" />
+        <app-circular-icon-button [icon]="button.icon" [iconSize]="20" (click)="onCircularButtonClick(button)" />
       }
     }
   </div>

@@ -1,4 +1,4 @@
-<app-circular-icon-button [icon]="IconName.MORE_VERTICAL" [iconSize]="20" (clicked)="toggleCollapsed()" />
+<app-circular-icon-button [icon]="IconName.MORE_VERTICAL" [iconSize]="20" (click)="toggleCollapsed()" />
 
 <div class="more-option-list-container" [@toggleCollapse]="isCollapsed() ? 'collapsed' : 'expanded'">
   <ul>
