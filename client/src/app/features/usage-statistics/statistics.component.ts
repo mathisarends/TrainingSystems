@@ -5,6 +5,7 @@ import { SelectComponent } from '../../shared/components/select/select.component
 import { ImageDownloadService } from '../../shared/service/image-download.service';
 import { NotificationService } from '../../shared/service/notification.service';
 import { HeaderService } from '../header/header.service';
+import { StatisticsService } from './statistics.service';
 import { TrainingDayNotificationComponent } from './training-day-notification/training-day-notification.component';
 import { TrainingStatisticsDataView } from './training-statistics-data-view';
 
@@ -14,10 +15,12 @@ import { TrainingStatisticsDataView } from './training-statistics-data-view';
   imports: [CommonModule, TrainingDayNotificationComponent, LineChartComponent, SelectComponent],
   templateUrl: './statistics.component.html',
   styleUrls: ['./statistics.component.scss'],
-  providers: [ImageDownloadService],
+  providers: [ImageDownloadService, StatisticsService],
 })
 export class StatisticsComponent implements OnInit {
   selectedTrainingPlans = signal<string[]>([]);
+
+  trainingPlanTitles = signal<string[]>([]);
 
   trainingStatisticsDataViewOptions = signal(Object.values(TrainingStatisticsDataView));
 
@@ -26,11 +29,21 @@ export class StatisticsComponent implements OnInit {
   constructor(
     protected notificationService: NotificationService,
     private headerService: HeaderService,
+    private statisticsService: StatisticsService,
   ) {}
 
   ngOnInit(): void {
     this.headerService.setHeadlineInfo({
       title: 'Usage',
+    });
+
+    this.initializeTrainingPlanSelection();
+  }
+
+  private initializeTrainingPlanSelection(): void {
+    this.statisticsService.getIdTitleMappingsForTrainingPlans().subscribe((titles) => {
+      this.trainingPlanTitles.set(titles);
+      this.selectedTrainingPlans.set(titles);
     });
   }
 }

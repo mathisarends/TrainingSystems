@@ -4,7 +4,6 @@ import { HttpService } from '../../../core/services/http-client.service';
 import { ExerciseCategories } from '../model/exercise-categories';
 import { AverageTrainingDayDurationDto } from './average-training-duration-dto';
 import { ChartDataDto } from './chart-data-dto';
-import { TrainingPlanTitleIdDto } from './training-plan-title-id-dto';
 
 @Injectable()
 export class TrainingStatisticsService {
@@ -12,10 +11,6 @@ export class TrainingStatisticsService {
 
   getTrainingPlanTitle(id: string): Observable<string> {
     return this.httpService.get<string>(`/training/plan/${id}/title`);
-  }
-
-  getIdTitleMappingsForTrainingPlans(): Observable<TrainingPlanTitleIdDto> {
-    return this.httpService.get<TrainingPlanTitleIdDto>(`/training/plans/id-title-mapping`);
   }
 
   /**

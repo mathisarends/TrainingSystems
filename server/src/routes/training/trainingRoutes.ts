@@ -12,7 +12,11 @@ router.use('/plan', trainingPlanRouter);
 
 /** Lädt eine Kartenansicht mit allen Trainingspplänen */
 router.get('/plans', authService.authenticationMiddleware, asyncHandler(trainingController.getPlans));
-router.get('/plans/id-title-mapping', authService.authenticationMiddleware, asyncHandler(trainingController.getPlans));
+router.get(
+  '/plans/titles',
+  authService.authenticationMiddleware,
+  asyncHandler(trainingController.getTrainingPlanTitles)
+);
 
 router.get(
   '/most-recent-plan-link',

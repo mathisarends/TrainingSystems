@@ -5,7 +5,15 @@ import { UUID } from '../models/uuid.js';
 
 class TrainingPlanManager {
   async findTrainingPlanById(user: User, planId: UUID): Promise<TrainingPlan> {
-    const plan = user.trainingPlans.find(plan => plan.id === planId);
+    return this.findTrainingPlan(user, plan => plan.id === planId);
+  }
+
+  async findTrainingPlanByTitle(user: User, title: string): Promise<TrainingPlan> {
+    return this.findTrainingPlan(user, plan => plan.title === title);
+  }
+
+  private findTrainingPlan(user: User, predicate: (plan: TrainingPlan) => boolean): TrainingPlan {
+    const plan = user.trainingPlans.find(predicate);
 
     if (!plan) {
       throw new NotFoundError('Plan nicht gefunden');
