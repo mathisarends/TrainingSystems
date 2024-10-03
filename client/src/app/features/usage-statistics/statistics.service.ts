@@ -1,33 +1,48 @@
+import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { HttpService } from '../../core/services/http-client.service';
+import { ChartDataDto } from '../training-plans/training-day-statistics/chart-data-dto';
 
 @Injectable()
 export class StatisticsService {
   constructor(private httpService: HttpService) {}
 
-  private trainingPlansSource = new BehaviorSubject<string[]>([]);
-  private selectedCategorySource = new BehaviorSubject<string>('');
-  private selectedDataViewSource = new BehaviorSubject<string>('');
-
-  trainingPlans$ = this.trainingPlansSource.asObservable();
-  selectedCategory$ = this.selectedCategorySource.asObservable();
-  selectedDataViewSource$ = this.selectedDataViewSource.asObservable();
-
-  getIdTitleMappingsForTrainingPlans(): Observable<string[]> {
+  /**
+   * Retrieves the titles of all available training plans.
+   */
+  getAllTrainingPlanTitles(): Observable<string[]> {
     return this.httpService.get(`/training/plans/titles`);
   }
 
-  updateTrainingPlans(trainingPlans: string[]) {
-    this.trainingPlansSource.next(trainingPlans);
+  /**
+   * Fetches the volume comparison data for the specified category and training plans.
+   */
+  getVolumeChartComparisonData(
+    category: string,
+    trainingPlanTitles: string[],
+  ): Observable<Record<string, ChartDataDto>> {
+    const requestParams = this.buildTrainingPlanComparisonRequestParams(category, trainingPlanTitles);
+    return this.httpService.get(`/training/statistics/volume-comparison`, requestParams);
   }
 
-  updateSelectedCategory(category: string) {
-    this.selectedCategorySource.next(category);
+  /**
+   * Fetches the performance comparison data for the specified category and training plans.
+   */
+  getPerformanceChartComparisonData(
+    category: string,
+    trainingPlanTitles: string[],
+  ): Observable<Record<string, ChartDataDto>> {
+    const requestParams = this.buildTrainingPlanComparisonRequestParams(category, trainingPlanTitles);
+    return this.httpService.get(`/training/statistics/performance-comparison`, requestParams);
   }
 
-  updateSelectedDataViewSource(dataView: string) {
-    this.selectedCategorySource.next(dataView);
+  /**
+   * Builds the request parameters for comparing training plans based on category and titles.
+   */
+  private buildTrainingPlanComparisonRequestParams(category: string, trainingPlanTitles: string[]) {
+    const trainingPlanTitlesQueryParam = trainingPlanTitles.join(',');
+
+    return new HttpParams().set('category', category).set('plans', trainingPlanTitlesQueryParam);
   }
 }

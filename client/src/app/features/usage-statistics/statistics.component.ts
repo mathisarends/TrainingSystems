@@ -98,7 +98,7 @@ export class StatisticsComponent implements OnInit {
   }
 
   private initializeTrainingPlanSelection(): void {
-    this.statisticsService.getIdTitleMappingsForTrainingPlans().subscribe((titles) => {
+    this.statisticsService.getAllTrainingPlanTitles().subscribe((titles) => {
       this.trainingPlanTitles.set(titles);
 
       this.selectedTrainingPlans.set(titles);

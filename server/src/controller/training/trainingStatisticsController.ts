@@ -8,6 +8,7 @@ import * as trainingService from '../../service/trainingService.js';
 import { mapToExerciseCategory } from '../../utils/exerciseUtils.js';
 
 import _ from 'lodash';
+import { ValidationError } from '../../errors/validationError.js';
 import { AverageTrainingDayDurationDto } from '../../interfaces/averageTrainingDayDurationDto.js';
 import { LineChartDataDTO } from '../../interfaces/lineChartDataDto.js';
 import trainingPlanManager from '../../service/trainingPlanManager.js';
@@ -196,7 +197,7 @@ export async function getDrilldownForCategory(req: Request, res: Response): Prom
  */
 export async function getVolumeComparison(req: Request, res: Response): Promise<void> {
   const trainingPlanTitles = (req.query.plans as string).split(',');
-  const exerciseCategories = (req.query.exercises as string).split(',');
+  const exerciseCategory = req.query.category as string;
 
   const user = await userManager.getUser(res);
 
@@ -211,12 +212,10 @@ export async function getVolumeComparison(req: Request, res: Response): Promise<
   for (const trainingPlan of trainingPlans) {
     const planData: LineChartDataDTO = {};
 
-    exerciseCategories.forEach(category => {
-      const exerciseCategory = mapToExerciseCategory(category);
-      if (exerciseCategory) {
-        planData[capitalize(category)] = prepareTrainingWeeksForExercise(trainingPlan, exerciseCategory);
-      }
-    });
+    const mappedExerciseCategory = mapToExerciseCategory(exerciseCategory);
+    if (mappedExerciseCategory) {
+      planData[capitalize(exerciseCategory)] = prepareTrainingWeeksForExercise(trainingPlan, mappedExerciseCategory);
+    }
 
     responseData[trainingPlan.title] = planData;
   }
@@ -229,9 +228,9 @@ export async function getVolumeComparison(req: Request, res: Response): Promise<
  */
 export async function getPerformanceComparisonCharts(req: Request, res: Response): Promise<void> {
   const trainingPlanTitles = (req.query.plans as string).split(',');
-  const exerciseCategories = (req.query.exercises as string).split(',');
+  const exerciseCategory = req.query.category as string;
 
-  const mappedExerciseCategories = exerciseCategories.map((category: string) => mapToExerciseCategory(category));
+  const mappedExerciseCategory = mapToExerciseCategory(exerciseCategory);
 
   const mainExercises = [
     ExerciseCategoryType.SQUAT,
@@ -240,7 +239,9 @@ export async function getPerformanceComparisonCharts(req: Request, res: Response
     ExerciseCategoryType.OVERHEADPRESS
   ];
 
-  const validExercises = mappedExerciseCategories.filter(exercise => mainExercises.includes(exercise));
+  if (!mainExercises.includes(mappedExerciseCategory)) {
+    throw new ValidationError('Ungültige Kategorie');
+  }
 
   const user = await userManager.getUser(res);
 
@@ -255,9 +256,7 @@ export async function getPerformanceComparisonCharts(req: Request, res: Response
   for (const trainingPlan of trainingPlans) {
     const planData: LineChartDataDTO = {};
 
-    validExercises.forEach(category => {
-      planData[capitalize(category)] = getBestPerformanceByExercise(trainingPlan, category);
-    });
+    planData[capitalize(exerciseCategory)] = getBestPerformanceByExercise(trainingPlan, mappedExerciseCategory);
 
     responseData[trainingPlan.title] = planData;
   }
