@@ -44,9 +44,14 @@ export class ModalService {
       this.appRef.attachView(this.overlayComponentRef.hostView);
       document.body.appendChild(this.overlayComponentRef.location.nativeElement);
 
+      const modalInjector = Injector.create({
+        parent: this.injector,
+        providers: options.providers ?? [],
+      });
+
       this.modalComponentRef = createComponent(ModalComponent, {
         environmentInjector: this.environmentInjector,
-        elementInjector: this.injector,
+        elementInjector: modalInjector,
       });
 
       this.appRef.attachView(this.modalComponentRef.hostView);

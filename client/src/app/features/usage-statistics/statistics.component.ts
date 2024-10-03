@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, DestroyRef, Injector, OnInit, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { forkJoin } from 'rxjs';
 import { ModalService } from '../../core/services/modal/modalService';
@@ -32,7 +32,7 @@ import { TrainingStatsComparisonConfigComponent } from './training-stats-compari
   providers: [ImageDownloadService, StatisticsService, TrainingStatisticsService],
 })
 export class StatisticsComponent implements OnInit {
-  selectedTrainingPlan = signal<string[]>([]);
+  selectedTrainingPlans = signal<string[]>([]);
 
   trainingPlanTitles = signal<string[]>([]);
 
@@ -54,6 +54,7 @@ export class StatisticsComponent implements OnInit {
     private trainingStatisticService: TrainingStatisticsService,
     private modalService: ModalService,
     private destroyRef: DestroyRef,
+    private injector: Injector,
   ) {}
 
   ngOnInit(): void {
@@ -65,6 +66,15 @@ export class StatisticsComponent implements OnInit {
     this.fetchAndSetCategoryMetadata();
     this.initializeTrainingPlanSelection();
     this.initializeDataViewOptions();
+
+    this.listenForTrainingPlansChange();
+  }
+
+  private listenForTrainingPlansChange() {
+    this.statisticsService.trainingPlans$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((newPlans) => {
+      console.log('🚀 ~ StatisticsComponent ~ this.statisticsService.trainingPlan$.pipe ~ newPlans:', newPlans);
+      this.selectedTrainingPlans.set(newPlans);
+    });
   }
 
   /**
@@ -92,7 +102,7 @@ export class StatisticsComponent implements OnInit {
     this.statisticsService.getIdTitleMappingsForTrainingPlans().subscribe((titles) => {
       this.trainingPlanTitles.set(titles);
 
-      this.selectedTrainingPlan.set(titles);
+      this.selectedTrainingPlans.set(titles);
     });
   }
 
@@ -103,14 +113,14 @@ export class StatisticsComponent implements OnInit {
     }));
   }
 
-  private async openConfigurationModal(): Promise<void> {
-    console.log('ehre');
-    const confirmed = await this.modalService.open({
+  private openConfigurationModal(): void {
+    this.modalService.open({
       title: 'Konfiguration',
       component: TrainingStatsComparisonConfigComponent,
+      providers: [{ provide: StatisticsService, useValue: this.injector.get(StatisticsService) }],
       buttonText: 'Übernehmen',
       componentData: {
-        selectedTrainingPlan: this.selectedTrainingPlan(),
+        selectedTrainingPlans: this.selectedTrainingPlans(),
         trainingPlanTitles: this.trainingPlanTitles(),
         trainingStatisticsDataViewOptions: this.trainingStatisticsDataViewOptions(),
         selectedDataViewOption: this.selectedDataViewOption(),
@@ -118,9 +128,5 @@ export class StatisticsComponent implements OnInit {
         selectedCategory: this.selectedCategory(),
       },
     });
-
-    if (confirmed) {
-      console.log('confirmed');
-    }
   }
 }

@@ -1,8 +1,9 @@
-import { Component, signal, WritableSignal } from '@angular/core';
+import { Component, effect, Injector, signal, WritableSignal } from '@angular/core';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
 import { FloatingLabelInputItem } from '../../../shared/components/floating-label-input/floating-label-input-item';
 import { FloatingLabelInputComponent } from '../../../shared/components/floating-label-input/floating-label-input.component';
 import { SelectComponent } from '../../../shared/components/select/select.component';
+import { StatisticsService } from '../statistics.service';
 import { TrainingStatisticsDataView } from '../training-statistics-data-view';
 
 @Component({
@@ -13,7 +14,7 @@ import { TrainingStatisticsDataView } from '../training-statistics-data-view';
   styleUrls: ['./training-stats-comparison-config.component.scss'],
 })
 export class TrainingStatsComparisonConfigComponent {
-  selectedTrainingPlan = signal<string[]>([]);
+  selectedTrainingPlans = signal<string[]>([]);
 
   trainingPlanTitles = signal<string[]>([]);
 
@@ -25,5 +26,16 @@ export class TrainingStatsComparisonConfigComponent {
 
   selectedCategory = signal('');
 
-  constructor() {}
+  constructor(
+    private statisticsService: StatisticsService,
+    private injector: Injector,
+  ) {
+    effect(
+      () => {
+        this.statisticsService.updateTrainingPlans(this.selectedTrainingPlans());
+        console.log('here');
+      },
+      { allowSignalWrites: true, injector: this.injector },
+    );
+  }
 }

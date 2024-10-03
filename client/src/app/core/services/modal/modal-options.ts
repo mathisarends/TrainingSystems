@@ -1,3 +1,4 @@
+import { Provider } from '@angular/core';
 import { ModalSize } from './modalSize';
 /**
  * Interface for modal options.
@@ -46,6 +47,8 @@ export interface ModalOptions {
   confirmationRequired?: boolean;
 
   hasFooter?: boolean;
+
+  providers?: Provider[];
 }
 
 /**
