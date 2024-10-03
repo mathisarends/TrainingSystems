@@ -22,8 +22,7 @@ import { ChangeProfilePictureConfirmationComponent } from '../../profile-2/chang
 import { ChartColorService } from '../training-view/services/chart-color.service';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
 import { AverageTrainingDayDurationDto } from './average-training-duration-dto';
-import { BarChartDataDto } from './bar-chart-data-dto';
-import { LineChartDataDTO } from './line-chart-data-dto';
+import { ChartDataDto } from './chart-data-dto';
 import { TrainingDayChartType } from './training-day-chart-type';
 import { TrainingStatisticsService } from './training-statistics.service';
 
@@ -159,7 +158,7 @@ export class TrainingDayStatisticsComponent implements OnInit {
       });
   }
 
-  private inializePerformedSetsData(tonnageData: BarChartDataDto) {
+  private inializePerformedSetsData(tonnageData: ChartDataDto) {
     const lineDatasets = Object.keys(tonnageData).map((categoryKey) => {
       const categoryData = tonnageData[categoryKey];
       return this.createSetDataSet(categoryKey, categoryData || []);
@@ -209,7 +208,7 @@ export class TrainingDayStatisticsComponent implements OnInit {
    * @param tonnageData - An object containing tonnage data for each exercise category.
    * @param chartType - The type of chart to initialize (volume or performance).
    */
-  private initializeLineChartData(tonnageData: LineChartDataDTO, chartType: TrainingDayChartType) {
+  private initializeLineChartData(tonnageData: ChartDataDto, chartType: TrainingDayChartType) {
     const lineDatasets = Object.keys(tonnageData).map((categoryKey) => {
       const categoryData = tonnageData[categoryKey];
       return this.createTonnageDataSet(categoryKey, categoryData || []);

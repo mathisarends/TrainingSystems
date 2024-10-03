@@ -3,8 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { ExerciseCategories } from '../model/exercise-categories';
 import { AverageTrainingDayDurationDto } from './average-training-duration-dto';
-import { BarChartDataDto } from './bar-chart-data-dto';
-import { LineChartDataDTO } from './line-chart-data-dto';
+import { ChartDataDto } from './chart-data-dto';
 import { TrainingPlanTitleIdDto } from './training-plan-title-id-dto';
 
 @Injectable()
@@ -36,17 +35,17 @@ export class TrainingStatisticsService {
   /**
    * Retrieves the tonnage data for selected exercises in a specific training plan.
    */
-  getTonnageDataForSelectedExercises(id: string, exercises: string[]): Observable<LineChartDataDTO> {
+  getTonnageDataForSelectedExercises(id: string, exercises: string[]): Observable<ChartDataDto> {
     const exercisesQueryParam = this.toQueryParam(exercises);
-    return this.httpService.get<LineChartDataDTO>(`/training/statistics/${id}?exercises=${exercisesQueryParam}`);
+    return this.httpService.get<ChartDataDto>(`/training/statistics/${id}?exercises=${exercisesQueryParam}`);
   }
 
   /**
    * Retrieves the tonnage data for selected exercises in a specific training plan.
    */
-  getPerformanceDataForSelectedExercises(id: string, exercises: string[]): Observable<LineChartDataDTO> {
+  getPerformanceDataForSelectedExercises(id: string, exercises: string[]): Observable<ChartDataDto> {
     const exercisesQueryParam = this.toQueryParam(exercises);
-    return this.httpService.get<LineChartDataDTO>(
+    return this.httpService.get<ChartDataDto>(
       `/training/statistics/${id}/performance?exercises=${exercisesQueryParam}`,
     );
   }
@@ -61,7 +60,7 @@ export class TrainingStatisticsService {
   /**
    * Retrieves the set data for selected exercises in a specific training plan.
    */
-  getSetDataForSelectedExercises(id: string, exercises: string[]): Observable<BarChartDataDto> {
+  getSetDataForSelectedExercises(id: string, exercises: string[]): Observable<ChartDataDto> {
     const exercisesQueryParam = this.toQueryParam(exercises);
     return this.httpService.get(`/training/statistics/${id}/sets?exercises=${exercisesQueryParam}`);
   }
