@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import Chart from 'chart.js/auto';
 import { TooltipDirective } from '../../../directives/tooltip.directive';
 import { CircularIconButtonComponent } from '../../circular-icon-button/circular-icon-button.component';
-import { BaseChartComponent } from '../base-chart.component';
+import { ChartComponent } from '../chart.component';
 
 /**
  * PolarChartComponent
@@ -17,7 +17,7 @@ import { BaseChartComponent } from '../base-chart.component';
   templateUrl: './polar-chart.component.html',
   styleUrls: ['./polar-chart.component.scss'],
 })
-export class PolarChartComponent extends BaseChartComponent<'polarArea'> {
+export class PolarChartComponent extends ChartComponent<'polarArea'> {
   initializeChart(): void {
     this.chart()?.destroy(); // prevent memory leaks
 

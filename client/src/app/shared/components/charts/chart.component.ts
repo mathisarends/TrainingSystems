@@ -1,9 +1,10 @@
 import { AfterViewInit, Directive, effect, ElementRef, Injector, input, signal, ViewChild } from '@angular/core';
 import Chart, { ChartData, ChartType } from 'chart.js/auto';
 import { IconName } from '../../icon/icon-name';
+import { ImageDownloadService } from '../../service/image-download.service';
 
 @Directive()
-export abstract class BaseChartComponent<T extends ChartType> implements AfterViewInit {
+export abstract class ChartComponent<T extends ChartType> implements AfterViewInit {
   protected readonly IconName = IconName;
   @ViewChild('canvas') canvas!: ElementRef;
 
@@ -29,7 +30,10 @@ export abstract class BaseChartComponent<T extends ChartType> implements AfterVi
    */
   chart = signal<Chart<T> | null>(null);
 
-  constructor(protected injector: Injector) {}
+  constructor(
+    protected injector: Injector,
+    private imageDownloadService: ImageDownloadService,
+  ) {}
 
   /**
    * Lifecycle hook that initializes the chart after the view is rendered.
@@ -77,9 +81,7 @@ export abstract class BaseChartComponent<T extends ChartType> implements AfterVi
     }
 
     const base64Image = chartInstance.toBase64Image();
-    const link = document.createElement('a');
-    link.href = base64Image;
-    link.download = `${this.chartId() || 'chart'}.png`;
-    link.click();
+
+    this.imageDownloadService.downloadImage(base64Image, `${this.chartId() || 'chart'}.png`);
   }
 }

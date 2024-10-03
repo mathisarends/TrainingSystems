@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import Chart from 'chart.js/auto';
 import { TooltipDirective } from '../../../directives/tooltip.directive';
 import { CircularIconButtonComponent } from '../../circular-icon-button/circular-icon-button.component';
-import { BaseChartComponent } from '../base-chart.component';
+import { ChartComponent } from '../chart.component';
 
 @Component({
   selector: 'app-line-chart',
@@ -11,7 +11,7 @@ import { BaseChartComponent } from '../base-chart.component';
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.scss'],
 })
-export class LineChartComponent extends BaseChartComponent<'line'> {
+export class LineChartComponent extends ChartComponent<'line'> {
   /**
    * Initializes the line chart. Destroys any existing chart to prevent memory leaks.
    */

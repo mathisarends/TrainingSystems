@@ -14,6 +14,7 @@ import { ChartSkeletonComponent } from '../../../shared/components/loader/chart-
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { SelectComponent } from '../../../shared/components/select/select.component';
 import { ToSelectItemPipe } from '../../../shared/components/select/to-select-item.pipe';
+import { ImageDownloadService } from '../../../shared/service/image-download.service';
 import { KeyboardService } from '../../../shared/service/keyboard.service';
 import { HeaderService } from '../../header/header.service';
 import { ChangeProfilePictureConfirmationComponent } from '../../profile-2/change-profile-picture-confirmation/change-profile-picture-confirmation.component';
@@ -42,7 +43,7 @@ import { TrainingStatisticsService } from './training-statistics.service';
     ToSelectItemPipe,
     PolarChartComponent,
   ],
-  providers: [TrainingStatisticsService, KeyboardService, PaginationComponent],
+  providers: [TrainingStatisticsService, KeyboardService, PaginationComponent, ImageDownloadService],
   templateUrl: './training-day-statistics.component.html',
   styleUrls: ['./training-day-statistics.component.scss'],
 })
