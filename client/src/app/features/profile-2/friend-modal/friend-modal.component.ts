@@ -5,9 +5,9 @@ import { catchError, finalize } from 'rxjs/operators';
 import { HttpService } from '../../../core/services/http-client.service';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
-import { Friend } from '../../profile-2/friend-card/friend';
-import { FriendCardSkeletonComponent } from '../../profile-2/friend-card/friend-card-skeleton/friend-card-skeleton.component';
-import { FriendCardComponent } from '../../profile-2/friend-card/friend-card.component';
+import { Friend } from '../friend-card/friend';
+import { FriendCardSkeletonComponent } from '../friend-card/friend-card-skeleton/friend-card-skeleton.component';
+import { FriendCardComponent } from '../friend-card/friend-card.component';
 
 @Component({
   selector: 'app-friend-modal',
