@@ -4,6 +4,12 @@
   gap: 1.5rem;
 }
 
+.floating-label-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.85rem;
+}
+
 .configuration-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

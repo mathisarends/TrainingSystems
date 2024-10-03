@@ -25,6 +25,7 @@ export class IconListeItemComponent {
    */
   itemClicked = output<IconListItem>();
 
+  showChevronIcon = input(true);
   /**
    * Handles the click event on the component. When the user clicks anywhere
    * on the component, this method is triggered, emitting the `itemClicked` event

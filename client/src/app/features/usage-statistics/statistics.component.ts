@@ -2,12 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, effect, Injector, OnInit, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { forkJoin } from 'rxjs';
-import { ModalService } from '../../core/services/modal/modalService';
 import { ChartData } from '../../shared/components/charts/chart-data';
 import { LineChartDataset } from '../../shared/components/charts/line-chart/line-chart-data-set';
 import { LineChartComponent } from '../../shared/components/charts/line-chart/line-chart.component';
 import { FloatingLabelInputItem } from '../../shared/components/floating-label-input/floating-label-input-item';
 import { FloatingLabelInputComponent } from '../../shared/components/floating-label-input/floating-label-input.component';
+import { IconBackgroundColor } from '../../shared/components/icon-list-item/icon-background-color';
+import { IconListeItemComponent } from '../../shared/components/icon-list-item/icon-list-item.component';
 import { SelectComponent } from '../../shared/components/select/select.component';
 import { IconName } from '../../shared/icon/icon-name';
 import { ImageDownloadService } from '../../shared/service/image-download.service';
@@ -20,7 +21,6 @@ import { ChartColorService } from '../training-plans/training-view/services/char
 import { StatisticsService } from './statistics.service';
 import { TrainingDayNotificationComponent } from './training-day-notification/training-day-notification.component';
 import { TrainingStatisticsDataView } from './training-statistics-data-view';
-import { TrainingStatsComparisonConfigComponent } from './training-stats-comparison/training-stats-comparison-config.component';
 
 @Component({
   selector: 'app-statistics',
@@ -31,6 +31,7 @@ import { TrainingStatsComparisonConfigComponent } from './training-stats-compari
     LineChartComponent,
     SelectComponent,
     FloatingLabelInputComponent,
+    IconListeItemComponent,
   ],
   templateUrl: './statistics.component.html',
   styleUrls: ['./statistics.component.scss'],
@@ -38,6 +39,8 @@ import { TrainingStatsComparisonConfigComponent } from './training-stats-compari
 })
 export class StatisticsComponent implements OnInit {
   protected readonly TrainingStatisticsDataView = TrainingStatisticsDataView;
+  protected readonly IconName = IconName;
+  protected readonly IconBackgroundColor = IconBackgroundColor;
   selectedTrainingPlans = signal<string[]>([]);
 
   trainingPlanTitles = signal<string[]>([]);
@@ -68,7 +71,6 @@ export class StatisticsComponent implements OnInit {
     private headerService: HeaderService,
     private statisticsService: StatisticsService,
     private trainingStatisticService: TrainingStatisticsService,
-    private modalService: ModalService,
     private destroyRef: DestroyRef,
     private chartColorService: ChartColorService,
     private injector: Injector,
@@ -77,7 +79,6 @@ export class StatisticsComponent implements OnInit {
   ngOnInit(): void {
     this.headerService.setHeadlineInfo({
       title: 'Usage',
-      buttons: [{ icon: IconName.BAR_CHART, callback: this.openConfigurationModal.bind(this) }],
     });
 
     this.fetchAndSetCategoryMetadata();
@@ -126,7 +127,7 @@ export class StatisticsComponent implements OnInit {
       Object.keys(planData).forEach((categoryKey) => {
         const categoryData = planData[categoryKey];
 
-        lineDatasets.push(this.createTonnageDataSet(`${categoryKey.toUpperCase()} ${planTitle}`, categoryData || []));
+        lineDatasets.push(this.createTonnageDataSet(`${planTitle.toUpperCase()}`, categoryData || []));
       });
     });
 
@@ -200,21 +201,5 @@ export class StatisticsComponent implements OnInit {
       label: item,
       value: item,
     }));
-  }
-
-  private openConfigurationModal(): void {
-    this.modalService.open({
-      title: 'Konfiguration',
-      component: TrainingStatsComparisonConfigComponent,
-      buttonText: 'Übernehmen',
-      componentData: {
-        selectedTrainingPlans: this.selectedTrainingPlans,
-        trainingPlanTitles: this.trainingPlanTitles,
-        trainingStatisticsDataViewOptions: this.trainingStatisticsDataViewOptions,
-        selectedDataViewOption: this.selectedDataViewOption,
-        allCategories: this.allCategories,
-        selectedCategory: this.selectedCategory,
-      },
-    });
   }
 }

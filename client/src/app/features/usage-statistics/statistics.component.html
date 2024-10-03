@@ -1,7 +1,20 @@
-@if (selectedDataViewOption() === TrainingStatisticsDataView.VOLUME) {
-  <app-line-chart [yAxisTitle]="'Tonnage ' + selectedCategory()" [data]="volumeChartData()" />
-} @else {
-  <app-line-chart [yAxisTitle]="'Est. Max ' + selectedCategory()" [data]="performanceChartData()" />
-}
+<div class="floating-label-grid">
+  <app-floating-label-input
+    [label]="'Betrachtete Kategorie'"
+    [type]="'select'"
+    [options]="allCategories()"
+    [(value)]="selectedCategory"
+  />
+
+  <app-floating-label-input
+    [label]="'Datenansicht'"
+    [type]="'select'"
+    [options]="trainingStatisticsDataViewOptions()"
+    [(value)]="selectedDataViewOption"
+  />
+</div>
+
+@let isTonnageView = selectedDataViewOption() === TrainingStatisticsDataView.VOLUME;
+<app-line-chart [data]="isTonnageView ? volumeChartData() : performanceChartData()" />
 
 <app-training-day-notification [notificationsInput]="notificationService.trainingDayNotifications()" />

@@ -4,4 +4,6 @@
   </div>
   <p>{{ item().label }}</p>
 </div>
-<app-icon [name]="IconName.CHEVRON_RIGHT" [size]="26" [color]="'grey'" />
+@if (showChevronIcon()) {
+  <app-icon [name]="IconName.CHEVRON_RIGHT" [size]="26" [color]="'grey'" />
+}
