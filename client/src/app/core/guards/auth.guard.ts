@@ -27,7 +27,7 @@ export class AuthGuard implements CanActivate {
     }
 
     if (this.authService.isAuthenticated() === false) {
-      this.router.navigate(['login']);
+      this.authService.showLoginModalDialog();
       return of(false);
     }
 
@@ -36,7 +36,7 @@ export class AuthGuard implements CanActivate {
       map(() => {
         const isAuthenticated = this.authService.isAuthenticated();
         if (!isAuthenticated) {
-          this.router.navigate(['login']);
+          this.authService.showLoginModalDialog();
         }
         return isAuthenticated as boolean;
       }),

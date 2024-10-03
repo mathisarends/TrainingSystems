@@ -1,1 +1,5 @@
+@if (notificationService.trainingDayNotifications().length === 0) {
+  <app-alert [alertText]="'Es sind momentan keine Benachrichtigungen vorhanden'" />
+}
+
 <app-training-day-notification [notificationsInput]="notificationService.trainingDayNotifications()" />
