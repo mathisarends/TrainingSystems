@@ -7,12 +7,10 @@ import { LineChartDataset } from '../../shared/components/charts/line-chart/line
 import { LineChartComponent } from '../../shared/components/charts/line-chart/line-chart.component';
 import { FloatingLabelInputItem } from '../../shared/components/floating-label-input/floating-label-input-item';
 import { FloatingLabelInputComponent } from '../../shared/components/floating-label-input/floating-label-input.component';
-import { IconBackgroundColor } from '../../shared/components/icon-list-item/icon-background-color';
 import { IconListeItemComponent } from '../../shared/components/icon-list-item/icon-list-item.component';
 import { SelectComponent } from '../../shared/components/select/select.component';
 import { IconName } from '../../shared/icon/icon-name';
 import { ImageDownloadService } from '../../shared/service/image-download.service';
-import { NotificationService } from '../../shared/service/notification.service';
 import { HeaderService } from '../header/header.service';
 import { ChartDataDto } from '../training-plans/training-day-statistics/chart-data-dto';
 import { TrainingDayChartType } from '../training-plans/training-day-statistics/training-day-chart-type';
@@ -39,8 +37,6 @@ import { TrainingStatisticsDataView } from './training-statistics-data-view';
 })
 export class StatisticsComponent implements OnInit {
   protected readonly TrainingStatisticsDataView = TrainingStatisticsDataView;
-  protected readonly IconName = IconName;
-  protected readonly IconBackgroundColor = IconBackgroundColor;
 
   trainingPlanTitles = signal<string[]>([]);
 
@@ -66,7 +62,6 @@ export class StatisticsComponent implements OnInit {
   performanceChartData = signal<ChartData<LineChartDataset>>({ datasets: [], labels: [] });
 
   constructor(
-    protected notificationService: NotificationService,
     private headerService: HeaderService,
     private statisticsService: StatisticsService,
     private trainingStatisticService: TrainingStatisticsService,

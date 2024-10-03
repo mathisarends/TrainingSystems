@@ -19,7 +19,16 @@
 
       <div class="list-item-container">
         @for (item of listItems; track item) {
-          <app-icon-list-item [item]="item" (itemClicked)="onListItemClicked($any($event))" />
+          <div class="list-item">
+            <app-icon-list-item [item]="item" (itemClicked)="onListItemClicked($any($event))" />
+
+            @if (item.label === 'Logs') {
+              <app-notification-badge
+                [count]="notificationService.trainingDayNotifications().length"
+                [position]="'top-left'"
+              />
+            }
+          </div>
         }
       </div>
     </div>

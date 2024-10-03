@@ -8,11 +8,12 @@ import { IconBackgroundColor } from '../../shared/components/icon-list-item/icon
 import { IconListItem } from '../../shared/components/icon-list-item/icon-list-item';
 import { IconListeItemComponent } from '../../shared/components/icon-list-item/icon-list-item.component';
 import { ChartSkeletonComponent } from '../../shared/components/loader/chart-skeleton/chart-skeleton.component';
+import { NotificationBadgeComponent } from '../../shared/components/notification-badge/notification-badge.component';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 import { ToastService } from '../../shared/components/toast/toast.service';
 import { IconName } from '../../shared/icon/icon-name';
-import { IconComponent } from '../../shared/icon/icon.component';
 import { ImageUploadService } from '../../shared/service/image-upload.service';
+import { NotificationService } from '../../shared/service/notification.service';
 import { GymTicketComponent } from '../gym-ticket/gym-ticket.component';
 import { GymTicketService } from '../gym-ticket/gym-ticket.service';
 import { HeaderService } from '../header/header.service';
@@ -27,13 +28,13 @@ import { SettingsComponent } from './settings/settings.component';
 @Component({
   standalone: true,
   imports: [
-    IconComponent,
     SpinnerComponent,
     IconListeItemComponent,
     RestPauseTimeIndicatorComponent,
     ActivityCalendar,
     CommonModule,
     ChartSkeletonComponent,
+    NotificationBadgeComponent,
   ],
   selector: 'app-profile',
   templateUrl: 'profile.component.html',
@@ -61,6 +62,7 @@ export class ProfileComponent2 implements OnInit {
 
   constructor(
     protected profileService: ProfileService,
+    protected notificationService: NotificationService,
     private authService: AuthService,
     private headerService: HeaderService,
     private modalService: ModalService,

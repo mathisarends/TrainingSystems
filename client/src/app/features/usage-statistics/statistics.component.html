@@ -16,5 +16,3 @@
 
 @let isTonnageView = selectedDataViewOption() === TrainingStatisticsDataView.VOLUME;
 <app-line-chart [data]="isTonnageView ? volumeChartData() : performanceChartData()" />
-
-<app-training-day-notification [notificationsInput]="notificationService.trainingDayNotifications()" />

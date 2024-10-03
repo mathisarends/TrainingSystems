@@ -66,6 +66,10 @@
   flex-direction: column;
   gap: 0.45rem;
   margin-top: 1rem;
+
+  .list-item {
+    position: relative;
+  }
 }
 
 @media screen and (max-width: 768px) {

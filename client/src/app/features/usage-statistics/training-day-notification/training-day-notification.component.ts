@@ -36,7 +36,6 @@ export class TrainingDayNotificationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Initialize the writable signal with the input value
     this.notifications.set(
       this.notificationsInput().map((notification) => ({ ...notification, exerciseTabCollapsed: true })),
     );
@@ -56,10 +55,8 @@ export class TrainingDayNotificationComponent implements OnInit {
 
   protected goToTrainingPlan(notificationId: string): void {
     this.notificationService.getTrainingDayById(notificationId).subscribe((response) => {
-      // Assuming the response contains the trainingPlanId, weekIndex, and dayIndex
       const { trainingPlanId, weekIndex, dayIndex } = response;
 
-      // Navigate to the route with query parameters
       this.router.navigate(['/training/view'], {
         queryParams: { planId: trainingPlanId, week: weekIndex, day: dayIndex },
       });
@@ -81,7 +78,6 @@ export class TrainingDayNotificationComponent implements OnInit {
 
     const message = `${trainingDate}\n\n${exercisesDetails}`;
 
-    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
+    this.shareService.shareViaWhatsApp(message);
   }
 }
