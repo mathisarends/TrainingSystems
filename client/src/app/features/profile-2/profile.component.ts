@@ -19,7 +19,6 @@ import { HeaderService } from '../header/header.service';
 import { RestPauseTimeIndicatorComponent } from '../training-plans/training-view/rest-pause-time-indicator/rest-pause-time-indicator.component';
 import { ActivityCalendarData } from '../usage-statistics/activity-calendar-data';
 import { ActivityCalendar } from '../usage-statistics/activity-calendar/activity-calendar.component';
-import { UsageStatisticsService } from '../usage-statistics/usage.-statistics.service';
 import { ChangeProfilePictureConfirmationComponent } from './change-profile-picture-confirmation/change-profile-picture-confirmation.component';
 import { FriendModalComponent } from './friend-modal/friend-modal.component';
 import { ProfileService } from './service/profileService';
@@ -39,7 +38,7 @@ import { SettingsComponent } from './settings/settings.component';
   selector: 'app-profile',
   templateUrl: 'profile.component.html',
   styleUrls: ['profile.component.scss'],
-  providers: [GymTicketService, UsageStatisticsService],
+  providers: [GymTicketService],
 })
 export class ProfileComponent2 implements OnInit {
   protected IconName = IconName;
@@ -68,7 +67,6 @@ export class ProfileComponent2 implements OnInit {
     private toastService: ToastService,
     private gymTicketService: GymTicketService,
     private imageUploadService: ImageUploadService,
-    private usageStatisticsService: UsageStatisticsService,
     private router: Router,
     private route: ActivatedRoute,
   ) {}
@@ -86,7 +84,7 @@ export class ProfileComponent2 implements OnInit {
   }
 
   private initializeActivityCalendar(): void {
-    this.activityCalendarData$ = this.usageStatisticsService.getActivityCalendarData();
+    this.activityCalendarData$ = this.profileService.getActivityCalendarData();
   }
 
   protected async onListItemClicked(listItem: IconListItem) {

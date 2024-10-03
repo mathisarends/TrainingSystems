@@ -2,6 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { BasicConfirmationResponse } from '../../../shared/dto/basic-confirmation-response';
+import { ActivityCalendarData } from '../../usage-statistics/activity-calendar-data';
 import { UpdateProfilePictureDto } from './update-profile-picture-dto';
 import { UserProfileDto } from './user-profile-dto';
 
@@ -26,13 +27,13 @@ export class ProfileService {
 
   isInitalized = signal(false);
 
-  constructor(private httpClientService: HttpService) {}
+  constructor(private httpService: HttpService) {}
 
   /**
    * Fetches the user's profile data from the server and updates individual signals.
    */
   fetchAndSetProfileData(): Observable<UserProfileDto> {
-    return this.httpClientService.get<UserProfileDto>('/user/profile').pipe(
+    return this.httpService.get<UserProfileDto>('/user/profile').pipe(
       tap((data: UserProfileDto) => {
         this.username.set(data.username);
         this.email.set(data.email);
@@ -47,13 +48,22 @@ export class ProfileService {
    * Uploads a new profile picture for the user.
    */
   uploadProfilePicture(updateProfilePictureDto: UpdateProfilePictureDto): Observable<BasicConfirmationResponse> {
-    return this.httpClientService.post<any>('/user/profile/update-profile-picture', updateProfilePictureDto);
+    return this.httpService.post<any>('/user/profile/update-profile-picture', updateProfilePictureDto);
   }
 
   /**
    * Deletes the user's account from the system.
    */
   deleteAccount(): Observable<BasicConfirmationResponse> {
-    return this.httpClientService.delete<any>('/user/profile/delete-account');
+    return this.httpService.delete<any>('/user/profile/delete-account');
+  }
+
+  /**
+   * Retrieves activity calendar data for the user.
+   *
+   * @returns An `Observable` emitting `ActivityCalendarData` that contains the user's activity data.
+   */
+  getActivityCalendarData(): Observable<ActivityCalendarData> {
+    return this.httpService.get<ActivityCalendarData>('/user/activity/activity-calendar');
   }
 }

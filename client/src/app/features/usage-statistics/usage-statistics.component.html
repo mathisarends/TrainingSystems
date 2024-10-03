@@ -1,14 +1,1 @@
-<!-- @if (usageStatisticsData$ | async; as usageData) {
-  <app-activity-calendar [activityData]="usageData.activityCalendarData" />
-
-  <app-grouped-bar-chart
-    [yAxisLabel]="'Trainingsdauer (in Minuten)'"
-    [groupedBarChartData]="usageData.recentTrainingDurations"
-  />
-
-  <app-training-day-notification [notificationsInput]="notificationService.trainingDayNotifications()" />
-} @else {
-  <app-chart-skeleton [rows]="4" />
-  <app-chart-skeleton [rows]="4" />
-}
- -->
+<app-training-day-notification [notificationsInput]="notificationService.trainingDayNotifications()" />
