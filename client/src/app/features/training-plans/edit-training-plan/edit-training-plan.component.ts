@@ -3,7 +3,6 @@ import { Component, effect, ElementRef, Injector, OnInit, signal, ViewChild } fr
 import { FormsModule } from '@angular/forms';
 import { ImageCropperComponent } from 'ngx-image-cropper';
 import { firstValueFrom } from 'rxjs';
-import { ModalService } from '../../../core/services/modal/modalService';
 import { AbstractImageCropperComponent } from '../../../shared/components/abstract-image-cropper/abstract-image-cropper.component';
 import { FloatingLabelInputComponent } from '../../../shared/components/floating-label-input/floating-label-input.component';
 import { OnConfirm } from '../../../shared/components/modal/on-confirm';
@@ -46,7 +45,6 @@ export class EditTrainingPlanComponent extends AbstractImageCropperComponent imp
 
   constructor(
     private injector: Injector,
-    private modalService: ModalService,
     private trainingPlanService: TrainingPlanService,
     private editTrainingPlanService: EditTrainingPlanService,
     imageUploadService: ImageUploadService,

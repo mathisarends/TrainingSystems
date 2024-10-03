@@ -1,13 +1,26 @@
 <div class="configuration-grid">
-  <app-select [options]="trainingPlanTitles()" [isSearchable]="false" [(selectedOptions)]="selectedTrainingPlans" />
-  <app-select
+  <app-floating-label-input
+    [label]="'Trainingsplan'"
+    [type]="'select'"
+    [options]="trainingPlanTitles()"
+    [(value)]="selectedTrainingPlan"
+  />
+
+  <app-floating-label-input
+    [label]="'Betrachtete Kategorie'"
+    [type]="'select'"
+    [options]="allCategories()"
+    [(value)]="selectedCategory"
+  />
+
+  <app-floating-label-input
+    [label]="'Datenansicht'"
+    [type]="'select'"
     [options]="trainingStatisticsDataViewOptions()"
-    [isSearchable]="false"
-    [selectionMode]="'single'"
-    [(selectedOptions)]="selectedDataViewOption"
+    [(value)]="selectedDataViewOption"
   />
 </div>
 
-<app-line-chart [yAxisTitle]="selectedDataViewOption()[0]" />
+<app-line-chart />
 
 <app-training-day-notification [notificationsInput]="notificationService.trainingDayNotifications()" />

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, input, model, signal } from '@angular/core';
+import { FloatingLabelInputItem } from './floating-label-input-item';
 
 /**
  * A reusable form input component with validation logic.
@@ -37,7 +38,7 @@ export class FloatingLabelInputComponent {
   /**
    * If the type is 'select', the options to display in the dropdown.
    */
-  options = input<{ value: string | number; label: string }[]>([]); // Empty array by default
+  options = input<FloatingLabelInputItem[]>([]); // Empty array by default
 
   /**
    * Signal that tracks whether the input is in an invalid state.
