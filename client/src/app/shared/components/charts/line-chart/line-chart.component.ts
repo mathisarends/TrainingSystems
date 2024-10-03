@@ -29,7 +29,7 @@ export class LineChartComponent extends ChartComponent<'line'> {
       data: this.data(),
       options: {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         scales: {
           y: {
             beginAtZero: true,
