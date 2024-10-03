@@ -41,7 +41,6 @@ export class StatisticsComponent implements OnInit {
   protected readonly TrainingStatisticsDataView = TrainingStatisticsDataView;
   protected readonly IconName = IconName;
   protected readonly IconBackgroundColor = IconBackgroundColor;
-  selectedTrainingPlans = signal<string[]>([]);
 
   trainingPlanTitles = signal<string[]>([]);
 
@@ -78,7 +77,8 @@ export class StatisticsComponent implements OnInit {
 
   ngOnInit(): void {
     this.headerService.setHeadlineInfo({
-      title: 'Usage',
+      title: 'Statistiken',
+      buttons: [{ icon: IconName.PLUS, callback: () => {} }],
     });
 
     this.fetchAndSetCategoryMetadata();
@@ -91,7 +91,7 @@ export class StatisticsComponent implements OnInit {
   private handleConfigurationParamUpdate() {
     effect(
       () => {
-        const trainingPlans = this.selectedTrainingPlans();
+        const trainingPlans = this.trainingPlanTitles();
         const category = this.selectedCategory();
         const selectedDataViewOption = this.selectedDataViewOption();
 
@@ -131,8 +131,9 @@ export class StatisticsComponent implements OnInit {
       });
     });
 
-    // Generate labels for the chart (assumes weekly data)
-    const lineLabels = this.generateWeekLabels(lineDatasets[0]?.data.length || 0);
+    const getDataSetWithMostEntries = this.getDataSetWithMostEntries(lineDatasets);
+
+    const lineLabels = this.generateWeekLabels(getDataSetWithMostEntries?.data.length || 0);
 
     // Set the appropriate chart based on the chartType
     if (chartType === TrainingDayChartType.VOLUME) {
@@ -140,6 +141,20 @@ export class StatisticsComponent implements OnInit {
     } else if (chartType === TrainingDayChartType.PERFORMANCE) {
       this.performanceChartData.set({ datasets: lineDatasets, labels: lineLabels });
     }
+  }
+
+  /**
+   * Returns the dataset with the longest `data` array.
+   * @param datasets - The list of datasets to check.
+   * @returns The dataset with the longest `data` array.
+   */
+  private getDataSetWithMostEntries(datasets: LineChartDataset[]): LineChartDataset | undefined {
+    return datasets.reduce(
+      (longest, current) => {
+        return current.data.length > (longest?.data.length || 0) ? current : longest;
+      },
+      undefined as LineChartDataset | undefined,
+    );
   }
 
   /**
@@ -191,8 +206,6 @@ export class StatisticsComponent implements OnInit {
   private initializeTrainingPlanSelection(): void {
     this.statisticsService.getAllTrainingPlanTitles().subscribe((titles) => {
       this.trainingPlanTitles.set(titles);
-
-      this.selectedTrainingPlans.set(titles);
     });
   }
 
