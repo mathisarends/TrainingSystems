@@ -10,6 +10,7 @@ import { mapToExerciseCategory } from '../../utils/exerciseUtils.js';
 import _ from 'lodash';
 import { AverageTrainingDayDurationDto } from '../../interfaces/averageTrainingDayDurationDto.js';
 import { LineChartDataDTO } from '../../interfaces/lineChartDataDto.js';
+import trainingPlanManager from '../../service/trainingPlanManager.js';
 import userManager from '../../service/userManager.js';
 const { capitalize } = _;
 
@@ -187,6 +188,81 @@ export async function getDrilldownForCategory(req: Request, res: Response): Prom
   const tonnageArray = Array.from(tonnageMap, ([exercise, tonnage]) => ({ exercise, tonnage }));
 
   return res.status(200).json({ category, week: weekIndex, exercises: tonnageArray });
+}
+
+// TODO: Momentan noch mit Title aber mit id die pläne wäre hier semantisch richtiger
+/**
+ * Retrieves tonnage data for specific exercise categories across multiple training plans.
+ */
+export async function getVolumeComparison(req: Request, res: Response): Promise<void> {
+  const trainingPlanTitles = (req.query.plans as string).split(',');
+  const exerciseCategories = (req.query.exercises as string).split(',');
+
+  const user = await userManager.getUser(res);
+
+  const trainingPlans: TrainingPlan[] = await Promise.all(
+    trainingPlanTitles.map(async title => {
+      return await trainingPlanManager.findTrainingPlanByTitle(user, title);
+    })
+  );
+
+  const responseData: Record<string, LineChartDataDTO> = {};
+
+  for (const trainingPlan of trainingPlans) {
+    const planData: LineChartDataDTO = {};
+
+    exerciseCategories.forEach(category => {
+      const exerciseCategory = mapToExerciseCategory(category);
+      if (exerciseCategory) {
+        planData[capitalize(category)] = prepareTrainingWeeksForExercise(trainingPlan, exerciseCategory);
+      }
+    });
+
+    responseData[trainingPlan.title] = planData;
+  }
+
+  res.status(200).json(responseData);
+}
+
+/**
+ * Retrieves performance data for specific exercise categories across multiple training plans.
+ */
+export async function getPerformanceComparisonCharts(req: Request, res: Response): Promise<void> {
+  const trainingPlanTitles = (req.query.plans as string).split(',');
+  const exerciseCategories = (req.query.exercises as string).split(',');
+
+  const mappedExerciseCategories = exerciseCategories.map((category: string) => mapToExerciseCategory(category));
+
+  const mainExercises = [
+    ExerciseCategoryType.SQUAT,
+    ExerciseCategoryType.BENCH,
+    ExerciseCategoryType.DEADLIFT,
+    ExerciseCategoryType.OVERHEADPRESS
+  ];
+
+  const validExercises = mappedExerciseCategories.filter(exercise => mainExercises.includes(exercise));
+
+  const user = await userManager.getUser(res);
+
+  const trainingPlans: TrainingPlan[] = await Promise.all(
+    trainingPlanTitles.map(async title => {
+      return await trainingPlanManager.findTrainingPlanByTitle(user, title);
+    })
+  );
+
+  const responseData: Record<string, LineChartDataDTO> = {};
+
+  for (const trainingPlan of trainingPlans) {
+    const planData: LineChartDataDTO = {};
+
+    validExercises.forEach(category => {
+      planData[capitalize(category)] = getBestPerformanceByExercise(trainingPlan, category);
+    });
+
+    responseData[trainingPlan.title] = planData;
+  }
+
+  res.status(200).json(responseData);
 }
 
 export async function getPerformanceCharts(req: Request, res: Response): Promise<void> {

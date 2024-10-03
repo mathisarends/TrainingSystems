@@ -48,4 +48,16 @@ statisticsRouter.get(
   asyncHandler(trainingStatisticsController.getDrilldownForCategory)
 );
 
+statisticsRouter.get(
+  '/volume-comparison',
+  authService.authenticationMiddleware,
+  asyncHandler(trainingStatisticsController.getVolumeComparison)
+);
+
+statisticsRouter.get(
+  '/performance-comparison',
+  authService.authenticationMiddleware,
+  asyncHandler(trainingStatisticsController.getPerformanceCharts)
+);
+
 export default statisticsRouter;

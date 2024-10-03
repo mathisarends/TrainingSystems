@@ -1,4 +1,4 @@
-import { Component, computed, WritableSignal } from '@angular/core';
+import { Component, WritableSignal } from '@angular/core';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
 import { FloatingLabelInputItem } from '../../../shared/components/floating-label-input/floating-label-input-item';
 import { FloatingLabelInputComponent } from '../../../shared/components/floating-label-input/floating-label-input.component';
@@ -13,20 +13,33 @@ import { TrainingStatisticsDataView } from '../training-statistics-data-view';
   styleUrls: ['./training-stats-comparison-config.component.scss'],
 })
 export class TrainingStatsComparisonConfigComponent {
+  /**
+   * Holds the selected training plans.
+   */
   selectedTrainingPlans!: WritableSignal<string[]>;
-  trainingPlanTitles!: WritableSignal<string[]>;
-  trainingStatisticsDataViewOptions!: WritableSignal<FloatingLabelInputItem[]>;
-  selectedDataViewOption!: WritableSignal<TrainingStatisticsDataView>;
-  allCategories!: WritableSignal<FloatingLabelInputItem[]>;
-  selectedCategory!: WritableSignal<string>;
 
-  isInitialized = computed(
-    () =>
-      this.selectedTrainingPlans() &&
-      this.trainingPlanTitles() &&
-      this.trainingStatisticsDataViewOptions() &&
-      this.selectedDataViewOption() &&
-      this.allCategories() &&
-      this.selectedCategory(),
-  );
+  /**
+   * Stores available training plan titles.
+   */
+  trainingPlanTitles!: WritableSignal<string[]>;
+
+  /**
+   * Contains the available data view options for statistics configuration.
+   */
+  trainingStatisticsDataViewOptions!: WritableSignal<FloatingLabelInputItem[]>;
+
+  /**
+   * Stores the selected data view option, defaulting to volume.
+   */
+  selectedDataViewOption!: WritableSignal<TrainingStatisticsDataView>;
+
+  /**
+   * Holds all available categories for training statistics filtering.
+   */
+  allCategories!: WritableSignal<FloatingLabelInputItem[]>;
+
+  /**
+   * Stores the currently selected category.
+   */
+  selectedCategory!: WritableSignal<string>;
 }
