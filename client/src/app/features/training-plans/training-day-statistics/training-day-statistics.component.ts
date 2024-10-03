@@ -71,14 +71,23 @@ export class TrainingDayStatisticsComponent implements OnInit {
   allExercises: WritableSignal<string[]> = signal([]);
 
   /**
-   * Holds the data for a line chart, including datasets and labels.
+   * Holds the data for the volume progression throughout the weeks.
    */
   volumeChartData = signal<ChartData<LineChartDataset>>({ datasets: [], labels: [] });
 
+  /**
+   * Holds the data for the set progression throughout the week.
+   */
   setsData = signal<ChartData<BarChartDataset>>({ datasets: [], labels: [] });
 
+  /**
+   * Holds the data for the performance develeopment based on the 1RM.
+   */
   performanceChartData = signal<ChartData<LineChartDataset>>({ datasets: [], labels: [] });
 
+  /**
+   * Holds the average session duration for a certain training day.
+   */
   sessionDurationChartData = signal<ChartData<PolarAreaChartDataset>>({ datasets: [], labels: [] });
 
   constructor(
@@ -168,7 +177,8 @@ export class TrainingDayStatisticsComponent implements OnInit {
 
     this.setsData.set({ labels: lineLabels, datasets: lineDatasets });
   }
-  initializeSessionDurationData(sessionDurationData: AverageTrainingDayDurationDto[]): void {
+
+  private initializeSessionDurationData(sessionDurationData: AverageTrainingDayDurationDto[]): void {
     const labels = sessionDurationData.map((session) => session.dayOfWeek);
     const data = sessionDurationData.map((session) => session.averageDuration);
     const color = sessionDurationData.map(
@@ -185,19 +195,6 @@ export class TrainingDayStatisticsComponent implements OnInit {
     this.sessionDurationChartData.set({
       labels: labels,
       datasets: [sessionDataset],
-    });
-  }
-
-  /**
-   * Sets the headline information for the page.
-   * Updates the header with the given title and a fixed subtitle ('stats').
-   *
-   * @param title - The main title to display in the header.
-   */
-  private setHeadlineInfo(title: string): void {
-    this.headerService.setHeadlineInfo({
-      title: title,
-      subTitle: 'stats',
     });
   }
 
@@ -249,6 +246,19 @@ export class TrainingDayStatisticsComponent implements OnInit {
       backgroundColor: colors.backgroundColor,
       fill: true,
     };
+  }
+
+  /**
+   * Sets the headline information for the page.
+   * Updates the header with the given title and a fixed subtitle ('stats').
+   *
+   * @param title - The main title to display in the header.
+   */
+  private setHeadlineInfo(title: string): void {
+    this.headerService.setHeadlineInfo({
+      title: title,
+      subTitle: 'stats',
+    });
   }
 
   /**

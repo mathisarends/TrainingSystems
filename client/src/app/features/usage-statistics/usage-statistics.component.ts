@@ -5,6 +5,7 @@ import { BarChartDataset } from '../../shared/components/charts/grouped-bar-char
 import { GroupedBarChartComponent } from '../../shared/components/charts/grouped-bar-chart/grouped-bar-chart.component';
 import { ChartSkeletonComponent } from '../../shared/components/loader/chart-skeleton/chart-skeleton.component';
 import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
+import { ImageDownloadService } from '../../shared/service/image-download.service';
 import { NotificationService } from '../../shared/service/notification.service';
 import { HeaderService } from '../header/header.service';
 import { ActivityCalendarData } from './activity-calendar-data';
@@ -25,8 +26,8 @@ import { UsageStatisticsService } from './usage.-statistics.service';
     ChartSkeletonComponent,
   ],
   templateUrl: './usage-statistics.component.html',
-  styleUrls: ['./usage-statistics.component.scss'], // Corrected to styleUrls
-  providers: [UsageStatisticsService],
+  styleUrls: ['./usage-statistics.component.scss'],
+  providers: [UsageStatisticsService, ImageDownloadService],
 })
 export class UsageStatisticsComponent implements OnInit {
   /**

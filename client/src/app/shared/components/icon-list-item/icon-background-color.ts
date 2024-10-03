@@ -7,4 +7,5 @@ export enum IconBackgroundColor {
   DarkGray = '#A9A9A9',
   BlueViolet = '#8A2BE2',
   OrangeRed = '#FF4500',
+  MediumSlateBlue = '#7B68EE',
 }
