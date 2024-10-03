@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, Injector, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, DestroyRef, effect, Injector, OnInit, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { forkJoin } from 'rxjs';
 import { ModalService } from '../../core/services/modal/modalService';
@@ -67,14 +67,13 @@ export class StatisticsComponent implements OnInit {
     this.initializeTrainingPlanSelection();
     this.initializeDataViewOptions();
 
-    this.listenForTrainingPlansChange();
-  }
-
-  private listenForTrainingPlansChange() {
-    this.statisticsService.trainingPlans$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((newPlans) => {
-      console.log('🚀 ~ StatisticsComponent ~ this.statisticsService.trainingPlan$.pipe ~ newPlans:', newPlans);
-      this.selectedTrainingPlans.set(newPlans);
-    });
+    effect(
+      () => {
+        const trainingPlanChange = this.selectedTrainingPlans();
+        console.log('🚀 ~ StatisticsComponent ~ effect ~ trainingPlanChange:', trainingPlanChange);
+      },
+      { injector: this.injector },
+    );
   }
 
   /**
@@ -120,12 +119,12 @@ export class StatisticsComponent implements OnInit {
       providers: [{ provide: StatisticsService, useValue: this.injector.get(StatisticsService) }],
       buttonText: 'Übernehmen',
       componentData: {
-        selectedTrainingPlans: this.selectedTrainingPlans(),
-        trainingPlanTitles: this.trainingPlanTitles(),
-        trainingStatisticsDataViewOptions: this.trainingStatisticsDataViewOptions(),
-        selectedDataViewOption: this.selectedDataViewOption(),
-        allCategories: this.allCategories(),
-        selectedCategory: this.selectedCategory(),
+        selectedTrainingPlans: this.selectedTrainingPlans,
+        trainingPlanTitles: this.trainingPlanTitles,
+        trainingStatisticsDataViewOptions: this.trainingStatisticsDataViewOptions,
+        selectedDataViewOption: this.selectedDataViewOption,
+        allCategories: this.allCategories,
+        selectedCategory: this.selectedCategory,
       },
     });
   }
