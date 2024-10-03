@@ -7,6 +7,18 @@ import * as trainingStatisticsController from '../../controller/training/trainin
 const statisticsRouter = express.Router();
 
 statisticsRouter.get(
+  '/volume-comparison',
+  authService.authenticationMiddleware,
+  asyncHandler(trainingStatisticsController.getVolumeComparison)
+);
+
+statisticsRouter.get(
+  '/performance-comparison',
+  authService.authenticationMiddleware,
+  asyncHandler(trainingStatisticsController.getPerformanceComparisonCharts)
+);
+
+statisticsRouter.get(
   '/:id/viewedCategories',
   authService.authenticationMiddleware,
   asyncHandler(trainingStatisticsController.getViewedCategories)
@@ -46,18 +58,6 @@ statisticsRouter.get(
   '/:id/drilldown/:category/:week',
   authService.authenticationMiddleware,
   asyncHandler(trainingStatisticsController.getDrilldownForCategory)
-);
-
-statisticsRouter.get(
-  '/volume-comparison',
-  authService.authenticationMiddleware,
-  asyncHandler(trainingStatisticsController.getVolumeComparison)
-);
-
-statisticsRouter.get(
-  '/performance-comparison',
-  authService.authenticationMiddleware,
-  asyncHandler(trainingStatisticsController.getPerformanceCharts)
 );
 
 export default statisticsRouter;

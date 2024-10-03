@@ -69,10 +69,31 @@ export class StatisticsComponent implements OnInit {
 
     effect(
       () => {
-        const trainingPlanChange = this.selectedTrainingPlans();
-        console.log('🚀 ~ StatisticsComponent ~ effect ~ trainingPlanChange:', trainingPlanChange);
+        const trainingPlans = this.selectedTrainingPlans();
+        const category = this.selectedCategory();
+        const selectedDataViewOption = this.selectedDataViewOption();
+
+        if (trainingPlans.length === 0 || !category) {
+          return;
+        }
+
+        if (selectedDataViewOption === TrainingStatisticsDataView.VOLUME) {
+          this.statisticsService
+            .getVolumeChartComparisonData(category, trainingPlans)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((data) => {
+              console.log('Fetched statistics data:', data);
+            });
+        } else {
+          this.statisticsService
+            .getPerformanceChartComparisonData(category, trainingPlans)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((data) => {
+              console.log('Fetched statistics data:', data);
+            });
+        }
       },
-      { injector: this.injector },
+      { injector: this.injector, allowSignalWrites: true },
     );
   }
 
@@ -116,7 +137,6 @@ export class StatisticsComponent implements OnInit {
     this.modalService.open({
       title: 'Konfiguration',
       component: TrainingStatsComparisonConfigComponent,
-      providers: [{ provide: StatisticsService, useValue: this.injector.get(StatisticsService) }],
       buttonText: 'Übernehmen',
       componentData: {
         selectedTrainingPlans: this.selectedTrainingPlans,

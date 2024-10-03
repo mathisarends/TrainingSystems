@@ -118,6 +118,7 @@ class Timer {
 
   /**
    * Closes all notifications associated with this timer.
+  
    */
   closeNotifications() {
     this.notificationManager.closeNotifications();
