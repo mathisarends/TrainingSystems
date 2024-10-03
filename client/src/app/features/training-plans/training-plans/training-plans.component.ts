@@ -9,6 +9,7 @@ import { AlertComponent } from '../../../shared/components/alert/alert.component
 import { CircularIconButtonComponent } from '../../../shared/components/circular-icon-button/circular-icon-button.component';
 import { SkeletonCardComponent } from '../../../shared/components/loader/skeleton-card/skeleton-card.component';
 import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component';
+import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
 import { IconName } from '../../../shared/icon/icon-name';
 import { KeyboardService } from '../../../shared/service/keyboard.service';
 import { HeaderService } from '../../header/header.service';
@@ -18,7 +19,6 @@ import { CreateTrainingComponent } from '../training-view/create-training/create
 import { TrainingPlanCardView } from '../training-view/models/exercise/training-plan-card-view-dto';
 import { TrainingPlanType } from '../training-view/models/training-plan-type';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
-import { TrainingTypeSelect } from './training-type-select/training-type-select.component';
 
 /**
  * Component to manage and display training plans.
@@ -34,7 +34,7 @@ import { TrainingTypeSelect } from './training-type-select/training-type-select.
     CircularIconButtonComponent,
     SearchBarComponent,
     DragDropModule,
-    TrainingTypeSelect,
+    SpinnerComponent,
   ],
   templateUrl: './training-plans.component.html',
   styleUrls: ['./training-plans.component.scss'],

@@ -1,26 +1,3 @@
-<div class="configuration-grid">
-  <app-floating-label-input
-    [label]="'Trainingsplan'"
-    [type]="'select'"
-    [options]="trainingPlanTitles()"
-    [(value)]="selectedTrainingPlan"
-  />
-
-  <app-floating-label-input
-    [label]="'Betrachtete Kategorie'"
-    [type]="'select'"
-    [options]="allCategories()"
-    [(value)]="selectedCategory"
-  />
-
-  <app-floating-label-input
-    [label]="'Datenansicht'"
-    [type]="'select'"
-    [options]="trainingStatisticsDataViewOptions()"
-    [(value)]="selectedDataViewOption"
-  />
-</div>
-
 <app-line-chart />
 
 <app-training-day-notification [notificationsInput]="notificationService.trainingDayNotifications()" />

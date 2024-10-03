@@ -2,10 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, OnInit, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { forkJoin } from 'rxjs';
+import { ModalService } from '../../core/services/modal/modalService';
 import { LineChartComponent } from '../../shared/components/charts/line-chart/line-chart.component';
 import { FloatingLabelInputItem } from '../../shared/components/floating-label-input/floating-label-input-item';
 import { FloatingLabelInputComponent } from '../../shared/components/floating-label-input/floating-label-input.component';
 import { SelectComponent } from '../../shared/components/select/select.component';
+import { IconName } from '../../shared/icon/icon-name';
 import { ImageDownloadService } from '../../shared/service/image-download.service';
 import { NotificationService } from '../../shared/service/notification.service';
 import { HeaderService } from '../header/header.service';
@@ -13,6 +15,7 @@ import { TrainingStatisticsService } from '../training-plans/training-day-statis
 import { StatisticsService } from './statistics.service';
 import { TrainingDayNotificationComponent } from './training-day-notification/training-day-notification.component';
 import { TrainingStatisticsDataView } from './training-statistics-data-view';
+import { TrainingStatsComparisonConfigComponent } from './training-stats-comparison/training-stats-comparison-config.component';
 
 @Component({
   selector: 'app-statistics',
@@ -29,9 +32,9 @@ import { TrainingStatisticsDataView } from './training-statistics-data-view';
   providers: [ImageDownloadService, StatisticsService, TrainingStatisticsService],
 })
 export class StatisticsComponent implements OnInit {
-  selectedTrainingPlan = signal<string>('');
+  selectedTrainingPlan = signal<string[]>([]);
 
-  trainingPlanTitles = signal<FloatingLabelInputItem[]>([]);
+  trainingPlanTitles = signal<string[]>([]);
 
   trainingStatisticsDataViewOptions = signal<FloatingLabelInputItem[]>([]);
 
@@ -49,12 +52,14 @@ export class StatisticsComponent implements OnInit {
     private headerService: HeaderService,
     private statisticsService: StatisticsService,
     private trainingStatisticService: TrainingStatisticsService,
+    private modalService: ModalService,
     private destroyRef: DestroyRef,
   ) {}
 
   ngOnInit(): void {
     this.headerService.setHeadlineInfo({
       title: 'Usage',
+      buttons: [{ icon: IconName.SETTINGS, callback: this.openConfigurationModal.bind(this) }],
     });
 
     this.fetchAndSetCategoryMetadata();
@@ -72,7 +77,7 @@ export class StatisticsComponent implements OnInit {
     })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(({ allCategories }) => {
-        const mappedCategories = this.mapToFloatingLabelInputItem(allCategories)
+        const mappedCategories = this.mapToFloatingLabelInputItem(allCategories);
         this.allCategories.set(mappedCategories);
         this.selectedCategory.set(allCategories[0]);
       });
@@ -85,10 +90,9 @@ export class StatisticsComponent implements OnInit {
 
   private initializeTrainingPlanSelection(): void {
     this.statisticsService.getIdTitleMappingsForTrainingPlans().subscribe((titles) => {
-      const mappedTitles = this.mapToFloatingLabelInputItem(titles);
-      this.trainingPlanTitles.set(mappedTitles);
+      this.trainingPlanTitles.set(titles);
 
-      this.selectedTrainingPlan.set(titles[0]);
+      this.selectedTrainingPlan.set(titles);
     });
   }
 
@@ -97,5 +101,26 @@ export class StatisticsComponent implements OnInit {
       label: item,
       value: item,
     }));
+  }
+
+  private async openConfigurationModal(): Promise<void> {
+    console.log('ehre');
+    const confirmed = await this.modalService.open({
+      title: 'Konfiguration',
+      component: TrainingStatsComparisonConfigComponent,
+      buttonText: 'Übernehmen',
+      componentData: {
+        selectedTrainingPlan: this.selectedTrainingPlan(),
+        trainingPlanTitles: this.trainingPlanTitles(),
+        trainingStatisticsDataViewOptions: this.trainingStatisticsDataViewOptions(),
+        selectedDataViewOption: this.selectedDataViewOption(),
+        allCategories: this.allCategories(),
+        selectedCategory: this.selectedCategory(),
+      },
+    });
+
+    if (confirmed) {
+      console.log('confirmed');
+    }
   }
 }

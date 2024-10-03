@@ -15,7 +15,7 @@ export interface HeadlineButton {
    * Optional: A callback for regular buttons, triggered when the button is clicked.
    * This exists only for regular buttons.
    */
-  callback?: () => void;
+  callback?: () => void | Promise<void>;
 
   /**
    * Optional: A list of options for the button when it’s a "More Options" button.
