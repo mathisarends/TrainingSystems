@@ -1,0 +1,12 @@
+<div class="configuration-grid">
+  <!-- Beide Selects werden jetzt nebeneinander dargestellt -->
+  <app-select [options]="['Test', 'Fest']" [(selectedOptions)]="selectedTrainingPlans" />
+  <app-select
+    [options]="trainingStatisticsDataViewOptions()"
+    [selectionMode]="'single'"
+    [(selectedOptions)]="selectedDataViewOption"
+  />
+</div>
+<app-line-chart [yAxisTitle]="'Trainingsplan Vergleich'" />
+
+<app-training-day-notification [notificationsInput]="notificationService.trainingDayNotifications()" />

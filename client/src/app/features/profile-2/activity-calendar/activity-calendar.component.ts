@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, computed, ElementRef, input, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
-import { ActivityCalendarData } from '../activity-calendar-data';
+import { ActivityCalendarData } from './activity-calendar-data';
 import { ActivityCalendarEntry, Day, Level } from './activity-calendar-entry';
 
 @Component({

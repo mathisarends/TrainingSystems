@@ -13,14 +13,14 @@ import { TrainingDayStatisticsComponent } from './features/training-plans/traini
 import { TrainingPlansComponent } from './features/training-plans/training-plans/training-plans.component';
 import { TrainingViewComponent } from './features/training-plans/training-view/training-view.component';
 import { SessionViewComponent } from './features/training-session/session-view/session-view.component';
-import { UsageStatisticsComponent } from './features/usage-statistics/usage-statistics.component';
+import { StatisticsComponent } from './features/usage-statistics/statistics.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'user/reset-password', component: RequestNewPasswordEmail },
   { path: 'user/reset/password/:token', component: ResetPasswordComponent },
-  { path: 'usage', component: UsageStatisticsComponent, canActivate: [AuthGuard] },
+  { path: 'usage', component: StatisticsComponent, canActivate: [AuthGuard] },
   {
     path: '',
     component: TrainingPlansComponent,

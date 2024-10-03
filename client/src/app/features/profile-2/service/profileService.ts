@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { BasicConfirmationResponse } from '../../../shared/dto/basic-confirmation-response';
-import { ActivityCalendarData } from '../../usage-statistics/activity-calendar-data';
+import { ActivityCalendarData } from '../activity-calendar/activity-calendar-data';
 import { UpdateProfilePictureDto } from './update-profile-picture-dto';
 import { UserProfileDto } from './user-profile-dto';
 
