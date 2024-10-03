@@ -61,7 +61,6 @@ export class UsageStatisticsComponent implements OnInit {
               data: data,
               borderColor: 'rgba(255, 99, 132, 1)',
               backgroundColor: 'rgba(255, 99, 132, 0.2)',
-              borderWidth: 1,
             },
           ];
 

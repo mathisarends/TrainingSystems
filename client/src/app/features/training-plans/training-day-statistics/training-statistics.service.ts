@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { ExerciseCategories } from '../model/exercise-categories';
 import { AverageTrainingDayDurationDto } from './average-training-duration-dto';
+import { BarChartDataDto } from './bar-chart-data-dto';
 import { LineChartDataDTO } from './line-chart-data-dto';
 import { TrainingPlanTitleIdDto } from './training-plan-title-id-dto';
 
@@ -60,9 +61,9 @@ export class TrainingStatisticsService {
   /**
    * Retrieves the set data for selected exercises in a specific training plan.
    */
-  getSetDataForSelectedExercises(id: string, exercises: string[]) {
+  getSetDataForSelectedExercises(id: string, exercises: string[]): Observable<BarChartDataDto> {
     const exercisesQueryParam = this.toQueryParam(exercises);
-    return this.httpService.get<any>(`/training/statistics/${id}/sets?exercises=${exercisesQueryParam}`);
+    return this.httpService.get(`/training/statistics/${id}/sets?exercises=${exercisesQueryParam}`);
   }
 
   /**

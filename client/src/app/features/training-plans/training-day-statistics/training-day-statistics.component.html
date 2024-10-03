@@ -10,6 +10,7 @@
   </div>
 
   <div class="chart-grid">
+    <app-grouped-bar-chart [data]="setsData()" yAxisTitle="Satzanzahl" />
     <app-polar-chart [data]="sessionDurationChartData()" />
   </div>
 } @else {

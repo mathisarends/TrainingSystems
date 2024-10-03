@@ -1,5 +1,3 @@
-type RGBAColor = `rgba(${number}, ${number}, ${number}, ${number | number})`;
-
 /**
  * Represents a single dataset in a bar chart, including the data points
  * and visual styling (such as colors and border width).
@@ -13,7 +11,6 @@ type RGBAColor = `rgba(${number}, ${number}, ${number}, ${number | number})`;
 export interface BarChartDataset {
   label: string;
   data: number[];
-  backgroundColor: RGBAColor;
-  borderColor: RGBAColor;
-  borderWidth: number;
+  backgroundColor: string;
+  borderColor: string;
 }

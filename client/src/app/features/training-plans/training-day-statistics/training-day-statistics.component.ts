@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { ChartData } from '../../../shared/components/charts/chart-data';
+import { BarChartDataset } from '../../../shared/components/charts/grouped-bar-chart/bar-chart.-data-set';
 import { GroupedBarChartComponent } from '../../../shared/components/charts/grouped-bar-chart/grouped-bar-chart.component';
 import { LineChartDataset } from '../../../shared/components/charts/line-chart/line-chart-data-set';
 import { LineChartComponent } from '../../../shared/components/charts/line-chart/line-chart.component';
@@ -21,6 +22,7 @@ import { ChangeProfilePictureConfirmationComponent } from '../../profile-2/chang
 import { ChartColorService } from '../training-view/services/chart-color.service';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
 import { AverageTrainingDayDurationDto } from './average-training-duration-dto';
+import { BarChartDataDto } from './bar-chart-data-dto';
 import { LineChartDataDTO } from './line-chart-data-dto';
 import { TrainingDayChartType } from './training-day-chart-type';
 import { TrainingStatisticsService } from './training-statistics.service';
@@ -42,6 +44,7 @@ import { TrainingStatisticsService } from './training-statistics.service';
     ChangeProfilePictureConfirmationComponent,
     ToSelectItemPipe,
     PolarChartComponent,
+    GroupedBarChartComponent,
   ],
   providers: [TrainingStatisticsService, KeyboardService, PaginationComponent, ImageDownloadService],
   templateUrl: './training-day-statistics.component.html',
@@ -72,6 +75,8 @@ export class TrainingDayStatisticsComponent implements OnInit {
    * Holds the data for a line chart, including datasets and labels.
    */
   volumeChartData = signal<ChartData<LineChartDataset>>({ datasets: [], labels: [] });
+
+  setsData = signal<ChartData<BarChartDataset>>({ datasets: [], labels: [] });
 
   performanceChartData = signal<ChartData<LineChartDataset>>({ datasets: [], labels: [] });
 
@@ -138,20 +143,32 @@ export class TrainingDayStatisticsComponent implements OnInit {
       tonnage: this.trainingStatisticService.getTonnageDataForSelectedExercises(id, exercises),
       performance: this.trainingStatisticService.getPerformanceDataForSelectedExercises(id, exercises),
       sessionDurationData: this.trainingStatisticService.getAverageSessionDurationDataForTrainingPlanDay(id),
+      performedSetsData: this.trainingStatisticService.getSetDataForSelectedExercises(id, exercises),
       title: this.trainingStatisticService.getTrainingPlanTitle(id),
     })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ tonnage, performance, sessionDurationData, title }) => {
+      .subscribe(({ tonnage, performance, performedSetsData, sessionDurationData, title }) => {
         this.setHeadlineInfo(title);
         this.isLoaded.set(true);
 
         this.initializeSessionDurationData(sessionDurationData);
+        this.inializePerformedSetsData(performedSetsData);
 
         this.initializeLineChartData(tonnage, TrainingDayChartType.VOLUME);
         this.initializeLineChartData(performance, TrainingDayChartType.PERFORMANCE);
       });
   }
 
+  private inializePerformedSetsData(tonnageData: BarChartDataDto) {
+    const lineDatasets = Object.keys(tonnageData).map((categoryKey) => {
+      const categoryData = tonnageData[categoryKey];
+      return this.createSetDataSet(categoryKey, categoryData || []);
+    });
+
+    const lineLabels = this.generateWeekLabels(lineDatasets[0]?.data.length || 0);
+
+    this.setsData.set({ labels: lineLabels, datasets: lineDatasets });
+  }
   initializeSessionDurationData(sessionDurationData: AverageTrainingDayDurationDto[]): void {
     const labels = sessionDurationData.map((session) => session.dayOfWeek);
     const data = sessionDurationData.map((session) => session.averageDuration);
@@ -205,6 +222,16 @@ export class TrainingDayStatisticsComponent implements OnInit {
     } else if (chartType === TrainingDayChartType.PERFORMANCE) {
       this.performanceChartData.set({ datasets: lineDatasets, labels: lineLabels });
     }
+  }
+
+  private createSetDataSet(category: string, data: number[]): BarChartDataset {
+    const colors = this.chartColorService.getCategoryColor(category);
+    return {
+      label: category,
+      data: data,
+      backgroundColor: colors.backgroundColor,
+      borderColor: colors.borderColor,
+    };
   }
 
   /**

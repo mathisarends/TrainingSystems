@@ -1,4 +1,21 @@
-#barChart {
-  height: 450px;
-  width: 100%;
+:host {
+  position: relative;
+
+  app-circular-icon-button {
+    cursor: pointer;
+    position: absolute;
+    right: 2rem;
+    top: 2rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover app-circular-icon-button {
+    opacity: 1;
+  }
+}
+
+#chart {
+  height: 400px;
+  max-width: 100%;
 }
