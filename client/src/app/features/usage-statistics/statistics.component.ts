@@ -3,6 +3,8 @@ import { Component, DestroyRef, effect, Injector, OnInit, signal, WritableSignal
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { forkJoin } from 'rxjs';
 import { ModalService } from '../../core/services/modal/modalService';
+import { ChartData } from '../../shared/components/charts/chart-data';
+import { LineChartDataset } from '../../shared/components/charts/line-chart/line-chart-data-set';
 import { LineChartComponent } from '../../shared/components/charts/line-chart/line-chart.component';
 import { FloatingLabelInputItem } from '../../shared/components/floating-label-input/floating-label-input-item';
 import { FloatingLabelInputComponent } from '../../shared/components/floating-label-input/floating-label-input.component';
@@ -11,7 +13,10 @@ import { IconName } from '../../shared/icon/icon-name';
 import { ImageDownloadService } from '../../shared/service/image-download.service';
 import { NotificationService } from '../../shared/service/notification.service';
 import { HeaderService } from '../header/header.service';
+import { ChartDataDto } from '../training-plans/training-day-statistics/chart-data-dto';
+import { TrainingDayChartType } from '../training-plans/training-day-statistics/training-day-chart-type';
 import { TrainingStatisticsService } from '../training-plans/training-day-statistics/training-statistics.service';
+import { ChartColorService } from '../training-plans/training-view/services/chart-color.service';
 import { StatisticsService } from './statistics.service';
 import { TrainingDayNotificationComponent } from './training-day-notification/training-day-notification.component';
 import { TrainingStatisticsDataView } from './training-statistics-data-view';
@@ -32,6 +37,7 @@ import { TrainingStatsComparisonConfigComponent } from './training-stats-compari
   providers: [ImageDownloadService, StatisticsService, TrainingStatisticsService],
 })
 export class StatisticsComponent implements OnInit {
+  protected readonly TrainingStatisticsDataView = TrainingStatisticsDataView;
   selectedTrainingPlans = signal<string[]>([]);
 
   trainingPlanTitles = signal<string[]>([]);
@@ -47,6 +53,16 @@ export class StatisticsComponent implements OnInit {
 
   selectedCategory = signal('');
 
+  /**
+   * Holds the data for the volume progression throughout the weeks.
+   */
+  volumeChartData = signal<ChartData<LineChartDataset>>({ datasets: [], labels: [] });
+
+  /**
+   * Holds the data for the performance develeopment based on the 1RM.
+   */
+  performanceChartData = signal<ChartData<LineChartDataset>>({ datasets: [], labels: [] });
+
   constructor(
     protected notificationService: NotificationService,
     private headerService: HeaderService,
@@ -54,19 +70,24 @@ export class StatisticsComponent implements OnInit {
     private trainingStatisticService: TrainingStatisticsService,
     private modalService: ModalService,
     private destroyRef: DestroyRef,
+    private chartColorService: ChartColorService,
     private injector: Injector,
   ) {}
 
   ngOnInit(): void {
     this.headerService.setHeadlineInfo({
       title: 'Usage',
-      buttons: [{ icon: IconName.SETTINGS, callback: this.openConfigurationModal.bind(this) }],
+      buttons: [{ icon: IconName.BAR_CHART, callback: this.openConfigurationModal.bind(this) }],
     });
 
     this.fetchAndSetCategoryMetadata();
     this.initializeTrainingPlanSelection();
     this.initializeDataViewOptions();
 
+    this.handleConfigurationParamUpdate();
+  }
+
+  private handleConfigurationParamUpdate() {
     effect(
       () => {
         const trainingPlans = this.selectedTrainingPlans();
@@ -78,23 +99,71 @@ export class StatisticsComponent implements OnInit {
         }
 
         if (selectedDataViewOption === TrainingStatisticsDataView.VOLUME) {
-          this.statisticsService
+          return this.statisticsService
             .getVolumeChartComparisonData(category, trainingPlans)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((data) => {
-              console.log('Fetched statistics data:', data);
-            });
-        } else {
-          this.statisticsService
-            .getPerformanceChartComparisonData(category, trainingPlans)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((data) => {
-              console.log('Fetched statistics data:', data);
+              this.updateChartData(data, TrainingDayChartType.VOLUME);
             });
         }
+        return this.statisticsService
+          .getPerformanceChartComparisonData(category, trainingPlans)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe((data) => {
+            this.updateChartData(data, TrainingDayChartType.PERFORMANCE);
+          });
       },
       { injector: this.injector, allowSignalWrites: true },
     );
+  }
+
+  private updateChartData(tonnageData: Record<string, ChartDataDto>, chartType: TrainingDayChartType): void {
+    const lineDatasets: LineChartDataset[] = [];
+
+    Object.keys(tonnageData).forEach((planTitle) => {
+      const planData = tonnageData[planTitle];
+
+      Object.keys(planData).forEach((categoryKey) => {
+        const categoryData = planData[categoryKey];
+
+        lineDatasets.push(this.createTonnageDataSet(`${categoryKey.toUpperCase()} ${planTitle}`, categoryData || []));
+      });
+    });
+
+    // Generate labels for the chart (assumes weekly data)
+    const lineLabels = this.generateWeekLabels(lineDatasets[0]?.data.length || 0);
+
+    // Set the appropriate chart based on the chartType
+    if (chartType === TrainingDayChartType.VOLUME) {
+      this.volumeChartData.set({ datasets: lineDatasets, labels: lineLabels });
+    } else if (chartType === TrainingDayChartType.PERFORMANCE) {
+      this.performanceChartData.set({ datasets: lineDatasets, labels: lineLabels });
+    }
+  }
+
+  /**
+   * Generates week labels for the charts based on the given number of weeks.
+   */
+  private generateWeekLabels(length: number): string[] {
+    return Array.from({ length }, (_, index) => `Woche ${index + 1}`);
+  }
+
+  /**
+   * Creates a dataset for the line chart, representing the tonnage for a specific category.
+   *
+   * @param category - The name of the exercise category (e.g., 'squat').
+   * @param data - An array of tonnage data points.
+   * @returns A dataset formatted for the line chart.
+   */
+  private createTonnageDataSet(category: string, data: number[]): LineChartDataset {
+    const colors = this.chartColorService.getCategoryColor(category);
+    return {
+      label: category,
+      data: data,
+      borderColor: colors.borderColor,
+      backgroundColor: colors.backgroundColor,
+      fill: true,
+    };
   }
 
   /**

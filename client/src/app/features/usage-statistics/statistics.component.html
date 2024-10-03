@@ -1,3 +1,7 @@
-<app-line-chart />
+@if (selectedDataViewOption() === TrainingStatisticsDataView.VOLUME) {
+  <app-line-chart [yAxisTitle]="'Tonnage ' + selectedCategory()" [data]="volumeChartData()" />
+} @else {
+  <app-line-chart [yAxisTitle]="'Est. Max ' + selectedCategory()" [data]="performanceChartData()" />
+}
 
 <app-training-day-notification [notificationsInput]="notificationService.trainingDayNotifications()" />
