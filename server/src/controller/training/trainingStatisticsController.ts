@@ -11,6 +11,7 @@ import _ from 'lodash';
 import { ValidationError } from '../../errors/validationError.js';
 import { AverageTrainingDayDurationDto } from '../../interfaces/averageTrainingDayDurationDto.js';
 import { LineChartDataDTO } from '../../interfaces/lineChartDataDto.js';
+import { TrainingDayStatisticsManager } from '../../service/training-day-statistics-manager.js';
 import trainingPlanManager from '../../service/trainingPlanManager.js';
 import userManager from '../../service/userManager.js';
 const { capitalize } = _;
@@ -57,14 +58,8 @@ export async function getSetsForCategories(req: Request, res: Response): Promise
 
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
-  const responseData: { [key: string]: number[] } = {};
-
-  exerciseCategories.forEach(category => {
-    const exerciseCategory = mapToExerciseCategory(category);
-    if (exerciseCategory) {
-      responseData[capitalize(category)] = getSetsPerWeek(trainingPlan, exerciseCategory);
-    }
-  });
+  const trainingDayStatisticsManager = new TrainingDayStatisticsManager(trainingPlan);
+  const responseData = trainingDayStatisticsManager.getSetProgressionByCategories(exerciseCategories);
 
   res.status(200).json(responseData);
 }
