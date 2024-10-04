@@ -1,13 +1,12 @@
 import { Request, Response } from 'express';
 
-import { TrainingPlan } from '../../models/training/trainingPlan.js';
 import * as trainingService from '../../service/trainingService.js';
 
 import { AverageTrainingDayDurationDto } from '../../interfaces/averageTrainingDayDurationDto.js';
 import { ChartDataDto } from '../../interfaces/chartDataDto.js';
-import { LineChartDataDTO } from '../../interfaces/lineChartDataDto.js';
 import trainingPlanManager from '../../service/trainingPlanManager.js';
 import { PerformanceProgressionManager } from '../../service/trainingStatistics/performance-progression-manager.js';
+import { SessionDurationManager } from '../../service/trainingStatistics/session-duration-manager.js';
 import { SetProgressionManager } from '../../service/trainingStatistics/set-progression-manager.js';
 import { TonnageProgressionManager } from '../../service/trainingStatistics/tonnage-progression-manager.js';
 import userManager from '../../service/userManager.js';
@@ -85,22 +84,20 @@ export async function getVolumeComparison(req: Request, res: Response): Promise<
 
   const user = await userManager.getUser(res);
 
-  const trainingPlans: TrainingPlan[] = await Promise.all(
+  const responseData = await Promise.all(
     trainingPlanTitles.map(async title => {
-      return await trainingPlanManager.findTrainingPlanByTitle(user, title);
+      const trainingPlan = await trainingPlanManager.findTrainingPlanByTitle(user, title);
+      const tonnageProgressionManager = new TonnageProgressionManager(trainingPlan);
+
+      return {
+        [title]: tonnageProgressionManager.getTonnageProgressionByCategories([exerciseCategory])
+      };
     })
   );
 
-  const responseData: Record<string, LineChartDataDTO> = {};
+  const responseObject = Object.assign({}, ...responseData);
 
-  for (const trainingPlan of trainingPlans) {
-    const tonnageProgressionManager = new TonnageProgressionManager(trainingPlan);
-    const planData = tonnageProgressionManager.getTonnageProgressionByCategories([exerciseCategory]);
-
-    responseData[trainingPlan.title] = planData;
-  }
-
-  return res.status(200).json(responseData);
+  return res.status(200).json(responseObject);
 }
 
 export async function getPerformanceCharts(req: Request, res: Response): Promise<Response<ChartDataDto>> {
@@ -141,57 +138,28 @@ export async function getPerformanceComparisonCharts(req: Request, res: Response
   return res.status(200).json(responseObject);
 }
 
-export async function getAverageSessionDurationDataForTrainingPlanDay(req: Request, res: Response): Promise<Response> {
+export async function getAverageSessionDurationDataForTrainingPlanDay(
+  req: Request,
+  res: Response
+): Promise<Response<AverageTrainingDayDurationDto[]>> {
   const trainingPlanId = req.params.id;
 
   const user = await userManager.getUser(res);
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
-  const trainingDaysWithDuration = trainingPlan.trainingWeeks
-    .flatMap(week => week.trainingDays)
-    .filter(day => !!day.durationInMinutes)
-    .map(day => ({
-      durationInMinutes: day.durationInMinutes!,
-      date: new Date(day.endTime!)
-    }));
-
-  const dayOfWeekDurations: Record<number, { totalDuration: number; count: number }> = {
-    0: { totalDuration: 0, count: 0 }, // Sunday
-    1: { totalDuration: 0, count: 0 }, // Monday
-    2: { totalDuration: 0, count: 0 }, // Tuesday
-    3: { totalDuration: 0, count: 0 }, // Wednesday
-    4: { totalDuration: 0, count: 0 }, // Thursday
-    5: { totalDuration: 0, count: 0 }, // Friday
-    6: { totalDuration: 0, count: 0 } // Saturday
-  };
-
-  trainingDaysWithDuration.forEach(trainingDay => {
-    const dayOfWeek = trainingDay.date.getDay();
-    dayOfWeekDurations[dayOfWeek].totalDuration += trainingDay.durationInMinutes;
-    dayOfWeekDurations[dayOfWeek].count += 1;
-  });
-
-  const daysOfWeekLabels = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
-
-  const averageDurationsByDayOfWeek: AverageTrainingDayDurationDto[] = Object.entries(dayOfWeekDurations)
-    .filter(([, dayData]) => dayData.count > 0) // Filter out days with no training (count === 0)
-    .map(([dayIndex, dayData]) => {
-      const averageDuration = dayData.totalDuration / dayData.count;
-      return {
-        dayOfWeek: daysOfWeekLabels[Number(dayIndex)],
-        averageDuration: averageDuration
-      };
-    });
+  const sessionDurationManager = new SessionDurationManager(trainingPlan);
 
   if (process.env.NODE_ENV === 'development') {
     const mockAverageDurationsByDayOfWeek: AverageTrainingDayDurationDto[] = [
-      { dayOfWeek: 'Sunday', averageDuration: 45 },
-      { dayOfWeek: 'Tuesday', averageDuration: 55 },
-      { dayOfWeek: 'Thursday', averageDuration: 40 },
-      { dayOfWeek: 'Saturday', averageDuration: 65 }
+      { dayOfWeek: 'Sonntag', averageDuration: 45 },
+      { dayOfWeek: 'Dienstag', averageDuration: 55 },
+      { dayOfWeek: 'Donnerstag', averageDuration: 40 },
+      { dayOfWeek: 'Samstag', averageDuration: 65 }
     ];
     return res.status(200).json(mockAverageDurationsByDayOfWeek);
   }
+
+  const averageDurationsByDayOfWeek = sessionDurationManager.calculateAverageDurations();
 
   return res.status(200).json(averageDurationsByDayOfWeek);
 }
