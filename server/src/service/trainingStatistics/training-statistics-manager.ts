@@ -1,5 +1,5 @@
-import { ExerciseCategoryType } from '../models/training/exercise-category-type.js';
-import { TrainingPlan } from '../models/training/trainingPlan.js';
+import { ExerciseCategoryType } from '../../models/training/exercise-category-type.js';
+import { TrainingPlan } from '../../models/training/trainingPlan.js';
 
 export abstract class TrainingStatisticsManager {
   protected trainingPlan: TrainingPlan;

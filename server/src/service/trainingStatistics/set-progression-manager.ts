@@ -1,6 +1,6 @@
 import _ from 'lodash';
-import { ChartDataDto } from '../interfaces/chartDataDto.js';
-import { ExerciseCategoryType } from '../models/training/exercise-category-type.js';
+import { ChartDataDto } from '../../interfaces/chartDataDto.js';
+import { ExerciseCategoryType } from '../../models/training/exercise-category-type.js';
 import { TrainingStatisticsManager } from './training-statistics-manager.js';
 const { capitalize } = _;
 

@@ -11,8 +11,9 @@ import { ValidationError } from '../../errors/validationError.js';
 import { AverageTrainingDayDurationDto } from '../../interfaces/averageTrainingDayDurationDto.js';
 import { ChartDataDto } from '../../interfaces/chartDataDto.js';
 import { LineChartDataDTO } from '../../interfaces/lineChartDataDto.js';
-import { SetProgressionManager } from '../../service/set-progression-manager.js';
 import trainingPlanManager from '../../service/trainingPlanManager.js';
+import { SetProgressionManager } from '../../service/trainingStatistics/set-progression-manager.js';
+import { TonnageProgressionManager } from '../../service/trainingStatistics/tonnage-progression-manager.js';
 import userManager from '../../service/userManager.js';
 const { capitalize } = _;
 
@@ -67,24 +68,17 @@ export async function getSetsForCategories(req: Request, res: Response): Promise
 /**
  * Retrieves tonnage data for specific exercise categories in a specific training plan.
  */
-export async function getTonnageForCategories(req: Request, res: Response): Promise<void> {
+export async function getTonnageForCategories(req: Request, res: Response): Promise<Response<ChartDataDto>> {
   const trainingPlanId = req.params.id;
   const exerciseCategories = (req.query.exercises as string).split(',');
 
   const user = await userManager.getUser(res);
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
-  const responseData: LineChartDataDTO = {};
+  const tonnageProgressionManager = new TonnageProgressionManager(trainingPlan);
 
-  // Add tonnage data for each exercise category
-  exerciseCategories.forEach(category => {
-    const exerciseCategory = mapToExerciseCategory(category);
-    if (exerciseCategory) {
-      responseData[capitalize(category)] = prepareTrainingWeeksForExercise(trainingPlan, exerciseCategory);
-    }
-  });
-
-  res.status(200).json(responseData);
+  const responseData = tonnageProgressionManager.getTonnageProgressionByCategories(exerciseCategories);
+  return res.status(200).json(responseData);
 }
 
 export async function getAverageSessionDurationDataForTrainingPlanDay(req: Request, res: Response): Promise<Response> {
@@ -132,11 +126,8 @@ export async function getAverageSessionDurationDataForTrainingPlanDay(req: Reque
   if (process.env.NODE_ENV === 'development') {
     const mockAverageDurationsByDayOfWeek: AverageTrainingDayDurationDto[] = [
       { dayOfWeek: 'Sunday', averageDuration: 45 },
-      { dayOfWeek: 'Monday', averageDuration: 60 },
       { dayOfWeek: 'Tuesday', averageDuration: 55 },
-      { dayOfWeek: 'Wednesday', averageDuration: 70 },
       { dayOfWeek: 'Thursday', averageDuration: 40 },
-      { dayOfWeek: 'Friday', averageDuration: 50 },
       { dayOfWeek: 'Saturday', averageDuration: 65 }
     ];
     return res.status(200).json(mockAverageDurationsByDayOfWeek);
@@ -149,7 +140,7 @@ export async function getAverageSessionDurationDataForTrainingPlanDay(req: Reque
 /**
  * Retrieves tonnage data for specific exercise categories across multiple training plans.
  */
-export async function getVolumeComparison(req: Request, res: Response): Promise<void> {
+export async function getVolumeComparison(req: Request, res: Response): Promise<Response> {
   const trainingPlanTitles = (req.query.plans as string).split(',');
   const exerciseCategory = req.query.category as string;
 
@@ -164,17 +155,13 @@ export async function getVolumeComparison(req: Request, res: Response): Promise<
   const responseData: Record<string, LineChartDataDTO> = {};
 
   for (const trainingPlan of trainingPlans) {
-    const planData: LineChartDataDTO = {};
-
-    const mappedExerciseCategory = mapToExerciseCategory(exerciseCategory);
-    if (mappedExerciseCategory) {
-      planData[capitalize(exerciseCategory)] = prepareTrainingWeeksForExercise(trainingPlan, mappedExerciseCategory);
-    }
+    const tonnageProgressionManager = new TonnageProgressionManager(trainingPlan);
+    const planData = tonnageProgressionManager.getTonnageProgressionByCategories([exerciseCategory]);
 
     responseData[trainingPlan.title] = planData;
   }
 
-  res.status(200).json(responseData);
+  return res.status(200).json(responseData);
 }
 
 /**
@@ -264,49 +251,4 @@ function getBestPerformanceByExercise(trainingPlan: TrainingPlan, exerciseCatego
     })
     .filter(weekData => weekData.bestPerformance > 0 || weekData.isInitialWeek)
     .map(weekData => weekData.bestPerformance); // Now return only the number
-}
-
-/**
- * Calculates the number of sets per week for a specific exercise category in a training plan.
- */
-function getSetsPerWeek(trainingPlan: TrainingPlan, exerciseCategory: ExerciseCategoryType): number[] {
-  return trainingPlan.trainingWeeks.map(week => {
-    let sets = 0;
-
-    week.trainingDays.forEach(trainingDay => {
-      trainingDay.exercises.forEach(exercise => {
-        if (exercise.category === exerciseCategory) {
-          sets += exercise.sets;
-        }
-      });
-    });
-
-    return sets;
-  });
-}
-
-/**
- * Prepares tonnage data for a specific exercise category over the training weeks in a training plan.
- */
-function prepareTrainingWeeksForExercise(trainingPlan: TrainingPlan, exerciseCategory: ExerciseCategoryType): number[] {
-  return trainingPlan.trainingWeeks
-    .map((week, index) => {
-      let tonnageInCategory = 0;
-
-      week.trainingDays.forEach(trainingDay => {
-        trainingDay.exercises.forEach((exercise: Exercise) => {
-          if (exercise.category === exerciseCategory) {
-            const weight = parseFloat(exercise.weight) || 0;
-            tonnageInCategory += exercise.sets * exercise.reps * weight;
-          }
-        });
-      });
-
-      return {
-        tonnageInCategory,
-        index
-      };
-    })
-    .filter(weekData => weekData.tonnageInCategory > 0 || weekData.index === 0 || weekData.index === 1) // Include first and second weeks even if tonnage is 0
-    .map(weekData => weekData.tonnageInCategory);
 }
