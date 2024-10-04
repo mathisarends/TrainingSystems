@@ -54,10 +54,4 @@ statisticsRouter.get(
   asyncHandler(trainingStatisticsController.getAverageSessionDurationDataForTrainingPlanDay)
 );
 
-statisticsRouter.get(
-  '/:id/drilldown/:category/:week',
-  authService.authenticationMiddleware,
-  asyncHandler(trainingStatisticsController.getDrilldownForCategory)
-);
-
 export default statisticsRouter;

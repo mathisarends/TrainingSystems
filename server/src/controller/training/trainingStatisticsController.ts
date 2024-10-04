@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 
 import { ExerciseCategoryType } from '../../models/training/exercise-category-type.js';
 import { Exercise } from '../../models/training/exercise.js';
-import { TrainingDay } from '../../models/training/trainingDay.js';
 import { TrainingPlan } from '../../models/training/trainingPlan.js';
 import * as trainingService from '../../service/trainingService.js';
 import { mapToExerciseCategory } from '../../utils/exerciseUtils.js';
@@ -10,8 +9,9 @@ import { mapToExerciseCategory } from '../../utils/exerciseUtils.js';
 import _ from 'lodash';
 import { ValidationError } from '../../errors/validationError.js';
 import { AverageTrainingDayDurationDto } from '../../interfaces/averageTrainingDayDurationDto.js';
+import { ChartDataDto } from '../../interfaces/chartDataDto.js';
 import { LineChartDataDTO } from '../../interfaces/lineChartDataDto.js';
-import { TrainingDayStatisticsManager } from '../../service/training-day-statistics-manager.js';
+import { SetProgressionManager } from '../../service/set-progression-manager.js';
 import trainingPlanManager from '../../service/trainingPlanManager.js';
 import userManager from '../../service/userManager.js';
 const { capitalize } = _;
@@ -50,7 +50,7 @@ export async function getViewedCategories(req: Request, res: Response): Promise<
 /**
  * Retrieves the number of sets per week for the specified exercise categories in a specific training plan.
  */
-export async function getSetsForCategories(req: Request, res: Response): Promise<void> {
+export async function getSetsForCategories(req: Request, res: Response): Promise<Response<ChartDataDto>> {
   const trainingPlanId = req.params.id;
   const exerciseCategories = (req.query.exercises as string).split(',');
 
@@ -58,10 +58,10 @@ export async function getSetsForCategories(req: Request, res: Response): Promise
 
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
-  const trainingDayStatisticsManager = new TrainingDayStatisticsManager(trainingPlan);
-  const responseData = trainingDayStatisticsManager.getSetProgressionByCategories(exerciseCategories);
+  const setProgressionManager = new SetProgressionManager(trainingPlan);
+  const responseData = setProgressionManager.getSetProgressionByCategories(exerciseCategories);
 
-  res.status(200).json(responseData);
+  return res.status(200).json(responseData);
 }
 
 /**
@@ -143,47 +143,6 @@ export async function getAverageSessionDurationDataForTrainingPlanDay(req: Reque
   }
 
   return res.status(200).json(averageDurationsByDayOfWeek);
-}
-/**
- * Retrieves detailed drill-down statistics for a specific exercise category and week in a training plan.
- */
-export async function getDrilldownForCategory(req: Request, res: Response): Promise<Response> {
-  const trainingPlanId = req.params.id;
-  const weekIndex = parseInt(req.params.week, 10);
-  const category = req.params.category;
-
-  const mappedCategory = mapToExerciseCategory(category);
-
-  const user = await userManager.getUser(res);
-
-  const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
-
-  const trainingWeek = trainingPlan.trainingWeeks[weekIndex];
-
-  if (!trainingWeek) {
-    return res.status(404).json({ message: 'Ungültige Trainingswoche' });
-  }
-
-  const tonnageMap = new Map();
-
-  trainingWeek.trainingDays.forEach((trainingDay: TrainingDay) => {
-    trainingDay.exercises.forEach((exercise: Exercise) => {
-      if (exercise.category === mappedCategory) {
-        const weight = parseFloat(exercise.weight) || 0;
-        const exerciseTonnage = exercise.sets * exercise.reps * weight;
-
-        if (tonnageMap.has(exercise.exercise)) {
-          tonnageMap.set(exercise.exercise, tonnageMap.get(exercise.exercise) + exerciseTonnage);
-        } else {
-          tonnageMap.set(exercise.exercise, exerciseTonnage);
-        }
-      }
-    });
-  });
-
-  const tonnageArray = Array.from(tonnageMap, ([exercise, tonnage]) => ({ exercise, tonnage }));
-
-  return res.status(200).json({ category, week: weekIndex, exercises: tonnageArray });
 }
 
 // TODO: Momentan noch mit Title aber mit id die pläne wäre hier semantisch richtiger

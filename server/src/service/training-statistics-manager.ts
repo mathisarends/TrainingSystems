@@ -1,42 +1,14 @@
-import _ from 'lodash';
-import { ChartDataDto } from '../interfaces/chartDataDto.js';
 import { ExerciseCategoryType } from '../models/training/exercise-category-type.js';
 import { TrainingPlan } from '../models/training/trainingPlan.js';
-const { capitalize } = _;
 
-export class TrainingDayStatisticsManager {
-  private trainingPlan: TrainingPlan;
+export abstract class TrainingStatisticsManager {
+  protected trainingPlan: TrainingPlan;
 
   constructor(trainingPlan: TrainingPlan) {
     this.trainingPlan = trainingPlan;
   }
 
-  getSetProgressionByCategories(exerciseCategories: string[]): ChartDataDto {
-    const responseData: ChartDataDto = {};
-
-    const mappedCategories = this.mapExerciseCategoriesToValidCategoryTypes(exerciseCategories);
-
-    mappedCategories.forEach(category => {
-      responseData[capitalize(category)] = this.getSetsPerWeek(category);
-    });
-
-    return responseData;
-  }
-
-  private getSetsPerWeek(exerciseCategory: ExerciseCategoryType): number[] {
-    return this.trainingPlan.trainingWeeks.map(week =>
-      week.trainingDays.reduce(
-        (totalSets, trainingDay) =>
-          totalSets +
-          trainingDay.exercises
-            .filter(exercise => exercise.category === exerciseCategory)
-            .reduce((daySets, exercise) => daySets + exercise.sets, 0),
-        0
-      )
-    );
-  }
-
-  private mapExerciseCategoriesToValidCategoryTypes(exerciseCategories: string[]): ExerciseCategoryType[] {
+  protected mapExerciseCategoriesToValidCategoryTypes(exerciseCategories: string[]): ExerciseCategoryType[] {
     const mappedCategories = [];
     for (const category of exerciseCategories) {
       mappedCategories.push(this.mapToExerciseCategory(category));
