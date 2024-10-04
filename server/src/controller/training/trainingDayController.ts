@@ -14,41 +14,33 @@ import { ApiData } from '../../models/apiData.js';
 import { WeightRecommendationBase } from '../../models/training/weight-recommandation.enum.js';
 import { TrainingDayDataLocator } from './training-day-data-locator.js';
 
-import { ValidationError } from '../../errors/validationError.js';
+import { TrainingPlanService } from '../../service/trainingPlan/training-plan-service.js';
 import trainingPlanManager from '../../service/trainingPlanManager.js';
 import userManager from '../../service/userManager.js';
 import trainingSessionManager from './training-session-manager.js';
 
 /**
- * Updates an existing training plan based on user input. Adjustments can include changes
- * to the plan's title, frequency, and week structure. It also handles differences in the
- * number of weeks by either adding or removing weeks from the plan.
+ * REtrives the data for a certain training day in the training plan.
  */
 export async function getPlanForDay(req: Request, res: Response): Promise<void> {
   const { id, week, day } = req.params;
-
   const trainingWeekIndex = Number(week);
   const trainingDayIndex = Number(day);
 
   const user = await userManager.getUser(res);
-
   const trainingPlan = await trainingPlanManager.findTrainingPlanById(user, id);
 
-  if (trainingWeekIndex > trainingPlan.trainingWeeks.length - 1) {
-    throw new ValidationError('Die angefragte Woche gibt es nicht im Trainingsplan bitte erhöhe die Blocklänge');
-  }
-
-  const trainingWeek = trainingPlan.trainingWeeks[trainingWeekIndex];
-  if (trainingDayIndex > trainingWeek.trainingDays.length - 1) {
-    throw new ValidationError('Der angefragte Tag ist zu hoch für die angegebene Trainingsfrequenz');
-  }
-
-  const trainingDay = trainingWeek.trainingDays[trainingDayIndex];
+  const trainingPlanService = new TrainingPlanService();
+  const trainingDay = trainingPlanService.findAndValidateTrainingDay(trainingPlan, trainingWeekIndex, trainingDayIndex);
 
   let previousTrainingDay = {};
 
   if (trainingPlan.weightRecommandationBase === WeightRecommendationBase.LASTWEEK && trainingWeekIndex > 0) {
-    previousTrainingDay = trainingPlan.trainingWeeks[trainingWeekIndex - 1].trainingDays[trainingDayIndex];
+    previousTrainingDay = trainingPlanService.findAndValidateTrainingDay(
+      trainingPlan,
+      trainingWeekIndex - 1,
+      trainingDayIndex
+    );
   }
 
   const trainingPlanForTrainingDay = {
