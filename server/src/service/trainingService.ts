@@ -267,16 +267,37 @@ export function updateExercise(
  */
 export function getTonnagePerTrainingDay(trainingDay: TrainingDay): number {
   let tonnage = 0;
-  for (const exercise of trainingDay.exercises) {
-    const weight = Number(exercise.weight);
 
-    if (isNaN(weight)) {
-      continue;
-    }
+  for (const exercise of trainingDay.exercises) {
+    const weight = parseWeight(exercise.weight);
 
     const tonnagePerExercise = weight * exercise.sets * exercise.reps;
     tonnage += tonnagePerExercise;
   }
 
   return tonnage;
+}
+
+/**
+ * Parses a weight value which is always a string. The string could be a single number,
+ * a semicolon-delimited string of numbers, or an invalid string.
+ *
+ * @param weightInput - The weight value as a string.
+ * @returns The parsed number, or the average of the numbers if multiple weights are provided, or 0 if invalid.
+ */
+function parseWeight(weightInput: string): number {
+  const parsedWeight = Number(weightInput);
+  if (!isNaN(parsedWeight)) {
+    return parsedWeight;
+  }
+
+  const weights = weightInput.split(';').map(Number);
+  const validWeights = weights.filter(weight => !isNaN(weight));
+
+  if (validWeights.length === 0) {
+    return 0;
+  }
+
+  const sum = validWeights.reduce((total, weight) => total + weight, 0);
+  return sum / validWeights.length;
 }
