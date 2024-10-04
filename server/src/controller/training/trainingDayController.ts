@@ -33,14 +33,16 @@ export async function getPlanForDay(req: Request, res: Response): Promise<void> 
   const trainingPlanService = new TrainingPlanService();
   const trainingDay = trainingPlanService.findAndValidateTrainingDay(trainingPlan, trainingWeekIndex, trainingDayIndex);
 
-  let previousTrainingDay = {};
+  let weightRecommandations: string[] = [];
 
   if (trainingPlan.weightRecommandationBase === WeightRecommendationBase.LASTWEEK && trainingWeekIndex > 0) {
-    previousTrainingDay = trainingPlanService.findAndValidateTrainingDay(
+    const previousTrainingDay = trainingPlanService.findAndValidateTrainingDay(
       trainingPlan,
       trainingWeekIndex - 1,
       trainingDayIndex
     );
+
+    weightRecommandations = matchPreviousExerciseWeights(trainingDay.exercises, previousTrainingDay.exercises);
   }
 
   const trainingPlanForTrainingDay = {
@@ -48,10 +50,20 @@ export async function getPlanForDay(req: Request, res: Response): Promise<void> 
     trainingFrequency: trainingPlan.trainingFrequency,
     trainingBlockLength: trainingPlan.trainingWeeks.length,
     trainingDay,
-    previousTrainingDay
+    weightRecommandations
   };
 
   res.status(200).json(trainingPlanForTrainingDay);
+}
+
+function matchPreviousExerciseWeights(currentExercises: Exercise[], previousExercises: Exercise[]): string[] {
+  return currentExercises.map(currentExercise => {
+    const matchingExercise = previousExercises.find(previousExercise => {
+      return previousExercise.exercise === currentExercise.exercise && previousExercise.reps === currentExercise.reps;
+    });
+
+    return matchingExercise ? matchingExercise.weight : '';
+  });
 }
 
 /**

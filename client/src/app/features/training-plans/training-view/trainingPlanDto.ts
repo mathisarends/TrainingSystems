@@ -5,13 +5,14 @@ export class TrainingPlanDto {
   trainingFrequency!: number;
   trainingBlockLength!: number;
   trainingDay!: Partial<TrainingDay>;
-  previousTrainingDay?: TrainingDay;
+  weightRecommandations?: string[];
 
   setData(data: TrainingPlanDto) {
+    console.log('🚀 ~ TrainingPlanDto ~ setData ~ data:', data);
     this.title = data.title;
     this.trainingFrequency = data.trainingFrequency;
     this.trainingBlockLength = data.trainingBlockLength;
     this.trainingDay = data.trainingDay;
-    this.previousTrainingDay = data.previousTrainingDay;
+    this.weightRecommandations = data.weightRecommandations;
   }
 }
