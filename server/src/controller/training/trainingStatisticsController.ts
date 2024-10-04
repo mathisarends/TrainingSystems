@@ -12,6 +12,7 @@ import { AverageTrainingDayDurationDto } from '../../interfaces/averageTrainingD
 import { ChartDataDto } from '../../interfaces/chartDataDto.js';
 import { LineChartDataDTO } from '../../interfaces/lineChartDataDto.js';
 import trainingPlanManager from '../../service/trainingPlanManager.js';
+import { PerformanceProgressionManager } from '../../service/trainingStatistics/performance-progression-manager.js';
 import { SetProgressionManager } from '../../service/trainingStatistics/set-progression-manager.js';
 import { TonnageProgressionManager } from '../../service/trainingStatistics/tonnage-progression-manager.js';
 import userManager from '../../service/userManager.js';
@@ -205,30 +206,17 @@ export async function getPerformanceComparisonCharts(req: Request, res: Response
   res.status(200).json(responseData);
 }
 
-export async function getPerformanceCharts(req: Request, res: Response): Promise<void> {
+export async function getPerformanceCharts(req: Request, res: Response): Promise<Response<ChartDataDto>> {
   const trainingPlanId = req.params.id;
   const exerciseCategories = (req.query.exercises as string).split(',');
-
-  const mappedExerciseCategories = exerciseCategories.map((category: string) => mapToExerciseCategory(category));
-
-  const mainExercises = [
-    ExerciseCategoryType.SQUAT,
-    ExerciseCategoryType.BENCH,
-    ExerciseCategoryType.DEADLIFT,
-    ExerciseCategoryType.OVERHEADPRESS
-  ];
-
-  const validExercises = mappedExerciseCategories.filter(exercise => mainExercises.includes(exercise));
 
   const user = await userManager.getUser(res);
   const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
 
-  const performanceData = validExercises.reduce((result, category) => {
-    result[capitalize(category)] = getBestPerformanceByExercise(trainingPlan, category);
-    return result;
-  }, {} as LineChartDataDTO);
+  const performanceProgressionManager = new PerformanceProgressionManager(trainingPlan);
+  const performanceData = performanceProgressionManager.getPerformanceProgressionByCategories(exerciseCategories);
 
-  res.status(200).json(performanceData);
+  return res.status(200).json(performanceData);
 }
 
 function getBestPerformanceByExercise(trainingPlan: TrainingPlan, exerciseCategory: ExerciseCategoryType): number[] {
