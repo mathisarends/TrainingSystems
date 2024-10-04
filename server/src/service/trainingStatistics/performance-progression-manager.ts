@@ -29,20 +29,20 @@ export class PerformanceProgressionManager extends TrainingStatisticsManager {
   }
 
   /**
-   * Berechnet die beste Leistung pro Übungskategorie über die Wochen.
+   * Calculates the best performance per exercise category over the weeks.
    */
   private getBestPerformanceByExercise(exerciseCategory: ExerciseCategoryType): number[] {
     return this.trainingPlan.trainingWeeks
-      .map(week => {
+      .map((week, index) => {
         const bestPerformance = this.getBestPerformanceForWeek(week, exerciseCategory);
-        return { bestPerformance, isInitialWeek: this.isInitialWeek(week) };
+        return { bestPerformance, index };
       })
-      .filter(weekData => this.shouldIncludeWeek(weekData.bestPerformance, weekData.isInitialWeek))
+      .filter(weekData => this.shouldIncludeWeek(weekData.bestPerformance, weekData.index))
       .map(weekData => weekData.bestPerformance);
   }
 
   /**
-   * Berechnet die beste Leistung in einer Woche für eine Übungskategorie.
+   * Calculates the best performance in a week for a given exercise category.
    */
   private getBestPerformanceForWeek(week: TrainingWeek, exerciseCategory: ExerciseCategoryType): number {
     let bestPerformance = 0;
@@ -55,7 +55,7 @@ export class PerformanceProgressionManager extends TrainingStatisticsManager {
   }
 
   /**
-   * Berechnet die beste Leistung an einem Trainingstag für eine Übungskategorie.
+   * Calculates the best performance on a training day for a specific exercise category.
    */
   private getBestPerformanceForDay(trainingDay: TrainingDay, exerciseCategory: ExerciseCategoryType): number {
     let bestPerformance = 0;
@@ -70,18 +70,10 @@ export class PerformanceProgressionManager extends TrainingStatisticsManager {
   }
 
   /**
-   * Bestimmt, ob die Woche in den Endergebnissen enthalten sein soll.
-   * Berücksichtigt alle Wochen mit einer Leistung > 0 oder die ersten beiden Wochen.
+   * Determines whether the week should be included in the final results.
+   * Includes all weeks with a performance > 0 or the first two weeks.
    */
-  private shouldIncludeWeek(bestPerformance: number, isInitialWeek: boolean): boolean {
-    return bestPerformance > 0 || isInitialWeek;
-  }
-
-  /**
-   * Bestimmt, ob es sich um eine der ersten beiden Wochen handelt.
-   */
-  private isInitialWeek(week: TrainingWeek): boolean {
-    const index = this.trainingPlan.trainingWeeks.indexOf(week);
-    return index === 0 || index === 1;
+  private shouldIncludeWeek(bestPerformance: number, weekIndex: number): boolean {
+    return bestPerformance > 0 || weekIndex < 2;
   }
 }
