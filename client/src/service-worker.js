@@ -28,6 +28,32 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+self.addEventListener('push', function (event) {
+  console.log('Push-Benachrichtigung empfangen:', event);
+
+  const data = event.data ? event.data.json() : { title: 'Standard-Titel', body: 'Standard-Nachricht' };
+  console.log('🚀 ~ data:', data);
+
+  const options = {
+    tag: data.tag,
+    data: {
+      url: data.url || '/',
+    },
+  };
+
+  notificationManager.showNotification(data.title, data.body, options);
+});
+
+// redirect
+self.addEventListener('notificationclick', function (event) {
+  const notification = event.notification;
+  const url = notification.data.url || '/';
+
+  event.waitUntil(clients.openWindow(url));
+
+  notification.close();
+});
+
 /**
  * Handles incoming messages from the client.
  *
