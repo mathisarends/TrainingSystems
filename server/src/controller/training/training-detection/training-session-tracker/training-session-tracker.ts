@@ -1,5 +1,7 @@
 import { TrainingDay } from '../../../../models/training/trainingDay.js';
 import { InactivityTimeoutManager } from '../../../../service/inactivity-timeout-manager.js';
+import { NotificationPayload } from '../../../../service/notifications/notification-payload.js';
+import pushSubscriptionService from '../../../../service/notifications/push-subscription-service.js';
 import { TrainingDayFinishedNotificationService } from '../../../../service/notifications/training-finished-notification-service.js';
 import { TrainingDayManager } from '../../../../service/training-day-manager.js';
 import userManager from '../../../../service/userManager.js';
@@ -87,6 +89,20 @@ export class TrainingSessionTracker {
 
     user.trainingDayNotifications.push(trainingDayFinishedNotification);
     await userManager.update(user);
+
+    await this.sendTrainingSummaryPushNotification(user.id);
+  }
+
+  private async sendTrainingSummaryPushNotification(userId: string) {
+    const notificationPayload: NotificationPayload = {
+      title: 'TYR TS',
+      body: 'Trainingszusammenfassung verfügbar',
+      url: '/profile/logs',
+      tag: 'training-summary-notification',
+      vibrate: [200, 100, 200]
+    };
+
+    await pushSubscriptionService.sendNotification(userId, notificationPayload);
   }
 
   private addRelevantTrackingDataToTrainingDay(trainingDay: TrainingDay): void {

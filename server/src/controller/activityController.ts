@@ -16,9 +16,6 @@ import userManager from '../service/userManager.js';
 export async function getActivityCalendar(req: Request, res: Response): Promise<void> {
   const user = await userManager.getUser(res);
 
-  const test = user.trainingPlans[0].trainingWeeks[0].trainingDays[0];
-  console.log('🚀 ~ getActivityCalendar ~ test:', test);
-
   const activityMap = user.trainingPlans
     .flatMap(plan => plan.trainingWeeks)
     .flatMap(week => week.trainingDays)
