@@ -26,6 +26,7 @@ export default async function startDB(app: Express) {
 
     app.locals.userDAO = userDAO;
     app.locals.friendshipDAO = new MongoGenericDAO(db, 'friendships');
+    app.locals.PushSubscriptionDAO = new MongoGenericDAO(db, 'pushSubscriptions');
 
     userManager.setUserGenericDAO(userDAO);
   } catch (err) {
