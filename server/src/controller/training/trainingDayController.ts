@@ -14,7 +14,9 @@ import { ApiData } from '../../models/apiData.js';
 import { WeightRecommendationBase } from '../../models/training/weight-recommandation.enum.js';
 import { TrainingDayDataLocator } from './training-day-data-locator.js';
 
+import { TrainingDayDto } from '../../service/trainingPlan/training-day-dto.js';
 import { TrainingPlanService } from '../../service/trainingPlan/training-plan-service.js';
+import { WeightRecommendationService } from '../../service/trainingPlan/weight-recommandation-service.js';
 import trainingPlanManager from '../../service/trainingPlanManager.js';
 import userManager from '../../service/userManager.js';
 import trainingSessionManager from './training-session-manager.js';
@@ -22,7 +24,7 @@ import trainingSessionManager from './training-session-manager.js';
 /**
  * REtrives the data for a certain training day in the training plan.
  */
-export async function getPlanForDay(req: Request, res: Response): Promise<void> {
+export async function getPlanForDay(req: Request, res: Response): Promise<Response<TrainingDayDto>> {
   const { id, week, day } = req.params;
   const trainingWeekIndex = Number(week);
   const trainingDayIndex = Number(day);
@@ -30,7 +32,7 @@ export async function getPlanForDay(req: Request, res: Response): Promise<void> 
   const user = await userManager.getUser(res);
   const trainingPlan = await trainingPlanManager.findTrainingPlanById(user, id);
 
-  const trainingPlanService = new TrainingPlanService();
+  const trainingPlanService = new TrainingPlanService(trainingPlan);
   const trainingDay = trainingPlanService.findAndValidateTrainingDay(trainingPlan, trainingWeekIndex, trainingDayIndex);
 
   let weightRecommandations: string[] = [];
@@ -42,28 +44,14 @@ export async function getPlanForDay(req: Request, res: Response): Promise<void> 
       trainingDayIndex
     );
 
-    weightRecommandations = matchPreviousExerciseWeights(trainingDay.exercises, previousTrainingDay.exercises);
+    weightRecommandations = WeightRecommendationService.getWeightRecommendations(
+      trainingDay.exercises,
+      previousTrainingDay.exercises
+    );
   }
 
-  const trainingPlanForTrainingDay = {
-    title: trainingPlan.title,
-    trainingFrequency: trainingPlan.trainingFrequency,
-    trainingBlockLength: trainingPlan.trainingWeeks.length,
-    trainingDay,
-    weightRecommandations
-  };
-
-  res.status(200).json(trainingPlanForTrainingDay);
-}
-
-function matchPreviousExerciseWeights(currentExercises: Exercise[], previousExercises: Exercise[]): string[] {
-  return currentExercises.map(currentExercise => {
-    const matchingExercise = previousExercises.find(previousExercise => {
-      return previousExercise.exercise === currentExercise.exercise && previousExercise.reps === currentExercise.reps;
-    });
-
-    return matchingExercise ? matchingExercise.weight : '';
-  });
+  const trainingDayDto = trainingPlanService.toTrainingDayDto(trainingDay, weightRecommandations);
+  return res.status(200).json(trainingDayDto);
 }
 
 /**
