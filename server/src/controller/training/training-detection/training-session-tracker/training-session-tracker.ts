@@ -7,7 +7,7 @@ import userManager from '../../../../service/userManager.js';
 /**
  * The `TrainingSessionTracker` class is responsible for managing a user's training session.
  * It tracks the start and stop times, handles activity signals, manages exercise data,
- * and automatically stops the session after a period of inactivity (25 minutes by default).
+ * and automatically stops the session after a period of inactivity (45 minutes by default).
  */
 export class TrainingSessionTracker {
   private trainingDay: TrainingDay;
