@@ -2,6 +2,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { Component, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { toggleCollapseAnimation } from '../../../shared/animations/toggle-collapse';
+import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { CircularIconButtonComponent } from '../../../shared/components/circular-icon-button/circular-icon-button.component';
 import { ToastService } from '../../../shared/components/toast/toast.service';
 import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
@@ -15,7 +16,15 @@ import { TrainingDayFinishedNotification } from '../training-finished-notificati
 @Component({
   selector: 'app-training-day-notification',
   standalone: true,
-  imports: [CommonModule, IconComponent, FormatDatePipe, CircularIconButtonComponent, TooltipDirective],
+  imports: [
+    CommonModule,
+    IconComponent,
+    FormatDatePipe,
+    ButtonComponent,
+    CircularIconButtonComponent,
+    IconComponent,
+    TooltipDirective,
+  ],
   templateUrl: './training-day-notification.component.html',
   styleUrls: ['./training-day-notification.component.scss'],
   providers: [ShareService, DatePipe],
