@@ -11,7 +11,9 @@
         <div class="training-plan-grid">
           @for (trainingPlan of filteredTrainingPlans(); track trainingPlan.id) {
             <div class="training-plan-card-container" cdkDrag>
-              <app-training-plan-card [trainingPlan]="trainingPlan" cdkDragHandle />
+              <app-training-plan-card [trainingPlan]="trainingPlan" />
+
+              <app-circular-icon-button [icon]="IconName.DRAG" [iconSize]="18" cdkDragHandle />
             </div>
           }
         </div>
