@@ -17,7 +17,6 @@ import { TrainingDayChartType } from '../training-plans/training-day-statistics/
 import { TrainingStatisticsService } from '../training-plans/training-day-statistics/training-statistics.service';
 import { ChartColorService } from '../training-plans/training-view/services/chart-color.service';
 import { StatisticsService } from './statistics.service';
-import { TrainingDayNotificationComponent } from './training-day-notification/training-day-notification.component';
 import { TrainingStatisticsDataView } from './training-statistics-data-view';
 
 @Component({
@@ -25,7 +24,6 @@ import { TrainingStatisticsDataView } from './training-statistics-data-view';
   standalone: true,
   imports: [
     CommonModule,
-    TrainingDayNotificationComponent,
     LineChartComponent,
     SelectComponent,
     FloatingLabelInputComponent,

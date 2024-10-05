@@ -1,49 +1,45 @@
-@for (notification of notifications(); track notification.id) {
-  @let exerciseTabCollapsed = notification.exerciseTabCollapsed;
-
-  <div class="training-notification-card">
-    <div class="training-notification-header">
-      <h5>Training Day Summary</h5>
-      <app-icon [size]="22" [name]="IconName.X" (click)="deleteNotification(notification.id)" />
+<div class="training-notification-card">
+  <div class="training-notification-header">
+    <h5>Training Day Summary</h5>
+    <app-icon [size]="22" [name]="IconName.X" (click)="deleteNotification()" />
+  </div>
+  <div class="training-notification-body">
+    <p>
+      @if (notification().startTime) {
+        <strong>Date:</strong> {{ notification().startTime! | formatDate }}<br />
+      }
+      <strong>Duration:</strong> {{ notification().durationInMinutes }} minutes<br />
+      <strong>Total Tonnage:</strong> {{ notification().trainingDayTonnage }} kg
+    </p>
+    <div class="exercise-headline" (click)="toggleExerciseTab()">
+      Exercises
+      @if (notification().exerciseTabCollapsed) {
+        <app-icon [name]="IconName.ChevronDown" />
+      } @else {
+        <app-icon [name]="IconName.ChevronUp" />
+      }
     </div>
-    <div class="training-notification-body">
-      <p>
-        @if (notification.startTime) {
-          <strong>Date:</strong> {{ notification.startTime | formatDate }}<br />
-        }
-        <strong>Duration:</strong> {{ notification.durationInMinutes }} minutes<br />
-        <strong>Total Tonnage:</strong> {{ notification.trainingDayTonnage }} kg
-      </p>
-      <div class="exercise-headline" (click)="toggleExerciseTab(notification)">
-        Exercises
-        @if (exerciseTabCollapsed) {
-          <app-icon [name]="IconName.ChevronDown" />
-        } @else {
-          <app-icon [name]="IconName.ChevronUp" />
-        }
-      </div>
-      <div class="exercises-container" [@toggleCollapse]="exerciseTabCollapsed ? 'collapsed' : 'expanded'">
-        @for (exercise of notification.exercises; track exercise) {
-          <div class="exercise-card">
-            <strong>{{ exercise.exercise }}</strong>
-            <p>Sets: {{ exercise.sets }}</p>
-            <p>Reps: {{ exercise.reps }}</p>
-            <p>Weight: {{ exercise.weight }} kg</p>
-            @if (exercise.actualRPE) {
-              <p>RPE: {{ exercise.actualRPE }}</p>
-            }
-          </div>
-        }
-      </div>
-      <div class="d-flex g-3">
-        <button class="btn btn-light" (click)="goToTrainingPlan(notification.id)">Zum Trainingsplan gehen</button>
-        <app-circular-icon-button
-          [appTooltip]="'Teilen'"
-          [icon]="IconName.SHARE"
-          [iconSize]="16"
-          (clicked)="shareTrainingLog(notification)"
-        />
-      </div>
+    <div class="exercises-container" [@toggleCollapse]="notification().exerciseTabCollapsed ? 'collapsed' : 'expanded'">
+      @for (exercise of notification().exercises; track exercise) {
+        <div class="exercise-card">
+          <strong>{{ exercise.exercise }}</strong>
+          <p>Sets: {{ exercise.sets }}</p>
+          <p>Reps: {{ exercise.reps }}</p>
+          <p>Weight: {{ exercise.weight }} kg</p>
+          @if (exercise.actualRPE) {
+            <p>RPE: {{ exercise.actualRPE }}</p>
+          }
+        </div>
+      }
+    </div>
+    <div class="d-flex g-3">
+      <button class="btn btn-light" (click)="goToTrainingPlan()">Zum Trainingsplan gehen</button>
+      <app-circular-icon-button
+        [appTooltip]="'Teilen'"
+        [icon]="IconName.SHARE"
+        [iconSize]="16"
+        (clicked)="shareTrainingLog()"
+      />
     </div>
   </div>
-}
+</div>

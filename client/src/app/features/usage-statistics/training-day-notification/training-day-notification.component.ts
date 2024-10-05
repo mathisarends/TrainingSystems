@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, input, OnInit, signal } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { toggleCollapseAnimation } from '../../../shared/animations/toggle-collapse';
 import { CircularIconButtonComponent } from '../../../shared/components/circular-icon-button/circular-icon-button.component';
@@ -21,11 +21,10 @@ import { TrainingDayFinishedNotification } from '../training-finished-notificati
   providers: [ShareService, DatePipe],
   animations: [toggleCollapseAnimation],
 })
-export class TrainingDayNotificationComponent implements OnInit {
+export class TrainingDayNotificationComponent {
   protected IconName = IconName;
 
-  notificationsInput = input.required<TrainingDayFinishedNotification[]>();
-  notifications = signal<TrainingDayFinishedNotification[]>([]);
+  notification = input.required<TrainingDayFinishedNotification>();
 
   constructor(
     private notificationService: NotificationService,
@@ -35,26 +34,18 @@ export class TrainingDayNotificationComponent implements OnInit {
     private router: Router,
   ) {}
 
-  ngOnInit(): void {
-    this.notifications.set(
-      this.notificationsInput().map((notification) => ({ ...notification, exerciseTabCollapsed: true })),
-    );
+  protected toggleExerciseTab() {
+    this.notification().exerciseTabCollapsed = !this.notification().exerciseTabCollapsed;
   }
 
-  protected toggleExerciseTab(notification: TrainingDayFinishedNotification) {
-    notification.exerciseTabCollapsed = !notification.exerciseTabCollapsed;
-  }
-
-  protected deleteNotification(notificationId: string): void {
-    this.notificationService.deleteTrainingDayNotification(notificationId).subscribe((response) => {
-      this.notifications.set(this.notifications().filter((notification) => notification.id !== notificationId));
-
+  protected deleteNotification(): void {
+    this.notificationService.deleteTrainingDayNotification(this.notification().id).subscribe(() => {
       this.toastService.success('Benachrichtigung gelöscht');
     });
   }
 
-  protected goToTrainingPlan(notificationId: string): void {
-    this.notificationService.getTrainingDayById(notificationId).subscribe((response) => {
+  protected goToTrainingPlan(): void {
+    this.notificationService.getTrainingDayById(this.notification().id).subscribe((response) => {
       const { trainingPlanId, weekIndex, dayIndex } = response;
 
       this.router.navigate(['/training/view'], {
@@ -63,14 +54,14 @@ export class TrainingDayNotificationComponent implements OnInit {
     });
   }
 
-  protected shareTrainingLog(notification: TrainingDayFinishedNotification) {
-    const formattedDate = this.datePipe.transform(notification.startTime, 'EEEE, dd.MM.yyyy');
+  protected shareTrainingLog() {
+    const formattedDate = this.datePipe.transform(this.notification().startTime, 'EEEE, dd.MM.yyyy');
 
-    const trainingDate = notification.startTime ? `Heutiges Training: ${formattedDate}` : 'Heutiges Training:';
+    const trainingDate = this.notification().startTime ? `Heutiges Training: ${formattedDate}` : 'Heutiges Training:';
 
     // Map through the exercises and format the details
-    const exercisesDetails = notification.exercises
-      .map((exercise) => {
+    const exercisesDetails = this.notification()
+      .exercises.map((exercise) => {
         const exerciseDetails = `${exercise.exercise}: ${exercise.sets} x ${exercise.reps} ${exercise.weight}KG`;
         return exercise.actualRPE ? `${exerciseDetails}, RPE: ${exercise.actualRPE}` : exerciseDetails;
       })

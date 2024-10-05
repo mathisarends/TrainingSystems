@@ -2,4 +2,6 @@
   <app-alert [alertText]="'Es sind momentan keine Benachrichtigungen vorhanden'" />
 }
 
-<app-training-day-notification [notificationsInput]="notificationService.trainingDayNotifications()" />
+@for (notification of notificationService.trainingDayNotifications(); track notification.id) {
+  <app-training-day-notification [notification]="notification" />
+}
