@@ -17,7 +17,7 @@ export class TrainingSessionTracker {
   private inactivityTimeoutId: NodeJS.Timeout | null = null;
   private onTimeoutCallback: () => Promise<void>;
 
-  private readonly inactivityTimeoutDuration: number = 25 * 60 * 1000;
+  private readonly inactivityTimeoutDuration: number = 45 * 60 * 1000;
 
   constructor(trainingDay: TrainingDay, onTimeoutCallback: () => Promise<void>) {
     this.trainingDay = trainingDay;

@@ -28,7 +28,7 @@ trainingPlanRouter.patch(
 trainingPlanRouter.get(
   '/:id/:week/:day',
   authService.authenticationMiddleware,
-  asyncHandler(trainingDayController.getPlanForDay)
+  asyncHandler(trainingDayController.getTrainingDayData)
 );
 
 trainingPlanRouter.patch(

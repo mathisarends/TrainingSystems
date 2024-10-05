@@ -4,8 +4,6 @@ import { TrainingSessionTracker } from './training-session-tracker.js';
 import { TrainingDAyFinishedNotification } from '../../models/collections/user/training-fninished-notifcation.js';
 import { getTonnagePerTrainingDay } from '../../service/trainingService.js';
 import userManager from '../../service/userManager.js';
-import { sendMailForTrainingDaySummary } from './training-summary/training-day-summary.js';
-import { TrainingSummary } from './training-summary/training-summary.js';
 
 /**
  * Manages multiple training session trackers for different users.
@@ -95,17 +93,6 @@ class TrainingSessionManager {
       user.trainingDayNotifications.push(trainingDayNotification);
 
       await userManager.update(user);
-
-      const trainingDaySummary: TrainingSummary = {
-        trainingPlanTitle: user.trainingPlans[trainingPlanIndex].title,
-        trainingDayWeekNumber: trainingWeekIndex + 1,
-        trainingDayDayNumber: trainingDayIndex + 1,
-        ...trainingDayNotification
-      };
-
-      if (user.isTrainingSummaryEmailEnabled !== false) {
-        await sendMailForTrainingDaySummary(trainingDaySummary, user.email);
-      }
     }
 
     this.removeTracker(trainingDayId);

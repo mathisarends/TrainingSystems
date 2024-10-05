@@ -24,7 +24,7 @@ import trainingSessionManager from './training-session-manager.js';
 /**
  * REtrives the data for a certain training day in the training plan.
  */
-export async function getPlanForDay(req: Request, res: Response): Promise<Response<TrainingDayDto>> {
+export async function getTrainingDayData(req: Request, res: Response): Promise<Response<TrainingDayDto>> {
   const { id, week, day } = req.params;
   const trainingWeekIndex = Number(week);
   const trainingDayIndex = Number(day);
@@ -59,22 +59,18 @@ export async function getPlanForDay(req: Request, res: Response): Promise<Respon
  * the specified day but can also propagate to the same day in subsequent weeks, maintaining consistency.
  */
 export async function updateTrainingDataForTrainingDay(req: Request, res: Response) {
-  const trainingPlanId = req.params.id;
+  const id = req.params.id;
   const trainingWeekIndex = Number(req.params.week);
   const trainingDayIndex = Number(req.params.day);
 
-  if (isNaN(trainingWeekIndex) || isNaN(trainingDayIndex)) {
-    return res.status(400).json({ error: 'Ungültige Woche oder Tag Index' });
-  }
-
-  const changedData: ApiData = req.body;
-
   const user = await userManager.getUser(res);
+  const trainingPlan = await trainingPlanManager.findTrainingPlanById(user, id);
 
-  const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
+  const trainingPlanService = new TrainingPlanService(trainingPlan);
+  const trainingDay = trainingPlanService.findAndValidateTrainingDay(trainingPlan, trainingWeekIndex, trainingDayIndex);
   trainingPlan.lastUpdated = new Date();
 
-  const trainingDay = trainingPlan.trainingWeeks[trainingWeekIndex]?.trainingDays[trainingDayIndex];
+  const changedData: ApiData = req.body;
 
   updateTrainingDay(trainingDay, changedData);
   propagateChangesToFutureWeeks(trainingPlan, trainingWeekIndex, trainingDayIndex, changedData);
@@ -83,7 +79,7 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
 
   for (const [fieldName, fieldValue] of Object.entries(changedData)) {
     if (isTrainingActivitySignal(fieldName, fieldValue)) {
-      const trainingPlanIndex = trainingService.findTrainingPlanIndexById(user.trainingPlans, trainingPlanId);
+      const trainingPlanIndex = trainingService.findTrainingPlanIndexById(user.trainingPlans, id);
       const trainingMetaData = new TrainingDayDataLocator(user, trainingPlanIndex, trainingWeekIndex, trainingDayIndex);
 
       const trainingSessionTracker = await trainingSessionManager.addOrUpdateTracker(trainingMetaData);
