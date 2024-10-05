@@ -1,6 +1,7 @@
 import { TrainingPlanCardViewDto } from '../models/dto/training-plan-card-view-dto.js';
 import { TrainingPlanEditViewDto } from '../models/dto/training-plan-edit-view-dto.js';
 import { TrainingPlan } from '../models/training/trainingPlan.js';
+import dateService from './date-service.js';
 
 export class TrainingPlanDtoMapper {
   /**
@@ -15,7 +16,7 @@ export class TrainingPlanDtoMapper {
       blockLength: plan.trainingWeeks.length,
       weightRecomamndationBase: plan.weightRecommandationBase,
       trainingFrequency: plan.trainingFrequency,
-      lastUpdated: plan.lastUpdated,
+      lastUpdatedString: dateService.formatDate(plan.lastUpdated),
       coverImageBase64: plan.coverImageBase64 ?? ''
     };
   }

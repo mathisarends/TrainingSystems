@@ -9,6 +9,7 @@ import { TrainingSessionMetaDataDto } from './trainingSessionMetaDataDto.js';
 import _ from 'lodash';
 import { ApiData } from '../../models/apiData.js';
 import { Exercise } from '../../models/training/exercise.js';
+import dateService from '../../service/date-service.js';
 import { createExerciseObject, updateExercise } from '../../service/trainingService.js';
 import userManager from '../../service/userManager.js';
 
@@ -51,7 +52,7 @@ export async function getTrainingSessionCardViews(req: Request, res: Response): 
     return {
       id: trainingSession.id,
       title: trainingSession.title,
-      lastUpdated: trainingSession.lastUpdated,
+      lastUpdatedString: dateService.formatDate(trainingSession.lastUpdated),
       coverImageBase64: trainingSession.coverImageBase64 ?? '',
       pictureUrl: user.pictureUrl
     };

@@ -1,7 +1,7 @@
 export interface TrainingSessionCardViewDto {
   id: string;
   title: string;
-  lastUpdated: Date;
+  lastUpdatedString: string;
   pictureUrl?: string;
   coverImageBase64?: string;
   averageTrainingDayDuration?: string;

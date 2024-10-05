@@ -12,12 +12,6 @@ activityRouter.get(
 );
 
 activityRouter.get(
-  '/recent-training-durations',
-  authService.authenticationMiddleware,
-  asyncHandler(activityController.getRecentTrainingDurations)
-);
-
-activityRouter.get(
   '/training-notifications',
   authService.authenticationMiddleware,
   asyncHandler(activityController.getTrainingDayNotifications)

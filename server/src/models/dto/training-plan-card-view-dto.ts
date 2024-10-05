@@ -1,4 +1,4 @@
-import { WeightRecommendationBase } from '../training/weight-recommandation.enum';
+import { WeightRecommendationBase } from '../training/weight-recommandation.enum.js';
 
 /**
  * Represents the data structure for displaying a training plan in a card view.
@@ -12,7 +12,7 @@ export interface TrainingPlanCardViewDto {
   trainingFrequency: number;
   blockLength: number;
   weightRecomamndationBase: WeightRecommendationBase;
-  lastUpdated: Date;
+  lastUpdatedString: string;
   pictureUrl?: string;
   coverImageBase64?: string;
   percentageFinished?: number;

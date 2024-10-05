@@ -31,29 +31,6 @@ export async function getActivityCalendar(req: Request, res: Response): Promise<
 }
 
 /**
- * Retrieves the recent training durations for a user and returns an array of the last 14 durations.
- *
- * @param req - The HTTP request object.
- * @param res - The HTTP response object.
- * @returns A Promise that resolves to void. Sends a JSON response with the durations array.
- */
-export async function getRecentTrainingDurations(req: Request, res: Response): Promise<void> {
-  const user = await userManager.getUser(res);
-
-  const trainingDurationsWithDate = user.trainingPlans
-    .flatMap(plan => plan.trainingWeeks)
-    .flatMap(week => week.trainingDays)
-    .filter(day => !!day.durationInMinutes)
-    .map(day => ({
-      durationInMinutes: day.durationInMinutes!,
-      date: formatDateWithWeekday(new Date(day.endTime!))
-    }))
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 30);
-
-  res.status(200).json(trainingDurationsWithDate);
-}
-/**
  * Retrieves training day notifications for a user.
  */
 export async function getTrainingDayNotifications(req: Request, res: Response): Promise<Response> {

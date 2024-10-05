@@ -21,7 +21,7 @@ import userManager from '../../service/userManager.js';
  * Retrieves the list of training plans for the user, summarizing them into card views.
  * The result is intended to be a lightweight representation of the user's training plans.
  */
-export async function getPlans(req: Request, res: Response): Promise<void> {
+export async function getPlans(req: Request, res: Response): Promise<Response<TrainingPlanCardViewDto[]>> {
   const user = await userManager.getUser(res);
 
   const trainingPlanCards: TrainingPlanCardViewDto[] = user.trainingPlans.map((plan: TrainingPlan) => ({
@@ -31,7 +31,7 @@ export async function getPlans(req: Request, res: Response): Promise<void> {
     averageTrainingDayDuration: trainingService.getAverageTrainingDuration(plan)
   }));
 
-  res.status(200).json(trainingPlanCards);
+  return res.status(200).json(trainingPlanCards);
 }
 
 /**
