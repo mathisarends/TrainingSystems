@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BrowserCheckService } from '../core/services/browser-check.service';
+import { HttpService } from '../core/services/http-client.service';
 
 @Injectable({
   providedIn: 'root',
@@ -7,7 +8,10 @@ import { BrowserCheckService } from '../core/services/browser-check.service';
 export class ServiceWorkerService {
   private VAPID_PUBLIC_KEY = 'BOLKmNpP6togP7OJDnS2bR1I-Tut9tpUWzYJBLAsc-m3MlR36roqEtWXjPaKlQ1IXiXAA6wCvxTzTQn0FATAUms';
 
-  constructor(private browserCheckService: BrowserCheckService) {}
+  constructor(
+    private browserCheckService: BrowserCheckService,
+    private httpService: HttpService,
+  ) {}
 
   /**
    * Register the service worker and check for updates.
@@ -79,13 +83,13 @@ export class ServiceWorkerService {
    * Sende die Push-Subscription an den Server, um sie dort zu speichern.
    */
   private sendSubscriptionToServer(subscription: PushSubscription) {
-    return fetch('/api/push-notifications', {
-      method: 'POST',
-      body: JSON.stringify(subscription),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    this.httpService
+      .post('/push-notifications/subscribe', {
+        subscription,
+      })
+      .subscribe(() => {
+        console.log('Push-Subscription erfolgreich an den Server gesendet.');
+      });
   }
 
   /**

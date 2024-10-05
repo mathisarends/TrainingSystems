@@ -12,6 +12,7 @@ import {
 import { ApiData } from '../../models/apiData.js';
 import { WeightRecommendationBase } from '../../models/training/weight-recommandation.enum.js';
 
+import pushSubscriptionService from '../../service/push-subscription-service.js';
 import { TrainingDayDto } from '../../service/trainingPlan/dto/training-day-dto.js';
 import { TrainingPlanService } from '../../service/trainingPlan/training-plan-service.js';
 import { WeightRecommendationService } from '../../service/trainingPlan/weight-recommandation-service.js';
@@ -34,6 +35,8 @@ export async function getTrainingDayData(req: Request, res: Response): Promise<R
   const trainingDay = trainingPlanService.findAndValidateTrainingDay(trainingPlan, trainingWeekIndex, trainingDayIndex);
 
   let weightRecommandations: string[] = [];
+
+  await pushSubscriptionService.sendNotification(user.id);
 
   if (trainingPlan.weightRecommandationBase === WeightRecommendationBase.LASTWEEK && trainingWeekIndex > 0) {
     const previousTrainingDay = trainingPlanService.findAndValidateTrainingDay(

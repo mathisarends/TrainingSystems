@@ -28,6 +28,37 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+self.addEventListener('push', function (event) {
+  console.log('Push-Benachrichtigung empfangen:', event);
+
+  const data = event.data ? event.data.json() : { title: 'Standard-Titel', body: 'Standard-Nachricht' };
+  console.log('🚀 ~ data:', data);
+
+  const options = {
+    body: data.body || 'Sie haben eine neue Nachricht.',
+    icon: data.icon || '/default-icon.png',
+    data: {
+      url: data.url || '/',
+    },
+  };
+
+  // Debugging: Prüfen, ob die Notification-API unterstützt wird
+  if (!self.registration.showNotification) {
+    console.error('Benachrichtigungs-API nicht unterstützt');
+    return;
+  }
+
+  console.log('🚀 ~ Zeige Benachrichtigung an:', data.title, options);
+
+  // Versuche die Benachrichtigung anzuzeigen
+  event.waitUntil(
+    self.registration
+      .showNotification(data.title || 'Benachrichtigung', options)
+      .then(() => console.log('Benachrichtigung erfolgreich angezeigt'))
+      .catch((error) => console.error('Fehler beim Anzeigen der Benachrichtigung:', error)),
+  );
+});
+
 /**
  * Handles incoming messages from the client.
  *
