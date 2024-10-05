@@ -77,7 +77,7 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
 
   for (const [fieldName, fieldValue] of Object.entries(changedData)) {
     if (isTrainingActivitySignal(fieldName, fieldValue)) {
-      const trainingSessionTracker = await trainingSessionManager.addOrUpdateTracker(trainingDay, user.id);
+      const trainingSessionTracker = await trainingSessionManager.getOrCreateTracker(trainingDay, user.id);
       trainingSessionTracker.handleActivitySignal();
       break;
     }
