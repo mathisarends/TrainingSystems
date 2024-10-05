@@ -1,7 +1,8 @@
 import webPush, { PushSubscription } from 'web-push';
-import { NotFoundError } from '../errors/notFoundError.js';
-import { UserPushSubscription } from '../models/collections/push-subscription.js';
-import { MongoGenericDAO } from '../models/dao/mongo-generic.dao.js';
+import { NotFoundError } from '../../errors/notFoundError.js';
+import { UserPushSubscription } from '../../models/collections/push-subscription.js';
+import { MongoGenericDAO } from '../../models/dao/mongo-generic.dao.js';
+import { NotificationPayload } from './notification-payload.js';
 
 class PushSubscriptionService {
   private pushSubscriptionDAO!: MongoGenericDAO<UserPushSubscription>;
@@ -10,29 +11,25 @@ class PushSubscriptionService {
     this.pushSubscriptionDAO = pushSubscriptionDAO;
   }
 
-  async sendNotification(userId: string) {
+  async sendNotification(userId: string, notifcationPayload: NotificationPayload) {
     const subscriptions = await this.getSubscriptionsByUserId(userId);
-    console.log('🚀 Subscriptions retrieved:', subscriptions);
 
     if (subscriptions.length === 0) {
       throw new NotFoundError('Keine Push-Subscription für diesen Benutzer gefunden');
     }
 
     const notificationPayload = {
-      title: 'Benachrichtigung',
-      body: 'Sie haben eine neue Nachricht.',
-      icon: '/path-to-icon.png',
-      url: '/notification-url'
+      title: notifcationPayload.title,
+      body: notifcationPayload.body,
+      url: notifcationPayload.url,
+      vibrate: notifcationPayload.vibrate
     };
 
     for (const subscription of subscriptions) {
       try {
         await webPush.sendNotification(subscription, JSON.stringify(notificationPayload));
       } catch (error) {
-        console.log('error', error);
-        console.log('❌ Push-Subscription abgelaufen oder ungültig. Lösche die Subscription:', subscription.endpoint);
-        const deleteCount = await this.deleteSubscription(subscription.userId);
-        console.log('🚀 ~ PushSubscriptionService ~ sendNotification ~ deleteCount:', deleteCount);
+        await this.deleteSubscription(subscription.userId);
       }
     }
   }

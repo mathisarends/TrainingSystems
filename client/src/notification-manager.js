@@ -28,14 +28,6 @@ class NotificationManager {
       body,
       ...notificationOptions,
     });
-
-    setTimeout(() => {
-      self.registration.getNotifications({ tag: notificationOptions.tag }).then((notifications) => {
-        notifications.forEach((notification) => {
-          notification.close();
-        });
-      });
-    }, 60 * 1000);
   }
 
   /**

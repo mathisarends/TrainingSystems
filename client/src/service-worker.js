@@ -35,28 +35,23 @@ self.addEventListener('push', function (event) {
   console.log('🚀 ~ data:', data);
 
   const options = {
-    body: data.body || 'Sie haben eine neue Nachricht.',
-    icon: data.icon || '/default-icon.png',
+    tag: data.tag,
     data: {
       url: data.url || '/',
     },
   };
 
-  // Debugging: Prüfen, ob die Notification-API unterstützt wird
-  if (!self.registration.showNotification) {
-    console.error('Benachrichtigungs-API nicht unterstützt');
-    return;
-  }
+  notificationManager.showNotification(data.title, data.body, options);
+});
 
-  console.log('🚀 ~ Zeige Benachrichtigung an:', data.title, options);
+// redirect
+self.addEventListener('notificationclick', function (event) {
+  const notification = event.notification;
+  const url = notification.data.url || '/';
 
-  // Versuche die Benachrichtigung anzuzeigen
-  event.waitUntil(
-    self.registration
-      .showNotification(data.title || 'Benachrichtigung', options)
-      .then(() => console.log('Benachrichtigung erfolgreich angezeigt'))
-      .catch((error) => console.error('Fehler beim Anzeigen der Benachrichtigung:', error)),
-  );
+  event.waitUntil(clients.openWindow(url));
+
+  notification.close();
 });
 
 /**

@@ -66,6 +66,10 @@ class Timer {
     this.notificationManager.showNotification('TTS', 'Your timer has expired!', {
       vibrate: [200, 100, 200],
     });
+
+    setTimeout(() => {
+      this.closeNotifications();
+    }, 60 * 1000);
   }
 
   /**
@@ -118,7 +122,7 @@ class Timer {
 
   /**
    * Closes all notifications associated with this timer.
-  
+
    */
   closeNotifications() {
     this.notificationManager.closeNotifications();

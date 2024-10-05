@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { NotFoundError } from '../../errors/notFoundError.js';
-import pushSubscriptionService from '../../service/push-subscription-service.js';
+import pushSubscriptionService from '../../service/notifications/push-subscription-service.js';
 import userManager from '../../service/userManager.js';
 import { PushSubscriptionRequest } from './push-subscription-request.js';
 

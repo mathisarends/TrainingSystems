@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 import { UserPushSubscription } from './models/collections/push-subscription.js';
 import { User } from './models/collections/user/user.js';
 import { MongoGenericDAO } from './models/dao/mongo-generic.dao.js';
-import pushSubscriptionService from './service/push-subscription-service.js';
+import pushSubscriptionService from './service/notifications/push-subscription-service.js';
 import userManager from './service/userManager.js';
 
 dotenv.config();
