@@ -1,12 +1,6 @@
+import { PushSubscription } from 'web-push';
 import { Entity } from './entity.js';
 
-export interface PushSubscription extends Entity {
+export interface UserPushSubscription extends Entity, PushSubscription {
   userId: string;
-  subscription: {
-    endpoint: string;
-    keys: {
-      p256dh: string;
-      auth: string;
-    };
-  };
 }

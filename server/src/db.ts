@@ -2,8 +2,10 @@ import dotenv from 'dotenv';
 import { Express } from 'express';
 import { MongoClient } from 'mongodb';
 import mongoose from 'mongoose';
+import { UserPushSubscription } from './models/collections/push-subscription.js';
 import { User } from './models/collections/user/user.js';
 import { MongoGenericDAO } from './models/dao/mongo-generic.dao.js';
+import pushSubscriptionService from './service/push-subscription-service.js';
 import userManager from './service/userManager.js';
 
 dotenv.config();
@@ -23,12 +25,13 @@ export default async function startDB(app: Express) {
 
     const db = client.db();
     const userDAO: MongoGenericDAO<User> = new MongoGenericDAO(db, 'user');
+    const pushSubscriptionDAO: MongoGenericDAO<UserPushSubscription> = new MongoGenericDAO(db, 'userPushSubscriptions');
 
     app.locals.userDAO = userDAO;
     app.locals.friendshipDAO = new MongoGenericDAO(db, 'friendships');
-    app.locals.PushSubscriptionDAO = new MongoGenericDAO(db, 'pushSubscriptions');
 
     userManager.setUserGenericDAO(userDAO);
+    pushSubscriptionService.setPushSubscriptionDAO(pushSubscriptionDAO);
   } catch (err) {
     console.error('Error connecting to the database: ', err);
     process.exit(1);
