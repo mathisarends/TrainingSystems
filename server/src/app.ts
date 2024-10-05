@@ -1,19 +1,18 @@
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import dotenv from 'dotenv';
 import express, { Express } from 'express';
 import helmet from 'helmet';
 import http from 'http';
-import startDB from './db.js';
-
-import cors from 'cors';
-
-// Routers
+import webPush from 'web-push';
 import limiter from './config/rate-limiter.js';
 import emailTestRouter from './controller/emailTestRouter.js';
+import startDB from './db.js';
 import { errorHandler } from './middleware/error-handler.js';
 import requestLogger from './middleware/request-middleware.js';
 import exerciseRouter from './routes/exerciseRoutes.js';
 import friendShipRouter from './routes/friendshipRoutes.js';
+import pushNotificationRouter from './routes/pushNotificationRoutes.js';
 import trainingRouter from './routes/training/trainingRoutes.js';
 import trainingSessionRouter from './routes/trainingSession/trainingSessionRouter.js';
 import userRouter from './routes/user/userRoutes.js';
@@ -24,6 +23,12 @@ const PORT = process.env.port ? parseInt(process.env.port, 10) : 3000;
 
 const DEV_BASE_URL = process.env.DEV_BASE_URL!;
 const PROD_BASE_URL = process.env.PROD_BASE_URL!;
+
+webPush.setVapidDetails(
+  `mailto:${process.env.contact_email}`,
+  process.env.vapid_public_key!,
+  process.env.vapid_secret_key!
+);
 
 async function configureApp(app: Express) {
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
@@ -49,6 +54,7 @@ async function configureApp(app: Express) {
   app.use('/api/training-session', trainingSessionRouter);
   app.use('/api/exercise', exerciseRouter);
   app.use('/api/friendship', friendShipRouter);
+  app.use('/api/push-notifications', pushNotificationRouter);
   app.use('/api/test', emailTestRouter);
 
   app.use(errorHandler);
