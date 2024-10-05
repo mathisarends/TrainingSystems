@@ -1,17 +1,18 @@
+import { NotFoundError } from '../errors/notFoundError.js';
 import { User } from '../models/collections/user/user.js';
 import { TrainingDay } from '../models/training/trainingDay.js';
 import { TrainingPlan } from '../models/training/trainingPlan.js';
 import { TrainingWeek } from '../models/training/trainingWeek.js';
 
 export class TrainingDayManager {
-  static async findTrainingDayById(user: User, trainingDayId: string): Promise<TrainingDay | undefined> {
+  static async findTrainingDayById(user: User, trainingDayId: string): Promise<TrainingDay> {
     for (const trainingPlan of user.trainingPlans) {
       const foundDay = this.findTrainingDayInPlan(trainingPlan, trainingDayId);
       if (foundDay) {
         return foundDay;
       }
     }
-    return undefined;
+    throw new NotFoundError(`Trainingstag mit der id ${trainingDayId} konnte nicht gefunden werden.`);
   }
 
   private static findTrainingDayInPlan(trainingPlan: TrainingPlan, trainingDayId: string): TrainingDay | undefined {

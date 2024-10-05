@@ -13,10 +13,7 @@ class TrainingSessionManager {
     const trainingDayId = trainingDay.id;
     const tracker = this.getTrackerById(trainingDayId);
 
-    if (tracker) {
-      tracker.updateTrainingDayExerciseData(trainingDay.exercises);
-      return tracker;
-    }
+    if (tracker) return tracker;
 
     const newTracker = new TrainingSessionTracker(trainingDay, userId, () => this.removeTracker(trainingDayId));
 

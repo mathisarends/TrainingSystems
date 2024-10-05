@@ -1,4 +1,3 @@
-import { Exercise } from '../../../../models/training/exercise.js';
 import { TrainingDay } from '../../../../models/training/trainingDay.js';
 import { InactivityTimeoutManager } from '../../../../service/inactivity-timeout-manager.js';
 import { TrainingDayFinishedNotificationService } from '../../../../service/notifications/training-finished-notification-service.js';
@@ -37,10 +36,6 @@ export class TrainingSessionTracker {
     }
   }
 
-  updateTrainingDayExerciseData(exercises: Exercise[]): void {
-    this.trainingDay.exercises = exercises;
-  }
-
   clearInactivityTimeout(): void {
     this.inactivityTimeoutManager.clearTimeout();
   }
@@ -54,11 +49,12 @@ export class TrainingSessionTracker {
     this.inactivityTimeoutManager.startTimeout();
   }
 
-  private stopRecording(): void {
+  private async stopRecording(): Promise<void> {
     this.trainingDay.endTime = new Date();
     this.trainingDay.recording = false;
     this.calculateAndSetSessionDuration();
-    this.handleSessionTimeout();
+
+    await this.handleSessionTimeout();
 
     this.removeTrackerCallback();
   }
@@ -82,15 +78,22 @@ export class TrainingSessionTracker {
     }
 
     const user = await userManager.getUserById(this.userId);
-    let trainingDay = await TrainingDayManager.findTrainingDayById(user, this.trainingDay.id);
+    const trainingDay = await TrainingDayManager.findTrainingDayById(user, this.trainingDay.id);
 
-    trainingDay = this.trainingDay; // override data in user with the data saved in session tracker (e.g. duration)
+    this.addRelevantTrackingDataToTrainingDay(trainingDay);
 
     const trainingDayFinishedNotification =
       TrainingDayFinishedNotificationService.toTrainingFinishedNotificationDto(trainingDay);
 
     user.trainingDayNotifications.push(trainingDayFinishedNotification);
     await userManager.update(user);
+  }
+
+  private addRelevantTrackingDataToTrainingDay(trainingDay: TrainingDay): void {
+    trainingDay.startTime = this.trainingDay.startTime;
+    trainingDay.recording = false;
+    trainingDay.endTime = this.trainingDay.endTime;
+    trainingDay.durationInMinutes = this.trainingDay.durationInMinutes;
   }
 
   private isMinimumTrainingDurationMet(trainingDuration: number) {
