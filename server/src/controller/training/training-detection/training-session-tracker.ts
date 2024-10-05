@@ -1,5 +1,5 @@
-import { Exercise } from '../../models/training/exercise.js';
-import { TrainingDay } from '../../models/training/trainingDay.js';
+import { Exercise } from '../../../models/training/exercise.js';
+import { TrainingDay } from '../../../models/training/trainingDay.js';
 
 /**
  * The `TrainingSessionTracker` class is responsible for managing a user's training session.
@@ -15,12 +15,16 @@ export class TrainingSessionTracker {
   private trainingDay: TrainingDay;
 
   private inactivityTimeoutId: NodeJS.Timeout | null = null;
+
   private onTimeoutCallback: () => Promise<void>;
 
-  private readonly inactivityTimeoutDuration: number = 45 * 60 * 1000;
+  private userId: string;
 
-  constructor(trainingDay: TrainingDay, onTimeoutCallback: () => Promise<void>) {
+  private readonly inactivityTimeoutDuration: number = /* 45 * 60 * 1000; */ 15000;
+
+  constructor(trainingDay: TrainingDay, userId: string, onTimeoutCallback: () => Promise<void>) {
     this.trainingDay = trainingDay;
+    this.userId = userId;
     this.lastActivity = new Date();
 
     this.onTimeoutCallback = onTimeoutCallback;
@@ -48,19 +52,16 @@ export class TrainingSessionTracker {
     this.trainingDay.exercises = exercises;
   }
 
+  getUserId(): string {
+    return this.userId;
+  }
+
   /**
    * Returns the current `TrainingDay` object being tracked.
    * @returns The `TrainingDay` object.
    */
   getTrainingDay() {
     return this.trainingDay;
-  }
-
-  /**
-   * Cleans up resources associated with this tracker, including clearing the inactivity timeout.
-   */
-  cleanup(): void {
-    this.clearInactivityTimeout();
   }
 
   /**
@@ -72,6 +73,16 @@ export class TrainingSessionTracker {
    */
   isActivitySignal(fieldName: string, fieldValue: string): boolean {
     return (fieldName.endsWith('weight') && !!fieldValue) || (fieldName.endsWith('actualRPE') && !!fieldValue);
+  }
+
+  /**
+   * Clears the currently scheduled inactivity timeout, if any.
+   */
+  clearInactivityTimeout(): void {
+    if (this.inactivityTimeoutId) {
+      clearTimeout(this.inactivityTimeoutId);
+      this.inactivityTimeoutId = null;
+    }
   }
 
   /**
@@ -114,16 +125,6 @@ export class TrainingSessionTracker {
    */
   private scheduleInactivityTimeout(): void {
     this.inactivityTimeoutId = setTimeout(() => this.stopRecording(), this.inactivityTimeoutDuration);
-  }
-
-  /**
-   * Clears the currently scheduled inactivity timeout, if any.
-   */
-  private clearInactivityTimeout(): void {
-    if (this.inactivityTimeoutId) {
-      clearTimeout(this.inactivityTimeoutId);
-      this.inactivityTimeoutId = null;
-    }
   }
 
   /**

@@ -1,7 +1,7 @@
 import { ValidationError } from '../../errors/validationError.js';
 import { TrainingDay } from '../../models/training/trainingDay.js';
 import { TrainingPlan } from '../../models/training/trainingPlan.js';
-import { TrainingDayDto } from './training-day-dto.js';
+import { TrainingDayDto } from './dto/training-day-dto.js';
 
 export class TrainingPlanService {
   private trainingPlan: TrainingPlan;

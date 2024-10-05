@@ -3,7 +3,7 @@ import { ExerciseCategoryType } from '../../training/exercise-category-type.js';
 import { TrainingSession } from '../../training/training-session.js';
 import { TrainingPlan } from '../../training/trainingPlan.js';
 import { Entity } from '../entity.js';
-import { TrainingDAyFinishedNotification } from './training-fninished-notifcation.js';
+import { TrainingDayFinishedNotification } from './training-fninished-notifcation.js';
 import { UserExercise } from './user-exercise.js';
 
 /**
@@ -63,7 +63,7 @@ export interface User extends Entity {
    * This property is required and holds an array with  `TrainingDay` objects,
    * representing the summary of the user's previous training day.
    */
-  trainingDayNotifications: TrainingDAyFinishedNotification[];
+  trainingDayNotifications: TrainingDayFinishedNotification[];
 
   isTrainingSummaryEmailEnabled: boolean;
 

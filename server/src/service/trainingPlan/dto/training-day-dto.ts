@@ -1,4 +1,4 @@
-import { TrainingDay } from '../../models/training/trainingDay.js';
+import { TrainingDay } from '../../../models/training/trainingDay.js';
 
 export interface TrainingDayDto {
   title: string;

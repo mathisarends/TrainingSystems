@@ -149,16 +149,6 @@ export async function getAverageSessionDurationDataForTrainingPlanDay(
 
   const sessionDurationManager = new SessionDurationManager(trainingPlan);
 
-  if (process.env.NODE_ENV === 'development') {
-    const mockAverageDurationsByDayOfWeek: AverageTrainingDayDurationDto[] = [
-      { dayOfWeek: 'Sonntag', averageDuration: 45 },
-      { dayOfWeek: 'Dienstag', averageDuration: 55 },
-      { dayOfWeek: 'Donnerstag', averageDuration: 40 },
-      { dayOfWeek: 'Samstag', averageDuration: 65 }
-    ];
-    return res.status(200).json(mockAverageDurationsByDayOfWeek);
-  }
-
   const averageDurationsByDayOfWeek = sessionDurationManager.calculateAverageDurations();
 
   return res.status(200).json(averageDurationsByDayOfWeek);

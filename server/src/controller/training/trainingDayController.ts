@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { TrainingDay } from '../../models/training/trainingDay.js';
-import * as trainingService from '../../service/trainingService.js';
 
 import { Exercise } from '../../models/training/exercise.js';
 import { TrainingPlan } from '../../models/training/trainingPlan.js';
@@ -12,14 +11,13 @@ import {
 
 import { ApiData } from '../../models/apiData.js';
 import { WeightRecommendationBase } from '../../models/training/weight-recommandation.enum.js';
-import { TrainingDayDataLocator } from './training-day-data-locator.js';
 
-import { TrainingDayDto } from '../../service/trainingPlan/training-day-dto.js';
+import { TrainingDayDto } from '../../service/trainingPlan/dto/training-day-dto.js';
 import { TrainingPlanService } from '../../service/trainingPlan/training-plan-service.js';
 import { WeightRecommendationService } from '../../service/trainingPlan/weight-recommandation-service.js';
 import trainingPlanManager from '../../service/trainingPlanManager.js';
 import userManager from '../../service/userManager.js';
-import trainingSessionManager from './training-session-manager.js';
+import trainingSessionManager from './training-detection/training-session-manager.js';
 
 /**
  * REtrives the data for a certain training day in the training plan.
@@ -79,10 +77,7 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
 
   for (const [fieldName, fieldValue] of Object.entries(changedData)) {
     if (isTrainingActivitySignal(fieldName, fieldValue)) {
-      const trainingPlanIndex = trainingService.findTrainingPlanIndexById(user.trainingPlans, id);
-      const trainingMetaData = new TrainingDayDataLocator(user, trainingPlanIndex, trainingWeekIndex, trainingDayIndex);
-
-      const trainingSessionTracker = await trainingSessionManager.addOrUpdateTracker(trainingMetaData);
+      const trainingSessionTracker = await trainingSessionManager.addOrUpdateTracker(trainingDay, user.id);
       trainingSessionTracker.handleActivitySignal();
       break;
     }

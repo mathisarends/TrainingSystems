@@ -3,7 +3,7 @@ import { ChartJSNodeCanvas } from 'chartjs-node-canvas';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
-import { TrainingDAyFinishedNotification } from '../../../models/collections/user/training-fninished-notifcation';
+import { TrainingDayFinishedNotification } from '../../../models/collections/user/training-fninished-notifcation';
 
 dotenv.config();
 
@@ -19,7 +19,7 @@ const width = 600;
 const height = 400;
 const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height });
 
-async function renderTonnageChart(trainingData: TrainingDAyFinishedNotification) {
+async function renderTonnageChart(trainingData: TrainingDayFinishedNotification) {
   const colors = Object.values(ChartColors);
 
   const config: ChartConfiguration<'bar'> = {

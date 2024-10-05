@@ -17,7 +17,11 @@ class UserManager {
   async getUser(res: Response): Promise<User> {
     const userClaimsSet = res.locals.user;
 
-    const user = await this.userDAO.findOne({ id: userClaimsSet.id });
+    return this.getUserById(userClaimsSet.id);
+  }
+
+  async getUserById(userId: string): Promise<User> {
+    const user = await this.userDAO.findOne({ id: userId });
 
     if (!user) {
       throw new NotFoundError('Benutzer nicht gefunden');

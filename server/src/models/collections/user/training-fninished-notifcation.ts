@@ -1,5 +1,5 @@
 import { TrainingDay } from '../../training/trainingDay.js';
 
-export interface TrainingDAyFinishedNotification extends TrainingDay {
+export interface TrainingDayFinishedNotification extends TrainingDay {
   trainingDayTonnage: number;
 }

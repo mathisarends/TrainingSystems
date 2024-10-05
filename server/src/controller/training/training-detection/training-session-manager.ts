@@ -1,9 +1,10 @@
-import { TrainingDayDataLocator } from './training-day-data-locator.js';
 import { TrainingSessionTracker } from './training-session-tracker.js';
 
-import { TrainingDAyFinishedNotification } from '../../models/collections/user/training-fninished-notifcation.js';
-import { getTonnagePerTrainingDay } from '../../service/trainingService.js';
-import userManager from '../../service/userManager.js';
+import { TrainingDayFinishedNotification } from '../../../models/collections/user/training-fninished-notifcation.js';
+import { TrainingDay } from '../../../models/training/trainingDay.js';
+import { TrainingDayManager } from '../../../service/training-day-manager.js';
+import { getTonnagePerTrainingDay } from '../../../service/trainingService.js';
+import userManager from '../../../service/userManager.js';
 
 /**
  * Manages multiple training session trackers for different users.
@@ -11,6 +12,7 @@ import userManager from '../../service/userManager.js';
  */
 class TrainingSessionManager {
   private trackers: Map<string, TrainingSessionTracker> = new Map();
+  private readonly MINIMUM_TRAINING_DURATION_IN_MINUTES = 30;
 
   /**
    * Adds or updates a training day tracker for a specific training day.
@@ -19,32 +21,27 @@ class TrainingSessionManager {
    * @param userId - The unique user ID.
    * @param trainingDayDataLocator - The data locator object that provides access to the training day data.
    */
-  async addOrUpdateTracker(trainingDayDataLocator: TrainingDayDataLocator): Promise<TrainingSessionTracker> {
-    const trainingDay = trainingDayDataLocator.getTrainingDay();
+  async addOrUpdateTracker(trainingDay: TrainingDay, userId: string): Promise<TrainingSessionTracker> {
     const trainingDayId = trainingDay.id;
-    const tracker = this.getTracker(trainingDayId);
+    const tracker = this.getTrackerById(trainingDayId);
 
     if (tracker) {
       tracker.updateTrainingDayExerciseData(trainingDay.exercises);
       return tracker;
     }
 
-    const onTimeoutCallback = () => this.handleSessionTimeout(trainingDayId, trainingDayDataLocator);
-    const newTracker = new TrainingSessionTracker(trainingDay, onTimeoutCallback);
+    const onTimeoutCallback = () => this.handleSessionTimeout(trainingDayId, userId);
+    const newTracker = new TrainingSessionTracker(trainingDay, userId, onTimeoutCallback);
 
     this.trackers.set(trainingDayId, newTracker);
 
     return newTracker;
   }
 
-  getTracker(trainingDayId: string): TrainingSessionTracker | undefined {
-    return this.trackers.get(trainingDayId);
-  }
-
   removeTracker(trainingDayId: string): void {
     const tracker = this.trackers.get(trainingDayId);
     if (tracker) {
-      tracker.cleanup();
+      tracker.clearInactivityTimeout();
       this.trackers.delete(trainingDayId);
     }
   }
@@ -56,12 +53,14 @@ class TrainingSessionManager {
    * @param changedData - The object containing changed data fields.
    */
   handleActivitySignals(trainingDayId: string): void {
-    const tracker = this.getTracker(trainingDayId);
-    if (!tracker) {
-      return;
+    const tracker = this.getTrackerById(trainingDayId);
+    if (tracker) {
+      tracker.handleActivitySignal();
     }
+  }
 
-    tracker.handleActivitySignal();
+  private getTrackerById(trainingDayId: string): TrainingSessionTracker | undefined {
+    return this.trackers.get(trainingDayId);
   }
 
   /**
@@ -72,28 +71,26 @@ class TrainingSessionManager {
    * @param userDAO - The data access object for user operations.
    * @param trainingDayDataLocator - The data locator object that provides access to the training day data.
    */
-  private async handleSessionTimeout(
-    trainingDayId: string,
-    trainingDayDataLocator: TrainingDayDataLocator
-  ): Promise<void> {
-    const { user, trainingPlanIndex, trainingWeekIndex, trainingDayIndex } = trainingDayDataLocator.getData();
+  private async handleSessionTimeout(trainingDayId: string, userId: string): Promise<void> {
+    const trainingData = this.getTrackerById(trainingDayId)!.getTrainingDay();
+    const user = await userManager.getUserById(userId);
 
-    const trainingData = this.getTracker(trainingDayId)!.getTrainingDay();
+    let trainingDayFromManager = await TrainingDayManager.findTrainingDayById(user, trainingDayId);
 
     // CHECK FOR REAL SESSION NOT JUST MINOR CHANGES
-    if (trainingData.durationInMinutes! >= 30) {
-      user.trainingPlans[trainingPlanIndex].trainingWeeks[trainingWeekIndex].trainingDays[trainingDayIndex] =
-        trainingData;
+    /* if (trainingData.durationInMinutes! >= this.MINIMUM_TRAINING_DURATION_IN_MINUTES) { */
+    trainingDayFromManager = trainingData;
 
-      const trainingDayNotification: TrainingDAyFinishedNotification = {
-        ...trainingData,
-        trainingDayTonnage: getTonnagePerTrainingDay(trainingData)
-      };
+    const trainingDayNotification: TrainingDayFinishedNotification = {
+      ...trainingData,
+      trainingDayTonnage: getTonnagePerTrainingDay(trainingDayFromManager)
+    };
 
-      user.trainingDayNotifications.push(trainingDayNotification);
+    user.trainingDayNotifications.push(trainingDayNotification);
 
-      await userManager.update(user);
-    }
+    await userManager.update(user);
+
+    /* } */
 
     this.removeTracker(trainingDayId);
   }
