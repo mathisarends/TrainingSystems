@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, ElementRef, Injector, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, Injector, OnInit, signal, ViewChild } from '@angular/core';
 import { HttpService } from '../../../../core/services/http-client.service';
 import { FloatingLabelInputComponent } from '../../../../shared/components/floating-label-input/floating-label-input.component';
 import { ToDropDownOptionsPipe } from '../../../../shared/components/floating-label-input/to-dropdown-options.pipe';
 import { OnConfirm } from '../../../../shared/components/modal/on-confirm';
-import { OnToggleView } from '../../../../shared/components/modal/on-toggle-view';
 import { ToastService } from '../../../../shared/components/toast/toast.service';
 import { ImageUploadService } from '../../../../shared/service/image-upload.service';
 import { TrainingSessionMetaDataDto } from '../../../training-session/training-session-meta-data-dto';
@@ -26,14 +25,10 @@ import { TrainingPlanService } from '../services/training-plan.service';
   styleUrls: ['./create-training.component.scss'],
   providers: [TrainingSessionService],
 })
-export class CreateTrainingComponent implements OnInit, OnConfirm, OnToggleView {
+export class CreateTrainingComponent implements OnInit, OnConfirm {
   @ViewChild('coverImage') coverImage!: ElementRef<HTMLImageElement>;
   protected readonly placeholderCoverImage = '/images/training/training_3.png';
   protected readonly TrainingPlanType = TrainingPlanType;
-
-  existingPlans = signal<TrainingPlanCardView[]>([]);
-
-  isExistingPlanMode = signal(false);
 
   /**
    * The training plan object that contains the form fields using Angular signals.
@@ -63,21 +58,6 @@ export class CreateTrainingComponent implements OnInit, OnConfirm, OnToggleView 
 
   ngOnInit(): void {
     this.trainingPlanEditView = TrainingPlanEditView.fromDto();
-
-    effect(
-      () => {
-        if (!this.selectedPlanId() && this.isExistingPlanMode()) {
-          this.selectedPlanId.set(this.existingPlans()[0]?.id ?? null);
-        }
-
-        const selectedPlan = this.existingPlans().find((plan) => plan.id === this.selectedPlanId());
-
-        if (selectedPlan) {
-          this.populateFormWithPlan(selectedPlan);
-        }
-      },
-      { allowSignalWrites: true, injector: this.injector },
-    );
   }
 
   /**
@@ -103,10 +83,6 @@ export class CreateTrainingComponent implements OnInit, OnConfirm, OnToggleView 
 
     if (!this.trainingPlanEditView.isValid()) {
       return;
-    }
-
-    if (this.isExistingPlanMode()) {
-      this.trainingPlanEditView.setReferencePlanId(this.selectedPlanId());
     }
 
     this.httpClient.post('/training/create', this.trainingPlanEditView.toDto()).subscribe(() => {
@@ -140,14 +116,6 @@ export class CreateTrainingComponent implements OnInit, OnConfirm, OnToggleView 
 
     if (uploadedImageBase64Str) {
       this.trainingPlanEditView.coverImageBase64.set(uploadedImageBase64Str);
-    }
-  }
-
-  onToggleView() {
-    this.isExistingPlanMode.set(!this.isExistingPlanMode());
-
-    if (!this.isExistingPlanMode()) {
-      this.trainingPlanEditView.resetToDefaults();
     }
   }
 }

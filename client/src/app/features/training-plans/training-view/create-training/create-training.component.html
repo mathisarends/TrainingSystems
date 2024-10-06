@@ -1,80 +1,56 @@
-@if (isExistingPlanMode()) {
-  @if (existingPlans().length > 0) {
-    <app-floating-label-input
-      [label]="'Basisplan wählen'"
-      [(value)]="selectedPlanId!"
-      [required]="true"
-      type="select"
-      [options]="existingPlans() | toDropDownOptions: 'id' : 'title'"
-    />
+<div class="form-group text-center mb-4 position-relative">
+  <img
+    #coverImage
+    [src]="trainingPlanEditView.coverImageBase64() || placeholderCoverImage"
+    alt="Cover Bild Platzhalter"
+    id="cover-image"
+  />
+  <input
+    type="file"
+    id="cover-image-input"
+    class="form-control-file position-absolute"
+    style="opacity: 0; width: 100%; height: 100%; top: 0; left: 0; cursor: pointer"
+    (change)="handleImageUpload($event)"
+  />
+</div>
 
-    <ng-container *ngIf="selectedPlanId(); else emptyForm">
-      <ng-container *ngTemplateOutlet="commonForm"></ng-container>
-    </ng-container>
+<app-floating-label-input [label]="'Titel'" [(value)]="trainingPlanEditView.title" [required]="true" />
 
-    <ng-template #emptyForm>
-      <p>No existing plan selected. Please choose an existing plan or create a new one.</p>
-    </ng-template>
-  }
-} @else {
-  <ng-container *ngTemplateOutlet="commonForm"></ng-container>
-}
-
-<ng-template #commonForm>
-  <div class="form-group text-center mb-4 position-relative">
-    <img
-      #coverImage
-      [src]="trainingPlanEditView.coverImageBase64() || placeholderCoverImage"
-      alt="Cover Bild Platzhalter"
-      id="cover-image"
-    />
-    <input
-      type="file"
-      id="cover-image-input"
-      class="form-control-file position-absolute"
-      style="opacity: 0; width: 100%; height: 100%; top: 0; left: 0; cursor: pointer"
-      (change)="handleImageUpload($event)"
-    />
-  </div>
-
-  <app-floating-label-input [label]="'Titel'" [(value)]="trainingPlanEditView.title" [required]="true" />
-
-  @if (trainingPlanTyp() === TrainingPlanType.PLAN) {
-    <app-floating-label-input
-      [label]="'Trainings / Woche'"
-      [(value)]="trainingPlanEditView.trainingFrequency"
-      [required]="true"
-      type="select"
-      [options]="[
-        { value: 3, label: '3' },
-        { value: 4, label: '4' },
-        { value: 5, label: '5' },
-        { value: 6, label: '6' },
-      ]"
-    />
-
-    <app-floating-label-input
-      [label]="'Blocklänge (Wochen)'"
-      [(value)]="trainingPlanEditView.trainingBlockLength"
-      [required]="true"
-      type="select"
-      [options]="[
-        { value: 3, label: '3' },
-        { value: 4, label: '4' },
-        { value: 5, label: '5' },
-        { value: 6, label: '6' },
-      ]"
-    />
-  }
-
+@if (trainingPlanTyp() === TrainingPlanType.PLAN) {
   <app-floating-label-input
-    [label]="'Gewichtsempfehlungen'"
-    [(value)]="trainingPlanEditView.weightRecommendationBase"
+    [label]="'Trainings / Woche'"
+    [(value)]="trainingPlanEditView.trainingFrequency"
     [required]="true"
     type="select"
     [options]="[
-      { value: 'lastWeek', label: 'basierend auf letzter Woche' },
-      { value: 'off', label: 'keine Gewichtsempfehlungen' },
+      { value: 3, label: '3' },
+      { value: 4, label: '4' },
+      { value: 5, label: '5' },
+      { value: 6, label: '6' },
     ]"
   />
-</ng-template>
+
+  <app-floating-label-input
+    [label]="'Blocklänge (Wochen)'"
+    [(value)]="trainingPlanEditView.trainingBlockLength"
+    [required]="true"
+    type="select"
+    [options]="[
+      { value: 3, label: '3' },
+      { value: 4, label: '4' },
+      { value: 5, label: '5' },
+      { value: 6, label: '6' },
+    ]"
+  />
+}
+
+<app-floating-label-input
+  [label]="'Gewichtsempfehlungen'"
+  [(value)]="trainingPlanEditView.weightRecommendationBase"
+  [required]="true"
+  type="select"
+  [options]="[
+    { value: 'lastWeek', label: 'basierend auf letzter Woche' },
+    { value: 'off', label: 'keine Gewichtsempfehlungen' },
+  ]"
+/>

@@ -141,9 +141,6 @@ export class TrainingPlansComponent implements OnInit {
       secondaryButtonText: 'Optionen',
       size: ModalSize.LARGE,
       confirmationRequired: true,
-      componentData: {
-        existingPlans: this.trainingPlanService.getTrainingPlans(),
-      },
     });
   }
 

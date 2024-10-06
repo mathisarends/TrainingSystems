@@ -12,7 +12,6 @@ import {
   handleWeekDifference
 } from '../../service/trainingService.js';
 
-import _ from 'lodash';
 import { TrainingPlanEditViewDto } from '../../models/dto/training-plan-edit-view-dto.js';
 
 import { NotificationPayload } from '../../service/notifications/notification-payload.js';
@@ -116,15 +115,7 @@ export async function createPlan(req: Request, res: Response): Promise<void> {
   const weightRecommandation = trainingPlanEditDto.weightRecommandationBase;
   const coverImage = trainingPlanEditDto.coverImageBase64;
 
-  const referencePlanId = req.body.referencePlanId;
-  let trainingWeeksArr;
-  if (referencePlanId) {
-    const trainingPlan = _.cloneDeep(findTrainingPlanById(user.trainingPlans, referencePlanId));
-
-    trainingWeeksArr = trainingService.createNewTrainingPlanBasedOnTemplate(trainingPlan);
-  } else {
-    trainingWeeksArr = createNewTrainingPlanWithPlaceholders(trainingWeeks, trainingFrequency);
-  }
+  const trainingWeeksArr = createNewTrainingPlanWithPlaceholders(trainingWeeks, trainingFrequency);
 
   const newTrainingPlan: TrainingPlan = {
     id: uuidv4(),
