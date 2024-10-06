@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { NotFoundError } from '../../errors/notFoundError.js';
+import fingerprintService from '../../service/fingerprintService.js';
 import pushSubscriptionService from '../../service/notifications/push-subscription-service.js';
 import userManager from '../../service/userManager.js';
 import { PushSubscriptionRequest } from './push-subscription-request.js';
@@ -7,7 +8,7 @@ import { PushSubscriptionRequest } from './push-subscription-request.js';
 export async function createPushNotificationSubscriptionForUser(
   req: PushSubscriptionRequest,
   res: Response
-): Promise<void> {
+): Promise<Response> {
   const { subscription } = req.body;
 
   const user = await userManager.getUser(res);
@@ -16,11 +17,13 @@ export async function createPushNotificationSubscriptionForUser(
     throw new NotFoundError('Es muss eine Subscription übergeben werden.');
   }
 
-  await pushSubscriptionService.saveSubscription(user.id, subscription);
-  res.status(201).json({ message: 'Push-Subscription gespeichert.' });
+  const clientFingerPrint = fingerprintService.generateDeviceFingerprint(req);
+
+  await pushSubscriptionService.saveSubscription(user.id, subscription, clientFingerPrint);
+  return res.status(201).json({ message: 'Push-Subscription gespeichert.' });
 }
 
-export async function deletePushNotificationSubscriptionForUser(req: Request, res: Response): Promise<void> {
+export async function deletePushNotificationSubscriptionForUser(req: Request, res: Response): Promise<Response> {
   const user = await userManager.getUser(res);
   const subscription = await pushSubscriptionService.getSubscriptionsByUserId(user.id);
 
@@ -29,5 +32,10 @@ export async function deletePushNotificationSubscriptionForUser(req: Request, re
   }
 
   await pushSubscriptionService.deleteSubscription(user.id);
-  res.status(200).json({ message: 'Subscription erfolgreich gelöscht.' });
+  return res.status(200).json({ message: 'Subscription erfolgreich gelöscht.' });
+}
+
+export async function deleteSchema(req: Request, res: Response): Promise<Response> {
+  await pushSubscriptionService.deleteSubscriptions();
+  return res.status(200).json({ message: 'Datenbankschema zurückgesetzt' });
 }

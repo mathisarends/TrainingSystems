@@ -49,9 +49,8 @@ export class MongoGenericDAO<T extends Entity> implements GenericDAO<T> {
     if (!entityFilter) {
       await this.db.collection(this.collection).drop();
       return -1;
-    } else {
-      const result = await this.db.collection(this.collection).deleteMany(entityFilter);
-      return result.deletedCount || 0;
     }
+    const result = await this.db.collection(this.collection).deleteMany(entityFilter);
+    return result.deletedCount || 0;
   }
 }

@@ -96,6 +96,7 @@ export async function updateTrainingPlanOrder(req: Request, res: Response): Prom
   };
 
   await pushSubscriptionService.sendNotification(user.id, notificationPayload);
+  console.log('send succesfully');
 
   return res.status(200).json({ message: 'Reihenfolge geupdated' });
 }

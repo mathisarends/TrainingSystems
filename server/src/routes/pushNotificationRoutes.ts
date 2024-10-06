@@ -17,4 +17,7 @@ pushNotificationRouter.post(
   asyncHandler(pushNotificationController.deletePushNotificationSubscriptionForUser)
 );
 
+// Zu Migrationszwecken: TODO: entfernen
+pushNotificationRouter.delete('/reset-schema', asyncHandler(pushNotificationController.deleteSchema));
+
 export default pushNotificationRouter;
