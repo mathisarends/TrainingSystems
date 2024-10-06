@@ -15,6 +15,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { FormService } from '../../../core/services/form.service';
+import { ModalService } from '../../../core/services/modal/modalService';
 import { SwipeService } from '../../../core/services/swipe.service';
 import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
 import { InputComponent } from '../../../shared/components/input/input.component';
@@ -89,6 +90,7 @@ export class SessionViewComponent implements OnInit {
     private router: Router,
     private destroyRef: DestroyRef,
     private headerService: HeaderService,
+    private modalService: ModalService,
     private trainingSessionService: TrainingSessionService,
     protected exerciseDataService: ExerciseDataService,
     private formService: FormService,
@@ -201,11 +203,24 @@ export class SessionViewComponent implements OnInit {
     });
   }
 
-  private startNewSesson() {
+  private async startNewSesson() {
     console.log('start new session');
-    this.trainingSessionService.startNewTrainingSession(this.sessionId()).subscribe((response) => {
-      this.navigateToVersion(response.version);
+    const confirmed = await this.modalService.openBasicInfoModal({
+      title: 'Neues Training',
+      infoText: 'Bist du dir sicher, dass du ein neues Training starten willst?',
+      buttonText: 'Starten',
     });
+
+    if (confirmed) {
+      this.trainingSessionService.startNewTrainingSession(this.sessionId()).subscribe((response) => {
+        this.router.navigate(['/session/view'], {
+          queryParams: {
+            sessionId: this.sessionId(),
+            version: response.version,
+          },
+        });
+      });
+    }
   }
 
   /**
