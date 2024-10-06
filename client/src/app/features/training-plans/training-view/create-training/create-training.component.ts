@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Injector, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
 import { HttpService } from '../../../../core/services/http-client.service';
 import { FloatingLabelInputComponent } from '../../../../shared/components/floating-label-input/floating-label-input.component';
 import { ToDropDownOptionsPipe } from '../../../../shared/components/floating-label-input/to-dropdown-options.pipe';
 import { OnConfirm } from '../../../../shared/components/modal/on-confirm';
+import { OnToggleView } from '../../../../shared/components/modal/on-toggle-view';
 import { ToastService } from '../../../../shared/components/toast/toast.service';
 import { ImageUploadService } from '../../../../shared/service/image-upload.service';
 import { TrainingSessionMetaDataDto } from '../../../training-session/training-session-meta-data-dto';
@@ -25,7 +26,7 @@ import { TrainingPlanService } from '../services/training-plan.service';
   styleUrls: ['./create-training.component.scss'],
   providers: [TrainingSessionService],
 })
-export class CreateTrainingComponent implements OnInit, OnConfirm {
+export class CreateTrainingComponent implements OnInit, OnConfirm, OnToggleView {
   @ViewChild('coverImage') coverImage!: ElementRef<HTMLImageElement>;
   protected readonly placeholderCoverImage = '/images/training/training_3.png';
   protected readonly TrainingPlanType = TrainingPlanType;
@@ -53,7 +54,6 @@ export class CreateTrainingComponent implements OnInit, OnConfirm {
     private httpClient: HttpService,
     private imageUploadService: ImageUploadService,
     private toastService: ToastService,
-    private injector: Injector,
   ) {}
 
   ngOnInit(): void {
@@ -116,6 +116,14 @@ export class CreateTrainingComponent implements OnInit, OnConfirm {
 
     if (uploadedImageBase64Str) {
       this.trainingPlanEditView.coverImageBase64.set(uploadedImageBase64Str);
+    }
+  }
+
+  onToggleView(): void {
+    if (this.trainingPlanTyp() === TrainingPlanType.PLAN) {
+      this.trainingPlanTyp.set(TrainingPlanType.SESSION);
+    } else {
+      this.trainingPlanTyp.set(TrainingPlanType.PLAN);
     }
   }
 }

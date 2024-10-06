@@ -17,7 +17,6 @@ import { TrainingSessionService } from '../../training-session/training-session-
 import { TrainingPlanCardComponent } from '../training-plan-card/training-plan-card.component';
 import { CreateTrainingComponent } from '../training-view/create-training/create-training.component';
 import { TrainingPlanCardView } from '../training-view/models/exercise/training-plan-card-view-dto';
-import { TrainingPlanType } from '../training-view/models/training-plan-type';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
 
 /**
@@ -117,19 +116,6 @@ export class TrainingPlansComponent implements OnInit {
     });
   }
 
-  private openCreateTrainingSessionModal(): void {
-    this.modalService.open({
-      component: CreateTrainingComponent,
-      title: 'Training erstellen',
-      buttonText: 'Erstellen',
-      size: ModalSize.LARGE,
-      confirmationRequired: true,
-      componentData: {
-        trainingPlanTyp: TrainingPlanType.SESSION,
-      },
-    });
-  }
-
   /**
    * Opens the modal to create a new training plan.
    */
@@ -138,7 +124,7 @@ export class TrainingPlansComponent implements OnInit {
       component: CreateTrainingComponent,
       title: 'Trainingsplan erstellen',
       buttonText: 'Erstellen',
-      secondaryButtonText: 'Optionen',
+      secondaryButtonText: 'Session Erstellen',
       size: ModalSize.LARGE,
       confirmationRequired: true,
     });
@@ -158,7 +144,6 @@ export class TrainingPlansComponent implements OnInit {
       title: 'Training',
       buttons: [
         { icon: IconName.PLUS, callback: this.createNewPlan.bind(this) },
-        { icon: IconName.Zap, callback: this.openCreateTrainingSessionModal.bind(this) },
         { icon: IconName.MORE_VERTICAL, options },
       ],
     });
