@@ -46,8 +46,8 @@ import { TrainingStatisticsService } from './training-statistics.service';
     GroupedBarChartComponent,
   ],
   providers: [TrainingStatisticsService, KeyboardService, PaginationComponent, ImageDownloadService],
-  templateUrl: './training-day-statistics.component.html',
-  styleUrls: ['./training-day-statistics.component.scss'],
+  templateUrl: './training-plan-statistics.component.html',
+  styleUrls: ['./training-plan-statistics.component.scss'],
 })
 export class TrainingDayStatisticsComponent implements OnInit {
   /**

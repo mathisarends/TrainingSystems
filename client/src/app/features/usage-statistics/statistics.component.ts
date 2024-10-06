@@ -12,9 +12,9 @@ import { SelectComponent } from '../../shared/components/select/select.component
 import { IconName } from '../../shared/icon/icon-name';
 import { ImageDownloadService } from '../../shared/service/image-download.service';
 import { HeaderService } from '../header/header.service';
-import { ChartDataDto } from '../training-plans/training-day-statistics/chart-data-dto';
-import { TrainingDayChartType } from '../training-plans/training-day-statistics/training-day-chart-type';
-import { TrainingStatisticsService } from '../training-plans/training-day-statistics/training-statistics.service';
+import { ChartDataDto } from '../training-plans/training-plan-statistics/chart-data-dto';
+import { TrainingDayChartType } from '../training-plans/training-plan-statistics/training-day-chart-type';
+import { TrainingStatisticsService } from '../training-plans/training-plan-statistics/training-statistics.service';
 import { ChartColorService } from '../training-plans/training-view/services/chart-color.service';
 import { StatisticsService } from './statistics.service';
 import { TrainingStatisticsDataView } from './training-statistics-data-view';
@@ -22,13 +22,7 @@ import { TrainingStatisticsDataView } from './training-statistics-data-view';
 @Component({
   selector: 'app-statistics',
   standalone: true,
-  imports: [
-    CommonModule,
-    LineChartComponent,
-    SelectComponent,
-    FloatingLabelInputComponent,
-    IconListeItemComponent,
-  ],
+  imports: [CommonModule, LineChartComponent, SelectComponent, FloatingLabelInputComponent, IconListeItemComponent],
   templateUrl: './statistics.component.html',
   styleUrls: ['./statistics.component.scss'],
   providers: [ImageDownloadService, StatisticsService, TrainingStatisticsService],
