@@ -3,9 +3,11 @@ import { Express } from 'express';
 import { MongoClient } from 'mongodb';
 import mongoose from 'mongoose';
 import { UserPushSubscription } from './models/collections/push-subscription.js';
+import { TrainingSession } from './models/collections/trainingSession.js';
 import { User } from './models/collections/user/user.js';
 import { MongoGenericDAO } from './models/dao/mongo-generic.dao.js';
 import pushSubscriptionService from './service/notifications/push-subscription-service.js';
+import trainingSessionService from './service/trainingSessionService.js';
 import userManager from './service/userManager.js';
 
 dotenv.config();
@@ -26,12 +28,16 @@ export default async function startDB(app: Express) {
     const db = client.db();
     const userDAO: MongoGenericDAO<User> = new MongoGenericDAO(db, 'user');
     const pushSubscriptionDAO: MongoGenericDAO<UserPushSubscription> = new MongoGenericDAO(db, 'userPushSubscriptions');
+    const trainingSessionDAO: MongoGenericDAO<TrainingSession> = new MongoGenericDAO(db, 'trainingSessions');
 
+    // TODO: kann das entfernt werden
     app.locals.userDAO = userDAO;
     app.locals.friendshipDAO = new MongoGenericDAO(db, 'friendships');
 
+    // Kann man vereinheitlichen über eine basis klasse
     userManager.setUserGenericDAO(userDAO);
     pushSubscriptionService.setPushSubscriptionDAO(pushSubscriptionDAO);
+    trainingSessionService.setDAO(trainingSessionDAO);
   } catch (err) {
     console.error('Error connecting to the database: ', err);
     process.exit(1);

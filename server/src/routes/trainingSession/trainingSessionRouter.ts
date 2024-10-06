@@ -2,6 +2,7 @@ import express from 'express';
 import { authService } from '../../service/authService.js';
 
 import * as trainingSessionController from '../../controller/session/sessionController.js';
+import { asyncHandler } from '../../middleware/error-handler.js';
 
 const trainingSessionRouter = express.Router();
 
@@ -14,7 +15,7 @@ const trainingSessionRouter = express.Router();
 trainingSessionRouter.get(
   '/',
   authService.authenticationMiddleware,
-  trainingSessionController.getTrainingSessionCardViews
+  asyncHandler(trainingSessionController.getTrainingSessionCardViews)
 );
 
 /**
@@ -28,7 +29,7 @@ trainingSessionRouter.get(
 trainingSessionRouter.get(
   '/:id',
   authService.authenticationMiddleware,
-  trainingSessionController.getTrainingSessionById
+  asyncHandler(trainingSessionController.getTrainingSessionById)
 );
 
 /**
@@ -40,7 +41,7 @@ trainingSessionRouter.get(
 trainingSessionRouter.post(
   '/create',
   authService.authenticationMiddleware,
-  trainingSessionController.createTrainingSession
+  asyncHandler(trainingSessionController.createTrainingSession)
 );
 
 /**
@@ -53,7 +54,7 @@ trainingSessionRouter.post(
 trainingSessionRouter.put(
   '/edit/:id',
   authService.authenticationMiddleware,
-  trainingSessionController.editTrainingSesssion
+  asyncHandler(trainingSessionController.editTrainingSesssion)
 );
 
 /**
@@ -66,7 +67,7 @@ trainingSessionRouter.put(
 trainingSessionRouter.delete(
   '/:id',
   authService.authenticationMiddleware,
-  trainingSessionController.deleteTrainingSession
+  asyncHandler(trainingSessionController.deleteTrainingSession)
 );
 
 /**
@@ -78,13 +79,13 @@ trainingSessionRouter.delete(
 trainingSessionRouter.post(
   '/start/:id',
   authService.authenticationMiddleware,
-  trainingSessionController.startTrainingSession
+  asyncHandler(trainingSessionController.startTrainingSession)
 );
 
 trainingSessionRouter.get(
   '/:id/latest-version',
   authService.authenticationMiddleware,
-  trainingSessionController.getLatestVersionOfSession
+  asyncHandler(trainingSessionController.getLatestVersionOfSession)
 );
 
 /**
@@ -99,7 +100,7 @@ trainingSessionRouter.get(
 trainingSessionRouter.get(
   '/:id/:version',
   authService.authenticationMiddleware,
-  trainingSessionController.getTrainingSessionByVersion
+  asyncHandler(trainingSessionController.getTrainingSessionByVersion)
 );
 
 /**
@@ -111,7 +112,7 @@ trainingSessionRouter.get(
 trainingSessionRouter.patch(
   '/:id/:version',
   authService.authenticationMiddleware,
-  trainingSessionController.updateTrainingSessionVersion
+  asyncHandler(trainingSessionController.updateTrainingSessionVersion)
 );
 
 export default trainingSessionRouter;

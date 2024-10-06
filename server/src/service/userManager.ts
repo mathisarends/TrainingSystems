@@ -10,10 +10,6 @@ class UserManager {
     this.userDAO = userDAO;
   }
 
-  getUserGenericDAO(): MongoGenericDAO<User> {
-    return this.userDAO;
-  }
-
   async getUser(res: Response): Promise<User> {
     const userClaimsSet = res.locals.user;
 

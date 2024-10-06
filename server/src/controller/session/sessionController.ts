@@ -2,40 +2,33 @@ import { Request, Response } from 'express';
 
 import { v4 as uuidv4 } from 'uuid';
 import { TrainingSessionCardDto } from '../../models/dto/training-session-card-dto.js';
-import { TrainingSession } from '../../models/training/training-session.js';
 import { TrainingDay } from '../../models/training/trainingDay.js';
 import { TrainingSessionMetaDataDto } from './trainingSessionMetaDataDto.js';
 
 import _ from 'lodash';
 import { ApiData } from '../../models/apiData.js';
+import { TrainingSession } from '../../models/collections/trainingSession.js';
 import { Exercise } from '../../models/training/exercise.js';
 import dateService from '../../service/date-service.js';
 import { createExerciseObject, updateExercise } from '../../service/trainingService.js';
+import trainingSessionService from '../../service/trainingSessionService.js';
 import userManager from '../../service/userManager.js';
+import trainingSessionManager from '../training/training-detection/training-session-manager.js';
 
 /**
  * Retrieves a specific training session by its ID.
  */
-export async function getTrainingSessionById(req: Request, res: Response): Promise<Response> {
+export async function getTrainingSessionById(req: Request, res: Response): Promise<Response<TrainingSession>> {
   const trainingSessionId = req.params.id;
 
   const user = await userManager.getUser(res);
-  const trainingSession = user.trainingSessions.find(session => session.id === trainingSessionId);
+  const trainingSession = await trainingSessionService.findByUserIdAndSessionId(user.id, trainingSessionId);
 
   if (!trainingSession) {
     return res.status(404).json({ error: 'Training Session nicht gefunden' });
   }
 
-  const mappedTrainingSession: TrainingSession = {
-    id: trainingSession.id,
-    title: trainingSession.title,
-    lastUpdated: trainingSession.lastUpdated,
-    weightRecommandationBase: trainingSession.weightRecommandationBase,
-    versions: trainingSession.versions,
-    coverImageBase64: trainingSession.coverImageBase64 ?? ''
-  };
-
-  return res.status(200).json(mappedTrainingSession);
+  return res.status(200).json(trainingSession);
 }
 
 /**
@@ -44,11 +37,9 @@ export async function getTrainingSessionById(req: Request, res: Response): Promi
 export async function getTrainingSessionCardViews(req: Request, res: Response): Promise<Response> {
   const user = await userManager.getUser(res);
 
-  if (!user.trainingSessions) {
-    user.trainingSessions = [];
-  }
+  const trainingSessions = await trainingSessionService.findByUserId(user.id);
 
-  const trainingSessions: TrainingSessionCardDto[] = user.trainingSessions.map(trainingSession => {
+  const trainingSessionCardViewDto: TrainingSessionCardDto[] = trainingSessions.map(trainingSession => {
     return {
       id: trainingSession.id,
       title: trainingSession.title,
@@ -58,7 +49,7 @@ export async function getTrainingSessionCardViews(req: Request, res: Response): 
     };
   });
 
-  return res.status(200).json(trainingSessions);
+  return res.status(200).json(trainingSessionCardViewDto);
 }
 
 /**
@@ -69,29 +60,25 @@ export async function createTrainingSession(req: Request, res: Response): Promis
 
   const trainingSessionCreateDto = req.body as TrainingSessionMetaDataDto;
 
-  const newTrainingSession: TrainingSession = {
-    id: uuidv4(),
+  const newTrainingSession: Omit<TrainingSession, 'id' | 'createdAt'> = {
+    userId: user.id,
     title: trainingSessionCreateDto.title,
     lastUpdated: new Date(),
     weightRecommandationBase: trainingSessionCreateDto.weightRecommandationBase,
     coverImageBase64: trainingSessionCreateDto.coverImageBase64 ?? '',
-    versions: []
+    versions: [
+      {
+        id: uuidv4(),
+        exercises: []
+      }
+    ]
   };
 
-  createPlaceholderVersion(newTrainingSession);
-
-  user.trainingSessions.unshift(newTrainingSession);
+  await trainingSessionService.createTrainingSession(newTrainingSession);
 
   await userManager.update(user);
 
   return res.status(200).json({ message: 'Erfolgreich erstellt ' });
-}
-
-function createPlaceholderVersion(trainingSession: TrainingSession): void {
-  trainingSession.versions.push({
-    id: uuidv4(),
-    exercises: []
-  });
 }
 
 /**
@@ -102,17 +89,12 @@ export async function editTrainingSesssion(req: Request, res: Response): Promise
   const user = await userManager.getUser(res);
 
   const trainingSessionEditDto = req.body as TrainingSessionMetaDataDto;
+  const trainingSession = await trainingSessionService.findByUserIdAndSessionId(user.id, trainingSessionId);
 
-  const plan = user.trainingSessions.find(session => session.id === trainingSessionId);
-
-  if (!plan) {
-    return res.status(404).json({ error: 'Training Session nicht gefunden' });
-  }
-
-  plan.title = trainingSessionEditDto.title;
-  plan.lastUpdated = new Date();
-  plan.weightRecommandationBase = trainingSessionEditDto.weightRecommandationBase;
-  plan.coverImageBase64 = trainingSessionEditDto.coverImageBase64;
+  trainingSession.title = trainingSessionEditDto.title;
+  trainingSession.lastUpdated = new Date();
+  trainingSession.weightRecommandationBase = trainingSessionEditDto.weightRecommandationBase;
+  trainingSession.coverImageBase64 = trainingSessionEditDto.coverImageBase64;
 
   await userManager.update(user);
 
@@ -126,13 +108,8 @@ export async function deleteTrainingSession(req: Request, res: Response): Promis
   const trainingSessionId = req.params.id;
   const user = await userManager.getUser(res);
 
-  const sessionIndex = user.trainingSessions.findIndex(session => session.id === trainingSessionId);
-
-  if (sessionIndex === -1) {
-    return res.status(404).json({ error: 'Training Session nicht gefunden' });
-  }
-
-  user.trainingSessions.splice(sessionIndex, 1);
+  const trainingSession = await trainingSessionService.findByUserIdAndSessionId(user.id, trainingSessionId);
+  await trainingSessionService.deleteTrainingSession(user.id, trainingSession.id);
 
   await userManager.update(user);
 
@@ -147,13 +124,14 @@ export async function startTrainingSession(req: Request, res: Response): Promise
 
   const user = await userManager.getUser(res);
 
-  const trainingSession = user.trainingSessions.find(session => session.id === trainingSessionId);
+  const trainingSession = await trainingSessionService.findByUserIdAndSessionId(user.id, trainingSessionId);
 
   if (!trainingSession) {
     return res.status(404).json({ error: 'Training Session nicht gefunden' });
   }
 
   const trainingSessionTemplate = prepareTrainingSessionTemplate(trainingSession);
+
   trainingSession.versions.push(trainingSessionTemplate);
 
   await userManager.update(user);
@@ -197,7 +175,7 @@ export async function getTrainingSessionByVersion(req: Request, res: Response): 
 
   const user = await userManager.getUser(res);
 
-  const trainingSession = user.trainingSessions.find(session => session.id === trainingSessionId);
+  const trainingSession = await trainingSessionService.findByUserIdAndSessionId(user.id, trainingSessionId);
 
   if (!trainingSession) {
     return res.status(404).json({ error: 'Training Session nicht gefunden' });
@@ -215,7 +193,7 @@ export async function getLatestVersionOfSession(req: Request, res: Response): Pr
 
   const user = await userManager.getUser(res);
 
-  const trainingSession = user.trainingSessions.find(session => session.id === trainingSessionId);
+  const trainingSession = await trainingSessionService.findByUserIdAndSessionId(user.id, trainingSessionId);
 
   if (!trainingSession) {
     return res.status(404).json({ error: 'Training Session nicht gefunden' });
@@ -236,7 +214,7 @@ export async function updateTrainingSessionVersion(req: Request, res: Response):
 
   const user = await userManager.getUser(res);
 
-  const trainingSession = user.trainingSessions.find(session => session.id === trainingSessionId);
+  const trainingSession = await trainingSessionService.findByUserIdAndSessionId(user.id, trainingSessionId);
 
   if (!trainingSession) {
     return res.status(404).json({ error: 'Training Session nicht gefunden' });
@@ -251,6 +229,14 @@ export async function updateTrainingSessionVersion(req: Request, res: Response):
   const changedData: ApiData = req.body;
 
   updateExercisesInSessionVersion(trainingSessionVersion, changedData);
+
+  for (const [fieldName, fieldValue] of Object.entries(changedData)) {
+    if (trainingSessionManager.isTrainingActivitySignal(fieldName, fieldValue)) {
+      const trainingSessionTracker = await trainingSessionManager.getOrCreateTracker(trainingSessionVersion, user.id);
+      trainingSessionTracker.handleActivitySignal();
+      break;
+    }
+  }
 
   await userManager.update(user);
 
