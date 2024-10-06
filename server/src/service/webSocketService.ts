@@ -4,8 +4,6 @@ import { Server as SocketIOServer } from 'socket.io';
 class WebSocketService {
   private io: SocketIOServer | null = null;
 
-  constructor() {}
-
   initialize(server: HttpServer): void {
     if (this.io) return;
 
