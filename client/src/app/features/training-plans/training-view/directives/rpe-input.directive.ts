@@ -17,17 +17,17 @@ export class RpeInputDirective extends AbstractDoubleClickDirective {
   private readonly MAX_RPE = 10;
 
   constructor(
-    protected override autoSaveService: AutoSaveService,
-    protected override formService: FormService,
+    protected autoSaveService: AutoSaveService,
+    protected formService: FormService,
     protected override exerciseTableRowService: ExerciseTableRowService,
     protected override elementRef: ElementRef,
     private estMaxService: EstMaxService,
   ) {
-    super(autoSaveService, formService, exerciseTableRowService, elementRef);
+    super(exerciseTableRowService, elementRef);
   }
 
   @HostListener('change', ['$event'])
-  override onChange(event: Event): void {
+  onChange(event: Event): void {
     const rpeValues = this.parseInputValues();
 
     if (rpeValues.length === 1) {
@@ -40,7 +40,8 @@ export class RpeInputDirective extends AbstractDoubleClickDirective {
       this.estMaxService.calculateMaxAfterInputChange(event.target as HTMLInputElement);
     }
 
-    super.onChange(event); // Call parent method to handle additional logic
+    this.formService.trackChange(event);
+    this.autoSaveService.save();
   }
 
   /**

@@ -1,7 +1,4 @@
 import { AfterViewInit, Directive, ElementRef, HostListener } from '@angular/core';
-import { FormService } from '../../../../core/services/form.service';
-import { InteractiveElementDirective } from '../../../../shared/directives/interactive-element.directive';
-import { AutoSaveService } from '../../../../shared/service/auto-save.service';
 import { ExerciseTableRowService } from '../services/exercise-table-row.service';
 
 /**
@@ -10,7 +7,7 @@ import { ExerciseTableRowService } from '../services/exercise-table-row.service'
  * methods to parse and duplicate input values.
  */
 @Directive()
-export abstract class AbstractDoubleClickDirective extends InteractiveElementDirective implements AfterViewInit {
+export abstract class AbstractDoubleClickDirective implements AfterViewInit {
   protected inputElement!: HTMLInputElement;
 
   /**
@@ -26,13 +23,9 @@ export abstract class AbstractDoubleClickDirective extends InteractiveElementDir
   protected doubleClickThreshold: number = 300;
 
   constructor(
-    protected override autoSaveService: AutoSaveService,
-    protected override formService: FormService,
     protected exerciseTableRowService: ExerciseTableRowService,
     protected elementRef: ElementRef,
-  ) {
-    super(autoSaveService, formService);
-  }
+  ) {}
 
   /**
    * Lifecycle hook that runs after the view is initialized.

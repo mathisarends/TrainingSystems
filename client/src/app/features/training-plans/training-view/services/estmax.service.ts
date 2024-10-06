@@ -22,35 +22,35 @@ export class EstMaxService {
       const reps = parseFloat(repsInput.value);
       const rpe = parseFloat(rpeInput.value);
 
-      if (weight && reps && rpe) {
-        const estMax = this.calcEstMax(weight, reps, rpe);
-        estMaxInput.value = estMax.toString();
+      if (!weight || !reps || !rpe) {
+        return;
+      }
 
-        this.formService.addChange(estMaxInput.name, estMaxInput.value);
+      const estMax = this.calcEstMax(weight, reps, rpe);
+      estMaxInput.value = estMax.toString();
 
-        const nextExerciseCategory = weightInput
-          .closest('tr')
-          ?.nextElementSibling?.querySelector('.exercise-name-selector select') as HTMLSelectElement | undefined;
+      this.formService.addChange(estMaxInput.name, estMaxInput.value);
 
-        if (nextExerciseCategory?.value === exerciseSelect.value) {
-          const nextExerciseReps = parseFloat(
-            this.exerciseTableRowService.getRepsInputByElement(nextExerciseCategory).value,
-          );
-          const nextExerciseRpe = parseFloat(
-            this.exerciseTableRowService.getPlanedRpeByElement(nextExerciseCategory).value,
-          );
+      const nextExerciseCategory = weightInput
+        .closest('tr')
+        ?.nextElementSibling?.querySelector('.exercise-name-selector select') as HTMLSelectElement | undefined;
 
-          if (nextExerciseReps && nextExerciseRpe) {
-            const backoffWeight = this.calcBackoff(nextExerciseReps, nextExerciseRpe, estMax);
-            const nextRowWeightInput = this.exerciseTableRowService.getWeightInputByElement(nextExerciseCategory);
-            nextRowWeightInput.placeholder = backoffWeight.toString();
-          }
+      if (nextExerciseCategory?.value === exerciseSelect.value) {
+        const nextExerciseReps = parseFloat(
+          this.exerciseTableRowService.getRepsInputByElement(nextExerciseCategory).value,
+        );
+        const nextExerciseRpe = parseFloat(
+          this.exerciseTableRowService.getPlanedRpeByElement(nextExerciseCategory).value,
+        );
+
+        if (nextExerciseReps && nextExerciseRpe) {
+          const backoffWeight = this.calcBackoff(nextExerciseReps, nextExerciseRpe, estMax);
+          const nextRowWeightInput = this.exerciseTableRowService.getWeightInputByElement(nextExerciseCategory);
+          nextRowWeightInput.placeholder = backoffWeight.toString();
         }
       }
     }
   }
-
-
 
   /**
    * Calculates the estimated maximum weight using the Wathan formula, incorporating actual reps adjusted for RPE.
@@ -84,22 +84,6 @@ export class EstMaxService {
     const highEndBackoffWeight = backoffWeight + 2.5;
 
     return `${lowEndBackoffWeight} - ${highEndBackoffWeight}`;
-  }
-
-  /**
-   * Extracts the exercise index from the input name.
-   * @param inputName - The name attribute of the input element (e.g., "day0_exercise1_weight").
-   * @returns The exercise index as a number or null if no match is found.
-   */
-  private extractExerciseIndexFromName(inputName: string): number {
-    const regex = /exercise(\d+)/;
-    const match = regex.exec(inputName);
-
-    if (!match) {
-      throw new Error('The name attribute of the input element is invalid');
-    }
-
-    return Number(match[1]);
   }
 
   /**

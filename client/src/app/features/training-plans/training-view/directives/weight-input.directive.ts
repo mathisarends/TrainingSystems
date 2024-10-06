@@ -20,16 +20,17 @@ export class WeightInputDirective extends AbstractDoubleClickDirective implement
     private exerciseDataService: ExerciseDataService,
     private pauseTimeService: PauseTimeService,
     private estMaxService: EstMaxService,
+    protected autoSaveService: AutoSaveService,
+    protected formService: FormService,
     protected override exerciseTableRowService: ExerciseTableRowService,
-    protected override autoSaveService: AutoSaveService,
-    protected override formService: FormService,
     protected override elementRef: ElementRef,
   ) {
-    super(autoSaveService, formService, exerciseTableRowService, elementRef);
+    super(exerciseTableRowService, elementRef);
   }
 
   @HostListener('change', ['$event'])
   startPauseTimer(event: Event): void {
+    event.stopPropagation();
     const categoryValue = this.exerciseTableRowService.getExerciseCategorySelectorByElement(this.inputElement).value;
     const exerciseName = this.exerciseTableRowService.getExerciseNameSelectorByElement(this.inputElement).value;
     const pauseTime = this.exerciseDataService.getExerciseData().categoryPauseTimes[categoryValue];
@@ -37,12 +38,11 @@ export class WeightInputDirective extends AbstractDoubleClickDirective implement
     if (this.isLastSet()) {
       const roundedWeight = this.getRoundedAverageWithStep(2.5);
       this.inputElement.value = roundedWeight.toString();
-
-      this.formService.addChange(this.inputElement.name, this.inputElement.value);
     }
+    this.formService.addChange(this.inputElement.name, this.inputElement.value);
     this.autoSaveService.save();
-    this.estMaxService.calculateMaxAfterInputChange(event.target as HTMLInputElement);
 
+    this.estMaxService.calculateMaxAfterInputChange(event.target as HTMLInputElement);
     this.pauseTimeService.startPauseTimer(pauseTime, exerciseName);
   }
 }
