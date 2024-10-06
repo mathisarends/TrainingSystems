@@ -7,19 +7,19 @@ import { asyncHandler } from '../../middleware/error-handler.js';
 const trainingSessionStatisticsRouter = express.Router();
 
 trainingSessionStatisticsRouter.get(
-  '/exercises',
+  '/exercises/:id',
   authService.authenticationMiddleware,
   asyncHandler(trainingSessionStatisticsController.getExercisesFromTrainingSession)
 );
 
 trainingSessionStatisticsRouter.get(
-  '/tonnage',
+  '/tonnage/:id',
   authService.authenticationMiddleware,
   asyncHandler(trainingSessionStatisticsController.getTonnageCharts)
 );
 
 trainingSessionStatisticsRouter.get(
-  '/performance',
+  '/performance/:id',
   authService.authenticationMiddleware,
   asyncHandler(trainingSessionStatisticsController.getPerformanceCharts)
 );

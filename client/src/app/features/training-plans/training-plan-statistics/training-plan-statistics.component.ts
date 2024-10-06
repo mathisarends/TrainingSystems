@@ -49,7 +49,7 @@ import { TrainingStatisticsService } from './training-statistics.service';
   templateUrl: './training-plan-statistics.component.html',
   styleUrls: ['./training-plan-statistics.component.scss'],
 })
-export class TrainingDayStatisticsComponent implements OnInit {
+export class TrainingPlanStatisticsComponent implements OnInit {
   /**
    * Indicates whether the data has been fully loaded.
    */

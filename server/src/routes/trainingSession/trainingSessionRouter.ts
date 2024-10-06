@@ -24,7 +24,7 @@ trainingSessionRouter.get(
 trainingSessionRouter.get(
   '/title/:id',
   authService.authenticationMiddleware,
-  asyncHandler(trainingSessionController.getTrainingSessionById)
+  asyncHandler(trainingSessionController.getTrainingSessionTitleById)
 );
 
 /**
