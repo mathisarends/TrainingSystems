@@ -9,10 +9,12 @@ import { environment } from '../../environment/environment';
 })
 export class WebSocketService {
   private socket!: Socket;
+  private webSocketUrl =
+    process.env['NODE_ENV'] === 'production' ? environment.webSocketProdUrl : environment.webSocketUrl;
 
   constructor(private browserCheckService: BrowserCheckService) {
     if (this.browserCheckService.isBrowser()) {
-      this.socket = io(environment.webSocketUrl, {
+      this.socket = io(this.webSocketUrl, {
         transports: ['websocket'],
       });
     }

@@ -4,4 +4,5 @@ export const environment = {
   apiUrl: 'http://localhost:3000/api',
   produUrl: 'https://trainingsystems.onrender.com/api',
   webSocketUrl: 'ws://localhost:3000',
+  webSocketProdUrl: 'wss://https://trainingsystems.onrender.com',
 };
