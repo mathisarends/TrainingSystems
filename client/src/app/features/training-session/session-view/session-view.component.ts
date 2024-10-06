@@ -241,10 +241,10 @@ export class SessionViewComponent implements OnInit {
     this.swipeService.addSwipeListener(
       this.trainingTable.nativeElement,
       () => {
-        console.log('right');
+        this.navigateToVersion(this.version() + 1);
       },
       () => {
-        console.log('left');
+        this.navigateToVersion(this.version() - 1);
       },
     );
   }
