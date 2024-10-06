@@ -76,7 +76,7 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
   await userManager.update(user);
 
   for (const [fieldName, fieldValue] of Object.entries(changedData)) {
-    if (isTrainingActivitySignal(fieldName, fieldValue)) {
+    if (trainingSessionManager.isTrainingActivitySignal(fieldName, fieldValue)) {
       const trainingSessionTracker = await trainingSessionManager.getOrCreateTracker(trainingDay, user.id);
       trainingSessionTracker.handleActivitySignal();
       break;
@@ -84,10 +84,6 @@ export async function updateTrainingDataForTrainingDay(req: Request, res: Respon
   }
 
   res.status(200).json({ message: 'Trainingsplan erfolgreich aktualisiert', trainingDay });
-}
-
-function isTrainingActivitySignal(fieldName: string, fieldValue: string): boolean {
-  return (fieldName.endsWith('weight') && !!fieldValue) || (fieldName.endsWith('actualRPE') && !!fieldValue);
 }
 
 /**

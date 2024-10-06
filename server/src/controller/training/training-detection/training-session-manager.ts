@@ -1,5 +1,5 @@
 import { TrainingDay } from '../../../models/training/trainingDay.js';
-import { TrainingPlanId } from './training-plan-id.type.js';
+import { TrainingDayId } from './training-day-id.type.js';
 import { TrainingSessionTracker } from './training-session-tracker/training-session-tracker.js';
 
 /**
@@ -7,7 +7,7 @@ import { TrainingSessionTracker } from './training-session-tracker/training-sess
  * Each tracker is uniquely identified by a combination of user ID and training day ID.
  */
 class TrainingSessionManager {
-  private trackers: Map<TrainingPlanId, TrainingSessionTracker> = new Map();
+  private trackers: Map<TrainingDayId, TrainingSessionTracker> = new Map();
 
   async getOrCreateTracker(trainingDay: TrainingDay, userId: string): Promise<TrainingSessionTracker> {
     const trainingDayId = trainingDay.id;
@@ -21,7 +21,7 @@ class TrainingSessionManager {
     return newTracker;
   }
 
-  removeTracker(trainingDayId: TrainingPlanId): void {
+  removeTracker(trainingDayId: TrainingDayId): void {
     const tracker = this.getTrackerById(trainingDayId);
     if (tracker) {
       tracker.clearInactivityTimeout();
@@ -29,7 +29,14 @@ class TrainingSessionManager {
     }
   }
 
-  private getTrackerById(trainingDayId: TrainingPlanId): TrainingSessionTracker | undefined {
+  isTrainingActivitySignal(fieldName: string, fieldValue: string): boolean {
+    const isValidWeightInput = fieldName.endsWith('weight') && !!fieldValue;
+    const isValidActualRpeINput = fieldName.endsWith('actualRPE') && !!fieldValue;
+
+    return isValidWeightInput || isValidActualRpeINput;
+  }
+
+  private getTrackerById(trainingDayId: TrainingDayId): TrainingSessionTracker | undefined {
     return this.trackers.get(trainingDayId);
   }
 }

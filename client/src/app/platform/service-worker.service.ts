@@ -38,7 +38,6 @@ export class ServiceWorkerService {
    */
   private checkAndSubscribeToPushNotifications(registration: ServiceWorkerRegistration): void {
     if (Notification.permission === 'granted') {
-      console.log('Push-Berechtigung bereits erteilt.');
       this.subscribeToPushNotifications(registration);
     } else if (Notification.permission !== 'denied') {
       this.requestNotificationPermission(registration);
@@ -51,7 +50,6 @@ export class ServiceWorkerService {
   requestNotificationPermission(registration: ServiceWorkerRegistration): void {
     Notification.requestPermission().then((permission) => {
       if (permission === 'granted') {
-        console.log('Notification permission granted.');
         this.subscribeToPushNotifications(registration);
       } else {
         console.error('Permission not granted for notifications.');
@@ -71,7 +69,6 @@ export class ServiceWorkerService {
         applicationServerKey: applicationServerKey,
       })
       .then((subscription) => {
-        console.log('User is subscribed:', subscription);
         this.sendSubscriptionToServer(subscription);
       })
       .catch((error) => {

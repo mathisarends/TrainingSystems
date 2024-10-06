@@ -133,6 +133,8 @@ export class SessionViewComponent implements OnInit {
    * Loads the training session data and sets the component's state.
    */
   loadSessionData(): void {
+    this.isLoaded.set(false);
+
     forkJoin({
       sessionDto: this.trainingSessionService.getTrainingSessionById(this.sessionId()),
       exerciseData: this.trainingSessionService.loadExerciseData(),
