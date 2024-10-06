@@ -1,4 +1,5 @@
 import { AfterViewInit, Directive, ElementRef, HostListener } from '@angular/core';
+import { ToastService } from '../../../../shared/components/toast/toast.service';
 import { ExerciseTableRowService } from '../services/exercise-table-row.service';
 
 /**
@@ -9,6 +10,7 @@ import { ExerciseTableRowService } from '../services/exercise-table-row.service'
 @Directive()
 export abstract class AbstractDoubleClickDirective implements AfterViewInit {
   protected inputElement!: HTMLInputElement;
+  protected delimiter: string = ' '; // Default delimiter is a space
 
   /**
    * Stores the timestamp of the last click event.
@@ -25,6 +27,7 @@ export abstract class AbstractDoubleClickDirective implements AfterViewInit {
   constructor(
     protected exerciseTableRowService: ExerciseTableRowService,
     protected elementRef: ElementRef,
+    protected toastService: ToastService,
   ) {}
 
   /**
@@ -90,7 +93,17 @@ export abstract class AbstractDoubleClickDirective implements AfterViewInit {
    * The values are expected to be separated by semicolons (';') and may include commas (',') which are replaced with dots ('.') for parsing.
    */
   protected parseInputValues(): number[] {
-    return this.inputElement.value.split(';').map((value) => parseFloat(value.trim().replace(',', '.')));
+    const cleanedValue = this.inputElement.value.replace(/\s+/g, ' ').trim();
+
+    const parsedNumericValues = cleanedValue
+      .split(this.delimiter)
+      .map((value) => parseFloat(value.trim().replace(',', '.')));
+
+    if (parsedNumericValues.some((value) => isNaN(value))) {
+      this.toastService.error('Ungültige Eingabe');
+    }
+
+    return parsedNumericValues;
   }
 
   /**
@@ -98,7 +111,7 @@ export abstract class AbstractDoubleClickDirective implements AfterViewInit {
    */
   protected duplicateLastInput(values: number[]): void {
     const lastInput = values[values.length - 1];
-    this.inputElement.value = `${this.inputElement.value};${lastInput}`;
+    this.inputElement.value = `${this.inputElement.value}${this.delimiter}${lastInput}`;
   }
 
   /**

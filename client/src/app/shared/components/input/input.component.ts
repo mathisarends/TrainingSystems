@@ -26,7 +26,7 @@ export class InputComponent<T extends string | number> {
    * The type of input control (e.g., 'text', 'number', 'password').
    * This input is required and determines the type of input field.
    */
-  type = input.required<'text' | 'number'>();
+  type = input.required<'text' | 'number' | 'tel'>();
 
   /**
    * The placeholder of the input.

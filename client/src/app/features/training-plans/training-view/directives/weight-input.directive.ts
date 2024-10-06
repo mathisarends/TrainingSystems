@@ -1,5 +1,6 @@
 import { AfterViewInit, Directive, ElementRef, HostListener } from '@angular/core';
 import { FormService } from '../../../../core/services/form.service';
+import { ToastService } from '../../../../shared/components/toast/toast.service';
 import { AutoSaveService } from '../../../../shared/service/auto-save.service';
 import { ExerciseDataService } from '../exercise-data.service';
 import { EstMaxService } from '../services/estmax.service';
@@ -24,8 +25,9 @@ export class WeightInputDirective extends AbstractDoubleClickDirective implement
     protected formService: FormService,
     protected override exerciseTableRowService: ExerciseTableRowService,
     protected override elementRef: ElementRef,
+    protected override toastService: ToastService,
   ) {
-    super(exerciseTableRowService, elementRef);
+    super(exerciseTableRowService, elementRef, toastService);
   }
 
   @HostListener('change', ['$event'])

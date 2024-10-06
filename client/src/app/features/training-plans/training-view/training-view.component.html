@@ -80,7 +80,7 @@
                 <app-input
                   class="weight"
                   [placeholder]="weightRecommandation"
-                  [type]="'text'"
+                  [type]="'tel'"
                   [name]="namePrefix + 'weight'"
                   [directiveUsed]="'weightInputDirective'"
                   [value]="exercise.weight || ''"
@@ -89,7 +89,7 @@
               <td data-cell="RPE">
                 <app-input
                   class="targetRPE"
-                  [type]="'text'"
+                  [type]="'number'"
                   [name]="namePrefix + 'targetRPE'"
                   [directiveUsed]="'rpeInputDirective'"
                   [value]="exercise.targetRPE"
@@ -98,7 +98,7 @@
               <td data-cell="@RPE">
                 <app-input
                   class="actualRPE"
-                  [type]="'text'"
+                  [type]="'tel'"
                   [name]="namePrefix + 'actualRPE'"
                   [directiveUsed]="'rpeInputDirective'"
                   [value]="exercise.actualRPE || ''"
