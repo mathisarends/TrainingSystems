@@ -3,8 +3,11 @@ import { authService } from '../../service/authService.js';
 
 import * as trainingSessionController from '../../controller/session/sessionController.js';
 import { asyncHandler } from '../../middleware/error-handler.js';
+import trainingSessionStatisticsRouter from './trainingSessionStatisticsRouter.js';
 
 const trainingSessionRouter = express.Router();
+
+trainingSessionRouter.use('/statistics', trainingSessionStatisticsRouter);
 
 /**
  * GET /
