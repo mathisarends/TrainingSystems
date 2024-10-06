@@ -15,6 +15,15 @@ import trainingSessionService from '../../service/trainingSessionService.js';
 import userManager from '../../service/userManager.js';
 import trainingSessionManager from '../training/training-detection/training-session-manager.js';
 
+export async function getTrainingSessionTitleById(req: Request, res: Response): Promise<Response<string>> {
+  const trainingSessionId = req.params.id;
+
+  const user = await userManager.getUser(res);
+  const trainingSession = await trainingSessionService.findByUserIdAndSessionId(user.id, trainingSessionId);
+
+  return res.status(200).json(trainingSession.title);
+}
+
 /**
  * Retrieves a specific training session by its ID.
  */
@@ -23,10 +32,6 @@ export async function getTrainingSessionById(req: Request, res: Response): Promi
 
   const user = await userManager.getUser(res);
   const trainingSession = await trainingSessionService.findByUserIdAndSessionId(user.id, trainingSessionId);
-
-  if (!trainingSession) {
-    return res.status(404).json({ error: 'Training Session nicht gefunden' });
-  }
 
   return res.status(200).json(trainingSession);
 }
