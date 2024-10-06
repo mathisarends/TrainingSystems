@@ -1,3 +1,4 @@
+import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
@@ -16,10 +17,23 @@ export class TrainingSessionStatisticsService {
   }
 
   getTonnageChartData(id: string, exercises: string[]): Observable<ChartDataDto> {
-    return this.httpService.get(`/training-session/statistics/tonnage/${id}`);
+    const exerciseParams = this.buildExerciseRequestParams(exercises);
+
+    return this.httpService.get(`/training-session/statistics/tonnage/${id}`, exerciseParams);
   }
 
   getPerformanceChartData(id: string, exercises: string[]): Observable<ChartDataDto> {
-    return this.httpService.get(`/training-session/statistics/performance/${id}`);
+    const exerciseParams = this.buildExerciseRequestParams(exercises);
+
+    return this.httpService.get(`/training-session/statistics/performance/${id}`, exerciseParams);
+  }
+
+  /**
+   * Builds the request parameters for comparing training plans based on category and titles.
+   */
+  private buildExerciseRequestParams(exercises: string[]): HttpParams {
+    const exercisesQuerParam = exercises.join(',');
+
+    return new HttpParams().set('exercises', exercisesQuerParam);
   }
 }

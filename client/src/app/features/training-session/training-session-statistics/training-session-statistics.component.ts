@@ -51,18 +51,19 @@ export class TrainingSesssionStatisticsComponent implements OnInit {
 
     this.trainingSessionId.set(this.trainingSessionUrlFromUrl());
 
-    this.fetchAndSetCategoryMetadata(this.trainingSessionId());
+    this.fetchTitleAndExercises(this.trainingSessionId());
 
     effect(
       () => {
         if (this.isLoaded()) {
+          this.fetchChartData(this.trainingSessionId(), this.exercises());
         }
       },
       { allowSignalWrites: true, injector: this.injector },
     );
   }
 
-  fetchAndSetCategoryMetadata(id: string): void {
+  private fetchTitleAndExercises(id: string): void {
     forkJoin({
       title: this.trainingSessionStatisticsService.getTrainingSessiontitleById(id),
       exerciseOptions: this.trainingSessionStatisticsService.getExerciseOptions(id),
@@ -71,10 +72,22 @@ export class TrainingSesssionStatisticsComponent implements OnInit {
       .subscribe(({ title, exerciseOptions }) => {
         this.setHeadlineInfo(title);
         this.exercises.set(exerciseOptions);
+        this.isLoaded.set(true);
+      });
+  }
 
-        // TODO: Das hier mappen
-        /* this.tonnageChartData.set(tonnageChartData);
-        this.performanceChartData.set(performanceChartData); */
+  private fetchChartData(id: string, exercises: string[]) {
+    forkJoin({
+      tonangeChartData: this.trainingSessionStatisticsService.getTonnageChartData(id, exercises),
+      performanceChartData: this.trainingSessionStatisticsService.getPerformanceChartData(id, exercises),
+    })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(({ tonangeChartData, performanceChartData }) => {
+        console.log(
+          '🚀 ~ TrainingSesssionStatisticsComponent ~ .subscribe ~ performanceChartData:',
+          performanceChartData,
+        );
+        console.log('🚀 ~ TrainingSesssionStatisticsComponent ~ .subscribe ~ tonangeChartData:', tonangeChartData);
       });
   }
 
