@@ -4,16 +4,22 @@ import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { ChartData } from '../../../shared/components/charts/chart-data';
 import { LineChartDataset } from '../../../shared/components/charts/line-chart/line-chart-data-set';
+import { LineChartComponent } from '../../../shared/components/charts/line-chart/line-chart.component';
+import { ChartSkeletonComponent } from '../../../shared/components/loader/chart-skeleton/chart-skeleton.component';
+import { ImageDownloadService } from '../../../shared/service/image-download.service';
 import { HeaderService } from '../../header/header.service';
+import { ChartDataDto } from '../../training-plans/training-plan-statistics/chart-data-dto';
+import { TrainingDayChartType } from '../../training-plans/training-plan-statistics/training-day-chart-type';
+import { ChartColorService } from '../../training-plans/training-view/services/chart-color.service';
 import { TrainingSessionStatisticsService } from './training-session-statistics.service';
 
 @Component({
   standalone: true,
-  imports: [],
+  imports: [LineChartComponent, ChartSkeletonComponent],
   selector: 'selector-name',
   templateUrl: 'training-session-statistics.component.html',
   styleUrls: ['./training-session-statistics.component.scss'],
-  providers: [TrainingSessionStatisticsService],
+  providers: [TrainingSessionStatisticsService, ImageDownloadService],
 })
 export class TrainingSesssionStatisticsComponent implements OnInit {
   /**
@@ -44,6 +50,7 @@ export class TrainingSesssionStatisticsComponent implements OnInit {
     private router: Router,
     private injector: Injector,
     private destroyRef: DestroyRef,
+    private chartColorService: ChartColorService,
   ) {}
 
   ngOnInit() {
@@ -78,17 +85,46 @@ export class TrainingSesssionStatisticsComponent implements OnInit {
 
   private fetchChartData(id: string, exercises: string[]) {
     forkJoin({
-      tonangeChartData: this.trainingSessionStatisticsService.getTonnageChartData(id, exercises),
+      tonnageChartData: this.trainingSessionStatisticsService.getTonnageChartData(id, exercises),
       performanceChartData: this.trainingSessionStatisticsService.getPerformanceChartData(id, exercises),
     })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ tonangeChartData, performanceChartData }) => {
-        console.log(
-          '🚀 ~ TrainingSesssionStatisticsComponent ~ .subscribe ~ performanceChartData:',
-          performanceChartData,
-        );
-        console.log('🚀 ~ TrainingSesssionStatisticsComponent ~ .subscribe ~ tonangeChartData:', tonangeChartData);
+      .subscribe(({ tonnageChartData, performanceChartData }) => {
+        this.initializeLineChartData(tonnageChartData, TrainingDayChartType.VOLUME);
+        this.initializeLineChartData(performanceChartData, TrainingDayChartType.PERFORMANCE);
       });
+  }
+
+  private initializeLineChartData(tonnageData: ChartDataDto, chartType: TrainingDayChartType) {
+    const lineDatasets = Object.keys(tonnageData).map((categoryKey) => {
+      const categoryData = tonnageData[categoryKey];
+      return this.createTonnageDataSet(categoryKey, categoryData || []);
+    });
+
+    const lineLabels = this.generateWeekLabels(lineDatasets[0]?.data.length || 0);
+
+    if (chartType === TrainingDayChartType.VOLUME) {
+      this.tonnageChartData.set({ datasets: lineDatasets, labels: lineLabels });
+    } else if (chartType === TrainingDayChartType.PERFORMANCE) {
+      this.performanceChartData.set({ datasets: lineDatasets, labels: lineLabels });
+    }
+  }
+
+  private createTonnageDataSet(category: string, data: number[]): LineChartDataset {
+    const colors = this.chartColorService.getCategoryColor(category);
+    return {
+      label: category,
+      data: data,
+      borderColor: colors.borderColor,
+      backgroundColor: colors.backgroundColor,
+      fill: true,
+    };
+  }
+  /**
+   * Generates week labels for the charts based on the given number of weeks.
+   */
+  private generateWeekLabels(length: number): string[] {
+    return Array.from({ length }, (_, index) => `Session ${index + 1}`);
   }
 
   /**

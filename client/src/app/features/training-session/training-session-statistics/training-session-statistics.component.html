@@ -1,1 +1,12 @@
-<p>Works</p>
+@if (isLoaded()) {
+  <div class="chart-grid">
+    <app-line-chart [data]="tonnageChartData()" yAxisTitle="Tonnage (kg)" />
+
+    <app-line-chart [data]="performanceChartData()" yAxisTitle="Est. Max (kg)" />
+  </div>
+} @else {
+  <div class="chart-grid">
+    <app-chart-skeleton />
+    <app-chart-skeleton />
+  </div>
+}

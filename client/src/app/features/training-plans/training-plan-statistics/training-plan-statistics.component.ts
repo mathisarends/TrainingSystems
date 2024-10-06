@@ -9,8 +9,6 @@ import { LineChartDataset } from '../../../shared/components/charts/line-chart/l
 import { LineChartComponent } from '../../../shared/components/charts/line-chart/line-chart.component';
 import { PolarAreaChartDataset } from '../../../shared/components/charts/polar-chart/polar-area-chart-data-set';
 import { PolarChartComponent } from '../../../shared/components/charts/polar-chart/polar-chart.component';
-import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
-import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
 import { ChartSkeletonComponent } from '../../../shared/components/loader/chart-skeleton/chart-skeleton.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { SelectComponent } from '../../../shared/components/select/select.component';
@@ -18,7 +16,6 @@ import { ToSelectItemPipe } from '../../../shared/components/select/to-select-it
 import { ImageDownloadService } from '../../../shared/service/image-download.service';
 import { KeyboardService } from '../../../shared/service/keyboard.service';
 import { HeaderService } from '../../header/header.service';
-import { ChangeProfilePictureConfirmationComponent } from '../../profile-2/change-profile-picture-confirmation/change-profile-picture-confirmation.component';
 import { ChartColorService } from '../training-view/services/chart-color.service';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
 import { AverageTrainingDayDurationDto } from './average-training-duration-dto';
@@ -35,12 +32,9 @@ import { TrainingStatisticsService } from './training-statistics.service';
   standalone: true,
   imports: [
     SelectComponent,
-    DropdownComponent,
     LineChartComponent,
     GroupedBarChartComponent,
-    HeadlineComponent,
     ChartSkeletonComponent,
-    ChangeProfilePictureConfirmationComponent,
     ToSelectItemPipe,
     PolarChartComponent,
     GroupedBarChartComponent,
