@@ -15,6 +15,8 @@ import {
 import _ from 'lodash';
 import { TrainingPlanEditViewDto } from '../../models/dto/training-plan-edit-view-dto.js';
 
+import { NotificationPayload } from '../../service/notifications/notification-payload.js';
+import pushSubscriptionService from '../../service/notifications/push-subscription-service.js';
 import userManager from '../../service/userManager.js';
 
 /**
@@ -84,6 +86,16 @@ export async function updateTrainingPlanOrder(req: Request, res: Response): Prom
   user.trainingPlans = sortedTrainingPlans;
 
   await userManager.update(user);
+
+  const notificationPayload: NotificationPayload = {
+    title: 'TTS',
+    body: 'Reihenfolge geändert',
+    url: '/profile/logs',
+    tag: 'training-summary-notification',
+    vibrate: [200, 100, 200]
+  };
+
+  await pushSubscriptionService.sendNotification(user.id, notificationPayload);
 
   return res.status(200).json({ message: 'Reihenfolge geupdated' });
 }

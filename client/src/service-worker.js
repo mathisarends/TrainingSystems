@@ -32,7 +32,6 @@ self.addEventListener('push', function (event) {
   console.log('Push-Benachrichtigung empfangen:', event);
 
   const data = event.data ? event.data.json() : { title: 'Standard-Titel', body: 'Standard-Nachricht' };
-  console.log('🚀 ~ data:', data);
 
   const options = {
     tag: data.tag,
@@ -40,6 +39,9 @@ self.addEventListener('push', function (event) {
       url: data.url || '/',
     },
   };
+
+  console.log('data. title', data.title);
+  console.log(!'bpody', data.body);
 
   notificationManager.showNotification(data.title, data.body, options);
 });

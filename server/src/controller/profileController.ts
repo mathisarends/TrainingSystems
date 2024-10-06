@@ -1,8 +1,6 @@
 import { Request, Response } from 'express';
 import { UpdateProfilePictureDto } from '../interfaces/updateProfilePictureDto.js';
 import { UserProfileDto } from '../interfaces/userProfileDto.js';
-import { NotificationPayload } from '../service/notifications/notification-payload.js';
-import pushSubscriptionService from '../service/notifications/push-subscription-service.js';
 import userManager from '../service/userManager.js';
 
 /**
@@ -16,16 +14,6 @@ export async function getProfile(req: Request, res: Response): Promise<void> {
     email: user.email,
     pictureUrl: user.pictureUrl
   };
-
-  const notificationPayload: NotificationPayload = {
-    title: 'TYR TS',
-    body: 'Auf dem Profile gelandet',
-    url: '/profile/logs',
-    tag: 'training-summary-notification',
-    vibrate: [200, 100, 200]
-  };
-
-  await pushSubscriptionService.sendNotification(user.id, notificationPayload);
 
   res.status(200).json(userDto);
 }
