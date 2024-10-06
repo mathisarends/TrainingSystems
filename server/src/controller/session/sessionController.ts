@@ -75,9 +75,6 @@ export async function createTrainingSession(req: Request, res: Response): Promis
   };
 
   await trainingSessionService.createTrainingSession(newTrainingSession);
-
-  await userManager.update(user);
-
   return res.status(200).json({ message: 'Erfolgreich erstellt ' });
 }
 
@@ -96,7 +93,7 @@ export async function editTrainingSesssion(req: Request, res: Response): Promise
   trainingSession.weightRecommandationBase = trainingSessionEditDto.weightRecommandationBase;
   trainingSession.coverImageBase64 = trainingSessionEditDto.coverImageBase64;
 
-  await userManager.update(user);
+  await trainingSessionService.updateTrainingSession(trainingSession);
 
   return res.status(200).json({ message: 'Änderungen gespeichert' });
 }
@@ -111,7 +108,7 @@ export async function deleteTrainingSession(req: Request, res: Response): Promis
   const trainingSession = await trainingSessionService.findByUserIdAndSessionId(user.id, trainingSessionId);
   await trainingSessionService.deleteTrainingSession(user.id, trainingSession.id);
 
-  await userManager.update(user);
+  await trainingSessionService.updateTrainingSession(trainingSession);
 
   return res.status(200).json({ message: 'Training Session erfolgreich gelöscht' });
 }
@@ -134,7 +131,7 @@ export async function startTrainingSession(req: Request, res: Response): Promise
 
   trainingSession.versions.push(trainingSessionTemplate);
 
-  await userManager.update(user);
+  await trainingSessionService.updateTrainingSession(trainingSession);
 
   return res.status(200).json({ trainingSessionTemplate, version: trainingSession.versions.length });
 }
@@ -213,7 +210,6 @@ export async function updateTrainingSessionVersion(req: Request, res: Response):
   }
 
   const user = await userManager.getUser(res);
-
   const trainingSession = await trainingSessionService.findByUserIdAndSessionId(user.id, trainingSessionId);
 
   if (!trainingSession) {
@@ -238,7 +234,7 @@ export async function updateTrainingSessionVersion(req: Request, res: Response):
     }
   }
 
-  await userManager.update(user);
+  await trainingSessionService.updateTrainingSession(trainingSession);
 
   return res.status(200).json({ message: 'Änderungen gespeichert ' });
 }

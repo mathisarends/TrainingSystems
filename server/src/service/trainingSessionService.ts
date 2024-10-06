@@ -27,8 +27,7 @@ class TrainingSessionService {
     return trainingSession;
   }
 
-  async updateTrainingSession(userId: string, sessionId: string): Promise<void> {
-    const session = await this.findByUserIdAndSessionId(userId, sessionId);
+  async updateTrainingSession(session: TrainingSession): Promise<void> {
     await this.trainingSessionDAO.update(session);
   }
 
