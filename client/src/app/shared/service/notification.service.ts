@@ -13,6 +13,11 @@ import { WebSocketService } from './webSocket/web-socket.service';
   providedIn: 'root',
 })
 export class NotificationService {
+  /**
+   * Signal holding the training day notifications for the user.
+   */
+  trainingDayNotifications = signal<TrainingDayFinishedNotification[]>([]);
+
   constructor(
     private httpService: HttpService,
     private webSocketService: WebSocketService,
@@ -21,15 +26,12 @@ export class NotificationService {
     this.webSocketService
       .onTrainingNotification()
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((message) => {
-        console.log('New private message:', message);
+      .subscribe((newTrainingNotification: TrainingDayFinishedNotification) => {
+        const updatedNotifications = [...this.trainingDayNotifications(), newTrainingNotification];
+        this.trainingDayNotifications.set(updatedNotifications);
+        console.log('New message received and added to array:', updatedNotifications);
       });
   }
-
-  /**
-   * Signal holding the training day notifications for the user.
-   */
-  trainingDayNotifications = signal<TrainingDayFinishedNotification[]>([]);
 
   /**
    * Fetches the training day notifications from the server and updates the `trainingDayNotifications` signal.

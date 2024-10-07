@@ -4,6 +4,7 @@ import { Observable, Subject } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { BrowserCheckService } from '../../../core/services/browser-check.service';
 import { environment } from '../../../environment/environment';
+import { TrainingDayFinishedNotification } from '../../../features/usage-statistics/training-finished-notification';
 import { NotificationChannel } from './notificationChannel';
 
 @Injectable({
@@ -35,7 +36,7 @@ export class WebSocketService {
         transports: ['websocket'],
       });
 
-      this.socket.on(NotificationChannel.TrainingNotifications, (message: any) => {
+      this.socket.on(NotificationChannel.TrainingNotifications, (message: TrainingDayFinishedNotification) => {
         console.log('Received training notification:', message);
         this.trainingNotificationSubject.next(message);
       });
@@ -56,7 +57,7 @@ export class WebSocketService {
     }
   }
 
-  onTrainingNotification(): Observable<any> {
+  onTrainingNotification(): Observable<TrainingDayFinishedNotification> {
     return this.trainingNotificationSubject.asObservable();
   }
 

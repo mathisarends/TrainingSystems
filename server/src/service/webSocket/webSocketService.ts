@@ -1,6 +1,7 @@
 import cookie from 'cookie'; // Use cookie parsing library
 import { Server as HttpServer } from 'http';
 import { Socket, Server as SocketIOServer } from 'socket.io';
+import { TrainingDayFinishedNotification } from '../../models/collections/user/training-fninished-notifcation.js';
 import { authService } from '../authService.js';
 import { NotificationChannel } from './notificationChannel.js';
 import { UserId } from './userId.type.js';
@@ -52,12 +53,13 @@ class WebSocketService {
     });
   }
 
-  sendTrainingNotificationToUser(userId: string, message: string): void {
-    this.sendMessageToUser(userId, NotificationChannel.TrainingNotifications, message);
+  sendTrainingNotificationToUser(userId: string, notification: TrainingDayFinishedNotification): void {
+    this.sendMessageToUser(userId, NotificationChannel.TrainingNotifications, notification);
   }
 
-  private sendMessageToUser(userId: string, channel: NotificationChannel, message: string): void {
+  private sendMessageToUser(userId: string, channel: NotificationChannel, message: unknown): void {
     const socket = this.userSockets.get(userId);
+
     if (socket) {
       socket.emit(channel, message);
     } else {
