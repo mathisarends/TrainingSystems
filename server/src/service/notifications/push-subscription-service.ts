@@ -15,9 +15,9 @@ class PushSubscriptionService {
     let subscriptions: UserPushSubscription[];
 
     if (fingerprint) {
-      subscriptions = await this.pushSubscriptionDAO.findByCondition({ userId, fingerprint });
+      subscriptions = await this.pushSubscriptionDAO.findAll({ userId, fingerprint });
     } else {
-      subscriptions = await this.pushSubscriptionDAO.findByCondition({ userId });
+      subscriptions = await this.pushSubscriptionDAO.findAll({ userId });
     }
 
     if (subscriptions.length === 0) {
