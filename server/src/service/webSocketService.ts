@@ -3,6 +3,7 @@ import { Server as SocketIOServer } from 'socket.io';
 
 class WebSocketService {
   private io: SocketIOServer | null = null;
+  private readonly SECRET = process.env.JWT_SECRET!;
 
   initialize(server: HttpServer): void {
     if (this.io) return;
@@ -16,11 +17,12 @@ class WebSocketService {
     });
 
     this.io.on('connection', socket => {
-      console.log('Client verbunden: ', socket.id);
+      console.log('Client verbunden:', socket.id);
 
       socket.on('message', (message: string) => {
-        console.log(`Nachricht vom Client erhalten: ${message}`);
-        socket.emit('message', `Server hat die Nachricht empfangen: ${message}`);
+        console.log(`Nachricht vom Benutzer erhalten: ${message}`);
+
+        socket.emit('message', `Echo: ${message}`);
       });
 
       socket.on('disconnect', () => {
@@ -29,12 +31,6 @@ class WebSocketService {
     });
 
     console.log('Socket.IO Server gestartet.');
-  }
-
-  broadcastMessage(message: string): void {
-    if (!this.io) return;
-
-    this.io.emit('broadcast', message);
   }
 }
 

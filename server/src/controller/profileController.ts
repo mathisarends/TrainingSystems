@@ -10,6 +10,7 @@ export async function getProfile(req: Request, res: Response): Promise<void> {
   const user = await userManager.getUser(res);
 
   const userDto: UserProfileDto = {
+    id: user.id,
     username: user.username,
     email: user.email,
     pictureUrl: user.pictureUrl

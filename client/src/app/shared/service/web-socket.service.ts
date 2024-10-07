@@ -20,7 +20,7 @@ export class WebSocketService {
   ) {
     this.appRef.isStable.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((isStable) => {
       if (isStable) {
-        if (this.browserCheckService.isBrowser()) {
+        if (this.browserCheckService.isBrowser() && !this.socket) {
           this.socket = io(this.webSocketUrl, {
             transports: ['websocket'],
           });
@@ -34,11 +34,19 @@ export class WebSocketService {
   }
 
   onMessage(event: string): Observable<any> {
-    if (!this.socket) return of();
+    if (!this.socket) {
+      console.log('Socket not initialized yet');
+      return of();
+    }
 
+    // Ensure socket is connected before subscribing to messages
     return new Observable<any>((observer) => {
-      this.socket.on(event, (data) => {
-        observer.next(data);
+      this.socket.on('connect', () => {
+        console.log('WebSocket connected:', this.socket.id);
+        this.socket.on(event, (data) => {
+          console.log(`Received message for event "${event}":`, data);
+          observer.next(data);
+        });
       });
     });
   }

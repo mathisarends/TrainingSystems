@@ -10,6 +10,8 @@ import { UserProfileDto } from './user-profile-dto';
   providedIn: 'root',
 })
 export class ProfileService {
+  id = signal('');
+
   /**
    * Signal Storing the user's username.
    */
@@ -35,6 +37,7 @@ export class ProfileService {
   fetchAndSetProfileData(): Observable<UserProfileDto> {
     return this.httpService.get<UserProfileDto>('/user/profile').pipe(
       tap((data: UserProfileDto) => {
+        this.id.set(data.id);
         this.username.set(data.username);
         this.email.set(data.email);
         this.pictureUrl.set(data.pictureUrl);
