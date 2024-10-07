@@ -16,7 +16,7 @@ import pushNotificationRouter from './routes/pushNotificationRoutes.js';
 import trainingRouter from './routes/training/trainingRoutes.js';
 import trainingSessionRouter from './routes/trainingSession/trainingSessionRouter.js';
 import userRouter from './routes/user/userRoutes.js';
-import webSocketService from './service/webSocketService.js';
+import webSocketService from './service/webSocket/webSocketService.js';
 
 dotenv.config();
 

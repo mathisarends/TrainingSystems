@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable, tap } from 'rxjs';
 import { HttpService } from '../../core/services/http-client.service';
 import { TrainingDayFinishedNotification } from '../../features/usage-statistics/training-finished-notification';
-import { WebSocketService } from './web-socket.service';
+import { WebSocketService } from './webSocket/web-socket.service';
 
 /**
  * Service for handling notification-related operations.
@@ -19,7 +19,7 @@ export class NotificationService {
     private destroyRef: DestroyRef,
   ) {
     this.webSocketService
-      .onMessage()
+      .onTrainingNotification()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((message) => {
         console.log('New private message:', message);

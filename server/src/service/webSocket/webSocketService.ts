@@ -1,9 +1,9 @@
 import cookie from 'cookie'; // Use cookie parsing library
 import { Server as HttpServer } from 'http';
 import { Socket, Server as SocketIOServer } from 'socket.io';
-import { authService } from './authService.js';
-
-type UserId = string;
+import { authService } from '../authService.js';
+import { NotificationChannel } from './notificationChannel.js';
+import { UserId } from './userId.type.js';
 
 class WebSocketService {
   private io: SocketIOServer | null = null;
@@ -52,11 +52,14 @@ class WebSocketService {
     });
   }
 
-  // Send a message to a specific user by user ID
-  sendMessageToUser(userId: string, message: string): void {
+  sendTrainingNotificationToUser(userId: string, message: string): void {
+    this.sendMessageToUser(userId, NotificationChannel.TrainingNotifications, message);
+  }
+
+  private sendMessageToUser(userId: string, channel: NotificationChannel, message: string): void {
     const socket = this.userSockets.get(userId);
     if (socket) {
-      socket.emit('private-message', message);
+      socket.emit(channel, message);
     } else {
       console.log(`User ${userId} is not connected`);
     }

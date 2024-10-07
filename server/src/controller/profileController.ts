@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { UpdateProfilePictureDto } from '../interfaces/updateProfilePictureDto.js';
 import { UserProfileDto } from '../interfaces/userProfileDto.js';
 import userManager from '../service/userManager.js';
-import webSocketService from '../service/webSocketService.js';
+import webSocketService from '../service/webSocket/webSocketService.js';
 
 /**
  * Retrieves the user's profile information and returns a DTO containing the username, email, and picture URL.
@@ -31,7 +31,7 @@ export async function updateProfilePicture(req: Request, res: Response): Promise
     return res.status(404).json({ error: 'Profile picture not found in request body' });
   }
 
-  webSocketService.sendMessageToUser(user.id, 'Test 123');
+  webSocketService.sendTrainingNotificationToUser(user.id, 'Test 123');
 
   user.pictureUrl = body.profilePicture;
   await userManager.update(user);

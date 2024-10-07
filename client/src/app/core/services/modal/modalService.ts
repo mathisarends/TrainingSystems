@@ -10,7 +10,6 @@ import {
 import { BasicInfoComponent } from '../../../shared/components/modal/basic-info/basic-info.component';
 import { ModalOverlayComponent } from '../../../shared/components/modal/modal-overlay/modal-overlay.component';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
-import { WebSocketService } from '../../../shared/service/web-socket.service';
 import { BasicInfoModalOptions, ModalOptions } from './modal-options';
 import { ModalSize } from './modalSize';
 
@@ -27,7 +26,6 @@ export class ModalService {
     private appRef: ApplicationRef,
     private injector: Injector,
     private environmentInjector: EnvironmentInjector,
-    private webSocketService: WebSocketService,
   ) {}
 
   /**
@@ -42,8 +40,6 @@ export class ModalService {
         environmentInjector: this.environmentInjector,
         elementInjector: this.injector,
       });
-
-      this.webSocketService.sendMessage('message', 'Hallo 123');
 
       this.appRef.attachView(this.overlayComponentRef.hostView);
       document.body.appendChild(this.overlayComponentRef.location.nativeElement);
