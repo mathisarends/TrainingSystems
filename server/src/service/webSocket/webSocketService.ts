@@ -7,7 +7,8 @@ import { UserId } from './userId.type.js';
 
 class WebSocketService {
   private io: SocketIOServer | null = null;
-  private userSockets: Map<UserId, Socket> = new Map();
+  // Map to store an array of sockets for each user
+  private userSockets: Map<UserId, Socket[]> = new Map();
 
   initialize(server: HttpServer): void {
     if (this.io) return;
@@ -26,13 +27,15 @@ class WebSocketService {
       const userId = socket.data.user.id;
       console.log('User connected:', userId);
 
-      // Store the socket with the user ID
-      this.userSockets.set(userId, socket);
+      if (this.userSockets.has(userId)) {
+        this.userSockets.get(userId)!.push(socket);
+      } else {
+        this.userSockets.set(userId, [socket]);
+      }
 
-      // Handle disconnect
       socket.on('disconnect', () => {
         console.log('User disconnected:', userId);
-        this.userSockets.delete(userId);
+        this.removeSocket(userId, socket);
       });
     });
   }
@@ -45,14 +48,35 @@ class WebSocketService {
     this.sendMessageToUser(userId, NotificationChannel.keepTimerAliveSignal, currentTime);
   }
 
-  private sendMessageToUser(userId: string, channel: NotificationChannel, message: unknown): void {
-    const socket = this.userSockets.get(userId);
+  sendTestMessageToUser(userId: string, message: string): void {
+    this.sendMessageToUser(userId, NotificationChannel.MESSAGE, message);
+  }
 
-    if (socket) {
-      socket.emit(channel, message);
+  private removeSocket(userId: UserId, socket: Socket): void {
+    const userSocketArray = this.userSockets.get(userId);
+
+    if (!userSocketArray) return;
+
+    const updatedSockets = userSocketArray.filter(s => s !== socket);
+    if (updatedSockets.length > 0) {
+      this.userSockets.set(userId, updatedSockets);
     } else {
-      console.log(`User ${userId} is not connected`);
+      this.userSockets.delete(userId);
     }
+  }
+
+  private sendMessageToUser(userId: string, channel: NotificationChannel, message: unknown): void {
+    const userSocketArray = this.userSockets.get(userId);
+    console.log('🚀 ~ WebSocketService ~ sendMessageToUser ~ userSocketArray:', userSocketArray);
+
+    if (!userSocketArray || userSocketArray.length === 0) {
+      console.log(`User ${userId} is not connected`);
+      return;
+    }
+
+    userSocketArray.forEach(socket => {
+      socket.emit(channel, message);
+    });
   }
 }
 

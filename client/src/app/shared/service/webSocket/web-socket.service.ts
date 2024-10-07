@@ -15,7 +15,9 @@ export class WebSocketService {
   private webSocketUrl =
     process.env['NODE_ENV'] === 'production' ? environment.webSocketProdUrl : environment.webSocketUrl;
 
-  private trainingNotificationSubject: Subject<any> = new Subject<any>();
+  private trainingNotificationSubject = new Subject<TrainingDayFinishedNotification>();
+
+  private testMessage = new Subject<string>();
 
   constructor(
     private browserCheckService: BrowserCheckService,
@@ -41,6 +43,11 @@ export class WebSocketService {
         this.trainingNotificationSubject.next(message);
       });
 
+      this.socket.on(NotificationChannel.MESSAGE, (message: string) => {
+        console.log('message', message);
+        this.testMessage.next(message);
+      });
+
       this.socket.on('connect', () => {
         console.log('WebSocket connected:', this.socket.id);
       });
@@ -59,6 +66,10 @@ export class WebSocketService {
 
   onTrainingNotification(): Observable<TrainingDayFinishedNotification> {
     return this.trainingNotificationSubject.asObservable();
+  }
+
+  onTestMessage(): Observable<string> {
+    return this.testMessage.asObservable();
   }
 
   disconnect(): void {

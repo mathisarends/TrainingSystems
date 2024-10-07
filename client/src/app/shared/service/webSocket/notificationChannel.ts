@@ -3,4 +3,5 @@
  */
 export enum NotificationChannel {
   TrainingNotifications = 'training-notifications',
+  MESSAGE = 'message',
 }

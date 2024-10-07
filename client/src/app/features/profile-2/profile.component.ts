@@ -110,7 +110,6 @@ export class ProfileComponent2 implements OnInit {
       this.router.navigate(['profile/exercises']);
     } else if (listItem.label === 'Account löschen') {
       this.showDeleteAccountDialog();
-    } else if (listItem.label === 'Settings') {
     } else if (listItem.label === 'Logs') {
       this.router.navigate(['profile/logs']);
     } else if (listItem.label === 'Settings') {

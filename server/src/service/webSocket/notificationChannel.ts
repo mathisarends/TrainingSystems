@@ -3,5 +3,6 @@
  */
 export enum NotificationChannel {
   TrainingNotifications = 'training-notifications',
-  keepTimerAliveSignal = 'keepTimerAliveSignal'
+  keepTimerAliveSignal = 'keepTimerAliveSignal',
+  MESSAGE = 'message'
 }
