@@ -101,6 +101,7 @@ export class TrainingSessionTracker {
   }
 
   private async sendTrainingSummaryPushNotification(userId: string) {
+    console.log('wie oft gehittet?');
     const notificationPayload: NotificationPayload = {
       title: 'TYR TS',
       body: 'Trainingszusammenfassung verfügbar',
