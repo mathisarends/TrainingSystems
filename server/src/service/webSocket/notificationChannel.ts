@@ -2,5 +2,6 @@
  * Bindings for different types of notifications.
  */
 export enum NotificationChannel {
-  TrainingNotifications = 'training-notifications'
+  TrainingNotifications = 'training-notifications',
+  keepTimerAliveSignal = 'keepTimerAliveSignal'
 }

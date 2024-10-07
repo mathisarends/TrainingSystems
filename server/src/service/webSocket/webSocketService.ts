@@ -57,6 +57,10 @@ class WebSocketService {
     this.sendMessageToUser(userId, NotificationChannel.TrainingNotifications, notification);
   }
 
+  sendKeepTimerAliveSignal(userId: string, currentTime: number): void {
+    this.sendMessageToUser(userId, NotificationChannel.keepTimerAliveSignal, currentTime);
+  }
+
   private sendMessageToUser(userId: string, channel: NotificationChannel, message: unknown): void {
     const socket = this.userSockets.get(userId);
 
