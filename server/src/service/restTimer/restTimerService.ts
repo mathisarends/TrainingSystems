@@ -1,10 +1,9 @@
+import { UserId } from '../webSocket/userId.type.js';
 import webSocketService from '../webSocket/webSocketService.js';
 import { RestTimer } from './restTimer.js';
 
-// TODO: Routen, service worker connection, Testen
-
 export class RestTimerService {
-  private timers: Map<string, RestTimer> = new Map();
+  private timers: Map<UserId, RestTimer> = new Map();
 
   startTimer(userId: string, duration: number): void {
     if (this.timers.has(userId)) {
@@ -15,54 +14,54 @@ export class RestTimerService {
     const newTimer: RestTimer = {
       userId: userId,
       remainingTime: duration,
-      intervalId: this.createInterval(userId, userId)
+      intervalId: this.createInterval(userId)
     };
 
     this.timers.set(userId, newTimer);
     console.log(`Started timer for user ${userId} with ${duration} seconds.`);
   }
 
-  stopTimer(trainingDayId: string): void {
-    const timer = this.timers.get(trainingDayId);
+  stopTimer(userId: string): void {
+    const timer = this.timers.get(userId);
     if (timer) {
       clearInterval(timer.intervalId);
-      this.timers.delete(trainingDayId);
-      console.log(`Stopped and removed timer for training day ${trainingDayId}.`);
+      this.timers.delete(userId);
+      console.log(`Stopped and removed timer for user ${userId}.`);
     } else {
-      console.log(`No timer found for training day ${trainingDayId}.`);
+      console.log(`No timer found for user ${userId}.`);
     }
   }
 
-  getRemainingTime(trainingDayId: string): number | null {
-    const timer = this.timers.get(trainingDayId);
+  getRemainingTime(userId: string): number | null {
+    const timer = this.timers.get(userId);
     return timer ? timer.remainingTime : null;
   }
 
-  private createInterval(trainingDayId: string, userId: string): NodeJS.Timeout {
-    let elapsedSeconds = 0; // To track the number of seconds elapsed
+  private createInterval(userId: string): NodeJS.Timeout {
+    let elapsedSeconds = 0; // Track the number of seconds elapsed
 
     return setInterval(() => {
-      const timer = this.timers.get(trainingDayId);
-      if (timer) {
-        timer.remainingTime--;
-        elapsedSeconds++;
+      const timer = this.timers.get(userId);
+      if (!timer) return;
 
-        if (elapsedSeconds >= 10) {
-          webSocketService.sendKeepTimerAliveSignal(userId, timer.remainingTime);
-          elapsedSeconds = 0;
-        }
+      timer.remainingTime--;
+      elapsedSeconds++;
 
-        if (timer.remainingTime <= 0) {
-          this.stopTimer(trainingDayId);
-          console.log(`Timer for training day ${trainingDayId} has finished.`);
-          this.onTimerComplete(trainingDayId);
-        }
+      if (elapsedSeconds >= 10) {
+        this.sendKeepAliveSignal(userId, timer.remainingTime);
+        elapsedSeconds = 0;
+      }
+
+      if (timer.remainingTime <= 0) {
+        this.stopTimer(userId);
+        console.log(`Timer for user ${userId} has finished.`);
       }
     }, 1000);
   }
 
-  private onTimerComplete(trainingDayId: string): void {
-    console.log(`Training day ${trainingDayId} has completed the timer.`);
+  private sendKeepAliveSignal(userId: string, remainingTime: number): void {
+    webSocketService.sendKeepTimerAliveSignal(userId, remainingTime);
+    console.log(`Keep-alive signal sent to user ${userId} with remaining time: ${remainingTime}`);
   }
 }
 
