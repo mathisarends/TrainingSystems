@@ -1,9 +1,8 @@
-import cookie from 'cookie'; // Use cookie parsing library
 import { Server as HttpServer } from 'http';
 import { Socket, Server as SocketIOServer } from 'socket.io';
 import { TrainingDayFinishedNotification } from '../../models/collections/user/training-fninished-notifcation.js';
-import { authService } from '../authService.js';
 import { NotificationChannel } from './notificationChannel.js';
+import { socketAuthMiddleware } from './socketAuthMiddleware.js';
 import { UserId } from './userId.type.js';
 
 class WebSocketService {
@@ -21,22 +20,7 @@ class WebSocketService {
       }
     });
 
-    // Middleware to authenticate the WebSocket connection
-    this.io.use((socket, next) => {
-      const cookies = cookie.parse(socket.handshake.headers.cookie ?? '');
-      const token = cookies['jwt-token'];
-      if (!token) {
-        return next(new Error('Authentication error: Token not found'));
-      }
-
-      try {
-        const user = authService.verifyToken(token);
-        socket.data.user = user;
-        next();
-      } catch (err) {
-        return next(new Error('Authentication error: Invalid token'));
-      }
-    });
+    this.io.use(socketAuthMiddleware);
 
     this.io.on('connection', (socket: Socket) => {
       const userId = socket.data.user.id;
