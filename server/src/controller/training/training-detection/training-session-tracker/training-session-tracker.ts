@@ -1,3 +1,4 @@
+import { TrainingDayFinishedNotification } from '../../../../models/collections/user/training-fninished-notifcation.js';
 import { TrainingDay } from '../../../../models/training/trainingDay.js';
 import { InactivityTimeoutManager } from '../../../../service/inactivity-timeout-manager.js';
 import { NotificationPayload } from '../../../../service/notifications/notification-payload.js';
@@ -5,6 +6,7 @@ import pushSubscriptionService from '../../../../service/notifications/push-subs
 import { TrainingDayFinishedNotificationService } from '../../../../service/notifications/training-finished-notification-service.js';
 import { TrainingDayManager } from '../../../../service/training-day-manager.js';
 import userManager from '../../../../service/userManager.js';
+import webSocketService from '../../../../service/webSocket/webSocketService.js';
 
 /**
  * The `TrainingSessionTracker` class is responsible for managing a user's training session.
@@ -90,10 +92,16 @@ export class TrainingSessionTracker {
     user.trainingDayNotifications.push(trainingDayFinishedNotification);
     await userManager.update(user);
 
+    this.sendUpdatedDataToClient(user.id, trainingDayFinishedNotification);
     await this.sendTrainingSummaryPushNotification(user.id);
   }
 
+  private sendUpdatedDataToClient(userId: string, trainingNotification: TrainingDayFinishedNotification): void {
+    webSocketService.sendTrainingNotificationToUser(userId, trainingNotification);
+  }
+
   private async sendTrainingSummaryPushNotification(userId: string) {
+    console.log('wie oft gehittet?');
     const notificationPayload: NotificationPayload = {
       title: 'TYR TS',
       body: 'Trainingszusammenfassung verfügbar',

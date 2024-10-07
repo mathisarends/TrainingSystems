@@ -5,6 +5,7 @@
  * It includes properties for the user's username, email, and profile picture.
  */
 export interface UserProfileDto {
+  id: string;
   /**
    * The user's unique username.
    */

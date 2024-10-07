@@ -1,5 +1,6 @@
 import { Request } from 'express';
 
+//TODO: gucken ob das hier langfristig probleme macht weil der fingerprint sich ja immer ändert wegen der client ip. Hier werden aufjeden fall schon mehrer push beanchrichtigungen verschichkt.
 class FingerPrintService {
   generateDeviceFingerprint(req: Request): string {
     const userAgent = req.headers['user-agent'] ?? 'Unknown';

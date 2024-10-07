@@ -4,9 +4,9 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const SECRET: string = process.env.jwt_secret!;
-
 class AuthService {
+  private readonly SECRET: string = process.env.jwt_secret!;
+
   /**
    * Middleware function to authenticate the user using JWT.
    */
@@ -43,14 +43,14 @@ class AuthService {
    * Generates a JWT token using the provided user claims and an expiration time.
    */
   createToken(userClaimSet: Record<string, unknown>, expiresIn: string) {
-    return jwt.sign(userClaimSet, SECRET, { algorithm: 'HS256', expiresIn: expiresIn });
+    return jwt.sign(userClaimSet, this.SECRET, { algorithm: 'HS256', expiresIn: expiresIn });
   }
 
   /**
    * Verifies the provided JWT token using the secret key.
    */
   verifyToken(token: string) {
-    return jwt.verify(token, SECRET);
+    return jwt.verify(token, this.SECRET);
   }
 
   /**

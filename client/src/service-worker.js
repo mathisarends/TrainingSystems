@@ -11,7 +11,10 @@ const timer = new self.Timer(notificationManager);
 self.addEventListener('install', (event) => {
   event.waitUntil(
     Promise.resolve()
-      .then(() => console.log('[Service Worker] Installation successful'))
+      .then(() => {
+        console.log('[Service Worker] Installation successful');
+        self.skipWaiting();
+      })
       .catch((error) => console.error('[Service Worker] Installation failed:', error)),
   );
 });
@@ -23,7 +26,10 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     Promise.resolve()
-      .then(() => console.log('[Service Worker] Activation successful'))
+      .then(() => {
+        console.log('[Service Worker] Activation successful');
+        return self.clients.claim();
+      })
       .catch((error) => console.error('[Service Worker] Activation failed:', error)),
   );
 });
@@ -33,15 +39,14 @@ self.addEventListener('push', function (event) {
 
   const data = event.data ? event.data.json() : { title: 'Standard-Titel', body: 'Standard-Nachricht' };
 
+  console.log('tes 12 121233');
+
   const options = {
     tag: data.tag,
     data: {
       url: data.url || '/',
     },
   };
-
-  console.log('data. title', data.title);
-  console.log(!'bpody', data.body);
 
   notificationManager.showNotification(data.title, data.body, options);
 });

@@ -16,6 +16,7 @@ import pushNotificationRouter from './routes/pushNotificationRoutes.js';
 import trainingRouter from './routes/training/trainingRoutes.js';
 import trainingSessionRouter from './routes/trainingSession/trainingSessionRouter.js';
 import userRouter from './routes/user/userRoutes.js';
+import webSocketService from './service/webSocket/webSocketService.js';
 
 dotenv.config();
 
@@ -67,6 +68,7 @@ export async function start() {
 
   // Erstelle einen HTTP-Server, der sowohl von Express als auch von Socket.IO verwendet wird
   const server = http.createServer(app);
+  webSocketService.initialize(server);
 
   server.listen(PORT, () => {
     console.log(`Server läuft auf http://localhost:${PORT}`);
