@@ -1,6 +1,9 @@
 import { effect, Injectable, Injector, signal } from '@angular/core';
+import { Observable } from 'rxjs';
 import { BrowserCheckService } from '../../../../core/services/browser-check.service';
+import { HttpService } from '../../../../core/services/http-client.service';
 import { ServiceWorkerService } from '../../../../platform/service-worker.service';
+import { BasicConfirmationResponse } from '../../../../shared/dto/basic-confirmation-response';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +20,7 @@ export class PauseTimeService {
   constructor(
     private serviceWorkerService: ServiceWorkerService,
     private browserCheckService: BrowserCheckService,
+    private httpService: HttpService,
     private injector: Injector,
   ) {
     if (this.browserCheckService.isBrowser()) {
@@ -63,6 +67,10 @@ export class PauseTimeService {
 
     this.currentExercise.set(exerciseName);
     this.startKeepAlive();
+
+    this.startKeepAliveOnServer(pauseTime).subscribe((response) => {
+      console.log('🚀 ~ PauseTimeService ~ this.startKeepAliveOnServer ~ response:', response);
+    });
   }
 
   private startKeepAlive() {
@@ -100,6 +108,10 @@ export class PauseTimeService {
         this.startKeepAlive();
       }
     }
+  }
+
+  private startKeepAliveOnServer(pauseTime: number): Observable<BasicConfirmationResponse> {
+    return this.httpService.post('/rest-pause-timer', { pauseTime });
   }
 
   /**

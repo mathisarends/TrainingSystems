@@ -1,6 +1,6 @@
 export class InactivityTimeoutManager {
   private timeoutId: NodeJS.Timeout | null = null;
-  private readonly timeoutDuration: number;
+  private timeoutDuration: number;
   private onTimeoutCallback: () => void | Promise<void>;
 
   constructor(timeoutDuration: number, onTimeoutCallback: () => void | Promise<void>) {
