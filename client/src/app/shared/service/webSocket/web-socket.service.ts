@@ -35,6 +35,7 @@ export class WebSocketService {
     if (!this.socket) {
       console.log('Initializing WebSocket connection...');
       this.socket = io(this.webSocketUrl, {
+        path: '/socket-io',
         transports: ['websocket'],
       });
 

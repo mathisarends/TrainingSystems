@@ -70,6 +70,9 @@ export async function start() {
   const server = http.createServer(app);
   webSocketService.initialize(server);
 
+  // used for keep alive signals from service worker
+  /* nativeWebSocketService.initialize(server); */
+
   server.listen(PORT, () => {
     console.log(`Server läuft auf http://localhost:${PORT}`);
   });
