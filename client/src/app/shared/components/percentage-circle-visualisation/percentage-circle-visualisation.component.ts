@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, effect, ElementRef, Injector, input, output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, effect, ElementRef, Injector, input, ViewChild } from '@angular/core';
 import { Percentage } from './percentage.type';
 
 @Component({
@@ -16,8 +16,6 @@ export class PercentageCircleVisualisationComponent implements AfterViewInit {
    * This is a required input and should be a valid percentage (0-100).
    */
   percentage = input.required<Percentage>();
-
-  percentageChanged = output<Percentage>();
 
   strokeWidth = input<number>(10);
 

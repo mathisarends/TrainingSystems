@@ -40,27 +40,12 @@ export class RestTimerComponent implements OnInit {
       seconds = 0;
     }
 
-    this.sendMessageToServiceWorker('adjustTime', { seconds });
+    this.pauseTimeService.adjustTime(seconds);
   }
 
   skipTimer() {
-    this.sendMessageToServiceWorker('stop');
+    this.pauseTimeService.skipTimer();
     this.modalService.close();
-  }
-
-  protected calcTimeAndAdjustTimer(newPercentage: number) {
-    const initialTime = this.pauseTimeService.getInitialTime();
-    let newRemainingTime = this.pauseTimeService.getInitialTime() - (newPercentage / 100) * initialTime;
-    newRemainingTime = Math.round(newRemainingTime / 2) * 2;
-
-    this.sendMessageToServiceWorker('setTime', { newRemainingTime });
-  }
-
-  private sendMessageToServiceWorker(command: string, data?: any) {
-    this.serviceWorkerService.sendMessageToServiceWorker({
-      command,
-      ...data,
-    });
   }
 
   private calculateRemainingRestTimePercentage() {

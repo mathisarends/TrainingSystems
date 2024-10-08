@@ -40,6 +40,7 @@ export class PauseTimeService {
         if (this.remainingTime() === 0 && this.initialTime !== 0) {
           clearInterval(this.keepAliveIntervalId);
           this.keepAliveIntervalId = null;
+          this.stopKeepAliveSignalOnServer();
 
           new Audio('./audio/boxing_bell.mp3').play();
           this.clearLocalStorage();
@@ -66,26 +67,18 @@ export class PauseTimeService {
     });
 
     this.currentExercise.set(exerciseName);
-    this.startKeepAlive();
 
-    this.startKeepAliveOnServer(pauseTime).subscribe((response) => {
-      console.log('🚀 ~ PauseTimeService ~ this.startKeepAliveOnServer ~ response:', response);
-    });
+    this.startKeepAliveOnServer(pauseTime).subscribe(() => {});
   }
 
-  private startKeepAlive() {
-    if (this.keepAliveIntervalId) {
-      clearInterval(this.keepAliveIntervalId);
-    }
+  adjustTime(seconds: number) {
+    const newRemainingTime = this.remainingTime() + seconds;
 
-    this.keepAliveIntervalId = setInterval(() => {
-      if (this.remainingTime() > 0) {
-        this.serviceWorkerService.sendMessageToServiceWorker({
-          command: 'keepAlive',
-          duration: this.remainingTime(),
-        });
-      }
-    }, 10000);
+    this.sendMessageToServiceWorker('adjustTime', { seconds });
+  }
+
+  skipTimer() {
+    this.sendMessageToServiceWorker('stop');
   }
 
   getInitialTime(): number {
@@ -103,15 +96,15 @@ export class PauseTimeService {
     if (savedInitialTime) {
       this.initialTime = parseInt(savedInitialTime, 10);
       this.remainingTime.set(this.initialTime);
-
-      if (this.remainingTime() > 0) {
-        this.startKeepAlive();
-      }
     }
   }
 
   private startKeepAliveOnServer(pauseTime: number): Observable<BasicConfirmationResponse> {
-    return this.httpService.post('/rest-pause-timer', { pauseTime });
+    return this.httpService.post('/rest-pause-timer/keep-alive');
+  }
+
+  private stopKeepAliveSignalOnServer(): Observable<BasicConfirmationResponse> {
+    return this.httpService.post('/rest-pause-timer/stop-keep-alive');
   }
 
   /**
@@ -127,5 +120,12 @@ export class PauseTimeService {
 
   private saveInitialTimeInLocalStorage(exercisePauseTime: number): void {
     localStorage.setItem('initialTime', exercisePauseTime.toString());
+  }
+
+  private sendMessageToServiceWorker(command: string, data?: any) {
+    this.serviceWorkerService.sendMessageToServiceWorker({
+      command,
+      ...data,
+    });
   }
 }

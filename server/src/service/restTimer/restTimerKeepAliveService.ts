@@ -3,31 +3,22 @@ import pushSubscriptionService from '../notifications/push-subscription-service.
 import { UserId } from '../webSocket/userId.type.js';
 import { RestTimer } from './restTimer.js';
 
-export class RestTImerKeepAliveService {
+export class RestTimerKeepAliveService {
   private timers: Map<UserId, RestTimer> = new Map();
 
-  startTimer(userId: string, fingerprint: string, duration: number): void {
+  startTimer(userId: string, fingerprint: string): void {
     if (this.timers.has(userId)) {
       console.log(`Timer for user ${userId} is already running.`);
       return;
     }
 
     const timer: RestTimer = {
-      remainingTime: duration,
       fingerprint: fingerprint,
       intervalId: setInterval(() => {
-        timer.remainingTime -= 20;
-        this.sendKeepAliveSignal(userId, timer.remainingTime);
-
-        if (timer.remainingTime <= 0) {
-          this.stopTimer(userId);
-          console.log(`Timer for user ${userId} has finished.`);
-        }
+        this.sendKeepAliveSignal(userId);
       }, 20000)
     };
-
     this.timers.set(userId, timer);
-    console.log(`Started timer for user ${userId} with ${duration} seconds.`);
   }
 
   stopTimer(userId: string): void {
@@ -39,26 +30,26 @@ export class RestTImerKeepAliveService {
     console.log(`Stopped and removed timer for user ${userId}.`);
   }
 
-  private async sendKeepAliveSignal(userId: string, remainingTime: number): Promise<void> {
+  private async sendKeepAliveSignal(userId: string): Promise<void> {
     const timer = this.timers.get(userId);
 
     if (!timer) {
-      console.log('Unexpected no timer for user');
+      console.log('Unexpected: no timer found for user');
       return;
     }
 
     const payload: NotificationPayload = {
       title: 'Keep Alive',
-      body: `Remaining time: ${remainingTime} seconds`
+      body: `Keeping timer alive`
     };
 
     try {
       await pushSubscriptionService.sendNotification(userId, payload, timer.fingerprint);
-      console.log(`Keep-alive signal sent to user ${userId} with remaining time: ${remainingTime}`);
+      console.log(`Keep-alive signal sent to user ${userId}`);
     } catch (error) {
       console.error(`Failed to send keep-alive signal to user ${userId}`, error);
     }
   }
 }
 
-export default new RestTImerKeepAliveService();
+export default new RestTimerKeepAliveService();
