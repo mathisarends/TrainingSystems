@@ -4,12 +4,13 @@
  * while displaying notifications when the timer updates or expires.
  */
 class Timer {
-  constructor(notificationManager) {
+  constructor(notificationManager, webSocketManager) {
     this.remainingTime = 0;
     this.timer = null;
     this.isTimerPaused = false;
     this.pausedTime = 0;
     this.notificationManager = notificationManager;
+    this.webSocketManager = webSocketManager;
   }
 
   /**
@@ -24,11 +25,15 @@ class Timer {
       clearInterval(this.timer); // Stop any existing timer
     }
 
+    this.webSocketManager.connect();
+    this.webSocketManager.keepAlive();
+
     this.timer = setInterval(() => {
       if (this.remainingTime <= 0) {
         clearInterval(this.timer);
         this.notifyTimerExpired();
         this.updateTimerDisplay(this.remainingTime);
+        this.webSocketManager.disconnect();
         return;
       }
 
@@ -79,6 +84,8 @@ class Timer {
     clearInterval(this.timer);
     this.remainingTime = 0;
 
+    this.webSocketManager.disconnect();
+
     self.clients.matchAll().then((clients) => {
       clients.forEach((client) => {
         client.postMessage({
@@ -96,6 +103,7 @@ class Timer {
       clearInterval(this.timer);
       this.pausedTime = this.remainingTime;
       this.isTimerPaused = true;
+      this.webSocketManager.disconnect();
     }
   }
 
@@ -106,6 +114,7 @@ class Timer {
     if (this.isTimerPaused) {
       this.isTimerPaused = false;
       this.startTimer(this.pausedTime);
+      this.webSocketManager.connect();
     }
   }
 

@@ -1,9 +1,7 @@
 import { effect, Injectable, Injector, signal } from '@angular/core';
-import { Observable } from 'rxjs';
 import { BrowserCheckService } from '../../../../core/services/browser-check.service';
 import { HttpService } from '../../../../core/services/http-client.service';
 import { ServiceWorkerService } from '../../../../platform/service-worker.service';
-import { BasicConfirmationResponse } from '../../../../shared/dto/basic-confirmation-response';
 
 @Injectable({
   providedIn: 'root',
@@ -40,7 +38,6 @@ export class PauseTimeService {
         if (this.remainingTime() === 0 && this.initialTime !== 0) {
           clearInterval(this.keepAliveIntervalId);
           this.keepAliveIntervalId = null;
-          this.stopKeepAliveSignalOnServer();
 
           new Audio('./audio/boxing_bell.mp3').play();
           this.clearLocalStorage();
@@ -67,13 +64,9 @@ export class PauseTimeService {
     });
 
     this.currentExercise.set(exerciseName);
-
-    this.startKeepAliveOnServer(pauseTime).subscribe(() => {});
   }
 
   adjustTime(seconds: number) {
-    const newRemainingTime = this.remainingTime() + seconds;
-
     this.sendMessageToServiceWorker('adjustTime', { seconds });
   }
 
@@ -97,14 +90,6 @@ export class PauseTimeService {
       this.initialTime = parseInt(savedInitialTime, 10);
       this.remainingTime.set(this.initialTime);
     }
-  }
-
-  private startKeepAliveOnServer(pauseTime: number): Observable<BasicConfirmationResponse> {
-    return this.httpService.post('/rest-pause-timer/keep-alive');
-  }
-
-  private stopKeepAliveSignalOnServer(): Observable<BasicConfirmationResponse> {
-    return this.httpService.post('/rest-pause-timer/stop-keep-alive');
   }
 
   /**

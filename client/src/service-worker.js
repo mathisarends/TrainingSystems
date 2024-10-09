@@ -1,8 +1,10 @@
 importScripts('timer.js');
 importScripts('notification-manager.js');
+importScripts('web-socket-manager.js');
 
 const notificationManager = new self.NotificationManager();
-const timer = new self.Timer(notificationManager);
+const webSocketManager = new self.WebSocketManager('ws://localhost:3000/ws');
+const timer = new self.Timer(notificationManager, webSocketManager);
 
 /**
  * Handles the 'install' event of the Service Worker.

@@ -5,6 +5,7 @@ import express, { Express } from 'express';
 import helmet from 'helmet';
 import http from 'http';
 import webPush from 'web-push';
+import { WebSocketServer } from 'ws';
 import limiter from './config/rate-limiter.js';
 import emailTestRouter from './controller/emailTestRouter.js';
 import startDB from './db.js';
@@ -17,7 +18,6 @@ import restPauseTimerRouter from './routes/restPauseTimerRouter.js';
 import trainingRouter from './routes/training/trainingRoutes.js';
 import trainingSessionRouter from './routes/trainingSession/trainingSessionRouter.js';
 import userRouter from './routes/user/userRoutes.js';
-import webSocketService from './service/webSocket/webSocketService.js';
 
 dotenv.config();
 
@@ -70,7 +70,19 @@ export async function start() {
 
   // Erstelle einen HTTP-Server, der sowohl von Express als auch von Socket.IO verwendet wird
   const server = http.createServer(app);
-  webSocketService.initialize(server);
+  /* webSocketService.initialize(server); */
+
+  const wss = new WebSocketServer({ server, path: '/ws' });
+  // Native WebSocket-Verbindungen behandeln
+  wss.on('connection', ws => {
+    console.log('WebSocket user connected');
+    ws.on('message', message => {
+      console.log(`Received message: ${message}`);
+    });
+    ws.on('close', () => {
+      console.log('WebSocket user disconnected');
+    });
+  });
 
   server.listen(PORT, () => {
     console.log(`Server läuft auf http://localhost:${PORT}`);
