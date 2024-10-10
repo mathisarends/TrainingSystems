@@ -60,7 +60,7 @@ export class PauseTimeService {
     this.saveExerciseNameInLocalStorage(exerciseName);
     this.saveInitialTimeInLocalStorage(pauseTime);
 
-    this.startKeepAliveOnServer(this.initialTime);
+    this.startKeepAliveOnServer();
 
     this.serviceWorkerService.sendMessageToServiceWorker({
       command: 'start',
@@ -96,8 +96,8 @@ export class PauseTimeService {
     }
   }
 
-  private startKeepAliveOnServer(remainingTime: number) {
-    this.httpService.post('/rest-pause-timer/keep-alive', { remainingTime }).subscribe((response) => {});
+  private startKeepAliveOnServer() {
+    this.httpService.post('/rest-pause-timer/keep-alive').subscribe((response) => {});
   }
 
   private stopKeepAliveOnServer() {

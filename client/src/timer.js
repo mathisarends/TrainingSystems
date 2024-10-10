@@ -110,6 +110,14 @@ class Timer {
   }
 
   /**
+   * Used to keep the timer alive.
+   */
+  restartRestPauseTimerWithExistingTime() {
+    clearInterval(this.timer);
+    this.startTimer(this.remainingTime);
+  }
+
+  /**
    * Restarts the timer with a new duration, typically used after a rest or pause period.
    *
    * @param {number} newDuration - The new duration for the timer in seconds.

@@ -36,12 +36,11 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('push', (event) => {
-  console.log('Push-Benachrichtigung empfangen:', event);
-
   const data = event.data ? event.data.json() : { title: 'Standard-Titel', body: 'Standard-Nachricht' };
 
   if (data.title === 'Keep Alive') {
     console.log('Keep Alive Signal empfangen:', data.body);
+    timer.restartRestPauseTimerWithExistingTime();
     return;
   }
 
