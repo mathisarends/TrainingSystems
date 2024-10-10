@@ -1,9 +1,7 @@
-import { DestroyRef, Injectable, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Injectable, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { HttpService } from '../../core/services/http-client.service';
 import { TrainingDayFinishedNotification } from '../../features/usage-statistics/training-finished-notification';
-import { WebSocketService } from './webSocket/web-socket.service';
 
 /**
  * Service for handling notification-related operations.
@@ -18,18 +16,14 @@ export class NotificationService {
    */
   trainingDayNotifications = signal<TrainingDayFinishedNotification[]>([]);
 
-  constructor(
-    private httpService: HttpService,
-    private webSocketService: WebSocketService,
-    private destroyRef: DestroyRef,
-  ) {
-    this.webSocketService
+  constructor(private httpService: HttpService) {
+    /* this.webSocketService
       .onTrainingNotification()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((newTrainingNotification: TrainingDayFinishedNotification) => {
         const updatedNotifications = [...this.trainingDayNotifications(), newTrainingNotification];
         this.trainingDayNotifications.set(updatedNotifications);
-      });
+      }); */
   }
 
   /**

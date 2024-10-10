@@ -44,7 +44,7 @@ export class RestTimerKeepAliveService {
     };
 
     try {
-      await pushSubscriptionService.sendNotification(userId, payload, timer.fingerprint);
+      await pushSubscriptionService.sendNotification(userId, payload);
       console.log(`Keep-alive signal sent to user ${userId}`);
     } catch (error) {
       console.error(`Failed to send keep-alive signal to user ${userId}`, error);

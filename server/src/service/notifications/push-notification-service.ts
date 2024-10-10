@@ -11,44 +11,20 @@ class PushNotificationService {
     this.pushSubscriptionDAO = pushSubscriptionDAO;
   }
 
-  async sendNotification(userId: string, notificationPayload: NotificationPayload, fingerprint?: string) {
-    let subscriptions: UserPushSubscription[];
-
-    if (fingerprint) {
-      subscriptions = await this.pushSubscriptionDAO.findAll({ userId, fingerprint });
-    } else {
-      subscriptions = await this.pushSubscriptionDAO.findAll({ userId });
-    }
+  async sendNotification(userId: string, notificationPayload: NotificationPayload) {
+    const subscriptions = await this.pushSubscriptionDAO.findAll({ userId });
 
     if (subscriptions.length === 0) {
-      throw new NotFoundError('Keine Push-Subscription für diesen Benutzer gefunden');
+      throw new NotFoundError(`Keine Push-Subscription für den Benutzer mit id ${userId} gefunden`);
     }
-
-    const failedSubscriptions: UserPushSubscription[] = [];
 
     for (const subscription of subscriptions) {
       try {
         await webPush.sendNotification(subscription, JSON.stringify(notificationPayload));
       } catch (error) {
         console.error('Fehler beim Senden der Push-Benachrichtigung:', error);
-        await this.deleteSubscription(subscription.id);
-        const newSubscription = (await this.saveSubscription(
-          userId,
-          subscription,
-          subscription.fingerprint
-        )) as UserPushSubscription;
-
-        if (newSubscription) {
-          failedSubscriptions.push(newSubscription);
-        }
-      }
-    }
-
-    for (const newSub of failedSubscriptions) {
-      try {
-        await webPush.sendNotification(newSub, JSON.stringify(notificationPayload));
-      } catch (retryError) {
-        console.error('Fehler beim Retry der Push-Benachrichtigung:', retryError);
+        const deleteCount = await this.deleteSubscription(subscription.id);
+        console.log('deleted the subscription', deleteCount);
       }
     }
   }
