@@ -24,17 +24,40 @@ class PushNotificationService {
       throw new NotFoundError('Keine Push-Subscription für diesen Benutzer gefunden');
     }
 
+    const failedSubscriptions: UserPushSubscription[] = [];
+
     for (const subscription of subscriptions) {
       try {
         await webPush.sendNotification(subscription, JSON.stringify(notificationPayload));
       } catch (error) {
         console.error('Fehler beim Senden der Push-Benachrichtigung:', error);
         await this.deleteSubscription(subscription.id);
+        const newSubscription = (await this.saveSubscription(
+          userId,
+          subscription,
+          subscription.fingerprint
+        )) as UserPushSubscription;
+
+        if (newSubscription) {
+          failedSubscriptions.push(newSubscription);
+        }
+      }
+    }
+
+    for (const newSub of failedSubscriptions) {
+      try {
+        await webPush.sendNotification(newSub, JSON.stringify(notificationPayload));
+      } catch (retryError) {
+        console.error('Fehler beim Retry der Push-Benachrichtigung:', retryError);
       }
     }
   }
 
-  async saveSubscription(userId: string, subscription: PushSubscription, fingerprint: string) {
+  async saveSubscription(
+    userId: string,
+    subscription: PushSubscription,
+    fingerprint: string
+  ): Promise<UserPushSubscription | undefined> {
     const existingSubscription = await this.pushSubscriptionDAO.findOne({ userId, fingerprint });
 
     if (existingSubscription) {
@@ -43,15 +66,18 @@ class PushNotificationService {
         endpoint: subscription.endpoint,
         keys: subscription.keys
       });
+
       return;
     }
 
-    await this.pushSubscriptionDAO.create({
+    const createdSubsciption = await this.pushSubscriptionDAO.create({
       userId,
       endpoint: subscription.endpoint,
       keys: subscription.keys,
       fingerprint
     });
+
+    return createdSubsciption;
   }
 
   async getSubscriptionsByUserId(userId: string): Promise<UserPushSubscription[]> {
