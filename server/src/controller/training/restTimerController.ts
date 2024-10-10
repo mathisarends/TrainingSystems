@@ -5,7 +5,8 @@ import userManager from '../../service/userManager.js';
 
 export async function setPauseTimerKeepAlive(req: Request, res: Response): Promise<Response> {
   const user = await userManager.getUser(res);
-  const pauseTime = req.body.pauseTime;
+  const pauseTime = req.body.remainingTime;
+  console.log('🚀 ~ setPauseTimerKeepAlive ~ pauseTime:', pauseTime);
 
   const fingerprint = fingerprintService.generateDeviceFingerprint(req);
 

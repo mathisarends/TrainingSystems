@@ -22,9 +22,16 @@ export class ServiceWorkerService {
     }
 
     navigator.serviceWorker
-      .register('/service-worker.js')
+      .register('/service-worker.js', {
+      })
       .then((registration) => {
         console.log('Service Worker registered with scope:', registration.scope);
+
+        if (registration.active) {
+          registration.active.postMessage({
+            webSocketUrl: 'wss://production.example.com/ws',
+          });
+        }
 
         this.checkAndSubscribeToPushNotifications(registration);
       })

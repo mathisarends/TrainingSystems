@@ -1,5 +1,5 @@
 import { NotificationPayload } from '../notifications/notification-payload.js';
-import pushSubscriptionService from '../notifications/push-subscription-service.js';
+import pushSubscriptionService from '../notifications/push-notification-service.js';
 import { UserId } from '../webSocket/userId.type.js';
 import { RestTimer } from './restTimer.js';
 

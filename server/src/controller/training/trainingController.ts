@@ -15,7 +15,7 @@ import {
 import { TrainingPlanEditViewDto } from '../../models/dto/training-plan-edit-view-dto.js';
 
 import { NotificationPayload } from '../../service/notifications/notification-payload.js';
-import pushSubscriptionService from '../../service/notifications/push-subscription-service.js';
+import pushSubscriptionService from '../../service/notifications/push-notification-service.js';
 import userManager from '../../service/userManager.js';
 
 /**

@@ -4,7 +4,7 @@ import { UserPushSubscription } from '../../models/collections/push-subscription
 import { MongoGenericDAO } from '../../models/dao/mongo-generic.dao.js';
 import { NotificationPayload } from './notification-payload.js';
 
-class PushSubscriptionService {
+class PushNotificationService {
   private pushSubscriptionDAO!: MongoGenericDAO<UserPushSubscription>;
 
   setPushSubscriptionDAO(pushSubscriptionDAO: MongoGenericDAO<UserPushSubscription>) {
@@ -67,4 +67,4 @@ class PushSubscriptionService {
   }
 }
 
-export default new PushSubscriptionService();
+export default new PushNotificationService();

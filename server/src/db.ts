@@ -6,7 +6,7 @@ import { UserPushSubscription } from './models/collections/push-subscription.js'
 import { TrainingSession } from './models/collections/trainingSession.js';
 import { User } from './models/collections/user/user.js';
 import { MongoGenericDAO } from './models/dao/mongo-generic.dao.js';
-import pushSubscriptionService from './service/notifications/push-subscription-service.js';
+import pushSubscriptionService from './service/notifications/push-notification-service.js';
 import trainingSessionService from './service/trainingSessionService.js';
 import userManager from './service/userManager.js';
 

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { NotFoundError } from '../../errors/notFoundError.js';
 import fingerprintService from '../../service/fingerprintService.js';
-import pushSubscriptionService from '../../service/notifications/push-subscription-service.js';
+import pushSubscriptionService from '../../service/notifications/push-notification-service.js';
 import userManager from '../../service/userManager.js';
 import { PushSubscriptionRequest } from './push-subscription-request.js';
 

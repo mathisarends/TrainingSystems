@@ -14,7 +14,6 @@ class WebSocketService {
     if (this.io) return;
 
     this.io = new SocketIOServer(server, {
-      path: '/socket-io',
       cors: {
         origin: [process.env.DEV_BASE_URL!, process.env.PROD_BASE_URL!],
         methods: ['GET', 'POST'],

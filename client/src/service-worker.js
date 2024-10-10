@@ -3,8 +3,7 @@ importScripts('notification-manager.js');
 importScripts('web-socket-manager.js');
 
 const notificationManager = new self.NotificationManager();
-const webSocketManager = new self.WebSocketManager('ws://localhost:3000/ws');
-const timer = new self.Timer(notificationManager, webSocketManager);
+const timer = new self.Timer(notificationManager);
 
 /**
  * Handles the 'install' event of the Service Worker.
@@ -89,9 +88,7 @@ self.addEventListener('message', function (event) {
       timer.continueTimer();
       break;
     case 'keepAlive':
-      if (!timer.isTimerPaused) {
-        timer.restartRestPauseTimer(data.duration - 1);
-      }
+      timer.restartRestPauseTimer(data.duration - 1);
       break;
     case 'adjustTime':
       timer.remainingTime += data.seconds;

@@ -41,6 +41,8 @@ export class PauseTimeService {
 
           new Audio('./audio/boxing_bell.mp3').play();
           this.clearLocalStorage();
+
+          this.stopKeepAliveOnServer();
         }
       },
       { allowSignalWrites: true, injector: this.injector },
@@ -57,6 +59,8 @@ export class PauseTimeService {
 
     this.saveExerciseNameInLocalStorage(exerciseName);
     this.saveInitialTimeInLocalStorage(pauseTime);
+
+    this.startKeepAliveOnServer(this.initialTime);
 
     this.serviceWorkerService.sendMessageToServiceWorker({
       command: 'start',
@@ -90,6 +94,14 @@ export class PauseTimeService {
       this.initialTime = parseInt(savedInitialTime, 10);
       this.remainingTime.set(this.initialTime);
     }
+  }
+
+  private startKeepAliveOnServer(remainingTime: number) {
+    this.httpService.post('/rest-pause-timer/keep-alive', { remainingTime }).subscribe((response) => {});
+  }
+
+  private stopKeepAliveOnServer() {
+    this.httpService.post('/rest-pause-timer/stop-keep-alive').subscribe(() => {});
   }
 
   /**

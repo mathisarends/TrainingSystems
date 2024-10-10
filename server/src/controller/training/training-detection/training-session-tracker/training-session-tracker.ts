@@ -2,7 +2,7 @@ import { TrainingDayFinishedNotification } from '../../../../models/collections/
 import { TrainingDay } from '../../../../models/training/trainingDay.js';
 import { InactivityTimeoutManager } from '../../../../service/inactivity-timeout-manager.js';
 import { NotificationPayload } from '../../../../service/notifications/notification-payload.js';
-import pushSubscriptionService from '../../../../service/notifications/push-subscription-service.js';
+import pushSubscriptionService from '../../../../service/notifications/push-notification-service.js';
 import { TrainingDayFinishedNotificationService } from '../../../../service/notifications/training-finished-notification-service.js';
 import { TrainingDayManager } from '../../../../service/training-day-manager.js';
 import userManager from '../../../../service/userManager.js';
