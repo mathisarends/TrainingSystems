@@ -15,12 +15,6 @@ import { TrainingDayFinishedNotification } from '../training-finished-notificati
 })
 export class TrainingDayNotification2Component {
   protected readonly IconName = IconName;
-
-  title = input.required<string>();
-  id = input.required<string>();
-  trainingDuration = input.required<number>();
-  coverImage = input('/images/training/training_3.jpg');
-  startDate = input.required<Date>();
   notification = input.required<TrainingDayFinishedNotification>();
 
   constructor(private modalService: ModalService) {}
@@ -32,7 +26,7 @@ export class TrainingDayNotification2Component {
       buttonText: 'Ansehen',
       secondaryButtonText: 'Teilen',
       size: ModalSize.LARGE,
-      title: this.title(),
+      title: 'Test Überschrift',
       componentData: {
         notification: this.notification,
       },

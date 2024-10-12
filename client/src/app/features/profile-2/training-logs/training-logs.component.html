@@ -4,12 +4,6 @@
 
 <div class="grid">
   @for (notification of notificationService.trainingDayNotifications(); track notification.id) {
-    <app-training-day-notification-2
-      [id]="notification.id"
-      [title]="'Test'"
-      [trainingDuration]="notification.durationInMinutes!"
-      [startDate]="notification.startTime!"
-      [notification]="notification"
-    />
+    <app-training-day-notification-2 [notification]="notification" />
   }
 </div>

@@ -1,11 +1,11 @@
 <div class="image-container">
-  <img [src]="coverImage()" alt="{{ title() }}" />
-  <div class="duration-overlay">{{ trainingDuration() + ' Minuten' }}</div>
+  <img [src]="'/images/training/training_3.jpg'" alt="{{ 'Test' }}" />
+  <div class="duration-overlay">{{ notification().durationInMinutes + ' Minuten' }}</div>
 </div>
 
 <div class="training-info">
   <div>
-    <h4>{{ title() }}</h4>
-    <p>{{ startDate() | formatDate }}</p>
+    <h4>{{ 'Test' }}</h4>
+    <p>{{ notification().startTime! | formatDate }}</p>
   </div>
 </div>
