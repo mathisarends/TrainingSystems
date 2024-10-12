@@ -66,7 +66,8 @@ export async function createNewUser(userDetails: NewUserParams): Promise<Omit<Us
       [ExerciseCategoryType.TRICEPS]: tricepExercises,
       [ExerciseCategoryType.BICEPS]: bicepsExercises,
       [ExerciseCategoryType.LEGS]: legExercises
-    }
+    },
+    pictureUrl: setDefaultProfilePictureBasedOnFirstCharacter(username)
   };
 
   if (password) {
@@ -74,4 +75,10 @@ export async function createNewUser(userDetails: NewUserParams): Promise<Omit<Us
   }
 
   return userObj;
+}
+
+function setDefaultProfilePictureBasedOnFirstCharacter(username: string) {
+  const firstLetter = username[0].toUpperCase();
+
+  return `/images/profile/${firstLetter}.webp`;
 }
