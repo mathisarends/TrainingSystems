@@ -22,7 +22,7 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'user/reset-password', component: RequestNewPasswordEmail },
   { path: 'user/reset/password/:token', component: ResetPasswordComponent },
-  { path: 'usage', component: StatisticsComponent, canActivate: [AuthGuard] },
+  { path: 'profile/progression', component: StatisticsComponent, canActivate: [AuthGuard] },
   {
     path: '',
     component: TrainingPlansComponent,
@@ -45,7 +45,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'profile/logs',
+    path: 'logs',
     component: TrainingLogsComponent,
     canActivate: [AuthGuard],
   },

@@ -30,7 +30,7 @@ export class NavBarComponent implements OnInit {
   protected navItems: NavItem[] = [
     { label: 'Home', route: '/', icon: this.IconName.HOME },
     { label: 'Training', route: '', icon: this.IconName.Activity },
-    { label: 'Statistiken', route: '/usage', icon: this.IconName.BAR_CHART },
+    { label: 'Logs', route: '/logs', icon: this.IconName.BookOpen },
     { label: 'Profil', route: '/profile', icon: this.IconName.User },
   ];
 

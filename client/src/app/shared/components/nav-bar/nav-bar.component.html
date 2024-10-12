@@ -3,7 +3,7 @@
     <app-icon [name]="item.icon" [size]="24"></app-icon>
     <span class="nav-label">{{ item.label }}</span>
 
-    @if (item.route === '/profile' && activeRoute() !== '/profile') {
+    @if (item.route === '/logs') {
       <app-notification-badge [count]="notificationService.trainingDayNotifications().length" />
     }
   </div>

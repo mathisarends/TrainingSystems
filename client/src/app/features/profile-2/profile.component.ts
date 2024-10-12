@@ -53,7 +53,7 @@ export class ProfileComponent2 implements OnInit {
 
   protected readonly listItems: IconListItem[] = [
     { label: 'Exercises', iconName: IconName.DATABASE, iconBackgroundColor: IconBackgroundColor.DodgerBlue },
-    { label: 'Logs', iconName: IconName.BookOpen, iconBackgroundColor: IconBackgroundColor.MediumSlateBlue },
+    { label: 'Progression', iconName: IconName.BAR_CHART, iconBackgroundColor: IconBackgroundColor.MediumSlateBlue },
     { label: 'Social', iconName: IconName.USERS, iconBackgroundColor: IconBackgroundColor.LimeGreen },
     { label: 'Ticket', iconName: IconName.IMAGE, iconBackgroundColor: IconBackgroundColor.Orange },
     { label: 'Settings', iconName: IconName.SETTINGS, iconBackgroundColor: IconBackgroundColor.DarkGray },
@@ -110,8 +110,8 @@ export class ProfileComponent2 implements OnInit {
       this.router.navigate(['profile/exercises']);
     } else if (listItem.label === 'Account löschen') {
       this.showDeleteAccountDialog();
-    } else if (listItem.label === 'Logs') {
-      this.router.navigate(['profile/logs']);
+    } else if (listItem.label === 'Progression') {
+      this.router.navigate(['profile/progression']);
     } else if (listItem.label === 'Settings') {
       this.displaySettingsModal();
     } else if (listItem.label === 'Social') {
