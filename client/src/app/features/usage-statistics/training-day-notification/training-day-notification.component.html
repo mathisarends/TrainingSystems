@@ -18,7 +18,7 @@
     {{ notification().trainingDayTonnage }} Tonnage
   </div>
 
-  <div class="exercises-container" [@toggleCollapse]="notification().exerciseTabCollapsed ? 'collapsed' : 'expanded'">
+  <div class="exercises-container">
     @for (exercise of notification().exercises; track exercise) {
       <div class="exercise-card">
         <strong>{{ exercise.exercise }}</strong>

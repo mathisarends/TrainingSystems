@@ -1,4 +1,4 @@
-import { Component, HostListener, input } from '@angular/core';
+import { Component, effect, HostListener, Injector, input } from '@angular/core';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { ModalSize } from '../../../core/services/modal/modalSize';
 import { IconName } from '../../../shared/icon/icon-name';
@@ -17,7 +17,19 @@ export class TrainingDayNotification2Component {
   protected readonly IconName = IconName;
   notification = input.required<TrainingDayFinishedNotification>();
 
-  constructor(private modalService: ModalService) {}
+  constructor(
+    private modalService: ModalService,
+    private injector: Injector,
+  ) {}
+
+  ngOnInit(): void {
+    effect(
+      () => {
+        console.log('🚀 ~ TrainingDayNotification2Component ~ notification:', this.notification());
+      },
+      { injector: this.injector },
+    );
+  }
 
   @HostListener('click', ['$event'])
   protected showSummaryModal() {

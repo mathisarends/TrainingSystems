@@ -60,10 +60,6 @@ export class TrainingDayNotificationComponent implements OnToggleView {
     });
   }
 
-  protected toggleExerciseTab() {
-    this.notification().exerciseTabCollapsed = !this.notification().exerciseTabCollapsed;
-  }
-
   protected deleteNotification(): void {
     this.notificationService.deleteTrainingDayNotification(this.notification().id).subscribe(() => {
       this.toastService.success('Benachrichtigung gelöscht');

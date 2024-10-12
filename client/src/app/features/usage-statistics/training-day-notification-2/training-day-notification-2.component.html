@@ -1,5 +1,5 @@
 <div class="image-container">
-  <img [src]="'/images/training/training_3.jpg'" alt="{{ 'Test' }}" />
+  <img [src]="notification().coverImage ?? '/images/training/training_3.jpg'" alt="{{ 'Test' }}" />
   <div class="duration-overlay">{{ notification().durationInMinutes + ' Minuten' }}</div>
 </div>
 

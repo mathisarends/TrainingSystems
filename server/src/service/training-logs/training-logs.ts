@@ -7,11 +7,14 @@ class TrainingLogs {
   getUserTrainingLogs(user: User): TrainingDayFinishedNotification[] {
     const trainingDays = this.getAllFinishedTrainingSessions(user);
 
-    return trainingDays.map(day => ({
-      ...day,
-      trainingDayTonnage: getTonnagePerTrainingDay(day),
-      coverImage: this.getCoverImageFromPlan(user, day.id)
-    }));
+    return trainingDays
+      .map(day => ({
+        ...day,
+        trainingDayTonnage: getTonnagePerTrainingDay(day),
+        coverImage: this.getCoverImageFromPlan(user, day.id)
+      }))
+      .reverse()
+      .slice(0, 16);
   }
 
   private getAllFinishedTrainingSessions(user: User): TrainingDay[] {
