@@ -14,16 +14,8 @@
         format="png"
       />
     } @else {
-      <img #coverImage [src]="image() || placeholderCoverImage" alt="Cover Placeholder" id="cover-image" />
+      <app-training-banner [(imageSrc)]="trainingPlanEditView.coverImageBase64" />
     }
-    <input
-      type="file"
-      name="cover-image"
-      id="cover-image"
-      class="form-control-file position-absolute"
-      style="opacity: 0; width: 100%; height: 100%; top: 0; left: 0; cursor: pointer"
-      (change)="handleImageUpload($event)"
-    />
 
     <app-floating-label-input [label]="'Title'" [(value)]="trainingPlanEditView.title" [required]="true" />
 
@@ -33,6 +25,7 @@
       [required]="true"
       type="select"
       [options]="[
+        { value: 2, label: '2' },
         { value: 3, label: '3' },
         { value: 4, label: '4' },
         { value: 5, label: '5' },
@@ -46,10 +39,13 @@
       [required]="true"
       type="select"
       [options]="[
+        { value: 2, label: '2' },
         { value: 3, label: '3' },
         { value: 4, label: '4' },
         { value: 5, label: '5' },
         { value: 6, label: '6' },
+        { value: 7, label: '7' },
+        { value: 8, label: '8' },
       ]"
     />
 

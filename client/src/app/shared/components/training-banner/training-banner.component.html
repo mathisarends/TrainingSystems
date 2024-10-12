@@ -1,0 +1,22 @@
+<img [src]="imageSrc()" alt="Cover Placeholder" id="cover-image" />
+
+<input
+  type="file"
+  name="cover-image"
+  id="cover-image-input"
+  class="form-control-file position-absolute"
+  (change)="handleImageUpload($event)"
+/>
+
+<app-icon
+  class="icon image-slider left"
+  [size]="26"
+  [name]="IconName.CHEVRON_LEFT"
+  (click)="selectNextBannerRecomandation($event)"
+/>
+<app-icon
+  class="icon image-slider right"
+  [size]="26"
+  [name]="IconName.CHEVRON_RIGHT"
+  (click)="selectPreviousBannerRecomandation($event)"
+/>

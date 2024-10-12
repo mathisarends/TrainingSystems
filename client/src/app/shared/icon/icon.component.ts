@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, input, output } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { IconName } from './icon-name';
 
 /**
@@ -44,19 +44,4 @@ export class IconComponent {
    * This input is optional and defaults to `false` if not provided.
    */
   fillIcon = input<boolean>(false);
-
-  /**
-   * Emits an event when the icon is clicked.
-   * This output can be used to trigger actions when the user interacts with the icon.
-   */
-  clicked = output<void>();
-
-  /**
-   * HostListener for the `click` event.
-   * Triggers the `clicked` output when the icon is clicked by the user.
-   */
-  @HostListener('click')
-  onClick() {
-    this.clicked.emit();
-  }
 }

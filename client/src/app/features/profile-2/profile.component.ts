@@ -11,6 +11,7 @@ import { ChartSkeletonComponent } from '../../shared/components/loader/chart-ske
 import { ProfilePictureWithInfoComponent } from '../../shared/components/profile-picture-with-info/profile-picture-with-info.component';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 import { ToastService } from '../../shared/components/toast/toast.service';
+import { TrainingBannerComponent } from '../../shared/components/training-banner/training-banner.component';
 import { IconName } from '../../shared/icon/icon-name';
 import { ImageUploadService } from '../../shared/service/image-upload.service';
 import { NotificationService } from '../../shared/service/notification.service';
@@ -35,6 +36,7 @@ import { SettingsComponent } from './settings/settings.component';
     CommonModule,
     ChartSkeletonComponent,
     ProfilePictureWithInfoComponent,
+    TrainingBannerComponent,
   ],
   selector: 'app-profile',
   templateUrl: 'profile.component.html',

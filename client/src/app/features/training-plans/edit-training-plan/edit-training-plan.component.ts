@@ -8,6 +8,7 @@ import { FloatingLabelInputComponent } from '../../../shared/components/floating
 import { OnConfirm } from '../../../shared/components/modal/on-confirm';
 import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
 import { ToastService } from '../../../shared/components/toast/toast.service';
+import { TrainingBannerComponent } from '../../../shared/components/training-banner/training-banner.component';
 import { ImageUploadService } from '../../../shared/service/image-upload.service';
 import { TrainingPlanEditView } from '../model/training-plan-edit-view';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
@@ -20,12 +21,18 @@ import { EditTrainingPlanService } from './edit-training-plan.service';
   selector: 'app-edit-training-plan',
   standalone: true,
   providers: [EditTrainingPlanService],
-  imports: [CommonModule, SkeletonComponent, FormsModule, FloatingLabelInputComponent, ImageCropperComponent],
+  imports: [
+    CommonModule,
+    SkeletonComponent,
+    FormsModule,
+    FloatingLabelInputComponent,
+    ImageCropperComponent,
+    TrainingBannerComponent,
+  ],
   templateUrl: './edit-training-plan.component.html',
   styleUrls: ['./edit-training-plan.component.scss'],
 })
 export class EditTrainingPlanComponent extends AbstractImageCropperComponent implements OnInit, OnConfirm {
-  protected readonly placeholderCoverImage = '/images/training/training_3.png';
   @ViewChild('coverImage') coverImageElement!: ElementRef<HTMLImageElement>;
 
   /**
