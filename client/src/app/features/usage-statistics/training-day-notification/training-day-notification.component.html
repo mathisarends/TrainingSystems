@@ -1,52 +1,37 @@
-<div class="notification-card">
-  <div class="training-notification-header">
-    <h5>Training</h5>
-    <app-icon [size]="22" [name]="IconName.X" (click)="deleteNotification()" />
+<div class="training-notification-body">
+  <p>
+    @if (notification().startTime) {
+      <div class="notification-text-container">
+        <app-icon [name]="IconName.CALENDAR" [color]="'#666'" />
+        {{ notification().startTime! | formatDate }}
+      </div>
+    }
+  </p>
+
+  <div class="notification-text-container">
+    <app-icon [name]="IconName.CLOCK" [color]="'#666'" />
+    {{ notification().durationInMinutes }} Minuten
   </div>
-  <div class="training-notification-body">
-    <p>
-      @if (notification().startTime) {
-        <div class="notification-text-container">
-          <app-icon [name]="IconName.CALENDAR" [color]="'#666'" />
-          {{ notification().startTime! | formatDate }}
-        </div>
-      }
-    </p>
 
-    <div class="notification-text-container">
-      <app-icon [name]="IconName.CLOCK" [color]="'#666'" />
-      {{ notification().durationInMinutes }} Minuten
-    </div>
+  <div class="notification-text-container">
+    <app-icon [name]="IconName.BAR_CHART" [color]="'#666'" />
+    {{ notification().trainingDayTonnage }} Tonnage
+  </div>
 
-    <div class="notification-text-container">
-      <app-icon [name]="IconName.BAR_CHART" [color]="'#666'" />
-      {{ notification().trainingDayTonnage }} Tonnage
-    </div>
-
-    <div class="exercises-container" [@toggleCollapse]="notification().exerciseTabCollapsed ? 'collapsed' : 'expanded'">
-      @for (exercise of notification().exercises; track exercise) {
-        <div class="exercise-card">
-          <strong>{{ exercise.exercise }}</strong>
-          <p>Sets: {{ exercise.sets }}</p>
-          <p>Reps: {{ exercise.reps }}</p>
-          <p>Weight: {{ exercise.weight }} kg</p>
-          @if (exercise.actualRPE) {
-            <p>RPE: {{ exercise.actualRPE }}</p>
-          }
-          @if (exercise.estMax) {
-            <p>Est. Max {{ exercise.estMax }}</p>
-          }
-        </div>
-      }
-    </div>
-    <div class="notification-card-footer">
-      <app-button (clicked)="goToTrainingPlan()" [textContent]="'Zum Trainingsplan gehen'" />
-      <app-circular-icon-button
-        [appTooltip]="'Teilen'"
-        [icon]="IconName.SHARE"
-        [iconSize]="16"
-        (click)="shareTrainingLog()"
-      />
-    </div>
+  <div class="exercises-container" [@toggleCollapse]="notification().exerciseTabCollapsed ? 'collapsed' : 'expanded'">
+    @for (exercise of notification().exercises; track exercise) {
+      <div class="exercise-card">
+        <strong>{{ exercise.exercise }}</strong>
+        <p>Sets: {{ exercise.sets }}</p>
+        <p>Reps: {{ exercise.reps }}</p>
+        <p>Weight: {{ exercise.weight }} kg</p>
+        @if (exercise.actualRPE) {
+          <p>RPE: {{ exercise.actualRPE }}</p>
+        }
+        @if (exercise.estMax) {
+          <p>Est. Max {{ exercise.estMax }}</p>
+        }
+      </div>
+    }
   </div>
 </div>

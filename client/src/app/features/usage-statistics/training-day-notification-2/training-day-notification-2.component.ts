@@ -1,7 +1,10 @@
 import { Component, HostListener, input } from '@angular/core';
 import { ModalService } from '../../../core/services/modal/modalService';
+import { ModalSize } from '../../../core/services/modal/modalSize';
 import { IconName } from '../../../shared/icon/icon-name';
 import { FormatDatePipe } from '../../../shared/pipes/format-date.pipe';
+import { TrainingDayNotificationComponent } from '../training-day-notification/training-day-notification.component';
+import { TrainingDayFinishedNotification } from '../training-finished-notification';
 
 @Component({
   selector: 'app-training-day-notification-2',
@@ -18,17 +21,21 @@ export class TrainingDayNotification2Component {
   trainingDuration = input.required<number>();
   coverImage = input('/images/training/training_3.jpg');
   startDate = input.required<Date>();
+  notification = input.required<TrainingDayFinishedNotification>();
 
   constructor(private modalService: ModalService) {}
 
   @HostListener('click', ['$event'])
   protected showSummaryModal() {
-    this.modalService.openBasicInfoModal({
-      infoText: 'Test',
-      title: 'Test',
+    this.modalService.open({
+      component: TrainingDayNotificationComponent,
+      buttonText: 'Ansehen',
+      secondaryButtonText: 'Teilen',
+      size: ModalSize.LARGE,
+      title: this.title(),
+      componentData: {
+        notification: this.notification,
+      },
     });
   }
-
-  // TODO: innerhalb von diesem modal dann mithilfe von lazy loading die relevatne trainingsdaten und links laden
-  // TODO: wiggling animation for new entries
 }

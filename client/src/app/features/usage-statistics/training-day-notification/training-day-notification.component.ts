@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { toggleCollapseAnimation } from '../../../shared/animations/toggle-collapse';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { CircularIconButtonComponent } from '../../../shared/components/circular-icon-button/circular-icon-button.component';
+import { OnToggleView } from '../../../shared/components/modal/on-toggle-view';
 import { ToastService } from '../../../shared/components/toast/toast.service';
 import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
 import { IconName } from '../../../shared/icon/icon-name';
@@ -31,7 +32,7 @@ import { TrainingDayFinishedNotification } from '../training-finished-notificati
   providers: [ShareService, DatePipe],
   animations: [toggleCollapseAnimation],
 })
-export class TrainingDayNotificationComponent {
+export class TrainingDayNotificationComponent implements OnToggleView {
   protected IconName = IconName;
 
   notification = input.required<TrainingDayFinishedNotification>();
@@ -45,6 +46,20 @@ export class TrainingDayNotificationComponent {
     protected profileService: ProfileService,
   ) {}
 
+  onToggleView(): void {
+    this.shareTrainingLog();
+  }
+
+  onConfirm(): void {
+    this.notificationService.getTrainingDayById(this.notification().id).subscribe((response) => {
+      const { trainingPlanId, weekIndex, dayIndex } = response;
+
+      this.router.navigate(['/training/view'], {
+        queryParams: { planId: trainingPlanId, week: weekIndex, day: dayIndex },
+      });
+    });
+  }
+
   protected toggleExerciseTab() {
     this.notification().exerciseTabCollapsed = !this.notification().exerciseTabCollapsed;
   }
@@ -52,16 +67,6 @@ export class TrainingDayNotificationComponent {
   protected deleteNotification(): void {
     this.notificationService.deleteTrainingDayNotification(this.notification().id).subscribe(() => {
       this.toastService.success('Benachrichtigung gelöscht');
-    });
-  }
-
-  protected goToTrainingPlan(): void {
-    this.notificationService.getTrainingDayById(this.notification().id).subscribe((response) => {
-      const { trainingPlanId, weekIndex, dayIndex } = response;
-
-      this.router.navigate(['/training/view'], {
-        queryParams: { planId: trainingPlanId, week: weekIndex, day: dayIndex },
-      });
     });
   }
 
