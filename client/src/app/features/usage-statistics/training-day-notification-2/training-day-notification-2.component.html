@@ -1,11 +1,11 @@
 <div class="image-container">
-  <img [src]="imageUrl" alt="{{ title }}" (error)="imageUrl = '/images/training/bench-press.jpg'" />
-  <div class="duration-overlay">{{ duration }}</div>
+  <img [src]="coverImage()" alt="{{ title() }}" />
+  <div class="duration-overlay">{{ trainingDuration() }}</div>
 </div>
 
 <div class="training-info">
   <div>
-    <h4>{{ title }}</h4>
-    <p>{{ date | formatDate }}</p>
+    <h4>{{ title() }}</h4>
+    <p>{{ startDate() | formatDate }}</p>
   </div>
 </div>

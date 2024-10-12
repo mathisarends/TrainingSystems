@@ -6,7 +6,6 @@ import helmet from 'helmet';
 import http from 'http';
 import webPush from 'web-push';
 import limiter from './config/rate-limiter.js';
-import emailTestRouter from './controller/emailTestRouter.js';
 import startDB from './db.js';
 import { errorHandler } from './middleware/error-handler.js';
 import requestLogger from './middleware/request-middleware.js';
@@ -58,7 +57,6 @@ async function configureApp(app: Express) {
   app.use('/api/exercise', exerciseRouter);
   app.use('/api/friendship', friendShipRouter);
   app.use('/api/push-notifications', pushNotificationRouter);
-  app.use('/api/test', emailTestRouter);
 
   app.use(errorHandler);
 }

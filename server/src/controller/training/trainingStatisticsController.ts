@@ -1,7 +1,5 @@
 import { Request, Response } from 'express';
 
-import * as trainingService from '../../service/trainingService.js';
-
 import { AverageTrainingDayDurationDto } from '../../interfaces/averageTrainingDayDurationDto.js';
 import { ChartDataDto } from '../../interfaces/chartDataDto.js';
 import trainingPlanManager from '../../service/trainingPlanManager.js';
@@ -20,7 +18,7 @@ export async function updateViewedCategories(req: Request, res: Response): Promi
 
   const user = await userManager.getUser(res);
 
-  const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
+  const trainingPlan = await trainingPlanManager.findTrainingPlanById(user, trainingPlanId);
 
   trainingPlan.recentlyViewedCategoriesInStatisticSection = exerciseCategories;
 
@@ -37,7 +35,7 @@ export async function getViewedCategories(req: Request, res: Response): Promise<
 
   const user = await userManager.getUser(res);
 
-  const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
+  const trainingPlan = await trainingPlanManager.findTrainingPlanById(user, trainingPlanId);
 
   res.status(200).json(trainingPlan.recentlyViewedCategoriesInStatisticSection ?? ['Squat', 'Bench', 'Deadlift']);
 }
@@ -51,7 +49,7 @@ export async function getSetsForCategories(req: Request, res: Response): Promise
 
   const user = await userManager.getUser(res);
 
-  const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
+  const trainingPlan = await trainingPlanManager.findTrainingPlanById(user, trainingPlanId);
 
   const setProgressionManager = new SetProgressionManager(trainingPlan);
   const responseData = setProgressionManager.getSetProgressionByCategories(exerciseCategories);
@@ -67,7 +65,7 @@ export async function getTonnageForCategories(req: Request, res: Response): Prom
   const exerciseCategories = (req.query.exercises as string).split(',');
 
   const user = await userManager.getUser(res);
-  const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
+  const trainingPlan = await trainingPlanManager.findTrainingPlanById(user, trainingPlanId);
 
   const tonnageProgressionManager = new TonnageProgressionManager(trainingPlan);
 
@@ -105,7 +103,7 @@ export async function getPerformanceCharts(req: Request, res: Response): Promise
   const exerciseCategories = (req.query.exercises as string).split(',');
 
   const user = await userManager.getUser(res);
-  const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
+  const trainingPlan = await trainingPlanManager.findTrainingPlanById(user, trainingPlanId);
 
   const performanceProgressionManager = new PerformanceProgressionManager(trainingPlan);
   const performanceData = performanceProgressionManager.getPerformanceProgressionByCategories(exerciseCategories);
@@ -145,7 +143,7 @@ export async function getAverageSessionDurationDataForTrainingPlanDay(
   const trainingPlanId = req.params.id;
 
   const user = await userManager.getUser(res);
-  const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, trainingPlanId);
+  const trainingPlan = await trainingPlanManager.findTrainingPlanById(user, trainingPlanId);
 
   const sessionDurationManager = new SessionDurationManager(trainingPlan);
 

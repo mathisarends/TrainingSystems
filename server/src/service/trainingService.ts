@@ -4,33 +4,6 @@ import { TrainingPlan } from '../models/training/trainingPlan.js';
 import { TrainingWeek } from '../models/training/trainingWeek.js';
 
 import { v4 as uuidv4 } from 'uuid';
-import { TrainingDayIndexes } from './training-day-indexes.js';
-
-export function findTrainingPlanById(trainingPlans: TrainingPlan[], planId: string): TrainingPlan {
-  const plan = trainingPlans.find(plan => plan.id === planId);
-
-  if (!plan) {
-    throw new Error(`Training plan with ID ${planId} not found.`);
-  }
-  return plan;
-}
-
-export function getNextTrainingDay(trainingPlan: TrainingPlan): TrainingDayIndexes {
-  let { weekIndex, dayIndex } = findLatestTrainingDayWithWeight(trainingPlan);
-
-  if (dayIndex < trainingPlan.trainingFrequency - 1) {
-    dayIndex += 1;
-  } else if (weekIndex < trainingPlan.trainingWeeks.length - 1) {
-    weekIndex += 1;
-    dayIndex = 0;
-  } else {
-    // last day
-    weekIndex = 0;
-    dayIndex = 0;
-  }
-
-  return { weekIndex, dayIndex };
-}
 
 export function getAverageTrainingDuration(trainingPlan: TrainingPlan): string | undefined {
   const trainingDurations: number[] = [];

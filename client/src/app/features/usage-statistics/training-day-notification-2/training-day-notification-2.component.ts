@@ -1,8 +1,7 @@
-import { Component, HostListener, Input } from '@angular/core';
+import { Component, HostListener, input } from '@angular/core';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { IconName } from '../../../shared/icon/icon-name';
 import { FormatDatePipe } from '../../../shared/pipes/format-date.pipe';
-import { ProfileService } from '../../profile-2/service/profileService';
 
 @Component({
   selector: 'app-training-day-notification-2',
@@ -13,17 +12,14 @@ import { ProfileService } from '../../profile-2/service/profileService';
 })
 export class TrainingDayNotification2Component {
   protected readonly IconName = IconName;
-  protected date = new Date();
 
-  @Input() title: string = 'Morning Vinyasa'; // Training title
-  @Input() trainer: string = 'Giovanna L.'; // Trainer's name
-  @Input() duration: string = '45m'; // Duration of the training
-  @Input() imageUrl: string = '/images/training/training_3.jpg'; // Default image
+  title = input.required<string>();
+  id = input.required<string>();
+  trainingDuration = input.required<number>();
+  coverImage = input("/images/training/training_3.jpg'");
+  startDate = input.required<Date>();
 
-  constructor(
-    protected profileService: ProfileService,
-    private modalService: ModalService,
-  ) {}
+  constructor(private modalService: ModalService) {}
 
   @HostListener('click', ['$event'])
   protected showSummaryModal() {
@@ -32,4 +28,7 @@ export class TrainingDayNotification2Component {
       title: 'Test',
     });
   }
+
+  // TODO: innerhalb von diesem modal dann mithilfe von lazy loading die relevatne trainingsdaten und links laden
+  // TODO: wiggling animation for new entries
 }

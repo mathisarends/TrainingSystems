@@ -8,7 +8,6 @@ import * as trainingService from '../../service/trainingService.js';
 import {
   createNewTrainingPlanWithPlaceholders,
   findLatestTrainingDayWithWeight,
-  findTrainingPlanById,
   handleWeekDifference
 } from '../../service/trainingService.js';
 
@@ -16,6 +15,7 @@ import { TrainingPlanEditViewDto } from '../../models/dto/training-plan-edit-vie
 
 import { NotificationPayload } from '../../service/notifications/notification-payload.js';
 import pushSubscriptionService from '../../service/notifications/push-notification-service.js';
+import trainingPlanManager from '../../service/trainingPlanManager.js';
 import userManager from '../../service/userManager.js';
 
 /**
@@ -158,7 +158,7 @@ export async function getPlanForEdit(req: Request, res: Response): Promise<void>
 
   const user = await userManager.getUser(res);
 
-  const trainingPlan = trainingService.findTrainingPlanById(user.trainingPlans, planId);
+  const trainingPlan = await trainingPlanManager.findTrainingPlanById(user, planId);
 
   const trainingPlanEditView = TrainingPlanDtoMapper.getEditView(trainingPlan);
 
@@ -175,7 +175,7 @@ export async function updatePlan(req: Request, res: Response): Promise<void> {
 
   const user = await userManager.getUser(res);
 
-  const trainingPlan = findTrainingPlanById(user.trainingPlans, planId);
+  const trainingPlan = await trainingPlanManager.findTrainingPlanById(user, planId);
 
   const trainingPlanEditDto = req.body as TrainingPlanEditViewDto;
 
@@ -207,7 +207,7 @@ export async function autoProgressionForTrainingPlan(req: Request, res: Response
 
   const user = await userManager.getUser(res);
 
-  const trainingPlan = findTrainingPlanById(user.trainingPlans, id);
+  const trainingPlan = await trainingPlanManager.findTrainingPlanById(user, id);
 
   trainingPlan.trainingWeeks.forEach((trainingWeek, weekIndex) => {
     if (planDeload && isLastWeek(trainingPlan, weekIndex)) {
@@ -228,7 +228,7 @@ export async function autoProgressionForTrainingPlan(req: Request, res: Response
 export async function getTrainingPlanTitle(req: Request, res: Response): Promise<void> {
   const id = req.params.id;
   const user = await userManager.getUser(res);
-  const trainingPlan = findTrainingPlanById(user.trainingPlans, id);
+  const trainingPlan = await trainingPlanManager.findTrainingPlanById(user, id);
 
   res.status(200).json(trainingPlan.title);
 }
