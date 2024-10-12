@@ -11,6 +11,7 @@ import { IconComponent } from '../../../shared/icon/icon.component';
 import { FormatDatePipe } from '../../../shared/pipes/format-date.pipe';
 import { NotificationService } from '../../../shared/service/notification.service';
 import { ShareService } from '../../../shared/service/social-media-share.service';
+import { ProfileService } from '../../profile-2/service/profileService';
 import { TrainingDayFinishedNotification } from '../training-finished-notification';
 
 @Component({
@@ -41,6 +42,7 @@ export class TrainingDayNotificationComponent {
     private datePipe: DatePipe,
     private toastService: ToastService,
     private router: Router,
+    protected profileService: ProfileService,
   ) {}
 
   protected toggleExerciseTab() {

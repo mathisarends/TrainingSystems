@@ -35,22 +35,6 @@
   gap: 0.5em;
 }
 
-.image-wrapper {
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-  height: 100%;
-  padding: 0.625em;
-  padding-right: 0;
-  max-width: 4rem;
-
-  .rounded-circle {
-    padding: 0.5em;
-    border-radius: 50%;
-    cursor: pointer;
-  }
-}
-
 @media screen and (max-width: 786px) {
   :host {
     padding-left: 5%;

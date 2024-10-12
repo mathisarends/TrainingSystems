@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { CircularIconButtonComponent } from '../../shared/components/circular-icon-button/circular-icon-button.component';
 import { HeadlineComponent } from '../../shared/components/headline/headline.component';
 import { MoreOptionsButtonComponent } from '../../shared/components/more-options-button/more-options-button.component';
+import { ProfilePictureComponent } from '../../shared/components/profile-picture/profile-picture.component';
 import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
 import { IconName } from '../../shared/icon/icon-name';
 import { ProfileService } from '../profile-2/service/profileService';
@@ -11,7 +12,13 @@ import { HeadlineButton } from './headline-button';
 
 @Component({
   standalone: true,
-  imports: [CircularIconButtonComponent, HeadlineComponent, SkeletonComponent, MoreOptionsButtonComponent],
+  imports: [
+    CircularIconButtonComponent,
+    HeadlineComponent,
+    SkeletonComponent,
+    MoreOptionsButtonComponent,
+    ProfilePictureComponent,
+  ],
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',

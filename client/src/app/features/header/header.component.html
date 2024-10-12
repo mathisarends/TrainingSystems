@@ -15,12 +15,5 @@
     }
   </div>
 } @else {
-  <div class="image-wrapper">
-    <img
-      [src]="profileService.pictureUrl() || '/images/profile-placeholder.webp'"
-      (click)="onProfilePictureClick()"
-      alt="M"
-      class="h-100 rounded-circle"
-    />
-  </div>
+  <app-profile-picture (onProfilePictureClick)="onProfilePictureClick()" />
 }
