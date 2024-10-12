@@ -6,6 +6,7 @@ export class TrainingDayFinishedNotificationService {
   static toTrainingFinishedNotificationDto(trainingDay: TrainingDay): TrainingDayFinishedNotification {
     return {
       ...trainingDay,
+      planTitle: '',
       trainingDayTonnage: getTonnagePerTrainingDay(trainingDay)
     };
   }

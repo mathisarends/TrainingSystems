@@ -3,4 +3,5 @@ import { TrainingDay } from '../../features/training-plans/training-view/trainin
 export interface TrainingDayFinishedNotification extends TrainingDay {
   trainingDayTonnage: number;
   coverImage?: string;
+  planTitle: string;
 }
