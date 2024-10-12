@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { toggleCollapseAnimation } from '../../../shared/animations/toggle-collapse';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { CircularIconButtonComponent } from '../../../shared/components/circular-icon-button/circular-icon-button.component';
+import { ProfilePictureComponent } from '../../../shared/components/profile-picture/profile-picture.component';
 import { ToastService } from '../../../shared/components/toast/toast.service';
 import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
 import { IconName } from '../../../shared/icon/icon-name';
@@ -25,6 +26,7 @@ import { TrainingDayFinishedNotification } from '../training-finished-notificati
     CircularIconButtonComponent,
     IconComponent,
     TooltipDirective,
+    ProfilePictureComponent,
   ],
   templateUrl: './training-day-notification.component.html',
   styleUrls: ['./training-day-notification.component.scss'],

@@ -2,17 +2,13 @@
   @if (activityCalendarData$ | async; as activityCalendarData) {
     <div class="profile-wrapper">
       <div class="profile-header-container">
+        <app-profile-picture />
+
+        <input type="file" id="file-input" (change)="showProfilePictureChangeDialog($event)" />
         <div class="profile-info">
           <h2>{{ profileService.username() }}</h2>
           <p>{{ profileService.email() }}</p>
         </div>
-        <img
-          #profilePicture
-          [src]="profileService.pictureUrl() || '/images/profile-placeholder.webp'"
-          class="profile-picture"
-          alt="Profile"
-        />
-        <input type="file" id="file-input" (change)="showProfilePictureChangeDialog($event)" />
       </div>
 
       <app-activity-calendar [activityData]="activityCalendarData" />

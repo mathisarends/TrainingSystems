@@ -8,7 +8,7 @@ import { IconBackgroundColor } from '../../shared/components/icon-list-item/icon
 import { IconListItem } from '../../shared/components/icon-list-item/icon-list-item';
 import { IconListeItemComponent } from '../../shared/components/icon-list-item/icon-list-item.component';
 import { ChartSkeletonComponent } from '../../shared/components/loader/chart-skeleton/chart-skeleton.component';
-import { NotificationBadgeComponent } from '../../shared/components/notification-badge/notification-badge.component';
+import { ProfilePictureComponent } from '../../shared/components/profile-picture/profile-picture.component';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 import { ToastService } from '../../shared/components/toast/toast.service';
 import { IconName } from '../../shared/icon/icon-name';
@@ -34,7 +34,7 @@ import { SettingsComponent } from './settings/settings.component';
     ActivityCalendar,
     CommonModule,
     ChartSkeletonComponent,
-    NotificationBadgeComponent,
+    ProfilePictureComponent,
   ],
   selector: 'app-profile',
   templateUrl: 'profile.component.html',
