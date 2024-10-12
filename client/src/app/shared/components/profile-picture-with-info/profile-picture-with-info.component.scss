@@ -1,0 +1,22 @@
+:host {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.65rem;
+  position: relative;
+  height: 6rem;
+
+  .profile-info {
+    padding-top: 0.35em;
+  }
+
+  .profile-info h2 {
+    font-size: 1.2rem;
+    color: #333333;
+  }
+
+  .profile-info p {
+    color: #888888;
+    margin-top: -0.25rem;
+  }
+}

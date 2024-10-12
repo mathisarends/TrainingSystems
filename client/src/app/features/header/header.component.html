@@ -15,5 +15,8 @@
     }
   </div>
 } @else {
-  <app-profile-picture (onProfilePictureClick)="onProfilePictureClick()" />
+  <app-profile-picture
+    [profilePicture]="profileService.pictureUrl()!"
+    (onProfilePictureClick)="onProfilePictureClick()"
+  />
 }

@@ -1,5 +1,4 @@
-import { Component, HostListener, output } from '@angular/core';
-import { ProfileService } from '../../../features/profile-2/service/profileService';
+import { Component, HostListener, input, output } from '@angular/core';
 
 @Component({
   selector: 'app-profile-picture',
@@ -8,9 +7,9 @@ import { ProfileService } from '../../../features/profile-2/service/profileServi
   standalone: true,
 })
 export class ProfilePictureComponent {
-  onProfilePictureClick = output<void>();
+  profilePicture = input('');
 
-  constructor(protected profileService: ProfileService) {}
+  onProfilePictureClick = output<void>();
 
   @HostListener('click', ['$event'])
   handleProfileClick(event: Event): void {
