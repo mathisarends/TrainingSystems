@@ -37,9 +37,16 @@ export async function getActivityCalendar(req: Request, res: Response): Promise<
  */
 export async function getTrainingDayNotifications(req: Request, res: Response): Promise<Response<number>> {
   const user = await userManager.getUser(res);
-  console.log('🚀 ~ getTrainingDayNotifications ~ user.trainingDayNotifications:', user.trainingDayNotifications);
 
   return res.status(200).json(user.trainingDayNotifications.length);
+}
+
+// TODO: training notifications muss jetzt nicht mehr denn ganzne plan selber speichern sondenr nur noch einen beliebigen eitnarg vllt. id?
+export async function resetUnseenTrainingDayNotifications(req: Request, res: Response): Promise<Response<number>> {
+  const user = await userManager.getUser(res);
+  user.trainingDayNotifications = [];
+  await userManager.update(user);
+  return res.status(200);
 }
 
 export async function getTrainingLogForUser(

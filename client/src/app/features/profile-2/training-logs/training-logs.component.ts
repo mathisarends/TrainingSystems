@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
@@ -16,7 +16,7 @@ import { TrainingDayFinishedNotification } from '../../usage-statistics/training
   templateUrl: 'training-logs.component.html',
   styleUrls: ['./training-logs.component.scss'],
 })
-export class TrainingLogsComponent implements OnInit {
+export class TrainingLogsComponent implements OnInit, AfterViewInit {
   trainingDayNotifications$!: Observable<TrainingDayFinishedNotification[]>;
 
   constructor(
@@ -33,5 +33,11 @@ export class TrainingLogsComponent implements OnInit {
     this.trainingDayNotifications$ = this.httpService.get<TrainingDayFinishedNotification[]>(
       '/user/activity/training-notifications',
     );
+  }
+
+  ngAfterViewInit(): void {
+    this.httpService.delete('/user/activity/unseen-training-notifications').subscribe(() => {
+      console.log('here');
+    });
   }
 }

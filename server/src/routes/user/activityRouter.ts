@@ -24,6 +24,12 @@ activityRouter.get(
 );
 
 activityRouter.delete(
+  '/unseen-training-notifications',
+  authService.authenticationMiddleware,
+  asyncHandler(activityController.resetUnseenTrainingDayNotifications)
+);
+
+activityRouter.delete(
   '/training-notification/:id',
   authService.authenticationMiddleware,
   asyncHandler(activityController.deleteTrainingDayNotification)
