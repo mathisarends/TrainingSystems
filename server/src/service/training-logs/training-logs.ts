@@ -4,7 +4,7 @@ import { TrainingDay } from '../../models/training/trainingDay.js';
 import { getTonnagePerTrainingDay } from '../trainingService.js';
 
 class TrainingLogs {
-  getUserTrainingLogs(user: User): TrainingDayFinishedNotification[] {
+  getUserTrainingLogs(user: User, limit?: number): TrainingDayFinishedNotification[] {
     const trainingDays = this.getAllFinishedTrainingSessions(user);
 
     return trainingDays
@@ -13,15 +13,15 @@ class TrainingLogs {
         trainingDayTonnage: getTonnagePerTrainingDay(day),
         coverImage: this.getCoverImageFromPlan(user, day.id)
       }))
-      .reverse()
-      .slice(0, 16);
+      .slice(0, limit);
   }
 
   private getAllFinishedTrainingSessions(user: User): TrainingDay[] {
     return user.trainingPlans
       .flatMap(plan => plan.trainingWeeks)
       .flatMap(week => week.trainingDays)
-      .filter(day => !!day.endTime); // Only include training days that are finished
+      .filter(day => !!day.endTime)
+      .sort((a, b) => new Date(b.endTime!).getTime() - new Date(a.endTime!).getTime());
   }
 
   private getCoverImageFromPlan(user: User, trainingDayId: string): string {
