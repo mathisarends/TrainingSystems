@@ -1,4 +1,4 @@
-/* import { ApplicationRef, DestroyRef, Injectable } from '@angular/core';
+import { ApplicationRef, DestroyRef, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable, Subject } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
@@ -78,4 +78,3 @@ export class WebSocketService {
     }
   }
 }
- */
