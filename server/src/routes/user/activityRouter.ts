@@ -14,6 +14,12 @@ activityRouter.get(
 activityRouter.get(
   '/training-notifications',
   authService.authenticationMiddleware,
+  asyncHandler(activityController.getTrainingLogForUser)
+);
+
+activityRouter.get(
+  '/unseen-training-notifications',
+  authService.authenticationMiddleware,
   asyncHandler(activityController.getTrainingDayNotifications)
 );
 

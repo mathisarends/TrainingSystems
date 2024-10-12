@@ -25,7 +25,7 @@ export class NotificationService {
    * @returns An Observable of the fetched training day notifications.
    */
   fetchAndSetTrainingDayNotifications(): Observable<number> {
-    return this.httpService.get<number>('/user/activity/training-notifications').pipe(
+    return this.httpService.get<number>('/user/activity/unseen-training-notifications').pipe(
       tap((amountOfUnseenNotifications: number) => {
         console.log('🚀 ~ NotificationService ~ tap ~ amountOfUnseenNotifications:', amountOfUnseenNotifications);
         this.amountOfUnseenNotifications.set(amountOfUnseenNotifications);

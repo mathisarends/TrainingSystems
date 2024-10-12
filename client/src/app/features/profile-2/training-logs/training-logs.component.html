@@ -1,9 +1,13 @@
-@if (notificationService.trainingDayNotifications().length === 0) {
-  <app-alert [alertText]="'Du hast noch keine Trainings absolviert'" />
-}
-
-<div class="grid">
-  @for (notification of notificationService.trainingDayNotifications(); track notification.id) {
-    <app-training-day-notification-2 [notification]="notification" />
+@if (trainingDayNotifications$ | async; as trainingDayNotifications) {
+  @if (trainingDayNotifications.length === 0) {
+    <app-alert [alertText]="'Du hast noch keine Trainings absolviert'" />
   }
-</div>
+
+  <div class="grid">
+    @for (notification of trainingDayNotifications; track notification.id) {
+      <app-training-day-notification-2 [notification]="notification" />
+    }
+  </div>
+} @else {
+  <app-spinner />
+}
