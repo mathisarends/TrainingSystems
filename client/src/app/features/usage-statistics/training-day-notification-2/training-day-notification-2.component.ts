@@ -16,7 +16,7 @@ export class TrainingDayNotification2Component {
   title = input.required<string>();
   id = input.required<string>();
   trainingDuration = input.required<number>();
-  coverImage = input("/images/training/training_3.jpg'");
+  coverImage = input('/images/training/training_3.jpg');
   startDate = input.required<Date>();
 
   constructor(private modalService: ModalService) {}
