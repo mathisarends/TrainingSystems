@@ -1,9 +1,7 @@
-import { DestroyRef, Injectable, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Injectable, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { HttpService } from '../../core/services/http-client.service';
 import { TrainingDayFinishedNotification } from '../../features/usage-statistics/training-finished-notification';
-import { WebSocketService } from './webSocket/web-socket.service';
 
 /**
  * Service for handling notification-related operations.
@@ -18,30 +16,21 @@ export class NotificationService {
    */
   trainingDayNotifications = signal<TrainingDayFinishedNotification[]>([]);
 
-  constructor(
-    private httpService: HttpService,
-    private webSocketService: WebSocketService,
-    private destroyRef: DestroyRef,
-  ) {
-    this.webSocketService
-      .onTrainingNotification()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((newTrainingNotification: TrainingDayFinishedNotification) => {
-        const updatedNotifications = [...this.trainingDayNotifications(), newTrainingNotification];
-        this.trainingDayNotifications.set(updatedNotifications);
-      });
-  }
+  amountOfUnseenNotifications = signal(0);
+
+  constructor(private httpService: HttpService) {}
 
   /**
    * Fetches the training day notifications from the server and updates the `trainingDayNotifications` signal.
    * @returns An Observable of the fetched training day notifications.
    */
-  fetchAndSetTrainingDayNotifications(): Observable<TrainingDayFinishedNotification[]> {
-    return this.httpService
-      .get<TrainingDayFinishedNotification[]>('/user/activity/training-notifications')
-      .pipe(
-        tap((notifications: TrainingDayFinishedNotification[]) => this.trainingDayNotifications.set(notifications)),
-      );
+  fetchAndSetTrainingDayNotifications(): Observable<number> {
+    return this.httpService.get<number>('/user/activity/training-notifications').pipe(
+      tap((amountOfUnseenNotifications: number) => {
+        console.log('🚀 ~ NotificationService ~ tap ~ amountOfUnseenNotifications:', amountOfUnseenNotifications);
+        this.amountOfUnseenNotifications.set(amountOfUnseenNotifications);
+      }),
+    );
   }
 
   /**

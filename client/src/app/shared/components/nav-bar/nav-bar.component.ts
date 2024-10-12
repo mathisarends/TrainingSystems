@@ -1,4 +1,4 @@
-import { Component, computed, effect, Injector, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, effect, Injector, OnInit, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpService } from '../../../core/services/http-client.service';
 import { IconName } from '../../icon/icon-name';
@@ -17,10 +17,6 @@ import { NavItem } from './nav-item';
 })
 export class NavBarComponent implements OnInit {
   protected IconName = IconName;
-  /**
-   * Derived signal for the notification count
-   */
-  protected notificationCount = computed(() => this.notificationService.trainingDayNotifications().length);
 
   // Routen ideen heir allowed routes ergänzen
 

@@ -4,7 +4,7 @@
     <span class="nav-label">{{ item.label }}</span>
 
     @if (item.route === '/logs') {
-      <app-notification-badge [count]="notificationService.trainingDayNotifications().length" />
+      <app-notification-badge [count]="notificationService.amountOfUnseenNotifications()" />
     }
   </div>
 }

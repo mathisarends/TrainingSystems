@@ -53,8 +53,6 @@ export class AppComponent implements OnInit {
       }
     });
 
-
-
     if (this.browserCheckService.isBrowser()) {
       this.serviceWorkerService.registerServiceWorker();
 

@@ -1,10 +1,11 @@
 import { format } from 'date-fns';
 import { Request, Response } from 'express';
+import { TrainingDayFinishedNotification } from '../models/collections/user/training-fninished-notifcation.js';
+import trainingLogs from '../service/training-logs/training-logs.js';
 import { getTonnagePerTrainingDay } from '../service/trainingService.js';
 import userManager from '../service/userManager.js';
 
 // TODO: Dtos hierfür bauen und die Logik entsprechend ein wenig refactoren?
-
 /**
  * Retrieves the activity calendar for a user, calculating the tonnage (total weight lifted)
  * for each training day and returning a map of dates to tonnages.
@@ -34,10 +35,20 @@ export async function getActivityCalendar(req: Request, res: Response): Promise<
 /**
  * Retrieves training day notifications for a user.
  */
-export async function getTrainingDayNotifications(req: Request, res: Response): Promise<Response> {
+export async function getTrainingDayNotifications(req: Request, res: Response): Promise<Response<number>> {
   const user = await userManager.getUser(res);
+  console.log('🚀 ~ getTrainingDayNotifications ~ user.trainingDayNotifications:', user.trainingDayNotifications);
 
-  return res.status(200).json(user.trainingDayNotifications);
+  return res.status(200).json(user.trainingDayNotifications.length);
+}
+
+export async function getTrainingLogForUser(
+  req: Request,
+  res: Response
+): Promise<Response<TrainingDayFinishedNotification>> {
+  const user = await userManager.getUser(res);
+  const userTrainingLogs = trainingLogs.getUserTrainingLogs(user);
+  return res.status(200).json(userTrainingLogs);
 }
 
 /**
