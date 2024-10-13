@@ -1,8 +1,6 @@
 import { DatePipe } from '@angular/common';
-import { Component, input, signal, WritableSignal } from '@angular/core';
+import { Component, input, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalService } from '../../../core/services/modal/modalService';
-import { MoreOptionListItem } from '../../../shared/components/more-options-button/more-option-list-item';
 import { MoreOptionsList } from '../../../shared/components/more-options-list/more-options-list.component';
 import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
@@ -22,31 +20,45 @@ import { TrainingDayFinishedNotification } from '../training-finished-notificati
 export class TrainingDayNotification2Component {
   protected readonly IconName = IconName;
 
+  /**
+   * Notification input containing details of the finished training day.
+   */
   notification = input.required<TrainingDayFinishedNotification>();
 
+  /**
+   * Signal controlling the collapsed state of the "More Options" list.
+   */
   isMoreOptionsCollapsed = signal(true);
 
-  moreOptions: WritableSignal<MoreOptionListItem[]> = signal([
+  /**
+   * List of more options to display in the dropdown, including 'view' and 'share'.
+   */
+  moreOptions = [
     { label: 'Ansehen', icon: IconName.EYE, callback: () => this.navigateToTrainingDay() },
     {
       label: 'Teilen',
       icon: IconName.SHARE,
       callback: () => this.shareTrainingLog(),
     },
-  ]);
+  ];
 
   constructor(
-    private modalService: ModalService,
     private notificationService: NotificationService,
     private datePipe: DatePipe,
     private router: Router,
     private shareService: ShareService,
   ) {}
 
+  /**
+   * Toggles the collapse state of the "More Options" list.
+   */
   protected toggleMoreOptionsCollapseState() {
     this.isMoreOptionsCollapsed.set(!this.isMoreOptionsCollapsed());
   }
 
+  /**
+   * Navigates to the detailed view of the training day, retrieving the necessary details by notification ID.
+   */
   private navigateToTrainingDay(): void {
     this.notificationService.getTrainingDayById(this.notification().id).subscribe((response) => {
       const { trainingPlanId, weekIndex, dayIndex } = response;
@@ -57,10 +69,14 @@ export class TrainingDayNotification2Component {
     });
   }
 
+  /**
+   * Shares the training log details via WhatsApp, including the date, exercises, sets, reps, and weights.
+   */
   protected shareTrainingLog(): void {
     const formattedDate = this.datePipe.transform(this.notification().startTime, 'EEEE, dd.MM.yyyy');
 
-    const trainingDate = this.notification().startTime ? `Heutiges Training: ${formattedDate}` : 'Heutiges Training:';
+    const translatedDate = this.translateDayOfWeek(formattedDate);
+    const trainingDate = this.notification().startTime ? `Heutiges Training: ${translatedDate}` : 'Heutiges Training:';
 
     const exercisesDetails = this.notification()
       .exercises.map((exercise) => {
@@ -69,8 +85,32 @@ export class TrainingDayNotification2Component {
       })
       .join('\n');
 
-    const message = `${trainingDate}\n\n${exercisesDetails}`;
+    const message = `${trainingDate}\n\n${exercisesDetails}\n\n@TYR Training Systems`;
 
     this.shareService.shareViaWhatsApp(message);
+  }
+
+  /**
+   * Translates an English weekday in the given date string to German.
+   * @param dateString Date string containing an English weekday.
+   * @returns Translated date string with the German weekday.
+   */
+  private translateDayOfWeek(dateString: string | null): string {
+    if (!dateString) return '';
+
+    const dayTranslations: { [key: string]: string } = {
+      Monday: 'Montag',
+      Tuesday: 'Dienstag',
+      Wednesday: 'Mittwoch',
+      Thursday: 'Donnerstag',
+      Friday: 'Freitag',
+      Saturday: 'Samstag',
+      Sunday: 'Sonntag',
+    };
+
+    return dateString.replace(
+      /Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday/g,
+      (match) => dayTranslations[match],
+    );
   }
 }
