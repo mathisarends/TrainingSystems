@@ -1,11 +1,14 @@
 import { AsyncPipe } from '@angular/common';
+import { HttpParams } from '@angular/common/http';
 import { AfterViewInit, Component, effect, Injector, OnInit, signal, WritableSignal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
+import { ButtonComponent } from '../../../shared/components/button/button.component';
 import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
 import { IconName } from '../../../shared/icon/icon-name';
+import { IconComponent } from '../../../shared/icon/icon.component';
 import { NotificationService } from '../../../shared/service/notification.service';
 import { HeaderService } from '../../header/header.service';
 import { TrainingDayFinishedNotification } from '../../usage-statistics/training-finished-notification';
@@ -21,6 +24,8 @@ import { TrainingLogCardComponent } from '../../usage-statistics/training-log-ca
     AsyncPipe,
     SearchBarComponent,
     TrainingLogCardSkeletonComponent,
+    IconComponent,
+    ButtonComponent,
   ],
   selector: 'app-training-logs',
   templateUrl: 'training-logs.component.html',
@@ -48,14 +53,7 @@ export class TrainingLogsComponent implements OnInit, AfterViewInit {
       title: 'Logs',
     });
 
-    this.trainingDayNotifications$ = this.httpService
-      .get<TrainingDayFinishedNotification[]>('/user/activity/training-notifications')
-      .pipe(
-        tap((notifications) => {
-          this.cachedTrainingNotifications.set(notifications);
-          this.filteredTrainingNotifications.set(notifications);
-        }),
-      );
+    this.loadLogEntries(16);
 
     effect(
       () => {
@@ -66,9 +64,23 @@ export class TrainingLogsComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.httpService.delete('/user/activity/unseen-training-notifications').subscribe(() => {
-      console.log('here');
-    });
+    this.httpService.delete('/user/activity/unseen-training-notifications').subscribe(() => {});
+  }
+
+  protected loadLogEntries(limit?: number) {
+    const httpParams = new HttpParams();
+    if (limit) {
+      httpParams.set('limit', limit.toString());
+    }
+
+    this.trainingDayNotifications$ = this.httpService
+      .get<TrainingDayFinishedNotification[]>('/user/activity/training-notifications', httpParams)
+      .pipe(
+        tap((notifications) => {
+          this.cachedTrainingNotifications.set(notifications);
+          this.filteredTrainingNotifications.set(notifications);
+        }),
+      );
   }
 
   private filterTrainingNotifications(): void {

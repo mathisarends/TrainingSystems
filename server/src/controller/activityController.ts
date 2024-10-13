@@ -53,8 +53,11 @@ export async function getTrainingLogForUser(
   req: Request,
   res: Response
 ): Promise<Response<TrainingDayFinishedNotification>> {
+  const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 16;
+
   const user = await userManager.getUser(res);
-  const userTrainingLogs = await trainingLogService.getUserTrainingLogs(user, 16);
+  const userTrainingLogs = await trainingLogService.getUserTrainingLogs(user, limit);
+
   return res.status(200).json(userTrainingLogs);
 }
 
