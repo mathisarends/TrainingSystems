@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { Request, Response } from 'express';
 import { TrainingDayFinishedNotification } from '../models/collections/user/training-fninished-notifcation.js';
-import trainingLogs from '../service/training-logs/training-logs.js';
+import trainingLogService from '../service/training-logs/trainingLogService.js';
 import { getTonnagePerTrainingDay } from '../service/trainingService.js';
 import userManager from '../service/userManager.js';
 
@@ -54,7 +54,7 @@ export async function getTrainingLogForUser(
   res: Response
 ): Promise<Response<TrainingDayFinishedNotification>> {
   const user = await userManager.getUser(res);
-  const userTrainingLogs = await trainingLogs.getUserTrainingLogs(user, 16);
+  const userTrainingLogs = await trainingLogService.getUserTrainingLogs(user, 16);
   return res.status(200).json(userTrainingLogs);
 }
 

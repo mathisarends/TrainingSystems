@@ -3,8 +3,12 @@ import { User } from '../../models/collections/user/user.js';
 import { TrainingDay } from '../../models/training/trainingDay.js';
 import { TrainingDayManager } from '../training-day-manager.js';
 import { getTonnagePerTrainingDay } from '../trainingService.js';
+import { ExerciseSetCountByCategory } from './categorySetCountMap.js';
 
-class TrainingLogs {
+class TrainingLogService {
+  /**
+   * Retrieves the finished training logs for a user, including training tonnage, plan details, and optional image.
+   */
   async getUserTrainingLogs(user: User, limit?: number): Promise<TrainingDayFinishedNotification[]> {
     const trainingDays = this.getAllFinishedTrainingSessions(user);
 
@@ -23,6 +27,9 @@ class TrainingLogs {
     return trainingLogs.slice(0, limit);
   }
 
+  /**
+   * Returns all completed training sessions for the given user, sorted by the end time.
+   */
   private getAllFinishedTrainingSessions(user: User): TrainingDay[] {
     return user.trainingPlans
       .flatMap(plan => plan.trainingWeeks)
@@ -31,10 +38,13 @@ class TrainingLogs {
       .sort((a, b) => new Date(b.endTime!).getTime() - new Date(a.endTime!).getTime());
   }
 
+  /**
+   * Retrieves the cover image and plan title for a specific training day.
+   */
   private async getPlanDetails(user: User, trainingDayId: string): Promise<{ coverImage: string; planTitle: string }> {
     const trainingDay = await TrainingDayManager.findTrainingDayById(user, trainingDayId);
 
-    const mostProminentCategoriesInTrainingDay = this.findMostProminentExerciseForTrainingDay(trainingDay);
+    const mostProminentCategoriesInTrainingDay = this.getMostProminentExerciseForTrainingDay(trainingDay);
 
     return {
       coverImage: this.determineCoverImageBasedOnMostProminentCategory(mostProminentCategoriesInTrainingDay),
@@ -42,6 +52,9 @@ class TrainingLogs {
     };
   }
 
+  /**
+   * Determines the cover image based on the most prominent exercise category.
+   */
   private determineCoverImageBasedOnMostProminentCategory(category: string): string {
     const imageMap: { [key: string]: string } = {
       bench: '/images/summaries/benchpress.webp',
@@ -60,7 +73,10 @@ class TrainingLogs {
     return '/images/training/training_banner-1.webp';
   }
 
-  private findMostProminentExerciseForTrainingDay(trainingDay: TrainingDay): string {
+  /**
+   * Returns the most prominent exercise categories for a given training day.
+   */
+  private getMostProminentExerciseForTrainingDay(trainingDay: TrainingDay): string {
     const categorySetCount = this.countSetsPerCategory(trainingDay);
 
     const mostProminentCategories = this.getCategoriesWithMostSets(categorySetCount);
@@ -68,23 +84,28 @@ class TrainingLogs {
     return mostProminentCategories.join(' and ');
   }
 
-  private countSetsPerCategory(trainingDay: TrainingDay): { [category: string]: number } {
-    const categorySetCount: { [category: string]: number } = {};
+  /**
+   * Counts the number of sets per category for a given training day, giving higher weight to the first two exercises.
+   */
+  private countSetsPerCategory(trainingDay: TrainingDay): ExerciseSetCountByCategory {
+    const categorySetCount: ExerciseSetCountByCategory = {};
 
-    for (const exercise of trainingDay.exercises) {
-      categorySetCount[exercise.category] = (categorySetCount[exercise.category] || 0) + exercise.sets;
-    }
+    trainingDay.exercises.forEach((exercise, index) => {
+      const setCount = index < 2 ? exercise.sets * 2 : exercise.sets; // First two exercises are weighted (for more accurate priority representation)
+      categorySetCount[exercise.category] = (categorySetCount[exercise.category] || 0) + setCount;
+    });
 
     return categorySetCount;
   }
 
-  private getCategoriesWithMostSets(categorySetCount: { [category: string]: number }): string[] {
+  /**
+   * Returns the top two categories with the most sets for a given training day.
+   */
+  private getCategoriesWithMostSets(categorySetCount: ExerciseSetCountByCategory): string[] {
     const sortedCategories = Object.entries(categorySetCount).sort((a, b) => b[1] - a[1]);
 
-    const maxSets = sortedCategories[0][1];
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    return sortedCategories.filter(([_, sets]) => sets === maxSets).map(([category]) => category);
+    return sortedCategories.slice(0, 2).map(([category]) => category);
   }
 }
 
-export default new TrainingLogs();
+export default new TrainingLogService();
