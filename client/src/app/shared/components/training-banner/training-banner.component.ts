@@ -1,6 +1,7 @@
 import { Component, computed, ElementRef, model, OnInit, signal, ViewChild } from '@angular/core';
 import { ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper';
 import { IconName } from '../../icon/icon-name';
+import { IconComponent } from '../../icon/icon.component';
 import { ImageUploadService } from '../../service/image-upload.service';
 import { PictureService } from '../../service/picture.service';
 import { CircularIconButtonComponent } from '../circular-icon-button/circular-icon-button.component';
@@ -11,7 +12,7 @@ import { CircularIconButtonComponent } from '../circular-icon-button/circular-ic
   styleUrls: ['./training-banner.component.scss'],
   standalone: true,
   providers: [PictureService],
-  imports: [CircularIconButtonComponent, ImageCropperComponent],
+  imports: [CircularIconButtonComponent, ImageCropperComponent, IconComponent],
 })
 export class TrainingBannerComponent implements OnInit {
   protected readonly IconName = IconName;
@@ -25,6 +26,9 @@ export class TrainingBannerComponent implements OnInit {
   croppedImage = signal<string | null>(null);
 
   currentPictureIndex = signal(0);
+  restoredImageRecommandations = signal(false);
+
+  originalImageSrc = signal<string | null>(null);
 
   constructor(
     private imageUploadService: ImageUploadService,
@@ -34,8 +38,8 @@ export class TrainingBannerComponent implements OnInit {
   isCropView = signal(false);
 
   ngOnInit(): void {
-    if (!this.imageSrc()) {
-      this.imageSrc.set('/images/training/training_banner_1.webp');
+    if (this.imageSrc() !== '/images/training/training_banner_1.webp') {
+      this.originalImageSrc.set(this.imageSrc());
     }
   }
 
@@ -53,6 +57,10 @@ export class TrainingBannerComponent implements OnInit {
     } catch (error) {
       console.error('Error converting blob to Base64', error);
     }
+  }
+
+  protected restoreOriginalDataSource(): void {
+    this.imageSrc.set(this.originalImageSrc()!);
   }
 
   protected activateCropView(): void {
@@ -73,22 +81,27 @@ export class TrainingBannerComponent implements OnInit {
 
   protected async handleImageUpload(event: any): Promise<void> {
     const uploadedImageBase64Str = await this.imageUploadService.handleImageUpload(event);
-    console.log('🚀 ~ TrainingBannerComponent ~ handleImageUpload ~ uploadedImageBase64Str:', uploadedImageBase64Str);
 
     if (uploadedImageBase64Str) {
       this.imageSrc.set(uploadedImageBase64Str);
     }
   }
 
-  protected selectNextBannerRecomandation(event: Event): void {
-    event.stopPropagation();
+  protected selectNextBannerRecomandation(): void {
+    if (this.isImageSrcBase64()) {
+      this.restoredImageRecommandations.set(true);
+    }
+
     const nextIndex = (this.currentPictureIndex() + 1) % 5;
     this.currentPictureIndex.set(nextIndex);
     this.updateImageSrc();
   }
 
-  protected selectPreviousBannerRecomandation(event: Event): void {
-    event.stopPropagation();
+  protected selectPreviousBannerRecomandation(): void {
+    if (this.isImageSrcBase64()) {
+      this.restoredImageRecommandations.set(true);
+    }
+
     const prevIndex = (this.currentPictureIndex() - 1 + 5) % 5;
     this.currentPictureIndex.set(prevIndex);
     this.updateImageSrc();

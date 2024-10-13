@@ -12,14 +12,16 @@
 <div class="button-container">
   @if (isCropView()) {
     <app-circular-icon-button [icon]="IconName.CHECK" (click)="setImageAndDeactivateCropView()" />
-  } @else if (!isImageSrcBase64()) {
-    <app-circular-icon-button [icon]="IconName.CHEVRON_LEFT" (click)="selectPreviousBannerRecomandation($event)" />
-    <app-circular-icon-button [icon]="IconName.CHEVRON_RIGHT" (click)="selectNextBannerRecomandation($event)" />
   }
+  <app-circular-icon-button [icon]="IconName.CHEVRON_LEFT" (click)="selectPreviousBannerRecomandation()" />
+  <app-circular-icon-button [icon]="IconName.CHEVRON_RIGHT" (click)="selectNextBannerRecomandation()" />
   <app-circular-icon-button [icon]="IconName.UPLOAD" (click)="triggerFileInput()" />
-
   @if (isImageSrcBase64() && !isCropView()) {
     <app-circular-icon-button [icon]="IconName.CROP" (click)="activateCropView()" />
+  }
+
+  @if (restoredImageRecommandations() && this.originalImageSrc()) {
+    <app-circular-icon-button [icon]="IconName.REFRESH" (click)="restoreOriginalDataSource()" />
   }
 </div>
 

@@ -50,4 +50,7 @@ export enum IconName {
   CHECK = 'check',
   CROP = 'crop',
   UPLOAD = 'upload',
+  LIST = 'list',
+  DELETE = 'delete',
+  REFRESH = 'refresh-ccw',
 }
