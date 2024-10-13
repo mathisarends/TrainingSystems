@@ -5,19 +5,30 @@ import { HttpService } from '../../../core/services/http-client.service';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
 import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
+import { IconName } from '../../../shared/icon/icon-name';
 import { NotificationService } from '../../../shared/service/notification.service';
 import { HeaderService } from '../../header/header.service';
-import { TrainingDayNotificationComponent } from '../../usage-statistics/training-day-notification/training-day-notification.component';
 import { TrainingDayFinishedNotification } from '../../usage-statistics/training-finished-notification';
+import { TrainingLogCardSkeletonComponent } from '../../usage-statistics/training-log-card-skeleton/training-log-card-skeleton.component';
+import { TrainingLogCardComponent } from '../../usage-statistics/training-log-card/training-log-card.component';
 
 @Component({
   standalone: true,
-  imports: [TrainingDayNotificationComponent, AlertComponent, SpinnerComponent, AsyncPipe, SearchBarComponent],
+  imports: [
+    TrainingLogCardComponent,
+    AlertComponent,
+    SpinnerComponent,
+    AsyncPipe,
+    SearchBarComponent,
+    TrainingLogCardSkeletonComponent,
+  ],
   selector: 'app-training-logs',
   templateUrl: 'training-logs.component.html',
   styleUrls: ['./training-logs.component.scss'],
 })
 export class TrainingLogsComponent implements OnInit, AfterViewInit {
+  protected readonly IconName = IconName;
+
   trainingDayNotifications$!: Observable<TrainingDayFinishedNotification[]>;
 
   cachedTrainingNotifications: WritableSignal<TrainingDayFinishedNotification[]> = signal([]);

@@ -27,6 +27,7 @@ export enum IconName {
   MIC = 'mic',
   DATABASE = 'database',
   MORE_VERTICAL = 'more-vertical',
+  MORE_HORIZONTAL = 'more-horizontal',
   DRAG = 'drag',
   USERS = 'users',
   SETTINGS = 'settings',

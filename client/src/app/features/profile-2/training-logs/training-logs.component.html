@@ -9,11 +9,15 @@
     } @else {
       <div class="grid">
         @for (notification of filteredTrainingNotifications(); track notification.id) {
-          <app-training-day-notification [notification]="notification" />
+          <app-training-log-card [notification]="notification" />
         }
       </div>
     }
   }
 } @else {
-  <app-spinner />
+  <div class="grid">
+    @for (k of [1, 2, 3]; track k) {
+      <app-training-log-card-skeleton />
+    }
+  </div>
 }
