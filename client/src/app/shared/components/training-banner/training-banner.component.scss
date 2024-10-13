@@ -1,35 +1,14 @@
 :host {
-  position: relative;
-  width: 100%; // Adjust width to take full width of the parent or set a reasonable size
-  height: auto; // Allow height to auto-adjust based on the content size
-  display: block; // Ensure the component is displayed as a block to take full width
-}
-
-.icon {
-  color: white;
-  position: absolute;
-}
-
-.crop-view-button-container {
-  color: white;
-  position: absolute;
-  right: 0.5rem;
-  bottom: 3.125rem;
   display: flex;
-  gap: 1rem;
+  flex-direction: column;
   align-items: center;
+  gap: 1rem;
 }
 
-.image-slider {
-  top: 37.5%;
-
-  &.left {
-    left: 0.5rem;
-  }
-
-  &.right {
-    right: 0.5rem;
-  }
+.button-container {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
 }
 
 #cover-image {
@@ -37,7 +16,6 @@
   width: 100%;
   height: auto;
   object-fit: cover;
-  margin-bottom: 1.5rem;
 
   &:hover {
     cursor: pointer;

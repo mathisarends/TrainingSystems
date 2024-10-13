@@ -2,14 +2,14 @@ import { Component, computed, model, OnInit, signal } from '@angular/core';
 import { IconName } from '../../icon/icon-name';
 import { IconComponent } from '../../icon/icon.component';
 import { ImageUploadService } from '../../service/image-upload.service';
-import { DotIndicatorComponent } from '../dot-indicator/dot-indicator.component';
+import { CircularIconButtonComponent } from '../circular-icon-button/circular-icon-button.component';
 
 @Component({
   selector: 'app-training-banner',
   templateUrl: './training-banner.component.html',
   styleUrls: ['./training-banner.component.scss'],
   standalone: true,
-  imports: [IconComponent, DotIndicatorComponent],
+  imports: [IconComponent, CircularIconButtonComponent],
 })
 export class TrainingBannerComponent implements OnInit {
   protected readonly IconName = IconName;

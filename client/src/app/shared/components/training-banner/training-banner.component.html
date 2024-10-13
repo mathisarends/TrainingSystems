@@ -1,5 +1,12 @@
 <img [src]="imageSrc()" alt="Cover Placeholder" id="cover-image" />
 
+<div class="button-container">
+  <app-circular-icon-button [icon]="IconName.CHEVRON_LEFT" (click)="selectPreviousBannerRecomandation($event)" />
+  <app-circular-icon-button [icon]="IconName.CHEVRON_RIGHT" (click)="selectNextBannerRecomandation($event)" />
+  <app-circular-icon-button [icon]="IconName.UPLOAD" />
+  <app-circular-icon-button [icon]="IconName.CROP" />
+</div>
+
 @if (isCropView()) {
   <input
     type="file"
@@ -8,24 +15,4 @@
     class="form-control-file position-absolute"
     (change)="handleImageUpload($event)"
   />
-
-  <div class="crop-view-button-container">
-    <app-icon [size]="26" [name]="IconName.CROP" />
-    <app-icon [size]="26" [name]="IconName.UPLOAD" />
-  </div>
-} @else {
-  <app-icon
-    class="icon image-slider left"
-    [size]="26"
-    [name]="IconName.CHEVRON_LEFT"
-    (click)="selectNextBannerRecomandation($event)"
-  />
-  <app-icon
-    class="icon image-slider right"
-    [size]="26"
-    [name]="IconName.CHEVRON_RIGHT"
-    (click)="selectPreviousBannerRecomandation($event)"
-  />
 }
-
-<app-dot-indicator [(activeIndex)]="activeViewIndex" [totalDots]="2" />
