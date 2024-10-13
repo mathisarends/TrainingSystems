@@ -10,9 +10,14 @@
   position: absolute;
 }
 
-.crop-icon {
-  bottom: 2.25rem;
-  right: 0.75rem;
+.crop-view-button-container {
+  color: white;
+  position: absolute;
+  right: 0.5rem;
+  bottom: 3.125rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
 }
 
 .image-slider {

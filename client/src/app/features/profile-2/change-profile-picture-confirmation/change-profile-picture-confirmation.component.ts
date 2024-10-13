@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, effect, Injector, signal } from '@angular/core';
 import { ImageCropperComponent } from 'ngx-image-cropper';
 import { AbstractImageCropperComponent } from '../../../shared/components/abstract-image-cropper/abstract-image-cropper.component';
 import { ImageCropperWithIconComponent } from '../../../shared/components/image-cropper/image-cropper-with-icon.component';
@@ -38,7 +38,17 @@ export class ChangeProfilePictureConfirmationComponent implements OnToggleView {
   constructor(
     private readonly profileService: ProfileService,
     private readonly toastService: ToastService,
-  ) {}
+    private injector: Injector,
+  ) {
+    effect(
+      () => {
+        if (this.image()) {
+          this.isCropView.set(false);
+        }
+      },
+      { allowSignalWrites: true, injector: this.injector },
+    );
+  }
 
   uploadImage(image: string): void {}
 

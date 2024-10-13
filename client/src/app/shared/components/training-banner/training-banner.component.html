@@ -1,22 +1,31 @@
 <img [src]="imageSrc()" alt="Cover Placeholder" id="cover-image" />
 
-<input
-  type="file"
-  name="cover-image"
-  id="cover-image-input"
-  class="form-control-file position-absolute"
-  (change)="handleImageUpload($event)"
-/>
+@if (isCropView()) {
+  <input
+    type="file"
+    name="cover-image"
+    id="cover-image-input"
+    class="form-control-file position-absolute"
+    (change)="handleImageUpload($event)"
+  />
 
-<app-icon
-  class="icon image-slider left"
-  [size]="26"
-  [name]="IconName.CHEVRON_LEFT"
-  (click)="selectNextBannerRecomandation($event)"
-/>
-<app-icon
-  class="icon image-slider right"
-  [size]="26"
-  [name]="IconName.CHEVRON_RIGHT"
-  (click)="selectPreviousBannerRecomandation($event)"
-/>
+  <div class="crop-view-button-container">
+    <app-icon [size]="26" [name]="IconName.CROP" />
+    <app-icon [size]="26" [name]="IconName.UPLOAD" />
+  </div>
+} @else {
+  <app-icon
+    class="icon image-slider left"
+    [size]="26"
+    [name]="IconName.CHEVRON_LEFT"
+    (click)="selectNextBannerRecomandation($event)"
+  />
+  <app-icon
+    class="icon image-slider right"
+    [size]="26"
+    [name]="IconName.CHEVRON_RIGHT"
+    (click)="selectPreviousBannerRecomandation($event)"
+  />
+}
+
+<app-dot-indicator [(activeIndex)]="activeViewIndex" [totalDots]="2" />

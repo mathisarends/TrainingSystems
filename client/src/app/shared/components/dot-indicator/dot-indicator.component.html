@@ -1,0 +1,3 @@
+@for (dot of totalDotsIterable(); track dot) {
+  <div class="dot" (click)="updateActiveIndex(dot, $event)" [ngClass]="{ active: dot === activeIndex() }"></div>
+}

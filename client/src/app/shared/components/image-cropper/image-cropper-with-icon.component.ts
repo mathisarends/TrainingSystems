@@ -17,8 +17,6 @@ export class ImageCropperWithIconComponent {
 
   croppedImage = signal('');
 
-  constructor() {}
-
   protected async imageCropped(imageCropperEvent: ImageCroppedEvent) {
     if (!imageCropperEvent.blob) {
       console.error('Blob is not defined in ImageCroppedEvent');
@@ -38,17 +36,14 @@ export class ImageCropperWithIconComponent {
   /**
    * Called when the user confirms the crop action. Processes the cropped image.
    */
-  async confirmCrop() {
+  confirmCrop() {
     if (!this.croppedImage()) {
       console.error('No cropped image available');
       return;
     }
+    console.log('set image');
 
-    try {
-      this.image.set(this.croppedImage());
-    } catch (error) {
-      console.error('Error converting blob to Base64', error);
-    }
+    this.image.set(this.croppedImage());
   }
 
   /**
