@@ -3,16 +3,8 @@
 <div class="button-container">
   <app-circular-icon-button [icon]="IconName.CHEVRON_LEFT" (click)="selectPreviousBannerRecomandation($event)" />
   <app-circular-icon-button [icon]="IconName.CHEVRON_RIGHT" (click)="selectNextBannerRecomandation($event)" />
-  <app-circular-icon-button [icon]="IconName.UPLOAD" />
+  <app-circular-icon-button [icon]="IconName.UPLOAD" (click)="triggerFileInput()" />
   <app-circular-icon-button [icon]="IconName.CROP" />
 </div>
 
-@if (isCropView()) {
-  <input
-    type="file"
-    name="cover-image"
-    id="cover-image-input"
-    class="form-control-file position-absolute"
-    (change)="handleImageUpload($event)"
-  />
-}
+<input type="file" name="cover-image" style="display: none" #fileInput (change)="handleImageUpload($event)" />

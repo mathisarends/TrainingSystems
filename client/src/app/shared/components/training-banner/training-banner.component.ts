@@ -1,4 +1,4 @@
-import { Component, computed, model, OnInit, signal } from '@angular/core';
+import { Component, computed, ElementRef, model, OnInit, signal, ViewChild } from '@angular/core';
 import { IconName } from '../../icon/icon-name';
 import { IconComponent } from '../../icon/icon.component';
 import { ImageUploadService } from '../../service/image-upload.service';
@@ -13,6 +13,7 @@ import { CircularIconButtonComponent } from '../circular-icon-button/circular-ic
 })
 export class TrainingBannerComponent implements OnInit {
   protected readonly IconName = IconName;
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   imageSrc = model('/images/training/training_banner_1.webp');
 
@@ -31,6 +32,10 @@ export class TrainingBannerComponent implements OnInit {
     if (!this.imageSrc()) {
       this.imageSrc.set('/images/training/training_banner_1.webp');
     }
+  }
+
+  protected triggerFileInput() {
+    this.fileInput.nativeElement.click();
   }
 
   protected async handleImageUpload(event: any): Promise<void> {
