@@ -1,12 +1,17 @@
 @if (isCropView() && isImageSrcBase64()) {
-  <image-cropper [imageBase64]="imageSrc()" [maintainAspectRatio]="false" format="png" />
+  <image-cropper
+    [imageBase64]="imageSrc()"
+    (imageCropped)="onImageCropped($event)"
+    [maintainAspectRatio]="false"
+    format="png"
+  />
 } @else {
   <img [src]="imageSrc()" alt="Cover Placeholder" id="cover-image" />
 }
 
 <div class="button-container">
   @if (isCropView()) {
-    <app-circular-icon-button [icon]="IconName.CHECK" (click)="deactivateCropView()" />
+    <app-circular-icon-button [icon]="IconName.CHECK" (click)="setImageAndDeactivateCropView()" />
   } @else if (!isImageSrcBase64()) {
     <app-circular-icon-button [icon]="IconName.CHEVRON_LEFT" (click)="selectPreviousBannerRecomandation($event)" />
     <app-circular-icon-button [icon]="IconName.CHEVRON_RIGHT" (click)="selectNextBannerRecomandation($event)" />
