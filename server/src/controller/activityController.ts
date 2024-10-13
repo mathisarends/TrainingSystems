@@ -54,7 +54,7 @@ export async function getTrainingLogForUser(
   res: Response
 ): Promise<Response<TrainingDayFinishedNotification>> {
   const user = await userManager.getUser(res);
-  const userTrainingLogs = trainingLogs.getUserTrainingLogs(user, 16);
+  const userTrainingLogs = await trainingLogs.getUserTrainingLogs(user, 16);
   return res.status(200).json(userTrainingLogs);
 }
 

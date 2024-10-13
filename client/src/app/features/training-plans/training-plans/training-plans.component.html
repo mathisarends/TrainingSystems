@@ -19,7 +19,9 @@
         </div>
       }
     } @else {
-      <app-skeleton-card />
+      @for (k of [1, 2, 3]; track k) {
+        <app-skeleton-card />
+      }
     }
   </div>
 } @else {
@@ -37,7 +39,9 @@
         </div>
       }
     } @else {
-      <app-skeleton-card />
+      @for (k of [1, 2, 3]; track k) {
+        <app-skeleton-card />
+      }
     }
   </div>
 }

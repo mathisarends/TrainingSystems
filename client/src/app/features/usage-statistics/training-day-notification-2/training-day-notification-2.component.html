@@ -1,7 +1,7 @@
 <div class="image-container">
   <img
     [src]="notification().coverImage === '' ? '/images/training/training_3.jpg' : notification().coverImage"
-    alt="{{ 'Test' }}"
+    alt="{{ notification().planTitle }}"
   />
   <div class="duration-overlay">{{ notification().durationInMinutes + ' Minuten' }}</div>
 </div>
