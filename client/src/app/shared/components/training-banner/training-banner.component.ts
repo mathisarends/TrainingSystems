@@ -1,7 +1,8 @@
 import { Component, computed, ElementRef, model, OnInit, signal, ViewChild } from '@angular/core';
+import { ImageCropperComponent } from 'ngx-image-cropper';
 import { IconName } from '../../icon/icon-name';
-import { IconComponent } from '../../icon/icon.component';
 import { ImageUploadService } from '../../service/image-upload.service';
+import { PictureService } from '../../service/picture.service';
 import { CircularIconButtonComponent } from '../circular-icon-button/circular-icon-button.component';
 
 @Component({
@@ -9,29 +10,39 @@ import { CircularIconButtonComponent } from '../circular-icon-button/circular-ic
   templateUrl: './training-banner.component.html',
   styleUrls: ['./training-banner.component.scss'],
   standalone: true,
-  imports: [IconComponent, CircularIconButtonComponent],
+  providers: [PictureService],
+  imports: [CircularIconButtonComponent, ImageCropperComponent],
 })
 export class TrainingBannerComponent implements OnInit {
   protected readonly IconName = IconName;
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   imageSrc = model('/images/training/training_banner_1.webp');
+  isImageSrcBase64 = computed(() => {
+    return this.pictureService.isBase64Image(this.imageSrc());
+  });
 
   currentPictureIndex = signal(0);
 
-  constructor(private imageUploadService: ImageUploadService) {}
+  constructor(
+    private imageUploadService: ImageUploadService,
+    private pictureService: PictureService,
+  ) {}
 
-  activeViewIndex = signal(0);
-
-  isCropView = computed(() => {
-    console.log('this.activeVewIndex()', !!this.activeViewIndex());
-    return !!this.activeViewIndex();
-  });
+  isCropView = signal(false);
 
   ngOnInit(): void {
     if (!this.imageSrc()) {
       this.imageSrc.set('/images/training/training_banner_1.webp');
     }
+  }
+
+  protected activateCropView(): void {
+    this.isCropView.set(true);
+  }
+
+  protected deactivateCropView(): void {
+    this.isCropView.set(false);
   }
 
   protected triggerFileInput() {

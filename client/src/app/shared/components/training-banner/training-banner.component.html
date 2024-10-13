@@ -1,10 +1,21 @@
-<img [src]="imageSrc()" alt="Cover Placeholder" id="cover-image" />
+@if (isCropView() && isImageSrcBase64()) {
+  <image-cropper [imageBase64]="imageSrc()" [maintainAspectRatio]="false" format="png" />
+} @else {
+  <img [src]="imageSrc()" alt="Cover Placeholder" id="cover-image" />
+}
 
 <div class="button-container">
-  <app-circular-icon-button [icon]="IconName.CHEVRON_LEFT" (click)="selectPreviousBannerRecomandation($event)" />
-  <app-circular-icon-button [icon]="IconName.CHEVRON_RIGHT" (click)="selectNextBannerRecomandation($event)" />
+  @if (isCropView()) {
+    <app-circular-icon-button [icon]="IconName.CHECK" (click)="deactivateCropView()" />
+  } @else if (!isImageSrcBase64()) {
+    <app-circular-icon-button [icon]="IconName.CHEVRON_LEFT" (click)="selectPreviousBannerRecomandation($event)" />
+    <app-circular-icon-button [icon]="IconName.CHEVRON_RIGHT" (click)="selectNextBannerRecomandation($event)" />
+  }
   <app-circular-icon-button [icon]="IconName.UPLOAD" (click)="triggerFileInput()" />
-  <app-circular-icon-button [icon]="IconName.CROP" />
+
+  @if (isImageSrcBase64() && !isCropView()) {
+    <app-circular-icon-button [icon]="IconName.CROP" (click)="activateCropView()" />
+  }
 </div>
 
 <input type="file" name="cover-image" style="display: none" #fileInput (change)="handleImageUpload($event)" />
