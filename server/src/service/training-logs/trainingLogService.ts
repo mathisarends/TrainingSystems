@@ -66,7 +66,7 @@ class TrainingLogService {
       case normalizedCategory.includes('squat'):
         return '/images/summaries/squat.webp';
       case normalizedCategory.includes('overheadpress'):
-        return '/images/summaries/overheadpress.webp';
+        return '/images/summaries/overheadpress2.webp';
       case normalizedCategory.includes('lat'):
         return '/images/summaries/latpulldown.webp';
       default:
