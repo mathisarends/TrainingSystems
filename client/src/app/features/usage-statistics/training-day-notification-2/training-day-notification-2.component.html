@@ -11,4 +11,8 @@
     <h4>{{ notification().planTitle }}</h4>
     <p>{{ notification().startTime! | formatDate }}</p>
   </div>
+
+  <app-icon [name]="IconName.MORE_VERTICAL" [size]="20" (click)="toggleMoreOptionsCollapseState()" />
+
+  <app-more-options-list [options]="moreOptions()" [(isCollapsed)]="isMoreOptionsCollapsed" [position]="'left'" />
 </div>

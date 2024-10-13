@@ -1,9 +1,10 @@
-import { Component, HostListener, input } from '@angular/core';
+import { Component, input, signal, WritableSignal } from '@angular/core';
 import { ModalService } from '../../../core/services/modal/modalService';
-import { ModalSize } from '../../../core/services/modal/modalSize';
+import { MoreOptionListItem } from '../../../shared/components/more-options-button/more-option-list-item';
+import { MoreOptionsList } from '../../../shared/components/more-options-list/more-options-list.component';
 import { IconName } from '../../../shared/icon/icon-name';
+import { IconComponent } from '../../../shared/icon/icon.component';
 import { FormatDatePipe } from '../../../shared/pipes/format-date.pipe';
-import { TrainingDayNotificationComponent } from '../training-day-notification/training-day-notification.component';
 import { TrainingDayFinishedNotification } from '../training-finished-notification';
 
 @Component({
@@ -11,25 +12,27 @@ import { TrainingDayFinishedNotification } from '../training-finished-notificati
   templateUrl: './training-day-notification-2.component.html',
   styleUrls: ['./training-day-notification-2.component.scss'],
   standalone: true,
-  imports: [FormatDatePipe],
+  imports: [FormatDatePipe, IconComponent, MoreOptionsList],
 })
 export class TrainingDayNotification2Component {
   protected readonly IconName = IconName;
+
   notification = input.required<TrainingDayFinishedNotification>();
+
+  isMoreOptionsCollapsed = signal(true);
+
+  moreOptions: WritableSignal<MoreOptionListItem[]> = signal([
+    { label: 'Ansehehn', icon: IconName.EYE, callback: () => {} },
+    {
+      label: 'Teilen',
+      icon: IconName.SHARE,
+      callback: () => {},
+    },
+  ]);
 
   constructor(private modalService: ModalService) {}
 
-  @HostListener('click', ['$event'])
-  protected showSummaryModal() {
-    this.modalService.open({
-      component: TrainingDayNotificationComponent,
-      buttonText: 'Ansehen',
-      secondaryButtonText: 'Teilen',
-      size: ModalSize.LARGE,
-      title: 'Test Überschrift',
-      componentData: {
-        notification: this.notification,
-      },
-    });
+  protected toggleMoreOptionsCollapseState() {
+    this.isMoreOptionsCollapsed.set(!this.isMoreOptionsCollapsed());
   }
 }

@@ -1,8 +1,9 @@
-import { Component, ElementRef, HostListener, input, output, signal, WritableSignal } from '@angular/core';
+import { Component, ElementRef, HostListener, input, signal } from '@angular/core';
 import { toggleCollapseAnimation } from '../../animations/toggle-collapse';
 import { IconName } from '../../icon/icon-name';
 import { IconComponent } from '../../icon/icon.component';
 import { CircularIconButtonComponent } from '../circular-icon-button/circular-icon-button.component';
+import { MoreOptionsList } from '../more-options-list/more-options-list.component';
 import { MoreOptionListItem } from './more-option-list-item';
 
 /**
@@ -11,7 +12,7 @@ import { MoreOptionListItem } from './more-option-list-item';
 @Component({
   selector: 'app-more-options-button',
   standalone: true,
-  imports: [CircularIconButtonComponent, IconComponent],
+  imports: [CircularIconButtonComponent, IconComponent, MoreOptionsList],
   templateUrl: './more-options-button.component.html',
   styleUrls: ['./more-options-button.component.scss'],
   animations: [toggleCollapseAnimation],
@@ -25,14 +26,9 @@ export class MoreOptionsButtonComponent {
   options = input.required<MoreOptionListItem[]>();
 
   /**
-   * Event emitter that outputs the selected option.
-   */
-  optionSelected = output<string>();
-
-  /**
    * Signal to track whether the dropdown is collapsed or expanded.
    */
-  isCollapsed: WritableSignal<boolean> = signal(true);
+  isCollapsed = signal(true);
 
   /**
    * Creates an instance of MoreOptionsButtonComponent.
@@ -47,18 +43,6 @@ export class MoreOptionsButtonComponent {
    */
   protected toggleCollapsed() {
     this.isCollapsed.update((current) => !current);
-  }
-
-  /**
-   * Emits the selected option and collapses the dropdown menu.
-   *
-   * @param option The selected option from the dropdown.
-   */
-  protected selectOption(option: MoreOptionListItem, event: Event) {
-    event.stopPropagation();
-    this.isCollapsed.set(true);
-
-    option.callback();
   }
 
   /**

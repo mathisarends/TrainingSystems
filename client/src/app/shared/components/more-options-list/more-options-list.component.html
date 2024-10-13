@@ -1,0 +1,10 @@
+<ul>
+  @for (option of options(); track option.label) {
+    <li (click)="selectOption(option, $event)">
+      @if (option.icon) {
+        <app-icon [name]="option.icon" [size]="17" />
+      }
+      {{ option.label }}
+    </li>
+  }
+</ul>
