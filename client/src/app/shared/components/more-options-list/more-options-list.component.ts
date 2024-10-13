@@ -16,7 +16,7 @@ export class MoreOptionsList {
 
   isCollapsed = model.required<boolean>();
 
-  position = input<'bottom' | 'left'>('bottom');
+  position = input<'bottom' | 'left' | 'top'>('bottom');
 
   @HostBinding('class') get hostClasses(): string {
     return this.position();

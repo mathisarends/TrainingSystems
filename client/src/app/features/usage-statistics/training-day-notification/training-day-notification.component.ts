@@ -10,14 +10,14 @@ import { ShareService } from '../../../shared/service/social-media-share.service
 import { TrainingDayFinishedNotification } from '../training-finished-notification';
 
 @Component({
-  selector: 'app-training-day-notification-2',
-  templateUrl: './training-day-notification-2.component.html',
-  styleUrls: ['./training-day-notification-2.component.scss'],
+  selector: 'app-training-day-notification',
+  templateUrl: 'training-day-notification..component.html',
+  styleUrls: ['./training-day-notification.component.scss'],
   standalone: true,
   providers: [DatePipe, ShareService],
   imports: [FormatDatePipe, IconComponent, MoreOptionsList],
 })
-export class TrainingDayNotification2Component {
+export class TrainingDayNotificationComponent {
   protected readonly IconName = IconName;
 
   /**
