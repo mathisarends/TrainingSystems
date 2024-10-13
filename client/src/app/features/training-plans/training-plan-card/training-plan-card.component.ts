@@ -104,8 +104,7 @@ export class TrainingPlanCardComponent implements OnInit {
       await this.modalService.open({
         component: EditTrainingSessionComponent,
         title: 'Session bearbeiten',
-        buttonText: 'Übernehmen',
-        secondaryButtonText: 'Zuschneiden',
+        buttonText: 'Speichern',
         size: ModalSize.LARGE,
         componentData: {
           id: id,
@@ -115,7 +114,7 @@ export class TrainingPlanCardComponent implements OnInit {
       await this.modalService.open({
         component: EditTrainingPlanComponent,
         title: 'Trainingsplan bearbeiten',
-        buttonText: 'Übernehmen',
+        buttonText: 'Speichern',
         size: ModalSize.LARGE,
         componentData: {
           id: id,

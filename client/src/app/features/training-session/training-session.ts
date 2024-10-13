@@ -1,4 +1,4 @@
-import { signal } from '@angular/core'; // Import signal
+import { signal, WritableSignal } from '@angular/core'; // Import signal
 import { WeightRecommendationBase } from '../training-plans/edit-training-plan/training-plan-edit-view-dto';
 import { TrainingDay } from '../training-plans/training-view/training-day';
 import { Exercise } from '../training-plans/training-view/training-exercise';
@@ -6,26 +6,38 @@ import { TrainingSessionDto } from './model/training-session-dto';
 import { TrainingSessionMetaDataDto } from './training-session-meta-data-dto';
 
 export class TrainingSession {
-  id = signal<string>('');
-  title = signal<string>('');
+  id: WritableSignal<string>;
+  title: WritableSignal<string>;
   lastUpdated = signal<Date>(new Date());
-  weightRecommandationBase = signal<WeightRecommendationBase>(WeightRecommendationBase.LASTWEEK);
-  versions = signal<TrainingDay[]>([]);
-  coverImageBase64 = signal<string | undefined>(undefined);
-  recentlyViewedCategoriesInStatisticSection = signal<string[] | undefined>(undefined);
+  weightRecommendationBase: WritableSignal<WeightRecommendationBase>;
+  versions: WritableSignal<TrainingDay[]>;
+  coverImageBase64: WritableSignal<string>;
+  recentlyViewedCategoriesInStatisticSection: WritableSignal<string[]>;
+
+  protected readonly defaultValues = {
+    id: '',
+    title: '',
+    trainingFrequency: 4,
+    trainingBlockLength: 4,
+    weightRecommendationBase: WeightRecommendationBase.LASTWEEK,
+    coverImageBase64: '',
+    recentlyViewedCategoriesInStatisticSection: [],
+  };
 
   /**
    * Private constructor that initializes the TrainingSession instance from a DTO.
    * @param dto - The DTO containing data for initializing the training session.
    */
   private constructor(dto: TrainingSessionDto) {
-    this.id.set(dto.id);
-    this.title.set(dto.title);
+    this.id = signal(dto.id);
+    this.title = signal(dto.title);
     this.lastUpdated.set(dto.lastUpdated);
-    this.weightRecommandationBase.set(dto.weightRecommandationBase);
-    this.versions.set(dto.versions);
-    this.coverImageBase64.set(dto.coverImageBase64);
-    this.recentlyViewedCategoriesInStatisticSection.set(dto.recentlyViewedCategoriesInStatisticSection);
+    this.weightRecommendationBase = signal(dto.weightRecommandationBase);
+    this.versions = signal(dto.versions);
+    this.coverImageBase64 = signal(dto.coverImageBase64);
+    this.recentlyViewedCategoriesInStatisticSection = signal(
+      dto.recentlyViewedCategoriesInStatisticSection ?? this.defaultValues.recentlyViewedCategoriesInStatisticSection,
+    );
   }
 
   /**
@@ -44,7 +56,7 @@ export class TrainingSession {
   toSessionMetadataDto(): TrainingSessionMetaDataDto {
     return {
       title: this.title(),
-      weightRecommandationBase: this.weightRecommandationBase(),
+      weightRecommandationBase: this.weightRecommendationBase(),
       coverImageBase64: this.coverImageBase64(),
     };
   }

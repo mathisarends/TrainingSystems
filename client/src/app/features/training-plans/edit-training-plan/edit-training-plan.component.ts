@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, ElementRef, Injector, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, effect, Injector, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ImageCropperComponent } from 'ngx-image-cropper';
 import { firstValueFrom } from 'rxjs';
@@ -31,8 +31,6 @@ import { EditTrainingPlanService } from './edit-training-plan.service';
   styleUrls: ['./edit-training-plan.component.scss'],
 })
 export class EditTrainingPlanComponent implements OnInit, OnConfirm {
-  @ViewChild('coverImage') coverImageElement!: ElementRef<HTMLImageElement>;
-
   /**
    * The unique identifier for the training plan passed as a signal via the modal service.
    */

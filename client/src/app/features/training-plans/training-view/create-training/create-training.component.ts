@@ -1,17 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { HttpService } from '../../../../core/services/http-client.service';
 import { FloatingLabelInputComponent } from '../../../../shared/components/floating-label-input/floating-label-input.component';
 import { ToDropDownOptionsPipe } from '../../../../shared/components/floating-label-input/to-dropdown-options.pipe';
 import { OnConfirm } from '../../../../shared/components/modal/on-confirm';
 import { OnToggleView } from '../../../../shared/components/modal/on-toggle-view';
 import { ToastService } from '../../../../shared/components/toast/toast.service';
+import { TrainingBannerComponent } from '../../../../shared/components/training-banner/training-banner.component';
 import { ImageUploadService } from '../../../../shared/service/image-upload.service';
 import { TrainingSessionMetaDataDto } from '../../../training-session/training-session-meta-data-dto';
 import { TrainingSessionService } from '../../../training-session/training-session-service';
-import { WeightRecommendationBase } from '../../edit-training-plan/training-plan-edit-view-dto';
 import { TrainingPlanEditView } from '../../model/training-plan-edit-view';
-import { TrainingPlanCardView } from '../models/exercise/training-plan-card-view-dto';
 import { TrainingPlanType } from '../models/training-plan-type';
 import { TrainingPlanService } from '../services/training-plan.service';
 
@@ -21,14 +20,12 @@ import { TrainingPlanService } from '../services/training-plan.service';
 @Component({
   selector: 'app-create-training-form',
   standalone: true,
-  imports: [CommonModule, FloatingLabelInputComponent, ToDropDownOptionsPipe],
+  imports: [CommonModule, FloatingLabelInputComponent, ToDropDownOptionsPipe, TrainingBannerComponent],
   templateUrl: './create-training.component.html',
   styleUrls: ['./create-training.component.scss'],
   providers: [TrainingSessionService],
 })
 export class CreateTrainingComponent implements OnInit, OnConfirm, OnToggleView {
-  @ViewChild('coverImage') coverImage!: ElementRef<HTMLImageElement>;
-  protected readonly placeholderCoverImage = '/images/training/training_3.png';
   protected readonly TrainingPlanType = TrainingPlanType;
 
   /**
@@ -58,18 +55,6 @@ export class CreateTrainingComponent implements OnInit, OnConfirm, OnToggleView 
 
   ngOnInit(): void {
     this.trainingPlanEditView = TrainingPlanEditView.fromDto();
-  }
-
-  /**
-   * Populates the signals with data from an existing plan.
-   * @param plan - The training plan to pre-fill the form with.
-   */
-  populateFormWithPlan(plan: TrainingPlanCardView): void {
-    this.trainingPlanEditView.title.set(plan.title + ' RE');
-    this.trainingPlanEditView.trainingFrequency.set(plan.trainingFrequency as number);
-    this.trainingPlanEditView.trainingBlockLength.set(plan.blockLength as number);
-    this.trainingPlanEditView.weightRecommendationBase.set(plan.weightRecomamndationBase as WeightRecommendationBase);
-    this.trainingPlanEditView.coverImageBase64.set(plan.coverImageBase64 ?? this.placeholderCoverImage);
   }
 
   /**
