@@ -56,21 +56,22 @@ class TrainingLogService {
    * Determines the cover image based on the most prominent exercise category.
    */
   private determineCoverImageBasedOnMostProminentCategory(category: string): string {
-    const imageMap: { [key: string]: string } = {
-      bench: '/images/summaries/benchpress.webp',
-      deadlift: '/images/summaries/deadlift.webp',
-      squat: '/images/summaries/squat.webp',
-      overheadpress: '/images/summaries/overheadpress.webp',
-      lat: '/images/summaries/latpulldown.webp'
-    };
+    const normalizedCategory = category.toLowerCase();
 
-    for (const key in imageMap) {
-      if (category.toLowerCase().includes(key)) {
-        return imageMap[key];
-      }
+    switch (true) {
+      case normalizedCategory.includes('bench'):
+        return '/images/summaries/benchpress.webp';
+      case normalizedCategory.includes('deadlift'):
+        return '/images/summaries/deadlift.webp';
+      case normalizedCategory.includes('squat'):
+        return '/images/summaries/squat.webp';
+      case normalizedCategory.includes('overheadpress'):
+        return '/images/summaries/overheadpress.webp';
+      case normalizedCategory.includes('lat'):
+        return '/images/summaries/latpulldown.webp';
+      default:
+        return '/images/training/training_banner-1.webp';
     }
-
-    return '/images/training/training_banner-1.webp';
   }
 
   /**
