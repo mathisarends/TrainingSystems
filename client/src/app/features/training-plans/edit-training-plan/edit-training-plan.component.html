@@ -1,22 +1,12 @@
-@if (loading()) {
+@if (!trainingPlanEditView) {
   <app-skeleton [height]="'12rem'" />
   @for (k of [1, 2, 3]; track k) {
     <app-skeleton [height]="'4.25rem'" />
   }
 } @else {
-  <form (ngSubmit)="onConfirm()">
-    @if (isCropView()) {
-      <image-cropper
-        id="cover-image"
-        [imageBase64]="image()!"
-        [maintainAspectRatio]="false"
-        (imageCropped)="imageCropped($event)"
-        format="png"
-      />
-    } @else {
-      <app-training-banner [(imageSrc)]="trainingPlanEditView.coverImageBase64" />
-    }
+  <app-training-banner [(imageSrc)]="trainingPlanEditView.coverImageBase64" />
 
+  <div class="input-group">
     <app-floating-label-input [label]="'Title'" [(value)]="trainingPlanEditView.title" [required]="true" />
 
     <app-floating-label-input
@@ -59,5 +49,5 @@
         { value: 'off', label: 'Keine' },
       ]"
     />
-  </form>
+  </div>
 }

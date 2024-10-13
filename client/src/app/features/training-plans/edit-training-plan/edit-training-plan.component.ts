@@ -3,13 +3,11 @@ import { Component, effect, ElementRef, Injector, OnInit, signal, ViewChild } fr
 import { FormsModule } from '@angular/forms';
 import { ImageCropperComponent } from 'ngx-image-cropper';
 import { firstValueFrom } from 'rxjs';
-import { AbstractImageCropperComponent } from '../../../shared/components/abstract-image-cropper/abstract-image-cropper.component';
 import { FloatingLabelInputComponent } from '../../../shared/components/floating-label-input/floating-label-input.component';
 import { OnConfirm } from '../../../shared/components/modal/on-confirm';
 import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
 import { ToastService } from '../../../shared/components/toast/toast.service';
 import { TrainingBannerComponent } from '../../../shared/components/training-banner/training-banner.component';
-import { ImageUploadService } from '../../../shared/service/image-upload.service';
 import { TrainingPlanEditView } from '../model/training-plan-edit-view';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
 import { EditTrainingPlanService } from './edit-training-plan.service';
@@ -32,7 +30,7 @@ import { EditTrainingPlanService } from './edit-training-plan.service';
   templateUrl: './edit-training-plan.component.html',
   styleUrls: ['./edit-training-plan.component.scss'],
 })
-export class EditTrainingPlanComponent extends AbstractImageCropperComponent implements OnInit, OnConfirm {
+export class EditTrainingPlanComponent implements OnInit, OnConfirm {
   @ViewChild('coverImage') coverImageElement!: ElementRef<HTMLImageElement>;
 
   /**
@@ -45,22 +43,14 @@ export class EditTrainingPlanComponent extends AbstractImageCropperComponent imp
    */
   trainingPlanEditView!: TrainingPlanEditView;
 
-  /**
-   * Signal indicating whether the training plan is loading.
-   */
-  loading = signal(true);
-
   constructor(
     private injector: Injector,
     private trainingPlanService: TrainingPlanService,
     private editTrainingPlanService: EditTrainingPlanService,
-    imageUploadService: ImageUploadService,
-    toastService: ToastService,
-  ) {
-    super(imageUploadService, toastService);
-  }
+    private toastService: ToastService,
+  ) {}
 
-  override async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     effect(
       async () => {
         await this.fetchTrainingPlan();
@@ -72,7 +62,7 @@ export class EditTrainingPlanComponent extends AbstractImageCropperComponent imp
   /**
    * Handles form submission, checking the validity of all form fields.
    */
-  override onConfirm(): void {
+  onConfirm(): void {
     if (this.trainingPlanEditView.isValid()) {
       const formData = this.trainingPlanEditView.toDto();
 
@@ -83,8 +73,6 @@ export class EditTrainingPlanComponent extends AbstractImageCropperComponent imp
     }
   }
 
-  uploadImage(image: string | null): void {}
-
   /**
    * Fetches the training plan details to edit and initializes the TrainingPlan class with values.
    */
@@ -92,21 +80,5 @@ export class EditTrainingPlanComponent extends AbstractImageCropperComponent imp
     const response = await firstValueFrom(this.editTrainingPlanService.getPlanForEdit(this.id()));
 
     this.trainingPlanEditView = TrainingPlanEditView.fromDto(response);
-    this.image.set(this.trainingPlanEditView.coverImageBase64());
-
-    this.loading.set(false);
-  }
-
-  /**
-   * Handles image upload and updates the cover image signal.
-   * @param event - The file input change event.
-   */
-  protected async handleImageUpload(event: any): Promise<void> {
-    const uploadedImageBase64Str = await this.imageUploadService.handleImageUpload(event);
-
-    if (uploadedImageBase64Str) {
-      this.trainingPlanEditView.coverImageBase64.set(uploadedImageBase64Str);
-      this.image.set(uploadedImageBase64Str);
-    }
   }
 }
