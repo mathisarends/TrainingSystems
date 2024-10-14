@@ -1,3 +1,5 @@
+<app-date-picker />
+
 @if (trainingDayNotifications$ | async; as trainingDayNotifications) {
   @if (trainingDayNotifications.length === 0) {
     <app-alert [alertText]="'Hier werden später deine absolvierten Trainings angezeigt'" />
@@ -14,10 +16,6 @@
       </div>
     }
   }
-
-  <div class="more-entries-container">
-    <app-button [variant]="'SECONDARY'" [textContent]="'Mehr Einträge laden'" (click)="loadLogEntries()" />
-  </div>
 } @else {
   <div class="grid">
     @for (k of [1, 2, 3]; track k) {

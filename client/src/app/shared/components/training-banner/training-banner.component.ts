@@ -44,19 +44,7 @@ export class TrainingBannerComponent implements OnInit {
   }
 
   protected async onImageCropped(imageCropperEvent: ImageCroppedEvent) {
-    if (!imageCropperEvent.blob) {
-      console.error('Blob is not defined in ImageCroppedEvent');
-      return;
-    }
-
-    try {
-      const base64 = await this.convertBlobToBase64(imageCropperEvent.blob);
-      if (typeof base64 === 'string') {
-        this.croppedImage.set(base64);
-      }
-    } catch (error) {
-      console.error('Error converting blob to Base64', error);
-    }
+    this.croppedImage.set(imageCropperEvent.base64!);
   }
 
   protected restoreOriginalDataSource(): void {

@@ -1,9 +1,11 @@
 @if (isCropView() && isImageSrcBase64()) {
   <image-cropper
+    id="cover-image"
     [imageBase64]="imageSrc()"
     (imageCropped)="onImageCropped($event)"
     [maintainAspectRatio]="false"
     format="png"
+    output="base64"
   />
 } @else {
   <img [src]="imageSrc()" alt="Cover Placeholder" id="cover-image" />

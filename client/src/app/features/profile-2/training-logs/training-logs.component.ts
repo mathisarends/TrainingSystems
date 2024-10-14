@@ -5,6 +5,7 @@ import { Observable, tap } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
 import { ButtonComponent } from '../../../shared/components/button/button.component';
+import { DatePickerComponent } from '../../../shared/components/datepicker/date-picker.component';
 import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
 import { IconName } from '../../../shared/icon/icon-name';
@@ -26,6 +27,7 @@ import { TrainingLogCardComponent } from '../../usage-statistics/training-log-ca
     TrainingLogCardSkeletonComponent,
     IconComponent,
     ButtonComponent,
+    DatePickerComponent,
   ],
   selector: 'app-training-logs',
   templateUrl: 'training-logs.component.html',
@@ -53,7 +55,7 @@ export class TrainingLogsComponent implements OnInit, AfterViewInit {
       title: 'Logs',
     });
 
-    this.loadLogEntries(16);
+    this.loadLogEntries();
 
     effect(
       () => {
