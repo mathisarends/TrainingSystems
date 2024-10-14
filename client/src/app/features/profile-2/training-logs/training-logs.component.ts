@@ -43,6 +43,8 @@ export class TrainingLogsComponent implements OnInit, AfterViewInit {
 
   searchQuery = signal('');
 
+  trainingDateFilter = signal(new Date());
+
   constructor(
     protected notificationService: NotificationService,
     private headerService: HeaderService,

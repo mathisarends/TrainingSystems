@@ -1,2 +1,1 @@
-<input type="date" (change)="onDateSelect($event)" />
-<p *ngIf="selectedDate">Selected Date: {{ selectedDate() | date }}</p>
+<input type="date" [(value)]="templateDate" />
