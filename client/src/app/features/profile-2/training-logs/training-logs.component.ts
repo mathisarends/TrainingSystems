@@ -16,6 +16,10 @@ import { TrainingDayFinishedNotification } from '../../usage-statistics/training
 import { TrainingLogCardSkeletonComponent } from '../../usage-statistics/training-log-card-skeleton/training-log-card-skeleton.component';
 import { TrainingLogCardComponent } from '../../usage-statistics/training-log-card/training-log-card.component';
 
+/**
+ * Displays the training log entries, allows filtering by date and search query.
+ * Supports marking notifications as seen and clearing unseen training notifications.
+ */
 @Component({
   standalone: true,
   imports: [
@@ -36,11 +40,23 @@ import { TrainingLogCardComponent } from '../../usage-statistics/training-log-ca
 export class TrainingLogsComponent implements OnInit, AfterViewInit {
   protected readonly IconName = IconName;
 
+  /**
+   * Observable of training day notifications loaded from the server.
+   */
   trainingDayNotifications$!: Observable<TrainingDayFinishedNotification[]>;
 
+  /**
+   * Stores cached notifications to avoid refetching them from the server.
+   */
   cachedTrainingNotifications: WritableSignal<TrainingDayFinishedNotification[]> = signal([]);
+  /**
+   * Stores filtered notifications based on user search input.
+   */
   filteredTrainingNotifications: WritableSignal<TrainingDayFinishedNotification[]> = signal([]);
 
+  /**
+   * Signal holding the user's search query for filtering notifications.
+   */
   searchQuery = signal('');
 
   trainingDateFilter = signal(new Date());
@@ -52,10 +68,12 @@ export class TrainingLogsComponent implements OnInit, AfterViewInit {
     private injector: Injector,
   ) {}
 
+  /**
+   * Initializes the component, sets the headline information, loads log entries,
+   * and sets up the effect to filter notifications based on search query and date.
+   */
   ngOnInit(): void {
-    this.headerService.setHeadlineInfo({
-      title: 'Logs',
-    });
+    this.setHeadlineInfo();
 
     this.loadLogEntries();
 
@@ -67,10 +85,17 @@ export class TrainingLogsComponent implements OnInit, AfterViewInit {
     );
   }
 
+  /**
+   * Marks unseen training notifications as seen after the view has been initialized.
+   */
   ngAfterViewInit(): void {
     this.httpService.delete('/user/activity/unseen-training-notifications').subscribe(() => {});
   }
 
+  /**
+   * Loads training log entries from the server and caches them for filtering.
+   * @param limit Optional limit to the number of notifications fetched.
+   */
   protected loadLogEntries(limit?: number) {
     const httpParams = new HttpParams();
     if (limit) {
@@ -87,6 +112,9 @@ export class TrainingLogsComponent implements OnInit, AfterViewInit {
       );
   }
 
+  /**
+   * Filters cached training notifications based on the user's search query.
+   */
   private filterTrainingNotifications(): void {
     const query = this.searchQuery().toLowerCase();
 
@@ -95,5 +123,11 @@ export class TrainingLogsComponent implements OnInit, AfterViewInit {
     });
 
     this.filteredTrainingNotifications.set(filtered);
+  }
+
+  private setHeadlineInfo(): void {
+    this.headerService.setHeadlineInfo({
+      title: 'Logs',
+    });
   }
 }
