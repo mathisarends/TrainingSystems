@@ -1,5 +1,4 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
-import { BrowserCheckService } from '../core/services/browser-check.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,14 +12,12 @@ export class MobileDeviceDetectionService {
    *
    * @param browserCheckService - Service to check if the code is running in a browser environment.
    */
-  constructor(private browserCheckService: BrowserCheckService) {
-    if (this.browserCheckService.isBrowser()) {
-      this.isMobileSignal = signal(this.checkForMobileDevice());
+  constructor() {
+    this.isMobileSignal = signal(this.checkForMobileDevice());
 
-      window.addEventListener('resize', () => {
-        this.isMobileSignal.set(this.checkForMobileDevice());
-      });
-    }
+    window.addEventListener('resize', () => {
+      this.isMobileSignal.set(this.checkForMobileDevice());
+    });
   }
 
   /**

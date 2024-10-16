@@ -1,6 +1,5 @@
 import { Component, effect, ElementRef, Injector, OnInit, signal, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
-import { BrowserCheckService } from '../../../../core/services/browser-check.service';
 import { LoadingService } from '../../../../core/services/loading.service';
 
 @Component({
@@ -19,27 +18,24 @@ export class LoadingProgressBarComponent implements OnInit {
   @ViewChild('progressBar', { static: true }) progressBar!: ElementRef;
 
   constructor(
-    private browserCheckService: BrowserCheckService,
     private loadingService: LoadingService,
     private injector: Injector,
   ) {}
 
   ngOnInit() {
-    if (this.browserCheckService.isBrowser()) {
-      effect(
-        () => {
-          if (this.loadingService.isLoading()) {
-            this.isComplete.set(false);
-            this.progress.set(0);
-            this.showProgressBar();
-            this.simulateLoading();
-          } else {
-            this.completeLoading();
-          }
-        },
-        { allowSignalWrites: true, injector: this.injector },
-      );
-    }
+    effect(
+      () => {
+        if (this.loadingService.isLoading()) {
+          this.isComplete.set(false);
+          this.progress.set(0);
+          this.showProgressBar();
+          this.simulateLoading();
+        } else {
+          this.completeLoading();
+        }
+      },
+      { allowSignalWrites: true, injector: this.injector },
+    );
   }
 
   simulateLoading() {

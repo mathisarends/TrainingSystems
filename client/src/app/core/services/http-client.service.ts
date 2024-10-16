@@ -1,8 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '../../environment/environment';
-import { BrowserCheckService } from './browser-check.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,10 +9,7 @@ import { BrowserCheckService } from './browser-check.service';
 export class HttpService {
   private baseUrl: string = process.env['NODE_ENV'] === 'production' ? environment.produUrl : environment.apiUrl;
 
-  constructor(
-    private http: HttpClient,
-    private browserCheckService: BrowserCheckService,
-  ) {}
+  constructor(private http: HttpClient) {}
 
   /**
    * Makes an HTTP GET request.
@@ -101,10 +97,6 @@ export class HttpService {
     params?: HttpParams,
     headers?: HttpHeaders,
   ): Observable<T> {
-    if (!this.browserCheckService.isBrowser()) {
-      return of(null as unknown as T);
-    }
-
     const { fullUrl, options } = this.buildRequestOptions(url, params, headers, body);
 
     switch (method) {

@@ -2,7 +2,6 @@ import { DestroyRef, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter, take } from 'rxjs';
-import { BrowserCheckService } from './browser-check.service';
 
 /**
  * @service RedirectService
@@ -23,13 +22,12 @@ export class RedirectService {
 
   constructor(
     private router: Router,
-    private browserCheckService: BrowserCheckService,
     private destroyRef: DestroyRef,
   ) {}
 
   initialize(): void {
     this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((event) => {
-      if (this.browserCheckService.isBrowser() && event instanceof NavigationEnd) {
+      if (event instanceof NavigationEnd) {
         this.saveLastRoute(event.urlAfterRedirects);
       }
     });

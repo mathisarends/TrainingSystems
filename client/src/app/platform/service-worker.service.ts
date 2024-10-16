@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { BrowserCheckService } from '../core/services/browser-check.service';
 import { HttpService } from '../core/services/http-client.service';
 
 @Injectable({
@@ -8,10 +7,7 @@ import { HttpService } from '../core/services/http-client.service';
 export class ServiceWorkerService {
   private VAPID_PUBLIC_KEY = 'BOLKmNpP6togP7OJDnS2bR1I-Tut9tpUWzYJBLAsc-m3MlR36roqEtWXjPaKlQ1IXiXAA6wCvxTzTQn0FATAUms';
 
-  constructor(
-    private browserCheckService: BrowserCheckService,
-    private httpService: HttpService,
-  ) {}
+  constructor(private httpService: HttpService) {}
 
   /**
    * Register the service worker and check for updates.
@@ -120,7 +116,7 @@ export class ServiceWorkerService {
    * @param callback The function to handle the message.
    */
   listenForMessages(callback: (event: MessageEvent) => void): void {
-    if (this.browserCheckService.isBrowser() && 'serviceWorker' in navigator) {
+    if ('serviceWorker' in navigator) {
       navigator.serviceWorker.addEventListener('message', callback);
     }
   }

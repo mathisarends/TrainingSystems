@@ -2,7 +2,6 @@ import { Component, DestroyRef, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { AuthService } from './core/services/auth.service';
-import { BrowserCheckService } from './core/services/browser-check.service';
 import { RedirectService } from './core/services/redirect.service';
 import { HeaderComponent } from './features/header/header.component';
 import { ProfileService } from './features/profile-2/service/profileService';
@@ -36,7 +35,6 @@ export class AppComponent implements OnInit {
 
   constructor(
     private serviceWorkerService: ServiceWorkerService,
-    private browserCheckService: BrowserCheckService,
     private mobileDeviceDetectionService: MobileDeviceDetectionService,
     private redirectService: RedirectService,
     private activatedRoute: ActivatedRoute,
@@ -53,21 +51,19 @@ export class AppComponent implements OnInit {
       }
     });
 
-    if (this.browserCheckService.isBrowser()) {
-      this.serviceWorkerService.registerServiceWorker();
+    this.serviceWorkerService.registerServiceWorker();
 
-      this.authService.checkAuthenticationStatus().subscribe();
+    this.authService.checkAuthenticationStatus().subscribe();
 
-      this.profileService.fetchAndSetProfileData().subscribe();
+    this.profileService.fetchAndSetProfileData().subscribe();
 
-      this.notificationService.fetchAndSetTrainingDayNotifications().subscribe();
+    this.notificationService.fetchAndSetTrainingDayNotifications().subscribe();
 
-      if (!this.mobileDeviceDetectionService.isMobileDevice) {
-        return;
-      }
-
-      this.redirectService.initialize();
-      this.redirectService.redirectToLastRoute();
+    if (!this.mobileDeviceDetectionService.isMobileDevice) {
+      return;
     }
+
+    this.redirectService.initialize();
+    this.redirectService.redirectToLastRoute();
   }
 }
