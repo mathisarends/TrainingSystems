@@ -1,24 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormService } from '../../../core/services/form.service';
 import { TrainingPlanDto } from './trainingPlanDto';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TrainingViewNavigationService {
-  constructor(
-    private router: Router,
-    private formService: FormService,
-  ) {}
+  constructor(private router: Router) {}
 
   navigateDay(trainingDayIndex: number, trainingFrequency: number, week: number): void {
-    console.log('🚀 ~ TrainingViewNavigationService ~ navigateDay ~ week:', week);
-    console.log('🚀 ~ TrainingViewNavigationService ~ navigateDay ~ trainingFrequency:', trainingFrequency);
-    console.log('🚀 ~ TrainingViewNavigationService ~ navigateDay ~ trainingDayIndex:', trainingDayIndex);
-
     if (trainingDayIndex >= 0 && trainingDayIndex <= trainingFrequency - 1) {
-      console.log('not');
       this.router.navigate([], {
         queryParams: {
           week: week,

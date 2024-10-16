@@ -31,7 +31,7 @@ export class WeightInputDirective extends AbstractDoubleClickDirective implement
   }
 
   @HostListener('change', ['$event'])
-  startPauseTimer(event: Event): void {
+  async startPauseTimer(event: Event): Promise<void> {
     event.stopPropagation();
     const categoryValue = this.exerciseTableRowService.getExerciseCategorySelectorByElement(this.inputElement).value;
     const exerciseName = this.exerciseTableRowService.getExerciseNameSelectorByElement(this.inputElement).value;

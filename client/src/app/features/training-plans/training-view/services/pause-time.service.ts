@@ -3,6 +3,7 @@ import { BrowserCheckService } from '../../../../core/services/browser-check.ser
 import { HttpService } from '../../../../core/services/http-client.service';
 import { ServiceWorkerService } from '../../../../platform/service-worker.service';
 import { DeviceLockService } from './lock-timer.service';
+import { WakeLockService } from './wake-lock.service';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +22,7 @@ export class PauseTimeService {
     private browserCheckService: BrowserCheckService,
     private deviceLockService: DeviceLockService,
     private httpService: HttpService,
+    private wakeLockService: WakeLockService,
     private injector: Injector,
   ) {
     if (this.browserCheckService.isBrowser()) {
@@ -29,7 +31,7 @@ export class PauseTimeService {
 
     effect(
       () => {
-        if (deviceLockService.isDeviceLocked()) {
+        if (this.deviceLockService.isDeviceLocked()) {
           console.log('gets locked');
           this.saveTimerStateOnDisplayLock();
         } else {
@@ -96,7 +98,9 @@ export class PauseTimeService {
    * Starts the pause timer with the given duration.
    * Sends a message to the service worker and starts the keep-alive interval.
    */
-  startPauseTimer(pauseTime: number, exerciseName: string): void {
+  async startPauseTimer(pauseTime: number, exerciseName: string): Promise<void> {
+    await this.wakeLockService.requestWakeLock();
+
     this.initialTime = pauseTime;
     this.remainingTime.set(pauseTime);
 

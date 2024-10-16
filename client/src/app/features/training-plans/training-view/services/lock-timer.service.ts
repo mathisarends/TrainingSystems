@@ -9,7 +9,10 @@ export class DeviceLockService {
   constructor() {
     document.addEventListener('visibilitychange', () => {
       this.updateLockStatus();
+      console.log('Document visibility changed. Current visibility state:', document.hidden);
     });
+
+    console.log('DeviceLockService initialized and listening for visibility changes.');
   }
 
   private updateLockStatus() {
