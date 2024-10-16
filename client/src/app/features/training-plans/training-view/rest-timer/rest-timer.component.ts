@@ -1,6 +1,5 @@
 import { Component, effect, Injector, OnInit, signal, WritableSignal } from '@angular/core';
 import { ModalService } from '../../../../core/services/modal/modalService';
-import { ServiceWorkerService } from '../../../../platform/service-worker.service';
 import { PercentageCircleVisualisationComponent } from '../../../../shared/components/percentage-circle-visualisation/percentage-circle-visualisation.component';
 import { Percentage } from '../../../../shared/components/percentage-circle-visualisation/percentage.type';
 import { IconName } from '../../../../shared/icon/icon-name';
@@ -22,7 +21,6 @@ export class RestTimerComponent implements OnInit {
   constructor(
     protected pauseTimeService: PauseTimeService,
     private modalService: ModalService,
-    private serviceWorkerService: ServiceWorkerService,
     private injector: Injector,
   ) {}
 

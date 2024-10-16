@@ -43,6 +43,10 @@ class Timer {
     }, 1000);
   }
 
+  setTime(time) {
+    this.remainingTime = time;
+  }
+
   /**
    * Updates the display of the timer by sending the current time to all clients.
    *

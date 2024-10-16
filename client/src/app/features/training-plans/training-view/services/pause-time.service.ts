@@ -53,7 +53,7 @@ export class PauseTimeService {
           this.keepAliveIntervalId = null;
 
           new Audio('./audio/boxing_bell.mp3').play();
-          this.clearLocalStorage();
+          localStorage.removeItem('initialTime');
 
           this.stopKeepAliveOnServer();
         }
@@ -85,6 +85,10 @@ export class PauseTimeService {
 
       console.log(`Verstrichene Zeit: ${timePassed} Sekunden, neue verbleibende Zeit: ${newRemainingTime} Sekunden`);
 
+      this.serviceWorkerService.sendMessageToServiceWorker({
+        command: 'setTime',
+        newRemainingTime,
+      });
       localStorage.removeItem('lockTimestamp');
       localStorage.removeItem('remainingTimeBeforeLock');
     }
@@ -100,8 +104,8 @@ export class PauseTimeService {
     this.initialTime = pauseTime;
     this.remainingTime.set(pauseTime);
 
-    this.saveExerciseNameInLocalStorage(exerciseName);
-    this.saveInitialTimeInLocalStorage(pauseTime);
+    localStorage.setItem('currentExercise', exerciseName);
+    localStorage.setItem('initialTime', pauseTime.toString());
 
     this.startKeepAliveOnServer();
 
@@ -113,12 +117,17 @@ export class PauseTimeService {
     this.currentExercise.set(exerciseName);
   }
 
-  adjustTime(seconds: number) {
-    this.sendMessageToServiceWorker('adjustTime', { seconds });
+  adjustTime(seconds: number): void {
+    this.serviceWorkerService.sendMessageToServiceWorker({
+      command: 'adjustTime',
+      seconds,
+    });
   }
 
   skipTimer() {
-    this.sendMessageToServiceWorker('stop');
+    this.serviceWorkerService.sendMessageToServiceWorker({
+      command: 'stop',
+    });
   }
 
   getInitialTime(): number {
@@ -145,27 +154,5 @@ export class PauseTimeService {
 
   private stopKeepAliveOnServer() {
     this.httpService.post('/rest-pause-timer/stop-keep-alive').subscribe(() => {});
-  }
-
-  /**
-   * Clears the exercise name and initial time from localStorage.
-   */
-  private clearLocalStorage(): void {
-    localStorage.removeItem('initialTime');
-  }
-
-  private saveExerciseNameInLocalStorage(exerciseName: string): void {
-    localStorage.setItem('currentExercise', exerciseName);
-  }
-
-  private saveInitialTimeInLocalStorage(exercisePauseTime: number): void {
-    localStorage.setItem('initialTime', exercisePauseTime.toString());
-  }
-
-  private sendMessageToServiceWorker(command: string, data?: any) {
-    this.serviceWorkerService.sendMessageToServiceWorker({
-      command,
-      ...data,
-    });
   }
 }

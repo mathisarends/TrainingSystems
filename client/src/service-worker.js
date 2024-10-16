@@ -89,10 +89,12 @@ self.addEventListener('message', function (event) {
     case 'keepAlive':
       timer.restartRestPauseTimer(data.duration - 1);
       break;
+    case 'setTime':
+      console.log('neue zeit empfangen');
+      timer.setTime(data.newRemainingTime);
+      break;
     case 'adjustTime':
       timer.remainingTime += data.seconds;
       break;
-    case 'setTime':
-      timer.remainingTime = data.newRemainingTime;
   }
 });

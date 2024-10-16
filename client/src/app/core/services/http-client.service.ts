@@ -7,7 +7,8 @@ import { environment } from '../../environment/environment';
   providedIn: 'root',
 })
 export class HttpService {
-  private baseUrl: string = process.env['NODE_ENV'] === 'production' ? environment.produUrl : environment.apiUrl;
+  //@ts-ignore
+  private baseUrl = process.env.NODE_ENV === 'production' ? environment.produUrl : environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
