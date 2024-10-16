@@ -15,7 +15,11 @@ dotenv.config();
 export default async function startDB(app: Express) {
   try {
     const isProduction = process.env.NODE_ENV === 'production';
-    const dbURI = isProduction ? process.env.mongo_uri_prod! : process.env.mongo_uri!;
+    const dbURI = isProduction ? process.env.mongo_uri_prod : process.env.mongo_uri;
+
+    if (!dbURI) {
+      throw new Error('No valid database url');
+    }
 
     await mongoose.connect(dbURI, {
       serverSelectionTimeoutMS: 50000
