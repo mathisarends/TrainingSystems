@@ -14,12 +14,13 @@ class TrainingLogService {
 
     const trainingLogs = await Promise.all(
       trainingDays.map(async day => {
-        const { coverImage, planTitle } = await this.getPlanDetails(user, day.id);
+        const { coverImage, planTitle, tonnage } = await this.getPlanDetails(user, day.id);
         return {
           ...day,
           trainingDayTonnage: getTonnagePerTrainingDay(day),
           coverImage,
-          planTitle
+          planTitle,
+          tonnage
         };
       })
     );
@@ -41,14 +42,19 @@ class TrainingLogService {
   /**
    * Retrieves the cover image and plan title for a specific training day.
    */
-  private async getPlanDetails(user: User, trainingDayId: string): Promise<{ coverImage: string; planTitle: string }> {
+  private async getPlanDetails(
+    user: User,
+    trainingDayId: string
+  ): Promise<{ coverImage: string; planTitle: string; tonnage: number }> {
     const trainingDay = await TrainingDayManager.findTrainingDayById(user, trainingDayId);
+    const tonnage = this.getTonnagePerTrainingDay(trainingDay);
 
     const mostProminentCategoriesInTrainingDay = this.getMostProminentExerciseForTrainingDay(trainingDay);
 
     return {
       coverImage: this.determineCoverImageBasedOnMostProminentCategory(mostProminentCategoriesInTrainingDay),
-      planTitle: mostProminentCategoriesInTrainingDay ?? 'Unknown Plan'
+      planTitle: mostProminentCategoriesInTrainingDay ?? 'Unknown Plan',
+      tonnage: tonnage
     };
   }
 
@@ -106,6 +112,23 @@ class TrainingLogService {
     const sortedCategories = Object.entries(categorySetCount).sort((a, b) => b[1] - a[1]);
 
     return sortedCategories.slice(0, 2).map(([category]) => category);
+  }
+
+  private getTonnagePerTrainingDay(trainingDay: TrainingDay): number {
+    let tonnage = 0;
+
+    for (const exercise of trainingDay.exercises) {
+      const weight = Number(exercise.weight);
+
+      if (isNaN(weight)) {
+        continue;
+      }
+
+      const tonnagePerExercise = weight * exercise.sets * exercise.reps;
+      tonnage += tonnagePerExercise;
+    }
+
+    return tonnage;
   }
 }
 

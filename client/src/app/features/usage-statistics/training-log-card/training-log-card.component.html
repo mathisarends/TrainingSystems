@@ -3,13 +3,17 @@
     [src]="notification().coverImage === '' ? '/images/training/training_3.jpg' : notification().coverImage"
     alt="{{ notification().planTitle }}"
   />
-  <div class="duration-overlay">{{ notification().durationInMinutes + ' Minuten' }}</div>
+
+  <div class="duration-overlay">
+    {{ notification().durationInMinutes + ' Minuten' }}
+  </div>
 </div>
 
 <div class="training-info">
   <div>
     <h4>{{ notification().planTitle }}</h4>
     <p>{{ notification().startTime! | formatDate }}</p>
+    <p>{{ notification().tonnage }} Kilogramm bewegt</p>
   </div>
 
   <app-icon [name]="IconName.MORE_VERTICAL" [size]="20" (click)="toggleMoreOptionsCollapseState()" />
