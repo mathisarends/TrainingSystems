@@ -19,9 +19,7 @@
         </div>
       }
     } @else {
-      @for (k of [1, 2, 3]; track k) {
-        <app-skeleton-card />
-      }
+      <ng-container *ngTemplateOutlet="skeletonLoader"></ng-container>
     }
   </div>
 } @else {
@@ -39,9 +37,15 @@
         </div>
       }
     } @else {
-      @for (k of [1, 2, 3]; track k) {
-        <app-skeleton-card />
-      }
+      <ng-container *ngTemplateOutlet="skeletonLoader"></ng-container>
     }
   </div>
 }
+
+<ng-template #skeletonLoader>
+  @for (k of [1, 2, 3]; track k) {
+    <div class="training-plan-grid">
+      <app-skeleton-card />
+    </div>
+  }
+</ng-template>
