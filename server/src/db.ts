@@ -21,9 +21,7 @@ export default async function startDB(app: Express) {
       throw new Error('No valid database url');
     }
 
-    await mongoose.connect(dbURI, {
-      serverSelectionTimeoutMS: 50000
-    });
+    await mongoose.connect(dbURI);
     console.log('Database connected');
 
     const client = new MongoClient(dbURI);

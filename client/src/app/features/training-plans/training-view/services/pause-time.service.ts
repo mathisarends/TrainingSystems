@@ -2,6 +2,7 @@ import { effect, Injectable, Injector, signal } from '@angular/core';
 import { BrowserCheckService } from '../../../../core/services/browser-check.service';
 import { HttpService } from '../../../../core/services/http-client.service';
 import { ServiceWorkerService } from '../../../../platform/service-worker.service';
+import { LockTimerService } from './lock-timer.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +19,7 @@ export class PauseTimeService {
   constructor(
     private serviceWorkerService: ServiceWorkerService,
     private browserCheckService: BrowserCheckService,
+    private lcokTimerService: LockTimerService,
     private httpService: HttpService,
     private injector: Injector,
   ) {
