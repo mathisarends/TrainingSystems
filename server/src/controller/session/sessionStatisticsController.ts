@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ChartDataDto } from '../../interfaces/chartDataDto.js';
+import { ChartDataDto } from 'shared/charts/chart-data.dto.js';
 import { TrainingRoutineStatisticsManager } from '../../service/trainingRoutine/trainingRoutineStatisticsManager.js';
 import trainingSessionService from '../../service/trainingSessionService.js';
 import userManager from '../../service/userManager.js';

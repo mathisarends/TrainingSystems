@@ -1,8 +1,8 @@
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ChartDataDto } from '@shared/charts/chart-data.dto';
 import { Observable } from 'rxjs/internal/Observable';
 import { HttpService } from '../../core/services/http-client.service';
-import { ChartDataDto } from '../training-plans/training-plan-statistics/chart-data-dto';
 
 @Injectable()
 export class StatisticsService {

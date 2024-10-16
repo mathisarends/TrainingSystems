@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
+import { ChartDataDto } from '@shared/charts/chart-data.dto';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { ExerciseCategories } from '../model/exercise-categories';
 import { AverageTrainingDayDurationDto } from './average-training-duration-dto';
-import { ChartDataDto } from './chart-data-dto';
 
 @Injectable()
 export class TrainingStatisticsService {

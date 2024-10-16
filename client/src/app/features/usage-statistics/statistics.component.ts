@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, effect, Injector, OnInit, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChartDataDto } from '@shared/charts/chart-data.dto';
 import { forkJoin } from 'rxjs';
 import { ChartData } from '../../shared/components/charts/chart-data';
 import { LineChartDataset } from '../../shared/components/charts/line-chart/line-chart-data-set';
@@ -12,7 +13,6 @@ import { SelectComponent } from '../../shared/components/select/select.component
 import { IconName } from '../../shared/icon/icon-name';
 import { ImageDownloadService } from '../../shared/service/image-download.service';
 import { HeaderService } from '../header/header.service';
-import { ChartDataDto } from '../training-plans/training-plan-statistics/chart-data-dto';
 import { TrainingDayChartType } from '../training-plans/training-plan-statistics/training-day-chart-type';
 import { TrainingStatisticsService } from '../training-plans/training-plan-statistics/training-statistics.service';
 import { ChartColorService } from '../training-plans/training-view/services/chart-color.service';
