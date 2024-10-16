@@ -2,7 +2,7 @@ import { effect, Injectable, Injector, signal } from '@angular/core';
 import { BrowserCheckService } from '../../../../core/services/browser-check.service';
 import { HttpService } from '../../../../core/services/http-client.service';
 import { ServiceWorkerService } from '../../../../platform/service-worker.service';
-import { LockTimerService } from './lock-timer.service';
+import { DeviceLockService } from './lock-timer.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,13 +19,26 @@ export class PauseTimeService {
   constructor(
     private serviceWorkerService: ServiceWorkerService,
     private browserCheckService: BrowserCheckService,
-    private lcokTimerService: LockTimerService,
+    private deviceLockService: DeviceLockService,
     private httpService: HttpService,
     private injector: Injector,
   ) {
     if (this.browserCheckService.isBrowser()) {
       this.restoreStateFromLocalStorage();
     }
+
+    effect(
+      () => {
+        if (deviceLockService.isDeviceLocked()) {
+          console.log('gets locked');
+          this.saveTimerStateOnDisplayLock();
+        } else {
+          console.log('gets unlocked');
+          this.restoreTimerOnDisplayUnlock();
+        }
+      },
+      { allowSignalWrites: true, injector: this.injector },
+    );
 
     this.serviceWorkerService.listenForMessages((event: MessageEvent) => {
       if (event.data.command === 'currentTime') {
@@ -49,6 +62,34 @@ export class PauseTimeService {
       },
       { allowSignalWrites: true, injector: this.injector },
     );
+  }
+
+  private saveTimerStateOnDisplayLock() {
+    const timestamp = Date.now();
+    localStorage.setItem('lockTimestamp', timestamp.toString());
+    localStorage.setItem('remainingTimeBeforeLock', this.remainingTime().toString());
+
+    console.log('Speichere Zeitstempel und verbleibende Zeit im Local Storage.');
+  }
+
+  private restoreTimerOnDisplayUnlock() {
+    const lockTimestamp = localStorage.getItem('lockTimestamp');
+    const remainingTimeBeforeLock = localStorage.getItem('remainingTimeBeforeLock');
+
+    if (lockTimestamp && remainingTimeBeforeLock) {
+      const parsedTimestamp = parseInt(lockTimestamp, 10);
+      const parsedRemainingTime = parseInt(remainingTimeBeforeLock, 10);
+
+      const now = Date.now();
+      const timePassed = Math.floor((now - parsedTimestamp) / 1000);
+
+      const newRemainingTime = Math.max(0, parsedRemainingTime - timePassed);
+
+      console.log(`Verstrichene Zeit: ${timePassed} Sekunden, neue verbleibende Zeit: ${newRemainingTime} Sekunden`);
+
+      localStorage.removeItem('lockTimestamp');
+      localStorage.removeItem('remainingTimeBeforeLock');
+    }
   }
 
   /**
