@@ -3,7 +3,7 @@
 </div>
 
 @if (isDragMode()) {
-  <div class="row" cdkDropList (cdkDropListDropped)="updateTrainingPlanOrder($event)">
+  <div class="row">
     @if (!isLoading()) {
       @if (filteredTrainingPlans().length === 0) {
         <app-alert alertText="Keine deiner bestehenden Trainingpläne passen zu dieser Suchanfrage!" />
