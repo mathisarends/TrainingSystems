@@ -2,31 +2,26 @@
   class="mb-3"
   alertType="primary"
   alertText="Stelle sicher, dass du deinen Trainingsplan bereits vollständig erstellt und gespeichert hast."
-></app-alert>
+/>
 
-<div class="row">
-  <div class="col-md-12">
-    <div class="card-body">
-      <form [formGroup]="autoProgressionForm" (ngSubmit)="onConfirm()">
-        <!-- RPE Progression per Week -->
-        <div class="form-floating mb-4">
-          <select id="rpe_progression" class="form-control" formControlName="rpeProgression" required>
-            <option value="0">0</option>
-            <option value="0.5" selected>0.5</option>
-            <option value="1">1</option>
-          </select>
-          <label for="rpe_progression">RPE Anstieg pro Woche</label>
-        </div>
+<div class="input-group">
+  <app-floating-label-input
+    [label]="'RPE Anstieg pro Woche'"
+    [(value)]="rpeProgressionOption"
+    [type]="'select'"
+    [options]="[
+      { label: '0.5', value: 0.5 },
+      { label: '1', value: 1 },
+    ]"
+  />
 
-        <!-- Deload Week Planning -->
-        <div class="form-floating mb-4">
-          <select id="deload_week" class="form-control" formControlName="deloadWeek" required>
-            <option value="true" selected>Ja</option>
-            <option value="false">Nein</option>
-          </select>
-          <label for="deload_week">Letzte Woche als Deload planen?</label>
-        </div>
-      </form>
-    </div>
-  </div>
+  <app-floating-label-input
+    [label]="'Letzte Woche als Deload planen?'"
+    [(value)]="isDeloadWeekOptionSelection"
+    [type]="'select'"
+    [options]="[
+      { label: 'Ja', value: true },
+      { label: 'Nein', value: false },
+    ]"
+  />
 </div>

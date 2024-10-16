@@ -90,7 +90,6 @@ self.addEventListener('message', function (event) {
       timer.restartRestPauseTimer(data.duration - 1);
       break;
     case 'setTime':
-      console.log('neue zeit empfangen');
       timer.setTime(data.newRemainingTime);
       break;
     case 'adjustTime':

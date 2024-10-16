@@ -1,4 +1,4 @@
 export interface FloatingLabelInputItem {
   label: string;
-  value: number | string;
+  value: number | string | boolean;
 }

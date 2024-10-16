@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { Component, HostListener, input, output } from '@angular/core';
 
 @Component({
   selector: 'app-button',
@@ -20,4 +20,11 @@ export class ButtonComponent {
    * This input is required.
    */
   textContent = input.required<string>();
+
+  clicked = output<Event>();
+
+  @HostListener('click', ['$event'])
+  onClick(event: Event) {
+    this.clicked.emit(event);
+  }
 }

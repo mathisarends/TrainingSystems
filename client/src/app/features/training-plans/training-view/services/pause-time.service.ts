@@ -66,8 +66,6 @@ export class PauseTimeService {
     const timestamp = Date.now();
     localStorage.setItem('lockTimestamp', timestamp.toString());
     localStorage.setItem('remainingTimeBeforeLock', this.remainingTime().toString());
-
-    console.log('Speichere Zeitstempel und verbleibende Zeit im Local Storage.');
   }
 
   private restoreTimerOnDisplayUnlock() {

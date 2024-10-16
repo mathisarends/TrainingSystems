@@ -175,6 +175,7 @@ export class ModalComponent implements AfterViewInit, OnInit {
    * Calls `onConfirm` if the child component implements `ConfirmableComponent`.
    */
   confirm() {
+    console.log('confirmed here');
     const componentInstance = this.childComponentRef.instance;
     if (this.implementsOnConfirm(componentInstance)) {
       componentInstance.onConfirm();
