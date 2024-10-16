@@ -1,5 +1,4 @@
 import { effect, Injectable, Injector, signal } from '@angular/core';
-import { BrowserCheckService } from '../../../../core/services/browser-check.service';
 import { HttpService } from '../../../../core/services/http-client.service';
 import { ServiceWorkerService } from '../../../../platform/service-worker.service';
 import { DeviceLockService } from './lock-timer.service';
@@ -19,15 +18,12 @@ export class PauseTimeService {
 
   constructor(
     private serviceWorkerService: ServiceWorkerService,
-    private browserCheckService: BrowserCheckService,
     private deviceLockService: DeviceLockService,
     private httpService: HttpService,
     private wakeLockService: WakeLockService,
     private injector: Injector,
   ) {
-    if (this.browserCheckService.isBrowser()) {
-      this.restoreStateFromLocalStorage();
-    }
+    this.restoreStateFromLocalStorage();
 
     effect(
       () => {
