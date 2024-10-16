@@ -1,4 +1,4 @@
-import { ChartDataDto } from '../../interfaces/chartDataDto.js';
+import { ChartDataDto } from 'shared/charts/chart-data.dto.js';
 import { TrainingSession } from '../../models/collections/trainingSession.js';
 import { Exercise } from '../../models/training/exercise.js';
 
