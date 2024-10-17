@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
+import { PermissionDto } from '@shared/charts/settings/permission.dto';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { BasicConfirmationResponse } from '../../../shared/dto/basic-confirmation-response';
-import { PermissionDto } from './model/permission-dto';
 
 /**
  * Service to manage user settings related to permissions, such as email notifications.

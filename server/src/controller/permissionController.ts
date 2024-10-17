@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { PermissionDto } from '../interfaces/permissionDto.js';
+import { PermissionDto } from 'shared/charts/settings/permission.dto.js';
 import userManager from '../service/userManager.js';
 
 /**
