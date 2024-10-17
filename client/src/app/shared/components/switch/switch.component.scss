@@ -1,23 +1,43 @@
-:host {
-  width: 50px;
-  height: 25px;
-  background-color: #d1c4e9; /* Light purple */
+.switch {
+  width: 55px;
+  height: 30px;
+  background-color: #b0b0b0;
   border-radius: 25px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 2px;
+  position: relative;
   cursor: pointer;
-  transition:
-    background-color 0.3s,
-    justify-content 0.3s;
+  transition: background-color 0.3s ease;
+  padding: 2px;
+  border: 2px solid rgb(203, 187, 187);
 }
 
-:host.on {
-  background-color: #512da8; /* Dark purple */
-  justify-content: flex-end;
+.switch.on {
+  background-color: var(--accent-color);
+  border: none;
+}
+
+.switch .handle {
+  width: 18px;
+  height: 18px;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  transform: translateY(-50%);
+  transition: left 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  scale: 0.95;
+}
+
+.switch.on .handle {
+  width: 21px;
+  height: 21px;
+  left: 27px;
 }
 
 app-icon {
-  color: white;
+  font-size: 12px;
+  color: grey;
 }

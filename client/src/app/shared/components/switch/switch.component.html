@@ -1,1 +1,7 @@
-<app-icon [name]="IconName.CHECK"></app-icon>
+<div class="switch" [ngClass]="{ on: isChecked() }" (click)="toggle()">
+  <div class="handle">
+    @if (isChecked()) {
+      <app-icon [name]="IconName.CHECK" [size]="16" />
+    }
+  </div>
+</div>

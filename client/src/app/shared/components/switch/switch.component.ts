@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, HostBinding, HostListener, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { IconName } from '../../icon/icon-name';
 import { IconComponent } from '../../icon/icon.component';
 
@@ -9,18 +9,13 @@ import { IconComponent } from '../../icon/icon.component';
   imports: [IconComponent, NgClass],
   templateUrl: './switch.component.html',
   styleUrls: ['./switch.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SwitchComponent {
   protected readonly IconName = IconName;
-  isChecked = signal(false);
+  isChecked = model(false);
 
-  @HostBinding('class.on')
-  get isOn() {
-    return this.isChecked();
-  }
-
-  @HostListener('click')
-  toggle() {
+  protected toggle() {
     this.isChecked.set(!this.isChecked());
   }
 }
