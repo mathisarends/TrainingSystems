@@ -1,4 +1,4 @@
-import { AverageTrainingDayDurationDto } from '../../interfaces/averageTrainingDayDurationDto';
+import { AverageTrainingDayDurationDto } from 'shared/charts/average-training-day-duration.dto.js';
 import { TrainingStatisticsManager } from './training-statistics-manager.js';
 
 export class SessionDurationManager extends TrainingStatisticsManager {

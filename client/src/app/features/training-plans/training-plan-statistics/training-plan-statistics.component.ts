@@ -1,6 +1,7 @@
 import { Component, DestroyRef, effect, Injector, OnInit, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
+import { AverageTrainingDayDurationDto } from '@shared/charts/average-training-day-duration.dto';
 import { ChartDataDto } from '@shared/charts/chart-data.dto';
 import { forkJoin } from 'rxjs';
 import { ChartData } from '../../../shared/components/charts/chart-data';
@@ -19,7 +20,6 @@ import { KeyboardService } from '../../../shared/service/keyboard.service';
 import { HeaderService } from '../../header/header.service';
 import { ChartColorService } from '../training-view/services/chart-color.service';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
-import { AverageTrainingDayDurationDto } from './average-training-duration-dto';
 import { TrainingDayChartType } from './training-day-chart-type';
 import { TrainingStatisticsService } from './training-statistics.service';
 

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
+import { AverageTrainingDayDurationDto } from 'shared/charts/average-training-day-duration.dto.js';
 import { ChartDataDto } from 'shared/charts/chart-data.dto.js';
-import { AverageTrainingDayDurationDto } from '../../interfaces/averageTrainingDayDurationDto.js';
 import trainingPlanManager from '../../service/trainingPlanManager.js';
 import { PerformanceProgressionManager } from '../../service/trainingStatistics/performance-progression-manager.js';
 import { SessionDurationManager } from '../../service/trainingStatistics/session-duration-manager.js';
