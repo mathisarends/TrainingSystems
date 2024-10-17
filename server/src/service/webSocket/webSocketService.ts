@@ -1,6 +1,5 @@
 import { Server as HttpServer } from 'http';
 import { Socket, Server as SocketIOServer } from 'socket.io';
-import { TrainingDayFinishedNotification } from '../../models/collections/user/training-fninished-notifcation.js';
 import { NotificationChannel } from './notificationChannel.js';
 import { socketAuthMiddleware } from './socketAuthMiddleware.js';
 import { UserId } from './userId.type.js';
@@ -40,8 +39,8 @@ class WebSocketService {
     });
   }
 
-  sendTrainingNotificationToUser(userId: string, notification: TrainingDayFinishedNotification): void {
-    this.sendMessageToUser(userId, NotificationChannel.TrainingNotifications, notification);
+  sendTrainingNotificationToUser(userId: string, amountOfTrainingDayNotifications: number): void {
+    this.sendMessageToUser(userId, NotificationChannel.TrainingNotifications, amountOfTrainingDayNotifications);
   }
 
   sendKeepTimerAliveSignal(userId: string, currentTime: number): void {

@@ -38,13 +38,12 @@ export async function getActivityCalendar(req: Request, res: Response): Promise<
 export async function getTrainingDayNotifications(req: Request, res: Response): Promise<Response<number>> {
   const user = await userManager.getUser(res);
 
-  return res.status(200).json(user.trainingDayNotifications.length);
+  return res.status(200).json(user.amountOfTrainingDayNotifications);
 }
 
-// TODO: training notifications muss jetzt nicht mehr denn ganzne plan selber speichern sondenr nur noch einen beliebigen eitnarg vllt. id?
 export async function resetUnseenTrainingDayNotifications(req: Request, res: Response): Promise<Response<number>> {
   const user = await userManager.getUser(res);
-  user.trainingDayNotifications = [];
+  user.amountOfTrainingDayNotifications = 0;
   await userManager.update(user);
   return res.status(200);
 }
@@ -59,27 +58,6 @@ export async function getTrainingLogForUser(
   const userTrainingLogs = await trainingLogService.getUserTrainingLogs(user, limit);
 
   return res.status(200).json(userTrainingLogs);
-}
-
-/**
- * Deletes a specific training day notification for a user.
- */
-export async function deleteTrainingDayNotification(req: Request, res: Response): Promise<Response> {
-  const notificationId = req.params.id;
-
-  const user = await userManager.getUser(res);
-
-  const notificationIndex = user.trainingDayNotifications.findIndex(notification => notification.id === notificationId);
-
-  if (notificationIndex === -1) {
-    return res.status(404).json({ error: 'Notification with id not found.' });
-  }
-
-  user.trainingDayNotifications.splice(notificationIndex, 1);
-
-  await userManager.update(user);
-
-  return res.status(200).json({ message: 'Notification wurde erfolgreich entfernt' });
 }
 
 /**

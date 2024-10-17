@@ -2,9 +2,7 @@ import { ApplicationRef, DestroyRef, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable, Subject } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
-import { BrowserCheckService } from '../../../core/services/browser-check.service';
 import { environment } from '../../../environment/environment';
-import { TrainingDayFinishedNotification } from '../../../features/usage-statistics/training-finished-notification';
 import { NotificationChannel } from './notificationChannel';
 
 @Injectable({
@@ -15,17 +13,16 @@ export class WebSocketService {
   private webSocketUrl =
     process.env['NODE_ENV'] === 'production' ? environment.webSocketProdUrl : environment.webSocketUrl;
 
-  private trainingNotificationSubject = new Subject<TrainingDayFinishedNotification>();
+  private amoutOfTrainingDayNotificationsSubject = new Subject<number>();
 
   private testMessage = new Subject<string>();
 
   constructor(
-    private browserCheckService: BrowserCheckService,
     private appRef: ApplicationRef,
     private destroyRef: DestroyRef,
   ) {
     this.appRef.isStable.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((isStable) => {
-      if (isStable && this.browserCheckService.isBrowser() && !this.socket) {
+      if (isStable && !this.socket) {
         this.initializeSocket();
       }
     });
@@ -38,9 +35,9 @@ export class WebSocketService {
         transports: ['websocket'],
       });
 
-      this.socket.on(NotificationChannel.TrainingNotifications, (message: TrainingDayFinishedNotification) => {
+      this.socket.on(NotificationChannel.TrainingNotifications, (message: number) => {
         console.log('Received training notification:', message);
-        this.trainingNotificationSubject.next(message);
+        this.amoutOfTrainingDayNotificationsSubject.next(message);
       });
 
       this.socket.on(NotificationChannel.MESSAGE, (message: string) => {
@@ -64,8 +61,8 @@ export class WebSocketService {
     }
   }
 
-  onTrainingNotification(): Observable<TrainingDayFinishedNotification> {
-    return this.trainingNotificationSubject.asObservable();
+  onTrainingNotification(): Observable<number> {
+    return this.amoutOfTrainingDayNotificationsSubject.asObservable();
   }
 
   onTestMessage(): Observable<string> {

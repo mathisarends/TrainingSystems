@@ -51,7 +51,7 @@ export async function createNewUser(userDetails: NewUserParams): Promise<Omit<Us
     username,
     email,
     trainingPlans: [],
-    trainingDayNotifications: [],
+    amountOfTrainingDayNotifications: 0,
     gymtTicket: encrypt('noGymTicketAvailable'),
     isTrainingSummaryEmailEnabled: true,
     exercises: {
