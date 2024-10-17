@@ -96,7 +96,7 @@ export class TrainingSessionTracker {
     const notificationPayload: NotificationPayload = {
       title: 'TYR TS',
       body: 'Trainingszusammenfassung verfügbar',
-      url: '/profile/logs',
+      url: '/logs',
       tag: 'training-summary-notification',
       vibrate: [200, 100, 200]
     };

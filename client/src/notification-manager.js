@@ -22,6 +22,9 @@ class NotificationManager {
     const notificationOptions = {
       tag: this.defaultTag,
       icon: this.defaultIcon,
+      data: {
+        url: '/',
+      },
       ...options,
     };
     self.registration.showNotification(title, {
