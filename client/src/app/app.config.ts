@@ -5,13 +5,12 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { routes } from './app.routes';
 import { httpErrorInterceptor } from './core/interceptors/http-error-interceptor';
-import { loadingInterceptor } from './core/interceptors/loading-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideAnimations(),
     provideHttpClient(withFetch()),
-    provideHttpClient(withInterceptors([httpErrorInterceptor, loadingInterceptor])),
+    provideHttpClient(withInterceptors([httpErrorInterceptor])),
   ],
 };

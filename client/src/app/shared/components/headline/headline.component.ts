@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, input } from '@angular/core';
-import { LoadingService } from '../../../core/services/loading.service';
 import { SpikeLoaderComponent } from '../loader/spike-loader/spike-loader.component';
 import { SkeletonComponent } from '../skeleton/skeleton.component';
 
@@ -17,6 +16,4 @@ export class HeadlineComponent {
   subHeading = input<string>('');
 
   showSpikeLoader = input<boolean>(true);
-
-  constructor(protected loadingService: LoadingService) {}
 }
