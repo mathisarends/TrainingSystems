@@ -1,0 +1,23 @@
+:host {
+  width: 50px;
+  height: 25px;
+  background-color: #d1c4e9; /* Light purple */
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 2px;
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    justify-content 0.3s;
+}
+
+:host.on {
+  background-color: #512da8; /* Dark purple */
+  justify-content: flex-end;
+}
+
+app-icon {
+  color: white;
+}

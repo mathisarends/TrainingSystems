@@ -1,3 +1,5 @@
 @for (item of checkboxItems(); track item.label) {
   <app-checkbox (valueChanged)="onCheckboxValueChange($event)" [item]="item" />
 }
+
+<app-switch />

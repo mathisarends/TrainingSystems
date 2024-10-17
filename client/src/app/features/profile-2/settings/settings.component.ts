@@ -3,19 +3,22 @@ import { PermissionDto } from '@shared/settings/permission.dto';
 import { CheckboxItem } from '../../../shared/components/checbkox/checkbox-item';
 import { CheckboxComponent } from '../../../shared/components/checbkox/checkbox.component';
 import { OnConfirm } from '../../../shared/components/modal/on-confirm';
+import { SwitchComponent } from '../../../shared/components/switch/switch.component';
 import { ToastService } from '../../../shared/components/toast/toast.service';
 import { SettingsService } from './settings.service';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CheckboxComponent],
+  imports: [CheckboxComponent, SwitchComponent],
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
   providers: [SettingsService],
 })
 export class SettingsComponent implements OnInit, OnConfirm {
   protected checkboxItems = signal<CheckboxItem[]>([]);
+
+  isChecked = signal(true);
 
   constructor(
     private settingsService: SettingsService,
