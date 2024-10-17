@@ -1,5 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { PermissionDto } from '@shared/charts/settings/permission.dto';
+import { PermissionDto } from '@shared/settings/permission.dto';
 import { CheckboxItem } from '../../../shared/components/checbkox/checkbox-item';
 import { CheckboxComponent } from '../../../shared/components/checbkox/checkbox.component';
 import { OnConfirm } from '../../../shared/components/modal/on-confirm';

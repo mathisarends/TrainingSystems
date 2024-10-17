@@ -13,7 +13,6 @@
   <div>
     <h4>{{ notification().planTitle }}</h4>
     <p>{{ notification().startTime! | formatDate }}</p>
-    <p>{{ notification().tonnage }} Kilogramm bewegt</p>
   </div>
 
   <app-icon [name]="IconName.MORE_VERTICAL" [size]="20" (click)="toggleMoreOptionsCollapseState()" />

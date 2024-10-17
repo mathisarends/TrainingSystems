@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PermissionDto } from '@shared/charts/settings/permission.dto';
+import { PermissionDto } from '@shared/settings/permission.dto';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { BasicConfirmationResponse } from '../../../shared/dto/basic-confirmation-response';
