@@ -112,8 +112,6 @@ export class ProfileComponent2 implements OnInit {
       this.showDeleteAccountDialog();
     } else if (listItem.label === 'Progression') {
       this.router.navigate(['profile/progression']);
-    } else if (listItem.label === 'Settings') {
-      this.displaySettingsModal();
     } else if (listItem.label === 'Social') {
       this.modalService.open({
         component: FriendModalComponent,

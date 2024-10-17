@@ -35,6 +35,7 @@ export class TrainingLogCardComponent {
    */
   moreOptions = [
     { label: 'Ansehen', icon: IconName.EYE, callback: () => this.navigateToTrainingDay() },
+    { label: 'Fortschritt', icon: IconName.AWARD, callback: () => console.log('not yet amigo') },
     {
       label: 'Teilen',
       icon: IconName.SHARE,

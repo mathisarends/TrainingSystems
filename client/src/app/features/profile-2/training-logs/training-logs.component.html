@@ -4,8 +4,6 @@
   } @else {
     <app-search-bar [(searchQuery)]="searchQuery" />
 
-    <app-date-picker [(selectedDate)]="trainingDateFilter" />
-
     @if (filteredTrainingNotifications().length === 0) {
       <app-alert [alertText]="'Es passen keine Trainings zu deiner aktuellen Suchanfrage'" />
     } @else {

@@ -1,6 +1,15 @@
 import { AsyncPipe } from '@angular/common';
 import { HttpParams } from '@angular/common/http';
-import { AfterViewInit, Component, effect, Injector, OnInit, signal, WritableSignal } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  Injector,
+  OnInit,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
@@ -36,6 +45,7 @@ import { TrainingLogCardComponent } from '../../usage-statistics/training-log-ca
   selector: 'app-training-logs',
   templateUrl: 'training-logs.component.html',
   styleUrls: ['./training-logs.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TrainingLogsComponent implements OnInit, AfterViewInit {
   protected readonly IconName = IconName;
@@ -58,8 +68,6 @@ export class TrainingLogsComponent implements OnInit, AfterViewInit {
    * Signal holding the user's search query for filtering notifications.
    */
   searchQuery = signal('');
-
-  trainingDateFilter = signal(new Date());
 
   constructor(
     protected notificationService: NotificationService,
