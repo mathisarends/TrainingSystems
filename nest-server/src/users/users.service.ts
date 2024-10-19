@@ -72,19 +72,7 @@ export class UsersService {
       name,
       email,
       profilePicture,
-      exercises: {
-        [ExerciseCategoryType.PLACEHOLDER]: placeHolderExercises,
-        [ExerciseCategoryType.SQUAT]: squatExercises,
-        [ExerciseCategoryType.BENCH]: benchExercises,
-        [ExerciseCategoryType.DEADLIFT]: deadliftExercises,
-        [ExerciseCategoryType.OVERHEADPRESS]: overheadpressExercises,
-        [ExerciseCategoryType.CHEST]: chestExercises,
-        [ExerciseCategoryType.BACK]: backExercises,
-        [ExerciseCategoryType.SHOULDER]: shoulderExercises,
-        [ExerciseCategoryType.TRICEPS]: tricepExercises,
-        [ExerciseCategoryType.BICEPS]: bicepsExercises,
-        [ExerciseCategoryType.LEGS]: legExercises,
-      },
+      exercises: this.generateDefaultExercises(),
     });
 
     if (userCreationMode === UserCreationMode.REGULAR) {
@@ -106,5 +94,21 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
     return { deleted: true };
+  }
+
+  private generateDefaultExercises() {
+    return {
+      [ExerciseCategoryType.PLACEHOLDER]: placeHolderExercises,
+      [ExerciseCategoryType.SQUAT]: squatExercises,
+      [ExerciseCategoryType.BENCH]: benchExercises,
+      [ExerciseCategoryType.DEADLIFT]: deadliftExercises,
+      [ExerciseCategoryType.OVERHEADPRESS]: overheadpressExercises,
+      [ExerciseCategoryType.CHEST]: chestExercises,
+      [ExerciseCategoryType.BACK]: backExercises,
+      [ExerciseCategoryType.SHOULDER]: shoulderExercises,
+      [ExerciseCategoryType.TRICEPS]: tricepExercises,
+      [ExerciseCategoryType.BICEPS]: bicepsExercises,
+      [ExerciseCategoryType.LEGS]: legExercises,
+    };
   }
 }

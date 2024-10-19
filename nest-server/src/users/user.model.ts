@@ -22,9 +22,7 @@ export class User extends Document {
    * Organizes the user's exercises by category.
    */
   @Prop({
-    type: Map,
-    of: [{ type: Object, required: true }],
-    required: true,
+    type: Object,
     default: {},
   })
   exercises: Record<ExerciseCategoryType, UserExercise[]>;
