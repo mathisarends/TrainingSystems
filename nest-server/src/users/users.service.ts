@@ -12,23 +12,14 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UserCreationMode } from './types/user-creation-mode.enum';
 import { User } from './user.model';
 
-import backExercises from 'src/exercise/ressources/backExercises';
-import benchExercises from 'src/exercise/ressources/benchExercises';
-import bicepsExercises from 'src/exercise/ressources/bicepsExercises';
-import chestExercises from 'src/exercise/ressources/chestExercises';
-import deadliftExercises from 'src/exercise/ressources/deadliftExercises';
-import legExercises from 'src/exercise/ressources/legExercises';
-import overheadpressExercises from 'src/exercise/ressources/overheadpressExercises';
-import placeHolderExercises from 'src/exercise/ressources/placeholderExercises';
-import shoulderExercises from 'src/exercise/ressources/shoulderExercises';
-import squatExercises from 'src/exercise/ressources/squatExercises';
-import tricepExercises from 'src/exercise/ressources/tricepsExercises';
-
-import { ExerciseCategoryType } from 'src/exercise/types/exercise-category-type.enum';
+import { ExerciseService } from 'src/exercise/exercise.service';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
+  constructor(
+    @InjectModel('User') private readonly userModel: Model<User>,
+    private readonly exerciseService: ExerciseService,
+  ) {}
 
   async getUsers() {
     return await this.userModel.find().exec();
@@ -72,7 +63,7 @@ export class UsersService {
       name,
       email,
       profilePicture,
-      exercises: this.generateDefaultExercises(),
+      exercises: this.exerciseService.getDefaultExercisesForUser(),
     });
 
     if (userCreationMode === UserCreationMode.REGULAR) {
@@ -94,21 +85,5 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
     return { deleted: true };
-  }
-
-  private generateDefaultExercises() {
-    return {
-      [ExerciseCategoryType.PLACEHOLDER]: placeHolderExercises,
-      [ExerciseCategoryType.SQUAT]: squatExercises,
-      [ExerciseCategoryType.BENCH]: benchExercises,
-      [ExerciseCategoryType.DEADLIFT]: deadliftExercises,
-      [ExerciseCategoryType.OVERHEADPRESS]: overheadpressExercises,
-      [ExerciseCategoryType.CHEST]: chestExercises,
-      [ExerciseCategoryType.BACK]: backExercises,
-      [ExerciseCategoryType.SHOULDER]: shoulderExercises,
-      [ExerciseCategoryType.TRICEPS]: tricepExercises,
-      [ExerciseCategoryType.BICEPS]: bicepsExercises,
-      [ExerciseCategoryType.LEGS]: legExercises,
-    };
   }
 }

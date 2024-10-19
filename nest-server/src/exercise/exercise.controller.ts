@@ -1,4 +1,4 @@
-import { Controller, Get, Req } from '@nestjs/common';
+import { Controller, Delete, Get, Req } from '@nestjs/common';
 import { Request } from 'express';
 import { ExerciseService } from './exercise.service';
 
@@ -10,5 +10,11 @@ export class ExerciseController {
   getCategories(@Req() request: Request) {
     const user = request['user'];
     return this.exerciseService.getExercises(user);
+  }
+
+  @Delete()
+  async resetExercises(@Req() request: Request) {
+    const user = request['user'];
+    return await this.exerciseService.setDefaultExercisesForUser(user);
   }
 }

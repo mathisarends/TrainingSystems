@@ -1,6 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { User } from 'src/users/user.model';
 import { UserExercise } from './model/user-exercise.model';
+import backExercises from './ressources/backExercises';
+import benchExercises from './ressources/benchExercises';
+import bicepsExercises from './ressources/bicepsExercises';
+import chestExercises from './ressources/chestExercises';
+import deadliftExercises from './ressources/deadliftExercises';
+import legExercises from './ressources/legExercises';
+import overheadpressExercises from './ressources/overheadpressExercises';
+import placeHolderExercises from './ressources/placeholderExercises';
+import shoulderExercises from './ressources/shoulderExercises';
+import squatExercises from './ressources/squatExercises';
+import tricepExercises from './ressources/tricepsExercises';
+import { ExerciseCategoryType } from './types/exercise-category-type.enum';
 
 @Injectable()
 export class ExerciseService {
@@ -25,6 +37,28 @@ export class ExerciseService {
     };
   }
 
+  async setDefaultExercisesForUser(user: User) {
+    user.exercises = this.getDefaultExercisesForUser();
+
+    return await user.save();
+  }
+
+  getDefaultExercisesForUser() {
+    return {
+      [ExerciseCategoryType.PLACEHOLDER]: placeHolderExercises,
+      [ExerciseCategoryType.SQUAT]: squatExercises,
+      [ExerciseCategoryType.BENCH]: benchExercises,
+      [ExerciseCategoryType.DEADLIFT]: deadliftExercises,
+      [ExerciseCategoryType.OVERHEADPRESS]: overheadpressExercises,
+      [ExerciseCategoryType.CHEST]: chestExercises,
+      [ExerciseCategoryType.BACK]: backExercises,
+      [ExerciseCategoryType.SHOULDER]: shoulderExercises,
+      [ExerciseCategoryType.TRICEPS]: tricepExercises,
+      [ExerciseCategoryType.BICEPS]: bicepsExercises,
+      [ExerciseCategoryType.LEGS]: legExercises,
+    };
+  }
+
   /**
    * Prepares exercise data for rendering on the client side.
    */
@@ -43,10 +77,6 @@ export class ExerciseService {
     );
 
     for (const exercises of Object.values(user.exercises)) {
-      console.log(
-        '🚀 ~ ExerciseService ~ prepareExercisesData ~ exercises:',
-        exercises,
-      );
       exercises.forEach((exercise) =>
         this.processExercise(exercise, {
           categorizedExercises,
