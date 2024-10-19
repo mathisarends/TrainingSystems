@@ -10,20 +10,20 @@ export interface UserExerciseCategory {
   /**
    * The default pause time between sets in seconds.
    */
-  pauseTime?: number;
+  pauseTime: number;
 
   /**
    * The default number of sets.
    */
-  defaultSets?: number;
+  defaultSets: number;
 
   /**
    * The default number of repetitions per set.
    */
-  defaultReps?: number;
+  defaultReps: number;
 
   /**
    * The default Rate of Perceived Exertion (RPE).
    */
-  defaultRPE?: number;
+  defaultRPE: number;
 }

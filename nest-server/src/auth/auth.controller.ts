@@ -8,7 +8,8 @@ import { LoginOAuth2Dto } from './dto/login-oauth2.dto';
 import { NoGuard } from './no-guard.decorator';
 import { TokenService } from './token.service';
 
-// TODO: auth-state halte ich für nicht so sinnvoll man kann ja alle 403 einfach auf eine login page dann umleiten und entsprechend kein fehler anzeigen sollte ja mit zentralem error-handling kein Problem sein.
+// TODO: auth-state halte ich für nicht so sinnvoll man kann ja alle 403 einfach auf eine login page dann umleiten
+// und entsprechend kein fehler anzeigen sollte ja mit zentralem error-handling kein Problem sein.
 @NoGuard()
 @Controller('auth')
 export class AuthController {
@@ -44,12 +45,14 @@ export class AuthController {
   async login(@Body() loginDto: LoginDto, @Res() res: Response) {
     const loggedInUser = await this.authService.login(loginDto);
     this.tokenService.createAndSetToken({ id: loggedInUser.id }, res);
+    return res.status(200).json({ message: 'Login successful' });
   }
 
   @Post('register')
-  async register(createUserDto: CreateUserDto, @Res() res: Response) {
-    const createduser = await this.userService.createUser(createUserDto);
-    this.tokenService.createAndSetToken({ id: createduser.id }, res);
+  async register(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
+    const createdUser = await this.userService.createUser(createUserDto);
+    this.tokenService.createAndSetToken({ id: createdUser.id }, res);
+    return res.status(200).json({ message: 'Register successful' });
   }
 
   @Post('logout')

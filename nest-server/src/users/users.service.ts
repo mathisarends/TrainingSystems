@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -8,7 +9,22 @@ import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserCreationMode } from './types/user-creation-mode.enum';
 import { User } from './user.model';
+
+import backExercises from 'src/exercise/ressources/backExercises';
+import benchExercises from 'src/exercise/ressources/benchExercises';
+import bicepsExercises from 'src/exercise/ressources/bicepsExercises';
+import chestExercises from 'src/exercise/ressources/chestExercises';
+import deadliftExercises from 'src/exercise/ressources/deadliftExercises';
+import legExercises from 'src/exercise/ressources/legExercises';
+import overheadpressExercises from 'src/exercise/ressources/overheadpressExercises';
+import placeHolderExercises from 'src/exercise/ressources/placeholderExercises';
+import shoulderExercises from 'src/exercise/ressources/shoulderExercises';
+import squatExercises from 'src/exercise/ressources/squatExercises';
+import tricepExercises from 'src/exercise/ressources/tricepsExercises';
+
+import { ExerciseCategoryType } from 'src/exercise/types/exercise-category-type.enum';
 
 @Injectable()
 export class UsersService {
@@ -28,7 +44,7 @@ export class UsersService {
 
   async getUserByEmail(email: string): Promise<User> {
     try {
-      return await this.userModel.findOne({ email: email });
+      return await this.userModel.findOne({ email: email }).exec();
     } catch (error) {
       throw new NotFoundException('Could not find user');
     }
@@ -41,23 +57,46 @@ export class UsersService {
     return await existingUser.save();
   }
 
-  async createUser(createUserDto: CreateUserDto) {
+  async createUser(
+    createUserDto: CreateUserDto,
+    userCreationMode = UserCreationMode.REGULAR,
+  ) {
     const { name, email, profilePicture, password } = createUserDto;
 
-    const existingUser = await this.userModel.findOne({ email }).exec();
+    const existingUser = await this.getUserByEmail(email);
     if (existingUser) {
       throw new ConflictException('User with this email already exists');
     }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new this.userModel({
       name,
       email,
       profilePicture,
-      password: hashedPassword,
+      exercises: {
+        [ExerciseCategoryType.PLACEHOLDER]: placeHolderExercises,
+        [ExerciseCategoryType.SQUAT]: squatExercises,
+        [ExerciseCategoryType.BENCH]: benchExercises,
+        [ExerciseCategoryType.DEADLIFT]: deadliftExercises,
+        [ExerciseCategoryType.OVERHEADPRESS]: overheadpressExercises,
+        [ExerciseCategoryType.CHEST]: chestExercises,
+        [ExerciseCategoryType.BACK]: backExercises,
+        [ExerciseCategoryType.SHOULDER]: shoulderExercises,
+        [ExerciseCategoryType.TRICEPS]: tricepExercises,
+        [ExerciseCategoryType.BICEPS]: bicepsExercises,
+        [ExerciseCategoryType.LEGS]: legExercises,
+      },
     });
 
+    if (userCreationMode === UserCreationMode.REGULAR) {
+      if (!password) {
+        throw new BadRequestException(
+          'Password is required for regular user creation',
+        );
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+      newUser.password = hashedPassword;
+    }
     return await newUser.save();
   }
 

@@ -1,4 +1,4 @@
-import { UserExercise } from '../../models/collections/user/user-exercise.js';
+import { UserExercise } from '../model/user-exercise.model';
 
 /**
  * Placeholder exercise category to be used when no selection is made.
@@ -8,7 +8,7 @@ const placeholder = {
   pauseTime: 150,
   defaultSets: 3,
   defaultReps: 10,
-  defaultRPE: 8.5
+  defaultRPE: 8.5,
 };
 
 /**
@@ -17,8 +17,8 @@ const placeholder = {
 const placeHolderExercises: UserExercise[] = [
   {
     name: 'Placeholder',
-    category: placeholder
-  }
+    category: placeholder,
+  },
 ];
 
 export default placeHolderExercises;
