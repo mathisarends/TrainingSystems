@@ -34,6 +34,7 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+    "google-auth-library": "^9.14.2",
     "mongoose": "^8.7.2",
     "nest-server": "file:",
     "reflect-metadata": "^0.2.0",

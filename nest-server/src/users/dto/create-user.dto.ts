@@ -28,4 +28,16 @@ export class CreateUserDto {
     message: 'Password must contain at least one special character',
   })
   password?: string;
+
+  constructor(
+    name: string,
+    email: string,
+    profilePicture?: string,
+    password?: string,
+  ) {
+    this.name = name;
+    this.email = email;
+    this.profilePicture = profilePicture;
+    this.password = password;
+  }
 }

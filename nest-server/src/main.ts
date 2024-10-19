@@ -7,12 +7,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.use(cookieParser());
+  // TODO: vllt muss hier für die Postman Tests kurzzeitig der origin ausgeschaltet werden
   app.use(
     cors({
-      origin: [
-        'http://localhost:3000',
-        'https://trainingsystemsre.onrender.com',
-      ],
+      origin: [process.env.DEV_BASE_URL, process.env.PROD_BASE_URL],
       methods: 'GET,POST,PUT,DELETE',
       credentials: true,
     }),

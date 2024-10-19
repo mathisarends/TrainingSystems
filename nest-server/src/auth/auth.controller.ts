@@ -1,24 +1,35 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { AuthService } from './auth.service';
+import { LoginOAuth2Dto } from './dto/login-oauth2.dto';
+import { TokenService } from './token.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private tokenService: TokenService,
+  ) {}
 
   @Post('login/oauth2')
-  loginViahOauth2() {}
+  async loginViahOauth2(
+    @Body() loginOAuth2Dto: LoginOAuth2Dto,
+    @Res() res: Response,
+  ) {
+    const user = await this.authService.loginOAuth2User(
+      loginOAuth2Dto.credential,
+    );
+    this.tokenService.createAndSetToken({ id: user.id }, res);
 
-  @Post('register/oath2')
-  registerViaOauth2() {}
+    const redirectUrl =
+      process.env.NODE_ENV === 'development'
+        ? 'http://localhost:4200?login=success'
+        : 'https://trainingsystemsre.onrender.com?login=success';
 
-  @Post('register')
-  register(@Body() createUserDto: CreateUserDto) {
-    return this.authService.register(createUserDto);
+    res.cookie('authTemp', 'some-temp-value', {
+      maxAge: 30000,
+    });
+
+    res.redirect(redirectUrl);
   }
-
-  /* @Post('login')
-  login(@Body() loginDto: LoginDto) {
-    return this.authService.login(loginDto);
-  } */
 }

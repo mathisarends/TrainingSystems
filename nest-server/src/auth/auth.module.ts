@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt'; // JWT-Modul importieren
+import { UsersModule } from 'src/users/users.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { TokenService } from './token.service';
@@ -10,6 +11,7 @@ import { TokenService } from './token.service';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '30d' },
     }),
+    UsersModule,
   ],
   providers: [AuthService, TokenService],
   exports: [AuthService, TokenService],
