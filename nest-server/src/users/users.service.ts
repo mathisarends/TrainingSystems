@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -40,11 +41,13 @@ export class UsersService {
       throw new ConflictException('User with this email already exists');
     }
 
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const newUser = new this.userModel({
       name,
       email,
       profilePicture,
-      password,
+      password: hashedPassword,
     });
 
     return await newUser.save();
