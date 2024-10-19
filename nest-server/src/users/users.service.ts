@@ -6,6 +6,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.model';
 
 @Injectable()
@@ -24,10 +25,10 @@ export class UsersService {
     }
   }
 
-  async updateUser(user: User) {
-    const existingUser = await this.getUserById(user.id);
+  async updateUser(id: string, updatedUserDto: UpdateUserDto) {
+    const existingUser = await this.getUserById(id);
 
-    Object.assign(existingUser, user);
+    Object.assign(existingUser, updatedUserDto);
     return await existingUser.save();
   }
 

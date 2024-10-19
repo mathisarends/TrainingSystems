@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 import { User } from 'src/users/user.model';
 import { UsersService } from 'src/users/users.service';
 
@@ -11,8 +12,8 @@ export class ProfileService {
     return this.mapToProfileDto(foundUser);
   }
 
-  updateProfilePicture() {
-    return { message: 'Profile picture updated' };
+  updateProfilePicture(userId: string, updatedUserDto: UpdateUserDto) {
+    return this.userService.updateUser(userId, updatedUserDto);
   }
 
   deleteAccount() {

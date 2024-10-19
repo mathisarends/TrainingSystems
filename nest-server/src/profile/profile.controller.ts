@@ -1,4 +1,5 @@
-import { Controller, Delete, Get, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req } from '@nestjs/common';
+import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 import { ProfileService } from './profile.service';
 
 @Controller('profile')
@@ -11,13 +12,12 @@ export class ProfileController {
     return this.profileService.getProfile(user.id);
   }
 
-  @Post('update-profile-picture')
-  updateProfilePicture() {
-    return this.profileService.updateProfilePicture();
-  }
-
-  @Delete('delete-account')
-  deleteAccount() {
-    return this.profileService.deleteAccount();
+  @Post()
+  updateProfilePicture(
+    @Req() req: Request,
+    @Body() updatedUserDto: UpdateUserDto,
+  ) {
+    const user = req['user'];
+    return this.profileService.updateProfilePicture(user.id, updatedUserDto);
   }
 }

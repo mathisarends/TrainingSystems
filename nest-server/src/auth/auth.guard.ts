@@ -19,6 +19,10 @@ export class AuthGuard implements CanActivate {
     private readonly userService: UsersService,
   ) {}
 
+  /**
+   * Determines whether the current request can proceed by checking if the route is public,
+   * or by verifying the user's JWT token and retrieving the corresponding user.
+   */
   async canActivate(context: ExecutionContext): Promise<boolean> {
     if (this.isPublicRoute(context)) {
       return true;
