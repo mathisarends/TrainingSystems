@@ -6,6 +6,8 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
+import { JwtPayload } from 'jsonwebtoken';
+import { UsersService } from 'src/users/users.service';
 import { AuthService } from './auth.service';
 import { IS_PUBLIC_ROUTE_KEY } from './no-guard.decorator';
 
@@ -14,9 +16,10 @@ export class AuthGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
     private readonly authService: AuthService,
+    private readonly userService: UsersService,
   ) {}
 
-  canActivate(context: ExecutionContext): boolean {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     if (this.isPublicRoute(context)) {
       return true;
     }
@@ -25,7 +28,9 @@ export class AuthGuard implements CanActivate {
     const token = request.cookies['jwt-token'] || '';
 
     try {
-      const user = this.authService.verifyToken(token);
+      const userClaimsSet = this.authService.verifyToken(token) as JwtPayload;
+      const user = await this.userService.getUserById(userClaimsSet.id);
+
       request['user'] = user;
       return true;
     } catch (error) {

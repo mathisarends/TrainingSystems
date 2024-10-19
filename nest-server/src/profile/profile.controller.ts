@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Post } from '@nestjs/common';
+import { Controller, Delete, Get, Post, Req } from '@nestjs/common';
 import { ProfileService } from './profile.service';
 
 @Controller('profile')
@@ -6,8 +6,9 @@ export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
   @Get()
-  getProfile() {
-    return this.profileService.getProfile();
+  getProfile(@Req() req: Request) {
+    const user = req['user'];
+    return this.profileService.getProfile(user.id);
   }
 
   @Post('update-profile-picture')

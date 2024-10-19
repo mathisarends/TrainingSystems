@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request, Response } from 'express';
+import { JwtPayload } from 'jsonwebtoken';
 
 @Injectable()
 export class AuthService {
@@ -32,7 +33,7 @@ export class AuthService {
     });
   }
 
-  verifyToken(token: string) {
+  verifyToken(token: string): JwtPayload | string {
     try {
       return this.jwtService.verify(token);
     } catch (error) {
