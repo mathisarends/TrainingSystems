@@ -5,6 +5,7 @@ import { TrainingPlan, TrainingPlanSchema } from './model/training-plan.schema';
 import { TrainingPlanCardViewService } from './training-plan-card-view.service';
 import { TrainingPlanUtilsService } from './training-plan-utils.service';
 import { TrainingController } from './training.controller';
+import { TrainingService } from './training.service';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { TrainingController } from './training.controller';
     TrainingPlanUtilsService,
     CreateTrainingPlanService,
     TrainingPlanCardViewService,
+    TrainingService,
   ],
 })
 export class TrainingModule {}
