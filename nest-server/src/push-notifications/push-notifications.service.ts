@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { ClientJS } from 'clientjs';
 import { Model } from 'mongoose';
 import * as webPush from 'web-push';
-import { PushSubscriptionDto } from './dto/push-subscription.dto';
+import { CreatePushSubscriptionDto } from './dto/create-push-subscription.dto';
 import { UserPushSubscription } from './model/user-push-subscription.model';
 
 @Injectable()
@@ -21,7 +21,7 @@ export class PushNotificationsService {
 
   async createPushNotificationSubscriptionForUser(
     userId: string,
-    pushSubscriptionDto: PushSubscriptionDto,
+    pushSubscriptionDto: CreatePushSubscriptionDto,
   ) {
     const { endpoint, keys } = pushSubscriptionDto;
 

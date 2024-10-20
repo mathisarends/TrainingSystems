@@ -2,7 +2,7 @@ import { Type } from 'class-transformer';
 import { IsNotEmpty, IsString, ValidateNested } from 'class-validator';
 import { PushSubscriptionKeysDto } from './push-subscription-keys.dto';
 
-export class PushSubscriptionDto {
+export class CreatePushSubscriptionDto {
   @IsString()
   @IsNotEmpty()
   endpoint: string;
