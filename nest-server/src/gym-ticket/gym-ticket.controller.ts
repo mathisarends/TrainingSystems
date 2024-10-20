@@ -1,4 +1,6 @@
-import { Body, Controller, Get, Put, Req } from '@nestjs/common';
+import { Body, Controller, Get, Put } from '@nestjs/common';
+import { GetUser } from 'src/decorators/user.decorator';
+import { User } from 'src/users/user.model';
 import { GymTicketDto } from './dto/gym-ticket.dto';
 import { GymTicketService } from './gym-ticket.service';
 
@@ -7,17 +9,15 @@ export class GymTicketController {
   constructor(private readonly gymTicketService: GymTicketService) {}
 
   @Get()
-  async getGymTicketForUser(@Req() request: Request) {
-    const user = request['user'];
+  async getGymTicketForUser(@GetUser() user: User) {
     return await this.gymTicketService.getGymTicketByUserId(user.id);
   }
 
   @Put()
   async updateGymTicketForUser(
-    @Req() request: Request,
+    @GetUser() user: User,
     @Body() gymTicketDto: GymTicketDto,
   ) {
-    const user = request['user'];
     return await this.gymTicketService.updateGymTicketForUser(
       user.id,
       gymTicketDto,

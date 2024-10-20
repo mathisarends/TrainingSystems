@@ -4,10 +4,10 @@ import {
   Delete,
   Get,
   Param,
-  Post,
-  Req,
+  Post
 } from '@nestjs/common';
-import { Request } from 'express';
+import { GetUser } from 'src/decorators/user.decorator';
+import { User } from 'src/users/user.model';
 import { CreateTrainingPlanDto } from '../dto/create-training-plan.dto';
 import { CreateTrainingPlanService } from '../service/create-training-plan.service';
 import { TrainingPlanCardViewService } from '../service/training-plan-card-view.service';
@@ -25,17 +25,15 @@ export class TrainingController {
   ) {}
 
   @Get()
-  getTrainingPlanCardViews(@Req() request: Request) {
-    const user = request['user'];
+  getTrainingPlanCardViews(@GetUser() user: User) {
     return this.trainingPlanCardViewService.getCardViewsForUser(user);
   }
 
   @Post()
   async createTrainingPlan(
-    @Req() request: Request,
+    @GetUser() user: User,
     @Body() createTrainingPlanDto: CreateTrainingPlanDto,
   ) {
-    const user = request['user'];
     return await this.createTrainingPlanService.createTrainingPlan(
       user.id,
       createTrainingPlanDto,
@@ -44,11 +42,9 @@ export class TrainingController {
 
   @Delete(':id')
   async deleteTrainingPlan(
-    @Req() request: Request,
+    @GetUser() user: User,
     @Param('id') trainingPlanId: string,
   ) {
-    const user = request['user'];
-
     return await this.trainingService.deleteByUserAndTrainingId(
       user.id,
       trainingPlanId,
@@ -56,18 +52,14 @@ export class TrainingController {
   }
 
   @Get('titles')
-  async getTrainingPlanTitles(@Req() request: Request): Promise<string[]> {
-    const user = request['user'];
+  async getTrainingPlanTitles(@GetUser() user: User): Promise<string[]> {
     return await this.trainingPlanUtilsService.getTrainingPlanTitlesForUser(
       user.id,
     );
   }
 
   @Get('most-recent-plan-link')
-  async getMostRecentTrainingPlanLink(
-    @Req() request: Request,
-  ): Promise<string> {
-    const user = request['user'];
+  async getMostRecentTrainingPlanLink(@GetUser() user: User): Promise<string> {
     return await this.trainingPlanUtilsService.getMostRecentTrainingPlanLink(
       user.id,
     );

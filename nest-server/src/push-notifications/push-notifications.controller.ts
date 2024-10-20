@@ -1,5 +1,7 @@
 import { Body, Controller, Post, Req } from '@nestjs/common';
 import { Request } from 'express';
+import { GetUser } from 'src/decorators/user.decorator';
+import { User } from 'src/users/user.model';
 import { CreatePushSubscriptionDto } from './dto/create-push-subscription.dto';
 import { FingerprintService } from './fingerprint.service';
 import { PushNotificationsService } from './push-notifications.service';
@@ -14,9 +16,9 @@ export class PushNotificationsController {
   @Post()
   async createPushNotificationSubscriptionForUser(
     @Req() request: Request,
+    @GetUser() user: User,
     @Body() createPushSubscriptionDto: CreatePushSubscriptionDto,
   ) {
-    const user = request['user'];
     const fingerprint = this.fingerprintService.generateFingerprint(request);
     await this.pushNotiifcationService.createPushNotificationSubscriptionForUser(
       user.id,

@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Patch, Req } from '@nestjs/common';
-import { Request } from 'express';
+import { Body, Controller, Delete, Get, Patch } from '@nestjs/common';
+import { GetUser } from 'src/decorators/user.decorator';
 import { ApiData } from 'src/types/api-data';
+import { User } from 'src/users/user.model';
 import { ExerciseUpdateService } from './exercise-update.service';
 import { ExerciseService } from './exercise.service';
 
@@ -12,17 +13,15 @@ export class ExerciseController {
   ) {}
 
   @Get()
-  getCategories(@Req() request: Request) {
-    const user = request['user'];
+  getCategories(@GetUser() user: User) {
     return this.exerciseService.getExercises(user);
   }
 
   @Patch()
   updateUserExercises(
-    @Req() request: Request,
+    @GetUser() user: User,
     @Body() updatedExercises: ApiData,
   ) {
-    const user = request['user'];
     return this.exerciseUpdateService.updateExercisesForUser(
       user,
       updatedExercises,
@@ -30,8 +29,7 @@ export class ExerciseController {
   }
 
   @Delete()
-  async resetExercises(@Req() request: Request) {
-    const user = request['user'];
+  async resetExercises(@GetUser() user: User) {
     return await this.exerciseService.setDefaultExercisesForUser(user);
   }
 }

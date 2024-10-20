@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TrainingPlanEditController } from './controller/training-plan-edit.controller';
+import { TrainingPlanViewController } from './controller/training-plan-view.controller';
 import { TrainingController } from './controller/training.controller';
 import { TrainingPlan, TrainingPlanSchema } from './model/training-plan.schema';
 import { CreateTrainingPlanService } from './service/create-training-plan.service';
@@ -15,7 +16,11 @@ import { TrainingService } from './training.service';
       { name: TrainingPlan.name, schema: TrainingPlanSchema },
     ]),
   ],
-  controllers: [TrainingController, TrainingPlanEditController],
+  controllers: [
+    TrainingController,
+    TrainingPlanEditController,
+    TrainingPlanViewController,
+  ],
   providers: [
     TrainingPlanUtilsService,
     CreateTrainingPlanService,
