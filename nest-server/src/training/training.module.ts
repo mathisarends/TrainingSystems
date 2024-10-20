@@ -2,7 +2,8 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CreateTrainingPlanService } from './create-training-plan.service';
 import { TrainingPlan, TrainingPlanSchema } from './model/training-plan.schema';
-import { MostRecentTrainingPlanService } from './most-recent-training-plan.service';
+import { TrainingPlanCardViewService } from './training-plan-card-view.service';
+import { TrainingPlanUtilsService } from './training-plan-utils.service';
 import { TrainingController } from './training.controller';
 
 @Module({
@@ -12,6 +13,10 @@ import { TrainingController } from './training.controller';
     ]),
   ],
   controllers: [TrainingController],
-  providers: [MostRecentTrainingPlanService, CreateTrainingPlanService],
+  providers: [
+    TrainingPlanUtilsService,
+    CreateTrainingPlanService,
+    TrainingPlanCardViewService,
+  ],
 })
 export class TrainingModule {}

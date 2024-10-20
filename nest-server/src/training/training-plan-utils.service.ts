@@ -6,25 +6,31 @@ import { TrainingDay } from './model/training-day.schema';
 import { TrainingPlan } from './model/training-plan.schema';
 
 @Injectable()
-export class MostRecentTrainingPlanService {
+export class TrainingPlanUtilsService {
   constructor(
     @InjectModel(TrainingPlan.name)
     private readonly trainingPlanModel: Model<TrainingPlan>,
     private readonly configService: ConfigService,
   ) {}
 
+  async getTrainingPlanTitlesForUser(userId: string): Promise<string[]> {
+    const trainingPlans = await this.trainingPlanModel.find({ userId });
+
+    return trainingPlans.map((plan) => plan.title);
+  }
+
   async getMostRecentTrainingPlanLink(userId: string): Promise<string> {
     const baseURL = this.configService.get<string>(
       process.env.NODE_ENV === 'development' ? 'DEV_BASE_URL' : 'PROD_BASE_URL',
     );
 
-    const allPlans = await this.trainingPlanModel.find({ userId });
+    const trainingPlans = await this.trainingPlanModel.find({ userId });
 
-    if (!allPlans.length) {
+    if (!trainingPlans.length) {
       throw new NotFoundException('No training plan for user found');
     }
 
-    const mostRecentPlan = this.getMostRecentPlan(allPlans);
+    const mostRecentPlan = this.getMostRecentPlan(trainingPlans);
 
     const { weekIndex, dayIndex } =
       this.findLatestTrainingDayWithWeight(mostRecentPlan);
@@ -44,7 +50,7 @@ export class MostRecentTrainingPlanService {
   /**
    * Finds the latest training day with a weight by iterating through the flattened list.
    */
-  private findLatestTrainingDayWithWeight(trainingPlan: TrainingPlan): {
+  findLatestTrainingDayWithWeight(trainingPlan: TrainingPlan): {
     weekIndex: number;
     dayIndex: number;
   } {
