@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { TrainingDay } from './model/training-day.schema';
-import { TrainingPlan } from './model/training-plan.schema';
+import { TrainingDay } from '../model/training-day.schema';
+import { TrainingPlan } from '../model/training-plan.schema';
 
 @Injectable()
 export class TrainingPlanUtilsService {

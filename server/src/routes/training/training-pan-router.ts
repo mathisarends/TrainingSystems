@@ -13,6 +13,8 @@ trainingPlanRouter.delete(
   authService.authenticationMiddleware,
   asyncHandler(trainingController.deletePlan)
 );
+
+// TODO: hier sind wir stehen geblieben und die Route soll hier entsprechend weiter implementiert werden
 trainingPlanRouter.get(
   '/edit/:id',
   authService.authenticationMiddleware,

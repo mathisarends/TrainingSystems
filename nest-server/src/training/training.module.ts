@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { CreateTrainingPlanService } from './create-training-plan.service';
+import { TrainingController } from './controller/training.controller';
 import { TrainingPlan, TrainingPlanSchema } from './model/training-plan.schema';
-import { TrainingPlanCardViewService } from './training-plan-card-view.service';
-import { TrainingPlanUtilsService } from './training-plan-utils.service';
-import { TrainingController } from './training.controller';
+import { CreateTrainingPlanService } from './service/create-training-plan.service';
+import { TrainingPlanCardViewService } from './service/training-plan-card-view.service';
+import { TrainingPlanUtilsService } from './service/training-plan-utils.service';
 import { TrainingService } from './training.service';
 
 @Module({

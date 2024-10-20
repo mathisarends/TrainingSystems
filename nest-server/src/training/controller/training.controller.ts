@@ -8,11 +8,11 @@ import {
   Req,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { CreateTrainingPlanService } from './create-training-plan.service';
-import { CreateTrainingPlanDto } from './dto/training-plan.dto';
-import { TrainingPlanCardViewService } from './training-plan-card-view.service';
-import { TrainingPlanUtilsService } from './training-plan-utils.service';
-import { TrainingService } from './training.service';
+import { CreateTrainingPlanDto } from '../dto/create-training-plan.dto';
+import { CreateTrainingPlanService } from '../service/create-training-plan.service';
+import { TrainingPlanCardViewService } from '../service/training-plan-card-view.service';
+import { TrainingPlanUtilsService } from '../service/training-plan-utils.service';
+import { TrainingService } from '../training.service';
 
 // TODO: hier in mehere Router splitten
 @Controller('training')
@@ -47,9 +47,7 @@ export class TrainingController {
     @Req() request: Request,
     @Param('id') trainingPlanId: string,
   ) {
-    console.log('🚀 ~ TrainingController ~ trainingPlanId:', trainingPlanId);
     const user = request['user'];
-    console.log('userid', user.id);
 
     return await this.trainingService.deleteByUserAndTrainingId(
       user.id,

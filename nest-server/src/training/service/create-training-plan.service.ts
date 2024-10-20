@@ -1,17 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
-import { CreateTrainingPlanDto } from './dto/training-plan.dto';
-import { TrainingPlan } from './model/training-plan.schema';
+import { CreateTrainingPlanDto } from '../dto/create-training-plan.dto';
+import { TrainingPlan } from '../model/training-plan.schema';
 
 @Injectable()
 export class CreateTrainingPlanService {
   constructor(
     @InjectModel(TrainingPlan.name)
     private readonly trainingPlanModel: Model<TrainingPlan>,
-    private readonly configService: ConfigService,
   ) {}
 
   async createTrainingPlan(
