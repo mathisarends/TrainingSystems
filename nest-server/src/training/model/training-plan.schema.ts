@@ -1,12 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
+import { ExerciseCategoryType } from 'src/exercise/types/exercise-category-type.enum';
 import { TrainingWeek, TrainingWeekSchema } from './training-week.schema';
 import { WeightRecommendation } from './weight-recommandation.enum';
 
 @Schema()
 export class TrainingPlan extends Document {
-  @Prop({ required: true })
-  id: string;
+  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  userId: Types.ObjectId;
 
   @Prop({ required: true })
   title: string;
@@ -26,8 +27,16 @@ export class TrainingPlan extends Document {
   @Prop()
   coverImageBase64?: string;
 
-  @Prop({ type: [String], default: [] })
-  recentlyViewedCategoriesInStatisticSection?: string[];
+  @Prop({
+    type: [String],
+    enum: Object.values(ExerciseCategoryType),
+    default: [
+      ExerciseCategoryType.SQUAT,
+      ExerciseCategoryType.BENCH,
+      ExerciseCategoryType.DEADLIFT,
+    ],
+  })
+  recentlyViewedCategoriesInStatisticSection?: ExerciseCategoryType[];
 }
 
 export const TrainingPlanSchema = SchemaFactory.createForClass(TrainingPlan);

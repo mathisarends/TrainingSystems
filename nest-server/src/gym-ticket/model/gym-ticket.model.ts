@@ -13,7 +13,7 @@ export class GymTicket extends Document {
    * A reference to the user who owns this gym ticket.
    */
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
-  user: Types.ObjectId;
+  userId: Types.ObjectId;
 }
 
 export const GymTicketSchema = SchemaFactory.createForClass(GymTicket);

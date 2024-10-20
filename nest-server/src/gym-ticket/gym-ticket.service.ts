@@ -14,13 +14,15 @@ export class GymTicketService {
   async updateGymTicketForUser(userId: string, gymTicketDto: GymTicketDto) {
     const gymTicket = new this.gymTicketModel({
       gymTicket: gymTicketDto.gymTicket,
-      user: userId,
+      userId: userId,
     });
 
     return await gymTicket.save();
   }
 
   async getGymTicketByUserId(userId: string) {
-    return await this.gymTicketModel.find({ user: userId }, 'gymTicket').exec();
+    return await this.gymTicketModel
+      .find({ userId: userId }, 'gymTicket')
+      .exec();
   }
 }
