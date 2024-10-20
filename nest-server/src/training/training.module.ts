@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { CreateTrainingPlanService } from './create-training-plan.service';
 import { TrainingPlan, TrainingPlanSchema } from './model/training-plan.schema';
+import { MostRecentTrainingPlanService } from './most-recent-training-plan.service';
 import { TrainingController } from './training.controller';
-import { TrainingService } from './training.service';
 
 @Module({
   imports: [
@@ -11,6 +12,6 @@ import { TrainingService } from './training.service';
     ]),
   ],
   controllers: [TrainingController],
-  providers: [TrainingService],
+  providers: [MostRecentTrainingPlanService, CreateTrainingPlanService],
 })
 export class TrainingModule {}
