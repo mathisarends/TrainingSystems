@@ -11,6 +11,7 @@ import { GymTicketModule } from './gym-ticket/gym-ticket.module';
 import { RequestLoggerMiddleware } from './middleware/logger-middleware';
 import { PushNotificationsModule } from './push-notifications/push-notifications.module';
 import { UsersModule } from './users/users.module';
+import { TrainingModule } from './training/training.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { UsersModule } from './users/users.module';
     GymTicketModule,
     PushNotificationsModule,
     PushNotificationsModule,
+    TrainingModule,
   ],
   controllers: [AppController],
   providers: [
