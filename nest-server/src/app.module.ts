@@ -8,6 +8,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ExerciseModule } from './exercise/exercise.module';
+import { GymTicketModule } from './gym-ticket/gym-ticket.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ExerciseModule } from './exercise/exercise.module';
     UsersModule,
     AuthModule,
     ExerciseModule,
+    GymTicketModule,
   ],
   controllers: [AppController],
   providers: [

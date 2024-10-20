@@ -5,6 +5,10 @@ import { UserExercise } from './model/user-exercise.model';
 import { ExerciseCategoryType } from './types/exercise-category-type.enum';
 import { UserExerciseCategory } from './types/user-exercise-category';
 
+// TODO: diese Logik hier refactoren, sobald das Frontend angeschlossen ist. (wir kännten ja für jede Übung hier eine id erzeugen)
+// identifikation direkt über diese anstatt über die ganze datenstruktur laufen zu müssen
+// und dann jeweils auch eine Kennung für die Metadaten Felder einer Kategoerie
+
 @Injectable()
 export class ExerciseUpdateService {
   async updateExercisesForUser(user: User, changedData: ApiData) {
@@ -12,19 +16,16 @@ export class ExerciseUpdateService {
 
     Object.entries(changedCategoriesMap).forEach(
       ([category, { fieldNames, newValues }]) => {
-        const userExerciseField = this.getExerciseFieldByCategory(
-          category as ExerciseCategoryType,
-          user,
-        );
+        const exercisesForCategory = user.exercises[category];
 
-        for (let index = 0; index < fieldNames.length; index++) {
+        fieldNames.forEach((fieldName, index) => {
           this.processExerciseChanges(
-            fieldNames[index],
+            fieldName,
             index,
             newValues,
-            userExerciseField,
+            exercisesForCategory,
           );
-        }
+        });
       },
     );
 
@@ -65,7 +66,7 @@ export class ExerciseUpdateService {
   /**
    * Gets the associated category name based on the provided index.
    */
-  getAssociatedCategoryByIndex(index: number) {
+  private getAssociatedCategoryByIndex(index: number) {
     switch (index) {
       case 0:
         return ExerciseCategoryType.PLACEHOLDER;
@@ -108,23 +109,6 @@ export class ExerciseUpdateService {
     const concatenatedString = numeric1 + numeric2;
     return Number(concatenatedString);
   }
-
-  /**
-   * Gets the exercise field corresponding to the specified category from the user's data.
-   */
-  private getExerciseFieldByCategory(
-    category: ExerciseCategoryType,
-    user: User,
-  ) {
-    const exercises = user.exercises[category];
-
-    if (!exercises) {
-      throw new Error(`Unknown category: ${category}`);
-    }
-
-    return exercises;
-  }
-
   /**
    * Process changes related to exercises based on the provided field name, index, new values, and user exercise field.
    */
