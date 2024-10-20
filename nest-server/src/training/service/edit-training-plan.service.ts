@@ -43,6 +43,9 @@ export class EditTrainingPlanService {
       trainingPlanId,
     );
 
-    this.trainingService.updateTrainingPlan(trainingPlan, editTrainingPlanDto);
+    await this.trainingService.updateTrainingPlan(
+      trainingPlan,
+      editTrainingPlanDto,
+    );
   }
 }

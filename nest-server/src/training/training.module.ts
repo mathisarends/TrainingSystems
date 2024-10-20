@@ -8,6 +8,7 @@ import { CreateTrainingPlanService } from './service/create-training-plan.servic
 import { EditTrainingPlanService } from './service/edit-training-plan.service';
 import { TrainingPlanCardViewService } from './service/training-plan-card-view.service';
 import { TrainingPlanUtilsService } from './service/training-plan-utils.service';
+import { TrainingPlanViewService } from './service/training-plan-view.service';
 import { TrainingService } from './training.service';
 
 @Module({
@@ -26,6 +27,7 @@ import { TrainingService } from './training.service';
     CreateTrainingPlanService,
     TrainingPlanCardViewService,
     EditTrainingPlanService,
+    TrainingPlanViewService,
     TrainingService,
   ],
 })
