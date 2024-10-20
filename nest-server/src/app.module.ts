@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -8,6 +8,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { AuthModule } from './auth/auth.module';
 import { ExerciseModule } from './exercise/exercise.module';
 import { GymTicketModule } from './gym-ticket/gym-ticket.module';
+import { RequestLoggerMiddleware } from './middleware/logger-middleware';
 import { PushNotificationsModule } from './push-notifications/push-notifications.module';
 import { UsersModule } from './users/users.module';
 
@@ -33,4 +34,8 @@ import { UsersModule } from './users/users.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(RequestLoggerMiddleware).forRoutes('*');
+  }
+}

@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { ClientJS } from 'clientjs';
 import { Model } from 'mongoose';
 import * as webPush from 'web-push';
 import { CreatePushSubscriptionDto } from './dto/create-push-subscription.dto';
@@ -21,12 +20,10 @@ export class PushNotificationsService {
 
   async createPushNotificationSubscriptionForUser(
     userId: string,
+    fingerprint: string,
     pushSubscriptionDto: CreatePushSubscriptionDto,
   ) {
     const { endpoint, keys } = pushSubscriptionDto;
-
-    const client = new ClientJS();
-    const fingerprint = client.getFingerprint();
 
     const updatedSubscription = await this.subscriptionModel
       .findOneAndUpdate(
