@@ -1,13 +1,7 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { GetUser } from 'src/decorators/user.decorator';
 import { User } from 'src/users/user.model';
+import { AutoProgressionDto } from '../dto/auto-progression.dto';
 import { CreateTrainingPlanDto } from '../dto/create-training-plan.dto';
 import { CreateTrainingPlanService } from '../service/create-training-plan.service';
 import { TrainingPlanCardViewService } from '../service/training-plan-card-view.service';
@@ -48,6 +42,19 @@ export class TrainingController {
     return await this.trainingService.deleteByUserAndTrainingId(
       user.id,
       trainingPlanId,
+    );
+  }
+
+  @Post(':id/auto-progression')
+  async handleAutoProgression(
+    @GetUser() user: User,
+    @Param('id') trainingPlanId: string,
+    @Body() autpProgressionDto: AutoProgressionDto,
+  ) {
+    return await this.trainingPlanUtilsService.handleAutoProgressionForTrainingPlan(
+      user.id,
+      trainingPlanId,
+      autpProgressionDto,
     );
   }
 

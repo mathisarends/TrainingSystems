@@ -1,5 +1,6 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { GetUser } from 'src/decorators/user.decorator';
+import { ApiData } from 'src/types/api-data';
 import { User } from 'src/users/user.model';
 import { TrainingPlanViewUpdateService } from '../service/training-plan-view-update.service';
 import { TrainingPlanViewService } from '../service/training-plan-view.service';
@@ -24,6 +25,23 @@ export class TrainingPlanViewController {
       trainingPlanId,
       weekIndex,
       dayIndex,
+    );
+  }
+
+  @Get(':id/:week/:day')
+  async updateTrainingDataForTrainingDay(
+    @GetUser() user: User,
+    @Param('id') trainingPlanId: string,
+    @Param('week', ParseIntPipe) weekIndex: number,
+    @Param('day', ParseIntPipe) dayIndex: number,
+    @Body() changedData: ApiData,
+  ) {
+    return await this.tariningPlanViewUpdateService.updateTrainingDataForTrainingDay(
+      user.id,
+      trainingPlanId,
+      weekIndex,
+      dayIndex,
+      changedData,
     );
   }
 }
