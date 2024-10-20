@@ -35,3 +35,15 @@ export class Exercise extends Document {
 }
 
 export const ExerciseSchema = SchemaFactory.createForClass(Exercise);
+
+export class ExerciseDto {
+  category: string;
+  exercise: string;
+  sets: number;
+  reps: number;
+  weight: string;
+  targetRPE: string;
+  actualRPE: string;
+  estMax?: number;
+  notes?: string;
+}
