@@ -4,11 +4,13 @@ import { PushNotificationsModule } from 'src/push-notifications/push-notificatio
 import { PushNotificationsService } from 'src/push-notifications/push-notifications.service';
 import { TrainingPlanEditController } from './controller/training-plan-edit.controller';
 import { TrainingPlanViewController } from './controller/training-plan-view.controller';
+import { TrainingStatisticsController } from './controller/training-statistics.controller';
 import { TrainingController } from './controller/training.controller';
 import { TrainingPlan, TrainingPlanSchema } from './model/training-plan.schema';
 import { CreateTrainingPlanService } from './service/create-training-plan.service';
 import { EditTrainingPlanService } from './service/edit-training-plan.service';
 import { TonnageProgressionService } from './service/statistics/tonnage-progression.service';
+import { VolumeStatisticsService } from './service/statistics/training-plan-statistics.service';
 import { TrainingPlanCardViewService } from './service/training-plan-card-view.service';
 import { TrainingPlanUtilsService } from './service/training-plan-utils.service';
 import { TrainingPlanViewUpdateService } from './service/training-plan-view-update.service';
@@ -29,6 +31,7 @@ import { TrainingService } from './training.service';
     TrainingController,
     TrainingPlanEditController,
     TrainingPlanViewController,
+    TrainingStatisticsController,
   ],
   providers: [
     TrainingPlanUtilsService,
@@ -38,6 +41,7 @@ import { TrainingService } from './training.service';
     TrainingPlanViewService,
     TrainingPlanViewUpdateService,
     TrainingPlanViewValidationService,
+    VolumeStatisticsService,
     TrainingService,
     PushNotificationsService,
     TrainingSessionManagerService,

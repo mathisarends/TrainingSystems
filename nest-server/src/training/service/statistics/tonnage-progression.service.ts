@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import capitalize from 'lodash/capitalize';
+import { capitalize } from 'lodash';
 import { ExerciseCategoryType } from 'src/exercise/types/exercise-category-type.enum';
 import { ChartDataDto } from 'src/training/model/chart-data.dto';
 import { Exercise } from 'src/training/model/exercise.schema';

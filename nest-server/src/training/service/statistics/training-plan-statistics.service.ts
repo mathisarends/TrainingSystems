@@ -11,14 +11,15 @@ export class VolumeStatisticsService {
   ) {}
 
   async getVolumeComparison(
+    userId: string,
     trainingPlanTitles: string[],
     exerciseCategory: ExerciseCategoryType,
   ) {
     const responseData = await Promise.all(
       trainingPlanTitles.map(async (title) => {
         const trainingPlan = await this.trainingService.getPlanByUserAndTitle(
+          userId,
           title,
-          exerciseCategory,
         );
 
         return {
@@ -31,6 +32,6 @@ export class VolumeStatisticsService {
       }),
     );
 
-    const responseObject = Object.assign({}, ...responseData);
+    return Object.assign({}, ...responseData);
   }
 }
