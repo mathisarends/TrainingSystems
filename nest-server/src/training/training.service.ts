@@ -26,6 +26,19 @@ export class TrainingService {
     return trainingPlan;
   }
 
+  async getPlanByUserAndTitle(userId: string, trainingPlanTitle: string) {
+    const trainingPlan = await this.trainingPlanModel.findOne({
+      userId: userId,
+      title: trainingPlanTitle,
+    });
+
+    if (!trainingPlan) {
+      throw new NotFoundException('No training plan found');
+    }
+
+    return trainingPlan;
+  }
+
   async getCertainTrainingDay(userId: string, trainingDayId: string) {
     const trainingPlans = await this.trainingPlanModel.find({
       userId: userId,

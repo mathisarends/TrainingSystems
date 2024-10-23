@@ -38,6 +38,7 @@ trainingPlanRouter.patch(
   authService.authenticationMiddleware,
   asyncHandler(trainingDayController.updateTrainingDataForTrainingDay)
 );
+
 trainingPlanRouter.get(
   '/:id/latest',
   authService.authenticationMiddleware,
