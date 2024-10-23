@@ -12,11 +12,18 @@ export class TrainingLogController {
     return await this.trainingLogService.getTrainingLogsByUserId(user.id);
   }
 
+  // TODO: diese routen hier testen + activity calendar und die letzte route hier im controller natürlich nóch implementieren
   @Get('notifications')
-  getAmountOfUnseedTrainingLogNotifcations(@GetUser() user: User) {}
+  async getAmountOfUnseedTrainingLogNotifcations(@GetUser() user: User) {
+    return await this.trainingLogService.getAmoutOFTrainingLogNotificationsByUserId(
+      user.id,
+    );
+  }
 
   @Delete('notifications')
-  resetUnseenTrainingLogNotifications(@GetUser() user: User) {}
+  async resetUnseenTrainingLogNotifications(@GetUser() user: User) {
+    return await this.trainingLogService.deleteLogsByUser(user.id);
+  }
 
   @Get('training-day/:id')
   getRouteParamsForTrainingDayNavigation(@GetUser() user: User) {}

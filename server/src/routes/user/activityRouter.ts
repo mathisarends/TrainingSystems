@@ -5,6 +5,7 @@ import { authService } from '../../service/authService.js';
 
 const activityRouter = express.Router();
 
+// TODO: activity calendar muss noch umgesetzt werdern
 activityRouter.get(
   '/activity-calendar',
   authService.authenticationMiddleware,

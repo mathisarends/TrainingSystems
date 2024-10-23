@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { TrainingDay } from 'src/training/model/training-day.schema';
 import { TrainingPlan } from 'src/training/model/training-plan.schema';
 import { TrainingService } from 'src/training/training.service';
+import { TrainingLogNotification } from './model/training-log.model';
 import { TrainingDayService } from './training-day.service';
 
 interface ExerciseSetCountByCategory {
@@ -13,7 +16,27 @@ export class TrainingLogService {
   constructor(
     private readonly trainingService: TrainingService,
     private readonly trainingDayService: TrainingDayService,
+    @InjectModel(TrainingLogNotification.name)
+    private readonly trainingLogModel: Model<TrainingLogNotification>,
   ) {}
+
+  async getAmoutOFTrainingLogNotificationsByUserId(userId: string) {
+    const logs = await this.trainingLogModel.find({ userId }).exec();
+    return logs.length;
+  }
+
+  /**
+   * Löscht alle Logs eines Benutzers.
+   * @param userId Die ID des Benutzers
+   * @returns Anzahl der gelöschten Logs
+   */
+  async deleteLogsByUser(userId: string) {
+    const deleteResult = await this.trainingLogModel
+      .deleteMany({ userId })
+      .exec();
+
+    return deleteResult.deletedCount;
+  }
 
   async getTrainingLogsByUserId(userId: string) {
     const trainingPlans =
