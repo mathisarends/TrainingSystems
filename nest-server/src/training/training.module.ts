@@ -11,6 +11,7 @@ import { CreateTrainingPlanService } from './service/create-training-plan.servic
 import { EditTrainingPlanService } from './service/edit-training-plan.service';
 import { PerformanceProgressionService } from './service/statistics/performance-progression.service';
 import { PlanComparisonStaticsService } from './service/statistics/plan-comparison-statistics.service';
+import { RecentlyViewedCategoriesService } from './service/statistics/recently-viewed-categories.service';
 import { TonnageProgressionService } from './service/statistics/tonnage-progression.service';
 import { TrainingPlanCardViewService } from './service/training-plan-card-view.service';
 import { TrainingPlanUtilsService } from './service/training-plan-utils.service';
@@ -44,6 +45,7 @@ import { TrainingService } from './training.service';
     TrainingPlanViewValidationService,
     PlanComparisonStaticsService,
     PerformanceProgressionService,
+    RecentlyViewedCategoriesService,
     TrainingService,
     PushNotificationsService,
     TrainingSessionManagerService,

@@ -3,6 +3,7 @@ import { GetUser } from 'src/decorators/user.decorator';
 import { ExerciseCategoryType } from 'src/exercise/types/exercise-category-type.enum';
 import { User } from 'src/users/user.model';
 import { PlanComparisonStaticsService } from '../service/statistics/plan-comparison-statistics.service';
+import { RecentlyViewedCategoriesService } from '../service/statistics/recently-viewed-categories.service';
 import { CommaSeparatedStringsPipe } from '../utils/comma-seperated-strings.pipe';
 import { ExerciseCategoryTypePipe } from '../utils/exercise-category-type.pipe';
 
@@ -12,6 +13,7 @@ import { ExerciseCategoryTypePipe } from '../utils/exercise-category-type.pipe';
 export class TrainingStatisticsController {
   constructor(
     private planComparisonStaticsService: PlanComparisonStaticsService,
+    private recentlyViewedCategoriesService: RecentlyViewedCategoriesService,
   ) {}
 
   @Get('volume-comparison')
@@ -44,17 +46,30 @@ export class TrainingStatisticsController {
     );
   }
 
-  @Get("':id/viewedCategories'")
+  @Get('viewedCategories/:id')
   async getViewedCategories(
     @GetUser() user: User,
     @Param('id') trainingPlanId: string,
-  ) {}
+  ) {
+    return await this.recentlyViewedCategoriesService.getViewedCategories(
+      user.id,
+      trainingPlanId,
+    );
+  }
 
-  @Post(':id/viewedCategorie')
+  @Post('viewedCategorie/:id')
   async updateViewedCategories(
     @GetUser() user: User,
     @Param('id') trainingPlanId: string,
-  ) {}
+    @Query('category', ExerciseCategoryTypePipe)
+    eerciseCategories: ExerciseCategoryType[],
+  ) {
+    return await this.recentlyViewedCategoriesService.updateViewedCategories(
+      user.id,
+      trainingPlanId,
+      eerciseCategories,
+    );
+  }
 
   @Get(':id/sets')
   async getSetsForCategories(
