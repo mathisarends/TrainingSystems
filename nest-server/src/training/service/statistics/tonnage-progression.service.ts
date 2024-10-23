@@ -10,12 +10,6 @@ import { TrainingWeek } from 'src/training/model/training-week.schema';
 
 @Injectable()
 export class TonnageProgressionService {
-  /**
-   * Berechnet die Tonnage-Progression für die angegebenen Übungskategorien
-   * und gibt die Daten in einem ChartDataDto-Format zurück.
-   * @param exerciseCategories Liste der Übungskategorien
-   * @returns ChartDataDto - Daten für das Diagramm
-   */
   getTonnageProgressionByCategories(
     trainingPlan: TrainingPlan,
     exerciseCategories: ExerciseCategoryType[],

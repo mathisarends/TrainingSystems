@@ -2,7 +2,7 @@ import { Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { GetUser } from 'src/decorators/user.decorator';
 import { ExerciseCategoryType } from 'src/exercise/types/exercise-category-type.enum';
 import { User } from 'src/users/user.model';
-import { VolumeStatisticsService } from '../service/statistics/training-plan-statistics.service';
+import { PlanComparisonStaticsService } from '../service/statistics/plan-comparison-statistics.service';
 import { CommaSeparatedStringsPipe } from '../utils/comma-seperated-strings.pipe';
 import { ExerciseCategoryTypePipe } from '../utils/exercise-category-type.pipe';
 
@@ -10,7 +10,9 @@ import { ExerciseCategoryTypePipe } from '../utils/exercise-category-type.pipe';
 
 @Controller('training-plan/statistics')
 export class TrainingStatisticsController {
-  constructor(private volumeStatisticsService: VolumeStatisticsService) {}
+  constructor(
+    private planComparisonStaticsService: PlanComparisonStaticsService,
+  ) {}
 
   @Get('volume-comparison')
   async getVolumeComparison(
@@ -20,7 +22,7 @@ export class TrainingStatisticsController {
     exerciseCategories: ExerciseCategoryType[],
   ) {
     const exerciseCategory = exerciseCategories[0]; // only one category can be compared over multiple plans by now
-    return await this.volumeStatisticsService.getVolumeComparison(
+    return await this.planComparisonStaticsService.getVolumeComparison(
       user.id,
       trainingPlanTitles,
       exerciseCategory,
@@ -28,7 +30,19 @@ export class TrainingStatisticsController {
   }
 
   @Get('performance-comparison')
-  async getPerformanceComparisonCharts(@GetUser() user: User) {}
+  async getPerformanceComparisonCharts(
+    @GetUser() user: User,
+    @Query('plans', CommaSeparatedStringsPipe) trainingPlanTitles: string[],
+    @Query('category', ExerciseCategoryTypePipe)
+    eerciseCategories: ExerciseCategoryType[],
+  ) {
+    const exerciseCategory = eerciseCategories[0]; // only one category can be compared over multiple plans by now
+    return await this.planComparisonStaticsService.getPerformanceComparison(
+      user.id,
+      trainingPlanTitles,
+      exerciseCategory,
+    );
+  }
 
   @Get("':id/viewedCategories'")
   async getViewedCategories(
