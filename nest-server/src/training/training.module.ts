@@ -56,5 +56,6 @@ import { TrainingService } from './training.service';
     TonnageProgressionService,
     TrainingSessionTracker,
   ],
+  exports: [TrainingService, MongooseModule],
 })
 export class TrainingModule {}

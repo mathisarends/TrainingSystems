@@ -39,6 +39,14 @@ export class TrainingService {
     return trainingPlan;
   }
 
+  async getTrainingPlansByUser(userId: string): Promise<TrainingPlan[]> {
+    const trainingPlan = await this.trainingPlanModel.find({
+      userId: userId,
+    });
+
+    return trainingPlan;
+  }
+
   async getCertainTrainingDay(userId: string, trainingDayId: string) {
     const trainingPlans = await this.trainingPlanModel.find({
       userId: userId,

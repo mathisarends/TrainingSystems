@@ -10,8 +10,9 @@ import { ExerciseModule } from './exercise/exercise.module';
 import { GymTicketModule } from './gym-ticket/gym-ticket.module';
 import { RequestLoggerMiddleware } from './middleware/logger-middleware';
 import { PushNotificationsModule } from './push-notifications/push-notifications.module';
-import { UsersModule } from './users/users.module';
 import { TrainingModule } from './training/training.module';
+import { UsersModule } from './users/users.module';
+import { TrainingLogModule } from './training-log/training-log.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { TrainingModule } from './training/training.module';
     PushNotificationsModule,
     PushNotificationsModule,
     TrainingModule,
+    TrainingLogModule,
   ],
   controllers: [AppController],
   providers: [

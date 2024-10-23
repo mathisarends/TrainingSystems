@@ -13,7 +13,6 @@ import { CommaSeparatedStringsPipe } from '../utils/comma-seperated-strings.pipe
 import { ExerciseCategoryTypePipe } from '../utils/exercise-category-type.pipe';
 
 // TODO: hier weitermachen (die routen nach und nach implementieren)
-
 @Controller('training-plan/statistics')
 export class TrainingStatisticsController {
   constructor(
