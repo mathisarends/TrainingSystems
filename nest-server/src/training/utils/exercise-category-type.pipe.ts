@@ -6,6 +6,10 @@ export class ExerciseCategoryTypePipe
   implements PipeTransform<string, ExerciseCategoryType[]>
 {
   transform(value: string): ExerciseCategoryType[] {
+    if (!value) {
+      return [];
+    }
+
     const categories = value
       .split(',')
       .map((category) => category.trim().toLowerCase());

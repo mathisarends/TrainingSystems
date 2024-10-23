@@ -4,6 +4,7 @@ import { ExerciseCategoryType } from 'src/exercise/types/exercise-category-type.
 import { User } from 'src/users/user.model';
 import { PlanComparisonStaticsService } from '../service/statistics/plan-comparison-statistics.service';
 import { RecentlyViewedCategoriesService } from '../service/statistics/recently-viewed-categories.service';
+import { SetProgressionService } from '../service/statistics/set-prpgression.service';
 import { CommaSeparatedStringsPipe } from '../utils/comma-seperated-strings.pipe';
 import { ExerciseCategoryTypePipe } from '../utils/exercise-category-type.pipe';
 
@@ -14,6 +15,7 @@ export class TrainingStatisticsController {
   constructor(
     private planComparisonStaticsService: PlanComparisonStaticsService,
     private recentlyViewedCategoriesService: RecentlyViewedCategoriesService,
+    private setProgressionService: SetProgressionService,
   ) {}
 
   @Get('volume-comparison')
@@ -57,7 +59,7 @@ export class TrainingStatisticsController {
     );
   }
 
-  @Post('viewedCategorie/:id')
+  @Post('viewedCategories/:id')
   async updateViewedCategories(
     @GetUser() user: User,
     @Param('id') trainingPlanId: string,
@@ -75,7 +77,15 @@ export class TrainingStatisticsController {
   async getSetsForCategories(
     @GetUser() user: User,
     @Param('id') trainingPlanId: string,
-  ) {}
+    @Query('category', ExerciseCategoryTypePipe)
+    eerciseCategories: ExerciseCategoryType[],
+  ) {
+    return await this.setProgressionService.getSetProgressionByCategories(
+      user.id,
+      trainingPlanId,
+      eerciseCategories,
+    );
+  }
 
   @Get(':id/performance')
   async getPerformanceCharts(
