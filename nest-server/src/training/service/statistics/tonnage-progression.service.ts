@@ -1,13 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
-import _ from 'lodash';
+import capitalize from 'lodash/capitalize';
 import { ExerciseCategoryType } from 'src/exercise/types/exercise-category-type.enum';
 import { ChartDataDto } from 'src/training/model/chart-data.dto';
 import { Exercise } from 'src/training/model/exercise.schema';
 import { TrainingDay } from 'src/training/model/training-day.schema';
 import { TrainingPlan } from 'src/training/model/training-plan.schema';
 import { TrainingWeek } from 'src/training/model/training-week.schema';
-const { capitalize } = _;
 
 @Injectable()
 export class TonnageProgressionService {

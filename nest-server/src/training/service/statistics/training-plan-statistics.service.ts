@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { ExerciseCategoryType } from 'src/exercise/types/exercise-category-type.enum';
 import { TrainingService } from 'src/training/training.service';
+import { TonnageProgressionService } from './tonnage-progression.service';
 
-// TODO: diesen service hier implementieren für 'training-statistics-controller'
 @Injectable()
 export class VolumeStatisticsService {
-  constructor(private trainingService: TrainingService) {}
+  constructor(
+    private trainingService: TrainingService,
+    private tonnageProgressionService: TonnageProgressionService,
+  ) {}
 
   async getVolumeComparison(
     trainingPlanTitles: string[],
@@ -13,18 +16,17 @@ export class VolumeStatisticsService {
   ) {
     const responseData = await Promise.all(
       trainingPlanTitles.map(async (title) => {
-        const trainingPlan = await trainingPlanManager.findTrainingPlanByTitle(
-          user,
+        const trainingPlan = await this.trainingService.getPlanByUserAndTitle(
           title,
-        );
-        const tonnageProgressionManager = new TonnageProgressionManager(
-          trainingPlan,
+          exerciseCategory,
         );
 
         return {
-          [title]: tonnageProgressionManager.getTonnageProgressionByCategories([
-            exerciseCategory,
-          ]),
+          [title]:
+            this.tonnageProgressionService.getTonnageProgressionByCategories(
+              trainingPlan,
+              [exerciseCategory],
+            ),
         };
       }),
     );
