@@ -12,6 +12,7 @@ import { EditTrainingPlanService } from './service/edit-training-plan.service';
 import { PerformanceProgressionService } from './service/statistics/performance-progression.service';
 import { PlanComparisonStaticsService } from './service/statistics/plan-comparison-statistics.service';
 import { RecentlyViewedCategoriesService } from './service/statistics/recently-viewed-categories.service';
+import { SessionDurationService } from './service/statistics/session-duration.service';
 import { SetProgressionService } from './service/statistics/set-prpgression.service';
 import { TonnageProgressionService } from './service/statistics/tonnage-progression.service';
 import { TrainingPlanCardViewService } from './service/training-plan-card-view.service';
@@ -48,6 +49,7 @@ import { TrainingService } from './training.service';
     PerformanceProgressionService,
     RecentlyViewedCategoriesService,
     SetProgressionService,
+    SessionDurationService,
     TrainingService,
     PushNotificationsService,
     TrainingSessionManagerService,

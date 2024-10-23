@@ -15,12 +15,7 @@ export class PerformanceProgressionService {
     ExerciseCategoryType.OVERHEADPRESS,
   ];
 
-  /**
-   * Berechnet die Leistungs-Progression für die angegebenen Übungskategorien.
-   * @param exerciseCategories Liste der Übungskategorien
-   * @returns ChartDataDto - Daten für das Diagramm
-   */
-  public getPerformanceProgressionByCategories(
+  getPerformanceProgressionByCategories(
     trainingPlan: TrainingPlan,
     exerciseCategories: ExerciseCategoryType[],
   ): ChartDataDto {
