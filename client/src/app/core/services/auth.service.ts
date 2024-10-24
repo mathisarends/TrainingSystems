@@ -21,7 +21,7 @@ export class AuthService {
    * @returns An Observable that completes when the authentication status check is done.
    */
   checkAuthenticationStatus(): Observable<boolean> {
-    return this.httpService.get('/user/auth/auth-state').pipe(
+    return this.httpService.get('/auth-state').pipe(
       map(() => {
         this.isAuthenticatedSignal.set(true);
         return true;
@@ -52,7 +52,7 @@ export class AuthService {
    * Logs out the user
    */
   logout(): void {
-    this.httpService.post('/user/auth/logout').subscribe(() => {
+    this.httpService.post('/auth/logout').subscribe(() => {
       this.isAuthenticatedSignal.set(false);
       this.router.navigate(['login']);
     });

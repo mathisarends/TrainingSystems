@@ -9,6 +9,6 @@ export class LoginService {
   constructor(private httpService: HttpService) {}
 
   loginUser(loginDto: LoginDto): Observable<BasicConfirmationResponse> {
-    return this.httpService.post<BasicConfirmationResponse>('/user/auth/login', loginDto);
+    return this.httpService.post<BasicConfirmationResponse>('/auth/login', loginDto);
   }
 }

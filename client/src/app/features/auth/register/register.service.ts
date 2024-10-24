@@ -17,6 +17,6 @@ export class RegisterService {
    * @returns Observable of BasicConfirmationResponse indicating the registration result.
    */
   registerUser(registerDto: RegisterUserDto): Observable<BasicConfirmationResponse> {
-    return this.httpService.post<BasicConfirmationResponse>('/user/auth/register', registerDto);
+    return this.httpService.post<BasicConfirmationResponse>('/auth/register', registerDto);
   }
 }

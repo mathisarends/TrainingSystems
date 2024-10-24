@@ -1,13 +1,19 @@
-import { Type } from 'class-transformer';
-import { IsNotEmpty, IsString, ValidateNested } from 'class-validator';
-import { PushSubscriptionKeysDto } from './push-subscription-keys.dto';
+import { IsNotEmpty, IsString } from 'class-validator';
+
+export class PushSubscriptionKeysDto {
+  @IsString()
+  @IsNotEmpty()
+  p256dh: string;
+
+  @IsString()
+  @IsNotEmpty()
+  auth: string;
+}
 
 export class CreatePushSubscriptionDto {
-  @IsString()
   @IsNotEmpty()
   endpoint: string;
 
-  @ValidateNested()
-  @Type(() => PushSubscriptionKeysDto)
+  @IsNotEmpty()
   keys: PushSubscriptionKeysDto;
 }

@@ -16,7 +16,7 @@ export class ActivityCalendarService {
         return map;
       }, new Map<number, number>());
 
-    const activityObject = Object.fromEntries(activityMap);
+    return Object.fromEntries(activityMap);
   }
 
   private getTonnagePerTrainingDay(trainingDay: TrainingDay): number {

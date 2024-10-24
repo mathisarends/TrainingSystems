@@ -8,10 +8,10 @@ export class GymTicketService {
   constructor(private httpClient: HttpService) {}
 
   uploadGymTicket(gymTicketDto: GymTicketDto): Observable<any> {
-    return this.httpClient.put('/user/gym-ticket', gymTicketDto);
+    return this.httpClient.put('/gym-ticket', gymTicketDto);
   }
 
   getGymTicket(): Observable<string> {
-    return this.httpClient.get('/user/gym-ticket');
+    return this.httpClient.get('/gym-ticket');
   }
 }

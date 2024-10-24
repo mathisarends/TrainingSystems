@@ -97,7 +97,7 @@ export class TrainingLogsComponent implements OnInit, AfterViewInit {
    * Marks unseen training notifications as seen after the view has been initialized.
    */
   ngAfterViewInit(): void {
-    this.httpService.delete('/user/activity/unseen-training-notifications').subscribe(() => {});
+    this.httpService.delete('/training-log/notifications').subscribe(() => {});
   }
 
   /**
@@ -111,7 +111,7 @@ export class TrainingLogsComponent implements OnInit, AfterViewInit {
     }
 
     this.trainingDayNotifications$ = this.httpService
-      .get<TrainingDayFinishedNotification[]>('/user/activity/training-notifications', httpParams)
+      .get<TrainingDayFinishedNotification[]>('/training-log', httpParams)
       .pipe(
         tap((notifications) => {
           this.cachedTrainingNotifications.set(notifications);

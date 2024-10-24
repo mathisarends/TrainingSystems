@@ -30,7 +30,6 @@ activityRouter.delete(
   asyncHandler(activityController.resetUnseenTrainingDayNotifications)
 );
 
-// wird zum navigieren auf einene bestimmten Trainingsplan benutzt anscheinend
 activityRouter.get(
   '/training-day/:id',
   authService.authenticationMiddleware,

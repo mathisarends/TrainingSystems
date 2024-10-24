@@ -9,7 +9,7 @@ export interface UserProfileDto {
   /**
    * The user's unique username.
    */
-  username: string;
+  name: string;
 
   /**
    * The user's email address.

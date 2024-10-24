@@ -35,6 +35,7 @@ import { SettingsComponent } from './settings/settings.component';
     CommonModule,
     ChartSkeletonComponent,
     ProfilePictureWithInfoComponent,
+    SpinnerComponent,
   ],
   selector: 'app-profile',
   templateUrl: 'profile.component.html',

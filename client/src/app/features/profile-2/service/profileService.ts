@@ -35,10 +35,10 @@ export class ProfileService {
    * Fetches the user's profile data from the server and updates individual signals.
    */
   fetchAndSetProfileData(): Observable<UserProfileDto> {
-    return this.httpService.get<UserProfileDto>('/user/profile').pipe(
+    return this.httpService.get<UserProfileDto>('/profile').pipe(
       tap((data: UserProfileDto) => {
         this.id.set(data.id);
-        this.username.set(data.username);
+        this.username.set(data.name);
         this.email.set(data.email);
         this.pictureUrl.set(data.pictureUrl);
 
@@ -51,14 +51,14 @@ export class ProfileService {
    * Uploads a new profile picture for the user.
    */
   uploadProfilePicture(updateProfilePictureDto: UpdateProfilePictureDto): Observable<BasicConfirmationResponse> {
-    return this.httpService.post<any>('/user/profile/update-profile-picture', updateProfilePictureDto);
+    return this.httpService.post<any>('profile', updateProfilePictureDto);
   }
 
   /**
    * Deletes the user's account from the system.
    */
   deleteAccount(): Observable<BasicConfirmationResponse> {
-    return this.httpService.delete<any>('/user/profile/delete-account');
+    return this.httpService.delete<any>('/profile/delete-account');
   }
 
   /**
@@ -67,6 +67,6 @@ export class ProfileService {
    * @returns An `Observable` emitting `ActivityCalendarData` that contains the user's activity data.
    */
   getActivityCalendarData(): Observable<ActivityCalendarData> {
-    return this.httpService.get<ActivityCalendarData>('/user/activity/activity-calendar');
+    return this.httpService.get<ActivityCalendarData>('/activity-calendar');
   }
 }

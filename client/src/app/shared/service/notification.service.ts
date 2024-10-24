@@ -25,9 +25,8 @@ export class NotificationService {
    * @returns An Observable of the fetched training day notifications.
    */
   fetchAndSetTrainingDayNotifications(): Observable<number> {
-    return this.httpService.get<number>('/user/activity/unseen-training-notifications').pipe(
+    return this.httpService.get<number>('/training-log/notifications').pipe(
       tap((amountOfUnseenNotifications: number) => {
-        console.log('🚀 ~ NotificationService ~ tap ~ amountOfUnseenNotifications:', amountOfUnseenNotifications);
         this.amountOfUnseenNotifications.set(amountOfUnseenNotifications);
       }),
     );
@@ -40,7 +39,7 @@ export class NotificationService {
    * @returns An Observable representing the result of the delete operation.
    */
   deleteTrainingDayNotification(id: string): Observable<any> {
-    return this.httpService.delete(`/user/activity/training-notification/${id}`).pipe(
+    return this.httpService.delete(`/training-log/training-day/${id}`).pipe(
       tap(() => {
         // Remove the deleted notification from the signal
         const updatedNotifications = this.trainingDayNotifications().filter((notification) => notification.id !== id);
@@ -56,6 +55,6 @@ export class NotificationService {
    * @returns An Observable of the fetched training day data.
    */
   getTrainingDayById(id: string): Observable<any> {
-    return this.httpService.get<any>(`/user/activity/training-day/${id}`);
+    return this.httpService.get<any>(`/training-log/training-day/${id}`);
   }
 }

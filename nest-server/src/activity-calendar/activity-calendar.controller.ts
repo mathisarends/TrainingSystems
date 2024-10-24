@@ -14,6 +14,7 @@ export class ActivityCalendarController {
   async getActivityCalendar(@GetUser() userId: string) {
     const trainingPlans =
       await this.trainingService.getTrainingPlansByUser(userId);
+
     return this.actvityCalendarService.geetActivityCalendar(trainingPlans);
   }
 }
