@@ -89,6 +89,7 @@ export class NavBarComponent implements OnInit {
 
   private redirectToMostRecentTrainingDay() {
     this.httpService.get<string>('/training/most-recent-plan-link').subscribe((link) => {
+      console.log('🚀 ~ NavBarComponent ~ this.httpService.get<string> ~ link:', link);
       const url = new URL(link);
       const path = url.pathname;
 

@@ -60,10 +60,7 @@ export class TrainingPlanCardViewService {
     const trainingFrequency = trainingPlan.trainingFrequency;
     const totalTrainingDays =
       trainingFrequency * trainingPlan.trainingWeeks.length;
-    const { weekIndex, dayIndex } =
-      this.trainingPlanUtilsService.findLatestTrainingDayWithWeight(
-        trainingPlan,
-      );
+    const { weekIndex, dayIndex } = trainingPlan.mostRecentTrainingDayLocator;
 
     let completedDays: number;
     if (this.isFirstTrainingDay(weekIndex, dayIndex)) {

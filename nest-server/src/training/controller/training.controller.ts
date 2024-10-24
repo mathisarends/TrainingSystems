@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Res,
+} from '@nestjs/common';
+import { Response } from 'express';
 import { GetUser } from 'src/decorators/user.decorator';
 import { UsersService } from 'src/users/users.service';
 import { AutoProgressionDto } from '../dto/auto-progression.dto';
@@ -94,9 +103,10 @@ export class TrainingController {
   @Get('most-recent-plan-link')
   async getMostRecentTrainingPlanLink(
     @GetUser() userId: string,
-  ): Promise<string> {
-    return await this.trainingPlanUtilsService.getMostRecentTrainingPlanLink(
-      userId,
-    );
+    @Res() res: Response,
+  ) {
+    const link =
+      await this.trainingPlanUtilsService.getMostRecentTrainingPlanLink(userId);
+    return res.status(200).json(link);
   }
 }
