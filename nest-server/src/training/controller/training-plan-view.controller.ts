@@ -1,10 +1,17 @@
-import { Body, Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+} from '@nestjs/common';
 import { GetUser } from 'src/decorators/user.decorator';
 import { ApiData } from 'src/types/api-data';
 import { TrainingPlanViewUpdateService } from '../service/training-plan-view-update.service';
 import { TrainingPlanViewService } from '../service/training-plan-view.service';
 
-@Controller('training-plan/view')
+@Controller('training-plan-view')
 export class TrainingPlanViewController {
   constructor(
     private readonly trainingPlanViewService: TrainingPlanViewService,
@@ -27,7 +34,7 @@ export class TrainingPlanViewController {
     );
   }
 
-  @Get(':id/:week/:day')
+  @Patch(':id/:week/:day')
   async updateTrainingDataForTrainingDay(
     @GetUser() userId: string,
     @Param('id') trainingPlanId: string,

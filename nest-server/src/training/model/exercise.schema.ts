@@ -6,25 +6,25 @@ import { Document } from 'mongoose';
  */
 @Schema()
 export class Exercise extends Document {
-  @Prop({ required: true })
+  @Prop()
   category: string;
 
-  @Prop({ required: true })
+  @Prop()
   exercise: string;
 
-  @Prop({ required: true })
+  @Prop()
   sets: number;
 
-  @Prop({ required: true })
+  @Prop()
   reps: number;
 
-  @Prop({ required: true })
+  @Prop()
   weight: string;
 
-  @Prop({ required: true })
+  @Prop()
   targetRPE: string;
 
-  @Prop({ required: true })
+  @Prop()
   actualRPE: string;
 
   @Prop()

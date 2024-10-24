@@ -16,7 +16,7 @@ export class TrainingViewService {
    * Loads the training plan for a specific plan ID, week, and day.
    */
   loadTrainingPlan(planId: string, week: number, day: number): Observable<TrainingPlanDto> {
-    return this.httpClient.get<TrainingPlanDto>(`/training/plan/${planId}/${week}/${day}`);
+    return this.httpClient.get<TrainingPlanDto>(`/training-plan-view/${planId}/${week}/${day}`);
   }
 
   /**
@@ -30,6 +30,6 @@ export class TrainingViewService {
    * Submits changes to the training plan for a specific plan ID, week, and day.
    */
   submitTrainingPlan(planId: string, week: number, day: number, changedData: Record<string, string>): Observable<any> {
-    return this.httpClient.patch(`/training/plan/${planId}/${week}/${day}`, changedData);
+    return this.httpClient.patch(`/training-plan-view/${planId}/${week}/${day}`, changedData);
   }
 }
