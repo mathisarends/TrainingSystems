@@ -57,9 +57,10 @@ export class NavBarComponent implements OnInit {
             currentRoute = '/';
           }
 
-          if (this.isTrainingPlanUuidInRoute(currentRoute)) {
+          if (this.isMongooseObjectIdInRoute(currentRoute)) {
             currentRoute = '';
           } else {
+            console.log('is not in route');
             currentRoute = '/profile';
           }
         }
@@ -89,7 +90,6 @@ export class NavBarComponent implements OnInit {
 
   private redirectToMostRecentTrainingDay() {
     this.httpService.get<string>('/training/most-recent-plan-link').subscribe((link) => {
-      console.log('🚀 ~ NavBarComponent ~ this.httpService.get<string> ~ link:', link);
       const url = new URL(link);
       const path = url.pathname;
 
@@ -103,10 +103,19 @@ export class NavBarComponent implements OnInit {
     });
   }
 
-  private isTrainingPlanUuidInRoute(route: string): boolean {
-    const uuidRegex = /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/;
+  /**
+   * Checks if the route contains a Mongoose ObjectId (24-character hex string).
+   */
+  private isMongooseObjectIdInRoute(route: string): boolean {
+    const url = new URL(window.location.href);
+    const planId = url.searchParams.get('planId');
 
-    return uuidRegex.test(route);
+    if (!planId) {
+      return false;
+    }
+
+    const objectIdRegex = /^[0-9a-fA-F]{24}$/;
+    return objectIdRegex.test(planId);
   }
 
   private isActivityRoute(route: string) {

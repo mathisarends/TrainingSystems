@@ -125,8 +125,14 @@ export class TrainingPlanCardComponent implements OnInit {
   }
 
   viewStatistics(id: string): void {
-    const redirectUrl = this.isTrainingSessionCard() ? `statistics/session/${id}` : `statistics/${id}`;
+    const redirectUrl = this.isTrainingSessionCard() ? `statistics/session` : `statistics`;
     this.router.navigate([redirectUrl]);
+
+    this.router.navigate(['/statistics'], {
+      queryParams: {
+        planId: id,
+      },
+    });
   }
 
   /**

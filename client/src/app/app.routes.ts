@@ -34,7 +34,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'statistics/:planId',
+    path: 'statistics',
     component: TrainingPlanStatisticsComponent,
     canActivate: [AuthGuard],
   },

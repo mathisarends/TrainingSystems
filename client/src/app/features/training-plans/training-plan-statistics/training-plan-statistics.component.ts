@@ -268,6 +268,12 @@ export class TrainingPlanStatisticsComponent implements OnInit {
    * @returns The training plan ID extracted from the URL.
    */
   private parseTrainingPlanIdFromUrl(): string {
-    return this.router.url.split('/').pop()!;
+    const url = new URL(window.location.href);
+    const planId = url.searchParams.get('planId');
+
+    if (!planId) {
+      throw new Error('Plan id was not given in query param');
+    }
+    return planId;
   }
 }
