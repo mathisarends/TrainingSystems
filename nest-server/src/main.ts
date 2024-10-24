@@ -16,7 +16,8 @@ async function bootstrap() {
     }),
   );
 
-  // TODO: vllt muss hier für die Postman Tests kurzzeitig der origin ausgeschaltet werden
+  app.setGlobalPrefix('api');
+
   app.use(
     cors({
       origin: [process.env.DEV_BASE_URL, process.env.PROD_BASE_URL],
