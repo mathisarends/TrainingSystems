@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { TrainingDay } from '../model/training-day.schema';
-import { TrainingPlan } from '../model/training-plan.schema';
+import { TrainingPlan } from '../model/training-plan.model';
 import { TrainingWeek } from '../model/training-week.schema';
 
 @Injectable()

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { TrainingDayViewDto } from '../dto/training-day-view.dto';
 import { Exercise } from '../model/exercise.schema';
 import { TrainingDay } from '../model/training-day.schema';
-import { TrainingPlan } from '../model/training-plan.schema';
+import { TrainingPlan } from '../model/training-plan.model';
 import { WeightRecommendation } from '../model/weight-recommandation.enum';
 import { TrainingService } from '../training.service';
 import { TrainingPlanViewValidationService } from './training-plan-view-validation.service';
@@ -41,6 +41,8 @@ export class TrainingPlanViewService {
       dayIndex,
       trainingDay,
     );
+
+    await trainingPlan.save();
 
     return this.toTrainingDayDto(
       trainingPlan,

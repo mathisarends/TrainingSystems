@@ -57,6 +57,7 @@ export class TrainingPlanEditView {
       trainingBlockLength: Number(this.trainingBlockLength()),
       coverImageBase64: this.coverImageBase64(),
       referencePlanId: this.referencePlanId(),
+      weightRecommandationBase: this.weightRecommendationBase(),
     };
 
     if (this.id()) {

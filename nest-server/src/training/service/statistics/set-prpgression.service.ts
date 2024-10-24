@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { capitalize } from 'lodash';
 import { ExerciseCategoryType } from 'src/exercise/types/exercise-category-type.enum';
 import { ChartDataDto } from 'src/training/model/chart-data.dto';
-import { TrainingPlan } from 'src/training/model/training-plan.schema';
+import { TrainingPlan } from 'src/training/model/training-plan.model';
 import { TrainingService } from 'src/training/training.service';
 
 @Injectable()

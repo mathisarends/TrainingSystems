@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { EditTrainingPlanDto } from '../dto/edit-training-plan.dto';
 import { TrainingPlanEditViewDto } from '../dto/training-plan-edit-view.dto';
-import { TrainingPlan } from '../model/training-plan.schema';
+import { TrainingPlan } from '../model/training-plan.model';
 import { TrainingService } from '../training.service';
 
 @Injectable()

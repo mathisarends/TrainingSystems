@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { TrainingDay } from 'src/training/model/training-day.schema';
-import { TrainingPlan } from 'src/training/model/training-plan.schema';
+import { TrainingPlan } from 'src/training/model/training-plan.model';
 import { TrainingWeek } from 'src/training/model/training-week.schema';
 
 @Injectable()

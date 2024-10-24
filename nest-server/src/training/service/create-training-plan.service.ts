@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateTrainingPlanDto } from '../dto/create-training-plan.dto';
-import { TrainingPlan } from '../model/training-plan.schema';
+import { TrainingPlan } from '../model/training-plan.model';
 
 @Injectable()
 export class CreateTrainingPlanService {

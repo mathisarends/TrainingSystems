@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from 'src/users/user.model';
 import { TrainingPlanCardViewDto } from '../model/training-plan-card-view.dto';
-import { TrainingPlan } from '../model/training-plan.schema';
+import { TrainingPlan } from '../model/training-plan.model';
 import { TrainingPlanUtilsService } from './training-plan-utils.service';
 
 @Injectable()

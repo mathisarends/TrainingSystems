@@ -9,7 +9,7 @@ import { TrainingPlanEditController } from './controller/training-plan-edit.cont
 import { TrainingPlanViewController } from './controller/training-plan-view.controller';
 import { TrainingStatisticsController } from './controller/training-statistics.controller';
 import { TrainingController } from './controller/training.controller';
-import { TrainingPlan, TrainingPlanSchema } from './model/training-plan.schema';
+import { TrainingPlan, TrainingPlanSchema } from './model/training-plan.model';
 import { CreateTrainingPlanService } from './service/create-training-plan.service';
 import { EditTrainingPlanService } from './service/edit-training-plan.service';
 import { PerformanceProgressionService } from './service/statistics/performance-progression.service';

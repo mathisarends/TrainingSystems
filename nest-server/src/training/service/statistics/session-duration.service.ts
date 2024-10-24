@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AverageTrainingDayDurationDto } from 'src/training/dto/average-training-duration.dto';
-import { TrainingPlan } from 'src/training/model/training-plan.schema';
+import { TrainingPlan } from 'src/training/model/training-plan.model';
 
 @Injectable()
 export class SessionDurationService {

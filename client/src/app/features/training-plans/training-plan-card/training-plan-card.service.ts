@@ -4,8 +4,6 @@ import { HttpService } from '../../../core/services/http-client.service';
 
 @Injectable()
 export class TrainingPlanCardService {
-  private baseUrl = '/training';
-
   constructor(private httpService: HttpService) {}
 
   /**
@@ -14,7 +12,7 @@ export class TrainingPlanCardService {
    * @returns Observable containing the latest training plan data.
    */
   getLatestTrainingPlan(id: string): Observable<any> {
-    return this.httpService.get<any>(`${this.baseUrl}/plan/${id}/latest`);
+    return this.httpService.get<any>(`/training/${id}/latest`);
   }
 
   /**

@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 import { ExerciseCategoryType } from 'src/exercise/types/exercise-category-type.enum';
 import { AutoProgressionDto } from '../dto/auto-progression.dto';
 import { TrainingDay } from '../model/training-day.schema';
-import { TrainingPlan } from '../model/training-plan.schema';
+import { TrainingPlan } from '../model/training-plan.model';
 import { TrainingService } from '../training.service';
 
 @Injectable()

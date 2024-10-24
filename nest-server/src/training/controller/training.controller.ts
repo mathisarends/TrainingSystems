@@ -79,6 +79,18 @@ export class TrainingController {
     return { title };
   }
 
+  @Get(':id/latest')
+  async getLastTrainingDayOfPlan(
+    @GetUser() userId: string,
+    @Param('id') trainingPlanId: string,
+  ) {
+    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(
+      userId,
+      trainingPlanId,
+    );
+    return trainingPlan.mostRecentTrainingDayLocator;
+  }
+
   @Get('most-recent-plan-link')
   async getMostRecentTrainingPlanLink(
     @GetUser() userId: string,

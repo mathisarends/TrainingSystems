@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { TrainingDay } from 'src/training/model/training-day.schema';
-import { TrainingPlan } from 'src/training/model/training-plan.schema';
+import { TrainingPlan } from 'src/training/model/training-plan.model';
 import { TrainingService } from 'src/training/training.service';
 import { TrainingLogNotification } from './model/training-log.model';
 import { TrainingDayService } from './training-day.service';

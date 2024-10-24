@@ -4,7 +4,7 @@ import { ExerciseCategoryType } from 'src/exercise/types/exercise-category-type.
 import { ChartDataDto } from 'src/training/model/chart-data.dto';
 import { Exercise } from 'src/training/model/exercise.schema';
 import { TrainingDay } from 'src/training/model/training-day.schema';
-import { TrainingPlan } from 'src/training/model/training-plan.schema';
+import { TrainingPlan } from 'src/training/model/training-plan.model';
 import { TrainingWeek } from 'src/training/model/training-week.schema';
 
 @Injectable()

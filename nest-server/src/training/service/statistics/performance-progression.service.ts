@@ -3,7 +3,7 @@ import { capitalize } from 'lodash';
 import { ExerciseCategoryType } from 'src/exercise/types/exercise-category-type.enum';
 import { ChartDataDto } from 'src/training/model/chart-data.dto';
 import { TrainingDay } from 'src/training/model/training-day.schema';
-import { TrainingPlan } from 'src/training/model/training-plan.schema';
+import { TrainingPlan } from 'src/training/model/training-plan.model';
 import { TrainingWeek } from 'src/training/model/training-week.schema';
 
 @Injectable()
