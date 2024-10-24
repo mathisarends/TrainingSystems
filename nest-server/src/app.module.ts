@@ -15,6 +15,7 @@ import { PushNotificationsModule } from './push-notifications/push-notifications
 import { TrainingLogModule } from './training-log/training-log.module';
 import { TrainingModule } from './training/training.module';
 import { UsersModule } from './users/users.module';
+import { TrainingSessionModule } from './training-session/training-session.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { UsersModule } from './users/users.module';
     ActivityCalendarModule,
     FriendshipModule,
     FriendshipModule,
+    TrainingSessionModule,
   ],
   controllers: [AppController],
   providers: [
