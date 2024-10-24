@@ -29,6 +29,9 @@ import { TrainingSessionManagerService } from './service/training-view/training-
 import { TrainingSessionTracker } from './service/training-view/training-session-tracker.service';
 import { TrainingService } from './training.service';
 
+// TODO: aufteilen in trainingModule, trianingPlanModule, statisticsModule und timer Module
+// https://chatgpt.com/g/g-M5xiZJST7-nestjs-copilot/c/671a74bd-528c-8002-8936-14b871d46fa0
+
 @Module({
   imports: [
     MongooseModule.forFeature([

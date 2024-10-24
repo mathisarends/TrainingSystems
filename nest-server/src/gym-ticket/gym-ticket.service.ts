@@ -20,9 +20,12 @@ export class GymTicketService {
     return await gymTicket.save();
   }
 
-  async getGymTicketByUserId(userId: string) {
-    return await this.gymTicketModel
-      .find({ userId: userId }, 'gymTicket')
+  async getGymTicketByUserId(userId: string): Promise<string> {
+    const result = await this.gymTicketModel
+      .findOne({ userId: userId }, 'gymTicket')
+      .lean()
       .exec();
+
+    return result ? result.gymTicket : undefined;
   }
 }
