@@ -53,9 +53,8 @@ export class TrainingPlanEditView {
   toDto(): TrainingPlanEditViewDto {
     const dto: Partial<TrainingPlanEditViewDto> = {
       title: this.title(),
-      trainingFrequency: this.trainingFrequency(),
-      trainingBlockLength: this.trainingBlockLength(),
-      weightRecommandationBase: this.weightRecommendationBase(),
+      trainingFrequency: Number(this.trainingFrequency()),
+      trainingBlockLength: Number(this.trainingBlockLength()),
       coverImageBase64: this.coverImageBase64(),
       referencePlanId: this.referencePlanId(),
     };

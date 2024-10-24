@@ -33,6 +33,7 @@ export class EditTrainingPlanService {
     };
   }
 
+  // TODO: Das verlängern der Blocklänge funktioniert hier aufjedenfall noch nicht.
   async editTrainingPlan(
     userId: string,
     trainingPlanId: string,
@@ -43,7 +44,7 @@ export class EditTrainingPlanService {
       trainingPlanId,
     );
 
-    await this.trainingService.updateTrainingPlan(
+    return await this.trainingService.updateTrainingPlan(
       trainingPlan,
       editTrainingPlanDto,
     );
