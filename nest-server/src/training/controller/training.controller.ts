@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { GetUser } from 'src/decorators/user.decorator';
-import { User } from 'src/users/user.model';
+import { UsersService } from 'src/users/users.service';
 import { AutoProgressionDto } from '../dto/auto-progression.dto';
 import { CreateTrainingPlanDto } from '../dto/create-training-plan.dto';
 import { CreateTrainingPlanService } from '../service/create-training-plan.service';
@@ -16,11 +16,13 @@ export class TrainingController {
     private readonly createTrainingPlanService: CreateTrainingPlanService,
     private readonly trainingPlanCardViewService: TrainingPlanCardViewService,
     private readonly trainingService: TrainingService,
+    private readonly userService: UsersService,
   ) {}
 
   @Get()
-  getTrainingPlanCardViews(@GetUser() user: User) {
-    return this.trainingPlanCardViewService.getCardViewsForUser(user);
+  async getTrainingPlanCardViews(@GetUser() userId: string) {
+    const user = await this.userService.getUserById(userId);
+    return await this.trainingPlanCardViewService.getCardViewsForUser(user);
   }
 
   @Post()

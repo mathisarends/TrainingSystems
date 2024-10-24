@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ExerciseModule } from 'src/exercise/exercise.module';
 import { PushNotificationsModule } from 'src/push-notifications/push-notifications.module';
 import { PushNotificationsService } from 'src/push-notifications/push-notifications.service';
+import { UsersModule } from 'src/users/users.module';
+import { UsersService } from 'src/users/users.service';
 import { TrainingPlanEditController } from './controller/training-plan-edit.controller';
 import { TrainingPlanViewController } from './controller/training-plan-view.controller';
 import { TrainingStatisticsController } from './controller/training-statistics.controller';
@@ -29,7 +32,9 @@ import { TrainingService } from './training.service';
     MongooseModule.forFeature([
       { name: TrainingPlan.name, schema: TrainingPlanSchema },
     ]),
+    ExerciseModule,
     PushNotificationsModule,
+    UsersModule,
   ],
   controllers: [
     TrainingController,
@@ -55,6 +60,7 @@ import { TrainingService } from './training.service';
     TrainingSessionManagerService,
     TonnageProgressionService,
     TrainingSessionTracker,
+    UsersService,
   ],
   exports: [TrainingService, MongooseModule],
 })

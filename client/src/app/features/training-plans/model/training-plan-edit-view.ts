@@ -51,8 +51,7 @@ export class TrainingPlanEditView {
    * Convert the class back to a plain object for form submission.
    */
   toDto(): TrainingPlanEditViewDto {
-    return {
-      id: this.id(),
+    const dto: Partial<TrainingPlanEditViewDto> = {
       title: this.title(),
       trainingFrequency: this.trainingFrequency(),
       trainingBlockLength: this.trainingBlockLength(),
@@ -60,6 +59,12 @@ export class TrainingPlanEditView {
       coverImageBase64: this.coverImageBase64(),
       referencePlanId: this.referencePlanId(),
     };
+
+    if (this.id()) {
+      dto.id = this.id();
+    }
+
+    return dto as TrainingPlanEditViewDto;
   }
 
   isValid(): boolean {

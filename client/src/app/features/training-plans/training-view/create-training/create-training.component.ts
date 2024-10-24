@@ -70,7 +70,7 @@ export class CreateTrainingComponent implements OnInit, OnConfirm, OnToggleView 
       return;
     }
 
-    this.httpClient.post('/training/create', this.trainingPlanEditView.toDto()).subscribe(() => {
+    this.httpClient.post('/training', this.trainingPlanEditView.toDto()).subscribe(() => {
       this.toastService.success('Plan erstellt');
       this.trainingPlanService.trainingPlanChanged();
     });
