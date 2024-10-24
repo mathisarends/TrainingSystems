@@ -1,7 +1,15 @@
-import { Body, Controller, Delete, Get, Patch } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  forwardRef,
+  Get,
+  Inject,
+  Patch,
+} from '@nestjs/common';
 import { GetUser } from 'src/decorators/user.decorator';
 import { ApiData } from 'src/types/api-data';
-import { User } from 'src/users/user.model';
+import { UsersService } from 'src/users/users.service';
 import { ExerciseUpdateService } from './exercise-update.service';
 import { ExerciseService } from './exercise.service';
 
@@ -10,18 +18,22 @@ export class ExerciseController {
   constructor(
     private readonly exerciseService: ExerciseService,
     private readonly exerciseUpdateService: ExerciseUpdateService,
+    @Inject(forwardRef(() => UsersService))
+    private readonly userService: UsersService,
   ) {}
 
   @Get()
-  getCategories(@GetUser() user: User) {
+  async getCategories(@GetUser() userId: string) {
+    const user = await this.userService.getUserById(userId);
     return this.exerciseService.getExercises(user);
   }
 
   @Patch()
-  updateUserExercises(
-    @GetUser() user: User,
+  async updateUserExercises(
+    @GetUser() userId: string,
     @Body() updatedExercises: ApiData,
   ) {
+    const user = await this.userService.getUserById(userId);
     return this.exerciseUpdateService.updateExercisesForUser(
       user,
       updatedExercises,
@@ -29,7 +41,8 @@ export class ExerciseController {
   }
 
   @Delete()
-  async resetExercises(@GetUser() user: User) {
+  async resetExercises(@GetUser() userId: string) {
+    const user = await this.userService.getUserById(userId);
     return await this.exerciseService.setDefaultExercisesForUser(user);
   }
 }

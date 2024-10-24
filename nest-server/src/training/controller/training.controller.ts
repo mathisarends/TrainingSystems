@@ -25,50 +25,52 @@ export class TrainingController {
 
   @Post()
   async createTrainingPlan(
-    @GetUser() user: User,
+    @GetUser() userId: string,
     @Body() createTrainingPlanDto: CreateTrainingPlanDto,
   ) {
     return await this.createTrainingPlanService.createTrainingPlan(
-      user.id,
+      userId,
       createTrainingPlanDto,
     );
   }
 
   @Delete(':id')
   async deleteTrainingPlan(
-    @GetUser() user: User,
+    @GetUser() userId: string,
     @Param('id') trainingPlanId: string,
   ) {
     return await this.trainingService.deleteByUserAndTrainingId(
-      user.id,
+      userId,
       trainingPlanId,
     );
   }
 
   @Post(':id/auto-progression')
   async handleAutoProgression(
-    @GetUser() user: User,
+    @GetUser() userId: string,
     @Param('id') trainingPlanId: string,
     @Body() autpProgressionDto: AutoProgressionDto,
   ) {
     return await this.trainingPlanUtilsService.handleAutoProgressionForTrainingPlan(
-      user.id,
+      userId,
       trainingPlanId,
       autpProgressionDto,
     );
   }
 
   @Get('titles')
-  async getTrainingPlanTitles(@GetUser() user: User): Promise<string[]> {
+  async getTrainingPlanTitles(@GetUser() userId: string): Promise<string[]> {
     return await this.trainingPlanUtilsService.getTrainingPlanTitlesForUser(
-      user.id,
+      userId,
     );
   }
 
   @Get('most-recent-plan-link')
-  async getMostRecentTrainingPlanLink(@GetUser() user: User): Promise<string> {
+  async getMostRecentTrainingPlanLink(
+    @GetUser() userId: string,
+  ): Promise<string> {
     return await this.trainingPlanUtilsService.getMostRecentTrainingPlanLink(
-      user.id,
+      userId,
     );
   }
 }

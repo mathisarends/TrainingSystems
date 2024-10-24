@@ -1,7 +1,6 @@
 import { Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { GetUser } from 'src/decorators/user.decorator';
 import { ExerciseCategoryType } from 'src/exercise/types/exercise-category-type.enum';
-import { User } from 'src/users/user.model';
 import { PerformanceProgressionService } from '../service/statistics/performance-progression.service';
 import { PlanComparisonStaticsService } from '../service/statistics/plan-comparison-statistics.service';
 import { RecentlyViewedCategoriesService } from '../service/statistics/recently-viewed-categories.service';
@@ -27,14 +26,14 @@ export class TrainingStatisticsController {
 
   @Get('volume-comparison')
   async getVolumeComparison(
-    @GetUser() user: User,
+    @GetUser() userId: string,
     @Query('plans', CommaSeparatedStringsPipe) trainingPlanTitles: string[],
     @Query('categories', ExerciseCategoryTypePipe)
     exerciseCategories: ExerciseCategoryType[],
   ) {
     const exerciseCategory = exerciseCategories[0]; // only one category can be compared over multiple plans by now
     return await this.planComparisonStaticsService.getVolumeComparison(
-      user.id,
+      userId,
       trainingPlanTitles,
       exerciseCategory,
     );
@@ -42,14 +41,14 @@ export class TrainingStatisticsController {
 
   @Get('performance-comparison')
   async getPerformanceComparisonCharts(
-    @GetUser() user: User,
+    @GetUser() userId: string,
     @Query('plans', CommaSeparatedStringsPipe) trainingPlanTitles: string[],
     @Query('categories', ExerciseCategoryTypePipe)
     eerciseCategories: ExerciseCategoryType[],
   ) {
     const exerciseCategory = eerciseCategories[0]; // only one category can be compared over multiple plans by now
     return await this.planComparisonStaticsService.getPerformanceComparison(
-      user.id,
+      userId,
       trainingPlanTitles,
       exerciseCategory,
     );
@@ -57,24 +56,24 @@ export class TrainingStatisticsController {
 
   @Get('viewedCategories/:id')
   async getViewedCategories(
-    @GetUser() user: User,
+    @GetUser() userId: string,
     @Param('id') trainingPlanId: string,
   ) {
     return await this.recentlyViewedCategoriesService.getViewedCategories(
-      user.id,
+      userId,
       trainingPlanId,
     );
   }
 
   @Post('viewedCategories/:id')
   async updateViewedCategories(
-    @GetUser() user: User,
+    @GetUser() userId: string,
     @Param('id') trainingPlanId: string,
     @Query('categories', ExerciseCategoryTypePipe)
     eerciseCategories: ExerciseCategoryType[],
   ) {
     return await this.recentlyViewedCategoriesService.updateViewedCategories(
-      user.id,
+      userId,
       trainingPlanId,
       eerciseCategories,
     );
@@ -82,13 +81,13 @@ export class TrainingStatisticsController {
 
   @Get(':id/sets')
   async getSetsForCategories(
-    @GetUser() user: User,
+    @GetUser() userId: string,
     @Param('id') trainingPlanId: string,
     @Query('categories', ExerciseCategoryTypePipe)
     eerciseCategories: ExerciseCategoryType[],
   ) {
     return await this.setProgressionService.getSetProgressionByCategories(
-      user.id,
+      userId,
       trainingPlanId,
       eerciseCategories,
     );
@@ -96,13 +95,13 @@ export class TrainingStatisticsController {
 
   @Get(':id/performance')
   async getPerformanceCharts(
-    @GetUser() user: User,
+    @GetUser() userId: string,
     @Param('id') trainingPlanId: string,
     @Query('categories', ExerciseCategoryTypePipe)
     eerciseCategories: ExerciseCategoryType[],
   ) {
     const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(
-      user.id,
+      userId,
       trainingPlanId,
     );
     return this.performanceProgressionService.getPerformanceProgressionByCategories(
@@ -113,13 +112,13 @@ export class TrainingStatisticsController {
 
   @Get(':id/volume')
   async getTonnageForCategories(
-    @GetUser() user: User,
+    @GetUser() userId: string,
     @Param('id') trainingPlanId: string,
     @Query('categories', ExerciseCategoryTypePipe)
     eerciseCategories: ExerciseCategoryType[],
   ) {
     const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(
-      user.id,
+      userId,
       trainingPlanId,
     );
     return this.tonnageProgressionService.getTonnageProgressionByCategories(
@@ -130,11 +129,11 @@ export class TrainingStatisticsController {
 
   @Get(':id/session-durations')
   async getAverageSessionDurationDataForTrainingPlanDay(
-    @GetUser() user: User,
+    @GetUser() userId: string,
     @Param('id') trainingPlanId: string,
   ) {
     const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(
-      user.id,
+      userId,
       trainingPlanId,
     );
 

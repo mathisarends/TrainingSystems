@@ -1,7 +1,6 @@
 import { Body, Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { GetUser } from 'src/decorators/user.decorator';
 import { ApiData } from 'src/types/api-data';
-import { User } from 'src/users/user.model';
 import { TrainingPlanViewUpdateService } from '../service/training-plan-view-update.service';
 import { TrainingPlanViewService } from '../service/training-plan-view.service';
 
@@ -15,13 +14,13 @@ export class TrainingPlanViewController {
   // TOODO: use validation service to retrive training day which can be shared for update and get routes aswell.
   @Get(':id/:week/:day')
   async getTrainingDayData(
-    @GetUser() user: User,
+    @GetUser() userId: string,
     @Param('id') trainingPlanId: string,
     @Param('week', ParseIntPipe) weekIndex: number,
     @Param('day', ParseIntPipe) dayIndex: number,
   ) {
     return await this.trainingPlanViewService.getTrainingDayView(
-      user.id,
+      userId,
       trainingPlanId,
       weekIndex,
       dayIndex,
@@ -30,14 +29,14 @@ export class TrainingPlanViewController {
 
   @Get(':id/:week/:day')
   async updateTrainingDataForTrainingDay(
-    @GetUser() user: User,
+    @GetUser() userId: string,
     @Param('id') trainingPlanId: string,
     @Param('week', ParseIntPipe) weekIndex: number,
     @Param('day', ParseIntPipe) dayIndex: number,
     @Body() changedData: ApiData,
   ) {
     return await this.tariningPlanViewUpdateService.updateTrainingDataForTrainingDay(
-      user.id,
+      userId,
       trainingPlanId,
       weekIndex,
       dayIndex,

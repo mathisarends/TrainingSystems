@@ -7,7 +7,6 @@ import {
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
-import { UsersService } from 'src/users/users.service';
 import { IS_PUBLIC_ROUTE_KEY } from './no-guard.decorator';
 import { TokenService } from './token.service';
 
@@ -16,7 +15,6 @@ export class AuthGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
     private readonly tokenService: TokenService,
-    private readonly userService: UsersService,
   ) {}
 
   /**
@@ -33,9 +31,8 @@ export class AuthGuard implements CanActivate {
 
     try {
       const userClaimsSet = this.tokenService.verifyToken(token) as JwtPayload;
-      const user = await this.userService.getUserById(userClaimsSet.id);
 
-      request['user'] = user;
+      request['userId'] = userClaimsSet.id;
       return true;
     } catch (error) {
       throw new UnauthorizedException('Unauthorized');

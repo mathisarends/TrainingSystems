@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ExerciseModule } from 'src/exercise/exercise.module';
 import { ExerciseService } from 'src/exercise/exercise.service';
@@ -11,10 +11,10 @@ import { UsersService } from './users.service';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
-    ExerciseModule,
+    forwardRef(() => ExerciseModule),
   ],
   controllers: [UsersController, ProfileController],
   providers: [UsersService, ProfileService, ExerciseService],
-  exports: [UsersService],
+  exports: [UsersService, MongooseModule],
 })
 export class UsersModule {}

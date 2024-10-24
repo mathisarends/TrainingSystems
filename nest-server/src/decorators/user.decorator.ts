@@ -1,5 +1,5 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { User } from 'src/users/user.model';
+import { ObjectId } from 'mongoose';
 
 /**
  * Custom decorator that extracts the authenticated user from the request object.
@@ -7,8 +7,8 @@ import { User } from 'src/users/user.model';
  * after authentication middleware or guards have been applied.
  */
 export const GetUser = createParamDecorator(
-  (data: unknown, ctx: ExecutionContext): User => {
+  (data: unknown, ctx: ExecutionContext): ObjectId => {
     const request = ctx.switchToHttp().getRequest();
-    return request.user as User;
+    return request.userId;
   },
 );

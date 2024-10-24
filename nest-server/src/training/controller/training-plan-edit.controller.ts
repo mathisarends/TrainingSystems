@@ -1,7 +1,6 @@
 import { Body, Controller, Get, Param, Patch } from '@nestjs/common';
 
 import { GetUser } from 'src/decorators/user.decorator';
-import { User } from 'src/users/user.model';
 import { EditTrainingPlanDto } from '../dto/edit-training-plan.dto';
 import { EditTrainingPlanService } from '../service/edit-training-plan.service';
 
@@ -13,23 +12,23 @@ export class TrainingPlanEditController {
 
   @Get(':id')
   async getEditViewOfTrainingPlan(
-    @GetUser() user: User,
+    @GetUser() userId: string,
     @Param('id') trainingPlanId: string,
   ) {
     return await this.editTrainingPlanService.getEditViewOfTrainingPlan(
-      user.id,
+      userId,
       trainingPlanId,
     );
   }
 
   @Patch(':id')
   async editTrainingPlan(
-    @GetUser() user: User,
+    @GetUser() userId: string,
     @Param('id') trainingPlanId: string,
     @Body() editTrainingPlanDto: EditTrainingPlanDto,
   ) {
     return await this.editTrainingPlanService.editTrainingPlan(
-      user.id,
+      userId,
       trainingPlanId,
       editTrainingPlanDto,
     );
