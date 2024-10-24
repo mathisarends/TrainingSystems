@@ -57,7 +57,7 @@ export class NavBarComponent implements OnInit {
             currentRoute = '/';
           }
 
-          if (this.isMongooseObjectIdInRoute(currentRoute)) {
+          if (this.isMongooseObjectIdInRoute()) {
             currentRoute = '';
           } else {
             console.log('is not in route');
@@ -106,7 +106,7 @@ export class NavBarComponent implements OnInit {
   /**
    * Checks if the route contains a Mongoose ObjectId (24-character hex string).
    */
-  private isMongooseObjectIdInRoute(route: string): boolean {
+  private isMongooseObjectIdInRoute(): boolean {
     const url = new URL(window.location.href);
     const planId = url.searchParams.get('planId');
 

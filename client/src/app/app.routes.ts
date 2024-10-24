@@ -16,6 +16,7 @@ import { TrainingViewComponent } from './features/training-plans/training-view/t
 import { SessionViewComponent } from './features/training-session/session-view/session-view.component';
 import { TrainingSesssionStatisticsComponent } from './features/training-session/training-session-statistics/training-session-statistics.component';
 import { StatisticsComponent } from './features/usage-statistics/statistics.component';
+import { SpinnerComponent } from './shared/components/spinner/spinner.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -58,5 +59,10 @@ export const routes: Routes = [
     path: 'session/view',
     component: SessionViewComponent,
     canActivate: [AuthGuard],
+  },
+
+  {
+    path: 'spinner',
+    component: SpinnerComponent,
   },
 ];

@@ -100,7 +100,7 @@ export class TrainingPlanStatisticsComponent implements OnInit {
   ngOnInit(): void {
     this.headerService.setLoading();
 
-    this.trainingPlanId.set(this.parseTrainingPlanIdFromUrl());
+    this.trainingPlanId.set(this.parseTrainingPlanIdFromQueryParam());
 
     this.fetchAndSetCategoryMetadata();
 
@@ -267,7 +267,7 @@ export class TrainingPlanStatisticsComponent implements OnInit {
    *
    * @returns The training plan ID extracted from the URL.
    */
-  private parseTrainingPlanIdFromUrl(): string {
+  private parseTrainingPlanIdFromQueryParam(): string {
     const url = new URL(window.location.href);
     const planId = url.searchParams.get('planId');
 
