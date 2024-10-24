@@ -34,7 +34,7 @@ export class ExerciseController {
     @Body() updatedExercises: ApiData,
   ) {
     const user = await this.userService.getUserById(userId);
-    return this.exerciseUpdateService.updateExercisesForUser(
+    return await this.exerciseUpdateService.updateExercisesForUser(
       user,
       updatedExercises,
     );

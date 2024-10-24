@@ -29,7 +29,8 @@ export class ExerciseUpdateService {
       },
     );
 
-    await user.save();
+    user.markModified('exercises');
+    return await user.save();
   }
 
   /**
