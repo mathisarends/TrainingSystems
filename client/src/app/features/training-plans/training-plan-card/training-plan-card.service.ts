@@ -23,6 +23,6 @@ export class TrainingPlanCardService {
    * @returns Observable of the delete operation result.
    */
   deleteTrainingPlan(id: string): Observable<void> {
-    return this.httpService.delete<void>(`${this.baseUrl}/plan/delete/${id}`);
+    return this.httpService.delete(`/training/${id}`);
   }
 }

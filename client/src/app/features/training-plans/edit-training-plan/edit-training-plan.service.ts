@@ -9,10 +9,10 @@ export class EditTrainingPlanService {
   constructor(private httpService: HttpService) {}
 
   getPlanForEdit(id: string): Observable<TrainingPlanEditViewDto> {
-    return this.httpService.get<TrainingPlanEditViewDto>(`/training/plan/edit/${id}`);
+    return this.httpService.get<TrainingPlanEditViewDto>(`/training-plan/edit/${id}`);
   }
 
   editTrainingPlan(id: string, formData: TrainingPlanEditViewDto): Observable<BasicConfirmationResponse> {
-    return this.httpService.patch(`/training/plan/edit/${id}`, formData);
+    return this.httpService.patch(`/training-plan/edit/${id}`, formData);
   }
 }
