@@ -58,5 +58,7 @@ export class AuthController {
   @Post('logout')
   logOut(@Res() res: Response) {
     this.tokenService.removeToken(res);
+    console.log('test');
+    return res.status(200).json({ message: 'Logout successful' });
   }
 }

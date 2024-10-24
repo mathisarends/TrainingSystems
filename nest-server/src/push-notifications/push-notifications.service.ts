@@ -45,6 +45,10 @@ export class PushNotificationsService {
     notificationPayloadDto: NotificationPayloadDto,
   ): Promise<void> {
     const subscriptions = await this.getSubscriptionsByUserId(userId);
+    console.log(
+      '🚀 ~ PushNotificationsService ~ subscriptions:',
+      subscriptions,
+    );
 
     if (subscriptions.length === 0) {
       throw new NotFoundException(

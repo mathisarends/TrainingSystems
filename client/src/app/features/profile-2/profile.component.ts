@@ -184,6 +184,7 @@ export class ProfileComponent2 implements OnInit {
   }
 
   private handleLogout(): void {
+    console.log('is called though');
     this.authService.logout();
   }
 

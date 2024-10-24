@@ -30,8 +30,6 @@ export class AuthService {
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
-    console.log('🚀 ~ AuthService ~ loginOAuth2User ~ token:', token);
-
     const payload = ticket.getPayload();
     if (!payload) {
       throw new UnauthorizedException('Invalid Google token');

@@ -147,10 +147,10 @@ export class PauseTimeService {
   }
 
   private startKeepAliveOnServer() {
-    this.httpService.post('/rest-pause-timer/keep-alive').subscribe((response) => {});
+    this.httpService.post('/training-timer').subscribe(() => {});
   }
 
   private stopKeepAliveOnServer() {
-    this.httpService.post('/rest-pause-timer/stop-keep-alive').subscribe(() => {});
+    this.httpService.delete('/training-timer').subscribe(() => {});
   }
 }

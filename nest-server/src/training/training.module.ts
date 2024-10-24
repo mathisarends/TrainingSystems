@@ -8,10 +8,12 @@ import { UsersService } from 'src/users/users.service';
 import { TrainingPlanEditController } from './controller/training-plan-edit.controller';
 import { TrainingPlanViewController } from './controller/training-plan-view.controller';
 import { TrainingStatisticsController } from './controller/training-statistics.controller';
+import { TrainingTimerController } from './controller/training-timer.controller';
 import { TrainingController } from './controller/training.controller';
 import { TrainingPlan, TrainingPlanSchema } from './model/training-plan.model';
 import { CreateTrainingPlanService } from './service/create-training-plan.service';
 import { EditTrainingPlanService } from './service/edit-training-plan.service';
+import { RestTimerKeepAliveService } from './service/rest-timer/rest-timer-keep-alive.service';
 import { PerformanceProgressionService } from './service/statistics/performance-progression.service';
 import { PlanComparisonStaticsService } from './service/statistics/plan-comparison-statistics.service';
 import { RecentlyViewedCategoriesService } from './service/statistics/recently-viewed-categories.service';
@@ -41,6 +43,7 @@ import { TrainingService } from './training.service';
     TrainingPlanEditController,
     TrainingPlanViewController,
     TrainingStatisticsController,
+    TrainingTimerController,
   ],
   providers: [
     TrainingPlanUtilsService,
@@ -60,6 +63,7 @@ import { TrainingService } from './training.service';
     TrainingSessionManagerService,
     TonnageProgressionService,
     TrainingSessionTracker,
+    RestTimerKeepAliveService,
     UsersService,
   ],
   exports: [TrainingService, MongooseModule],
