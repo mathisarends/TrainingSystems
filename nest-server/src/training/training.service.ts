@@ -62,6 +62,23 @@ export class TrainingService {
     throw new NotFoundException('Training day with the id could not be found');
   }
 
+  getTrainingDayById(trainingPlans: TrainingPlan[], trainingDayId: string) {
+    const trainingDayDetails = trainingPlans
+      .flatMap((trainingPlan) =>
+        trainingPlan.trainingWeeks.flatMap((week, weekIndex) =>
+          week.trainingDays.map((day, dayIndex) => ({
+            trainingPlanId: trainingPlan.id,
+            weekIndex,
+            dayIndex,
+            day,
+          })),
+        ),
+      )
+      .find((detail) => detail.day.id === trainingDayId);
+
+    return trainingDayDetails;
+  }
+
   async deleteByUserAndTrainingId(userId: string, trainingPlanId: string) {
     const deleteResult = await this.trainingPlanModel.deleteOne({
       userId: userId,

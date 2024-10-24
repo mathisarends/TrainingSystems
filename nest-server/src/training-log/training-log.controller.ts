@@ -1,17 +1,20 @@
-import { Controller, Delete, Get } from '@nestjs/common';
+import { Controller, Delete, Get, Param } from '@nestjs/common';
 import { GetUser } from 'src/decorators/user.decorator';
+import { TrainingService } from 'src/training/training.service';
 import { TrainingLogService } from './training-log.service';
 
 @Controller('training-log')
 export class TrainingLogController {
-  constructor(private readonly trainingLogService: TrainingLogService) {}
+  constructor(
+    private readonly trainingLogService: TrainingLogService,
+    private readonly trainingService: TrainingService,
+  ) {}
 
   @Get()
   async getTrainingLogForUser(@GetUser() userId: string) {
     return await this.trainingLogService.getTrainingLogsByUserId(userId);
   }
 
-  // TODO: diese routen hier testen + activity calendar und die letzte route hier im controller natürlich nóch implementieren
   @Get('notifications')
   async getAmountOfUnseedTrainingLogNotifcations(@GetUser() userId: string) {
     return await this.trainingLogService.getAmoutOFTrainingLogNotificationsByUserId(
@@ -25,5 +28,15 @@ export class TrainingLogController {
   }
 
   @Get('training-day/:id')
-  getRouteParamsForTrainingDayNavigation(@GetUser() userId: string) {}
+  async getRouteParamsForTrainingDayNavigation(
+    @GetUser() userId: string,
+    @Param('id') trainingDayId: string,
+  ) {
+    const trainingPlans =
+      await this.trainingService.getTrainingPlansByUser(userId);
+    return this.trainingService.getTrainingDayById(
+      trainingPlans,
+      trainingDayId,
+    );
+  }
 }
