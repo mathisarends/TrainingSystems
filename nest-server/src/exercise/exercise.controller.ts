@@ -12,6 +12,7 @@ import { ApiData } from 'src/types/api-data';
 import { UsersService } from 'src/users/users.service';
 import { ExerciseUpdateService } from './exercise-update.service';
 import { ExerciseService } from './exercise.service';
+import { ExerciseCategoryType } from './types/exercise-category-type.enum';
 
 @Controller('exercise')
 export class ExerciseController {
@@ -44,5 +45,12 @@ export class ExerciseController {
   async resetExercises(@GetUser() userId: string) {
     const user = await this.userService.getUserById(userId);
     return await this.exerciseService.setDefaultExercisesForUser(user);
+  }
+
+  @Get('categories')
+  getAvailableCategorys() {
+    return Object.values(ExerciseCategoryType).filter(
+      (category) => category !== ExerciseCategoryType.PLACEHOLDER,
+    );
   }
 }

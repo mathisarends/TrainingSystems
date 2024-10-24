@@ -146,11 +146,11 @@ export class TrainingPlanStatisticsComponent implements OnInit {
       performance: this.trainingStatisticService.getPerformanceDataForSelectedExercises(id, exercises),
       sessionDurationData: this.trainingStatisticService.getAverageSessionDurationDataForTrainingPlanDay(id),
       performedSetsData: this.trainingStatisticService.getSetDataForSelectedExercises(id, exercises),
-      title: this.trainingStatisticService.getTrainingPlanTitle(id),
+      titleResponse: this.trainingStatisticService.getTrainingPlanTitle(id),
     })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ tonnage, performance, performedSetsData, sessionDurationData, title }) => {
-        this.setHeadlineInfo(title);
+      .subscribe(({ tonnage, performance, performedSetsData, sessionDurationData, titleResponse }) => {
+        this.setHeadlineInfo(titleResponse.title);
         this.isLoaded.set(true);
 
         this.initializeSessionDurationData(sessionDurationData);

@@ -67,6 +67,18 @@ export class TrainingController {
     );
   }
 
+  @Get('/title/:id')
+  async getTrainingPlanTitleById(
+    @GetUser() userId: string,
+    @Param('id') trainingPlanId: string,
+  ) {
+    const title = await this.trainingPlanUtilsService.getTrainingPlanTitleById(
+      userId,
+      trainingPlanId,
+    );
+    return { title };
+  }
+
   @Get('most-recent-plan-link')
   async getMostRecentTrainingPlanLink(
     @GetUser() userId: string,

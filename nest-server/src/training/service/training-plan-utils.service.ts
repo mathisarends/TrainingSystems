@@ -49,6 +49,18 @@ export class TrainingPlanUtilsService {
     return trainingPlans.map((plan) => plan.title);
   }
 
+  async getTrainingPlanTitleById(
+    userId: string,
+    trainingPlanId: string,
+  ): Promise<string> {
+    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(
+      userId,
+      trainingPlanId,
+    );
+
+    return trainingPlan.title;
+  }
+
   async getMostRecentTrainingPlanLink(userId: string): Promise<string> {
     const baseURL = this.configService.get<string>(
       process.env.NODE_ENV === 'development' ? 'DEV_BASE_URL' : 'PROD_BASE_URL',
