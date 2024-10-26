@@ -1,31 +1,20 @@
-import { ApplicationRef, DestroyRef, Injectable } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { environment } from '../../../environment/environment';
-import { NotificationChannel } from './notificationChannel';
 
 @Injectable({
   providedIn: 'root',
 })
 export class WebSocketService {
   private socket!: Socket;
-  private webSocketUrl =
-    process.env['NODE_ENV'] === 'production' ? environment.webSocketProdUrl : environment.webSocketUrl;
+  private webSocketUrl = environment.webSocketUrl;
 
-  private amoutOfTrainingDayNotificationsSubject = new Subject<number>();
+  private notificationSubject = new Subject<string>();
+  private friendRequestSubject = new Subject<{ userId: string }>();
 
-  private testMessage = new Subject<string>();
-
-  constructor(
-    private appRef: ApplicationRef,
-    private destroyRef: DestroyRef,
-  ) {
-    this.appRef.isStable.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((isStable) => {
-      if (isStable && !this.socket) {
-        this.initializeSocket();
-      }
-    });
+  constructor() {
+    this.initializeSocket();
   }
 
   private initializeSocket(): void {
@@ -33,16 +22,17 @@ export class WebSocketService {
       console.log('Initializing WebSocket connection...');
       this.socket = io(this.webSocketUrl, {
         transports: ['websocket'],
+        withCredentials: true,
       });
 
-      this.socket.on(NotificationChannel.TrainingNotifications, (message: number) => {
-        console.log('Received training notification:', message);
-        this.amoutOfTrainingDayNotificationsSubject.next(message);
+      this.socket.on('notification', (message: string) => {
+        console.log('Received notification:', message);
+        this.notificationSubject.next(message);
       });
 
-      this.socket.on(NotificationChannel.MESSAGE, (message: string) => {
-        console.log('message', message);
-        this.testMessage.next(message);
+      this.socket.on('friendRequestReceived', (data: { userId: string }) => {
+        console.log('Received friend request from:', data.userId);
+        this.friendRequestSubject.next(data);
       });
 
       this.socket.on('connect', () => {
@@ -55,18 +45,18 @@ export class WebSocketService {
     }
   }
 
-  sendMessage(event: string, message: any): void {
+  sendFriendRequest(friendId: string): void {
     if (this.socket) {
-      this.socket.emit(event, message);
+      this.socket.emit('sendFriendRequest', { friendId });
     }
   }
-
-  onTrainingNotification(): Observable<number> {
-    return this.amoutOfTrainingDayNotificationsSubject.asObservable();
+  // Abonnieren von Notifications
+  onNotification(): Observable<string> {
+    return this.notificationSubject.asObservable();
   }
 
-  onTestMessage(): Observable<string> {
-    return this.testMessage.asObservable();
+  onFriendRequest(): Observable<{ userId: string }> {
+    return this.friendRequestSubject.asObservable();
   }
 
   disconnect(): void {

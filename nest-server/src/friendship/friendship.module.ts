@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { AuthModule } from 'src/auth/auth.module';
 import { ExerciseModule } from 'src/exercise/exercise.module';
 import { UsersModule } from 'src/users/users.module';
 import { UsersService } from 'src/users/users.service';
 import { FriendshipController } from './friendship.controller';
+import { FriendshipGateway } from './friendship.gateway';
 import { FriendshipService } from './friendship.service';
 import { Friendship, FriendshipSchema } from './model/friendship.model';
 
@@ -14,8 +16,9 @@ import { Friendship, FriendshipSchema } from './model/friendship.model';
     ]),
     UsersModule,
     ExerciseModule,
+    AuthModule,
   ],
   controllers: [FriendshipController],
-  providers: [FriendshipService, UsersService],
+  providers: [FriendshipService, FriendshipGateway, UsersService],
 })
 export class FriendshipModule {}

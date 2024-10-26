@@ -28,6 +28,8 @@
     "@nestjs/mapped-types": "^2.0.5",
     "@nestjs/mongoose": "^10.0.10",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/platform-socket.io": "^10.4.6",
+    "@nestjs/websockets": "^10.4.6",
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
@@ -41,6 +43,8 @@
     "nest-server": "file:",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
     "uuid": "^10.0.0",
     "web-push": "^3.6.7"
   },
