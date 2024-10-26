@@ -11,7 +11,7 @@ import { TrainingService } from '../training.service';
 import { CommaSeparatedStringsPipe } from '../utils/comma-seperated-strings.pipe';
 import { ExerciseCategoryTypePipe } from '../utils/exercise-category-type.pipe';
 
-@Controller('training-plan/statistics')
+@Controller('training-plan-statistics')
 export class TrainingStatisticsController {
   constructor(
     private planComparisonStaticsService: PlanComparisonStaticsService,
