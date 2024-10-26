@@ -3,6 +3,7 @@ import { Inject, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpService } from '../../core/services/http-client.service';
 import { ToastService } from '../../shared/components/toast/toast.service';
+import { BasicConfirmationResponse } from '../../shared/dto/basic-confirmation-response';
 import { IconName } from '../../shared/icon/icon-name';
 
 declare const google: any;
@@ -41,7 +42,11 @@ export abstract class BaisAuthComponent {
       script.async = true;
       script.defer = true;
       script.onload = () => {
-        google.accounts.id.initialize({});
+        google.accounts.id.initialize({
+          client_id: '745778541640-0f05iimgfid2tag6rkvilau5nqt69ko0.apps.googleusercontent.com',
+          use_fedcm_for_prompt: true,
+          callback: (response: any) => this.handleCredentialResponse(response),
+        });
         resolve();
       };
       script.onerror = () => reject(new Error('Google script could not be loaded.'));
@@ -72,7 +77,28 @@ export abstract class BaisAuthComponent {
     }
   }
 
+  protected triggerGoogleLogin() {
+    google.accounts.id.prompt();
+  }
+
   private isRepeatPassword(passwordInput: HTMLInputElement) {
     return passwordInput.classList.contains('repeat-password');
+  }
+
+  private handleCredentialResponse(response: any) {
+    const credential = response.credential;
+
+    this.httpClient
+      .post<BasicConfirmationResponse>('/auth/login/oauth2', {
+        credential: credential,
+      })
+      .subscribe((response) => {
+        this.toastService.success(response.message);
+        this.router.navigate(['/'], {
+          queryParams: {
+            login: true,
+          },
+        });
+      });
   }
 }

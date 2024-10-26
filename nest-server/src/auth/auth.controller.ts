@@ -38,7 +38,7 @@ export class AuthController {
       maxAge: 30000,
     });
 
-    res.redirect(redirectUrl);
+    res.status(200).json({ message: 'Login erfolgreich ' });
   }
 
   @Post('login')

@@ -36,14 +36,7 @@ export class FriendshipGateway
 
   async handleConnection(client: Socket) {
     try {
-      const token = client.handshake.headers.cookie
-        ?.split('; ')
-        .find((cookie) => cookie.startsWith('jwt-token='))
-        ?.split('=')[1];
-
-      console.log('🚀 ~ handleConnection ~ token:', token);
-
-      if (!token) throw new UnauthorizedException('Token not found');
+      const token = this.parseJsonWebTokenFromHandshake(client);
 
       const userClaimsSet = this.tokenService.verifyToken(token) as JwtPayload;
       client.data.userId = userClaimsSet.id;
@@ -83,5 +76,16 @@ export class FriendshipGateway
 
     const { message } = payload;
     this.server.to(userId).emit('notification', { message });
+  }
+
+  private parseJsonWebTokenFromHandshake(client: Socket) {
+    const token = client.handshake.headers.cookie
+      ?.split('; ')
+      .find((cookie) => cookie.startsWith('jwt-token='))
+      ?.split('=')[1];
+
+    if (!token) throw new UnauthorizedException('Token not found');
+
+    return token;
   }
 }

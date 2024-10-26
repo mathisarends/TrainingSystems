@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpService } from '../../../core/services/http-client.service';
 import { ToastService } from '../../../shared/components/toast/toast.service';
@@ -18,6 +18,8 @@ import { RegisterService } from './register.service';
   providers: [RegisterService],
 })
 export class RegisterComponent extends BaisAuthComponent implements OnInit {
+  @ViewChild('googleLoginButton') googleLoginButton!: ElementRef;
+
   constructor(
     router: Router,
     httpClient: HttpService,
