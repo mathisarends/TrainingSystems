@@ -6,13 +6,14 @@ import { ToastService } from '../../../shared/components/toast/toast.service';
 import { IconComponent } from '../../../shared/icon/icon.component';
 import { HeaderService } from '../../header/header.service';
 import { BaisAuthComponent } from '../basic-auth.component';
+import { PulsatingCircleComponent } from '../components/pulsating-circle.componen';
 import { RegisterUserDto } from './register-user-dto';
 import { RegisterService } from './register.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [IconComponent],
+  imports: [IconComponent, PulsatingCircleComponent],
   templateUrl: './register.component.html',
   styleUrls: ['../auth-shared.scss'],
   providers: [RegisterService],
