@@ -158,7 +158,7 @@ export class TrainingViewComponent implements OnInit {
   private setHeadlineInfo(trainingPlanTitle: string) {
     this.headerService.setHeadlineInfo({
       title: trainingPlanTitle,
-      subTitle: `W${this.trainingWeekIndex() + 1}D${this.trainingDayIndex() + 1}`,
+      subTitle: this.getSubtitle(),
       buttons: [
         {
           icon: IconName.MORE_VERTICAL,
@@ -199,5 +199,9 @@ export class TrainingViewComponent implements OnInit {
           this.formService.clearChanges();
         }),
       );
+  }
+
+  private getSubtitle(): string {
+    return `W${this.trainingWeekIndex() + 1}D${this.trainingDayIndex() + 1}`;
   }
 }

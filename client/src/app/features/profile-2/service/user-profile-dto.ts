@@ -20,5 +20,5 @@ export interface UserProfileDto {
    * The URL of the user's profile picture.
    * This is a string containing the path or URL to the user's profile image.
    */
-  pictureUrl: string;
+  profilePicture: string;
 }

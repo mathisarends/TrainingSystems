@@ -40,7 +40,7 @@ export class ProfileService {
         this.id.set(data.id);
         this.username.set(data.name);
         this.email.set(data.email);
-        this.pictureUrl.set(data.pictureUrl);
+        this.pictureUrl.set(data.profilePicture);
 
         this.isInitalized.set(true);
       }),

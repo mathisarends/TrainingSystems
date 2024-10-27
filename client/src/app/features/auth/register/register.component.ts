@@ -67,10 +67,6 @@ export class RegisterComponent implements OnInit {
   }
 
   private initializeGoogleLogin() {
-    if (google) {
-      return;
-    }
-
     google.accounts.id.initialize({
       client_id: '745778541640-0f05iimgfid2tag6rkvilau5nqt69ko0.apps.googleusercontent.com',
       use_fedcm_for_prompt: false,
