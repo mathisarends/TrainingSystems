@@ -1,6 +1,4 @@
-@if (!(dataViewLoaded$ | async)) {
-  <app-spinner />
-} @else {
+@if (viewInitialized()) {
   <form id="form">
     <table
       class="table table-striped training-table responsive-table caption-top mb-4"
@@ -152,4 +150,6 @@
       />
     </div>
   </div>
+} @else {
+  <app-spinner />
 }

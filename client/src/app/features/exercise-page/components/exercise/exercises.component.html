@@ -1,5 +1,4 @@
 @if (exerciseData$ | async; as exerciseData) {
-  <form>
     @for (category of exerciseData.exerciseCategories; track category; let categoryIndex = $index) {
       @if (categoryIndex > 0) {
         <table class="table mb-5 table-hover">
@@ -66,7 +65,6 @@
         </table>
       }
     }
-  </form>
 } @else {
   <app-exercise-table-skeleton />
 }

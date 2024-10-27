@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { FormService } from '../../../core/services/form.service';
 import { ModalService } from '../../../core/services/modal/modalService';
@@ -68,8 +68,8 @@ export class TrainingViewComponent implements OnInit {
   trainingDayIndex: number = 0;
 
   protected planId!: string;
-  private dataViewLoaded = new BehaviorSubject<boolean>(false);
-  dataViewLoaded$ = this.dataViewLoaded.asObservable();
+
+  viewInitialized = signal(false);
 
   constructor(
     private route: ActivatedRoute,
@@ -121,9 +121,7 @@ export class TrainingViewComponent implements OnInit {
           this.exerciseDataService.exerciseData = exerciseData;
 
           this.setHeadlineInfo(trainingPlan);
-        }),
-        tap(() => {
-          this.dataViewLoaded.next(true);
+          this.viewInitialized.set(true);
         }),
       )
       .subscribe();

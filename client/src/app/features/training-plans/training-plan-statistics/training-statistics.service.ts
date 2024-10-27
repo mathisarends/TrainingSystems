@@ -24,7 +24,7 @@ export class TrainingStatisticsService {
    * Retrieves the list of categories that have been viewed by the user in a specific training plan.
    */
   getSelectedCategories(id: string): Observable<ExerciseCategories[]> {
-    return this.httpService.get<ExerciseCategories[]>(`/training-plan/statistics/viewedCategories/${id}`);
+    return this.httpService.get<ExerciseCategories[]>(`/training-plan-statistics/viewedCategories/${id}`);
   }
 
   /**
@@ -32,7 +32,7 @@ export class TrainingStatisticsService {
    */
   updateLastViewedCategories(id: string, categpries: string[]): Observable<unknown> {
     const categoriesQueryParam = this.toQueryParam(categpries);
-    return this.httpService.post(`/training-plan/statistics/viewedCategories/${id}?categories=${categoriesQueryParam}`);
+    return this.httpService.post(`/training-plan-statistics/viewedCategories/${id}?categories=${categoriesQueryParam}`);
   }
 
   /**
@@ -41,7 +41,7 @@ export class TrainingStatisticsService {
   getTonnageDataForSelectedExercises(id: string, categpries: string[]): Observable<ChartDataDto> {
     const categoriesQueryParam = this.toQueryParam(categpries);
     return this.httpService.get<ChartDataDto>(
-      `/training-plan/statistics/${id}/volume?categories=${categoriesQueryParam}`,
+      `/training-plan-statistics/${id}/volume?categories=${categoriesQueryParam}`,
     );
   }
 
@@ -51,7 +51,7 @@ export class TrainingStatisticsService {
   getPerformanceDataForSelectedExercises(id: string, categpries: string[]): Observable<ChartDataDto> {
     const categoriesQueryParam = this.toQueryParam(categpries);
     return this.httpService.get<ChartDataDto>(
-      `/training-plan/statistics/${id}/performance?categories=${categoriesQueryParam}`,
+      `/training-plan-statistics/${id}/performance?categories=${categoriesQueryParam}`,
     );
   }
 
@@ -59,7 +59,7 @@ export class TrainingStatisticsService {
    * Retrieves the tonnage data for selected exercises in a specific training plan.
    */
   getAverageSessionDurationDataForTrainingPlanDay(id: string): Observable<AverageTrainingDayDurationDto[]> {
-    return this.httpService.get<AverageTrainingDayDurationDto[]>(`/training-plan/statistics/${id}/session-durations`);
+    return this.httpService.get<AverageTrainingDayDurationDto[]>(`/training-plan-statistics/${id}/session-durations`);
   }
 
   /**
@@ -67,7 +67,7 @@ export class TrainingStatisticsService {
    */
   getSetDataForSelectedExercises(id: string, categpries: string[]): Observable<ChartDataDto> {
     const categoriesQueryParam = this.toQueryParam(categpries);
-    return this.httpService.get(`/training-plan/statistics/${id}/sets?categories=${categoriesQueryParam}`);
+    return this.httpService.get(`/training-plan-statistics/${id}/sets?categories=${categoriesQueryParam}`);
   }
 
   /**
