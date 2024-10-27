@@ -64,12 +64,7 @@
               />
             </td>
             <td data-cell="Sets">
-              <app-input
-                class="sets"
-                [type]="'number'"
-                [name]="'day' + trainingDayIndex + '_exercise' + k + '_sets'"
-                [value]="exercise.sets"
-              />
+              <app-input class="sets" [type]="'number'" [name]="namePrefix + '_sets'" [value]="exercise.sets" />
             </td>
             <td data-cell="Reps">
               <app-input

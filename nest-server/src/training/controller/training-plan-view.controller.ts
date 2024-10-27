@@ -46,7 +46,7 @@ export class TrainingPlanViewController {
     @Param('day', ParseIntPipe) dayIndex: number,
     @Body() changedData: ApiData,
     @Req() req: Request,
-  ) {
+  ): Promise<void> {
     const fingerprint = this.fingerprintService.generateFingerprint(req);
 
     return await this.tariningPlanViewUpdateService.updateTrainingDataForTrainingDay(

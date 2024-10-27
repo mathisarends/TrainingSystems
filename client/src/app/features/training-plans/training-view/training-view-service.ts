@@ -37,7 +37,7 @@ export class TrainingViewService {
   /**
    * Submits changes to the training plan for a specific plan ID, week, and day.
    */
-  submitTrainingPlan(planId: string, week: number, day: number, changedData: Record<string, string>): Observable<any> {
+  submitTrainingPlan(planId: string, week: number, day: number, changedData: Record<string, string>): Observable<void> {
     return this.httpService.patch(`/training-plan-view/${planId}/${week}/${day}`, changedData);
   }
 }

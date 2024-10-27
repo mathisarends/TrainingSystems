@@ -177,12 +177,8 @@ export class TrainingViewComponent implements OnInit {
   private initializeAutoSaveLogic() {
     this.autoSaveService.inputChanged$
       .pipe(takeUntilDestroyed(this.destroyRef)) // Automatically unsubscribe
-      .subscribe((option) => {
-        this.saveTrainingData$().subscribe(() => {
-          if (option === 'reload') {
-            this.loadData(this.planId(), this.trainingWeekIndex(), this.trainingDayIndex());
-          }
-        });
+      .subscribe(() => {
+        this.saveTrainingData$().subscribe(() => {});
       });
   }
 

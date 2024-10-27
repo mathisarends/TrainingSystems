@@ -3,7 +3,6 @@ import { Component, input, output } from '@angular/core';
 import { RepInputDirective } from '../../../features/training-plans/training-view/directives/rep-input.directive';
 import { RpeInputDirective } from '../../../features/training-plans/training-view/directives/rpe-input.directive';
 import { WeightInputDirective } from '../../../features/training-plans/training-view/directives/weight-input.directive';
-import { MobileDeviceDetectionService } from '../../../platform/mobile-device-detection.service';
 import { InteractiveElementDirective } from '../../directives/interactive-element.directive';
 
 @Component({
@@ -14,8 +13,6 @@ import { InteractiveElementDirective } from '../../directives/interactive-elemen
   styleUrl: './input.component.scss',
 })
 export class InputComponent<T extends string | number> {
-  constructor(protected mobileDetectionService: MobileDeviceDetectionService) {}
-
   /**
    * The name of the input field, used to uniquely identify the control.
    * This input is required and must be provided by the parent component.
