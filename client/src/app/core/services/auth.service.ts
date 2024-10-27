@@ -44,7 +44,7 @@ export class AuthService {
     });
 
     if (response) {
-      this.router.navigate(['login']);
+      this.router.navigate(['getting-started']);
     }
   }
 
@@ -54,7 +54,7 @@ export class AuthService {
   logout(): void {
     this.httpService.post('/auth/logout').subscribe(() => {
       this.isAuthenticatedSignal.set(false);
-      this.router.navigate(['login']);
+      this.router.navigate(['getting-started']);
     });
   }
 

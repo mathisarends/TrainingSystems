@@ -41,6 +41,28 @@ export class AuthController {
     res.status(200).json({ message: 'Login erfolgreich ' });
   }
 
+  @Post('login/oauth2/redirect')
+  async loginViahOauth2WithRedirect(
+    @Body() loginOAuth2Dto: LoginOAuth2Dto,
+    @Res() res: Response,
+  ) {
+    const loggedInUser = await this.authService.loginOAuth2User(
+      loginOAuth2Dto.credential,
+    );
+    this.tokenService.createAndSetToken({ id: loggedInUser.id }, res);
+
+    const redirectUrl =
+      process.env.NODE_ENV === 'development'
+        ? 'http://localhost:4200?login=success'
+        : 'https://trainingsystemsre.onrender.com?login=success';
+
+    res.cookie('authTemp', 'some-temp-value', {
+      maxAge: 30000,
+    });
+
+    res.redirect(redirectUrl);
+  }
+
   @Post('login')
   async login(@Body() loginDto: LoginDto, @Res() res: Response) {
     const loggedInUser = await this.authService.login(loginDto);

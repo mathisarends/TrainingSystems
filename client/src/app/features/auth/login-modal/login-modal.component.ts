@@ -16,8 +16,8 @@ export class LoginModalComponent implements OnInit {
 
   oauthRoute =
     process.env['NODE_ENV'] === 'production'
-      ? 'https://trainingsystems.onrender.com/api/user/auth/login/oauth2'
-      : 'http://localhost:3000/api/auth/login/oauth2';
+      ? 'https://trainingsystems.onrender.com/api/user/auth/login/oauth2/redirect'
+      : 'http://localhost:3000/api/auth/login/oauth2/redirect';
 
   ngOnInit(): void {
     this.loadGoogleClientScript();

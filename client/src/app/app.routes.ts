@@ -2,12 +2,8 @@ import { Routes } from '@angular/router';
 
 import { ExercisesComponent } from './features/exercise-page/components/exercise/exercises.component';
 
-import { ResetPasswordComponent } from './features/auth/reset-password/reset-password.component';
-
 import { AuthGuard } from './core/guards/auth.guard';
-import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
-import { RequestNewPasswordEmail } from './features/auth/request-new-password-email/request-new-password-email.component';
 import { ProfileComponent2 } from './features/profile-2/profile.component';
 import { TrainingLogsComponent } from './features/profile-2/training-logs/training-logs.component';
 import { TrainingPlanStatisticsComponent } from './features/training-plans/training-plan-statistics/training-plan-statistics.component';
@@ -19,10 +15,7 @@ import { StatisticsComponent } from './features/usage-statistics/statistics.comp
 import { SpinnerComponent } from './shared/components/spinner/spinner.component';
 
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'user/reset-password', component: RequestNewPasswordEmail },
-  { path: 'user/reset/password/:token', component: ResetPasswordComponent },
+  { path: 'getting-started', component: RegisterComponent },
   { path: 'profile/progression', component: StatisticsComponent, canActivate: [AuthGuard] },
   {
     path: '',
