@@ -6,17 +6,16 @@ import { PushNotificationsService } from 'src/push-notifications/push-notificati
 import { UsersModule } from 'src/users/users.module';
 import { UsersService } from 'src/users/users.service';
 import { TrainingPlanEditController } from './controller/training-plan-edit.controller';
-import { TrainingTimerController } from './controller/training-timer.controller';
 import { TrainingController } from './controller/training.controller';
 import { TrainingPlan, TrainingPlanSchema } from './model/training-plan.model';
 import { AutoProgressionService } from './service/auto-progression.service';
 import { CreateTrainingPlanService } from './service/create-training-plan.service';
 import { EditTrainingPlanService } from './service/edit-training-plan.service';
-import { RestTimerKeepAliveService } from './service/rest-timer/rest-timer-keep-alive.service';
 import { TrainingPlanCardViewService } from './service/training-plan-card-view.service';
 import { TrainingPlanUtilsService } from './service/training-plan-utils.service';
 import { TrainingPlanViewValidationService } from './service/training-plan-view-validation.service';
 import { TrainingPlanStatisticsModule } from './training-plan-statistics/training-plan-statistics.module';
+import { TrainingPlanTimerModule } from './training-plan-timer/training-plan-timer.module';
 import { TrainingPlanViewModule } from './training-plan-view/training-plan-view.module';
 import { TrainingService } from './training.service';
 
@@ -33,22 +32,17 @@ import { TrainingService } from './training.service';
     UsersModule,
     TrainingPlanViewModule,
     TrainingPlanStatisticsModule,
+    TrainingPlanTimerModule,
   ],
-  controllers: [
-    TrainingController,
-    TrainingPlanEditController,
-    TrainingTimerController,
-  ],
+  controllers: [TrainingController, TrainingPlanEditController],
   providers: [
     TrainingPlanUtilsService,
     CreateTrainingPlanService,
     TrainingPlanCardViewService,
     EditTrainingPlanService,
-
     TrainingPlanViewValidationService,
     TrainingService,
     PushNotificationsService,
-    RestTimerKeepAliveService,
     AutoProgressionService,
     UsersService,
   ],

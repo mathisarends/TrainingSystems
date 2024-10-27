@@ -2,7 +2,7 @@ import { Controller, Delete, Post, Req } from '@nestjs/common';
 import { Request } from 'express';
 import { GetUser } from 'src/decorators/user.decorator';
 import { FingerprintService } from 'src/push-notifications/fingerprint.service';
-import { RestTimerKeepAliveService } from '../service/rest-timer/rest-timer-keep-alive.service';
+import { RestTimerKeepAliveService } from './rest-timer-keep-alive.service';
 
 @Controller('training-timer')
 export class TrainingTimerController {
