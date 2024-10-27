@@ -1,8 +1,15 @@
 @if (!(dataViewLoaded$ | async)) {
-  <app-skeleton-training-table />
+  <app-spinner />
 } @else {
   <form id="form">
-    <table #trainingTable class="table table-striped training-table responsive-table caption-top mb-4">
+    <table
+      class="table table-striped training-table responsive-table caption-top mb-4"
+      appSwipe
+      [swipeLeft]="swipeLeft"
+      [swipeRight]="swipeRight"
+      [swipeDiagonalTopLeftToBottomRight]="swipeDiagonalTopLeftToBottomRight"
+      [swipeDiagonalTopRightToBottomLeft]="swipeDiagonalTopRightToBottomLeft"
+    >
       <thead>
         <tr>
           <th scope="col">Category</th>

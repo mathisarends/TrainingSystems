@@ -1,21 +1,20 @@
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { FormService } from '../../../core/services/form.service';
 import { ModalService } from '../../../core/services/modal/modalService';
-import { SwipeService } from '../../../core/services/swipe.service';
 import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
 import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
 import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
 import { InputComponent } from '../../../shared/components/input/input.component';
 import { SkeletonTrainingTableComponent } from '../../../shared/components/loader/skeleton-training-table/skeleton-training-table.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
 import { InteractiveElementDirective } from '../../../shared/directives/interactive-element.directive';
+import { SwipeDirective } from '../../../shared/directives/swipe.directive';
 import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
 import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
@@ -43,7 +42,6 @@ import { TrainingPlanDto } from './trainingPlanDto';
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
     PaginationComponent,
     HeadlineComponent,
     IconButtonComponent,
@@ -56,15 +54,15 @@ import { TrainingPlanDto } from './trainingPlanDto';
     DropdownComponent,
     RepInputDirective,
     FormatTimePipe,
-    DragDropModule,
     TooltipDirective,
+    SpinnerComponent,
+    SwipeDirective,
   ],
-  providers: [TrainingViewService, TrainingPlanDataService, EstMaxService, SwipeService],
+  providers: [TrainingViewService, TrainingPlanDataService, EstMaxService],
   templateUrl: './training-view.component.html',
   styleUrls: ['./training-view.component.scss'],
 })
 export class TrainingViewComponent implements OnInit {
-  @ViewChild('trainingTable', { static: false }) trainingTable!: ElementRef;
   protected readonly IconName = IconName;
 
   trainingWeekIndex: number = 0;
@@ -75,15 +73,12 @@ export class TrainingViewComponent implements OnInit {
   private dataViewLoaded = new BehaviorSubject<boolean>(false);
   dataViewLoaded$ = this.dataViewLoaded.asObservable();
 
-  private automationContextInitialized = false;
-
   constructor(
     private route: ActivatedRoute,
     private trainingViewService: TrainingViewService,
     private headerService: HeaderService,
     private formService: FormService,
     private navigationService: TrainingViewNavigationService,
-    private swipeService: SwipeService,
     private modalService: ModalService,
     private autoSaveService: AutoSaveService,
     private exerciseDataService: ExerciseDataService,
@@ -97,8 +92,6 @@ export class TrainingViewComponent implements OnInit {
    */
   ngOnInit() {
     this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
-      this.automationContextInitialized = false;
-      this.swipeService.removeSwipeListener();
       this.headerService.setLoading();
       this.planId = params['planId'];
       this.trainingWeekIndex = parseInt(params['week']);
@@ -110,33 +103,6 @@ export class TrainingViewComponent implements OnInit {
     this.initializeAutoSaveLogic();
   }
 
-  ngAfterViewChecked(): void {
-    if (this.dataViewLoaded.getValue() && this.trainingTable && !this.automationContextInitialized) {
-      this.initializeSwipeListener();
-      this.automationContextInitialized = true;
-    }
-  }
-
-  /**
-   * Initializes the swipe listener on the training table element.
-   * Registers callbacks for left and right swipe gestures.
-   */
-  initializeSwipeListener(): void {
-    if (this.trainingTable) {
-      this.swipeService.addSwipeListener(
-        this.trainingTable.nativeElement,
-        () => this.navigateDay(this.trainingDayIndex + 1, this.trainingWeekIndex),
-        () => this.navigateDay(this.trainingDayIndex - 1, this.trainingWeekIndex),
-        () => {
-          this.navigateWeek(-1);
-        },
-        () => {
-          this.navigateWeek(1);
-        },
-      );
-    }
-  }
-
   /**
    * Loads training data and exercise data for the specified plan, week, and day.
    * Updates the component state with the loaded data.
@@ -145,8 +111,6 @@ export class TrainingViewComponent implements OnInit {
    * @param day - Index of the training day.
    */
   loadData(planId: string, week: number, day: number): void {
-    this.dataViewLoaded.next(false);
-
     forkJoin({
       trainingPlan: this.trainingViewService.loadTrainingPlan(planId, week, day),
       exerciseData: this.trainingViewService.loadExerciseData(),
@@ -258,4 +222,9 @@ export class TrainingViewComponent implements OnInit {
         });
       });
   }
+
+  protected swipeLeft = () => this.navigateDay(this.trainingDayIndex + 1, this.trainingWeekIndex);
+  protected swipeRight = () => this.navigateDay(this.trainingDayIndex - 1, this.trainingWeekIndex);
+  protected swipeDiagonalTopLeftToBottomRight = () => this.navigateWeek(-1);
+  protected swipeDiagonalTopRightToBottomLeft = () => this.navigateWeek(1);
 }

@@ -1,7 +1,12 @@
 @if (!isLoaded()) {
   <app-skeleton-training-table />
 } @else {
-  <table #trainingTable class="table table-striped training-table responsive-table caption-top mb-4">
+  <table
+    class="table table-striped training-table responsive-table caption-top mb-4"
+    appSwipe
+    [swipeLeft]="swipeLeft"
+    [swipeRight]="swipeRight"
+  >
     <thead>
       <tr>
         <th scope="col">Category</th>

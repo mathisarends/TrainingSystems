@@ -16,11 +16,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { FormService } from '../../../core/services/form.service';
 import { ModalService } from '../../../core/services/modal/modalService';
-import { SwipeService } from '../../../core/services/swipe.service';
 import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
 import { InputComponent } from '../../../shared/components/input/input.component';
 import { SkeletonTrainingTableComponent } from '../../../shared/components/loader/skeleton-training-table/skeleton-training-table.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+import { SwipeDirective } from '../../../shared/directives/swipe.directive';
 import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
 import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
@@ -44,6 +44,7 @@ import { TrainingSessionService } from '../training-session-service';
     PaginationComponent,
     IconComponent,
     TooltipDirective,
+    SwipeDirective,
   ],
   selector: 'app-session-view',
   templateUrl: './session-view.component.html',
@@ -94,7 +95,6 @@ export class SessionViewComponent implements OnInit {
     private trainingSessionService: TrainingSessionService,
     protected exerciseDataService: ExerciseDataService,
     private formService: FormService,
-    private swipeService: SwipeService,
     private autoSaveService: AutoSaveService,
     private cdr: ChangeDetectorRef,
     private injector: Injector,
@@ -119,10 +119,6 @@ export class SessionViewComponent implements OnInit {
       () => {
         if (this.isLoaded()) {
           this.cdr.detectChanges(); // wait for dom update after view is loaded
-
-          if (this.trainingTable) {
-            this.initalizeSwipeService();
-          }
         }
       },
       { injector: this.injector },
@@ -237,15 +233,6 @@ export class SessionViewComponent implements OnInit {
     });
   }
 
-  private initalizeSwipeService(): void {
-    this.swipeService.addSwipeListener(
-      this.trainingTable.nativeElement,
-      () => {
-        this.navigateToVersion(this.version() + 1);
-      },
-      () => {
-        this.navigateToVersion(this.version() - 1);
-      },
-    );
-  }
+  protected swipeLeft = () => this.navigateToVersion(this.version() + 1);
+  protected swipeRight = () => this.navigateToVersion(this.version() - 1);
 }
