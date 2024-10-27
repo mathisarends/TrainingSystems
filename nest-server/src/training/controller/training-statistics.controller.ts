@@ -30,11 +30,10 @@ export class TrainingStatisticsController {
     @Query('categories', ExerciseCategoryTypePipe)
     exerciseCategories: ExerciseCategoryType[],
   ) {
-    const exerciseCategory = exerciseCategories[0]; // only one category can be compared over multiple plans by now
     return await this.planComparisonStaticsService.getVolumeComparison(
       userId,
       trainingPlanTitles,
-      exerciseCategory,
+      exerciseCategories,
     );
   }
 
@@ -45,11 +44,10 @@ export class TrainingStatisticsController {
     @Query('categories', ExerciseCategoryTypePipe)
     eerciseCategories: ExerciseCategoryType[],
   ) {
-    const exerciseCategory = eerciseCategories[0]; // only one category can be compared over multiple plans by now
     return await this.planComparisonStaticsService.getPerformanceComparison(
       userId,
       trainingPlanTitles,
-      exerciseCategory,
+      eerciseCategories,
     );
   }
 

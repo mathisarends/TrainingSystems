@@ -15,7 +15,7 @@ export class PlanComparisonStaticsService {
   async getVolumeComparison(
     userId: string,
     trainingPlanTitles: string[],
-    exerciseCategory: ExerciseCategoryType,
+    exerciseCategories: ExerciseCategoryType[],
   ) {
     const responseData = await Promise.all(
       trainingPlanTitles.map(async (title) => {
@@ -28,7 +28,7 @@ export class PlanComparisonStaticsService {
           [title]:
             this.tonnageProgressionService.getTonnageProgressionByCategories(
               trainingPlan,
-              [exerciseCategory],
+              exerciseCategories,
             ),
         };
       }),
@@ -40,7 +40,7 @@ export class PlanComparisonStaticsService {
   async getPerformanceComparison(
     userId: string,
     trainingPlanTitles: string[],
-    exerciseCategory: ExerciseCategoryType,
+    exerciseCategories: ExerciseCategoryType[],
   ) {
     const responseData = await Promise.all(
       trainingPlanTitles.map(async (title) => {
@@ -53,7 +53,7 @@ export class PlanComparisonStaticsService {
           [title]:
             this.performanceProgressionService.getPerformanceProgressionByCategories(
               trainingPlan,
-              [exerciseCategory],
+              exerciseCategories,
             ),
         };
       }),

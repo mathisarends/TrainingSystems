@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, OnInit, signal } from '@angular/core';
+import { Component, computed, DestroyRef, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin, Observable } from 'rxjs';
@@ -26,7 +26,9 @@ import { RepInputDirective } from './directives/rep-input.directive';
 import { RpeInputDirective } from './directives/rpe-input.directive';
 import { WeightInputDirective } from './directives/weight-input.directive';
 import { ExerciseDataService } from './exercise-data.service';
+import { NavigationDirection } from './models/navigation-direction.enum';
 import { EstMaxService } from './services/estmax.service';
+import { TrainingDayLocatorService } from './services/training-day-locator.service';
 import { TrainingPlanDataService } from './services/training-plan-data.service';
 import { TrainingViewNavigationService } from './training-view-navigation.service';
 import { TrainingViewService } from './training-view-service';
@@ -57,29 +59,37 @@ import { TrainingPlanDto } from './trainingPlanDto';
     SpinnerComponent,
     SwipeDirective,
   ],
-  providers: [TrainingViewService, TrainingPlanDataService, EstMaxService, ExerciseDataService],
+  providers: [
+    TrainingViewService,
+    TrainingViewNavigationService,
+    TrainingPlanDataService,
+    EstMaxService,
+    ExerciseDataService,
+    TrainingDayLocatorService,
+  ],
   templateUrl: './training-view.component.html',
   styleUrls: ['./training-view.component.scss'],
 })
 export class TrainingViewComponent implements OnInit {
   protected readonly IconName = IconName;
-
-  trainingWeekIndex: number = 0;
-  trainingDayIndex: number = 0;
-
-  protected planId!: string;
+  protected readonly NavigationDirection = NavigationDirection;
 
   viewInitialized = signal(false);
+
+  planId = computed(() => this.trainingDayLocatorService.planId);
+  trainingWeekIndex = computed(() => this.trainingDayLocatorService.trainingWeekIndex);
+  trainingDayIndex = computed(() => this.trainingDayLocatorService.trainingDayIndex);
 
   constructor(
     private route: ActivatedRoute,
     private trainingViewService: TrainingViewService,
+    private trainingDayLocatorService: TrainingDayLocatorService,
     private headerService: HeaderService,
     private formService: FormService,
-    private navigationService: TrainingViewNavigationService,
     private modalService: ModalService,
     private autoSaveService: AutoSaveService,
     private destroyRef: DestroyRef,
+    protected navigationService: TrainingViewNavigationService,
     protected exerciseDataService: ExerciseDataService,
     protected trainingDataService: TrainingPlanDataService,
   ) {}
@@ -92,24 +102,32 @@ export class TrainingViewComponent implements OnInit {
     this.headerService.setLoading();
 
     this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
-      this.planId = params['planId'];
-      this.trainingWeekIndex = parseInt(params['week']);
-      this.trainingDayIndex = parseInt(params['day']);
+      this.trainingDayLocatorService.planId = params['planId'];
+      this.trainingDayLocatorService.trainingWeekIndex = Number(params['week']);
+      this.trainingDayLocatorService.trainingDayIndex = Number(params['day']);
 
-      this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
+      this.loadData(
+        this.trainingDayLocatorService.planId,
+        this.trainingDayLocatorService.trainingWeekIndex,
+        this.trainingDayLocatorService.trainingDayIndex,
+      );
     });
 
     this.initializeAutoSaveLogic();
   }
 
+  protected swipeLeft = () => this.navigationService.navigateDay(this.trainingDayIndex() + 1);
+  protected swipeRight = () => this.navigationService.navigateDay(this.trainingDayIndex() - 1);
+  protected swipeDiagonalTopLeftToBottomRight = () =>
+    this.navigationService.navigateWeek(NavigationDirection.BACKWARD, this.trainingDayIndex());
+  protected swipeDiagonalTopRightToBottomLeft = () =>
+    this.navigationService.navigateWeek(NavigationDirection.FORWARD, this.trainingDayIndex());
+
   /**
    * Loads training data and exercise data for the specified plan, week, and day.
    * Updates the component state with the loaded data.
-   * @param planId - ID of the training plan.
-   * @param week - Index of the training week.
-   * @param day - Index of the training day.
    */
-  loadData(planId: string, week: number, day: number): void {
+  private loadData(planId: string, week: number, day: number): void {
     forkJoin({
       trainingPlan: this.trainingViewService.loadTrainingPlan(planId, week, day),
       exerciseData: this.trainingViewService.loadExerciseData(),
@@ -127,52 +145,6 @@ export class TrainingViewComponent implements OnInit {
       .subscribe();
   }
 
-  /**
-   * Handles form submission.
-   * Prevents default form submission, collects changed data, and submits the training plan.
-   * @param event - The form submission event.
-   */
-  saveTrainingData$(): Observable<void> {
-    return this.trainingViewService
-      .submitTrainingPlan(this.planId, this.trainingWeekIndex, this.trainingDayIndex, this.formService.getChanges())
-      .pipe(
-        tap(() => {
-          this.formService.clearChanges();
-        }),
-      );
-  }
-
-  navigateDay(day: number, weekIndex: number) {
-    if (day === this.trainingDataService.trainingPlanData.trainingFrequency) {
-      const isLastWeek = weekIndex === this.trainingDataService.trainingPlanData.trainingBlockLength - 1;
-
-      if (!isLastWeek) {
-        weekIndex = weekIndex + 1;
-      } else {
-        weekIndex = 0;
-      }
-      day = 0;
-    } else if (day < 0) {
-      day = this.trainingDataService.trainingPlanData.trainingBlockLength - 1;
-    }
-
-    this.navigationService.navigateDay(day, this.trainingDataService.trainingPlanData.trainingFrequency, weekIndex);
-  }
-
-  /**
-   * Navigates to the specified training week.
-   * Reloads the training data for the new week.
-   * @param direction - Direction to navigate (1 for next week, -1 for previous week).
-   */
-  navigateWeek(direction: number): void {
-    this.navigationService.navigateWeek(
-      this.trainingWeekIndex,
-      direction,
-      this.trainingDataService.trainingPlanData,
-      this.trainingDayIndex,
-    );
-  }
-
   private openAutoProgressionModal() {
     this.modalService.open({
       component: AutoProgressionComponent,
@@ -184,10 +156,29 @@ export class TrainingViewComponent implements OnInit {
     });
   }
 
+  /**
+   * Handles form submission.
+   * Prevents default form submission, collects changed data, and submits the training plan.
+   */
+  private saveTrainingData$(): Observable<void> {
+    return this.trainingViewService
+      .submitTrainingPlan(
+        this.planId(),
+        this.trainingWeekIndex(),
+        this.trainingDayIndex(),
+        this.formService.getChanges(),
+      )
+      .pipe(
+        tap(() => {
+          this.formService.clearChanges();
+        }),
+      );
+  }
+
   private setHeadlineInfo(trainingPlan: TrainingPlanDto) {
     this.headerService.setHeadlineInfo({
       title: trainingPlan.title,
-      subTitle: `W${this.trainingWeekIndex + 1}D${this.trainingDayIndex + 1}`,
+      subTitle: `W${this.trainingWeekIndex() + 1}D${this.trainingDayIndex() + 1}`,
       buttons: [
         {
           icon: IconName.MORE_VERTICAL,
@@ -209,14 +200,9 @@ export class TrainingViewComponent implements OnInit {
       .subscribe((option) => {
         this.saveTrainingData$().subscribe(() => {
           if (option === 'reload') {
-            this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
+            this.loadData(this.planId(), this.trainingWeekIndex(), this.trainingDayIndex());
           }
         });
       });
   }
-
-  protected swipeLeft = () => this.navigateDay(this.trainingDayIndex + 1, this.trainingWeekIndex);
-  protected swipeRight = () => this.navigateDay(this.trainingDayIndex - 1, this.trainingWeekIndex);
-  protected swipeDiagonalTopLeftToBottomRight = () => this.navigateWeek(-1);
-  protected swipeDiagonalTopRightToBottomLeft = () => this.navigateWeek(1);
 }
