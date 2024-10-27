@@ -1,10 +1,12 @@
 import { DOCUMENT } from '@angular/common';
-import { Inject, signal, WritableSignal } from '@angular/core';
+import { inject, Inject, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpService } from '../../core/services/http-client.service';
+import { ModalService } from '../../core/services/modal/modalService';
 import { ToastService } from '../../shared/components/toast/toast.service';
 import { BasicConfirmationResponse } from '../../shared/dto/basic-confirmation-response';
 import { IconName } from '../../shared/icon/icon-name';
+import { LoginModalComponent } from './login-modal/login-modal.component';
 
 declare const google: any;
 
@@ -14,6 +16,8 @@ export abstract class BaisAuthComponent {
 
   hidePasswordInput: WritableSignal<boolean> = signal(false);
   hideRepeatPasswordInput: WritableSignal<boolean> = signal(false);
+
+  modalService = inject(ModalService);
 
   constructor(
     protected router: Router,
@@ -44,7 +48,8 @@ export abstract class BaisAuthComponent {
       script.onload = () => {
         google.accounts.id.initialize({
           client_id: '745778541640-0f05iimgfid2tag6rkvilau5nqt69ko0.apps.googleusercontent.com',
-          use_fedcm_for_prompt: false,
+          login_uri: this.oauthRoute,
+          use_fedcm_for_prompt: true,
           callback: (response: any) => this.handleCredentialResponse(response),
         });
         resolve();
@@ -79,8 +84,22 @@ export abstract class BaisAuthComponent {
 
   // TODO: diese bitch hier migrierne
   protected triggerGoogleLogin() {
-    console.log('click herwer');
-    google.accounts.id.prompt();
+    console.log('click this bitch');
+    google.accounts.id.prompt((notification: any) => {
+      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+        console.log('here');
+        this.modalService.open({
+          component: LoginModalComponent,
+          title: 'Über Google Anmelden',
+          hasFooter: false,
+        });
+
+        console.warn(
+          'Login prompt not shown:',
+          notification.getNotDisplayedReason() || notification.getSkippedReason(),
+        );
+      }
+    });
   }
 
   private isRepeatPassword(passwordInput: HTMLInputElement) {

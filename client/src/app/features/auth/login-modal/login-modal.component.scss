@@ -1,0 +1,15 @@
+.line {
+  position: relative;
+  height: 1px;
+  width: 100%;
+  margin: 30px 0;
+  background-color: #d4d4d4;
+}
+
+.media-options div,
+.media-options iframe {
+  width: 100%; /* Ensure full width */
+  display: flex;
+  justify-content: center; /* Center the content inside */
+  align-items: center;
+}
