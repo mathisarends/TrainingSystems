@@ -38,11 +38,6 @@ export class PushNotificationsService {
       )
       .exec();
 
-    console.log(
-      '🚀 ~ PushNotificationsService ~ updatedSubscription:',
-      updatedSubscription,
-    );
-
     return updatedSubscription;
   }
 

@@ -6,6 +6,7 @@ import { RedirectService } from './core/services/redirect.service';
 import { HeaderComponent } from './features/header/header.component';
 import { ProfileService } from './features/profile-2/service/profileService';
 import { RestPauseTimeIndicatorComponent } from './features/training-plans/training-view/rest-pause-time-indicator/rest-pause-time-indicator.component';
+import { PauseTimeService } from './features/training-plans/training-view/services/pause-time.service';
 import { MobileDeviceDetectionService } from './platform/mobile-device-detection.service';
 import { ServiceWorkerService } from './platform/service-worker.service';
 import { NavBarComponent } from './shared/components/nav-bar/nav-bar.component';
@@ -33,6 +34,7 @@ export class AppComponent implements OnInit {
   title = 'TrainingSystems';
 
   constructor(
+    protected pauseTimeService: PauseTimeService,
     private serviceWorkerService: ServiceWorkerService,
     private mobileDeviceDetectionService: MobileDeviceDetectionService,
     private redirectService: RedirectService,

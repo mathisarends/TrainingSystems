@@ -51,7 +51,7 @@ export class RestTimerComponent implements OnInit {
     const remainingTime = this.pauseTimeService.remainingTime();
 
     if (remainingTime === 0) {
-      this.percentageRemaining.set(100);
+      this.modalService.close();
       return;
     }
 

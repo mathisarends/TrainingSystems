@@ -4,7 +4,9 @@
   <router-outlet />
 </div>
 
-<app-rest-pause-time-indicator />
+@if (pauseTimeService.remainingTime() > 0) {
+  <app-rest-pause-time-indicator />
+}
 
 <app-nav-bar />
 
