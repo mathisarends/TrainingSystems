@@ -217,8 +217,8 @@ export class TrainingViewComponent implements OnInit {
     );
   }
 
-  async openAutoProgressionModal() {
-    const confirmed = await this.modalService.open({
+  private openAutoProgressionModal() {
+    this.modalService.open({
       component: AutoProgressionComponent,
       title: 'Automatische Progression',
       buttonText: 'Übernehmen',

@@ -12,6 +12,7 @@ import { GetUser } from 'src/decorators/user.decorator';
 import { UsersService } from 'src/users/users.service';
 import { AutoProgressionDto } from '../dto/auto-progression.dto';
 import { CreateTrainingPlanDto } from '../dto/create-training-plan.dto';
+import { AutoProgressionService } from '../service/auto-progression.service';
 import { CreateTrainingPlanService } from '../service/create-training-plan.service';
 import { TrainingPlanCardViewService } from '../service/training-plan-card-view.service';
 import { TrainingPlanUtilsService } from '../service/training-plan-utils.service';
@@ -22,6 +23,7 @@ import { TrainingService } from '../training.service';
 export class TrainingController {
   constructor(
     private readonly trainingPlanUtilsService: TrainingPlanUtilsService,
+    private autoProgressionService: AutoProgressionService,
     private readonly createTrainingPlanService: CreateTrainingPlanService,
     private readonly trainingPlanCardViewService: TrainingPlanCardViewService,
     private readonly trainingService: TrainingService,
@@ -62,7 +64,7 @@ export class TrainingController {
     @Param('id') trainingPlanId: string,
     @Body() autpProgressionDto: AutoProgressionDto,
   ) {
-    return await this.trainingPlanUtilsService.handleAutoProgressionForTrainingPlan(
+    return await this.autoProgressionService.handleAutoProgressionForTrainingPlan(
       userId,
       trainingPlanId,
       autpProgressionDto,
@@ -81,10 +83,11 @@ export class TrainingController {
     @GetUser() userId: string,
     @Param('id') trainingPlanId: string,
   ) {
-    const title = await this.trainingPlanUtilsService.getTrainingPlanTitleById(
+    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(
       userId,
       trainingPlanId,
     );
+    const title = trainingPlan.title;
     return { title };
   }
 

@@ -11,6 +11,7 @@ import { TrainingStatisticsController } from './controller/training-statistics.c
 import { TrainingTimerController } from './controller/training-timer.controller';
 import { TrainingController } from './controller/training.controller';
 import { TrainingPlan, TrainingPlanSchema } from './model/training-plan.model';
+import { AutoProgressionService } from './service/auto-progression.service';
 import { CreateTrainingPlanService } from './service/create-training-plan.service';
 import { EditTrainingPlanService } from './service/edit-training-plan.service';
 import { RestTimerKeepAliveService } from './service/rest-timer/rest-timer-keep-alive.service';
@@ -67,6 +68,7 @@ import { TrainingService } from './training.service';
     TonnageProgressionService,
     TrainingSessionTracker,
     RestTimerKeepAliveService,
+    AutoProgressionService,
     UsersService,
   ],
   exports: [TrainingService, MongooseModule],
