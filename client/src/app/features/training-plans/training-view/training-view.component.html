@@ -34,6 +34,7 @@
               targetRPE: '',
               actualRPE: '',
               estMax: '',
+              notes: '',
             };
 
           @let namePrefix = 'day' + trainingDayIndex() + '_exercise' + k + '_';
@@ -80,10 +81,10 @@
               />
             </td>
             <td class="weight-data-cell" data-cell="Weight">
-              @let weightRecommandation = trainingDataService.weightRecommendations?.[i] ?? '';
+              @let weightRecommandation = trainingDataService.weightRecommendations[i];
               <app-input
                 class="weight"
-                [placeholder]="weightRecommandation"
+                [placeholder]="weightRecommandation ?? ''"
                 [type]="'tel'"
                 [name]="namePrefix + 'weight'"
                 [directiveUsed]="'weightInputDirective'"
@@ -118,7 +119,7 @@
               />
             </td>
             <td data-cell="Notes">
-              <app-input class="notes" [type]="'text'" [name]="namePrefix + 'notes'" [value]="exercise.notes ?? ''" />
+              <app-input class="notes" [type]="'text'" [name]="namePrefix + 'notes'" [value]="exercise.notes" />
             </td>
           </tr>
         }
