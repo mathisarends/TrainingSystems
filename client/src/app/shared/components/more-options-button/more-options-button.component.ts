@@ -38,11 +38,21 @@ export class MoreOptionsButtonComponent {
   constructor(private elementRef: ElementRef) {}
 
   /**
-   * Toggles the collapsed state of the dropdown menu.
-   * If the dropdown is collapsed, it will expand, and vice versa.
+   * Host listener for the mouseenter event.
+   * Expands the dropdown menu when hovering over the component.
    */
-  protected toggleCollapsed() {
-    this.isCollapsed.update((current) => !current);
+  @HostListener('mouseenter')
+  onMouseEnter() {
+    this.isCollapsed.set(false); // Set to false to expand the dropdown
+  }
+
+  /**
+   * Host listener for the mouseleave event.
+   * Collapses the dropdown menu when no longer hovering over the component.
+   */
+  @HostListener('mouseleave')
+  onMouseLeave() {
+    this.isCollapsed.set(true); // Set to true to collapse the dropdown
   }
 
   /**

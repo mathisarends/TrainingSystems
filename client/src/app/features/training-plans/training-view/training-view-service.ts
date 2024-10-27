@@ -29,7 +29,6 @@ export class TrainingViewService {
       return of(this.exerciseData()!);
     }
 
-    // Otherwise, fetch from the server, cache it, and return the observable
     return this.httpService
       .get<ExerciseDataDTO>('/exercise')
       .pipe(tap((exerciseData) => this.exerciseData.set(exerciseData)));
