@@ -29,10 +29,19 @@ export class PushNotificationsService {
     const updatedSubscription = await this.subscriptionModel
       .findOneAndUpdate(
         { userId, fingerprint },
-        { userId, endpoint, keys, fingerprint },
+        {
+          userId,
+          fingerprint,
+          subscription: { endpoint, keys },
+        },
         { new: true, upsert: true },
       )
       .exec();
+
+    console.log(
+      '🚀 ~ PushNotificationsService ~ updatedSubscription:',
+      updatedSubscription,
+    );
 
     return updatedSubscription;
   }
@@ -42,12 +51,12 @@ export class PushNotificationsService {
    */
   async sendNotification(
     userId: string,
+    fingerprint: string,
     notificationPayloadDto: NotificationPayloadDto,
   ): Promise<void> {
-    const subscriptions = await this.getSubscriptionsByUserId(userId);
-    console.log(
-      '🚀 ~ PushNotificationsService ~ subscriptions:',
-      subscriptions,
+    const subscriptions = await this.getSubscriptionsByUserId(
+      userId,
+      fingerprint,
     );
 
     if (subscriptions.length === 0) {
@@ -81,8 +90,9 @@ export class PushNotificationsService {
    */
   private async getSubscriptionsByUserId(
     userId: string,
+    fingerprint: string,
   ): Promise<UserPushSubscription[]> {
-    return await this.subscriptionModel.find({ userId }).exec();
+    return await this.subscriptionModel.find({ userId, fingerprint }).exec();
   }
 
   /**

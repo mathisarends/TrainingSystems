@@ -17,6 +17,6 @@ import { PushNotificationsService } from './push-notifications.service';
   ],
   providers: [PushNotificationsService, FingerprintService],
   controllers: [PushNotificationsController],
-  exports: [PushNotificationsService, MongooseModule],
+  exports: [PushNotificationsService, FingerprintService, MongooseModule],
 })
 export class PushNotificationsModule {}

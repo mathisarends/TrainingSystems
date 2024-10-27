@@ -5,8 +5,11 @@ import {
   Param,
   ParseIntPipe,
   Patch,
+  Req,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { GetUser } from 'src/decorators/user.decorator';
+import { FingerprintService } from 'src/push-notifications/fingerprint.service';
 import { ApiData } from 'src/types/api-data';
 import { TrainingPlanViewUpdateService } from '../service/training-plan-view-update.service';
 import { TrainingPlanViewService } from '../service/training-plan-view.service';
@@ -16,6 +19,7 @@ export class TrainingPlanViewController {
   constructor(
     private readonly trainingPlanViewService: TrainingPlanViewService,
     private readonly tariningPlanViewUpdateService: TrainingPlanViewUpdateService,
+    private readonly fingerprintService: FingerprintService,
   ) {}
 
   // TOODO: use validation service to retrive training day which can be shared for update and get routes aswell.
@@ -41,13 +45,17 @@ export class TrainingPlanViewController {
     @Param('week', ParseIntPipe) weekIndex: number,
     @Param('day', ParseIntPipe) dayIndex: number,
     @Body() changedData: ApiData,
+    @Req() req: Request,
   ) {
+    const fingerprint = this.fingerprintService.generateFingerprint(req);
+
     return await this.tariningPlanViewUpdateService.updateTrainingDataForTrainingDay(
       userId,
       trainingPlanId,
       weekIndex,
       dayIndex,
       changedData,
+      fingerprint,
     );
   }
 }

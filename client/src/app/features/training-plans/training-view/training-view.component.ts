@@ -155,25 +155,6 @@ export class TrainingViewComponent implements OnInit {
     });
   }
 
-  /**
-   * Handles form submission.
-   * Prevents default form submission, collects changed data, and submits the training plan.
-   */
-  private saveTrainingData$(): Observable<void> {
-    return this.trainingViewService
-      .submitTrainingPlan(
-        this.planId(),
-        this.trainingWeekIndex(),
-        this.trainingDayIndex(),
-        this.formService.getChanges(),
-      )
-      .pipe(
-        tap(() => {
-          this.formService.clearChanges();
-        }),
-      );
-  }
-
   private setHeadlineInfo(trainingPlanTitle: string) {
     this.headerService.setHeadlineInfo({
       title: trainingPlanTitle,
@@ -203,5 +184,24 @@ export class TrainingViewComponent implements OnInit {
           }
         });
       });
+  }
+
+  /**
+   * Handles form submission.
+   * Prevents default form submission, collects changed data, and submits the training plan.
+   */
+  private saveTrainingData$(): Observable<void> {
+    return this.trainingViewService
+      .submitTrainingPlan(
+        this.planId(),
+        this.trainingWeekIndex(),
+        this.trainingDayIndex(),
+        this.formService.getChanges(),
+      )
+      .pipe(
+        tap(() => {
+          this.formService.clearChanges();
+        }),
+      );
   }
 }

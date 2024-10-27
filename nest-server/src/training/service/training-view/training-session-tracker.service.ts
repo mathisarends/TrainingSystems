@@ -12,6 +12,7 @@ export class TrainingSessionTracker {
   constructor(
     private readonly trainingDay: TrainingDay,
     private readonly userId: string,
+    private readonly fingerprint: string,
     private readonly removeTrackerCallback: () => void,
     private readonly trainingService: TrainingService,
     private readonly pushNotificationService: PushNotificationsService,
@@ -81,10 +82,10 @@ export class TrainingSessionTracker {
     );
 
     this.addRelevantTrackingDataToTrainingDay(trainingDay);
-    await this.sendTrainingSummaryPushNotification(this.userId);
+    await this.sendTrainingSummaryPushNotification();
   }
 
-  private async sendTrainingSummaryPushNotification(userId: string) {
+  private async sendTrainingSummaryPushNotification() {
     const notificationPayload: NotificationPayloadDto = {
       title: 'TYR TS',
       body: 'Trainingszusammenfassung verfügbar',
@@ -94,7 +95,8 @@ export class TrainingSessionTracker {
     };
 
     await this.pushNotificationService.sendNotification(
-      userId,
+      this.userId,
+      this.fingerprint,
       notificationPayload,
     );
   }

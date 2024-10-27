@@ -1,59 +1,69 @@
 import { Injectable } from '@nestjs/common';
 import { NotificationPayloadDto } from 'src/push-notifications/model/notification-payload.dto';
 import { PushNotificationsService } from 'src/push-notifications/push-notifications.service';
-import { KeepAliveIntervalId } from 'src/training/model/keep-alive-interval-id.type';
-import { UserId } from 'src/training/model/userId.type';
 
 @Injectable()
 export class RestTimerKeepAliveService {
-  /**
-   * Stores the active timers for each user, identified by UserId.
-   */
-  private timers: Map<UserId, KeepAliveIntervalId> = new Map();
+  private activeSessions: Set<string> = new Set();
+  private readonly intervalDuration = 20 * 1000;
 
   constructor(
     private readonly pushNotificationService: PushNotificationsService,
-  ) {}
-
-  async startTimer(userId: string) {
-    if (this.timers.has(userId)) {
-      return;
-    }
-
-    const keepAliveInterval = setInterval(async () => {
-      await this.sendKeepAliveSignal(userId);
-    });
-
-    this.timers.set(userId, keepAliveInterval);
+  ) {
+    setInterval(() => this.checkAndSendKeepAlive(), this.intervalDuration);
   }
 
-  stopTimer(userId: string): void {
-    const keepAliveTimerIntervalId = this.timers.get(userId);
-
-    if (!keepAliveTimerIntervalId) {
-      return;
-    }
-    clearInterval(keepAliveTimerIntervalId);
-    this.timers.delete(userId);
-
-    console.log(`Stopped and removed timer for user ${userId}.`);
+  /**
+   * Generates a composite key combining userId and fingerprint.
+   */
+  private generateCompositeKey(userId: string, fingerprint: string): string {
+    return `${userId}-${fingerprint}`;
   }
 
-  private async sendKeepAliveSignal(userId: string): Promise<void> {
-    const timer = this.timers.get(userId);
+  /**
+   * Starts the keep-alive timer for a user and fingerprint combination.
+   */
+  startTimer(userId: string, fingerprint: string): void {
+    const key = this.generateCompositeKey(userId, fingerprint);
+    this.activeSessions.add(key);
+  }
 
-    if (!timer) {
-      console.log('Unexpected: no timer found for user');
-      return;
+  /**
+   * Stops the keep-alive timer for a user and fingerprint combination.
+   */
+  stopTimer(userId: string, fingerprint: string): void {
+    const key = this.generateCompositeKey(userId, fingerprint);
+    this.activeSessions.delete(key);
+  }
+
+  /**
+   * Periodically checks active sessions and sends keep-alive signals.
+   */
+  private async checkAndSendKeepAlive(): Promise<void> {
+    for (const key of this.activeSessions) {
+      const { userId, fingerprint } = this.extractUserIdAndFingerprint(key);
+      await this.sendKeepAliveSignal(userId, fingerprint);
     }
+  }
 
+  /**
+   * Sends a keep-alive signal to the user.
+   */
+  private async sendKeepAliveSignal(
+    userId: string,
+    fingerprint: string,
+  ): Promise<void> {
     const payload: NotificationPayloadDto = {
       title: 'Keep Alive',
-      body: `Keeping timer alive`,
+      body: 'Keeping timer alive',
     };
 
     try {
-      await this.pushNotificationService.sendNotification(userId, payload);
+      await this.pushNotificationService.sendNotification(
+        userId,
+        fingerprint,
+        payload,
+      );
       console.log(`Keep-alive signal sent to user ${userId}`);
     } catch (error) {
       console.error(
@@ -61,5 +71,16 @@ export class RestTimerKeepAliveService {
         error,
       );
     }
+  }
+
+  /**
+   * Extracts userId and fingerprint from a composite key.
+   */
+  private extractUserIdAndFingerprint(compositeKey: string): {
+    userId: string;
+    fingerprint: string;
+  } {
+    const [userId, fingerprint] = compositeKey.split('-');
+    return { userId, fingerprint };
   }
 }

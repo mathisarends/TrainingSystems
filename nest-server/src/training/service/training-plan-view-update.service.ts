@@ -21,6 +21,7 @@ export class TrainingPlanViewUpdateService {
     weekIndex: number,
     dayIndex: number,
     updatedData: ApiData,
+    fingerprint: string,
   ) {
     const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(
       userId,
@@ -56,6 +57,7 @@ export class TrainingPlanViewUpdateService {
           await this.trainingSessionManagerService.getOrCreateTracker(
             trainingDay,
             userId,
+            fingerprint,
           );
         trainingSessionTracker.handleActivitySignal();
         break;
