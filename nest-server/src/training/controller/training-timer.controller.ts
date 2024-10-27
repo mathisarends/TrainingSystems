@@ -12,9 +12,9 @@ export class TrainingTimerController {
   ) {}
 
   @Post()
-  async keepTimerAlive(@GetUser() userId: string, @Req() req: Request) {
+  keepTimerAlive(@GetUser() userId: string, @Req() req: Request) {
     const fingerprint = this.fingerprintService.generateFingerprint(req);
-    await this.restTimerKeepAliveService.startTimer(userId, fingerprint);
+    this.restTimerKeepAliveService.startTimer(userId, fingerprint);
   }
 
   @Delete()

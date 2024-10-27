@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { NotificationPayloadDto } from 'src/push-notifications/model/notification-payload.dto';
 import { PushNotificationsService } from 'src/push-notifications/push-notifications.service';
 
+/**
+ * Sends a keep-alive signal to the service-worker in order to prevent the timer from stopping.
+ */
 @Injectable()
 export class RestTimerKeepAliveService {
   private activeSessions: Set<string> = new Set();
@@ -11,13 +14,6 @@ export class RestTimerKeepAliveService {
     private readonly pushNotificationService: PushNotificationsService,
   ) {
     setInterval(() => this.checkAndSendKeepAlive(), this.intervalDuration);
-  }
-
-  /**
-   * Generates a composite key combining userId and fingerprint.
-   */
-  private generateCompositeKey(userId: string, fingerprint: string): string {
-    return `${userId}-${fingerprint}`;
   }
 
   /**
@@ -71,6 +67,13 @@ export class RestTimerKeepAliveService {
         error,
       );
     }
+  }
+
+  /**
+   * Generates a composite key combining userId and fingerprint.
+   */
+  private generateCompositeKey(userId: string, fingerprint: string): string {
+    return `${userId}-${fingerprint}`;
   }
 
   /**
