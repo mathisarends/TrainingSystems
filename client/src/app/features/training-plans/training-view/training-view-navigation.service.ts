@@ -13,17 +13,16 @@ export class TrainingViewNavigationService {
   ) {}
 
   navigateDay(day: number): void {
-    const trainingPlanData = this.trainingDataService.trainingPlanData;
     let weekIndex = this.trainingDayLocatorService.trainingWeekIndex;
 
-    if (day >= trainingPlanData.trainingFrequency) {
-      const isLastWeek = weekIndex === trainingPlanData.trainingBlockLength - 1;
+    if (day >= this.trainingDataService.trainingFrequency) {
+      const isLastWeek = weekIndex === this.trainingDataService.trainingBlockLength - 1;
 
       weekIndex = isLastWeek ? 0 : weekIndex + 1;
       day = 0;
     } else if (day < 0) {
-      day = trainingPlanData.trainingFrequency - 1;
-      weekIndex = weekIndex > 0 ? weekIndex - 1 : trainingPlanData.trainingBlockLength - 1;
+      day = this.trainingDataService.trainingFrequency - 1;
+      weekIndex = weekIndex > 0 ? weekIndex - 1 : this.trainingDataService.trainingBlockLength - 1;
     }
 
     this.router.navigate([], {
@@ -36,20 +35,14 @@ export class TrainingViewNavigationService {
   }
 
   navigateWeek(navigationDirection: NavigationDirection, day: number): void {
-    const trainingPlanData = this.trainingDataService.trainingPlanData;
     let currentWeekIndex = this.trainingDayLocatorService.trainingWeekIndex;
-
-    if (!trainingPlanData) {
-      console.warn('Training plan data not available.');
-      return;
-    }
 
     let targetWeek = currentWeekIndex;
 
     if (currentWeekIndex === 0 && navigationDirection === NavigationDirection.BACKWARD) {
-      targetWeek = trainingPlanData.trainingBlockLength - 1;
+      targetWeek = this.trainingDataService.trainingBlockLength - 1;
     } else if (
-      currentWeekIndex === trainingPlanData.trainingBlockLength - 1 &&
+      currentWeekIndex === this.trainingDataService.trainingBlockLength - 1 &&
       navigationDirection === NavigationDirection.FORWARD
     ) {
       targetWeek = 0;

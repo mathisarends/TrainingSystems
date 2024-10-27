@@ -25,7 +25,7 @@
       <tbody>
         @for (k of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track k; let i = $index) {
           @let exercise =
-            trainingDataService.trainingPlanData.trainingDay.exercises![i] || {
+            trainingDataService.trainingDay.exercises![i] || {
               category: '',
               exercise: '',
               sets: '',
@@ -80,7 +80,7 @@
               />
             </td>
             <td class="weight-data-cell" data-cell="Weight">
-              @let weightRecommandation = trainingDataService.trainingPlanData.weightRecommandations?.[i] ?? '';
+              @let weightRecommandation = trainingDataService.weightRecommendations?.[i] ?? '';
               <app-input
                 class="weight"
                 [placeholder]="weightRecommandation"
@@ -129,7 +129,7 @@
   <div class="navigation-container">
     <app-pagination
       [currentPage]="trainingDayIndex()"
-      [totalPages]="trainingDataService.trainingPlanData.trainingFrequency"
+      [totalPages]="trainingDataService.trainingFrequency"
       (pageChanged)="navigationService.navigateDay($event)"
     />
 

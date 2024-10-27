@@ -32,7 +32,6 @@ import { TrainingDayLocatorService } from './services/training-day-locator.servi
 import { TrainingPlanDataService } from './services/training-plan-data.service';
 import { TrainingViewNavigationService } from './training-view-navigation.service';
 import { TrainingViewService } from './training-view-service';
-import { TrainingPlanDto } from './trainingPlanDto';
 
 /**
  * Component to manage and display the training view.
@@ -129,16 +128,16 @@ export class TrainingViewComponent implements OnInit {
    */
   private loadData(planId: string, week: number, day: number): void {
     forkJoin({
-      trainingPlan: this.trainingViewService.loadTrainingPlan(planId, week, day),
-      exerciseData: this.trainingViewService.loadExerciseData(),
+      trainingPlanDto: this.trainingViewService.loadTrainingPlan(planId, week, day),
+      exerciseDataDto: this.trainingViewService.loadExerciseData(),
     })
       .pipe(
-        tap(({ trainingPlan, exerciseData }) => {
-          this.trainingDataService.trainingPlanData = trainingPlan;
+        tap(({ trainingPlanDto, exerciseDataDto }) => {
+          this.trainingDataService.initializeFromDto(trainingPlanDto);
 
-          this.exerciseDataService.setExerciseData(exerciseData);
+          this.exerciseDataService.setExerciseData(exerciseDataDto);
 
-          this.setHeadlineInfo(trainingPlan);
+          this.setHeadlineInfo(trainingPlanDto.title);
           this.viewInitialized.set(true);
         }),
       )
@@ -175,9 +174,9 @@ export class TrainingViewComponent implements OnInit {
       );
   }
 
-  private setHeadlineInfo(trainingPlan: TrainingPlanDto) {
+  private setHeadlineInfo(trainingPlanTitle: string) {
     this.headerService.setHeadlineInfo({
-      title: trainingPlan.title,
+      title: trainingPlanTitle,
       subTitle: `W${this.trainingWeekIndex() + 1}D${this.trainingDayIndex() + 1}`,
       buttons: [
         {
