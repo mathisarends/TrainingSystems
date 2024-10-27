@@ -104,7 +104,7 @@ export class ProfileComponent2 implements OnInit {
 
       this.gymTicketService.getGymTicket().subscribe((ticket: string) => {
         this.modalService.updateComponentData({
-          image: ticket,
+          image: ticket ?? 'noGymTicketAvailable',
         });
       });
     } else if (listItem.label === 'Exercises') {
