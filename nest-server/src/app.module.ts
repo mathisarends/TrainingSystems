@@ -16,6 +16,7 @@ import { TrainingLogModule } from './training-log/training-log.module';
 import { TrainingModule } from './training/training.module';
 import { UsersModule } from './users/users.module';
 import { TrainingSessionModule } from './training-session/training-session.module';
+import { UserExerciseRecordModule } from './user-exercise-record/user-exercise-record.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { TrainingSessionModule } from './training-session/training-session.modul
     FriendshipModule,
     FriendshipModule,
     TrainingSessionModule,
+    UserExerciseRecordModule,
   ],
   controllers: [AppController],
   providers: [
