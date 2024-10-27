@@ -118,7 +118,7 @@ export class TrainingViewComponent implements OnInit {
         tap(({ trainingPlan, exerciseData }) => {
           this.trainingDataService.trainingPlanData = trainingPlan;
 
-          this.exerciseDataService.exerciseData = exerciseData;
+          this.exerciseDataService.setExerciseData(exerciseData);
 
           this.setHeadlineInfo(trainingPlan);
           this.viewInitialized.set(true);

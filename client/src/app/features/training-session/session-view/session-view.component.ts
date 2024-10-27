@@ -172,7 +172,7 @@ export class SessionViewComponent implements OnInit {
    */
   private setExerciseMetadata(exerciseData: ExerciseDataDTO) {
     this.exerciseData.set(exerciseData);
-    this.exerciseDataService.exerciseData = exerciseData;
+    this.exerciseDataService.setExerciseData(exerciseData);
   }
 
   /**
