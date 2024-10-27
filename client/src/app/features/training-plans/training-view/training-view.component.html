@@ -45,7 +45,7 @@
               <app-dropdown
                 name="day{{ trainingDayIndex }}_exercise{{ k }}_category"
                 class="exercise-category-selector"
-                [options]="exerciseData.exerciseCategories"
+                [options]="exerciseDataService.exerciseData.exerciseCategories"
                 [directiveUsed]="'category-select'"
                 [(selectedValue)]="exercise.category"
                 [ngStyle]="{
@@ -57,7 +57,7 @@
               <app-dropdown
                 name="day{{ trainingDayIndex }}_exercise{{ k }}_exercise_name"
                 class="exercise-name-selector"
-                [options]="exerciseData.categorizedExercises[exercise.category]"
+                [options]="exerciseDataService.exerciseData.categorizedExercises[exercise.category]"
                 [(selectedValue)]="exercise.exercise"
                 [ngStyle]="{
                   opacity: exercise.category === '- Bitte Auswählen -' || !exercise.category ? 0 : 1,

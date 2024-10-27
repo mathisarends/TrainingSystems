@@ -1,14 +1,14 @@
-import { Directive, ElementRef, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 
 @Directive({
   selector: '[appSwipe]', // This directive can be used as an attribute on any element
   standalone: true,
 })
 export class SwipeDirective implements OnInit, OnDestroy {
-  @Input() swipeLeft: () => void = () => {};
-  @Input() swipeRight: () => void = () => {};
-  @Input() swipeDiagonalTopLeftToBottomRight?: () => void;
-  @Input() swipeDiagonalTopRightToBottomLeft?: () => void;
+  swipeLeft = input<() => void>(() => {});
+  swipeRight = input<() => void>(() => {});
+  swipeDiagonalTopLeftToBottomRight = input<() => void>(() => {});
+  swipeDiagonalTopRightToBottomLeft = input<() => void>(() => {});
 
   private swipeThreshold = 125;
   private verticalThreshold = 100;

@@ -73,7 +73,7 @@ export class CategorySelectDirective {
     const category = categorySelector.value;
 
     const firstExerciseOptionForCategory =
-      this.exerciseDataService.getExerciseData().categorizedExercises[categorySelector.value][0];
+      this.exerciseDataService.exerciseData.categorizedExercises[categorySelector.value][0];
 
     const defaultValues = defaultRepSchemeByCategory[category];
 

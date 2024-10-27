@@ -26,7 +26,6 @@ import { RepInputDirective } from './directives/rep-input.directive';
 import { RpeInputDirective } from './directives/rpe-input.directive';
 import { WeightInputDirective } from './directives/weight-input.directive';
 import { ExerciseDataService } from './exercise-data.service';
-import { ExerciseDataDTO } from './exerciseDataDto';
 import { EstMaxService } from './services/estmax.service';
 import { TrainingPlanDataService } from './services/training-plan-data.service';
 import { TrainingViewNavigationService } from './training-view-navigation.service';
@@ -58,7 +57,7 @@ import { TrainingPlanDto } from './trainingPlanDto';
     SpinnerComponent,
     SwipeDirective,
   ],
-  providers: [TrainingViewService, TrainingPlanDataService, EstMaxService],
+  providers: [TrainingViewService, TrainingPlanDataService, EstMaxService, ExerciseDataService],
   templateUrl: './training-view.component.html',
   styleUrls: ['./training-view.component.scss'],
 })
@@ -69,7 +68,6 @@ export class TrainingViewComponent implements OnInit {
   trainingDayIndex: number = 0;
 
   protected planId!: string;
-  exerciseData: ExerciseDataDTO = new ExerciseDataDTO();
   private dataViewLoaded = new BehaviorSubject<boolean>(false);
   dataViewLoaded$ = this.dataViewLoaded.asObservable();
 
@@ -81,8 +79,8 @@ export class TrainingViewComponent implements OnInit {
     private navigationService: TrainingViewNavigationService,
     private modalService: ModalService,
     private autoSaveService: AutoSaveService,
-    private exerciseDataService: ExerciseDataService,
     private destroyRef: DestroyRef,
+    protected exerciseDataService: ExerciseDataService,
     protected trainingDataService: TrainingPlanDataService,
   ) {}
 
@@ -120,17 +118,12 @@ export class TrainingViewComponent implements OnInit {
         tap(({ trainingPlan, exerciseData }) => {
           this.trainingDataService.trainingPlanData = trainingPlan;
 
-          this.exerciseData = exerciseData;
           this.exerciseDataService.exerciseData = exerciseData;
 
           this.setHeadlineInfo(trainingPlan);
         }),
         tap(() => {
-          if (this.trainingDataService.trainingPlanData && this.exerciseData) {
-            this.dataViewLoaded.next(true);
-          } else {
-            this.dataViewLoaded.next(false);
-          }
+          this.dataViewLoaded.next(true);
         }),
       )
       .subscribe();
