@@ -3,9 +3,9 @@ import { ApiData } from 'src/types/api-data';
 import { Exercise, ExerciseDto } from '../model/exercise.schema';
 import { TrainingDay } from '../model/training-day.schema';
 import { TrainingPlan } from '../model/training-plan.model';
+import { TrainingPlanViewValidationService } from '../service/training-plan-view-validation.service';
 import { TrainingService } from '../training.service';
-import { TrainingPlanViewValidationService } from './training-plan-view-validation.service';
-import { TrainingSessionManagerService } from './training-view/training-session-manager.service';
+import { TrainingSessionManagerService } from './training-session-manager.service';
 
 @Injectable()
 export class TrainingPlanViewUpdateService {

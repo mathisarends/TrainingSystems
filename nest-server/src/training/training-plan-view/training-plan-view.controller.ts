@@ -11,8 +11,8 @@ import { Request } from 'express';
 import { GetUser } from 'src/decorators/user.decorator';
 import { FingerprintService } from 'src/push-notifications/fingerprint.service';
 import { ApiData } from 'src/types/api-data';
-import { TrainingPlanViewUpdateService } from '../service/training-plan-view-update.service';
-import { TrainingPlanViewService } from '../service/training-plan-view.service';
+import { TrainingPlanViewUpdateService } from './training-plan-view-update.service';
+import { TrainingPlanViewService } from './training-plan-view.service';
 
 @Controller('training-plan-view')
 export class TrainingPlanViewController {

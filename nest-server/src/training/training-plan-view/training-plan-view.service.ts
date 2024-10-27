@@ -4,8 +4,8 @@ import { Exercise } from '../model/exercise.schema';
 import { TrainingDay } from '../model/training-day.schema';
 import { TrainingPlan } from '../model/training-plan.model';
 import { WeightRecommendation } from '../model/weight-recommandation.enum';
+import { TrainingPlanViewValidationService } from '../service/training-plan-view-validation.service';
 import { TrainingService } from '../training.service';
-import { TrainingPlanViewValidationService } from './training-plan-view-validation.service';
 
 @Injectable()
 export class TrainingPlanViewService {

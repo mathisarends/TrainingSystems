@@ -6,7 +6,6 @@ import { PushNotificationsService } from 'src/push-notifications/push-notificati
 import { UsersModule } from 'src/users/users.module';
 import { UsersService } from 'src/users/users.service';
 import { TrainingPlanEditController } from './controller/training-plan-edit.controller';
-import { TrainingPlanViewController } from './controller/training-plan-view.controller';
 import { TrainingStatisticsController } from './controller/training-statistics.controller';
 import { TrainingTimerController } from './controller/training-timer.controller';
 import { TrainingController } from './controller/training.controller';
@@ -23,11 +22,8 @@ import { SetProgressionService } from './service/statistics/set-prpgression.serv
 import { TonnageProgressionService } from './service/statistics/tonnage-progression.service';
 import { TrainingPlanCardViewService } from './service/training-plan-card-view.service';
 import { TrainingPlanUtilsService } from './service/training-plan-utils.service';
-import { TrainingPlanViewUpdateService } from './service/training-plan-view-update.service';
 import { TrainingPlanViewValidationService } from './service/training-plan-view-validation.service';
-import { TrainingPlanViewService } from './service/training-plan-view.service';
-import { TrainingSessionManagerService } from './service/training-view/training-session-manager.service';
-import { TrainingSessionTracker } from './service/training-view/training-session-tracker.service';
+import { TrainingPlanViewModule } from './training-plan-view/training-plan-view.module';
 import { TrainingService } from './training.service';
 
 // TODO: aufteilen in trainingModule, trianingPlanModule, statisticsModule und timer Module
@@ -41,11 +37,11 @@ import { TrainingService } from './training.service';
     ExerciseModule,
     PushNotificationsModule,
     UsersModule,
+    TrainingPlanViewModule,
   ],
   controllers: [
     TrainingController,
     TrainingPlanEditController,
-    TrainingPlanViewController,
     TrainingStatisticsController,
     TrainingTimerController,
   ],
@@ -54,8 +50,7 @@ import { TrainingService } from './training.service';
     CreateTrainingPlanService,
     TrainingPlanCardViewService,
     EditTrainingPlanService,
-    TrainingPlanViewService,
-    TrainingPlanViewUpdateService,
+
     TrainingPlanViewValidationService,
     PlanComparisonStaticsService,
     PerformanceProgressionService,
@@ -64,13 +59,11 @@ import { TrainingService } from './training.service';
     SessionDurationService,
     TrainingService,
     PushNotificationsService,
-    TrainingSessionManagerService,
     TonnageProgressionService,
-    TrainingSessionTracker,
     RestTimerKeepAliveService,
     AutoProgressionService,
     UsersService,
   ],
-  exports: [TrainingService, MongooseModule],
+  exports: [TrainingService, TrainingPlanViewValidationService, MongooseModule],
 })
 export class TrainingModule {}
