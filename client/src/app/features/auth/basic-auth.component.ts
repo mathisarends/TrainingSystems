@@ -44,7 +44,7 @@ export abstract class BaisAuthComponent {
       script.onload = () => {
         google.accounts.id.initialize({
           client_id: '745778541640-0f05iimgfid2tag6rkvilau5nqt69ko0.apps.googleusercontent.com',
-          use_fedcm_for_prompt: true,
+          use_fedcm_for_prompt: false,
           callback: (response: any) => this.handleCredentialResponse(response),
         });
         resolve();
@@ -77,7 +77,9 @@ export abstract class BaisAuthComponent {
     }
   }
 
+  // TODO: diese bitch hier migrierne
   protected triggerGoogleLogin() {
+    console.log('click herwer');
     google.accounts.id.prompt();
   }
 
