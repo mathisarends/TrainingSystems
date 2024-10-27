@@ -91,8 +91,9 @@ export class TrainingViewComponent implements OnInit {
    * Subscribes to route parameters and loads the initial data.
    */
   ngOnInit() {
+    this.headerService.setLoading();
+
     this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
-      this.headerService.setLoading();
       this.planId = params['planId'];
       this.trainingWeekIndex = parseInt(params['week']);
       this.trainingDayIndex = parseInt(params['day']);
