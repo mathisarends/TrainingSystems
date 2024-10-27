@@ -1,4 +1,5 @@
-import { Controller, Delete, Get, Req } from '@nestjs/common';
+import { Controller, Delete, Get } from '@nestjs/common';
+import { GetUser } from 'src/decorators/user.decorator';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -11,8 +12,7 @@ export class UsersController {
   }
 
   @Delete()
-  deleteUser(@Req() req: Request) {
-    const user = req['user'];
-    return this.userService.deleteUserById(user.id);
+  deleteUser(@GetUser() userId: string) {
+    return this.userService.deleteUserById(userId);
   }
 }

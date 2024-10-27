@@ -1,15 +1,12 @@
 import {
-  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserCreationMode } from './types/user-creation-mode.enum';
 import { User } from './user.model';
 
 import { ExerciseService } from 'src/exercise/exercise.service';
@@ -48,11 +45,8 @@ export class UsersService {
     return await existingUser.save();
   }
 
-  async createUser(
-    createUserDto: CreateUserDto,
-    userCreationMode = UserCreationMode.REGULAR,
-  ) {
-    const { name, email, profilePicture, password } = createUserDto;
+  async createUser(createUserDto: CreateUserDto) {
+    const { name, email, profilePicture } = createUserDto;
 
     const existingUser = await this.getUserByEmail(email);
     if (existingUser) {
@@ -66,16 +60,6 @@ export class UsersService {
       exercises: this.exerciseService.getDefaultExercisesForUser(),
     });
 
-    if (userCreationMode === UserCreationMode.REGULAR) {
-      if (!password) {
-        throw new BadRequestException(
-          'Password is required for regular user creation',
-        );
-      }
-
-      const hashedPassword = await bcrypt.hash(password, 10);
-      newUser.password = hashedPassword;
-    }
     return await newUser.save();
   }
 

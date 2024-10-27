@@ -1,9 +1,7 @@
 import { Body, Controller, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { AuthService } from './auth.service';
-import { LoginDto } from './dto/login-dto';
 import { LoginOAuth2Dto } from './dto/login-oauth2.dto';
 import { NoGuard } from './no-guard.decorator';
 import { TokenService } from './token.service';
@@ -61,20 +59,6 @@ export class AuthController {
     });
 
     res.redirect(redirectUrl);
-  }
-
-  @Post('login')
-  async login(@Body() loginDto: LoginDto, @Res() res: Response) {
-    const loggedInUser = await this.authService.login(loginDto);
-    this.tokenService.createAndSetToken({ id: loggedInUser.id }, res);
-    return res.status(200).json({ message: 'Login successful' });
-  }
-
-  @Post('register')
-  async register(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
-    const createdUser = await this.userService.createUser(createUserDto);
-    this.tokenService.createAndSetToken({ id: createdUser.id }, res);
-    return res.status(200).json({ message: 'Register successful' });
   }
 
   @Post('logout')

@@ -58,7 +58,7 @@ export class ProfileService {
    * Deletes the user's account from the system.
    */
   deleteAccount(): Observable<BasicConfirmationResponse> {
-    return this.httpService.delete<any>('/profile/delete-account');
+    return this.httpService.delete('/users');
   }
 
   /**

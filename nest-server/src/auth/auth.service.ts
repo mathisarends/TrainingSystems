@@ -1,28 +1,13 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
 import { OAuth2Client } from 'google-auth-library';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { UserCreationMode } from 'src/users/types/user-creation-mode.enum';
 import { UsersService } from 'src/users/users.service';
-import { LoginDto } from './dto/login-dto';
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 @Injectable()
 export class AuthService {
   constructor(private userService: UsersService) {}
-
-  async login(loginDto: LoginDto) {
-    const { email, password } = loginDto;
-
-    const user = await this.userService.getUserByEmail(email);
-
-    if (!user || !(await bcrypt.compare(password, user.password!))) {
-      throw new UnauthorizedException('Ungültige E-Mail/Passwort Kombination');
-    }
-
-    return user;
-  }
 
   async loginOAuth2User(token: string) {
     const ticket = await googleClient.verifyIdToken({
@@ -46,7 +31,7 @@ export class AuthService {
       this.setDefaultProfilePictureBasedOnFirstCharacter(name);
     const userDto = new CreateUserDto(name, email, profilePicture);
 
-    return await this.userService.createUser(userDto, UserCreationMode.GOOGLE);
+    return await this.userService.createUser(userDto);
   }
 
   private setDefaultProfilePictureBasedOnFirstCharacter(

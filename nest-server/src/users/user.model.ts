@@ -14,9 +14,6 @@ export class User extends Document {
   @Prop()
   profilePicture: string;
 
-  @Prop()
-  password?: string;
-
   /**
    * A record of exercises categorized by exercise type.
    * Organizes the user's exercises by category.
