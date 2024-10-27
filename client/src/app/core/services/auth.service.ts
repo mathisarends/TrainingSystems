@@ -66,6 +66,10 @@ export class AuthService {
     return this.isAuthenticatedSignal();
   }
 
+  setAuthenticated(authenticated: boolean): void {
+    this.isAuthenticatedSignal.set(authenticated);
+  }
+
   /**
    * Sets the authentication status of the user.
    * @param authStatus - A boolean indicating the authentication status to set.

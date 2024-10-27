@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { inject, Inject, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 import { HttpService } from '../../core/services/http-client.service';
 import { ModalService } from '../../core/services/modal/modalService';
 import { ToastService } from '../../shared/components/toast/toast.service';
@@ -18,6 +19,7 @@ export abstract class BaisAuthComponent {
   hideRepeatPasswordInput: WritableSignal<boolean> = signal(false);
 
   modalService = inject(ModalService);
+  private authService = inject(AuthService);
 
   constructor(
     protected router: Router,
@@ -48,8 +50,7 @@ export abstract class BaisAuthComponent {
       script.onload = () => {
         google.accounts.id.initialize({
           client_id: '745778541640-0f05iimgfid2tag6rkvilau5nqt69ko0.apps.googleusercontent.com',
-          login_uri: this.oauthRoute,
-          use_fedcm_for_prompt: true,
+          use_fedcm_for_prompt: false,
           callback: (response: any) => this.handleCredentialResponse(response),
         });
         resolve();
@@ -115,6 +116,7 @@ export abstract class BaisAuthComponent {
       })
       .subscribe((response) => {
         this.toastService.success(response.message);
+        this.authService.setAuthenticated(true);
         this.router.navigate(['/'], {
           queryParams: {
             login: true,

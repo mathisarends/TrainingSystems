@@ -2,7 +2,6 @@ import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
-import { AuthService } from '../../../core/services/auth.service';
 import { HttpService } from '../../../core/services/http-client.service';
 import { ToastService } from '../../../shared/components/toast/toast.service';
 import { IconComponent } from '../../../shared/icon/icon.component';
@@ -24,7 +23,6 @@ export class LoginComponent extends BaisAuthComponent implements OnInit {
     router: Router,
     httpClient: HttpService,
     toastService: ToastService,
-    private authService: AuthService,
     private headerService: HeaderService,
     private loginService: LoginService,
     @Inject(DOCUMENT) document: Document,
@@ -54,8 +52,6 @@ export class LoginComponent extends BaisAuthComponent implements OnInit {
       .loginUser(loginDto)
       .pipe(
         tap(() => {
-          this.authService.setAuthenticationStatus(true);
-
           this.router.navigate(['/']);
         }),
       )
