@@ -1,6 +1,6 @@
-import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, DestroyRef, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -64,6 +64,7 @@ import { TrainingPlanDto } from './trainingPlanDto';
   styleUrls: ['./training-view.component.scss'],
 })
 export class TrainingViewComponent implements OnInit {
+  @ViewChild('trainingTable', { static: false }) trainingTable!: ElementRef;
   protected readonly IconName = IconName;
 
   trainingWeekIndex: number = 0;
@@ -75,10 +76,6 @@ export class TrainingViewComponent implements OnInit {
   dataViewLoaded$ = this.dataViewLoaded.asObservable();
 
   private automationContextInitialized = false;
-
-  @ViewChild('trainingTable', { static: false }) trainingTable!: ElementRef;
-
-  isDragMode = signal(false);
 
   constructor(
     private route: ActivatedRoute,
@@ -244,19 +241,10 @@ export class TrainingViewComponent implements OnInit {
               icon: IconName.Activity,
               callback: this.openAutoProgressionModal.bind(this),
             },
-            {
-              label: 'Anordnen',
-              icon: IconName.DRAG,
-              callback: () => this.toggleIsDragMode(),
-            },
           ],
         },
       ],
     });
-  }
-
-  private toggleIsDragMode() {
-    this.isDragMode.set(!this.isDragMode());
   }
 
   private initializeAutoSaveLogic() {
@@ -269,36 +257,5 @@ export class TrainingViewComponent implements OnInit {
           }
         });
       });
-  }
-
-  drop(event: CdkDragDrop<any, any, any>) {
-    // Move the row in the exercises array to its new position
-    moveItemInArray(
-      this.trainingDataService.trainingPlanData.trainingDay.exercises!,
-      event.previousIndex,
-      event.currentIndex,
-    );
-
-    // Track the changes for both the previous and current exercises
-    this.trackExerciseChanges(event.previousIndex);
-    this.trackExerciseChanges(event.currentIndex);
-
-    // Save the tracked changes
-    this.saveTrainingData$().subscribe();
-  }
-
-  /**
-   * Tracks changes for the exercise at the given index.
-   * @param index - The index of the exercise in the array.
-   */
-  trackExerciseChanges(index: number) {
-    const exercise = this.trainingDataService.trainingPlanData.trainingDay.exercises![index];
-    const namePrefix = `day${this.trainingDayIndex}_exercise${index + 1}_`;
-
-    const fields = ['category', 'exercise_name', 'sets', 'reps', 'weight', 'targetRPE', 'actualRPE', 'estMax', 'notes'];
-
-    fields.forEach((field) => {
-      this.formService.addChange(namePrefix + field, (exercise as any)[field]);
-    });
   }
 }

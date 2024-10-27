@@ -51,7 +51,7 @@ export class ProfileService {
    * Uploads a new profile picture for the user.
    */
   uploadProfilePicture(updateProfilePictureDto: UpdateProfilePictureDto): Observable<BasicConfirmationResponse> {
-    return this.httpService.post<any>('profile', updateProfilePictureDto);
+    return this.httpService.post('/profile', updateProfilePictureDto);
   }
 
   /**
