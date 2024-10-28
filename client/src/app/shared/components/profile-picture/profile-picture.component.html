@@ -1,1 +1,7 @@
 <img [src]="profilePicture() || '/images/profile-placeholder.webp'" alt="M" class="h-100 rounded-circle" />
+
+@if (options().length > 0) {
+  <app-icon [name]="IconName.ChevronDown" [size]="15" />
+
+  <app-more-options-list [options]="options()" [(isCollapsed)]="isCollapsed" />
+}

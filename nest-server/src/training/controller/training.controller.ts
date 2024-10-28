@@ -18,7 +18,6 @@ import { TrainingPlanCardViewService } from '../service/training-plan-card-view.
 import { TrainingPlanUtilsService } from '../service/training-plan-utils.service';
 import { TrainingService } from '../training.service';
 
-// TODO: hier in mehere Router splitten
 @Controller('training')
 export class TrainingController {
   constructor(
