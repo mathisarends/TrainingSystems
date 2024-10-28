@@ -22,6 +22,8 @@ export class HeaderService {
 
   buttons = signal<HeadlineButton[]>([]);
 
+  useProfilePictureOptions = signal(false);
+
   /**
    * Signal that represents whether the header is in a loading state.
    */

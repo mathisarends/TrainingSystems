@@ -30,6 +30,7 @@ import { NavigationDirection } from './models/navigation-direction.enum';
 import { EstMaxService } from './services/estmax.service';
 import { TrainingDayLocatorService } from './services/training-day-locator.service';
 import { TrainingPlanDataService } from './services/training-plan-data.service';
+import { TrainingExercisesListComponent } from './training-exercises-list/training-exercises-list.component';
 import { TrainingViewNavigationService } from './training-view-navigation.service';
 import { TrainingViewService } from './training-view-service';
 
@@ -155,6 +156,14 @@ export class TrainingViewComponent implements OnInit {
     });
   }
 
+  private openTrainingExerciseList() {
+    this.modalService.open({
+      component: TrainingExercisesListComponent,
+      title: 'Übungen anordnen',
+      providers: [{ provide: TrainingPlanDataService, useValue: this.trainingDataService }],
+    });
+  }
+
   private setHeadlineInfo(trainingPlanTitle: string) {
     this.headerService.setHeadlineInfo({
       title: trainingPlanTitle,
@@ -167,6 +176,11 @@ export class TrainingViewComponent implements OnInit {
               label: 'Progression',
               icon: IconName.Activity,
               callback: this.openAutoProgressionModal.bind(this),
+            },
+            {
+              label: 'Anordnen',
+              icon: IconName.DRAG,
+              callback: this.openTrainingExerciseList.bind(this),
             },
           ],
         },

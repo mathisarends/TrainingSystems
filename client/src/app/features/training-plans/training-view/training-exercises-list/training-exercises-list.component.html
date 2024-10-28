@@ -1,0 +1,5 @@
+<div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+  @for (exercise of trainingPlanDataService.trainingDay.exercises; track exercise) {
+    <div class="example-box" cdkDrag>{{ exercise.exercise }}</div>
+  }
+</div>
