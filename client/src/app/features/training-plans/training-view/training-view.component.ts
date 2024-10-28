@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, DestroyRef, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
+import cloneDeep from 'lodash/cloneDeep';
 import { forkJoin, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { FormService } from '../../../core/services/form.service';
@@ -156,12 +157,25 @@ export class TrainingViewComponent implements OnInit {
     });
   }
 
-  private openTrainingExerciseList() {
-    this.modalService.open({
+  private async openTrainingExerciseList() {
+    const trainingDayExercises = cloneDeep(this.trainingDataService.trainingDay.exercises);
+
+    const confirmed = await this.modalService.open({
       component: TrainingExercisesListComponent,
       title: 'Übungen anordnen',
-      providers: [{ provide: TrainingPlanDataService, useValue: this.trainingDataService }],
+      providers: [
+        { provide: TrainingPlanDataService, useValue: this.trainingDataService },
+        { provide: FormService, useValue: this.formService },
+        { provide: TrainingDayLocatorService, useValue: this.trainingDayLocatorService },
+      ],
     });
+
+    if (confirmed) {
+      this.saveTrainingData$().subscribe(() => {});
+    } else {
+      this.formService.clearChanges();
+      this.trainingDataService.trainingDay.exercises = trainingDayExercises;
+    }
   }
 
   private setHeadlineInfo(trainingPlanTitle: string) {
