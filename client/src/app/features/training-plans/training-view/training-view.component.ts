@@ -159,6 +159,7 @@ export class TrainingViewComponent implements OnInit {
 
   private async openTrainingExerciseList() {
     const trainingDayExercises = cloneDeep(this.trainingDataService.trainingDay.exercises);
+    console.log('🚀 ~ TrainingViewComponent ~ openTrainingExerciseList ~ trainingDayExercises:', trainingDayExercises);
 
     const confirmed = await this.modalService.open({
       component: TrainingExercisesListComponent,

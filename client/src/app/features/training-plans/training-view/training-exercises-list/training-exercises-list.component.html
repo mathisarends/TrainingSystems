@@ -1,5 +1,5 @@
 <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
-  @for (exercise of this.trainingPlanDataService.trainingDay.exercises; track exercise.reps) {
-    <div class="example-box" cdkDrag>{{ exercise.exercise }}</div>
+  @for (exercise of this.trainingPlanDataService.trainingDay.exercises; track exercise) {
+    <div class="example-box" cdkDrag>{{ exercise.category }} - {{ exercise.exercise }}</div>
   }
 </div>

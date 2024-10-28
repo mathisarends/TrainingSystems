@@ -22,12 +22,9 @@ export class TrainingExercisesListComponent {
   drop(event: CdkDragDrop<any[]>): void {
     const exercises = this.trainingPlanDataService.trainingDay.exercises!;
 
+    console.log('🚀 ~ TrainingExercisesListComponent ~ drop ~ exercises before:', exercises);
     moveItemInArray(exercises, event.previousIndex, event.currentIndex);
-
-    this.trainingPlanDataService.trainingDay = {
-      ...this.trainingPlanDataService.trainingDay,
-      exercises: exercises,
-    };
+    console.log('🚀 ~ TrainingExercisesListComponent ~ drop ~ exercises after:', exercises);
 
     this.trackExerciseChanges(event.previousIndex);
     this.trackExerciseChanges(event.currentIndex);
@@ -50,7 +47,11 @@ export class TrainingExercisesListComponent {
     const fields = ['category', 'exercise_name', 'sets', 'reps', 'weight', 'targetRPE', 'actualRPE', 'estMax', 'notes'];
 
     fields.forEach((field) => {
-      this.formService.addChange(namePrefix + field, (exercise as any)[field]);
+      this.formService.addChange(namePrefix + field, (exercise as any)[this.determineFieldName(field)]);
     });
+  }
+
+  private determineFieldName(fieldName: string): string {
+    return fieldName !== 'exercise_name' ? fieldName : 'exercise';
   }
 }
