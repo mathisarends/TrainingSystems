@@ -1,14 +1,15 @@
 // training-exercises-list.component.ts
-import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, CdkDragPlaceholder, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component } from '@angular/core';
 import { FormService } from '../../../../core/services/form.service';
+import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { TrainingDayLocatorService } from '../services/training-day-locator.service';
 import { TrainingPlanDataService } from '../services/training-plan-data.service';
 
 @Component({
   selector: 'app-training-exercises-list',
   standalone: true,
-  imports: [CdkDropList, CdkDrag],
+  imports: [CdkDropList, CdkDrag, CdkDragPlaceholder, AlertComponent],
   templateUrl: './training-exercises-list.component.html',
   styleUrls: ['./training-exercises-list.component.scss'],
 })
@@ -22,9 +23,7 @@ export class TrainingExercisesListComponent {
   drop(event: CdkDragDrop<any[]>): void {
     const exercises = this.trainingPlanDataService.trainingDay.exercises!;
 
-    console.log('🚀 ~ TrainingExercisesListComponent ~ drop ~ exercises before:', exercises);
     moveItemInArray(exercises, event.previousIndex, event.currentIndex);
-    console.log('🚀 ~ TrainingExercisesListComponent ~ drop ~ exercises after:', exercises);
 
     this.trackExerciseChanges(event.previousIndex);
     this.trackExerciseChanges(event.currentIndex);

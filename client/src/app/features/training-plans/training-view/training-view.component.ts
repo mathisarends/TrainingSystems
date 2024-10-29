@@ -2,8 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, DestroyRef, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import cloneDeep from 'lodash/cloneDeep';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { FormService } from '../../../core/services/form.service';
 import { ModalService } from '../../../core/services/modal/modalService';
@@ -157,13 +156,11 @@ export class TrainingViewComponent implements OnInit {
     });
   }
 
-  private async openTrainingExerciseList() {
-    const trainingDayExercises = cloneDeep(this.trainingDataService.trainingDay.exercises);
-    console.log('🚀 ~ TrainingViewComponent ~ openTrainingExerciseList ~ trainingDayExercises:', trainingDayExercises);
-
-    const confirmed = await this.modalService.open({
+  private openTrainingExerciseList() {
+    this.modalService.open({
       component: TrainingExercisesListComponent,
       title: 'Übungen anordnen',
+      hasFooter: false,
       providers: [
         { provide: TrainingPlanDataService, useValue: this.trainingDataService },
         { provide: FormService, useValue: this.formService },
@@ -171,12 +168,7 @@ export class TrainingViewComponent implements OnInit {
       ],
     });
 
-    if (confirmed) {
-      this.saveTrainingData$().subscribe(() => {});
-    } else {
-      this.formService.clearChanges();
-      this.trainingDataService.trainingDay.exercises = trainingDayExercises;
-    }
+    this.saveTrainingData$().subscribe(() => {});
   }
 
   private setHeadlineInfo(trainingPlanTitle: string) {
@@ -216,6 +208,11 @@ export class TrainingViewComponent implements OnInit {
    * Prevents default form submission, collects changed data, and submits the training plan.
    */
   private saveTrainingData$(): Observable<void> {
+    const changes = this.formService.getChanges();
+    if (!changes) {
+      return of();
+    }
+
     return this.trainingViewService
       .submitTrainingPlan(
         this.planId(),
