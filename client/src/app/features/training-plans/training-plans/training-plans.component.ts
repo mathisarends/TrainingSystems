@@ -60,17 +60,12 @@ export class TrainingPlansComponent implements OnInit {
   isSearchbarCollapsed = signal<boolean>(true);
 
   /**
-   * Toggling drag mode for training plans.
-   */
-  isDragMode = signal(false);
-
-  /**
    * Signal indicating whether the data is still loading.
    */
   isLoading = signal(true);
 
   constructor(
-    private trainingPlanService: TrainingPlanService,
+    protected trainingPlanService: TrainingPlanService,
     private modalService: ModalService,
     private headerService: HeaderService,
     private keyboardService: KeyboardService,
@@ -136,24 +131,19 @@ export class TrainingPlansComponent implements OnInit {
    */
   private setHeaderInfo(): void {
     const options = [
+      { icon: IconName.PLUS, label: 'Erstellen', callback: this.createNewPlan.bind(this) },
+      {
+        icon: IconName.Activity,
+        label: 'Session',
+        callback: () => {},
+      },
       { icon: IconName.SEARCH, label: 'Suchen', callback: this.toggleSearchBarVisibility.bind(this) },
-      { icon: IconName.DRAG, label: 'Anordnen', callback: this.toggleDragMode.bind(this) },
     ];
 
     this.headerService.setHeadlineInfo({
       title: 'Training',
-      buttons: [
-        { icon: IconName.PLUS, callback: this.createNewPlan.bind(this) },
-        { icon: IconName.MORE_VERTICAL, options },
-      ],
+      buttons: [{ icon: IconName.MORE_VERTICAL, options }],
     });
-  }
-
-  /**
-   * Toggles the mode in which training plan cards may be dragged
-   */
-  private toggleDragMode(): void {
-    this.isDragMode.set(!this.isDragMode());
   }
 
   /**
@@ -176,7 +166,7 @@ export class TrainingPlansComponent implements OnInit {
     effect(
       () => {
         const searchQuery = this.trainingPlanSearchQuery().toLowerCase();
-        const allPlans = this.trainingPlanService.getTrainingPlans();
+        const allPlans = this.trainingPlanService.trainingPlans();
 
         if (!allPlans) return;
 

@@ -13,7 +13,7 @@ export class TrainingPlanService {
 
   trainingPlansChanged$ = this.trainingPlansChangedSubject.asObservable();
 
-  private trainingPlans = signal<TrainingPlanCardView[]>([]);
+  trainingPlans = signal<TrainingPlanCardView[]>([]);
 
   constructor(private httpService: HttpService) {}
 
@@ -51,14 +51,5 @@ export class TrainingPlanService {
       map(([trainingPlans, trainingSessions]) => [...trainingPlans, ...trainingSessions]),
       tap((combinedResults) => this.trainingPlans.set(combinedResults)),
     );
-  }
-
-  /**
-   * Gets the current training plans from the signal.
-   * Can be used for filtering and other local operations without making additional HTTP requests.
-   * @returns The current value of the training plans.
-   */
-  getTrainingPlans(): TrainingPlanCardView[] {
-    return this.trainingPlans();
   }
 }

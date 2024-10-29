@@ -90,8 +90,8 @@ export class ProfileComponent2 implements OnInit {
     this.activityCalendarData$ = this.profileService.getActivityCalendarData();
   }
 
-  protected async onListItemClicked(listItem: IconListItem) {
-    if (listItem.label === 'Ticket') {
+  protected async onListItemClicked(label: string) {
+    if (label === 'Ticket') {
       this.modalService.open({
         component: GymTicketComponent,
         title: 'Gym Ticket',
@@ -107,13 +107,13 @@ export class ProfileComponent2 implements OnInit {
           image: ticket ?? 'noGymTicketAvailable',
         });
       });
-    } else if (listItem.label === 'Exercises') {
+    } else if (label === 'Exercises') {
       this.router.navigate(['profile/exercises']);
-    } else if (listItem.label === 'Account löschen') {
+    } else if (label === 'Account löschen') {
       this.showDeleteAccountDialog();
-    } else if (listItem.label === 'Progression') {
+    } else if (label === 'Progression') {
       this.router.navigate(['profile/progression']);
-    } else if (listItem.label === 'Social') {
+    } else if (label === 'Social') {
       this.modalService.open({
         component: FriendModalComponent,
         title: 'Test',
@@ -121,7 +121,7 @@ export class ProfileComponent2 implements OnInit {
       });
     } else {
       this.modalService.openBasicInfoModal({
-        title: listItem.label,
+        title: label,
         buttonText: 'Schließen',
         infoText: 'Leider noch nicht implementiert. Komm später wieder',
       });

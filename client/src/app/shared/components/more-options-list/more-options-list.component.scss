@@ -14,8 +14,8 @@
   }
 
   &.bottom {
-    top: 3rem;
-    right: 3%;
+    top: 3.5rem;
+    right: 6.5rem;
   }
 
   &.left {
@@ -49,6 +49,15 @@ ul {
 
     &:last-child {
       border-bottom: none;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  :host {
+    &.bottom {
+      right: 0.7rem;
+      top: 3rem;
     }
   }
 }

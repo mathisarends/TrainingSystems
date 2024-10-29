@@ -11,6 +11,7 @@ import { HeadlineComponent } from '../../../shared/components/headline/headline.
 import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
 import { InputComponent } from '../../../shared/components/input/input.component';
 import { SkeletonTrainingTableComponent } from '../../../shared/components/loader/skeleton-training-table/skeleton-training-table.component';
+import { MoreOptionListItem } from '../../../shared/components/more-options-button/more-option-list-item';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
 import { InteractiveElementDirective } from '../../../shared/directives/interactive-element.directive';
@@ -177,21 +178,32 @@ export class TrainingViewComponent implements OnInit {
       buttons: [
         {
           icon: IconName.MORE_VERTICAL,
-          options: [
-            {
-              label: 'Progression',
-              icon: IconName.Activity,
-              callback: this.openAutoProgressionModal.bind(this),
-            },
-            {
-              label: 'Anordnen',
-              icon: IconName.DRAG,
-              callback: this.openTrainingExerciseList.bind(this),
-            },
-          ],
+          options: this.determineHeadlineOptions(),
         },
       ],
     });
+  }
+
+  private determineHeadlineOptions(): MoreOptionListItem[] {
+    const moreOptionsList: MoreOptionListItem[] = [];
+
+    if (this.trainingWeekIndex() === 0) {
+      moreOptionsList.push({
+        label: 'Progression',
+        icon: IconName.Activity,
+        callback: this.openAutoProgressionModal.bind(this),
+      });
+    }
+
+    if (this.trainingDataService.trainingDay.exercises?.length) {
+      moreOptionsList.push({
+        label: 'Anordnen',
+        icon: IconName.DRAG,
+        callback: this.openTrainingExerciseList.bind(this),
+      });
+    }
+
+    return moreOptionsList;
   }
 
   private initializeAutoSaveLogic() {

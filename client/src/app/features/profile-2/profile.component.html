@@ -13,7 +13,12 @@
 
       <div class="list-item-container">
         @for (item of listItems; track item) {
-          <app-icon-list-item [item]="item" (itemClicked)="onListItemClicked($any($event))" />
+          <app-icon-list-item
+            [label]="item.label"
+            [iconName]="item.iconName"
+            [iconBackgroundColor]="item.iconBackgroundColor"
+            (itemClicked)="onListItemClicked($any($event))"
+          />
         }
       </div>
     </div>
