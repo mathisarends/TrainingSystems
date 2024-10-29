@@ -7,6 +7,8 @@ import { ModalSize } from '../../../core/services/modal/modalSize';
 import { toggleCollapseAnimation } from '../../../shared/animations/toggle-collapse';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
 import { CircularIconButtonComponent } from '../../../shared/components/circular-icon-button/circular-icon-button.component';
+import { IconBackgroundColor } from '../../../shared/components/icon-list-item/icon-background-color';
+import { IconListeItemComponent } from '../../../shared/components/icon-list-item/icon-list-item.component';
 import { SkeletonCardComponent } from '../../../shared/components/loader/skeleton-card/skeleton-card.component';
 import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
@@ -34,6 +36,7 @@ import { TrainingPlanService } from '../training-view/services/training-plan.ser
     SearchBarComponent,
     DragDropModule,
     SpinnerComponent,
+    IconListeItemComponent,
   ],
   templateUrl: './training-plans.component.html',
   styleUrls: ['./training-plans.component.scss'],
@@ -42,7 +45,9 @@ import { TrainingPlanService } from '../training-view/services/training-plan.ser
 })
 export class TrainingPlansComponent implements OnInit {
   @ViewChild(SearchBarComponent) searchBar!: SearchBarComponent;
+
   protected readonly IconName = IconName;
+  protected readonly IconBackgroundColor = IconBackgroundColor;
 
   /**
    * Holds the filtered training plans to display.
@@ -114,7 +119,7 @@ export class TrainingPlansComponent implements OnInit {
   /**
    * Opens the modal to create a new training plan.
    */
-  private createNewPlan(): void {
+  protected createNewPlan(): void {
     this.modalService.open({
       component: CreateTrainingComponent,
       title: 'Trainingsplan erstellen',

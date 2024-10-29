@@ -4,7 +4,25 @@
 <div class="row">
   @if (!isLoading()) {
     @if (trainingPlanService.trainingPlans().length === 0) {
-      <app-alert alertText="Du hast noch keine Trainingspläne erstellt" />
+      <app-alert
+        [alertText]="
+          'Du hast noch keine Trainingspläne erstellt! Starte jetzt, indem du entweder eine individuelle Session für gezieltes Training erstellst, oder einen umfassenden Trainingsplan, der dir hilft, deine langfristigen Ziele zu erreichen.'
+        "
+        [alertType]="'light'"
+      />
+      <div class="empty-training-list-container">
+        <app-icon-list-item
+          [label]="'Trainingsplan erstellen'"
+          [iconName]="IconName.CALENDAR"
+          [iconBackgroundColor]="IconBackgroundColor.MediumSlateBlue"
+          (click)="createNewPlan()"
+        />
+        <app-icon-list-item
+          [label]="'Session erstellen'"
+          [iconName]="IconName.Activity"
+          [iconBackgroundColor]="IconBackgroundColor.DodgerBlue"
+        />
+      </div>
     } @else if (filteredTrainingPlans().length === 0) {
       <app-alert alertText="Keine deiner bestehenden Trainingpläne passen zu dieser Suchanfrage!" />
     }
