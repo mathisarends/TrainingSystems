@@ -17,9 +17,10 @@ import { KeyboardService } from '../../../shared/service/keyboard.service';
 import { HeaderService } from '../../header/header.service';
 import { TrainingSessionService } from '../../training-session/training-session-service';
 import { TrainingPlanCardComponent } from '../training-plan-card/training-plan-card.component';
-import { CreateTrainingComponent } from '../training-view/create-training/create-training.component';
 import { TrainingPlanCardView } from '../training-view/models/exercise/training-plan-card-view-dto';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
+import { CreateSessionComponent } from './create-session/create-session.component';
+import { CreateTrainingComponent } from './create-training/create-training.component';
 
 /**
  * Component to manage and display training plans.
@@ -124,9 +125,15 @@ export class TrainingPlansComponent implements OnInit {
       component: CreateTrainingComponent,
       title: 'Trainingsplan erstellen',
       buttonText: 'Erstellen',
-      secondaryButtonText: 'Session Erstellen',
       size: ModalSize.LARGE,
-      confirmationRequired: true,
+    });
+  }
+
+  protected createNewSession(): void {
+    this.modalService.open({
+      component: CreateSessionComponent,
+      title: 'Trainingsession erstellen',
+      size: ModalSize.LARGE,
     });
   }
 
@@ -140,7 +147,7 @@ export class TrainingPlansComponent implements OnInit {
       {
         icon: IconName.Activity,
         label: 'Session',
-        callback: () => {},
+        callback: this.createNewSession.bind(this),
       },
       { icon: IconName.SEARCH, label: 'Suchen', callback: this.toggleSearchBarVisibility.bind(this) },
     ];

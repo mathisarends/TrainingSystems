@@ -1,11 +1,16 @@
 @if (trainingDayNotifications$ | async; as trainingDayNotifications) {
   @if (trainingDayNotifications.length === 0) {
-    <app-alert [alertText]="'Hier werden später deine absolvierten Trainings angezeigt'" />
+    <app-alert
+      [alertText]="
+        'Sobald du deine ersten Trainings absolviert hast, werden sie hier angezeigt! Deine Fortschritte werden automatisch dokumentiert und du erhältst hier eine umfassende Übersicht über deine Leistungen.'
+      "
+      [alertType]="'light'"
+    />
   } @else {
     <app-search-bar [(searchQuery)]="searchQuery" />
 
     @if (filteredTrainingNotifications().length === 0) {
-      <app-alert [alertText]="'Es passen keine Trainings zu deiner aktuellen Suchanfrage'" />
+      <app-alert [alertText]="'Es passen keine Trainings zu deiner aktuellen Suchanfrage'" [alertType]="'light'" />
     } @else {
       <div class="grid">
         @for (notification of filteredTrainingNotifications(); track notification.id) {

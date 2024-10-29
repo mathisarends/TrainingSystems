@@ -1,0 +1,16 @@
+<app-training-banner [(imageSrc)]="trainingPlanEditView.coverImageBase64" />
+
+<div class="input-group">
+  <app-floating-label-input [label]="'Titel'" [(value)]="trainingPlanEditView.title" [required]="true" />
+
+  <app-floating-label-input
+    [label]="'Gewichtsempfehlungen'"
+    [(value)]="trainingPlanEditView.weightRecommendationBase"
+    [required]="true"
+    type="select"
+    [options]="[
+      { value: 'lastWeek', label: 'basierend auf letzter Woche' },
+      { value: 'off', label: 'keine Gewichtsempfehlungen' },
+    ]"
+  />
+</div>
