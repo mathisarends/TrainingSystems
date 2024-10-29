@@ -160,7 +160,6 @@ export class TrainingViewComponent implements OnInit {
     this.modalService.open({
       component: TrainingExercisesListComponent,
       title: 'Übungen anordnen',
-      hasFooter: false,
       providers: [
         { provide: TrainingPlanDataService, useValue: this.trainingDataService },
         { provide: FormService, useValue: this.formService },
