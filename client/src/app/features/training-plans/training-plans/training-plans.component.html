@@ -23,6 +23,12 @@
           [iconBackgroundColor]="IconBackgroundColor.DodgerBlue"
           (click)="createNewSession()"
         />
+        <app-icon-list-item
+          [label]="'Trainingsplan vs Session'"
+          [iconName]="IconName.INFO"
+          [iconBackgroundColor]="IconBackgroundColor.LimeGreen"
+          (click)="openTrainingTypeExplanation()"
+        />
       </div>
     } @else if (filteredTrainingPlans().length === 0) {
       <app-alert alertText="Keine deiner bestehenden Trainingpläne passen zu dieser Suchanfrage!" />

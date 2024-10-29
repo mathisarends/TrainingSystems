@@ -137,6 +137,15 @@ export class TrainingPlansComponent implements OnInit {
     });
   }
 
+  protected openTrainingTypeExplanation(): void {
+    this.modalService.openBasicInfoModal({
+      title: 'Plan vs Session',
+      buttonText: 'Verstanden',
+      infoText:
+        'Ein Trainingsplan ist ideal, wenn du langfristig deine Fitnessziele erreichen möchtest. Er basiert auf dem Prinzip der Blockperiodisierung und verteilt dein Training über mehrere Wochen mit zunehmendem Volumen und steigender Intensität. So kannst du systematisch Fortschritte erzielen und die Belastung kontinuierlich steigern. \n\nEine Session hingegen ist eine einzelne, wiederholbare Trainingseinheit, die unabhängig oder als Teil eines Plans genutzt werden kann. Sie eignet sich perfekt für gezielte Einheiten, die du nach Belieben in dein Training integrieren kannst. Ob Plan oder Session – die Wahl hängt ganz von deinem Trainingsstil und deinen Zielen ab!',
+    });
+  }
+
   /**
    * Sets up the header information, including buttons and options.
    * The header contains controls for creating new plans and toggling the search bar.
