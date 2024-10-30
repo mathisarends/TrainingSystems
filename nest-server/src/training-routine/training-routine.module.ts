@@ -1,5 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ExerciseService } from 'src/exercise/exercise.service';
+import { UsersModule } from 'src/users/users.module';
+import { UsersService } from 'src/users/users.service';
 import {
   TrainingRoutine,
   TrainingRoutineSchema,
@@ -12,8 +15,9 @@ import { TrainingRoutineService } from './training-routine.service';
     MongooseModule.forFeature([
       { name: TrainingRoutine.name, schema: TrainingRoutineSchema },
     ]),
+    UsersModule,
   ],
   controllers: [TrainingRoutineController],
-  providers: [TrainingRoutineService],
+  providers: [TrainingRoutineService, UsersService, ExerciseService],
 })
 export class TrainingRoutineModule {}

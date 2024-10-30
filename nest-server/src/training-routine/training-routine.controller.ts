@@ -13,14 +13,16 @@ import { CreateTrainingRoutineDto } from './dto/create-training-routine.dto';
 import { EditTrainingRoutineDto } from './dto/edit-training-routine.dto';
 import { TrainingRoutineService } from './training-routine.service';
 
-@Controller('training-session')
+@Controller('training-routine')
 export class TrainingRoutineController {
   constructor(
     private readonly trainingRoutineService: TrainingRoutineService,
   ) {}
 
   @Get('/')
-  getTrainingSessionCardViews(@GetUser() userId: string) {}
+  async getTrainingSessionCardViews(@GetUser() userId: string) {
+    return await this.trainingRoutineService.geTrainingRoutineCardViews(userId);
+  }
 
   @Get('/title/:id')
   getTrainingSessionTitleById(
