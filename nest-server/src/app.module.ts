@@ -14,9 +14,9 @@ import { RequestLoggerMiddleware } from './middleware/logger-middleware';
 import { PushNotificationsModule } from './push-notifications/push-notifications.module';
 import { TrainingLogModule } from './training-log/training-log.module';
 import { TrainingModule } from './training/training.module';
-import { UsersModule } from './users/users.module';
-import { TrainingSessionModule } from './training-session/training-session.module';
 import { UserExerciseRecordModule } from './user-exercise-record/user-exercise-record.module';
+import { UsersModule } from './users/users.module';
+import { TrainingRoutineModule } from './training-routine/training-routine.module';
 
 @Module({
   imports: [
@@ -35,8 +35,8 @@ import { UserExerciseRecordModule } from './user-exercise-record/user-exercise-r
     ActivityCalendarModule,
     FriendshipModule,
     FriendshipModule,
-    TrainingSessionModule,
     UserExerciseRecordModule,
+    TrainingRoutineModule,
   ],
   controllers: [AppController],
   providers: [

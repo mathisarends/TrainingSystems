@@ -16,9 +16,11 @@ import { CircularIconButtonComponent } from '../circular-icon-button/circular-ic
 })
 export class TrainingBannerComponent implements OnInit {
   protected readonly IconName = IconName;
+  protected readonly placeHolderImage = '/images/training/training_banner_1.webp';
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
-  imageSrc = model('/images/training/training_banner_1.webp');
+  imageSrc = model.required<string>();
+
   isImageSrcBase64 = computed(() => {
     return this.pictureService.isBase64Image(this.imageSrc());
   });

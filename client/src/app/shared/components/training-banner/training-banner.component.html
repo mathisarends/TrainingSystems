@@ -8,7 +8,7 @@
     output="base64"
   />
 } @else {
-  <img [src]="imageSrc()" alt="Cover Placeholder" id="cover-image" />
+  <img [src]="imageSrc() || placeHolderImage" alt="Cover Placeholder" id="cover-image" />
 }
 
 <div class="button-container">
