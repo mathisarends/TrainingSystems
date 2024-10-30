@@ -4,22 +4,28 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Put,
-  Res,
+  Req,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Request } from 'express';
 import { GetUser } from 'src/decorators/user.decorator';
+import { FingerprintService } from 'src/push-notifications/fingerprint.service';
+import { ApiData } from 'src/types/api-data';
 import { CreateTrainingRoutineDto } from './dto/create-training-routine.dto';
 import { EditTrainingRoutineDto } from './dto/edit-training-routine.dto';
 import { TrainingRoutineCardViewDto } from './model/training.-routine-card-view';
+import { TrainingRoutineViewService } from './training-routine-view.service';
 import { TrainingRoutineService } from './training-routine.service';
 
 @Controller('training-routine')
 export class TrainingRoutineController {
   constructor(
     private readonly trainingRoutineService: TrainingRoutineService,
+    private readonly trainingRoutineViewService: TrainingRoutineViewService,
+    private readonly fingerprintService: FingerprintService,
   ) {}
 
   @Get('/')
@@ -33,15 +39,13 @@ export class TrainingRoutineController {
   async getTrainingSessionTitleById(
     @GetUser() userId: string,
     @Param('id') trainingRoutineId: string,
-    @Res() res: Response,
   ) {
     const trainingRoutine =
       await this.trainingRoutineService.getTrainingRoutineByUserAndRoutineId(
         userId,
         trainingRoutineId,
       );
-    const title = trainingRoutine.title;
-    return { title };
+    return { title: trainingRoutine.title };
   }
 
   @Get('/:id')
@@ -90,26 +94,59 @@ export class TrainingRoutineController {
   }
 
   @Post('/start/:id')
-  startTrainingSession(@GetUser() userId: string, @Param('id') id: string) {}
+  async startTrainingSession(
+    @GetUser() userId: string,
+    @Param('id') trainingRoutineId: string,
+  ) {
+    return await this.trainingRoutineViewService.startTrainingRoutine(
+      userId,
+      trainingRoutineId,
+    );
+  }
 
   @Get('/:id/latest-version')
-  getLatestVersionOfSession(
+  async getLatestVersionOfSession(
     @GetUser() userId: string,
-    @Param('id') id: string,
-  ) {}
+    @Param('id') trainingRoutineId: string,
+  ) {
+    const trainingRoutine =
+      await this.trainingRoutineViewService.findTrainingRoutineOrFail(
+        userId,
+        trainingRoutineId,
+      );
+
+    return { version: trainingRoutine.versions.length };
+  }
 
   @Get('/:id/:version')
-  getTrainingSessionByVersion(
+  async getTrainingSessionByVersion(
     @GetUser() userId: string,
-    @Param('id') id: string,
-    @Param('version') version: number,
-  ) {}
+    @Param('id') trainingRoutineId: string,
+    @Param('version', ParseIntPipe) version: number,
+  ) {
+    return await this.trainingRoutineViewService.getTrainingSessionByVersion(
+      userId,
+      trainingRoutineId,
+      version,
+    );
+  }
 
   @Patch('/:id/:version')
-  updateTrainingSessionVersion(
+  async updateTrainingSessionVersion(
     @GetUser() userId: string,
-    @Param('id') id: string,
-    @Param('version') version: number,
-    @Body() updateSessionDto: EditTrainingRoutineDto,
-  ) {}
+    @Param('id') trainingRoutineId: string,
+    @Param('version', ParseIntPipe) versionNumber: number,
+    @Req() req: Request,
+    @Body() requestBody: ApiData,
+  ) {
+    const fingerprint = this.fingerprintService.generateFingerprint(req);
+
+    return await this.trainingRoutineViewService.updateTrainingSessionVersion(
+      userId,
+      trainingRoutineId,
+      versionNumber,
+      requestBody,
+      fingerprint,
+    );
+  }
 }

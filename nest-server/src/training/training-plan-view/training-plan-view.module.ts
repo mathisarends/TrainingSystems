@@ -18,5 +18,6 @@ import { TrainingSessionTracker } from './training-session-tracker.service';
     TrainingSessionTracker,
     TrainingSessionManagerService,
   ],
+  exports: [TrainingSessionManagerService, TrainingSessionTracker],
 })
 export class TrainingPlanViewModule {}
