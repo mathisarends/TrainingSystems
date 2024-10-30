@@ -7,10 +7,13 @@ import {
   Patch,
   Post,
   Put,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { GetUser } from 'src/decorators/user.decorator';
 import { CreateTrainingRoutineDto } from './dto/create-training-routine.dto';
 import { EditTrainingRoutineDto } from './dto/edit-training-routine.dto';
+import { TrainingRoutineCardViewDto } from './model/training.-routine-card-view';
 import { TrainingRoutineService } from './training-routine.service';
 
 @Controller('training-routine')
@@ -20,24 +23,48 @@ export class TrainingRoutineController {
   ) {}
 
   @Get('/')
-  async getTrainingSessionCardViews(@GetUser() userId: string) {
+  async getTrainingSessionCardViews(
+    @GetUser() userId: string,
+  ): Promise<TrainingRoutineCardViewDto[]> {
     return await this.trainingRoutineService.geTrainingRoutineCardViews(userId);
   }
 
   @Get('/title/:id')
-  getTrainingSessionTitleById(
+  async getTrainingSessionTitleById(
     @GetUser() userId: string,
-    @Param('id') id: string,
-  ) {}
+    @Param('id') trainingRoutineId: string,
+    @Res() res: Response,
+  ) {
+    const trainingRoutine =
+      await this.trainingRoutineService.getTrainingRoutineByUserAndRoutineId(
+        userId,
+        trainingRoutineId,
+      );
+    const title = trainingRoutine.title;
+    return { title };
+  }
 
   @Get('/:id')
-  getTrainingSessionById(@GetUser() userId: string, @Param('id') id: string) {}
+  async getTrainingSessionById(
+    @GetUser() userId: string,
+    @Param('id') trainingRoutineId: string,
+  ) {
+    return await this.trainingRoutineService.getTrainingRoutineByUserAndRoutineId(
+      userId,
+      trainingRoutineId,
+    );
+  }
 
   @Post('/create')
-  createTrainingSession(
+  async createTrainingSession(
     @GetUser() userId: string,
     @Body() createTrainingRoutineDto: CreateTrainingRoutineDto,
-  ) {}
+  ) {
+    return await this.trainingRoutineService.createTrainingRoutine(
+      userId,
+      createTrainingRoutineDto,
+    );
+  }
 
   @Put('/edit/:id')
   editTrainingSession(

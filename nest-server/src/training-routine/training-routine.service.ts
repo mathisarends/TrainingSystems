@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UsersService } from 'src/users/users.service';
+import { CreateTrainingRoutineDto } from './dto/create-training-routine.dto';
 import { TrainingRoutine } from './model/training-routine.model';
 import { TrainingRoutineCardViewDto } from './model/training.-routine-card-view';
 
@@ -13,8 +14,10 @@ export class TrainingRoutineService {
     private readonly userService: UsersService,
   ) {}
 
-  async geTrainingRoutineCardViews(userId: string) {
-    const trainingRoutines = await this.getTrainingRoutinesForUser(userId);
+  async geTrainingRoutineCardViews(
+    userId: string,
+  ): Promise<TrainingRoutineCardViewDto[]> {
+    const trainingRoutines = await this.trainingRoutineModel.find({ userId });
     const userProfilePicture = (await this.userService.getUserById(userId))
       .profilePicture;
 
@@ -32,9 +35,34 @@ export class TrainingRoutineService {
     return trainingSessionCardViewDto;
   }
 
-  private async getTrainingRoutinesForUser(
+  async getTrainingRoutineByUserAndRoutineId(
     userId: string,
-  ): Promise<TrainingRoutine[]> {
-    return await this.trainingRoutineModel.find({ userId });
+    trainingRoutineId: string,
+  ) {
+    return await this.trainingRoutineModel.findOne({
+      userId: userId,
+      _id: trainingRoutineId,
+    });
+  }
+
+  async createTrainingRoutine(
+    userId: string,
+    createTrainingRoutineDto: CreateTrainingRoutineDto,
+  ) {
+    const newTrainingRoutine = new this.trainingRoutineModel({
+      userId: userId,
+      title: createTrainingRoutineDto.title,
+      lastUpdated: new Date(),
+      weightRecommandationBase:
+        createTrainingRoutineDto.weightRecommandationBase,
+      coverImageBase64: createTrainingRoutineDto.coverImageBase64 ?? '',
+      versions: [
+        {
+          exercises: [],
+        },
+      ],
+    });
+
+    return await newTrainingRoutine.save();
   }
 }

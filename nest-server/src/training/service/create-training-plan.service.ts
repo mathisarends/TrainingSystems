@@ -30,10 +30,6 @@ export class CreateTrainingPlanService {
       trainingWeeks: trainingWeeksPlaceholder,
       coverImageBase64: createTrainingPlanDto.coverImageBase64,
     });
-    console.log(
-      '🚀 ~ CreateTrainingPlanService ~ newTrainingPlan:',
-      newTrainingPlan,
-    );
 
     return await newTrainingPlan.save();
   }
