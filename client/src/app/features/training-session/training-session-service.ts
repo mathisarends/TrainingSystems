@@ -21,7 +21,7 @@ export class TrainingSessionService {
    * Retrieves a specific training session by ID.
    */
   getTrainingSessionById(id: string): Observable<TrainingSessionDto> {
-    return this.httpService.get(`/training-session/${id}`);
+    return this.httpService.get(`/training-routine/${id}`);
   }
 
   /**
@@ -37,7 +37,7 @@ export class TrainingSessionService {
   createNewTrainingSession(
     trainingSessionMetaDataDto: TrainingSessionMetaDataDto,
   ): Observable<BasicConfirmationResponse> {
-    return this.httpService.post('/training-session/create', trainingSessionMetaDataDto);
+    return this.httpService.post('/training-routine', trainingSessionMetaDataDto);
   }
 
   /**
@@ -47,32 +47,32 @@ export class TrainingSessionService {
     id: string,
     trainingSessionEditDto: TrainingSessionMetaDataDto,
   ): Observable<BasicConfirmationResponse> {
-    return this.httpService.put(`/training-session/edit/${id}`, trainingSessionEditDto);
+    return this.httpService.put(`/training-routine/edit/${id}`, trainingSessionEditDto);
   }
 
   /**
    * Deletes a specific training session by ID.
    */
   deleteTrainingSession(id: string): Observable<BasicConfirmationResponse> {
-    return this.httpService.delete(`/training-session/${id}`);
+    return this.httpService.delete(`/training-routine/${id}`);
   }
 
   getLatestVersionOfSession(id: string): Observable<number> {
-    return this.httpService.get(`/training-session/${id}/latest-version`);
+    return this.httpService.get(`/training-routine/${id}/latest-version`);
   }
 
   /**
    * Starts a new training session by its ID.
    */
   startNewTrainingSession(id: string): Observable<StartTrainingVersionDto> {
-    return this.httpService.post(`/training-session/start/${id}`);
+    return this.httpService.post(`/training-routine/start/${id}`);
   }
 
   /**
    * Retrieves a specific version of a training session by ID and version number.
    */
   getTrainingSessionVersionData(id: string, version: number): Observable<TrainingDay> {
-    return this.httpService.get(`/training-session/${id}/${version}`);
+    return this.httpService.get(`/training-routine/${id}/${version}`);
   }
 
   /**
@@ -83,6 +83,6 @@ export class TrainingSessionService {
     version: number,
     data: Record<string, string>,
   ): Observable<BasicConfirmationResponse> {
-    return this.httpService.patch(`/training-session/${id}/${version}`, data);
+    return this.httpService.patch(`/training-routine/${id}/${version}`, data);
   }
 }

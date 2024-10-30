@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FloatingLabelInputComponent } from '../../../../shared/components/floating-label-input/floating-label-input.component';
 import { ToDropDownOptionsPipe } from '../../../../shared/components/floating-label-input/to-dropdown-options.pipe';
+import { OnConfirm } from '../../../../shared/components/modal/on-confirm';
 import { ToastService } from '../../../../shared/components/toast/toast.service';
 import { TrainingBannerComponent } from '../../../../shared/components/training-banner/training-banner.component';
 import { ImageUploadService } from '../../../../shared/service/image-upload.service';
@@ -18,7 +19,7 @@ import { TrainingPlanService } from '../../training-view/services/training-plan.
   styleUrls: ['./create-session.component.scss'],
   providers: [TrainingSessionService],
 })
-export class CreateSessionComponent implements OnInit {
+export class CreateSessionComponent implements OnInit, OnConfirm {
   /**
    * The training plan object that contains the form fields using Angular signals.
    */
@@ -35,7 +36,7 @@ export class CreateSessionComponent implements OnInit {
     this.trainingPlanEditView = TrainingPlanEditView.fromDto();
   }
 
-  confirmSession() {
+  onConfirm(): void {
     if (!this.trainingPlanEditView.title()) {
       return;
     }

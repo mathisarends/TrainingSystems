@@ -49,7 +49,7 @@ import { TrainingSessionService } from '../training-session-service';
   selector: 'app-session-view',
   templateUrl: './session-view.component.html',
   styleUrls: ['./session-view.component.scss'],
-  providers: [TrainingSessionService, EstMaxService],
+  providers: [TrainingSessionService, ExerciseDataService, EstMaxService],
 })
 export class SessionViewComponent implements OnInit {
   @ViewChild('trainingTable') trainingTable!: ElementRef;

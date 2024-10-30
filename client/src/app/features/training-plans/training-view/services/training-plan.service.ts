@@ -44,7 +44,7 @@ export class TrainingPlanService {
    */
   loadAndCacheTrainingPlans(): Observable<(TrainingPlanCardView | TrainingSessionCardViewDto)[]> {
     const trainingPlans$: Observable<TrainingPlanCardView[]> = this.httpService.get('/training');
-    const trainingSessions$: Observable<TrainingSessionCardViewDto[]> = this.httpService.get('/training-session');
+    const trainingSessions$: Observable<TrainingSessionCardViewDto[]> = this.httpService.get('/training-routine');
     catchError(() => of<TrainingSessionCardViewDto[]>([]));
 
     return forkJoin([trainingPlans$, trainingSessions$]).pipe(

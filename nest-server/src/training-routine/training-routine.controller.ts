@@ -59,7 +59,7 @@ export class TrainingRoutineController {
     );
   }
 
-  @Post('/create')
+  @Post()
   async createTrainingSession(
     @GetUser() userId: string,
     @Body() createTrainingRoutineDto: CreateTrainingRoutineDto,

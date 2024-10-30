@@ -65,11 +65,6 @@ export class TrainingRoutineService {
       weightRecommandationBase:
         createTrainingRoutineDto.weightRecommandationBase,
       coverImageBase64: createTrainingRoutineDto.coverImageBase64 ?? '',
-      versions: [
-        {
-          exercises: [],
-        },
-      ],
     });
 
     return await newTrainingRoutine.save();
