@@ -67,14 +67,27 @@ export class TrainingRoutineController {
   }
 
   @Put('/edit/:id')
-  editTrainingSession(
+  async editTrainingSession(
     @GetUser() userId: string,
     @Param('id') id: string,
     @Body() editTrainingRoutineDto: EditTrainingRoutineDto,
-  ) {}
+  ) {
+    return await this.trainingRoutineService.editTrainingRoutine(
+      userId,
+      editTrainingRoutineDto,
+    );
+  }
 
   @Delete('/:id')
-  deleteTrainingSession(@GetUser() userId: string, @Param('id') id: string) {}
+  async deleteTrainingSession(
+    @GetUser() userId: string,
+    @Param('id') trainingRoutineId: string,
+  ) {
+    return this.trainingRoutineService.deleteTrainingRoutineById(
+      userId,
+      trainingRoutineId,
+    );
+  }
 
   @Post('/start/:id')
   startTrainingSession(@GetUser() userId: string, @Param('id') id: string) {}

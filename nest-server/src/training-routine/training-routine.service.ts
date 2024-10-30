@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UsersService } from 'src/users/users.service';
 import { CreateTrainingRoutineDto } from './dto/create-training-routine.dto';
+import { EditTrainingRoutineDto } from './dto/edit-training-routine.dto';
 import { TrainingRoutine } from './model/training-routine.model';
 import { TrainingRoutineCardViewDto } from './model/training.-routine-card-view';
 
@@ -39,10 +40,18 @@ export class TrainingRoutineService {
     userId: string,
     trainingRoutineId: string,
   ) {
-    return await this.trainingRoutineModel.findOne({
+    const trainingRoutine = await this.trainingRoutineModel.findOne({
       userId: userId,
       _id: trainingRoutineId,
     });
+
+    if (!trainingRoutine) {
+      throw new NotFoundException(
+        `Training Routine for userId ${userId} and training routine ${trainingRoutineId} was not found`,
+      );
+    }
+
+    return trainingRoutine;
   }
 
   async createTrainingRoutine(
@@ -64,5 +73,37 @@ export class TrainingRoutineService {
     });
 
     return await newTrainingRoutine.save();
+  }
+
+  async editTrainingRoutine(
+    userId: string,
+    editTrainingRoutineDto: EditTrainingRoutineDto,
+  ) {
+    const trainingRoutine = await this.trainingRoutineModel.findOne({
+      userId: userId,
+      _id: editTrainingRoutineDto.id,
+    });
+
+    if (!trainingRoutine) {
+      throw new NotFoundException(
+        `Training Routine for userId ${userId} and training routine ${editTrainingRoutineDto.id} was not found`,
+      );
+    }
+
+    Object.assign(trainingRoutine, editTrainingRoutineDto);
+    return await trainingRoutine.save();
+  }
+
+  async deleteTrainingRoutineById(userId: string, trainingRoutineId: string) {
+    const deleteResult = await this.trainingRoutineModel.deleteOne({
+      userId: userId,
+      _id: trainingRoutineId,
+    });
+
+    if (deleteResult.deletedCount === 0) {
+      throw new NotFoundException(
+        `Training Routine for userId ${userId} and training routine ${trainingRoutineId} was not found`,
+      );
+    }
   }
 }

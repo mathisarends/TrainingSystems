@@ -7,6 +7,7 @@ import trainingSessionStatisticsRouter from './trainingSessionStatisticsRouter.j
 
 const trainingSessionRouter = express.Router();
 
+// TODO: diesen router hier habe ich fast vergessen
 trainingSessionRouter.use('/statistics', trainingSessionStatisticsRouter);
 
 /**
