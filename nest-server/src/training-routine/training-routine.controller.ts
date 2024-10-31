@@ -115,7 +115,7 @@ export class TrainingRoutineController {
         trainingRoutineId,
       );
 
-    return { version: trainingRoutine.versions.length };
+    return trainingRoutine.versions.length;
   }
 
   @Get('/:id/:version')

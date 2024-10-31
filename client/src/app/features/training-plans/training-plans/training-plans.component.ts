@@ -13,6 +13,7 @@ import { IconListeItemComponent } from '../../../shared/components/icon-list-ite
 import { SkeletonCardComponent } from '../../../shared/components/loader/skeleton-card/skeleton-card.component';
 import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
+import { ToastService } from '../../../shared/components/toast/toast.service';
 import { IconName } from '../../../shared/icon/icon-name';
 import { KeyboardService } from '../../../shared/service/keyboard.service';
 import { HeaderService } from '../../header/header.service';
@@ -78,6 +79,7 @@ export class TrainingPlansComponent implements OnInit {
     private keyboardService: KeyboardService,
     private injector: Injector,
     private destroyRef: DestroyRef,
+    private toastService: ToastService,
   ) {}
 
   /**
@@ -99,11 +101,17 @@ export class TrainingPlansComponent implements OnInit {
   }
 
   protected startConfetti() {
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 },
-    });
+    setTimeout(() => {
+      confetti({
+        particleCount: 200,
+        spread: 70,
+        origin: { y: 0.9 },
+      });
+    }, 125);
+
+    this.toastService.success('New PR');
+
+    new Audio('./audio/new_pr.mp3').play();
   }
 
   /**
