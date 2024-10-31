@@ -29,6 +29,7 @@ import { WeightInputDirective } from './directives/weight-input.directive';
 import { ExerciseDataService } from './exercise-data.service';
 import { NavigationDirection } from './models/navigation-direction.enum';
 import { EstMaxService } from './services/estmax.service';
+import { PersonalRecordNotificationService } from './services/personal-record-notification.service';
 import { TrainingDayLocatorService } from './services/training-day-locator.service';
 import { TrainingPlanDataService } from './services/training-plan-data.service';
 import { TrainingExercisesListComponent } from './training-exercises-list/training-exercises-list.component';
@@ -67,6 +68,7 @@ import { TrainingViewService } from './training-view-service';
     EstMaxService,
     ExerciseDataService,
     TrainingDayLocatorService,
+    PersonalRecordNotificationService,
   ],
   templateUrl: './training-view.component.html',
   styleUrls: ['./training-view.component.scss'],

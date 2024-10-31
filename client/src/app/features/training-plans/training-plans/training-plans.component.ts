@@ -2,7 +2,6 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, effect, Injector, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import confetti from 'canvas-confetti';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { ModalSize } from '../../../core/services/modal/modalSize';
 import { toggleCollapseAnimation } from '../../../shared/animations/toggle-collapse';
@@ -98,20 +97,6 @@ export class TrainingPlansComponent implements OnInit {
     this.setupKeyBoardEventListeners();
 
     this.setupFilterLogic();
-  }
-
-  protected startConfetti() {
-    setTimeout(() => {
-      confetti({
-        particleCount: 200,
-        spread: 70,
-        origin: { y: 0.9 },
-      });
-    }, 125);
-
-    this.toastService.success('New PR');
-
-    new Audio('./audio/new_pr.mp3').play();
   }
 
   /**

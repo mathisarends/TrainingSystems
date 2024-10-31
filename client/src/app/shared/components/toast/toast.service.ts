@@ -9,25 +9,21 @@ export class ToastService {
   private toast!: Toast | null;
 
   success(infoText: string) {
-    const toast: Toast = {
+    this.toast = {
       status: ToastStatus.SUCCESS,
       title: 'Erfolg',
       text: infoText,
     };
 
-    this.toast = toast;
-
     setTimeout(() => this.remove(), 5000);
   }
 
   error(infoText: string) {
-    const toast: Toast = {
+    this.toast = {
       status: ToastStatus.ERROR,
       title: 'Fehler',
       text: infoText,
     };
-
-    this.toast = toast;
 
     setTimeout(() => this.remove(), 10000);
   }
