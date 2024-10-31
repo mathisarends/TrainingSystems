@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, DestroyRef, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { forkJoin, Observable, of } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { FormService } from '../../../core/services/form.service';
 import { ModalService } from '../../../core/services/modal/modalService';
@@ -32,6 +32,7 @@ import { EstMaxService } from './services/estmax.service';
 import { PersonalRecordNotificationService } from './services/personal-record-notification.service';
 import { TrainingDayLocatorService } from './services/training-day-locator.service';
 import { TrainingPlanDataService } from './services/training-plan-data.service';
+import { Exercise } from './training-exercise';
 import { TrainingExercisesListComponent } from './training-exercises-list/training-exercises-list.component';
 import { TrainingViewNavigationService } from './training-view-navigation.service';
 import { TrainingViewService } from './training-view-service';
@@ -222,9 +223,8 @@ export class TrainingViewComponent implements OnInit {
    */
   private saveTrainingData$(): Observable<void> {
     const changes = this.formService.getChanges();
-    if (!changes) {
-      return of();
-    }
+
+    const exercise = this.determineExericseBasedOnFieldName(this.formService.getChanges());
 
     return this.trainingViewService
       .submitTrainingPlan(
@@ -238,6 +238,20 @@ export class TrainingViewComponent implements OnInit {
           this.formService.clearChanges();
         }),
       );
+  }
+
+  private determineExericseBasedOnFieldName(changes: { [key: string]: any }): Exercise | undefined {
+    for (const fieldName of Object.keys(changes)) {
+      const exerciseNumber = parseInt(fieldName.charAt(13));
+
+      if (!this.trainingDataService.trainingDay.exercises) {
+        return undefined;
+      }
+
+      return this.trainingDataService.trainingDay.exercises[exerciseNumber - 1];
+    }
+
+    return undefined;
   }
 
   private getSubtitle(): string {

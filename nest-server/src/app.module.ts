@@ -13,10 +13,10 @@ import { GymTicketModule } from './gym-ticket/gym-ticket.module';
 import { RequestLoggerMiddleware } from './middleware/logger-middleware';
 import { PushNotificationsModule } from './push-notifications/push-notifications.module';
 import { TrainingLogModule } from './training-log/training-log.module';
+import { TrainingRoutineModule } from './training-routine/training-routine.module';
 import { TrainingModule } from './training/training.module';
 import { UserExerciseRecordModule } from './user-exercise-record/user-exercise-record.module';
 import { UsersModule } from './users/users.module';
-import { TrainingRoutineModule } from './training-routine/training-routine.module';
 
 @Module({
   imports: [
