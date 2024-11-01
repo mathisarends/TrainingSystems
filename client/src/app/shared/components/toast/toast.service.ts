@@ -30,7 +30,7 @@ export class ToastService {
       status: ToastStatus.ACHIEVEMENT,
       title: 'Achievement',
       text: infoText,
-    }, 7500);
+    }, 5000);
   }
 
   private showToast(toast: Toast, duration: number) {
@@ -42,7 +42,7 @@ export class ToastService {
 
   remove(): void {
     this.isActive = false;
-    setTimeout(() => (this.toast = null), 500); // Warte, bis die Ausblendanimation abgeschlossen ist
+    setTimeout(() => (this.toast = null), 500); 
   }
 
   get currentToast(): Toast | null {

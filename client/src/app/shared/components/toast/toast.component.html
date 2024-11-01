@@ -6,9 +6,9 @@
       @if (toast.status === ToastStatus.ERROR) {
         <app-icon [name]="IconName.AlertTriangle" />
       } @else if (toast.status === ToastStatus.ACHIEVEMENT) {
-        <app-icon [name]="IconName.AWARD" [color]="'#90caf9'" />
+        <app-icon [name]="IconName.AWARD" [color]="'#FFD700 '" />
       } @else  {
-        <app-icon [name]="IconName.INFO" [color]="'#FFD700 '" />
+        <app-icon [name]="IconName.INFO" [color]="'#90caf9'" />
       }
       <span class="info">{{ toast.text }}</span>
     </div>
