@@ -33,12 +33,13 @@ export class EstMaxService {
 
       const exercise = this.userBestPerformanceService.determineExerciseBasedOnFieldName(estMaxInput.name);
 
-      if (exercise && this.userBestPerformanceService.isNewBestPerformance(exercise)) {
+      if (exercise && this.userBestPerformanceService.isNewBestPerformance(exercise.category, estMax)) {
         this.userBestPerformanceService.makeNewBestPerformanceEntry(exercise);
       }
     
 
       this.formService.addChange(estMaxInput.name, estMaxInput.value);
+      const changes = this.formService.getChanges();
 
       const nextExerciseCategory = weightInput
         .closest('tr')

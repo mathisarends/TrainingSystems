@@ -17,14 +17,14 @@ export class UserBestPerformanceService {
   ) {
     const records = await this.userBestPerformanceModel.find({ userId: userId }).exec();
 
-    const recordsMap = new Map<string, UserBestPerformance[]>();
+    const recordsMap = new Map<string, UserBestPerformance>();
 
     Object.values(ExerciseCategoryType).forEach((category) => {
-      const categoryRecords = records.filter(
+      const categoryRecord = records.find(
         (record) => record.category === category,
       );
-      if (categoryRecords.length > 0) {
-        recordsMap.set(category, categoryRecords);
+      if (categoryRecord) {
+        recordsMap.set(category, categoryRecord);
       }
     });
 

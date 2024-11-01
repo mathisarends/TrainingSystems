@@ -27,18 +27,14 @@ export class UserBestPerformanceService {
     return this.trainingPlanDataService.trainingDay()!.exercises[exerciseNumber - 1];
   }
 
-  isNewBestPerformance(exercise: Exercise): boolean {
-    const existingEntry = this.userBestPerformanceMap.get(exercise.category);
-    console.log("🚀 ~ UserBestPerformanceService ~ isNewBestPerformance ~ existingEntry:", existingEntry)
+  isNewBestPerformance(exerciseCategory: string, newEstMax: number): boolean {
+    const existingEntry = this.userBestPerformanceMap.get(exerciseCategory);
 
     if (!existingEntry) {
       return true;
     }
 
-    console.log("🚀 ~ UserBestPerformanceService ~ isNewBestPerformance ~ exercise:", exercise)
-
-    if (exercise.estMax > existingEntry.estMax) {
-      console.log("aber shcon hier?")
+    if (newEstMax > existingEntry.estMax) {
       return true;
     }
 

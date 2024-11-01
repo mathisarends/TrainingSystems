@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, input, model } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RepInputDirective } from '../../../features/training-plans/training-view/directives/rep-input.directive';
 import { RpeInputDirective } from '../../../features/training-plans/training-view/directives/rpe-input.directive';
 import { WeightInputDirective } from '../../../features/training-plans/training-view/directives/weight-input.directive';
@@ -8,7 +9,7 @@ import { InteractiveElementDirective } from '../../directives/interactive-elemen
 @Component({
   selector: 'app-input',
   standalone: true,
-  imports: [CommonModule, InteractiveElementDirective, WeightInputDirective, RpeInputDirective, RepInputDirective],
+  imports: [CommonModule, InteractiveElementDirective, WeightInputDirective, RpeInputDirective, RepInputDirective, FormsModule],
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss',
 })

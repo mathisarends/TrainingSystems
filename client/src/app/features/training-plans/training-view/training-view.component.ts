@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, DestroyRef, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -60,6 +61,7 @@ import { TrainingViewService } from './training-view-service';
     TooltipDirective,
     SpinnerComponent,
     SwipeDirective,
+    FormsModule
   ],
   providers: [
     TrainingViewService,
@@ -222,6 +224,7 @@ export class TrainingViewComponent implements OnInit {
    */
   private saveTrainingData$(): Observable<void> {
     const changes = this.formService.getChanges();
+    console.log("🚀 ~ TrainingViewComponent ~ changes:", changes)
 
 
     return this.trainingViewService

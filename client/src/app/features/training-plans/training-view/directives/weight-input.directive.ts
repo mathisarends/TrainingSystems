@@ -41,10 +41,12 @@ export class WeightInputDirective extends AbstractDoubleClickDirective implement
       const roundedWeight = this.getRoundedAverageWithStep(2.5);
       this.inputElement.value = roundedWeight.toString();
     }
+
     this.formService.addChange(this.inputElement.name, this.inputElement.value);
-    this.autoSaveService.save();
 
     this.estMaxService.calculateMaxAfterInputChange(event.target as HTMLInputElement);
     this.pauseTimeService.startPauseTimer(pauseTime, exerciseName);
+
+    this.autoSaveService.save();
   }
 }
