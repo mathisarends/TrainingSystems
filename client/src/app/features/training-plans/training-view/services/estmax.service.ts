@@ -35,7 +35,6 @@ export class EstMaxService {
 
       if (exercise && this.userBestPerformanceService.isNewBestPerformance(exercise)) {
         this.userBestPerformanceService.makeNewBestPerformanceEntry(exercise);
-      this.userBestPerformanceService.startConfetti();
       }
     
 

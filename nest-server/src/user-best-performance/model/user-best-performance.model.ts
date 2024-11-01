@@ -66,21 +66,24 @@ export const UserBestPerformanceSchema =
  * the current performance details. This keeps the history concise and always
  * up to date, allowing for easy restoration of previous states.
  */
-UserBestPerformanceSchema.pre('save', function (next) {
-  const record = this as UserBestPerformance;
+UserBestPerformanceSchema.pre('findOneAndUpdate', function (next) {
+  const update = this.getUpdate() as UserBestPerformance;
 
-  if (record.previousRecords.length >= 2) {
-    record.previousRecords.shift();
+  if (update.previousRecords && update.previousRecords.length >= 2) {
+    update.previousRecords.shift();
   }
 
-  record.previousRecords.push({
-    sets: record.sets,
-    reps: record.reps,
-    weight: record.weight,
-    actualRPE: record.actualRPE,
-    estMax: record.estMax,
-    achievedAt: record.achievedAt,
-  });
+  if (update.sets && update.reps && update.weight && update.actualRPE && update.estMax) {
+    update.previousRecords = update.previousRecords || [];
+    update.previousRecords.push({
+      sets: update.sets,
+      reps: update.reps,
+      weight: update.weight,
+      actualRPE: update.actualRPE,
+      estMax: update.estMax,
+      achievedAt: update.achievedAt || new Date(),
+    });
+  }
 
   next();
 });

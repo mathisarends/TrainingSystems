@@ -5,6 +5,6 @@ export interface TrainingPlanDto {
   title: string;
   trainingFrequency: number;
   trainingBlockLength: number;
-  trainingDay: Partial<TrainingDay>;
+  trainingDay: TrainingDay;
   weightRecommandations: string[];
 }

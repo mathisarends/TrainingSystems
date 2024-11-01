@@ -2,12 +2,13 @@ import { Injectable, signal, WritableSignal } from '@angular/core';
 import { TrainingDay } from '../training-day';
 import { TrainingPlanDto } from '../trainingPlanDto';
 
+// TODO: hier alles public machen
 @Injectable()
 export class TrainingPlanDataService {
   private _title: WritableSignal<string> = signal('');
   private _trainingFrequency: WritableSignal<number> = signal(0);
   private _trainingBlockLength: WritableSignal<number> = signal(0);
-  private _trainingDay: WritableSignal<Partial<TrainingDay>> = signal({});
+  trainingDay: WritableSignal<TrainingDay | undefined> = signal(undefined);
   private _weightRecommendations: WritableSignal<string[]> = signal([]);
 
   /**
@@ -18,7 +19,7 @@ export class TrainingPlanDataService {
     this.title = dto.title;
     this.trainingFrequency = dto.trainingFrequency;
     this.trainingBlockLength = dto.trainingBlockLength;
-    this.trainingDay = dto.trainingDay;
+    this.trainingDay.set(dto.trainingDay);
     this.weightRecommendations = dto.weightRecommandations;
   }
 
@@ -46,13 +47,6 @@ export class TrainingPlanDataService {
     this._trainingBlockLength.set(value);
   }
 
-  get trainingDay(): Partial<TrainingDay> {
-    return this._trainingDay();
-  }
-
-  set trainingDay(value: Partial<TrainingDay>) {
-    this._trainingDay.set(value);
-  }
 
   get weightRecommendations(): string[] {
     return this._weightRecommendations();

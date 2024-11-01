@@ -15,7 +15,6 @@ export class UserBestPerformanceService {
   async getExerciseRecordsByUserId(
     userId: string,
   ) {
-
     const records = await this.userBestPerformanceModel.find({ userId: userId }).exec();
 
     const recordsMap = new Map<string, UserBestPerformance[]>();

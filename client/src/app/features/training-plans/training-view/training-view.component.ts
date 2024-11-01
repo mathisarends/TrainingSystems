@@ -32,7 +32,6 @@ import { NavigationDirection } from './models/navigation-direction.enum';
 import { EstMaxService } from './services/estmax.service';
 import { TrainingDayLocatorService } from './services/training-day-locator.service';
 import { TrainingPlanDataService } from './services/training-plan-data.service';
-import { Exercise } from './training-exercise';
 import { TrainingExercisesListComponent } from './training-exercises-list/training-exercises-list.component';
 import { TrainingViewNavigationService } from './training-view-navigation.service';
 import { TrainingViewService } from './training-view-service';
@@ -198,7 +197,7 @@ export class TrainingViewComponent implements OnInit {
       });
     }
 
-    if (this.trainingDataService.trainingDay.exercises?.length) {
+    if (this.trainingDataService.trainingDay()?.exercises.length) {
       moreOptionsList.push({
         label: 'Anordnen',
         icon: IconName.DRAG,
@@ -224,12 +223,7 @@ export class TrainingViewComponent implements OnInit {
   private saveTrainingData$(): Observable<void> {
     const changes = this.formService.getChanges();
 
-    /* const exercise = this.determineExericseBasedOnFieldName(this.formService.getChanges());
 
-    if (!exercise) {
-      throw new Error('No exercise found');
-    }
- */
     return this.trainingViewService
       .submitTrainingPlan(this.planId(), this.trainingWeekIndex(), this.trainingDayIndex(), changes)
       .pipe(
@@ -239,21 +233,7 @@ export class TrainingViewComponent implements OnInit {
       );
   }
 
-  private determineExericseBasedOnFieldName(changes: { [key: string]: any }): Exercise | undefined {
-    for (const fieldName of Object.keys(changes)) {
-      const exerciseNumber = parseInt(fieldName.charAt(13));
 
-      if (!this.trainingDataService.trainingDay.exercises) {
-        return undefined;
-      }
-
-      // Der Training Service hier muss noch vorher auf die neuen Werte aus den changes hier geupdated werden damit hier überhaupt ein diff entsteht TODO:
-      // Oder noch besser eigentlich two way binding verwenden
-      return this.trainingDataService.trainingDay.exercises[exerciseNumber - 1];
-    }
-
-    return undefined;
-  }
 
   private getSubtitle(): string {
     return `W${this.trainingWeekIndex() + 1}D${this.trainingDayIndex() + 1}`;

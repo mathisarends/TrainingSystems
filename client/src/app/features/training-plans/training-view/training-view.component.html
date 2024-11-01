@@ -25,7 +25,7 @@
       <tbody>
         @for (k of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; track k; let i = $index) {
           @let exercise =
-            trainingDataService.trainingDay.exercises![i] || {
+            trainingDataService.trainingDay()!.exercises[i] || {
               category: '',
               exercise: '',
               sets: '',
@@ -83,8 +83,10 @@
                 [type]="'tel'"
                 [name]="namePrefix + 'weight'"
                 [directiveUsed]="'weightInputDirective'"
-                [value]="exercise.weight || ''"
+                [(value)]="exercise.weight"
               />
+
+   
             </td>
             <td data-cell="RPE">
               <app-input
@@ -109,7 +111,7 @@
                 class="estMax"
                 [type]="'number'"
                 [name]="namePrefix + 'estMax'"
-                [(value)]="exercise.estMax"
+                [value]="exercise.estMax"
                 [ngClass]="{ 'opacity-0': exercise.estMax === undefined || exercise.estMax === 0 }"
               />
             </td>
