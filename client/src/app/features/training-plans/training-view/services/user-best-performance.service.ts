@@ -3,7 +3,7 @@ import confetti from 'canvas-confetti';
 import { ToastService } from '../../../../shared/components/toast/toast.service';
 
 @Injectable()
-export class PersonalRecordNotificationService {
+export class UserBestPerformanceService {
   constructor(private toastService: ToastService) {}
 
   startConfetti() {

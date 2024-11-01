@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormService } from '../../../../core/services/form.service';
 import { ExerciseTableRowService } from './exercise-table-row.service';
-import { PersonalRecordNotificationService } from './personal-record-notification.service';
+import { UserBestPerformanceService } from './user-best-performance.service';
 
 @Injectable()
 export class EstMaxService {
@@ -10,7 +10,7 @@ export class EstMaxService {
   constructor(
     private formService: FormService,
     private exerciseTableRowService: ExerciseTableRowService,
-    private personalRecordNotificationService: PersonalRecordNotificationService,
+    private userBestPerformanceService: UserBestPerformanceService,
   ) {}
 
   calculateMaxAfterInputChange(inputElement: HTMLInputElement) {
@@ -31,7 +31,7 @@ export class EstMaxService {
       const estMax = this.calcEstMax(weight, reps, rpe);
       estMaxInput.value = estMax.toString();
 
-      this.personalRecordNotificationService.startConfetti();
+      this.userBestPerformanceService.startConfetti();
 
       this.formService.addChange(estMaxInput.name, estMaxInput.value);
 

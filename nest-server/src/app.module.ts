@@ -15,7 +15,7 @@ import { PushNotificationsModule } from './push-notifications/push-notifications
 import { TrainingLogModule } from './training-log/training-log.module';
 import { TrainingRoutineModule } from './training-routine/training-routine.module';
 import { TrainingModule } from './training/training.module';
-import { UserExerciseRecordModule } from './user-exercise-record/user-exercise-record.module';
+import { UserExerciseRecordModule } from './user-best-performance/user-best-performance.module';
 import { UsersModule } from './users/users.module';
 
 @Module({

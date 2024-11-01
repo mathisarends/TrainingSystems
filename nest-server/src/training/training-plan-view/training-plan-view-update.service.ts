@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { ApiData } from 'src/types/api-data';
-import { UserExerciseRecordService } from 'src/user-exercise-record/user-exercise-record.service';
 import { Exercise, ExerciseDto } from '../model/exercise.schema';
 import { TrainingDay } from '../model/training-day.schema';
 import { TrainingPlan } from '../model/training-plan.model';
@@ -14,7 +13,6 @@ export class TrainingPlanViewUpdateService {
     private readonly trainingService: TrainingService,
     private readonly trainingPlanViewValidationService: TrainingPlanViewValidationService,
     private readonly trainingSessionManagerService: TrainingSessionManagerService,
-    private readonly userExerciseRecordService: UserExerciseRecordService,
   ) {}
 
   async updateTrainingDataForTrainingDay(
@@ -67,7 +65,6 @@ export class TrainingPlanViewUpdateService {
       }
     }
 
-    await this.checkAndHandleNewPR(updatedData, trainingDay, userId);
   }
 
   private updateTrainingDay(
@@ -118,57 +115,8 @@ export class TrainingPlanViewUpdateService {
     }
   }
 
-  async checkAndHandleNewPR(
-    requestBody: ApiData,
-    trainingDay: TrainingDay,
-    userId: string,
-  ): Promise<void> {
-    const exercise = this.extractExerciseFromRequest(requestBody, trainingDay);
-    console.log('🚀 ~ TrainingPlanViewUpdateService ~ exercise:', exercise);
-    if (!exercise) {
-      return;
-    }
 
-    await this.evaluateAndSaveNewPR(userId, exercise);
-  }
 
-  private extractExerciseFromRequest(
-    requestBody: ApiData,
-    trainingDay: TrainingDay,
-  ): Exercise | null {
-    for (const fieldName of Object.keys(requestBody)) {
-      console.log('🚀 ~ TrainingPlanViewUpdateService ~ fieldName:', fieldName);
-      if (this.isEstMax(fieldName)) {
-        const exerciseNumber = Number(fieldName.charAt(13));
-        return trainingDay.exercises[exerciseNumber - 1];
-      }
-    }
-    return null;
-  }
-
-  private async evaluateAndSaveNewPR(
-    userId: string,
-    exercise: Exercise,
-  ): Promise<void> {
-    const previousRecord =
-      await this.userExerciseRecordService.getRecordByUserAndExercise(
-        userId,
-        exercise.exercise,
-      );
-
-    if (previousRecord.estMax >= exercise.estMax) {
-      return;
-    }
-
-    await this.userExerciseRecordService.saveUserRecordByExercise(
-      exercise,
-      userId,
-    );
-
-    if (previousRecord.previousRecords.length > 1) {
-      console.log('show nots hier');
-    }
-  }
 
   // DELETE this incomprehensive logic. API in frontend does not exist anymore.
   private isDeletedExercise(

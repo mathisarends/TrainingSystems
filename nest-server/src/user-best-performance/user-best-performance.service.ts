@@ -3,10 +3,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { ExerciseCategoryType } from 'src/exercise/types/exercise-category-type.enum';
 import { Exercise } from 'src/training/model/exercise.schema';
-import { UserExerciseRecord } from './model/user-exercise-record.model';
+import { UserExerciseRecord } from './model/user-best-performance.model';
 
 @Injectable()
-export class UserExerciseRecordService {
+export class UserBestPerformanceService {
   constructor(
     @InjectModel(UserExerciseRecord.name)
     private userExerciseRecordModel: Model<UserExerciseRecord>,
