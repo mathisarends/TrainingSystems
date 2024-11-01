@@ -9,6 +9,7 @@ import { TrainingPlanViewController } from './training-plan-view.controller';
 import { TrainingPlanViewService } from './training-plan-view.service';
 import { TrainingSessionManagerService } from './training-session-manager.service';
 import { TrainingSessionTracker } from './training-session-tracker.service';
+import { TrainingPlanViewUpdateService2 } from './training-view-update-2.service';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { TrainingSessionTracker } from './training-session-tracker.service';
     TrainingSessionTracker,
     TrainingSessionManagerService,
     UserExerciseRecordService,
+    TrainingPlanViewUpdateService2,
   ],
   exports: [TrainingSessionManagerService, TrainingSessionTracker],
 })

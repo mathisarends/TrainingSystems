@@ -224,15 +224,14 @@ export class TrainingViewComponent implements OnInit {
   private saveTrainingData$(): Observable<void> {
     const changes = this.formService.getChanges();
 
-    const exercise = this.determineExericseBasedOnFieldName(this.formService.getChanges());
+    /* const exercise = this.determineExericseBasedOnFieldName(this.formService.getChanges());
 
+    if (!exercise) {
+      throw new Error('No exercise found');
+    }
+ */
     return this.trainingViewService
-      .submitTrainingPlan(
-        this.planId(),
-        this.trainingWeekIndex(),
-        this.trainingDayIndex(),
-        this.formService.getChanges(),
-      )
+      .submitTrainingPlan(this.planId(), this.trainingWeekIndex(), this.trainingDayIndex(), changes)
       .pipe(
         tap(() => {
           this.formService.clearChanges();
@@ -248,6 +247,8 @@ export class TrainingViewComponent implements OnInit {
         return undefined;
       }
 
+      // Der Training Service hier muss noch vorher auf die neuen Werte aus den changes hier geupdated werden damit hier überhaupt ein diff entsteht TODO:
+      // Oder noch besser eigentlich two way binding verwenden
       return this.trainingDataService.trainingDay.exercises[exerciseNumber - 1];
     }
 

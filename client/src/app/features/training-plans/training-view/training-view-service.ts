@@ -2,6 +2,7 @@ import { Injectable, signal, WritableSignal } from '@angular/core';
 import { Observable, of, tap } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { ExerciseDataDTO } from './exerciseDataDto';
+import { Exercise } from './training-exercise';
 import { TrainingPlanDto } from './trainingPlanDto';
 
 /**
@@ -39,5 +40,12 @@ export class TrainingViewService {
    */
   submitTrainingPlan(planId: string, week: number, day: number, changedData: Record<string, string>): Observable<void> {
     return this.httpService.patch(`/training-plan-view/${planId}/${week}/${day}`, changedData);
+  }
+
+  /**
+   * Submits changes to the training plan for a specific plan ID, week, and day.
+   */
+  submitTrainingPlan2(planId: string, week: number, day: number, exercise: Exercise): Observable<void> {
+    return this.httpService.patch(`/training-plan-view/${planId}/${week}/${day}/2`, { exercise });
   }
 }
