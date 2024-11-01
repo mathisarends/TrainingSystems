@@ -3,7 +3,7 @@ import { Document, Types } from 'mongoose';
 import { ExerciseCategoryType } from 'src/exercise/types/exercise-category-type.enum';
 
 @Schema()
-export class UserExerciseRecord extends Document {
+export class UserBestPerformance extends Document {
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   userId: Types.ObjectId;
 
@@ -55,8 +55,8 @@ export class UserExerciseRecord extends Document {
   }[];
 }
 
-export const UserExerciseRecordSchema =
-  SchemaFactory.createForClass(UserExerciseRecord);
+export const UserBestPerformanceSchema =
+  SchemaFactory.createForClass(UserBestPerformance);
 
 /**
  * Middleware to manage the `previousRecords` history.
@@ -66,8 +66,8 @@ export const UserExerciseRecordSchema =
  * the current performance details. This keeps the history concise and always
  * up to date, allowing for easy restoration of previous states.
  */
-UserExerciseRecordSchema.pre('save', function (next) {
-  const record = this as UserExerciseRecord;
+UserBestPerformanceSchema.pre('save', function (next) {
+  const record = this as UserBestPerformance;
 
   if (record.previousRecords.length >= 2) {
     record.previousRecords.shift();
@@ -85,7 +85,7 @@ UserExerciseRecordSchema.pre('save', function (next) {
   next();
 });
 
-UserExerciseRecordSchema.index(
+UserBestPerformanceSchema.index(
   { userId: 1, exerciseName: 1 },
   { unique: true },
 );

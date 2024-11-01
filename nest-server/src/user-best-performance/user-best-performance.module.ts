@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import {
-  UserExerciseRecord,
-  UserExerciseRecordSchema,
+  UserBestPerformance,
+  UserBestPerformanceSchema
 } from './model/user-best-performance.model';
 import { UserBestPerformanceController } from './user-best-performance.controller';
 import { UserBestPerformanceService } from './user-best-performance.service';
@@ -10,7 +10,7 @@ import { UserBestPerformanceService } from './user-best-performance.service';
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: UserExerciseRecord.name, schema: UserExerciseRecordSchema },
+      { name: UserBestPerformance.name, schema: UserBestPerformanceSchema },
     ]),
   ],
   controllers: [UserBestPerformanceController],

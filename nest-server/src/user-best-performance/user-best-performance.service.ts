@@ -1,23 +1,24 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { ExerciseCategoryType } from 'src/exercise/types/exercise-category-type.enum';
 import { Exercise } from 'src/training/model/exercise.schema';
-import { UserExerciseRecord } from './model/user-best-performance.model';
+import { UserBestPerformance } from './model/user-best-performance.model';
 
 @Injectable()
 export class UserBestPerformanceService {
   constructor(
-    @InjectModel(UserExerciseRecord.name)
-    private userExerciseRecordModel: Model<UserExerciseRecord>,
+    @InjectModel(UserBestPerformance.name)
+    private userBestPerformanceModel: Model<UserBestPerformance>,
   ) {}
 
   async getExerciseRecordsByUserId(
     userId: string,
-  ): Promise<Map<string, UserExerciseRecord[]>> {
-    const records = await this.userExerciseRecordModel.find({ userId }).exec();
+  ) {
 
-    const recordsMap = new Map<string, UserExerciseRecord[]>();
+    const records = await this.userBestPerformanceModel.find({ userId: userId }).exec();
+
+    const recordsMap = new Map<string, UserBestPerformance[]>();
 
     Object.values(ExerciseCategoryType).forEach((category) => {
       const categoryRecords = records.filter(
@@ -28,7 +29,8 @@ export class UserBestPerformanceService {
       }
     });
 
-    return recordsMap;
+
+    return  Object.fromEntries(recordsMap);
   }
 
   /**
@@ -37,9 +39,9 @@ export class UserBestPerformanceService {
   async createOrUpdateRecord(
     userId: string,
     exerciseName: string,
-    recordData: Partial<UserExerciseRecord>,
-  ): Promise<UserExerciseRecord> {
-    return this.userExerciseRecordModel
+    recordData: UserBestPerformance,
+  ): Promise<UserBestPerformance> {
+    return this.userBestPerformanceModel
       .findOneAndUpdate(
         { userId, exerciseName },
         { ...recordData, userId, exerciseName },
@@ -54,8 +56,8 @@ export class UserBestPerformanceService {
   async getRecordByUserAndExercise(
     userId: string,
     exerciseName: string,
-  ): Promise<UserExerciseRecord> {
-    const exerciseRecord = await this.userExerciseRecordModel
+  ): Promise<UserBestPerformance> {
+    const exerciseRecord = await this.userBestPerformanceModel
       .findOne({ userId, exerciseName })
       .exec();
 
@@ -72,16 +74,15 @@ export class UserBestPerformanceService {
    * Saves a new user exercise record or updates an existing one.
    */
   async saveUserRecordByExercise(
-    exercise: Exercise,
     userId: string,
-  ): Promise<void> {
-    const userObjectId = new Types.ObjectId(userId);
+    exercise: Exercise,
+  ): Promise<UserBestPerformance> {
 
-    await this.userExerciseRecordModel
+    return await this.userBestPerformanceModel
       .findOneAndUpdate(
-        { userId: userObjectId, exerciseName: exercise.exercise },
+        { userId: userId, exerciseName: exercise.exercise },
         {
-          userId: userObjectId,
+          userId: userId,
           category: exercise.category as ExerciseCategoryType,
           exerciseName: exercise.exercise,
           sets: exercise.sets,

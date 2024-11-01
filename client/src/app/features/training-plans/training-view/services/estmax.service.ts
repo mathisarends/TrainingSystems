@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormService } from '../../../../core/services/form.service';
+import { UserBestPerformanceService } from '../../../../shared/service/user-best-performance/user-best-performance.service';
 import { ExerciseTableRowService } from './exercise-table-row.service';
-import { UserBestPerformanceService } from './user-best-performance.service';
 
 @Injectable()
 export class EstMaxService {
@@ -31,7 +31,13 @@ export class EstMaxService {
       const estMax = this.calcEstMax(weight, reps, rpe);
       estMaxInput.value = estMax.toString();
 
+      const exercise = this.userBestPerformanceService.determineExerciseBasedOnFieldName(estMaxInput.name);
+
+      if (exercise && this.userBestPerformanceService.isNewBestPerformance(exercise)) {
+        this.userBestPerformanceService.makeNewBestPerformanceEntry(exercise);
       this.userBestPerformanceService.startConfetti();
+      }
+    
 
       this.formService.addChange(estMaxInput.name, estMaxInput.value);
 
