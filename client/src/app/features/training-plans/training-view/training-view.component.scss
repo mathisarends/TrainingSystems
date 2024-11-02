@@ -1,28 +1,9 @@
-.training-table tr td input[type='number'] {
+table tr td input[type='number'] {
   text-align: center;
 }
 
 .notes {
   min-width: 90px;
-}
-
-.cdk-drag-preview {
-  border: 2px dashed grey;
-}
-
-tr {
-  position: relative;
-
-  app-icon {
-    display: none;
-    position: absolute;
-    top: 0rem;
-    right: 0rem;
-  }
-
-  &:hover app-icon {
-    display: block;
-  }
 }
 
 .navigation-container {
@@ -65,44 +46,40 @@ tr {
     padding-bottom: 2rem;
   }
 
-  tr {
-    app-icon {
-      display: block;
-      position: absolute;
-      top: 14.5rem;
-      right: 0;
-    }
-  }
 
-  .responsive-table td {
+
+  table td {
     display: grid;
     grid-template-columns: 17ch auto;
     padding-top: 1em;
     padding-bottom: 1em;
   }
 
-  .responsive-table th {
+  table th {
     display: none;
   }
 
-  .responsive-table td::before {
+  table td::before {
     content: attr(data-cell) ': ';
   }
 
-  .training-table tr:first-child {
+  table tr:first-child {
     border: none;
   }
 
-  .training-table tr {
+  table tr {
     border-top: 4px solid rgb(216, 216, 216);
   }
 
-  .training-table td {
+  table td {
     border: none;
     padding: 0.775em;
   }
 
-  .training-table tr td input[type='number'] {
+  table {
+    margin-top: 2.75rem;
+  }
+  table tr td input[type='number'] {
     text-align: left;
   }
 
@@ -114,10 +91,6 @@ tr {
     text-align: left;
   }
 
-  .table {
-    position: relative;
-    top: 2.5rem;
-  }
 
   .navigation-container {
     justify-content: center;
