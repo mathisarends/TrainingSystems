@@ -20,21 +20,25 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { ModalSize } from '../../../core/services/modal/modalSize';
 import { DraggableDirective } from '../../directives/draggable.directive';
+import { IconName } from '../../icon/icon-name';
 import { KeyboardService } from '../../service/keyboard.service';
 import { DataMap } from '../../types/data-map';
 import { ButtonComponent } from '../button/button.component';
+import { CircularIconButtonComponent } from '../circular-icon-button/circular-icon-button.component';
 import { OnConfirm } from './on-confirm';
 import { OnToggleView } from './on-toggle-view';
 
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [ButtonComponent, CommonModule, DraggableDirective],
+  imports: [ButtonComponent, CommonModule, DraggableDirective, CircularIconButtonComponent],
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
   providers: [KeyboardService],
 })
 export class ModalComponent implements AfterViewInit, OnInit {
+  protected readonly IconName = IconName;
+
   @ViewChild('modalContent', { read: ViewContainerRef })
   modalContent!: ViewContainerRef;
   childComponentRef!: ComponentRef<any>;
