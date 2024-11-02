@@ -15,7 +15,7 @@ export class ToastService {
       text: infoText,
     };
 
-    setTimeout(() => this.remove(), 5000);
+    setTimeout(() => this.remove(), 20000);
   }
 
   error(infoText: string) {
@@ -26,6 +26,16 @@ export class ToastService {
     };
 
     setTimeout(() => this.remove(), 10000);
+  }
+
+  achievement(infoText: string) {
+    this.toast = {
+      status: ToastStatus.ACHIEVEMENT,
+      title: 'Achievement',
+      text: infoText,
+    };
+
+    setTimeout(() => this.remove(), 7500);
   }
 
   /**

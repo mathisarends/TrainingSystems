@@ -68,7 +68,7 @@ export class UserBestPerformanceService {
       });
     }, 125);
 
-    this.toastService.success('New PR');
+    this.toastService.achievement('New PR');
 
     new Audio('./audio/new_pr.mp3').play();
   }

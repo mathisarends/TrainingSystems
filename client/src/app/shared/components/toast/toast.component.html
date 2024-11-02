@@ -3,13 +3,15 @@
 
   <div class="toast" [ngClass]="{ error: warningToast }" [class.active]="true" role="alert">
     <div class="message">
-      @if (warningToast) {
+      @if (toast.status === ToastStatus.ERROR) {
         <app-icon [name]="IconName.AlertTriangle" />
-      } @else {
-        <span id="toast-headline">{{ toast.title }}</span>
+      } @else if (toast.status === ToastStatus.ACHIEVEMENT) {
+        <app-icon [name]="IconName.AWARD" [color]="'#90caf9'" />
+      } @else  {
+        <app-icon [name]="IconName.AWARD" [color]="'#FFD700 '" />
       }
       <span class="info">{{ toast.text }}</span>
     </div>
-    <div class="close-icon-container" (click)="remove()">✖</div>
+    <app-icon [name]="IconName.X" [color]="'#dbdbdb'" (click)="close()" />
   </div>
 }
