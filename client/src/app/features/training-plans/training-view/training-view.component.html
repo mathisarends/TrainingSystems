@@ -124,28 +124,7 @@
   </form>
 
   <div class="navigation-container">
-    <app-pagination
-      [currentPage]="trainingDayIndex()"
-      [totalPages]="trainingDataService.trainingFrequency"
-      (pageChanged)="navigationService.navigateDay($event)"
-    />
-
-    <div>
-      <app-icon
-        class="week-navigation-icon"
-        [appTooltip]="'Vorherige Woche'"
-        (click)="navigationService.navigateWeek(NavigationDirection.BACKWARD, this.trainingDayIndex())"
-        [name]="IconName.CHEVRON_LEFT"
-        [size]="28"
-      />
-      <app-icon
-        class="week-navigation-icon"
-        [appTooltip]="'Näcshte Woche'"
-        [name]="IconName.CHEVRON_RIGHT"
-        (click)="navigationService.navigateWeek(NavigationDirection.FORWARD, this.trainingDayIndex())"
-        [size]="28"
-      />
-    </div>
+    <app-training-view-navigation [trainingDayIndex]="trainingDayIndex()" />
   </div>
 } @else {
   <app-spinner />

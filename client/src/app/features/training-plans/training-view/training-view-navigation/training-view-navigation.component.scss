@@ -1,0 +1,40 @@
+:host {
+    display: flex;
+    justify-content: flex-end;
+    gap: 2rem;
+    color: rgb(109, 109, 109);
+    margin-top: 0.5rem;
+  
+    div {
+      display: flex;
+      gap: 1rem;
+    }
+  
+    .week-navigation-icon {
+      position: relative;
+  
+      &:hover {
+        cursor: pointer;
+      }
+  
+      &:hover::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        background-color: rgba(0, 0, 0, 0.1);
+        z-index: -1;
+      }
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    :host {
+        justify-content: center;
+        margin-bottom: 3rem;
+      }
+  }

@@ -35,6 +35,7 @@ import { TrainingDayLocatorService } from './services/training-day-locator.servi
 import { TrainingPlanDataService } from './services/training-plan-data.service';
 import { TrainingExercisesListComponent } from './training-exercises-list/training-exercises-list.component';
 import { TrainingViewNavigationService } from './training-view-navigation.service';
+import { TrainingViewNavigationComponent } from './training-view-navigation/training-view-navigation.component';
 import { TrainingViewService } from './training-view-service';
 
 /**
@@ -47,6 +48,7 @@ import { TrainingViewService } from './training-view-service';
   imports: [
     CommonModule,
     PaginationComponent,
+    TrainingViewNavigationComponent,
     HeadlineComponent,
     IconButtonComponent,
     SkeletonTrainingTableComponent,
