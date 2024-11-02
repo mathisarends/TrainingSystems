@@ -7,51 +7,49 @@ import { ToastStatus } from './toast-status';
 })
 export class ToastService {
   private toast!: Toast | null;
+  private isActive: boolean = false;
 
   success(infoText: string) {
-    this.toast = {
+    this.showToast({
       status: ToastStatus.SUCCESS,
       title: 'Erfolg',
       text: infoText,
-    };
-
-    setTimeout(() => this.remove(), 20000);
+    }, 5000);
   }
 
   error(infoText: string) {
-    this.toast = {
+    this.showToast({
       status: ToastStatus.ERROR,
       title: 'Fehler',
       text: infoText,
-    };
-
-    setTimeout(() => this.remove(), 10000);
+    }, 10000);
   }
 
   achievement(infoText: string) {
-    this.toast = {
+    this.showToast({
       status: ToastStatus.ACHIEVEMENT,
       title: 'Achievement',
       text: infoText,
-    };
-
-    setTimeout(() => this.remove(), 7500);
+    }, 7500);
   }
 
-  /**
-   * Removes the current toast.
-   * Sets the toast property to null, indicating no active toast.
-   */
+  private showToast(toast: Toast, duration: number) {
+    this.toast = toast;
+    this.isActive = true;
+
+    setTimeout(() => this.remove(), duration);
+  }
+
   remove(): void {
-    this.toast = null;
+    this.isActive = false;
+    setTimeout(() => (this.toast = null), 500); // Warte, bis die Ausblendanimation abgeschlossen ist
   }
 
-  /**
-   * Gets the current toast.
-   *
-   * @returns The current toast or null if no toast is active.
-   */
   get currentToast(): Toast | null {
     return this.toast;
+  }
+
+  get toastIsActive(): boolean {
+    return this.isActive;
   }
 }
