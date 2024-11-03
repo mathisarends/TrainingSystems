@@ -12,6 +12,8 @@ import {
 } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { HttpService } from '../../core/services/http-client.service';
+import { ModalService } from '../../core/services/modal/modalService';
+import { ModalSize } from '../../core/services/modal/modalSize';
 import { AlertComponent } from '../../shared/components/alert/alert.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { DatePickerComponent } from '../../shared/components/datepicker/date-picker.component';
@@ -95,6 +97,7 @@ export class TrainingLogsComponent implements OnInit, AfterViewInit {
   constructor(
     protected notificationService: NotificationService,
     private headerService: HeaderService,
+    private modalService: ModalService,
     private httpService: HttpService,
     private injector: Injector,
   ) {}
@@ -160,6 +163,27 @@ export class TrainingLogsComponent implements OnInit, AfterViewInit {
     this.headerService.setHeadlineInfo({
       title: this.currentMonthName(),
       subTitle: this.currentYear().toString(),
+      buttons: [
+        {
+          icon: IconName.MORE_VERTICAL,
+          options: [
+            {
+              icon: IconName.INFO,
+              label: 'Hinweise',
+              callback: () => this.openInfoModal(),
+            },
+          ],
+        },
+      ],
+    });
+  }
+
+  private openInfoModal() {
+    this.modalService.openBasicInfoModal({
+      title: 'Hinweise',
+      size: ModalSize.LARGE,
+      infoText:
+        'In diesem Kalender werden alle geplanten Trainings aus deinen Trainingsplänen angezeigt. Zusätzlich kannst du retrospektiv alle vergangenen Trainingseinheiten einsehen. Mit einem Klick auf die einzelnen Tage erhältst du detaillierte Informationen zu deiner Trainingsprogression, inklusive der erreichten Ziele und der wichtigsten Leistungsstatistiken.',
     });
   }
 }

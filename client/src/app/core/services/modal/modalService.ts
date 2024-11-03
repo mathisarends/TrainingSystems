@@ -116,8 +116,9 @@ export class ModalService {
     return this.open({
       component: BasicInfoComponent,
       title: options.title,
-      buttonText: options.buttonText,
+      buttonText: options.buttonText ?? 'Verstanden',
       isDestructiveAction: options.isDestructiveAction,
+      size: options.size,
       componentData: {
         text: options.infoText,
       },
