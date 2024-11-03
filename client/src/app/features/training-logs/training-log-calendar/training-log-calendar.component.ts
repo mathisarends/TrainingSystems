@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, model, signal, WritableSignal } from '@angular/core';
 import { IconName } from '../../../shared/icon/icon-name';
+import { CalendarEventComponent } from './calendar-event/calendar-event.component';
 import { IsCurrentDayPipe } from './is-current-day.pipe';
 import { MonthNavigationComponent } from './month-navigation/month-navigation.component';
 
 @Component({
   selector: 'app-training-log-calendar',
   standalone: true,
-  imports: [CommonModule, MonthNavigationComponent, IsCurrentDayPipe],
+  imports: [CommonModule, MonthNavigationComponent, IsCurrentDayPipe, CalendarEventComponent],
   templateUrl: './training-log-calendar.component.html',
   styleUrls: ['./training-log-calendar.component.scss'],
 })
