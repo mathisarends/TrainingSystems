@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal, WritableSignal } from '@angular/core';
+import { Component, effect, signal, WritableSignal } from '@angular/core';
 import { IconName } from '../../../shared/icon/icon-name';
 import { MonthNavigationComponent } from './month-navigation/month-navigation.component';
 
@@ -22,31 +22,38 @@ export class TrainingLogCalendarComponent {
   daysFromNextMonth: WritableSignal<number[]> = signal([]);
 
   constructor() {
-    this.generateCalendar();
+    effect(
+      () => {
+        console.log('called');
+        this.generateCalendar();
+      },
+      { allowSignalWrites: true },
+    );
   }
 
+  // Methode zur Generierung des Kalenders
   private generateCalendar() {
     const daysInCurrentMonth = new Date(this.currentYear(), this.currentMonth() + 1, 0).getDate();
 
     const firstDayOfMonth = new Date(this.currentYear(), this.currentMonth(), 1).getDay();
     const daysInPreviousMonth = new Date(this.currentYear(), this.currentMonth(), 0).getDate();
 
+    // Berechnung der Tage des vorherigen Monats, um die Woche zu vervollständigen
     const startIndex = (firstDayOfMonth + 6) % 7;
-
     const daysFromPreviousMonth = Array.from(
       { length: startIndex },
       (_, i) => daysInPreviousMonth - startIndex + i + 1,
     );
     this.daysFromPreviousMonth.set(daysFromPreviousMonth);
 
+    // Berechnung der Tage des aktuellen Monats
     const daysInMonth = Array.from({ length: daysInCurrentMonth }, (_, i) => i + 1);
     this.daysInMonth.set(daysInMonth);
 
+    // Berechnung der Tage des nächsten Monats, um den Kalender zu vervollständigen
     const totalDays = this.daysFromPreviousMonth().length + this.daysInMonth().length;
     const remainingDays = 7 - (totalDays % 7);
-
     const daysFromNextMonth = remainingDays < 7 ? Array.from({ length: remainingDays }, (_, i) => i + 1) : [];
-    console.log('🚀 ~ TrainingLogCalendarComponent ~ generateCalendar ~ daysFromNextMonth:', daysFromNextMonth);
     this.daysFromNextMonth.set(daysFromNextMonth);
   }
 }
