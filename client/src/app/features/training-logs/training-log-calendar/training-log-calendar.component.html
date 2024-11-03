@@ -1,0 +1,18 @@
+    <div class="calendar-grid">
+      <!-- Wochentage -->
+      <div class="day-name">Mo</div>
+      <div class="day-name">Di</div>
+      <div class="day-name">Mi</div>
+      <div class="day-name">Do</div>
+      <div class="day-name">Fr</div>
+      <div class="day-name">Sa</div>
+      <div class="day-name">So</div>
+      <!-- Nummerierte Tage des Monats -->
+
+      @for (day of daysInMonth; track day) {
+        <div class="day">
+            <div class="day-number" [ngClass]="{'current-day': day === currentDay}">{{ day }}</div>
+          </div>
+      }
+
+    </div>
