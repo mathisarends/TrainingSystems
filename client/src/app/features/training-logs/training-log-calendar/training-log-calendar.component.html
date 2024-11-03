@@ -9,10 +9,23 @@
       <div class="day-name">So</div>
       <!-- Nummerierte Tage des Monats -->
 
-      @for (day of daysInMonth; track day) {
+      @for (day of daysFromPreviousMonth(); track day) {
+        <div class="day other-month">
+            <div class="day-number">{{ day }}</div>
+        </div>
+      }
+
+      @for (day of daysInMonth(); track day) {
         <div class="day">
-            <div class="day-number" [ngClass]="{'current-day': day === currentDay}">{{ day }}</div>
+            <div class="day-number" [ngClass]="{'current-day': day === currentDay()}">{{ day }}</div>
           </div>
       }
+
+      @for (day of daysFromNextMonth(); track day) {
+        <div class="day other-month">
+            <div class="day-number">{{ day }}</div>
+        </div>
+      }
+
 
     </div>

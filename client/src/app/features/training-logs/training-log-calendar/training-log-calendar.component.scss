@@ -1,5 +1,3 @@
-// TODO: add badge and show correct days, extract dayname into own component? 
-
 :host {
     max-width: 800px;
     width: 100%;
@@ -29,28 +27,28 @@
   .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    gap: 0; /* Kein Abstand zwischen den Zellen */
+    gap: 0; 
   }
   
   .day-name {
     text-align: center;
     padding: 8px;
     font-size: smaller;
-    border-bottom: 1px solid #e0e0e0; /* Nur untere Grenze */
+    border-bottom: 1px solid #e0e0e0; 
   }
   
   .day {
     position: relative;
     padding: 15px;
-    border-bottom: 1px solid #e0e0e0; /* Nur untere Grenze */
-    border-right: 1px solid #e0e0e0; /* Nur rechte Grenze */
+    border-bottom: 1px solid #e0e0e0; 
+    border-right: 1px solid #e0e0e0; 
     min-height: 7rem;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
   
     &:nth-child(7n + 1) {
-        border-left: 1px solid #e0e0e0; /* Nur untere Grenze */
+        border-left: 1px solid #e0e0e0;
       }
 
     .day-number {
@@ -82,3 +80,8 @@
     display: grid;
     place-items: center;
   }
+
+  .other-month {
+    color: #aaa; /* Tage des vorherigen/nächsten Monats abgedunkelt */
+  }
+  
