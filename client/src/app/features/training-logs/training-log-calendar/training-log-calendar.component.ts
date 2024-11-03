@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, signal, WritableSignal } from '@angular/core';
+import { Component, effect, model, signal, WritableSignal } from '@angular/core';
 import { IconName } from '../../../shared/icon/icon-name';
 import { IsCurrentDayPipe } from './is-current-day.pipe';
 import { MonthNavigationComponent } from './month-navigation/month-navigation.component';
@@ -15,7 +15,7 @@ export class TrainingLogCalendarComponent {
   protected readonly IconName = IconName;
 
   currentDay = signal(new Date().getDate());
-  currentMonth = signal(new Date().getMonth());
+  currentMonth = model(new Date().getMonth());
   currentYear = signal(new Date().getFullYear());
 
   daysInMonth: WritableSignal<number[]> = signal([]);
@@ -31,14 +31,12 @@ export class TrainingLogCalendarComponent {
     );
   }
 
-  // Methode zur Generierung des Kalenders
   private generateCalendar() {
     const daysInCurrentMonth = new Date(this.currentYear(), this.currentMonth() + 1, 0).getDate();
 
     const firstDayOfMonth = new Date(this.currentYear(), this.currentMonth(), 1).getDay();
     const daysInPreviousMonth = new Date(this.currentYear(), this.currentMonth(), 0).getDate();
 
-    // Berechnung der Tage des vorherigen Monats, um die Woche zu vervollständigen
     const startIndex = (firstDayOfMonth + 6) % 7;
     const daysFromPreviousMonth = Array.from(
       { length: startIndex },
@@ -46,11 +44,9 @@ export class TrainingLogCalendarComponent {
     );
     this.daysFromPreviousMonth.set(daysFromPreviousMonth);
 
-    // Berechnung der Tage des aktuellen Monats
     const daysInMonth = Array.from({ length: daysInCurrentMonth }, (_, i) => i + 1);
     this.daysInMonth.set(daysInMonth);
 
-    // Berechnung der Tage des nächsten Monats, um den Kalender zu vervollständigen
     const totalDays = this.daysFromPreviousMonth().length + this.daysInMonth().length;
     const remainingDays = 7 - (totalDays % 7);
     const daysFromNextMonth = remainingDays < 7 ? Array.from({ length: remainingDays }, (_, i) => i + 1) : [];

@@ -1,31 +1,20 @@
 import { Component, computed, model } from '@angular/core';
+import { CircularIconButtonComponent } from '../../../../shared/components/circular-icon-button/circular-icon-button.component';
 import { IconName } from '../../../../shared/icon/icon-name';
 import { IconComponent } from '../../../../shared/icon/icon.component';
+import { monthNames } from '../month-names';
 
 @Component({
   selector: 'app-month-navigation',
   standalone: true,
-  imports: [IconComponent],
+  imports: [IconComponent, CircularIconButtonComponent],
   templateUrl: './month-navigation.component.html',
   styleUrls: ['./month-navigation.component.scss'],
 })
 export class MonthNavigationComponent {
   protected readonly IconName = IconName;
 
-  protected readonly monthNames: string[] = [
-    'Januar',
-    'Februar',
-    'März',
-    'April',
-    'Mai',
-    'Juni',
-    'Juli',
-    'August',
-    'September',
-    'Oktober',
-    'November',
-    'Dezember',
-  ];
+  protected readonly monthNames = monthNames;
 
   currentMonth = model.required<number>();
 

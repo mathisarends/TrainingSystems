@@ -1,9 +1,9 @@
 import { AsyncPipe } from '@angular/common';
-import { HttpParams } from '@angular/common/http';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   Injector,
   OnInit,
@@ -24,6 +24,7 @@ import { HeaderService } from '../header/header.service';
 import { TrainingDayFinishedNotification } from '../usage-statistics/training-finished-notification';
 import { TrainingLogCardSkeletonComponent } from '../usage-statistics/training-log-card-skeleton/training-log-card-skeleton.component';
 import { TrainingLogCardComponent } from '../usage-statistics/training-log-card/training-log-card.component';
+import { monthNames } from './training-log-calendar/month-names';
 import { TrainingLogCalendarComponent } from './training-log-calendar/training-log-calendar.component';
 
 /**
@@ -42,7 +43,7 @@ import { TrainingLogCalendarComponent } from './training-log-calendar/training-l
     IconComponent,
     ButtonComponent,
     DatePickerComponent,
-    TrainingLogCalendarComponent
+    TrainingLogCalendarComponent,
   ],
   selector: 'app-training-logs',
   templateUrl: 'training-logs.component.html',
@@ -65,6 +66,12 @@ export class TrainingLogsComponent implements OnInit, AfterViewInit {
    * Stores filtered notifications based on user search input.
    */
   filteredTrainingNotifications: WritableSignal<TrainingDayFinishedNotification[]> = signal([]);
+
+  currentMonth = signal(new Date().getMonth());
+
+  currentMonthName = computed(() => monthNames[this.currentMonth()]);
+
+  currentYear = signal(new Date().getFullYear());
 
   /**
    * Signal holding the user's search query for filtering notifications.
@@ -93,6 +100,13 @@ export class TrainingLogsComponent implements OnInit, AfterViewInit {
       },
       { injector: this.injector, allowSignalWrites: true },
     );
+
+    effect(
+      () => {
+        this.setHeadlineInfo();
+      },
+      { injector: this.injector, allowSignalWrites: true },
+    );
   }
 
   /**
@@ -106,20 +120,13 @@ export class TrainingLogsComponent implements OnInit, AfterViewInit {
    * Loads training log entries from the server and caches them for filtering.
    * @param limit Optional limit to the number of notifications fetched.
    */
-  protected loadLogEntries(limit?: number) {
-    const httpParams = new HttpParams();
-    if (limit) {
-      httpParams.set('limit', limit.toString());
-    }
-
-    this.trainingDayNotifications$ = this.httpService
-      .get<TrainingDayFinishedNotification[]>('/training-log', httpParams)
-      .pipe(
-        tap((notifications) => {
-          this.cachedTrainingNotifications.set(notifications);
-          this.filteredTrainingNotifications.set(notifications);
-        }),
-      );
+  protected loadLogEntries() {
+    this.trainingDayNotifications$ = this.httpService.get<TrainingDayFinishedNotification[]>('/training-log').pipe(
+      tap((notifications) => {
+        this.cachedTrainingNotifications.set(notifications);
+        this.filteredTrainingNotifications.set(notifications);
+      }),
+    );
   }
 
   /**
@@ -137,7 +144,8 @@ export class TrainingLogsComponent implements OnInit, AfterViewInit {
 
   private setHeadlineInfo(): void {
     this.headerService.setHeadlineInfo({
-      title: 'Logs',
+      title: this.currentMonthName(),
+      subTitle: this.currentYear().toString(),
     });
   }
 }
