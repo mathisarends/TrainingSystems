@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, signal, WritableSignal } from '@angular/core';
 import { IconName } from '../../../shared/icon/icon-name';
+import { IsCurrentDayPipe } from './is-current-day.pipe';
 import { MonthNavigationComponent } from './month-navigation/month-navigation.component';
 
 @Component({
   selector: 'app-training-log-calendar',
   standalone: true,
-  imports: [CommonModule, MonthNavigationComponent],
+  imports: [CommonModule, MonthNavigationComponent, IsCurrentDayPipe],
   templateUrl: './training-log-calendar.component.html',
   styleUrls: ['./training-log-calendar.component.scss'],
 })
@@ -24,7 +25,6 @@ export class TrainingLogCalendarComponent {
   constructor() {
     effect(
       () => {
-        console.log('called');
         this.generateCalendar();
       },
       { allowSignalWrites: true },
