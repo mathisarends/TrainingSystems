@@ -66,7 +66,7 @@ export class EditTrainingPlanComponent implements OnInit, OnConfirm {
 
       this.editTrainingPlanService.editTrainingPlan(this.trainingPlanEditView.id(), formData).subscribe((response) => {
         this.trainingPlanService.trainingPlanChanged();
-        this.toastService.success(response.message);
+        this.toastService.success('Plan bearbeitet');
       });
     }
   }

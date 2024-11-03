@@ -25,7 +25,6 @@ export class CreateTrainingPlanService {
       userId: userId,
       title: createTrainingPlanDto.title,
       trainingFrequency: createTrainingPlanDto.trainingFrequency,
-      weightRecommandationBase: createTrainingPlanDto.weightRecommandationBase,
       lastUpdated: new Date(),
       trainingWeeks: trainingWeeksPlaceholder,
       coverImageBase64: createTrainingPlanDto.coverImageBase64,

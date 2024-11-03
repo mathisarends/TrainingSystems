@@ -9,7 +9,6 @@ export class TrainingPlanEditView {
   title: WritableSignal<string>;
   trainingFrequency: WritableSignal<number>;
   trainingBlockLength: WritableSignal<number>;
-  weightRecommendationBase: WritableSignal<WeightRecommendationBase>;
   coverImageBase64: WritableSignal<string>;
 
   referencePlanId: WritableSignal<string | undefined> = signal(undefined);
@@ -31,7 +30,6 @@ export class TrainingPlanEditView {
     this.title = signal(this.defaultValues.title);
     this.trainingFrequency = signal(this.defaultValues.trainingFrequency);
     this.trainingBlockLength = signal(this.defaultValues.trainingBlockLength);
-    this.weightRecommendationBase = signal(this.defaultValues.weightRecommendationBase);
     this.coverImageBase64 = signal(this.defaultValues.coverImageBase64);
 
     // If DTO is provided, override the default values
@@ -57,7 +55,6 @@ export class TrainingPlanEditView {
       trainingBlockLength: Number(this.trainingBlockLength()),
       coverImageBase64: this.coverImageBase64(),
       referencePlanId: this.referencePlanId(),
-      weightRecommandationBase: this.weightRecommendationBase(),
     };
 
     if (this.id()) {
@@ -68,12 +65,7 @@ export class TrainingPlanEditView {
   }
 
   isValid(): boolean {
-    return (
-      this.title().trim().length > 0 &&
-      !!this.trainingFrequency() &&
-      !!this.trainingBlockLength() &&
-      !!this.weightRecommendationBase()
-    );
+    return this.title().trim().length > 0 && !!this.trainingFrequency() && !!this.trainingBlockLength();
   }
 
   /**
@@ -84,7 +76,6 @@ export class TrainingPlanEditView {
     this.title.set(dto.title);
     this.trainingFrequency.set(dto.trainingFrequency);
     this.trainingBlockLength.set(dto.trainingBlockLength);
-    this.weightRecommendationBase.set(dto.weightRecommandationBase);
     this.coverImageBase64.set(dto.coverImageBase64 || this.defaultValues.coverImageBase64);
   }
 
@@ -97,7 +88,6 @@ export class TrainingPlanEditView {
     this.title.set(this.defaultValues.title);
     this.trainingFrequency.set(this.defaultValues.trainingFrequency);
     this.trainingBlockLength.set(this.defaultValues.trainingBlockLength);
-    this.weightRecommendationBase.set(this.defaultValues.weightRecommendationBase);
     this.coverImageBase64.set(this.defaultValues.coverImageBase64);
   }
 

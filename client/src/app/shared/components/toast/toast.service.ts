@@ -10,27 +10,36 @@ export class ToastService {
   private isActive: boolean = false;
 
   success(infoText: string) {
-    this.showToast({
-      status: ToastStatus.SUCCESS,
-      title: 'Erfolg',
-      text: infoText,
-    }, 5000);
+    this.showToast(
+      {
+        status: ToastStatus.SUCCESS,
+        title: 'Erfolg',
+        text: infoText,
+      },
+      5000,
+    );
   }
 
   error(infoText: string) {
-    this.showToast({
-      status: ToastStatus.ERROR,
-      title: 'Fehler',
-      text: infoText,
-    }, 10000);
+    this.showToast(
+      {
+        status: ToastStatus.ERROR,
+        title: 'Fehler',
+        text: infoText,
+      },
+      10000,
+    );
   }
 
   achievement(infoText: string) {
-    this.showToast({
-      status: ToastStatus.ACHIEVEMENT,
-      title: 'Achievement',
-      text: infoText,
-    }, 5000);
+    this.showToast(
+      {
+        status: ToastStatus.ACHIEVEMENT,
+        title: 'Achievement',
+        text: infoText,
+      },
+      5000,
+    );
   }
 
   private showToast(toast: Toast, duration: number) {
@@ -42,7 +51,7 @@ export class ToastService {
 
   remove(): void {
     this.isActive = false;
-    setTimeout(() => (this.toast = null), 500); 
+    setTimeout(() => (this.toast = null), 500);
   }
 
   get currentToast(): Toast | null {

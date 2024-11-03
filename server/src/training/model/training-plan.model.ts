@@ -19,7 +19,11 @@ export class TrainingPlan extends Document {
   @Prop()
   lastUpdated: Date;
 
-  @Prop({ enum: WeightRecommendation, required: true })
+  @Prop({
+    enum: WeightRecommendation,
+    required: true,
+    default: WeightRecommendation.LASTWEEK,
+  })
   weightRecommandationBase: WeightRecommendation;
 
   @Prop({ type: [TrainingWeekSchema], default: [] })

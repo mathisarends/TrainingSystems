@@ -1,4 +1,3 @@
-import { WeightRecommendationBase } from '../../training-plans/edit-training-plan/training-plan-edit-view-dto.js';
 import { TrainingDay } from '../../training-plans/training-view/training-day.js';
 
 /**
@@ -19,11 +18,6 @@ export interface TrainingSessionDto {
    * The date when the training plan was last updated.
    */
   lastUpdated: Date;
-
-  /**
-   * The base for weight recommendations, can be 'max', 'lastWeek', or 'off'.
-   */
-  weightRecommandationBase: WeightRecommendationBase;
 
   versions: TrainingDay[];
 

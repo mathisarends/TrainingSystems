@@ -1,11 +1,4 @@
-import {
-  IsEnum,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
-import { WeightRecommendation } from '../model/weight-recommandation.enum';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateTrainingPlanDto {
   @IsString()
@@ -14,9 +7,6 @@ export class CreateTrainingPlanDto {
 
   @IsNumber()
   trainingFrequency: number;
-
-  @IsEnum(WeightRecommendation)
-  weightRecommandationBase: WeightRecommendation;
 
   @IsNumber()
   trainingBlockLength: number;

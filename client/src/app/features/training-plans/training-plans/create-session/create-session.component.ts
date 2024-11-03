@@ -43,7 +43,6 @@ export class CreateSessionComponent implements OnInit, OnConfirm {
 
     const trainingSessionCreateDto: TrainingSessionMetaDataDto = {
       title: this.trainingPlanEditView.title(),
-      weightRecommandationBase: this.trainingPlanEditView.weightRecommendationBase(),
       coverImageBase64: this.trainingPlanEditView.coverImageBase64(),
     };
 

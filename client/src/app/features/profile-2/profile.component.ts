@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
@@ -48,15 +48,12 @@ export class ProfileComponent2 implements OnInit {
 
   activityCalendarData$!: Observable<ActivityCalendarData>;
 
-  inputSignal = signal('');
-
   protected readonly listItems: IconListItem[] = [
-    { label: 'Exercises', iconName: IconName.DATABASE, iconBackgroundColor: IconBackgroundColor.DodgerBlue },
-    { label: 'Progression', iconName: IconName.BAR_CHART, iconBackgroundColor: IconBackgroundColor.MediumSlateBlue },
-    { label: 'Social', iconName: IconName.USERS, iconBackgroundColor: IconBackgroundColor.LimeGreen },
-    { label: 'Ticket', iconName: IconName.IMAGE, iconBackgroundColor: IconBackgroundColor.Orange },
-    { label: 'Settings', iconName: IconName.SETTINGS, iconBackgroundColor: IconBackgroundColor.DarkGray },
-    { label: 'Account löschen', iconName: IconName.Trash, iconBackgroundColor: IconBackgroundColor.OrangeRed },
+    { label: 'Exercises', iconName: IconName.DATABASE, iconBackgroundColor: IconBackgroundColor.DodgerBlue }, // Blau für Information
+    { label: 'Progression', iconName: IconName.BAR_CHART, iconBackgroundColor: IconBackgroundColor.LimeGreen }, // Grün für Fortschritt
+    { label: 'Ticket', iconName: IconName.IMAGE, iconBackgroundColor: IconBackgroundColor.Turquoise }, // Türkis für Dokumente oder Support
+    { label: 'Settings', iconName: IconName.SETTINGS, iconBackgroundColor: IconBackgroundColor.DarkGray }, // Grau für Einstellungen
+    { label: 'Account löschen', iconName: IconName.Trash, iconBackgroundColor: IconBackgroundColor.OrangeRed }, // Rot für kritische Aktionen
   ];
 
   constructor(
@@ -182,7 +179,6 @@ export class ProfileComponent2 implements OnInit {
   }
 
   private handleLogout(): void {
-    console.log('is called though');
     this.authService.logout();
   }
 
