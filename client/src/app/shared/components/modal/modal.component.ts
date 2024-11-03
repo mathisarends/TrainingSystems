@@ -141,32 +141,6 @@ export class ModalComponent implements AfterViewInit, OnInit {
   }
 
   /**
-   * Sets inputs for the dynamically loaded child component.
-   * Detects if a target property is a signal, and updates the signal instead of direct property assignment.
-   */
-  private setChildComponentInputs(data: any): void {
-    Object.keys(data).forEach((key) => {
-      const instanceProperty = this.childComponentRef.instance[key];
-
-      if (this.isSignal(instanceProperty)) {
-        (instanceProperty as WritableSignal<any>).set(data[key]);
-      } else {
-        this.childComponentRef.instance[key] = data[key];
-      }
-    });
-  }
-
-  /**
-   * Checks if a given property is a Signal.
-   *
-   * @param property - The property to check.
-   * @returns True if the property is a Signal, false otherwise.
-   */
-  private isSignal(property: any): boolean {
-    return property && typeof property === 'function' && 'set' in property;
-  }
-
-  /**
    * Closes the modal and emits the `cancelled` event.
    */
   close() {
@@ -179,14 +153,9 @@ export class ModalComponent implements AfterViewInit, OnInit {
    * Calls `onConfirm` if the child component implements `ConfirmableComponent`.
    */
   confirm() {
-    console.log('confirmed here');
     const componentInstance = this.childComponentRef.instance;
     if (this.implementsOnConfirm(componentInstance)) {
       componentInstance.onConfirm();
-    }
-
-    if (!this.confirmationRequired) {
-      this.modalService.close();
     }
 
     this.confirmed.emit();
@@ -234,4 +203,30 @@ export class ModalComponent implements AfterViewInit, OnInit {
   private implementsOnToggleView(component: any): component is OnToggleView {
     return (component as OnToggleView).onToggleView !== undefined;
   }
+
+    /**
+   * Sets inputs for the dynamically loaded child component.
+   * Detects if a target property is a signal, and updates the signal instead of direct property assignment.
+   */
+    private setChildComponentInputs(data: any): void {
+      Object.keys(data).forEach((key) => {
+        const instanceProperty = this.childComponentRef.instance[key];
+  
+        if (this.isSignal(instanceProperty)) {
+          (instanceProperty as WritableSignal<any>).set(data[key]);
+        } else {
+          this.childComponentRef.instance[key] = data[key];
+        }
+      });
+    }
+  
+    /**
+     * Checks if a given property is a Signal.
+     *
+     * @param property - The property to check.
+     * @returns True if the property is a Signal, false otherwise.
+     */
+    private isSignal(property: any): boolean {
+      return property && typeof property === 'function' && 'set' in property;
+    }
 }

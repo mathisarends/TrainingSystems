@@ -17,10 +17,10 @@ declare const google: any;
   selector: 'app-register',
   standalone: true,
   imports: [IconComponent, PulsatingCircleComponent],
-  templateUrl: './register.component.html',
+  templateUrl: './getting-started.component.html',
   styleUrls: ['../auth-shared.scss'],
 })
-export class RegisterComponent implements OnInit {
+export class GettingStartedComponent implements OnInit {
   @ViewChild('googleLoginButton') googleLoginButton!: ElementRef;
 
   private document = inject(DOCUMENT);
@@ -38,9 +38,9 @@ export class RegisterComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.headerService.setHeadlineInfo({ title: 'Start' });
 
-    if (!RegisterComponent.isGoogleScriptLoaded) {
+    if (!GettingStartedComponent.isGoogleScriptLoaded) {
       await this.loadGoogleClientScript();
-      RegisterComponent.isGoogleScriptLoaded = true;
+      GettingStartedComponent.isGoogleScriptLoaded = true;
     }
 
     // Initialize Google login if the script loaded successfully
@@ -67,6 +67,11 @@ export class RegisterComponent implements OnInit {
   }
 
   private initializeGoogleLogin() {
+    if (typeof google === 'undefined') {
+      console.error('Google object is not defined. Make sure the script is loaded properly.');
+      return;
+    }
+
     google.accounts.id.initialize({
       client_id: '745778541640-0f05iimgfid2tag6rkvilau5nqt69ko0.apps.googleusercontent.com',
       use_fedcm_for_prompt: false,

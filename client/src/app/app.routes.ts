@@ -1,9 +1,8 @@
 import { Routes } from '@angular/router';
 
-import { ExercisesComponent } from './features/exercise-page/components/exercise/exercises.component';
-
 import { AuthGuard } from './core/guards/auth.guard';
-import { RegisterComponent } from './features/auth/register/register.component';
+import { GettingStartedComponent } from './features/auth/getting-started/getting-started.component';
+import { ExercisesComponent } from './features/exercise-page/components/exercise/exercises.component';
 import { ProfileComponent2 } from './features/profile-2/profile.component';
 import { TrainingLogsComponent } from './features/profile-2/training-logs/training-logs.component';
 import { TrainingPlanStatisticsComponent } from './features/training-plans/training-plan-statistics/training-plan-statistics.component';
@@ -15,7 +14,7 @@ import { StatisticsComponent } from './features/usage-statistics/statistics.comp
 import { SpinnerComponent } from './shared/components/spinner/spinner.component';
 
 export const routes: Routes = [
-  { path: 'getting-started', component: RegisterComponent },
+  { path: 'getting-started', component: GettingStartedComponent },
   { path: 'profile/progression', component: StatisticsComponent, canActivate: [AuthGuard] },
   {
     path: '',

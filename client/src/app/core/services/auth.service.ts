@@ -34,21 +34,6 @@ export class AuthService {
   }
 
   /**
-   * Displays the login modal dialog if user is not authenticated.
-   */
-  async showLoginModalDialog(): Promise<void> {
-    const response = await this.modalService.openBasicInfoModal({
-      title: 'Anmeldung erforderlich',
-      buttonText: 'Anmelden',
-      infoText: 'Um diese Seite besuchen zu können musst du angemeldet sein!',
-    });
-
-    if (response) {
-      this.router.navigate(['getting-started']);
-    }
-  }
-
-  /**
    * Logs out the user
    */
   logout(): void {
