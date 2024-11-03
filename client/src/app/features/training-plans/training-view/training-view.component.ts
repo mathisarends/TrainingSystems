@@ -63,7 +63,7 @@ import { TrainingViewService } from './training-view-service';
     TooltipDirective,
     SpinnerComponent,
     SwipeDirective,
-    FormsModule
+    FormsModule,
   ],
   providers: [
     TrainingViewService,
@@ -226,8 +226,7 @@ export class TrainingViewComponent implements OnInit {
    */
   private saveTrainingData$(): Observable<void> {
     const changes = this.formService.getChanges();
-    console.log("🚀 ~ TrainingViewComponent ~ changes:", changes)
-
+    console.log('🚀 ~ TrainingViewComponent ~ changes:', changes);
 
     return this.trainingViewService
       .submitTrainingPlan(this.planId(), this.trainingWeekIndex(), this.trainingDayIndex(), changes)
@@ -237,8 +236,6 @@ export class TrainingViewComponent implements OnInit {
         }),
       );
   }
-
-
 
   private getSubtitle(): string {
     return `W${this.trainingWeekIndex() + 1}D${this.trainingDayIndex() + 1}`;

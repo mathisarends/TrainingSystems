@@ -1,4 +1,4 @@
-:host {
+.calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 0;
@@ -57,4 +57,12 @@
 
 .other-month {
   color: #aaa; /* Tage des vorherigen/nächsten Monats abgedunkelt */
+}
+
+.month-navigation-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: flex-end;
+  width: 100%;
 }
