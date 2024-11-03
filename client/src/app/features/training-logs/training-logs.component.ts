@@ -24,7 +24,6 @@ import { HeaderService } from '../header/header.service';
 import { TrainingDayFinishedNotification } from '../usage-statistics/training-finished-notification';
 import { TrainingLogCardSkeletonComponent } from '../usage-statistics/training-log-card-skeleton/training-log-card-skeleton.component';
 import { TrainingLogCardComponent } from '../usage-statistics/training-log-card/training-log-card.component';
-import { monthNames } from './training-log-calendar/month-names';
 import { TrainingLogCalendarComponent } from './training-log-calendar/training-log-calendar.component';
 
 /**
@@ -53,6 +52,21 @@ import { TrainingLogCalendarComponent } from './training-log-calendar/training-l
 export class TrainingLogsComponent implements OnInit, AfterViewInit {
   protected readonly IconName = IconName;
 
+  monthNames: string[] = [
+    'Januar',
+    'Februar',
+    'März',
+    'April',
+    'Mai',
+    'Juni',
+    'Juli',
+    'August',
+    'September',
+    'Oktober',
+    'November',
+    'Dezember',
+  ];
+
   /**
    * Observable of training day notifications loaded from the server.
    */
@@ -69,7 +83,7 @@ export class TrainingLogsComponent implements OnInit, AfterViewInit {
 
   currentMonth = signal(new Date().getMonth());
 
-  currentMonthName = computed(() => monthNames[this.currentMonth()]);
+  currentMonthName = computed(() => this.monthNames[this.currentMonth()]);
 
   currentYear = signal(new Date().getFullYear());
 

@@ -16,7 +16,7 @@ export class TrainingLogCalendarComponent {
 
   currentDay = signal(new Date().getDate());
   currentMonth = model(new Date().getMonth());
-  currentYear = signal(new Date().getFullYear());
+  currentYear = model(new Date().getFullYear());
 
   daysInMonth: WritableSignal<number[]> = signal([]);
   daysFromPreviousMonth: WritableSignal<number[]> = signal([]);
