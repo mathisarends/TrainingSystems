@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+          }
+          
+          .calendar-container {
+            max-width: 800px;
+            width: 100%;
+            padding: 20px;
+            background-color: #2b2b2b;
+            border-radius: 10px;
+          }
+          
+          .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+          }
+          
+          .month-title {
+            font-size: 1.5em;
+          }
+          
+          .nav-btn {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.2em;
+            cursor: pointer;
+          }
+          
+          .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+          }
+          
+          .day-name {
+            text-align: center;
+            font-weight: bold;
+            padding: 5px;
+            border-bottom: 1px solid #444;
+          }
+          
+          .day {
+            text-align: center;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #333;
+            transition: background-color 0.3s;
+          }
+          
+          .day:hover {
+            background-color: #444;
+          }
+    </style>
+</head>
+<body>
+    <div class="calendar-container">
+        <div class="calendar-header">
+          <button class="nav-btn">◄</button>
+          <div class="month-title">November 2024</div>
+          <button class="nav-btn">►</button>
+        </div>
+        <div class="calendar-grid">
+          <!-- Wochentage -->
+          <div class="day-name">Mo</div>
+          <div class="day-name">Di</div>
+          <div class="day-name">Mi</div>
+          <div class="day-name">Do</div>
+          <div class="day-name">Fr</div>
+          <div class="day-name">Sa</div>
+          <div class="day-name">So</div>
+          <!-- Nummerierte Tage des Monats -->
+          <div class="day">1</div>
+          <div class="day">2</div>
+          <div class="day">3</div>
+          <div class="day">4</div>
+          <div class="day">5</div>
+          <div class="day">6</div>
+          <div class="day">7</div>
+          <div class="day">8</div>
+          <div class="day">9</div>
+          <div class="day">10</div>
+          <div class="day">11</div>
+          <div class="day">12</div>
+          <div class="day">13</div>
+          <div class="day">14</div>
+          <div class="day">15</div>
+          <div class="day">16</div>
+          <div class="day">17</div>
+          <div class="day">18</div>
+          <div class="day">19</div>
+          <div class="day">20</div>
+          <div class="day">21</div>
+          <div class="day">22</div>
+          <div class="day">23</div>
+          <div class="day">24</div>
+          <div class="day">25</div>
+          <div class="day">26</div>
+          <div class="day">27</div>
+          <div class="day">28</div>
+          <div class="day">29</div>
+          <div class="day">30</div>
+        </div>
+      </div>
+      
+</body>
+</html>

@@ -18,7 +18,7 @@ declare const google: any;
   standalone: true,
   imports: [IconComponent, PulsatingCircleComponent],
   templateUrl: './getting-started.component.html',
-  styleUrls: ['../auth-shared.scss'],
+  styleUrls: ['./getting-started.component.scss'],
 })
 export class GettingStartedComponent implements OnInit {
   @ViewChild('googleLoginButton') googleLoginButton!: ElementRef;

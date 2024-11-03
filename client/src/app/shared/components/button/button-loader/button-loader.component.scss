@@ -1,33 +1,68 @@
-.loader {
-    width: 48px;
-    height: 48px;
-    display: inline-block;
-    position: relative;
+.lds-ellipsis,
+.lds-ellipsis div {
+  box-sizing: border-box;
+}
+
+.lds-ellipsis {
+  display: inline-block;
+  position: relative;
+  width: 46px; /* 15 % größere Breite */
+  height: 30px; /* Weniger Höhe */
+}
+
+.lds-ellipsis div {
+  position: absolute;
+  top: 11px; /* Angepasste Position für geringere Höhe */
+  width: 7.67px; /* 15 % größere Breite der Punkte */
+  height: 7.67px; /* 15 % größere Höhe der Punkte */
+  border-radius: 50%;
+  background: currentColor;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+
+.lds-ellipsis div:nth-child(1) {
+  left: 5px; /* Angepasste Position */
+  animation: lds-ellipsis1 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(2) {
+  left: 5px; /* Angepasste Position */
+  animation: lds-ellipsis2 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(3) {
+  left: 20px; /* Angepasste Position */
+  animation: lds-ellipsis2 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(4) {
+  left: 35px; /* Angepasste Position */
+  animation: lds-ellipsis3 0.6s infinite;
+}
+
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
   }
-  .loader::after,
-  .loader::before {
-    content: '';  
-    box-sizing: border-box;
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    border: 2px solid black;
-    position: absolute;
-    left: 0;
-    top: 0;
-    animation: animloader 2s linear infinite;
+  100% {
+    transform: scale(1);
   }
-  .loader::after {
-    animation-delay: 1s;
+}
+
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
   }
-  
-  @keyframes animloader {
-    0% {
-      transform: scale(0);
-      opacity: 1;
-    }
-    100% {
-      transform: scale(1);
-      opacity: 0;
-    }
+  100% {
+    transform: scale(0);
   }
+}
+
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(14px, 0); /* 15 % größere Bewegung */
+  }
+}

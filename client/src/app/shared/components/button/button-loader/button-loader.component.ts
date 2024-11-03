@@ -3,10 +3,9 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-button-loader',
   standalone: true,
-  template: `<span class="loader"></span>`,
+  templateUrl: './button-loader.component.html',
   styleUrls: ['./button-loader.component.scss'],
 })
 export class ButtonLoaderComponent {
 
 }
-// TOOD: build this button loader here more fancy

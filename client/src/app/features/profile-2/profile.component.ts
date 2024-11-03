@@ -17,7 +17,6 @@ import { NotificationService } from '../../shared/service/notification.service';
 import { GymTicketComponent } from '../gym-ticket/gym-ticket.component';
 import { GymTicketService } from '../gym-ticket/gym-ticket.service';
 import { HeaderService } from '../header/header.service';
-import { RestPauseTimeIndicatorComponent } from '../training-plans/training-view/rest-pause-time-indicator/rest-pause-time-indicator.component';
 import { ActivityCalendarData } from './activity-calendar/activity-calendar-data';
 import { ActivityCalendar } from './activity-calendar/activity-calendar.component';
 import { ChangeProfilePictureConfirmationComponent } from './change-profile-picture-confirmation/change-profile-picture-confirmation.component';
@@ -30,7 +29,6 @@ import { SettingsComponent } from './settings/settings.component';
   imports: [
     SpinnerComponent,
     IconListeItemComponent,
-    RestPauseTimeIndicatorComponent,
     ActivityCalendar,
     CommonModule,
     ChartSkeletonComponent,
