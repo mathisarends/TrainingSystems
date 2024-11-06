@@ -16,6 +16,8 @@ export class ButtonComponent {
    */
   variant = input<'PRIMARY' | 'SECONDARY' | 'DESTRUCTIVE'>('PRIMARY');
 
+  isLoading = input(false);
+
   /**
    * The text content displayed inside the button.
    * This input is required.

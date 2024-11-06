@@ -3,9 +3,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-button-loader',
   standalone: true,
-  templateUrl: './button-loader.component.html',
+  template: `<span class="loader"></span>`,
   styleUrls: ['./button-loader.component.scss'],
 })
-export class ButtonLoaderComponent {
-
-}
+export class ButtonLoaderComponent {}

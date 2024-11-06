@@ -1,68 +1,24 @@
-.lds-ellipsis,
-.lds-ellipsis div {
-  box-sizing: border-box;
+:host {
+  display: grid;
+  place-items: center;
 }
 
-.lds-ellipsis {
-  display: inline-block;
-  position: relative;
-  width: 46px; /* 15 % größere Breite */
-  height: 30px; /* Weniger Höhe */
-}
-
-.lds-ellipsis div {
-  position: absolute;
-  top: 11px; /* Angepasste Position für geringere Höhe */
-  width: 7.67px; /* 15 % größere Breite der Punkte */
-  height: 7.67px; /* 15 % größere Höhe der Punkte */
+.loader {
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  background: currentColor;
-  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+  display: inline-block;
+  border-top: 3px solid #fff;
+  border-right: 3px solid transparent;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
 }
 
-.lds-ellipsis div:nth-child(1) {
-  left: 5px; /* Angepasste Position */
-  animation: lds-ellipsis1 0.6s infinite;
-}
-
-.lds-ellipsis div:nth-child(2) {
-  left: 5px; /* Angepasste Position */
-  animation: lds-ellipsis2 0.6s infinite;
-}
-
-.lds-ellipsis div:nth-child(3) {
-  left: 20px; /* Angepasste Position */
-  animation: lds-ellipsis2 0.6s infinite;
-}
-
-.lds-ellipsis div:nth-child(4) {
-  left: 35px; /* Angepasste Position */
-  animation: lds-ellipsis3 0.6s infinite;
-}
-
-@keyframes lds-ellipsis1 {
+@keyframes rotation {
   0% {
-    transform: scale(0);
+    transform: rotate(0deg);
   }
   100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes lds-ellipsis3 {
-  0% {
-    transform: scale(1);
-  }
-  100% {
-    transform: scale(0);
-  }
-}
-
-@keyframes lds-ellipsis2 {
-  0% {
-    transform: translate(0, 0);
-  }
-  100% {
-    transform: translate(14px, 0); /* 15 % größere Bewegung */
+    transform: rotate(360deg);
   }
 }

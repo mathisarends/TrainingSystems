@@ -36,7 +36,6 @@ export class EstMaxService {
       if (exercise && this.userBestPerformanceService.isNewBestPerformance(exercise.category, estMax)) {
         this.userBestPerformanceService.makeNewBestPerformanceEntry(exercise);
       }
-    
 
       this.formService.addChange(estMaxInput.name, estMaxInput.value);
       const changes = this.formService.getChanges();
@@ -84,16 +83,13 @@ export class EstMaxService {
    * @param topSetMax - The top set maximum weight.
    * @returns The calculated backoff weight range as a string.
    */
-  private calcBackoff(planedReps: number, planedRPE: number, topSetMax: number): string {
+  private calcBackoff(planedReps: number, planedRPE: number, topSetMax: number): number {
     const totalReps = planedReps + (10 - planedRPE);
     let percentage = (0.484472 * totalReps * totalReps - 33.891 * totalReps + 1023.67) * 0.001;
     let backoffWeight = topSetMax * percentage;
     backoffWeight = Math.ceil(backoffWeight / 2.5) * 2.5;
 
-    const lowEndBackoffWeight = backoffWeight - 2.5;
-    const highEndBackoffWeight = backoffWeight + 2.5;
-
-    return `${lowEndBackoffWeight} - ${highEndBackoffWeight}`;
+    return backoffWeight;
   }
 
   /**

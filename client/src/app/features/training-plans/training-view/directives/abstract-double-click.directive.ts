@@ -67,11 +67,20 @@ export abstract class AbstractDoubleClickDirective implements AfterViewInit {
       return;
     }
 
-    this.duplicateLastInput(inputValues);
+    if (this.shouldApplyPlaceholderValue(inputValues)) {
+      this.inputElement.value = this.inputElement.placeholder;
+    } else if (inputValues.length > 0) {
+      this.duplicateLastInput(inputValues);
+    }
 
     // Dismiss the keyboard on mobile devices by removing focus from the input element
     this.inputElement.blur();
     this.inputElement.dispatchEvent(new Event('change'));
+    console.log('dispatch event');
+  }
+
+  private shouldApplyPlaceholderValue(parsedInputValues: number[]): boolean {
+    return parsedInputValues.length === 0 && !!this.inputElement.placeholder;
   }
 
   protected getRoundedAverageWithStep(roundingStep: number): number {
@@ -100,7 +109,7 @@ export abstract class AbstractDoubleClickDirective implements AfterViewInit {
       .map((value) => parseFloat(value.trim().replace(',', '.')));
 
     if (parsedNumericValues.some((value) => isNaN(value))) {
-      this.toastService.error('Ungültige Eingabe');
+      return [];
     }
 
     return parsedNumericValues;
