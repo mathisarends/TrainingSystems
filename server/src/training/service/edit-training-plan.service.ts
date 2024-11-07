@@ -6,6 +6,7 @@ import { EditTrainingPlanDto } from '../dto/edit-training-plan.dto';
 import { TrainingPlanEditViewDto } from '../dto/training-plan-edit-view.dto';
 import { TrainingDay } from '../model/training-day.schema';
 import { TrainingPlan } from '../model/training-plan.model';
+import { TrainingWeek } from '../model/training-week.schema';
 import { TrainingService } from '../training.service';
 
 @Injectable()
@@ -52,6 +53,19 @@ export class EditTrainingPlanService {
     );
 
     if (
+      this.isBlockLengthChanged(
+        trainingPlan,
+        editTrainingPlanDto.trainingBlockLength,
+      )
+    ) {
+      this.adjustBlockLength(
+        trainingPlan,
+        editTrainingPlanDto.trainingBlockLength,
+        editTrainingPlanDto.trainingDays.length,
+      );
+    }
+
+    if (
       !this.isTrainingFrequencyChanged(
         trainingPlan,
         editTrainingPlanDto.trainingDays.length,
@@ -86,6 +100,40 @@ export class EditTrainingPlanService {
       trainingPlan,
       editTrainingPlanDto,
     );
+  }
+
+  private isBlockLengthChanged(
+    trainingPlan: TrainingPlan,
+    newBlockLength: number,
+  ) {
+    return trainingPlan.trainingWeeks.length !== newBlockLength;
+  }
+
+  private adjustBlockLength(
+    trainingPlan: TrainingPlan,
+    newBlockLength: number,
+    daysPerWeek: number,
+  ): void {
+    const currentLength = trainingPlan.trainingWeeks.length;
+
+    if (newBlockLength > currentLength) {
+      const weeksToAdd = newBlockLength - currentLength;
+      trainingPlan.trainingWeeks.push(
+        ...Array.from({ length: weeksToAdd }, () =>
+          this.createNewTrainingWeek(daysPerWeek),
+        ),
+      );
+    } else if (newBlockLength < currentLength) {
+      trainingPlan.trainingWeeks.splice(newBlockLength);
+    }
+  }
+
+  private createNewTrainingWeek(daysPerWeek: number): TrainingWeek {
+    return {
+      trainingDays: Array.from({ length: daysPerWeek }, () =>
+        this.createEmptyTrainingDay(),
+      ),
+    } as TrainingWeek;
   }
 
   private isTrainingFrequencyChanged(
