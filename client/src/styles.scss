@@ -9,6 +9,7 @@
   --light-grey: #f0f0f0;
   --dark-grey: #2e3a40;
   --border-color: #e2e8f0;
+  --element-background: rgb(247, 247, 247);
 
   --off-white: #fdfdfd;
 
@@ -25,6 +26,12 @@
   --ff-serif: 'Bellefair', serif;
   --ff-sans-cond: 'Barlow Condensed', sans-serif;
   --ff-sans-normal: 'Barlow', sans-serif;
+}
+
+@media screen and (max-width: 768px) {
+  :root {
+    --element-background: rgb(243, 239, 239);
+  }
 }
 
 * {

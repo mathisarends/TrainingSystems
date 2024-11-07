@@ -22,6 +22,14 @@
         }
       </div>
     </div>
+
+    <app-dashboard-card
+      [icon]="IconName.Activity"
+      [unit]="'23'"
+      [differenceFromLastSession]="2.3"
+      [title]="'Test'"
+      [explanationText]="'Improvement'"
+    />
   } @else {
     <app-spinner />
   }

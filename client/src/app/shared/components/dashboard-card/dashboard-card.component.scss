@@ -1,0 +1,36 @@
+:host {
+  display: flex;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: var(--element-background);
+}
+
+.icon {
+  margin-right: 16px;
+  font-size: 32px;
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.value {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.change {
+  margin-top: 8px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.positive {
+  color: green;
+}
+
+.negative {
+  color: red;
+}

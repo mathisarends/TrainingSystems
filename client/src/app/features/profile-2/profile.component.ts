@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { ModalService } from '../../core/services/modal/modalService';
+import { DashboardCardComponent } from '../../shared/components/dashboard-card/dashboard-card.component';
 import { IconBackgroundColor } from '../../shared/components/icon-list-item/icon-background-color';
 import { IconListItem } from '../../shared/components/icon-list-item/icon-list-item';
 import { IconListeItemComponent } from '../../shared/components/icon-list-item/icon-list-item.component';
@@ -34,6 +35,7 @@ import { SettingsComponent } from './settings/settings.component';
     ChartSkeletonComponent,
     ProfilePictureWithInfoComponent,
     SpinnerComponent,
+    DashboardCardComponent,
   ],
   selector: 'app-profile',
   templateUrl: 'profile.component.html',

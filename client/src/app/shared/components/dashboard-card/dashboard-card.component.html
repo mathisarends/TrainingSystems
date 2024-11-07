@@ -1,0 +1,20 @@
+<div class="icon">
+  <app-icon-with-backdrop-color [icon]="icon()" [iconColor]="IconBackgroundColor.DodgerBlue" />
+</div>
+<div class="stat-content">
+  <h4>{{ title() }}</h4>
+  <p class="value">{{ differenceFromLastSession() }} {{ unit() }}</p>
+
+  @if (isPositiveTrend()) {
+    <div class="change positive">
+      {{ differenceFromLastSession() }}
+      <app-icon [name]="IconName.TRENDING_UP" />
+      <small>{{ explanationText() }}</small>
+    </div>
+  } @else {
+    <div class="change negative">
+      <app-icon [name]="IconName.TRENDING_DOWN" />
+      <small>{{ explanationText() }}</small>
+    </div>
+  }
+</div>

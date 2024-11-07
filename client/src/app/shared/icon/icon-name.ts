@@ -54,4 +54,7 @@ export enum IconName {
   LIST = 'list',
   DELETE = 'delete',
   REFRESH = 'refresh-ccw',
+  TRENDING_UP = 'feather-trending-up',
+  TRENDING_DOWN = 'feather-trending-down',
+  HEART = 'heart',
 }
