@@ -22,6 +22,8 @@ export class ModalService {
 
   isVisible = signal(false);
 
+  loading = signal(false);
+
   constructor(
     private appRef: ApplicationRef,
     private injector: Injector,

@@ -3,7 +3,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">{{ title }}</h5>
-        <app-circular-icon-button [icon]="IconName.X"  (click)="close()" />
+        <app-circular-icon-button [icon]="IconName.X" (click)="close()" />
       </div>
       <div class="modal-body">
         <ng-template #modalContent></ng-template>
@@ -15,7 +15,12 @@
           }
 
           @let buttonVariant = isDestructiveAction ? 'DESTRUCTIVE' : 'PRIMARY';
-          <app-button [variant]="buttonVariant" [textContent]="confirmButtonText" (clicked)="confirm()" />
+          <app-button
+            [variant]="buttonVariant"
+            [textContent]="confirmButtonText"
+            (clicked)="confirm()"
+            [isLoading]="isLoading()"
+          />
         </div>
       }
     </div>

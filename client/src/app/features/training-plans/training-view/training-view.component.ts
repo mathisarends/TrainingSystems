@@ -226,7 +226,6 @@ export class TrainingViewComponent implements OnInit {
    */
   private saveTrainingData$(): Observable<void> {
     const changes = this.formService.getChanges();
-    console.log('🚀 ~ TrainingViewComponent ~ changes:', changes);
 
     return this.trainingViewService
       .submitTrainingPlan(this.planId(), this.trainingWeekIndex(), this.trainingDayIndex(), changes)

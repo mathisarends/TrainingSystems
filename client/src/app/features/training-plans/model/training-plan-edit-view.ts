@@ -16,7 +16,7 @@ export class TrainingPlanEditView {
   protected readonly defaultValues = {
     id: '',
     title: '',
-    trainingDays: new Set<string>(),
+    trainingDays: new Set<string>(['Mo', 'Mi', 'Fr']),
     trainingBlockLength: 4,
     weightRecommendationBase: WeightRecommendationBase.LASTWEEK,
     coverImageBase64: '',

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, signal } from '@angular/core';
+import { Observable, of, tap } from 'rxjs';
 import { HttpService } from '../../../../core/services/http-client.service';
 import { FloatingLabelInputComponent } from '../../../../shared/components/floating-label-input/floating-label-input.component';
 import { ToDropDownOptionsPipe } from '../../../../shared/components/floating-label-input/to-dropdown-options.pipe';
@@ -55,16 +56,19 @@ export class CreateTrainingComponent implements OnInit, OnConfirm {
 
   /**
    * Handles form submission using signals.
+   * Returns an Observable that completes when the submission is done.
    */
-  onConfirm(): void {
+  onConfirm(): Observable<void> {
     if (!this.trainingPlanEditView.isValid()) {
-      return;
+      return of(); // Gibt ein leeres Observable zurück, wenn die Validierung fehlschlägt
     }
 
-    this.httpClient.post('/training', this.trainingPlanEditView.toDto()).subscribe(() => {
-      this.toastService.success('Plan erstellt');
-      this.trainingPlanService.trainingPlanChanged();
-    });
+    return this.httpClient.post<void>('/training', this.trainingPlanEditView.toDto()).pipe(
+      tap(() => {
+        this.toastService.success('Plan erstellt');
+        this.trainingPlanService.trainingPlanChanged();
+      }),
+    );
   }
 
   /**
