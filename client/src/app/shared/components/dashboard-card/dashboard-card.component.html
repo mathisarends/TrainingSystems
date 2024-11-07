@@ -1,26 +1,14 @@
 <div class="stat-content">
   <h4>{{ title() }}</h4>
-  <p class="value">{{ unit() }}</p>
-
-  @if (isPositiveTrend()) {
-    <div class="trend-container positive">
+  <div class="unit-container">
+    <p class="value">{{ unit() }}</p>
+    <div class="trend-container" [ngClass]="{ positive: isPositiveTrend(), negative: !isPositiveTrend() }">
       <div class="trend-info">
-        <app-icon [name]="IconName.TRENDING_UP" />
+        <app-icon [name]="isPositiveTrend() ? IconName.TRENDING_UP : IconName.TRENDING_DOWN"></app-icon>
         {{ differenceFromLastSession() }}
       </div>
-
-      <small>{{ explanationText() }}</small>
     </div>
-  } @else {
-    <div class="trend-container negative">
-      <div class="trend-info">
-        <app-icon [name]="IconName.TRENDING_DOWN" />
-        {{ differenceFromLastSession() }}
-      </div>
-
-      <small>{{ explanationText() }}</small>
-    </div>
-  }
+  </div>
 </div>
 
 <app-icon-with-backdrop-color [icon]="icon()" [iconColor]="IconBackgroundColor.DodgerBlue" />

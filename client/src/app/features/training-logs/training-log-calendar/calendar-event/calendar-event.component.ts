@@ -1,6 +1,7 @@
 import { Component, HostListener, input } from '@angular/core';
 import { ModalService } from '../../../../core/services/modal/modalService';
 import { IconName } from '../../../../shared/icon/icon-name';
+import { CalendarDashboardPopupComponent } from '../calendar-dashboard-popup/calendar-dashboard-popup.component';
 
 @Component({
   selector: 'app-calendar-event',
@@ -16,9 +17,10 @@ export class CalendarEventComponent {
 
   @HostListener('click')
   onHostClick() {
-    this.modalService.openBasicInfoModal({
-      title: 'Event Details',
-      infoText: `Details für das Event: ${this.title()}`,
+    this.modalService.open({
+      title: this.title(),
+      component: CalendarDashboardPopupComponent,
+      hasFooter: false,
     });
   }
 }
