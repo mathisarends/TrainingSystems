@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { forkJoin, map, Observable, Subject, tap } from 'rxjs';
+import { catchError, forkJoin, map, Observable, of, Subject, tap } from 'rxjs';
 import { HttpService } from '../../../../core/services/http-client.service';
 import { BasicConfirmationResponse } from '../../../../shared/dto/basic-confirmation-response';
 import { TrainingSessionCardViewDto } from '../../../training-session/model/training-session-card-view-dto';
@@ -13,7 +13,7 @@ export class TrainingPlanService {
 
   trainingPlansChanged$ = this.trainingPlansChangedSubject.asObservable();
 
-  private trainingPlans = signal<TrainingPlanCardView[]>([]);
+  trainingPlans = signal<TrainingPlanCardView[]>([]);
 
   constructor(private httpService: HttpService) {}
 
@@ -38,23 +38,18 @@ export class TrainingPlanService {
    * Fetches the training plans and session card views from the backend
    * and updates the trainingPlans signal.
    * Combines both results into one array for further use.
+   * If fetching training sessions fails, it returns an empty array for sessions,
+   * preserving the expected data type.
    * @returns An Observable of the combined result array.
    */
   loadAndCacheTrainingPlans(): Observable<(TrainingPlanCardView | TrainingSessionCardViewDto)[]> {
-    const trainingPlans$: Observable<TrainingPlanCardView[]> = this.httpService.get('/training/plans');
-    const trainingSessions$: Observable<TrainingSessionCardViewDto[]> = this.httpService.get('/training-session');
+    const trainingPlans$: Observable<TrainingPlanCardView[]> = this.httpService.get('/training');
+    const trainingSessions$: Observable<TrainingSessionCardViewDto[]> = this.httpService.get('/training-routine');
+    catchError(() => of<TrainingSessionCardViewDto[]>([]));
 
     return forkJoin([trainingPlans$, trainingSessions$]).pipe(
       map(([trainingPlans, trainingSessions]) => [...trainingPlans, ...trainingSessions]),
       tap((combinedResults) => this.trainingPlans.set(combinedResults)),
     );
-  }
-  /**
-   * Gets the current training plans from the signal.
-   * Can be used for filtering and other local operations without making additional HTTP requests.
-   * @returns The current value of the training plans.
-   */
-  getTrainingPlans(): TrainingPlanCardView[] {
-    return this.trainingPlans();
   }
 }

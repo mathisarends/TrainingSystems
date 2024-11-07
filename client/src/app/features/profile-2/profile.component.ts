@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
@@ -17,7 +17,6 @@ import { NotificationService } from '../../shared/service/notification.service';
 import { GymTicketComponent } from '../gym-ticket/gym-ticket.component';
 import { GymTicketService } from '../gym-ticket/gym-ticket.service';
 import { HeaderService } from '../header/header.service';
-import { RestPauseTimeIndicatorComponent } from '../training-plans/training-view/rest-pause-time-indicator/rest-pause-time-indicator.component';
 import { ActivityCalendarData } from './activity-calendar/activity-calendar-data';
 import { ActivityCalendar } from './activity-calendar/activity-calendar.component';
 import { ChangeProfilePictureConfirmationComponent } from './change-profile-picture-confirmation/change-profile-picture-confirmation.component';
@@ -30,11 +29,11 @@ import { SettingsComponent } from './settings/settings.component';
   imports: [
     SpinnerComponent,
     IconListeItemComponent,
-    RestPauseTimeIndicatorComponent,
     ActivityCalendar,
     CommonModule,
     ChartSkeletonComponent,
     ProfilePictureWithInfoComponent,
+    SpinnerComponent,
   ],
   selector: 'app-profile',
   templateUrl: 'profile.component.html',
@@ -49,15 +48,12 @@ export class ProfileComponent2 implements OnInit {
 
   activityCalendarData$!: Observable<ActivityCalendarData>;
 
-  inputSignal = signal('');
-
   protected readonly listItems: IconListItem[] = [
-    { label: 'Exercises', iconName: IconName.DATABASE, iconBackgroundColor: IconBackgroundColor.DodgerBlue },
-    { label: 'Progression', iconName: IconName.BAR_CHART, iconBackgroundColor: IconBackgroundColor.MediumSlateBlue },
-    { label: 'Social', iconName: IconName.USERS, iconBackgroundColor: IconBackgroundColor.LimeGreen },
-    { label: 'Ticket', iconName: IconName.IMAGE, iconBackgroundColor: IconBackgroundColor.Orange },
-    { label: 'Settings', iconName: IconName.SETTINGS, iconBackgroundColor: IconBackgroundColor.DarkGray },
-    { label: 'Account löschen', iconName: IconName.Trash, iconBackgroundColor: IconBackgroundColor.OrangeRed },
+    { label: 'Exercises', iconName: IconName.DATABASE, iconBackgroundColor: IconBackgroundColor.DodgerBlue }, // Blau für Information
+    { label: 'Progression', iconName: IconName.BAR_CHART, iconBackgroundColor: IconBackgroundColor.LimeGreen }, // Grün für Fortschritt
+    { label: 'Ticket', iconName: IconName.IMAGE, iconBackgroundColor: IconBackgroundColor.Turquoise }, // Türkis für Dokumente oder Support
+    { label: 'Settings', iconName: IconName.SETTINGS, iconBackgroundColor: IconBackgroundColor.DarkGray }, // Grau für Einstellungen
+    { label: 'Account löschen', iconName: IconName.Trash, iconBackgroundColor: IconBackgroundColor.OrangeRed }, // Rot für kritische Aktionen
   ];
 
   constructor(
@@ -89,8 +85,8 @@ export class ProfileComponent2 implements OnInit {
     this.activityCalendarData$ = this.profileService.getActivityCalendarData();
   }
 
-  protected async onListItemClicked(listItem: IconListItem) {
-    if (listItem.label === 'Ticket') {
+  protected async onListItemClicked(label: string) {
+    if (label === 'Ticket') {
       this.modalService.open({
         component: GymTicketComponent,
         title: 'Gym Ticket',
@@ -103,16 +99,16 @@ export class ProfileComponent2 implements OnInit {
 
       this.gymTicketService.getGymTicket().subscribe((ticket: string) => {
         this.modalService.updateComponentData({
-          image: ticket,
+          image: ticket ?? 'noGymTicketAvailable',
         });
       });
-    } else if (listItem.label === 'Exercises') {
+    } else if (label === 'Exercises') {
       this.router.navigate(['profile/exercises']);
-    } else if (listItem.label === 'Account löschen') {
+    } else if (label === 'Account löschen') {
       this.showDeleteAccountDialog();
-    } else if (listItem.label === 'Progression') {
+    } else if (label === 'Progression') {
       this.router.navigate(['profile/progression']);
-    } else if (listItem.label === 'Social') {
+    } else if (label === 'Social') {
       this.modalService.open({
         component: FriendModalComponent,
         title: 'Test',
@@ -120,7 +116,7 @@ export class ProfileComponent2 implements OnInit {
       });
     } else {
       this.modalService.openBasicInfoModal({
-        title: listItem.label,
+        title: label,
         buttonText: 'Schließen',
         infoText: 'Leider noch nicht implementiert. Komm später wieder',
       });

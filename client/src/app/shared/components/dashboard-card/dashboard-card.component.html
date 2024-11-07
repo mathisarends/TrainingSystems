@@ -1,0 +1,14 @@
+<div class="stat-content">
+  <h4>{{ title() }}</h4>
+  <div class="unit-container">
+    <p class="value">{{ unit() }}</p>
+    <div class="trend-container" [ngClass]="{ positive: isPositiveTrend(), negative: !isPositiveTrend() }">
+      <div class="trend-info">
+        <app-icon [name]="isPositiveTrend() ? IconName.TRENDING_UP : IconName.TRENDING_DOWN"></app-icon>
+        {{ differenceFromLastSession() }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-icon-with-backdrop-color [icon]="icon()" [iconColor]="IconBackgroundColor.DodgerBlue" />

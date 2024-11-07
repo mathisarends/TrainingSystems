@@ -2,25 +2,60 @@ import { Injectable } from '@angular/core';
 import { ExerciseDataDTO } from './exerciseDataDto';
 import { RepSchemeByCategory } from './models/default-rep-scheme-by-category';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class ExerciseDataService {
-  private _exerciseData!: ExerciseDataDTO;
+  private _exerciseCategories: string[] = [];
+  private _categoryPauseTimes: { [key: string]: number } = {};
+  private _categorizedExercises: { [key: string]: string[] } = {};
+  private _defaultRepSchemeByCategory: RepSchemeByCategory = {};
 
-  set exerciseData(exerciseData: ExerciseDataDTO) {
-    this._exerciseData = exerciseData;
+  setExerciseData(data: Partial<ExerciseDataDTO>): void {
+    this.exerciseCategories = data.exerciseCategories || [];
+    this.categoryPauseTimes = data.categoryPauseTimes || {};
+    this.categorizedExercises = data.categorizedExercises || {};
+    this.defaultRepSchemeByCategory = data.defaultRepSchemeByCategory || {};
+  }
+  get exerciseCategories(): string[] {
+    return this._exerciseCategories;
   }
 
-  getExerciseData(): ExerciseDataDTO {
-    return this._exerciseData;
+  set exerciseCategories(value: string[]) {
+    this._exerciseCategories = value;
   }
 
-  getExerciseCategories(): string[] {
-    return this._exerciseData.exerciseCategories;
+  get categoryPauseTimes(): { [key: string]: number } {
+    return this._categoryPauseTimes;
   }
 
-  getDefaultRepSchemeByCategory(): RepSchemeByCategory {
-    return this._exerciseData.defaultRepSchemeByCategory;
+  set categoryPauseTimes(value: { [key: string]: number }) {
+    this._categoryPauseTimes = value;
+  }
+
+  get categorizedExercises(): { [key: string]: string[] } {
+    return this._categorizedExercises;
+  }
+
+  set categorizedExercises(value: { [key: string]: string[] }) {
+    this._categorizedExercises = value;
+  }
+
+  get defaultRepSchemeByCategory(): {
+    [key: string]: {
+      defaultSets: number;
+      defaultReps: number;
+      defaultRPE: number;
+    };
+  } {
+    return this._defaultRepSchemeByCategory;
+  }
+
+  set defaultRepSchemeByCategory(value: {
+    [key: string]: {
+      defaultSets: number;
+      defaultReps: number;
+      defaultRPE: number;
+    };
+  }) {
+    this._defaultRepSchemeByCategory = value;
   }
 }

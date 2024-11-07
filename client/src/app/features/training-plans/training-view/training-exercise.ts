@@ -2,6 +2,9 @@
  * Represents an exercise within a workout routine.
  */
 export interface Exercise {
+
+  _id?: string;
+
   /**
    * The category or type of the exercise (e.g., strength, cardio).
    */

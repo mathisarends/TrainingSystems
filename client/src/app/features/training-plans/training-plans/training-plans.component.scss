@@ -28,7 +28,6 @@
   border-radius: 8px;
 }
 
-// TODO: Hieraus auch eine eigene Komponente machen um das Styling zu Kapsel nwäre ganz gut oder nciht
 .training-plan-grid {
   display: grid;
   gap: 1rem;
@@ -37,6 +36,16 @@
   margin: 0 auto;
 }
 
+.empty-training-list-container {
+  display: flex;
+  width: 100%;
+  gap: 1rem;
+  margin-top: 0.75rem;
+
+  > * {
+    flex: 1 1 50%;
+  }
+}
 @media screen and (max-width: 768px) {
   .container.heading-container {
     padding-left: 0;
@@ -50,5 +59,9 @@
 
   .cdk-drag-preview {
     transform: none;
+  }
+
+  .empty-training-list-container {
+    flex-direction: column;
   }
 }

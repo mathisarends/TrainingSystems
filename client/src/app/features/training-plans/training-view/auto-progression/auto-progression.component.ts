@@ -25,10 +25,14 @@ export class AutoProgressionComponent implements OnConfirm {
     private toastService: ToastService,
   ) {}
 
-  // TODO: sobald migriert ist auf nestjs wird das hier im request body gemacht
   onConfirm(): void {
-    const url = `/training/plan/${this.planId}/auto-progression?rpeProgression=${this.rpeProgressionOption()}&deloadWeek=${this.isDeloadWeekOptionSelection()}`;
+    const url = `/training/${this.planId}/auto-progression`;
 
-    this.httpService.post(url).subscribe(() => this.toastService.success('Progression geplant'));
+    const autoProgressionDto = {
+      withDeloadWeek: this.isDeloadWeekOptionSelection(),
+      rpeProgression: this.rpeProgressionOption(),
+    };
+
+    this.httpService.post(url, autoProgressionDto).subscribe(() => this.toastService.success('Progression geplant'));
   }
 }

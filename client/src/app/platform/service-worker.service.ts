@@ -76,13 +76,27 @@ export class ServiceWorkerService {
    * Sende die Push-Subscription an den Server, um sie dort zu speichern.
    */
   private sendSubscriptionToServer(subscription: PushSubscription) {
+    const keys = {
+      p256dh: this.arrayBufferToBase64(subscription.getKey('p256dh')),
+      auth: this.arrayBufferToBase64(subscription.getKey('auth')),
+    };
+
     this.httpService
-      .post('/push-notifications/subscribe', {
-        subscription,
+      .post('/push-notifications', {
+        endpoint: subscription.endpoint,
+        keys,
       })
       .subscribe(() => {
         console.log('Push-Subscription erfolgreich an den Server gesendet.');
       });
+  }
+
+  private arrayBufferToBase64(buffer: ArrayBuffer | null): string {
+    if (!buffer) {
+      return '';
+    }
+    const binary = String.fromCharCode(...new Uint8Array(buffer));
+    return window.btoa(binary);
   }
 
   /**

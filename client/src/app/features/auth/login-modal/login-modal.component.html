@@ -1,0 +1,28 @@
+<app-alert
+  [alertText]="
+    'The Google sign-in popup is temporarily unavailable due to a cooldown. Please use the button below to sign in manually.'
+  "
+/>
+
+<div class="media-options">
+  <div
+    id="g_id_onload"
+    data-client_id="745778541640-0f05iimgfid2tag6rkvilau5nqt69ko0.apps.googleusercontent.com"
+    data-context="signin"
+    data-ux_mode="popup"
+    [attr.data-login_uri]="oauthRoute"
+    data-auto_prompt="false"
+  ></div>
+
+  <div
+    class="g_id_signin"
+    data-type="standard"
+    data-shape="rectangular"
+    data-theme="outline"
+    data-text="signin_with"
+    data-size="large"
+    data-logo_alignment="left"
+    #googleLoginButton
+    style="margin-top: 1rem"
+  ></div>
+</div>

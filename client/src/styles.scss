@@ -9,8 +9,29 @@
   --light-grey: #f0f0f0;
   --dark-grey: #2e3a40;
   --border-color: #e2e8f0;
+  --element-background: rgb(247, 247, 247);
 
   --off-white: #fdfdfd;
+
+  --fs-900: clamp(5rem, 8vw + 1rem, 9.375rem);
+  --fs-800: 3.5rem;
+  --fs-700: 1.5rem;
+  --fs-600: 1rem;
+  --fs-500: 1rem;
+  --fs-400: 0.9375rem;
+  --fs-300: 1rem;
+  --fs-200: 0.875rem;
+
+  /* font-families */
+  --ff-serif: 'Bellefair', serif;
+  --ff-sans-cond: 'Barlow Condensed', sans-serif;
+  --ff-sans-normal: 'Barlow', sans-serif;
+}
+
+@media screen and (max-width: 768px) {
+  :root {
+    --element-background: rgb(243, 239, 239);
+  }
 }
 
 * {
@@ -68,4 +89,38 @@ textarea.form-control {
 .center {
   display: grid;
   place-items: center;
+}
+
+.transparent-input {
+  border: none;
+  background-color: transparent;
+  width: 100%;
+
+  text-align: center;
+}
+.transparent-input:focus {
+  border: none;
+  outline: none;
+}
+
+/* Hide up and down arrows from number inputs */
+input[type='number'] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0; /* Chrome, Safari, Edge, Opera */
+}
+
+/* Remove up and down arrows in IE10+ */
+input[type='number'] {
+  -ms-appearance: textfield;
+}
+
+@media screen and (max-width: 768px) {
+  .transparent-input {
+    text-align: left;
+  }
 }

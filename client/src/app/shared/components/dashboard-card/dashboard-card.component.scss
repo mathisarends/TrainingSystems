@@ -1,0 +1,50 @@
+:host {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgb(243, 243, 243);
+}
+
+.unit-container {
+  display: fleX;
+  gap: 0.75rem;
+  align-items: baseline;
+  justify-content: baseline;
+}
+
+.stat-content {
+  flex: 1;
+}
+
+h4 {
+  font-size: 15px;
+  font-weight: normal;
+}
+
+.value {
+  font-size: 28px;
+  letter-spacing: 2.5px;
+  font-weight: bold;
+}
+
+.trend-container {
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  .trend-info {
+    display: flex;
+    gap: 0.35rem;
+  }
+}
+
+.positive {
+  color: green;
+}
+
+.negative {
+  color: red;
+}

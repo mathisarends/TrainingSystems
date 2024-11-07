@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, HostListener, input, output } from '@angular/core';
 import { IconName } from '../../icon/icon-name';
 import { IconComponent } from '../../icon/icon.component';
-import { IconListItem } from './icon-list-item';
+import { IconBackgroundColor } from './icon-background-color';
 
 @Component({
   standalone: true,
@@ -15,15 +15,25 @@ export class IconListeItemComponent {
   protected readonly IconName = IconName;
 
   /**
-   * The list item to be displayed.
+   * The text label displayed alongside the icon.
    */
-  item = input.required<IconListItem>();
+  label = input.required<string>();
+
+  /**
+   * The name of the icon to be displayed.
+   */
+  iconName = input.required<IconName>();
+
+  /**
+   * The background color of the icon.
+   */
+  iconBackgroundColor = input.required<IconBackgroundColor>();
 
   /**
    * An event emitter that emits the current `IconListItem` when the component
    * is clicked.
    */
-  itemClicked = output<IconListItem>();
+  itemClicked = output<string>();
 
   showChevronIcon = input(true);
   /**
@@ -33,6 +43,6 @@ export class IconListeItemComponent {
    */
   @HostListener('click')
   onClick() {
-    this.itemClicked.emit(this.item());
+    this.itemClicked.emit(this.label());
   }
 }

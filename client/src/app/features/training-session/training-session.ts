@@ -9,7 +9,6 @@ export class TrainingSession {
   id: WritableSignal<string>;
   title: WritableSignal<string>;
   lastUpdated = signal<Date>(new Date());
-  weightRecommendationBase: WritableSignal<WeightRecommendationBase>;
   versions: WritableSignal<TrainingDay[]>;
   coverImageBase64: WritableSignal<string>;
   recentlyViewedCategoriesInStatisticSection: WritableSignal<string[]>;
@@ -32,7 +31,6 @@ export class TrainingSession {
     this.id = signal(dto.id);
     this.title = signal(dto.title);
     this.lastUpdated.set(dto.lastUpdated);
-    this.weightRecommendationBase = signal(dto.weightRecommandationBase);
     this.versions = signal(dto.versions);
     this.coverImageBase64 = signal(dto.coverImageBase64);
     this.recentlyViewedCategoriesInStatisticSection = signal(
@@ -56,7 +54,6 @@ export class TrainingSession {
   toSessionMetadataDto(): TrainingSessionMetaDataDto {
     return {
       title: this.title(),
-      weightRecommandationBase: this.weightRecommendationBase(),
       coverImageBase64: this.coverImageBase64(),
     };
   }

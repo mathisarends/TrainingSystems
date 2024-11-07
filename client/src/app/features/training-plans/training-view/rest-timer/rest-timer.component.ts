@@ -52,6 +52,11 @@ export class RestTimerComponent implements OnInit {
 
     if (remainingTime === 0) {
       this.percentageRemaining.set(100);
+
+      // timeout so fill animation is still visible
+      setTimeout(() => {
+        this.modalService.close();
+      }, 500);
       return;
     }
 

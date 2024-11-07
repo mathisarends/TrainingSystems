@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Injectable, signal, WritableSignal } from '@angular/core';
+import { Observable, of, tap } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { ExerciseDataDTO } from './exerciseDataDto';
+import { Exercise } from './training-exercise';
 import { TrainingPlanDto } from './trainingPlanDto';
 
 /**
@@ -10,26 +11,41 @@ import { TrainingPlanDto } from './trainingPlanDto';
  */
 @Injectable()
 export class TrainingViewService {
-  constructor(private httpClient: HttpService) {}
+  private exerciseData: WritableSignal<ExerciseDataDTO | undefined> = signal(undefined);
+
+  constructor(private httpService: HttpService) {}
 
   /**
    * Loads the training plan for a specific plan ID, week, and day.
    */
   loadTrainingPlan(planId: string, week: number, day: number): Observable<TrainingPlanDto> {
-    return this.httpClient.get<TrainingPlanDto>(`/training/plan/${planId}/${week}/${day}`);
+    return this.httpService.get<TrainingPlanDto>(`/training-plan-view/${planId}/${week}/${day}`);
   }
 
   /**
-   * Loads the exercise data for the application.
+   * Loads the exercise data, using cached data if available.
    */
   loadExerciseData(): Observable<ExerciseDataDTO> {
-    return this.httpClient.get<ExerciseDataDTO>('/exercise');
+    if (this.exerciseData()) {
+      return of(this.exerciseData()!);
+    }
+
+    return this.httpService
+      .get<ExerciseDataDTO>('/exercise')
+      .pipe(tap((exerciseData) => this.exerciseData.set(exerciseData)));
   }
 
   /**
    * Submits changes to the training plan for a specific plan ID, week, and day.
    */
-  submitTrainingPlan(planId: string, week: number, day: number, changedData: Record<string, string>): Observable<any> {
-    return this.httpClient.patch(`/training/plan/${planId}/${week}/${day}`, changedData);
+  submitTrainingPlan(planId: string, week: number, day: number, changedData: Record<string, string>): Observable<void> {
+    return this.httpService.patch(`/training-plan-view/${planId}/${week}/${day}`, changedData);
+  }
+
+  /**
+   * Submits changes to the training plan for a specific plan ID, week, and day.
+   */
+  submitTrainingPlan2(planId: string, week: number, day: number, exercise: Exercise): Observable<void> {
+    return this.httpService.patch(`/training-plan-view/${planId}/${week}/${day}/2`, { exercise });
   }
 }

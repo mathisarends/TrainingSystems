@@ -1,51 +1,50 @@
 <div class="search-bar-container" [@toggleCollapse]="isSearchbarCollapsed() ? 'collapsed' : 'expanded'">
   <app-search-bar [(searchQuery)]="trainingPlanSearchQuery" />
 </div>
-
-@if (isDragMode()) {
-  <div class="row">
-    @if (!isLoading()) {
-      @if (filteredTrainingPlans().length === 0) {
-        <app-alert alertText="Keine deiner bestehenden Trainingpläne passen zu dieser Suchanfrage!" />
-      } @else {
-        <div class="training-plan-grid">
-          @for (trainingPlan of filteredTrainingPlans(); track trainingPlan.id) {
-            <div class="training-plan-card-container" cdkDrag>
-              <app-training-plan-card [trainingPlan]="trainingPlan" />
-
-              <app-circular-icon-button [icon]="IconName.DRAG" [iconSize]="18" cdkDragHandle />
-            </div>
-          }
-        </div>
-      }
-    } @else {
-      <ng-container *ngTemplateOutlet="skeletonLoader"></ng-container>
+<div class="row">
+  @if (!isLoading()) {
+    @if (trainingPlanService.trainingPlans().length === 0) {
+      <app-alert
+        [alertText]="
+          'Du hast noch keine Trainingspläne erstellt! Starte jetzt, indem du entweder eine individuelle Session für gezieltes Training erstellst, oder einen umfassenden Trainingsplan, der dir hilft, deine langfristigen Ziele zu erreichen.'
+        "
+        [alertType]="'light'"
+      />
+      <div class="empty-training-list-container">
+        <app-icon-list-item
+          [label]="'Trainingsplan erstellen'"
+          [iconName]="IconName.CALENDAR"
+          [iconBackgroundColor]="IconBackgroundColor.MediumSlateBlue"
+          (click)="createNewPlan()"
+        />
+        <app-icon-list-item
+          [label]="'Session erstellen'"
+          [iconName]="IconName.Activity"
+          [iconBackgroundColor]="IconBackgroundColor.DodgerBlue"
+          (click)="createNewSession()"
+        />
+        <app-icon-list-item
+          [label]="'Trainingsplan vs Session'"
+          [iconName]="IconName.INFO"
+          [iconBackgroundColor]="IconBackgroundColor.LimeGreen"
+          (click)="openTrainingTypeExplanation()"
+        />
+      </div>
+    } @else if (filteredTrainingPlans().length === 0) {
+      <app-alert alertText="Keine deiner bestehenden Trainingpläne passen zu dieser Suchanfrage!" />
     }
-  </div>
-} @else {
-  <div class="row">
-    @if (!isLoading()) {
-      @if (filteredTrainingPlans().length === 0) {
-        <app-alert alertText="Keine deiner bestehenden Trainingpläne passen zu dieser Suchanfrage!" />
-      } @else {
-        <div class="training-plan-grid">
-          @for (trainingPlan of filteredTrainingPlans(); track trainingPlan.id) {
-            <div class="training-plan-card-container">
-              <app-training-plan-card [trainingPlan]="trainingPlan" />
-            </div>
-          }
-        </div>
-      }
-    } @else {
-      <ng-container *ngTemplateOutlet="skeletonLoader"></ng-container>
-    }
-  </div>
-}
-
-<ng-template #skeletonLoader>
-  @for (k of [1, 2, 3]; track k) {
     <div class="training-plan-grid">
-      <app-skeleton-card />
+      @for (trainingPlan of filteredTrainingPlans(); track trainingPlan.id) {
+        <div class="training-plan-card-container">
+          <app-training-plan-card [trainingPlan]="trainingPlan" />
+        </div>
+      }
     </div>
+  } @else {
+    @for (k of [1, 2, 3]; track k) {
+      <div class="training-plan-grid">
+        <app-skeleton-card />
+      </div>
+    }
   }
-</ng-template>
+</div>

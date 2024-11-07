@@ -5,10 +5,13 @@
 }
 
 .modal-body {
-  padding: 0.7rem;
+  padding: 1.325rem;
+  padding-top: 0.25rem;
 }
 
 .modal-header {
+  display: flex;
+  justify-content: space-between;
   cursor: move;
 }
 

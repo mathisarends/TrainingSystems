@@ -1,9 +1,9 @@
 import { Component, DestroyRef, effect, Injector, OnInit, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
 import { AverageTrainingDayDurationDto } from '@shared/charts/average-training-day-duration.dto';
 import { ChartDataDto } from '@shared/charts/chart-data.dto';
 import { forkJoin } from 'rxjs';
+import { AlertComponent } from '../../../shared/components/alert/alert.component';
 import { ChartData } from '../../../shared/components/charts/chart-data';
 import { BarChartDataset } from '../../../shared/components/charts/grouped-bar-chart/bar-chart.-data-set';
 import { GroupedBarChartComponent } from '../../../shared/components/charts/grouped-bar-chart/grouped-bar-chart.component';
@@ -12,6 +12,7 @@ import { LineChartComponent } from '../../../shared/components/charts/line-chart
 import { PolarAreaChartDataset } from '../../../shared/components/charts/polar-chart/polar-area-chart-data-set';
 import { PolarChartComponent } from '../../../shared/components/charts/polar-chart/polar-chart.component';
 import { ChartSkeletonComponent } from '../../../shared/components/loader/chart-skeleton/chart-skeleton.component';
+import { NoStatisticsAvailableComponent } from '../../../shared/components/no-statistics-available/no-statistics-available.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { SelectComponent } from '../../../shared/components/select/select.component';
 import { ToSelectItemPipe } from '../../../shared/components/select/to-select-item.pipe';
@@ -38,8 +39,9 @@ import { TrainingStatisticsService } from './training-statistics.service';
     ToSelectItemPipe,
     PolarChartComponent,
     GroupedBarChartComponent,
+    NoStatisticsAvailableComponent,
   ],
-  providers: [TrainingStatisticsService, KeyboardService, PaginationComponent, ImageDownloadService],
+  providers: [TrainingStatisticsService, KeyboardService, PaginationComponent, ImageDownloadService, AlertComponent],
   templateUrl: './training-plan-statistics.component.html',
   styleUrls: ['./training-plan-statistics.component.scss'],
 })
@@ -48,6 +50,8 @@ export class TrainingPlanStatisticsComponent implements OnInit {
    * Indicates whether the data has been fully loaded.
    */
   isLoaded = signal(false);
+
+  showNoDataAvailableInfo = signal(false);
 
   /**
    * The current training plan ID.
@@ -86,7 +90,6 @@ export class TrainingPlanStatisticsComponent implements OnInit {
 
   constructor(
     protected trainingPlanService: TrainingPlanService,
-    private router: Router,
     private chartColorService: ChartColorService,
     private trainingStatisticService: TrainingStatisticsService,
     private headerService: HeaderService,
@@ -100,7 +103,7 @@ export class TrainingPlanStatisticsComponent implements OnInit {
   ngOnInit(): void {
     this.headerService.setLoading();
 
-    this.trainingPlanId.set(this.parseTrainingPlanIdFromUrl());
+    this.trainingPlanId.set(this.parseTrainingPlanIdFromQueryParam());
 
     this.fetchAndSetCategoryMetadata();
 
@@ -146,11 +149,17 @@ export class TrainingPlanStatisticsComponent implements OnInit {
       performance: this.trainingStatisticService.getPerformanceDataForSelectedExercises(id, exercises),
       sessionDurationData: this.trainingStatisticService.getAverageSessionDurationDataForTrainingPlanDay(id),
       performedSetsData: this.trainingStatisticService.getSetDataForSelectedExercises(id, exercises),
-      title: this.trainingStatisticService.getTrainingPlanTitle(id),
+      titleResponse: this.trainingStatisticService.getTrainingPlanTitle(id),
     })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ tonnage, performance, performedSetsData, sessionDurationData, title }) => {
-        this.setHeadlineInfo(title);
+      .subscribe(({ tonnage, performance, performedSetsData, sessionDurationData, titleResponse }) => {
+        if (this.areAllEntriesZero(performedSetsData)) {
+          this.showNoDataAvailableInfo.set(true);
+        } else {
+          this.showNoDataAvailableInfo.set(false);
+        }
+
+        this.setHeadlineInfo(titleResponse.title);
         this.isLoaded.set(true);
 
         this.initializeSessionDurationData(sessionDurationData);
@@ -159,6 +168,15 @@ export class TrainingPlanStatisticsComponent implements OnInit {
         this.initializeLineChartData(tonnage, TrainingDayChartType.VOLUME);
         this.initializeLineChartData(performance, TrainingDayChartType.PERFORMANCE);
       });
+  }
+
+  /**
+   * Checks if all entries in the arrays of the given data object are zero.
+   * @param data - An object containing arrays to check.
+   * @returns True if all arrays contain only zeros, false otherwise.
+   */
+  private areAllEntriesZero(data: { [key: string]: number[] }): boolean {
+    return Object.values(data).every((array) => array.every((value) => value === 0));
   }
 
   private inializePerformedSetsData(tonnageData: ChartDataDto) {
@@ -267,7 +285,13 @@ export class TrainingPlanStatisticsComponent implements OnInit {
    *
    * @returns The training plan ID extracted from the URL.
    */
-  private parseTrainingPlanIdFromUrl(): string {
-    return this.router.url.split('/').pop()!;
+  private parseTrainingPlanIdFromQueryParam(): string {
+    const url = new URL(window.location.href);
+    const planId = url.searchParams.get('planId');
+
+    if (!planId) {
+      throw new Error('Plan id was not given in query param');
+    }
+    return planId;
   }
 }

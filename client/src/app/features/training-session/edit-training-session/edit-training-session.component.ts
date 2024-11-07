@@ -45,9 +45,9 @@ export class EditTrainingSessionComponent implements OnInit, OnConfirm {
   onConfirm(): void {
     const sessionMetadataDto = this.trainingSession.toSessionMetadataDto();
 
-    this.trainingSessionService.editTrainingSession(this.id(), sessionMetadataDto).subscribe((response) => {
+    this.trainingSessionService.editTrainingSession(this.id(), sessionMetadataDto).subscribe(() => {
       this.trainingPlanService.trainingPlanChanged();
-      this.toastService.success(response.message);
+      this.toastService.success('Session bearbeitet');
     });
   }
 

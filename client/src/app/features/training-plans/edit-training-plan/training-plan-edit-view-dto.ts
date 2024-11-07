@@ -1,12 +1,10 @@
 export interface TrainingPlanEditViewDto {
   id: string;
   title: string;
-  trainingFrequency: number;
+  trainingDays: string[];
   weightRecommandationBase: WeightRecommendationBase;
   trainingBlockLength: number;
   coverImageBase64: string;
-
-  referencePlanId?: string;
 }
 
 /**

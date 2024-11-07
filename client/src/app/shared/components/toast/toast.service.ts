@@ -7,45 +7,58 @@ import { ToastStatus } from './toast-status';
 })
 export class ToastService {
   private toast!: Toast | null;
+  private isActive: boolean = false;
 
   success(infoText: string) {
-    const toast: Toast = {
-      status: ToastStatus.SUCCESS,
-      title: 'Erfolg',
-      text: infoText,
-    };
-
-    this.toast = toast;
-
-    setTimeout(() => this.remove(), 5000);
+    this.showToast(
+      {
+        status: ToastStatus.SUCCESS,
+        title: 'Erfolg',
+        text: infoText,
+      },
+      5000,
+    );
   }
 
   error(infoText: string) {
-    const toast: Toast = {
-      status: ToastStatus.ERROR,
-      title: 'Fehler',
-      text: infoText,
-    };
+    this.showToast(
+      {
+        status: ToastStatus.ERROR,
+        title: 'Fehler',
+        text: infoText,
+      },
+      10000,
+    );
+  }
 
+  achievement(infoText: string) {
+    this.showToast(
+      {
+        status: ToastStatus.ACHIEVEMENT,
+        title: 'Achievement',
+        text: infoText,
+      },
+      5000,
+    );
+  }
+
+  private showToast(toast: Toast, duration: number) {
     this.toast = toast;
+    this.isActive = true;
 
-    setTimeout(() => this.remove(), 10000);
+    setTimeout(() => this.remove(), duration);
   }
 
-  /**
-   * Removes the current toast.
-   * Sets the toast property to null, indicating no active toast.
-   */
   remove(): void {
-    this.toast = null;
+    this.isActive = false;
+    setTimeout(() => (this.toast = null), 500);
   }
 
-  /**
-   * Gets the current toast.
-   *
-   * @returns The current toast or null if no toast is active.
-   */
   get currentToast(): Toast | null {
     return this.toast;
+  }
+
+  get toastIsActive(): boolean {
+    return this.isActive;
   }
 }

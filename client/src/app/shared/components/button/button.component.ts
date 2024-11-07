@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, input, output } from '@angular/core';
+import { ButtonLoaderComponent } from './button-loader/button-loader.component';
 
 @Component({
   selector: 'app-button',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ButtonLoaderComponent],
   templateUrl: './button.component.html',
   styleUrl: './button.component.scss',
 })
@@ -14,6 +15,8 @@ export class ButtonComponent {
    * Accepts 'PRIMARY' or 'SECONDARY'. Defaults to 'PRIMARY'.
    */
   variant = input<'PRIMARY' | 'SECONDARY' | 'DESTRUCTIVE'>('PRIMARY');
+
+  isLoading = input(false);
 
   /**
    * The text content displayed inside the button.

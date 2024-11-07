@@ -8,6 +8,7 @@ import { ToastService } from '../../../shared/components/toast/toast.service';
 import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
 import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
+import { FormatDatePipe } from '../../../shared/pipes/format-date.pipe';
 import { EditTrainingSessionComponent } from '../../training-session/edit-training-session/edit-training-session.component';
 import { TrainingSessionService } from '../../training-session/training-session-service';
 import { EditTrainingPlanComponent } from '../edit-training-plan/edit-training-plan.component';
@@ -23,7 +24,7 @@ import { TrainingWeekDayDto } from './training-week-day-dto';
 @Component({
   selector: 'app-training-plan-card',
   standalone: true,
-  imports: [CommonModule, TooltipDirective, IconButtonComponent, IconComponent],
+  imports: [CommonModule, TooltipDirective, IconButtonComponent, IconComponent, FormatDatePipe],
   templateUrl: './training-plan-card.component.html',
   styleUrls: ['./training-plan-card.component.scss'],
   providers: [TrainingPlanCardService, TrainingSessionService],
@@ -124,8 +125,14 @@ export class TrainingPlanCardComponent implements OnInit {
   }
 
   viewStatistics(id: string): void {
-    const redirectUrl = this.isTrainingSessionCard() ? `statistics/session/${id}` : `statistics/${id}`;
+    const redirectUrl = this.isTrainingSessionCard() ? `statistics/session` : `statistics`;
     this.router.navigate([redirectUrl]);
+
+    this.router.navigate(['/statistics'], {
+      queryParams: {
+        planId: id,
+      },
+    });
   }
 
   /**

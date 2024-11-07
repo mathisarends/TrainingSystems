@@ -21,7 +21,7 @@ export class AuthService {
    * @returns An Observable that completes when the authentication status check is done.
    */
   checkAuthenticationStatus(): Observable<boolean> {
-    return this.httpService.get('/user/auth/auth-state').pipe(
+    return this.httpService.get('/auth-state').pipe(
       map(() => {
         this.isAuthenticatedSignal.set(true);
         return true;
@@ -34,27 +34,12 @@ export class AuthService {
   }
 
   /**
-   * Displays the login modal dialog if user is not authenticated.
-   */
-  async showLoginModalDialog(): Promise<void> {
-    const response = await this.modalService.openBasicInfoModal({
-      title: 'Anmeldung erforderlich',
-      buttonText: 'Anmelden',
-      infoText: 'Um diese Seite besuchen zu können musst du angemeldet sein!',
-    });
-
-    if (response) {
-      this.router.navigate(['login']);
-    }
-  }
-
-  /**
    * Logs out the user
    */
   logout(): void {
-    this.httpService.post('/user/auth/logout').subscribe(() => {
+    this.httpService.post('/auth/logout').subscribe(() => {
       this.isAuthenticatedSignal.set(false);
-      this.router.navigate(['login']);
+      this.router.navigate(['getting-started']);
     });
   }
 
@@ -64,6 +49,10 @@ export class AuthService {
    */
   isAuthenticated(): boolean | undefined {
     return this.isAuthenticatedSignal();
+  }
+
+  setAuthenticated(authenticated: boolean): void {
+    this.isAuthenticatedSignal.set(authenticated);
   }
 
   /**

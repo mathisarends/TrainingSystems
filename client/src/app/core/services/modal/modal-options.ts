@@ -54,7 +54,8 @@ export interface ModalOptions {
 /**
  * Interface for the basic info modal options, inheriting only specific properties from ModalOptions.
  */
-export interface BasicInfoModalOptions extends Pick<ModalOptions, 'title' | 'buttonText' | 'isDestructiveAction'> {
+export interface BasicInfoModalOptions
+  extends Pick<ModalOptions, 'title' | 'buttonText' | 'isDestructiveAction' | 'hasFooter' | 'size'> {
   /**
    * The text message to display in the modal.
    */

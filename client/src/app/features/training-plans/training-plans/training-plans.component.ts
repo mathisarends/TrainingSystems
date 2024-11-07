@@ -7,17 +7,21 @@ import { ModalSize } from '../../../core/services/modal/modalSize';
 import { toggleCollapseAnimation } from '../../../shared/animations/toggle-collapse';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
 import { CircularIconButtonComponent } from '../../../shared/components/circular-icon-button/circular-icon-button.component';
+import { IconBackgroundColor } from '../../../shared/components/icon-list-item/icon-background-color';
+import { IconListeItemComponent } from '../../../shared/components/icon-list-item/icon-list-item.component';
 import { SkeletonCardComponent } from '../../../shared/components/loader/skeleton-card/skeleton-card.component';
 import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
+import { ToastService } from '../../../shared/components/toast/toast.service';
 import { IconName } from '../../../shared/icon/icon-name';
 import { KeyboardService } from '../../../shared/service/keyboard.service';
 import { HeaderService } from '../../header/header.service';
 import { TrainingSessionService } from '../../training-session/training-session-service';
 import { TrainingPlanCardComponent } from '../training-plan-card/training-plan-card.component';
-import { CreateTrainingComponent } from '../training-view/create-training/create-training.component';
 import { TrainingPlanCardView } from '../training-view/models/exercise/training-plan-card-view-dto';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
+import { CreateSessionComponent } from './create-session/create-session.component';
+import { CreateTrainingComponent } from './create-training/create-training.component';
 
 /**
  * Component to manage and display training plans.
@@ -34,6 +38,7 @@ import { TrainingPlanService } from '../training-view/services/training-plan.ser
     SearchBarComponent,
     DragDropModule,
     SpinnerComponent,
+    IconListeItemComponent,
   ],
   templateUrl: './training-plans.component.html',
   styleUrls: ['./training-plans.component.scss'],
@@ -42,7 +47,9 @@ import { TrainingPlanService } from '../training-view/services/training-plan.ser
 })
 export class TrainingPlansComponent implements OnInit {
   @ViewChild(SearchBarComponent) searchBar!: SearchBarComponent;
+
   protected readonly IconName = IconName;
+  protected readonly IconBackgroundColor = IconBackgroundColor;
 
   /**
    * Holds the filtered training plans to display.
@@ -60,22 +67,18 @@ export class TrainingPlansComponent implements OnInit {
   isSearchbarCollapsed = signal<boolean>(true);
 
   /**
-   * Toggling drag mode for training plans.
-   */
-  isDragMode = signal(false);
-
-  /**
    * Signal indicating whether the data is still loading.
    */
   isLoading = signal(true);
 
   constructor(
-    private trainingPlanService: TrainingPlanService,
+    protected trainingPlanService: TrainingPlanService,
     private modalService: ModalService,
     private headerService: HeaderService,
     private keyboardService: KeyboardService,
     private injector: Injector,
     private destroyRef: DestroyRef,
+    private toastService: ToastService,
   ) {}
 
   /**
@@ -119,14 +122,29 @@ export class TrainingPlansComponent implements OnInit {
   /**
    * Opens the modal to create a new training plan.
    */
-  private createNewPlan(): void {
+  protected createNewPlan(): void {
     this.modalService.open({
       component: CreateTrainingComponent,
       title: 'Trainingsplan erstellen',
       buttonText: 'Erstellen',
-      secondaryButtonText: 'Session Erstellen',
       size: ModalSize.LARGE,
-      confirmationRequired: true,
+    });
+  }
+
+  protected createNewSession(): void {
+    this.modalService.open({
+      component: CreateSessionComponent,
+      title: 'Trainingsession erstellen',
+      size: ModalSize.LARGE,
+    });
+  }
+
+  protected openTrainingTypeExplanation(): void {
+    this.modalService.openBasicInfoModal({
+      title: 'Plan vs Session',
+      buttonText: 'Verstanden',
+      infoText:
+        'Ein Trainingsplan ist ideal, wenn du langfristig deine Fitnessziele erreichen möchtest. Er basiert auf dem Prinzip der Blockperiodisierung und verteilt dein Training über mehrere Wochen mit zunehmendem Volumen und steigender Intensität. So kannst du systematisch Fortschritte erzielen und die Belastung kontinuierlich steigern. \n\nEine Session hingegen ist eine einzelne, wiederholbare Trainingseinheit, die unabhängig oder als Teil eines Plans genutzt werden kann. Sie eignet sich perfekt für gezielte Einheiten, die du nach Belieben in dein Training integrieren kannst. Ob Plan oder Session – die Wahl hängt ganz von deinem Trainingsstil und deinen Zielen ab!',
     });
   }
 
@@ -136,24 +154,19 @@ export class TrainingPlansComponent implements OnInit {
    */
   private setHeaderInfo(): void {
     const options = [
+      { icon: IconName.PLUS, label: 'Erstellen', callback: this.createNewPlan.bind(this) },
+      {
+        icon: IconName.Activity,
+        label: 'Session',
+        callback: this.createNewSession.bind(this),
+      },
       { icon: IconName.SEARCH, label: 'Suchen', callback: this.toggleSearchBarVisibility.bind(this) },
-      { icon: IconName.DRAG, label: 'Anordnen', callback: this.toggleDragMode.bind(this) },
     ];
 
     this.headerService.setHeadlineInfo({
       title: 'Training',
-      buttons: [
-        { icon: IconName.PLUS, callback: this.createNewPlan.bind(this) },
-        { icon: IconName.MORE_VERTICAL, options },
-      ],
+      buttons: [{ icon: IconName.MORE_VERTICAL, options }],
     });
-  }
-
-  /**
-   * Toggles the mode in which training plan cards may be dragged
-   */
-  private toggleDragMode(): void {
-    this.isDragMode.set(!this.isDragMode());
   }
 
   /**
@@ -176,7 +189,7 @@ export class TrainingPlansComponent implements OnInit {
     effect(
       () => {
         const searchQuery = this.trainingPlanSearchQuery().toLowerCase();
-        const allPlans = this.trainingPlanService.getTrainingPlans();
+        const allPlans = this.trainingPlanService.trainingPlans();
 
         if (!allPlans) return;
 

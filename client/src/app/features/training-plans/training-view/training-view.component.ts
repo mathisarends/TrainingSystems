@@ -1,25 +1,27 @@
-import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, computed, DestroyRef, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { FormService } from '../../../core/services/form.service';
 import { ModalService } from '../../../core/services/modal/modalService';
-import { SwipeService } from '../../../core/services/swipe.service';
 import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
 import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
 import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
 import { InputComponent } from '../../../shared/components/input/input.component';
 import { SkeletonTrainingTableComponent } from '../../../shared/components/loader/skeleton-training-table/skeleton-training-table.component';
+import { MoreOptionListItem } from '../../../shared/components/more-options-button/more-option-list-item';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
 import { InteractiveElementDirective } from '../../../shared/directives/interactive-element.directive';
+import { SwipeDirective } from '../../../shared/directives/swipe.directive';
 import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
 import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
 import { AutoSaveService } from '../../../shared/service/auto-save.service';
+import { UserBestPerformanceService } from '../../../shared/service/user-best-performance/user-best-performance.service';
 import { HeaderService } from '../../header/header.service';
 import { FormatTimePipe } from '../format-time.pipe';
 import { AutoProgressionComponent } from './auto-progression/auto-progression.component';
@@ -27,12 +29,14 @@ import { RepInputDirective } from './directives/rep-input.directive';
 import { RpeInputDirective } from './directives/rpe-input.directive';
 import { WeightInputDirective } from './directives/weight-input.directive';
 import { ExerciseDataService } from './exercise-data.service';
-import { ExerciseDataDTO } from './exerciseDataDto';
+import { NavigationDirection } from './models/navigation-direction.enum';
 import { EstMaxService } from './services/estmax.service';
+import { TrainingDayLocatorService } from './services/training-day-locator.service';
 import { TrainingPlanDataService } from './services/training-plan-data.service';
+import { TrainingExercisesListComponent } from './training-exercises-list/training-exercises-list.component';
 import { TrainingViewNavigationService } from './training-view-navigation.service';
+import { TrainingViewNavigationComponent } from './training-view-navigation/training-view-navigation.component';
 import { TrainingViewService } from './training-view-service';
-import { TrainingPlanDto } from './trainingPlanDto';
 
 /**
  * Component to manage and display the training view.
@@ -43,8 +47,8 @@ import { TrainingPlanDto } from './trainingPlanDto';
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
     PaginationComponent,
+    TrainingViewNavigationComponent,
     HeadlineComponent,
     IconButtonComponent,
     SkeletonTrainingTableComponent,
@@ -56,41 +60,44 @@ import { TrainingPlanDto } from './trainingPlanDto';
     DropdownComponent,
     RepInputDirective,
     FormatTimePipe,
-    DragDropModule,
     TooltipDirective,
+    SpinnerComponent,
+    SwipeDirective,
+    FormsModule,
   ],
-  providers: [TrainingViewService, TrainingPlanDataService, EstMaxService, SwipeService],
+  providers: [
+    TrainingViewService,
+    TrainingViewNavigationService,
+    TrainingPlanDataService,
+    EstMaxService,
+    ExerciseDataService,
+    TrainingDayLocatorService,
+    UserBestPerformanceService,
+  ],
   templateUrl: './training-view.component.html',
   styleUrls: ['./training-view.component.scss'],
 })
 export class TrainingViewComponent implements OnInit {
   protected readonly IconName = IconName;
+  protected readonly NavigationDirection = NavigationDirection;
 
-  trainingWeekIndex: number = 0;
-  trainingDayIndex: number = 0;
+  viewInitialized = signal(false);
 
-  protected planId!: string;
-  exerciseData: ExerciseDataDTO = new ExerciseDataDTO();
-  private dataViewLoaded = new BehaviorSubject<boolean>(false);
-  dataViewLoaded$ = this.dataViewLoaded.asObservable();
-
-  private automationContextInitialized = false;
-
-  @ViewChild('trainingTable', { static: false }) trainingTable!: ElementRef;
-
-  isDragMode = signal(false);
+  planId = computed(() => this.trainingDayLocatorService.planId);
+  trainingWeekIndex = computed(() => this.trainingDayLocatorService.trainingWeekIndex);
+  trainingDayIndex = computed(() => this.trainingDayLocatorService.trainingDayIndex);
 
   constructor(
     private route: ActivatedRoute,
     private trainingViewService: TrainingViewService,
+    private trainingDayLocatorService: TrainingDayLocatorService,
     private headerService: HeaderService,
     private formService: FormService,
-    private navigationService: TrainingViewNavigationService,
-    private swipeService: SwipeService,
     private modalService: ModalService,
     private autoSaveService: AutoSaveService,
-    private exerciseDataService: ExerciseDataService,
     private destroyRef: DestroyRef,
+    protected navigationService: TrainingViewNavigationService,
+    protected exerciseDataService: ExerciseDataService,
     protected trainingDataService: TrainingPlanDataService,
   ) {}
 
@@ -99,129 +106,54 @@ export class TrainingViewComponent implements OnInit {
    * Subscribes to route parameters and loads the initial data.
    */
   ngOnInit() {
-    this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
-      this.automationContextInitialized = false;
-      this.swipeService.removeSwipeListener();
-      this.headerService.setLoading();
-      this.planId = params['planId'];
-      this.trainingWeekIndex = parseInt(params['week']);
-      this.trainingDayIndex = parseInt(params['day']);
+    this.headerService.setLoading();
 
-      this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
+    this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+      this.trainingDayLocatorService.planId = params['planId'];
+      this.trainingDayLocatorService.trainingWeekIndex = Number(params['week']);
+      this.trainingDayLocatorService.trainingDayIndex = Number(params['day']);
+
+      this.loadData(
+        this.trainingDayLocatorService.planId,
+        this.trainingDayLocatorService.trainingWeekIndex,
+        this.trainingDayLocatorService.trainingDayIndex,
+      );
     });
 
     this.initializeAutoSaveLogic();
   }
 
-  ngAfterViewChecked(): void {
-    if (this.dataViewLoaded.getValue() && this.trainingTable && !this.automationContextInitialized) {
-      this.initializeSwipeListener();
-      this.automationContextInitialized = true;
-    }
-  }
-
-  /**
-   * Initializes the swipe listener on the training table element.
-   * Registers callbacks for left and right swipe gestures.
-   */
-  initializeSwipeListener(): void {
-    if (this.trainingTable) {
-      this.swipeService.addSwipeListener(
-        this.trainingTable.nativeElement,
-        () => this.navigateDay(this.trainingDayIndex + 1, this.trainingWeekIndex),
-        () => this.navigateDay(this.trainingDayIndex - 1, this.trainingWeekIndex),
-        () => {
-          this.navigateWeek(-1);
-        },
-        () => {
-          this.navigateWeek(1);
-        },
-      );
-    }
-  }
+  protected swipeLeft = () => this.navigationService.navigateDay(this.trainingDayIndex() + 1);
+  protected swipeRight = () => this.navigationService.navigateDay(this.trainingDayIndex() - 1);
+  protected swipeDiagonalTopLeftToBottomRight = () =>
+    this.navigationService.navigateWeek(NavigationDirection.BACKWARD, this.trainingDayIndex());
+  protected swipeDiagonalTopRightToBottomLeft = () =>
+    this.navigationService.navigateWeek(NavigationDirection.FORWARD, this.trainingDayIndex());
 
   /**
    * Loads training data and exercise data for the specified plan, week, and day.
    * Updates the component state with the loaded data.
-   * @param planId - ID of the training plan.
-   * @param week - Index of the training week.
-   * @param day - Index of the training day.
    */
-  loadData(planId: string, week: number, day: number): void {
-    this.dataViewLoaded.next(false);
-
+  private loadData(planId: string, week: number, day: number): void {
     forkJoin({
-      trainingPlan: this.trainingViewService.loadTrainingPlan(planId, week, day),
-      exerciseData: this.trainingViewService.loadExerciseData(),
+      trainingPlanDto: this.trainingViewService.loadTrainingPlan(planId, week, day),
+      exerciseDataDto: this.trainingViewService.loadExerciseData(),
     })
       .pipe(
-        tap(({ trainingPlan, exerciseData }) => {
-          this.trainingDataService.trainingPlanData = trainingPlan;
+        tap(({ trainingPlanDto, exerciseDataDto }) => {
+          this.trainingDataService.initializeFromDto(trainingPlanDto);
 
-          this.exerciseData = exerciseData;
-          this.exerciseDataService.exerciseData = exerciseData;
+          this.exerciseDataService.setExerciseData(exerciseDataDto);
 
-          this.setHeadlineInfo(trainingPlan);
-        }),
-        tap(() => {
-          if (this.trainingDataService.trainingPlanData && this.exerciseData) {
-            this.dataViewLoaded.next(true);
-          } else {
-            this.dataViewLoaded.next(false);
-          }
+          this.setHeadlineInfo(trainingPlanDto.title);
+          this.viewInitialized.set(true);
         }),
       )
       .subscribe();
   }
 
-  /**
-   * Handles form submission.
-   * Prevents default form submission, collects changed data, and submits the training plan.
-   * @param event - The form submission event.
-   */
-  saveTrainingData$(): Observable<void> {
-    return this.trainingViewService
-      .submitTrainingPlan(this.planId, this.trainingWeekIndex, this.trainingDayIndex, this.formService.getChanges())
-      .pipe(
-        tap(() => {
-          this.formService.clearChanges();
-        }),
-      );
-  }
-
-  navigateDay(day: number, weekIndex: number) {
-    if (day === this.trainingDataService.trainingPlanData.trainingFrequency) {
-      const isLastWeek = weekIndex === this.trainingDataService.trainingPlanData.trainingBlockLength - 1;
-
-      if (!isLastWeek) {
-        weekIndex = weekIndex + 1;
-      } else {
-        weekIndex = 0;
-      }
-      day = 0;
-    } else if (day < 0) {
-      day = this.trainingDataService.trainingPlanData.trainingBlockLength - 1;
-    }
-
-    this.navigationService.navigateDay(day, this.trainingDataService.trainingPlanData.trainingFrequency, weekIndex);
-  }
-
-  /**
-   * Navigates to the specified training week.
-   * Reloads the training data for the new week.
-   * @param direction - Direction to navigate (1 for next week, -1 for previous week).
-   */
-  navigateWeek(direction: number): void {
-    this.navigationService.navigateWeek(
-      this.trainingWeekIndex,
-      direction,
-      this.trainingDataService.trainingPlanData,
-      this.trainingDayIndex,
-    );
-  }
-
-  async openAutoProgressionModal() {
-    const confirmed = await this.modalService.open({
+  private openAutoProgressionModal() {
+    this.modalService.open({
       component: AutoProgressionComponent,
       title: 'Automatische Progression',
       buttonText: 'Übernehmen',
@@ -231,74 +163,81 @@ export class TrainingViewComponent implements OnInit {
     });
   }
 
-  private setHeadlineInfo(trainingPlan: TrainingPlanDto) {
+  private openTrainingExerciseList() {
+    this.modalService.open({
+      component: TrainingExercisesListComponent,
+      title: 'Übungen anordnen',
+      providers: [
+        { provide: TrainingPlanDataService, useValue: this.trainingDataService },
+        { provide: FormService, useValue: this.formService },
+        { provide: TrainingDayLocatorService, useValue: this.trainingDayLocatorService },
+      ],
+    });
+
+    this.saveTrainingData$().subscribe(() => {});
+  }
+
+  private setHeadlineInfo(trainingPlanTitle: string) {
     this.headerService.setHeadlineInfo({
-      title: trainingPlan.title,
-      subTitle: `W${this.trainingWeekIndex + 1}D${this.trainingDayIndex + 1}`,
+      title: trainingPlanTitle,
+      subTitle: this.getSubtitle(),
       buttons: [
         {
           icon: IconName.MORE_VERTICAL,
-          options: [
-            {
-              label: 'Progression',
-              icon: IconName.Activity,
-              callback: this.openAutoProgressionModal.bind(this),
-            },
-            {
-              label: 'Anordnen',
-              icon: IconName.DRAG,
-              callback: () => this.toggleIsDragMode(),
-            },
-          ],
+          options: this.determineHeadlineOptions(),
         },
       ],
     });
   }
 
-  private toggleIsDragMode() {
-    this.isDragMode.set(!this.isDragMode());
+  private determineHeadlineOptions(): MoreOptionListItem[] {
+    const moreOptionsList: MoreOptionListItem[] = [];
+
+    if (this.trainingWeekIndex() === 0) {
+      moreOptionsList.push({
+        label: 'Progression',
+        icon: IconName.Activity,
+        callback: this.openAutoProgressionModal.bind(this),
+      });
+    }
+
+    if (this.trainingDataService.trainingDay()?.exercises.length) {
+      moreOptionsList.push({
+        label: 'Anordnen',
+        icon: IconName.DRAG,
+        callback: this.openTrainingExerciseList.bind(this),
+      });
+    }
+
+    return moreOptionsList;
   }
 
   private initializeAutoSaveLogic() {
     this.autoSaveService.inputChanged$
       .pipe(takeUntilDestroyed(this.destroyRef)) // Automatically unsubscribe
-      .subscribe((option) => {
-        this.saveTrainingData$().subscribe(() => {
-          if (option === 'reload') {
-            this.loadData(this.planId, this.trainingWeekIndex, this.trainingDayIndex);
-          }
-        });
+      .subscribe(() => {
+        this.saveTrainingData$().subscribe(() => {});
       });
   }
 
-  drop(event: CdkDragDrop<any, any, any>) {
-    // Move the row in the exercises array to its new position
-    moveItemInArray(
-      this.trainingDataService.trainingPlanData.trainingDay.exercises!,
-      event.previousIndex,
-      event.currentIndex,
-    );
+  /**
+   * Handles form submission.
+   * Prevents default form submission, collects changed data, and submits the training plan.
+   */
+  private saveTrainingData$(): Observable<void> {
+    const changes = this.formService.getChanges();
+    console.log('🚀 ~ TrainingViewComponent ~ changes:', changes);
 
-    // Track the changes for both the previous and current exercises
-    this.trackExerciseChanges(event.previousIndex);
-    this.trackExerciseChanges(event.currentIndex);
-
-    // Save the tracked changes
-    this.saveTrainingData$().subscribe();
+    return this.trainingViewService
+      .submitTrainingPlan(this.planId(), this.trainingWeekIndex(), this.trainingDayIndex(), changes)
+      .pipe(
+        tap(() => {
+          this.formService.clearChanges();
+        }),
+      );
   }
 
-  /**
-   * Tracks changes for the exercise at the given index.
-   * @param index - The index of the exercise in the array.
-   */
-  trackExerciseChanges(index: number) {
-    const exercise = this.trainingDataService.trainingPlanData.trainingDay.exercises![index];
-    const namePrefix = `day${this.trainingDayIndex}_exercise${index + 1}_`;
-
-    const fields = ['category', 'exercise_name', 'sets', 'reps', 'weight', 'targetRPE', 'actualRPE', 'estMax', 'notes'];
-
-    fields.forEach((field) => {
-      this.formService.addChange(namePrefix + field, (exercise as any)[field]);
-    });
+  private getSubtitle(): string {
+    return `W${this.trainingWeekIndex() + 1}D${this.trainingDayIndex() + 1}`;
   }
 }

@@ -1,18 +1,22 @@
 @if (isLoaded()) {
-  <div class="select-container">
-    <app-select [options]="allExercises()" [(selectedOptions)]="selectedExercises" [isSearchable]="false" />
-  </div>
+  @if (showNoDataAvailableInfo()) {
+    <app-no-statistics-available />
+  } @else {
+    <div class="select-container">
+      <app-select [options]="allExercises()" [(selectedOptions)]="selectedExercises" [isSearchable]="false" />
+    </div>
 
-  <div class="chart-grid">
-    <app-line-chart [data]="volumeChartData()" yAxisTitle="Tonnage (kg)" />
+    <div class="chart-sgrid">
+      <app-line-chart [data]="volumeChartData()" yAxisTitle="Tonnage (kg)" />
 
-    <app-line-chart [data]="performanceChartData()" yAxisTitle="Est. Max (kg)" />
-  </div>
+      <app-line-chart [data]="performanceChartData()" yAxisTitle="Est. Max (kg)" />
+    </div>
 
-  <div class="chart-grid">
-    <app-grouped-bar-chart [data]="setsData()" yAxisTitle="Satzanzahl" />
-    <app-polar-chart [data]="sessionDurationChartData()" />
-  </div>
+    <div class="chart-grid">
+      <app-grouped-bar-chart [data]="setsData()" yAxisTitle="Satzanzahl" />
+      <app-polar-chart [data]="sessionDurationChartData()" />
+    </div>
+  }
 } @else {
   <div class="chart-grid">
     <app-chart-skeleton />

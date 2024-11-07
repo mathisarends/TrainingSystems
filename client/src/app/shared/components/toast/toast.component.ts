@@ -19,7 +19,7 @@ export class ToastComponent {
 
   constructor(public toastService: ToastService) {}
 
-  remove() {
+  protected close() {
     this.toastService.remove();
   }
 }

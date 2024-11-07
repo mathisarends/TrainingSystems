@@ -73,12 +73,10 @@ export class TrainingSesssionStatisticsComponent implements OnInit {
   private fetchTitleAndExercises(id: string): void {
     forkJoin({
       title: this.trainingSessionStatisticsService.getTrainingSessiontitleById(id),
-      exerciseOptions: this.trainingSessionStatisticsService.getExerciseOptions(id),
     })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ title, exerciseOptions }) => {
+      .subscribe(({ title }) => {
         this.setHeadlineInfo(title);
-        this.exercises.set(exerciseOptions);
         this.isLoaded.set(true);
       });
   }

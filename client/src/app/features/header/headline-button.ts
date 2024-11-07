@@ -9,7 +9,7 @@ export interface HeadlineButton {
   /**
    * The icon to display for the button.
    */
-  icon: IconName;
+  icon?: IconName;
 
   /**
    * Optional: A callback for regular buttons, triggered when the button is clicked.

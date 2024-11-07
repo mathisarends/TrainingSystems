@@ -8,15 +8,12 @@
   <div class="button-container">
     @for (button of headerService.buttons(); track button.icon) {
       @if (button.icon === IconName.MORE_VERTICAL) {
-        <app-more-options-button [options]="button.options!" />
+        <app-profile-picture [profilePicture]="profileService.pictureUrl()!" [options]="button.options!" />
       } @else {
-        <app-circular-icon-button [icon]="button.icon" [iconSize]="20" (click)="onCircularButtonClick(button)" />
+        <app-circular-icon-button [icon]="button.icon!" [iconSize]="20" (click)="onCircularButtonClick(button)" />
       }
     }
   </div>
 } @else {
-  <app-profile-picture
-    [profilePicture]="profileService.pictureUrl()!"
-    (onProfilePictureClick)="onProfilePictureClick()"
-  />
+  <app-profile-picture [profilePicture]="profileService.pictureUrl()!" />
 }

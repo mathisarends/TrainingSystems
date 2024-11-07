@@ -7,9 +7,8 @@ import { TrainingPlanEditViewDto, WeightRecommendationBase } from '../edit-train
 export class TrainingPlanEditView {
   id: WritableSignal<string>;
   title: WritableSignal<string>;
-  trainingFrequency: WritableSignal<number>;
+  trainingDays: WritableSignal<Set<string>>;
   trainingBlockLength: WritableSignal<number>;
-  weightRecommendationBase: WritableSignal<WeightRecommendationBase>;
   coverImageBase64: WritableSignal<string>;
 
   referencePlanId: WritableSignal<string | undefined> = signal(undefined);
@@ -17,7 +16,7 @@ export class TrainingPlanEditView {
   protected readonly defaultValues = {
     id: '',
     title: '',
-    trainingFrequency: 4,
+    trainingDays: new Set<string>(),
     trainingBlockLength: 4,
     weightRecommendationBase: WeightRecommendationBase.LASTWEEK,
     coverImageBase64: '',
@@ -29,9 +28,8 @@ export class TrainingPlanEditView {
   private constructor(dto?: TrainingPlanEditViewDto) {
     this.id = signal(this.defaultValues.id);
     this.title = signal(this.defaultValues.title);
-    this.trainingFrequency = signal(this.defaultValues.trainingFrequency);
+    this.trainingDays = signal(this.defaultValues.trainingDays);
     this.trainingBlockLength = signal(this.defaultValues.trainingBlockLength);
-    this.weightRecommendationBase = signal(this.defaultValues.weightRecommendationBase);
     this.coverImageBase64 = signal(this.defaultValues.coverImageBase64);
 
     // If DTO is provided, override the default values
@@ -51,24 +49,22 @@ export class TrainingPlanEditView {
    * Convert the class back to a plain object for form submission.
    */
   toDto(): TrainingPlanEditViewDto {
-    return {
-      id: this.id(),
+    const dto: Partial<TrainingPlanEditViewDto> = {
       title: this.title(),
-      trainingFrequency: this.trainingFrequency(),
-      trainingBlockLength: this.trainingBlockLength(),
-      weightRecommandationBase: this.weightRecommendationBase(),
+      trainingDays: Array.from(this.trainingDays()),
+      trainingBlockLength: Number(this.trainingBlockLength()),
       coverImageBase64: this.coverImageBase64(),
-      referencePlanId: this.referencePlanId(),
     };
+
+    if (this.id()) {
+      dto.id = this.id();
+    }
+
+    return dto as TrainingPlanEditViewDto;
   }
 
   isValid(): boolean {
-    return (
-      this.title().trim().length > 0 &&
-      !!this.trainingFrequency() &&
-      !!this.trainingBlockLength() &&
-      !!this.weightRecommendationBase()
-    );
+    return this.title().trim().length > 0 && !!this.trainingDays() && !!this.trainingBlockLength();
   }
 
   /**
@@ -77,9 +73,8 @@ export class TrainingPlanEditView {
   setTrainingPlan(dto: TrainingPlanEditViewDto): void {
     this.id.set(dto.id);
     this.title.set(dto.title);
-    this.trainingFrequency.set(dto.trainingFrequency);
+    this.trainingDays.set(new Set(dto.trainingDays));
     this.trainingBlockLength.set(dto.trainingBlockLength);
-    this.weightRecommendationBase.set(dto.weightRecommandationBase);
     this.coverImageBase64.set(dto.coverImageBase64 || this.defaultValues.coverImageBase64);
   }
 
@@ -90,13 +85,8 @@ export class TrainingPlanEditView {
   resetToDefaults(): void {
     this.id.set(this.defaultValues.id);
     this.title.set(this.defaultValues.title);
-    this.trainingFrequency.set(this.defaultValues.trainingFrequency);
+    this.trainingDays.set(this.defaultValues.trainingDays);
     this.trainingBlockLength.set(this.defaultValues.trainingBlockLength);
-    this.weightRecommendationBase.set(this.defaultValues.weightRecommendationBase);
     this.coverImageBase64.set(this.defaultValues.coverImageBase64);
-  }
-
-  setReferencePlanId(id: string): void {
-    this.referencePlanId.set(id);
   }
 }

@@ -35,16 +35,18 @@ export class WeightInputDirective extends AbstractDoubleClickDirective implement
     event.stopPropagation();
     const categoryValue = this.exerciseTableRowService.getExerciseCategorySelectorByElement(this.inputElement).value;
     const exerciseName = this.exerciseTableRowService.getExerciseNameSelectorByElement(this.inputElement).value;
-    const pauseTime = this.exerciseDataService.getExerciseData().categoryPauseTimes[categoryValue];
+    const pauseTime = this.exerciseDataService.categoryPauseTimes[categoryValue];
 
     if (this.isLastSet()) {
       const roundedWeight = this.getRoundedAverageWithStep(2.5);
       this.inputElement.value = roundedWeight.toString();
     }
+
     this.formService.addChange(this.inputElement.name, this.inputElement.value);
-    this.autoSaveService.save();
 
     this.estMaxService.calculateMaxAfterInputChange(event.target as HTMLInputElement);
     this.pauseTimeService.startPauseTimer(pauseTime, exerciseName);
+
+    this.autoSaveService.save();
   }
 }

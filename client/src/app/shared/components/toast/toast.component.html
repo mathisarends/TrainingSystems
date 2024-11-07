@@ -1,15 +1,17 @@
 @if (toastService.currentToast; as toast) {
   @let warningToast = toast.status === ToastStatus.ERROR;
 
-  <div class="toast" [ngClass]="{ error: warningToast }" [class.active]="true" role="alert">
+  <div class="toast" [ngClass]="{ error: warningToast, active: toastService.toastIsActive }" [class.active]="true" role="alert">
     <div class="message">
-      @if (warningToast) {
+      @if (toast.status === ToastStatus.ERROR) {
         <app-icon [name]="IconName.AlertTriangle" />
-      } @else {
-        <span id="toast-headline">{{ toast.title }}</span>
+      } @else if (toast.status === ToastStatus.ACHIEVEMENT) {
+        <app-icon [name]="IconName.AWARD" [color]="'#FFD700 '" />
+      } @else  {
+        <app-icon [name]="IconName.INFO" [color]="'#90caf9'" />
       }
       <span class="info">{{ toast.text }}</span>
     </div>
-    <div class="close-icon-container" (click)="remove()">✖</div>
+    <app-icon [name]="IconName.X" [color]="'#dbdbdb'" (click)="close()" />
   </div>
 }

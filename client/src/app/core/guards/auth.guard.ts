@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate } from '@angular/router';
+import { CanActivate, Router } from '@angular/router';
 import { map, Observable, of } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
@@ -7,7 +7,7 @@ import { AuthService } from '../services/auth.service';
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   /**
    * Determines whether the user can activate the requested route.
@@ -18,7 +18,7 @@ export class AuthGuard implements CanActivate {
     }
 
     if (this.authService.isAuthenticated() === false) {
-      this.authService.showLoginModalDialog();
+      this.router.navigate(['getting-started']);
       return of(false);
     }
 
@@ -27,7 +27,7 @@ export class AuthGuard implements CanActivate {
       map(() => {
         const isAuthenticated = this.authService.isAuthenticated();
         if (!isAuthenticated) {
-          this.authService.showLoginModalDialog();
+          this.router.navigate(['getting-started']);
         }
         return isAuthenticated as boolean;
       }),

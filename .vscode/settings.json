@@ -5,5 +5,9 @@
   "javascript.preferences.organizeImports": {},
   "typescript.preferences.organizeImports": {
     "sortOrder": "alphabetical"
+  },
+  "material-icon-theme.folders.associations": {
+    "client": "angular",
+    "nest-server": "nestjs"
   }
 }

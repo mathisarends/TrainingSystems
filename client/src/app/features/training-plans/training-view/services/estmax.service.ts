@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormService } from '../../../../core/services/form.service';
+import { UserBestPerformanceService } from '../../../../shared/service/user-best-performance/user-best-performance.service';
 import { ExerciseTableRowService } from './exercise-table-row.service';
 
 @Injectable()
@@ -9,6 +10,7 @@ export class EstMaxService {
   constructor(
     private formService: FormService,
     private exerciseTableRowService: ExerciseTableRowService,
+    private userBestPerformanceService: UserBestPerformanceService,
   ) {}
 
   calculateMaxAfterInputChange(inputElement: HTMLInputElement) {
@@ -29,7 +31,14 @@ export class EstMaxService {
       const estMax = this.calcEstMax(weight, reps, rpe);
       estMaxInput.value = estMax.toString();
 
+      const exercise = this.userBestPerformanceService.determineExerciseBasedOnFieldName(estMaxInput.name);
+
+      if (exercise && this.userBestPerformanceService.isNewBestPerformance(exercise.category, estMax)) {
+        this.userBestPerformanceService.makeNewBestPerformanceEntry(exercise);
+      }
+
       this.formService.addChange(estMaxInput.name, estMaxInput.value);
+      const changes = this.formService.getChanges();
 
       const nextExerciseCategory = weightInput
         .closest('tr')
@@ -74,16 +83,13 @@ export class EstMaxService {
    * @param topSetMax - The top set maximum weight.
    * @returns The calculated backoff weight range as a string.
    */
-  private calcBackoff(planedReps: number, planedRPE: number, topSetMax: number): string {
+  private calcBackoff(planedReps: number, planedRPE: number, topSetMax: number): number {
     const totalReps = planedReps + (10 - planedRPE);
     let percentage = (0.484472 * totalReps * totalReps - 33.891 * totalReps + 1023.67) * 0.001;
     let backoffWeight = topSetMax * percentage;
     backoffWeight = Math.ceil(backoffWeight / 2.5) * 2.5;
 
-    const lowEndBackoffWeight = backoffWeight - 2.5;
-    const highEndBackoffWeight = backoffWeight + 2.5;
-
-    return `${lowEndBackoffWeight} - ${highEndBackoffWeight}`;
+    return backoffWeight;
   }
 
   /**

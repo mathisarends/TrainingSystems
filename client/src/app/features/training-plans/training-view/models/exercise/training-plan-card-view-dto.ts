@@ -11,7 +11,7 @@ export interface TrainingPlanCardView {
   trainingFrequency?: number;
   blockLength?: number;
   weightRecomamndationBase?: WeightRecommendationBase;
-  lastUpdatedString: string;
+  lastUpdated: Date;
   pictureUrl?: string;
   coverImageBase64?: string;
   percentageFinished?: Percentage;

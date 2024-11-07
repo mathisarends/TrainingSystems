@@ -26,7 +26,7 @@ export class NavBarComponent implements OnInit {
   protected navItems: NavItem[] = [
     { label: 'Home', route: '/', icon: this.IconName.HOME },
     { label: 'Training', route: '', icon: this.IconName.Activity },
-    { label: 'Logs', route: '/logs', icon: this.IconName.BookOpen },
+    { label: 'Logs', route: '/logs', icon: this.IconName.CALENDAR },
     { label: 'Profil', route: '/profile', icon: this.IconName.User },
   ];
 
@@ -57,9 +57,10 @@ export class NavBarComponent implements OnInit {
             currentRoute = '/';
           }
 
-          if (this.isTrainingPlanUuidInRoute(currentRoute)) {
+          if (this.isMongooseObjectIdInRoute()) {
             currentRoute = '';
           } else {
+            console.log('is not in route');
             currentRoute = '/profile';
           }
         }
@@ -102,10 +103,19 @@ export class NavBarComponent implements OnInit {
     });
   }
 
-  private isTrainingPlanUuidInRoute(route: string): boolean {
-    const uuidRegex = /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/;
+  /**
+   * Checks if the route contains a Mongoose ObjectId (24-character hex string).
+   */
+  private isMongooseObjectIdInRoute(): boolean {
+    const url = new URL(window.location.href);
+    const planId = url.searchParams.get('planId');
 
-    return uuidRegex.test(route);
+    if (!planId) {
+      return false;
+    }
+
+    const objectIdRegex = /^[0-9a-fA-F]{24}$/;
+    return objectIdRegex.test(planId);
   }
 
   private isActivityRoute(route: string) {

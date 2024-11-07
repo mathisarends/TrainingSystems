@@ -277,6 +277,19 @@
       <circle cx="19" cy="12" r="1"></circle>
       <circle cx="5" cy="12" r="1"></circle>
     }
+    @case (IconName.TRENDING_UP) {
+      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+      <polyline points="17 6 23 6 23 12"></polyline>
+    }
+    @case (IconName.TRENDING_DOWN) {
+      <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
+      <polyline points="17 18 23 18 23 12"></polyline>
+    }
+    @case (IconName.HEART) {
+      <path
+        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+      ></path>
+    }
     @default {
       <path d="M0 0h24v24H0z" fill="none"></path>
     }

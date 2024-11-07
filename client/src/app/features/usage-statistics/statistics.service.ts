@@ -12,7 +12,7 @@ export class StatisticsService {
    * Retrieves the titles of all available training plans.
    */
   getAllTrainingPlanTitles(): Observable<string[]> {
-    return this.httpService.get(`/training/plans/titles`);
+    return this.httpService.get(`/training/titles`);
   }
 
   /**
@@ -23,7 +23,7 @@ export class StatisticsService {
     trainingPlanTitles: string[],
   ): Observable<Record<string, ChartDataDto>> {
     const requestParams = this.buildTrainingPlanComparisonRequestParams(category, trainingPlanTitles);
-    return this.httpService.get(`/training/statistics/volume-comparison`, requestParams);
+    return this.httpService.get(`/training-plan-statistics/volume-comparison`, requestParams);
   }
 
   /**

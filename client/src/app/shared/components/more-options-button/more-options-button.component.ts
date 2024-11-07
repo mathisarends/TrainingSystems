@@ -38,11 +38,10 @@ export class MoreOptionsButtonComponent {
   constructor(private elementRef: ElementRef) {}
 
   /**
-   * Toggles the collapsed state of the dropdown menu.
-   * If the dropdown is collapsed, it will expand, and vice versa.
+   * Collapses the dropdown menu when no longer hovering over the component.
    */
-  protected toggleCollapsed() {
-    this.isCollapsed.update((current) => !current);
+  protected toggleCollapse() {
+    this.isCollapsed.set(!this.isCollapsed());
   }
 
   /**
