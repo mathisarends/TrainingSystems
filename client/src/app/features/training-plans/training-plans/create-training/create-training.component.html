@@ -1,5 +1,7 @@
 <app-training-banner [(imageSrc)]="trainingPlanEditView.coverImageBase64" />
 
+<app-training-day-selection [(selectedDays)]="trainingPlanEditView.trainingDays" />
+
 <div class="input-group">
   <app-floating-label-input [label]="'Titel'" [(value)]="trainingPlanEditView.title" [required]="true" />
 
@@ -16,5 +18,3 @@
     ]"
   />
 </div>
-
-<app-training-day-selection [(selectedDays)]="trainingPlanEditView.trainingDays" />
