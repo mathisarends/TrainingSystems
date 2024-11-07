@@ -7,7 +7,6 @@ import { UsersModule } from 'src/users/users.module';
 import { UsersService } from 'src/users/users.service';
 import { TrainingPlanEditController } from './controller/training-plan-edit.controller';
 import { TrainingController } from './controller/training.controller';
-import { TrainingDay, TrainingDaySchema } from './model/training-day.schema';
 import { TrainingPlan, TrainingPlanSchema } from './model/training-plan.model';
 import { AutoProgressionService } from './service/auto-progression.service';
 import { CreateTrainingPlanService } from './service/create-training-plan.service';
@@ -27,7 +26,6 @@ import { TrainingService } from './training.service';
   imports: [
     MongooseModule.forFeature([
       { name: TrainingPlan.name, schema: TrainingPlanSchema },
-      { name: TrainingDay.name, schema: TrainingDaySchema },
     ]),
     ExerciseModule,
     PushNotificationsModule,

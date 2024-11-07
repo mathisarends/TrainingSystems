@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import { EditTrainingPlanDto } from '../dto/edit-training-plan.dto';
 import { TrainingPlanEditViewDto } from '../dto/training-plan-edit-view.dto';
@@ -11,11 +9,7 @@ import { TrainingService } from '../training.service';
 
 @Injectable()
 export class EditTrainingPlanService {
-  constructor(
-    private readonly trainingService: TrainingService,
-    @InjectModel(TrainingDay.name)
-    private readonly trainingDayModel: Model<TrainingDay>,
-  ) {}
+  constructor(private readonly trainingService: TrainingService) {}
 
   async getEditViewOfTrainingPlan(
     userId: string,
@@ -42,6 +36,10 @@ export class EditTrainingPlanService {
     };
   }
 
+  /**
+   * Edits an existing training plan based on the provided data.
+   * Adjusts the training block length and training frequency as needed.
+   */
   async editTrainingPlan(
     userId: string,
     trainingPlanId: string,
@@ -66,34 +64,15 @@ export class EditTrainingPlanService {
     }
 
     if (
-      !this.isTrainingFrequencyChanged(
+      this.isTrainingFrequencyChanged(
         trainingPlan,
         editTrainingPlanDto.trainingDays.length,
       )
     ) {
-      return await this.trainingService.updateTrainingPlan(
+      this.handleTrainingFrequencyChange(
         trainingPlan,
-        editTrainingPlanDto,
+        editTrainingPlanDto.trainingDays.length,
       );
-    }
-
-    const difference =
-      trainingPlan.trainingWeeks[0].trainingDays.length -
-      editTrainingPlanDto.trainingDays.length;
-
-    if (difference > 0) {
-      trainingPlan.trainingWeeks.forEach((week) => {
-        week.trainingDays.splice(-difference);
-      });
-    } else {
-      const numberOfDaysToAdd = Math.abs(difference);
-      trainingPlan.trainingWeeks.forEach((week) => {
-        week.trainingDays.push(
-          ...Array.from({ length: numberOfDaysToAdd }, () =>
-            this.createEmptyTrainingDay(),
-          ),
-        );
-      });
     }
 
     return await this.trainingService.updateTrainingPlan(
@@ -102,6 +81,9 @@ export class EditTrainingPlanService {
     );
   }
 
+  /**
+   * Checks if the block length of a training plan has changed..
+   */
   private isBlockLengthChanged(
     trainingPlan: TrainingPlan,
     newBlockLength: number,
@@ -109,6 +91,9 @@ export class EditTrainingPlanService {
     return trainingPlan.trainingWeeks.length !== newBlockLength;
   }
 
+  /**
+   * Adjusts the block length of a training plan by adding or removing weeks.
+   */
   private adjustBlockLength(
     trainingPlan: TrainingPlan,
     newBlockLength: number,
@@ -128,6 +113,9 @@ export class EditTrainingPlanService {
     }
   }
 
+  /**
+   * Creates a new training week with the specified number of training days.
+   */
   private createNewTrainingWeek(daysPerWeek: number): TrainingWeek {
     return {
       trainingDays: Array.from({ length: daysPerWeek }, () =>
@@ -136,6 +124,9 @@ export class EditTrainingPlanService {
     } as TrainingWeek;
   }
 
+  /**
+   * Checks if the training frequency (number of training days per week) has changed.
+   */
   private isTrainingFrequencyChanged(
     trainingPlan: TrainingPlan,
     newAmountOfDays: number,
@@ -145,6 +136,37 @@ export class EditTrainingPlanService {
     );
   }
 
+  /**
+   * Adjusts the number of training days in each week based on the difference between the current and new training frequency.
+   */
+  private handleTrainingFrequencyChange(
+    trainingPlan: TrainingPlan,
+    newAmountOfDays: number,
+  ): void {
+    const currentDays = trainingPlan.trainingWeeks[0].trainingDays.length;
+    const difference = currentDays - newAmountOfDays;
+
+    if (difference > 0) {
+      // Remove days
+      trainingPlan.trainingWeeks.forEach((week) => {
+        week.trainingDays.splice(-difference);
+      });
+    } else {
+      // Add days
+      const numberOfDaysToAdd = Math.abs(difference);
+      trainingPlan.trainingWeeks.forEach((week) => {
+        week.trainingDays.push(
+          ...Array.from({ length: numberOfDaysToAdd }, () =>
+            this.createEmptyTrainingDay(),
+          ),
+        );
+      });
+    }
+  }
+
+  /**
+   * Creates an empty training day with a unique ID and no exercises.
+   */
   private createEmptyTrainingDay() {
     return {
       id: uuidv4(),
