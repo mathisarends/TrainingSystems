@@ -5,7 +5,6 @@ import {
   Component,
   computed,
   effect,
-  Injector,
   OnInit,
   signal,
   WritableSignal,
@@ -14,7 +13,6 @@ import { Observable, tap } from 'rxjs';
 import { HttpService } from '../../core/services/http-client.service';
 import { ModalService } from '../../core/services/modal/modalService';
 import { ModalSize } from '../../core/services/modal/modalSize';
-import { AlertComponent } from '../../shared/components/alert/alert.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { DatePickerComponent } from '../../shared/components/datepicker/date-picker.component';
 import { SearchBarComponent } from '../../shared/components/search-bar/search-bar.component';
@@ -28,6 +26,7 @@ import { TrainingLogCardSkeletonComponent } from '../usage-statistics/training-l
 import { TrainingLogCardComponent } from '../usage-statistics/training-log-card/training-log-card.component';
 import { TrainingLogCalendarComponent } from './training-log-calendar/training-log-calendar.component';
 
+// TODO: das hier aufräumen eigentlich
 /**
  * Displays the training log entries, allows filtering by date and search query.
  * Supports marking notifications as seen and clearing unseen training notifications.
@@ -36,7 +35,6 @@ import { TrainingLogCalendarComponent } from './training-log-calendar/training-l
   standalone: true,
   imports: [
     TrainingLogCardComponent,
-    AlertComponent,
     SpinnerComponent,
     AsyncPipe,
     SearchBarComponent,
@@ -99,31 +97,23 @@ export class TrainingLogsComponent implements OnInit, AfterViewInit {
     private headerService: HeaderService,
     private modalService: ModalService,
     private httpService: HttpService,
-    private injector: Injector,
-  ) {}
+  ) {
+    this.headerService.setLoading();
+
+    effect(
+      () => {
+        this.setHeadlineInfo();
+      },
+      { allowSignalWrites: true },
+    );
+  }
 
   /**
    * Initializes the component, sets the headline information, loads log entries,
    * and sets up the effect to filter notifications based on search query and date.
    */
   ngOnInit(): void {
-    this.setHeadlineInfo();
-
     this.loadLogEntries();
-
-    effect(
-      () => {
-        this.filterTrainingNotifications();
-      },
-      { injector: this.injector, allowSignalWrites: true },
-    );
-
-    effect(
-      () => {
-        this.setHeadlineInfo();
-      },
-      { injector: this.injector, allowSignalWrites: true },
-    );
   }
 
   /**
@@ -144,19 +134,6 @@ export class TrainingLogsComponent implements OnInit, AfterViewInit {
         this.filteredTrainingNotifications.set(notifications);
       }),
     );
-  }
-
-  /**
-   * Filters cached training notifications based on the user's search query.
-   */
-  private filterTrainingNotifications(): void {
-    const query = this.searchQuery().toLowerCase();
-
-    const filtered = this.cachedTrainingNotifications().filter((notification) => {
-      return notification.planTitle.toLowerCase().includes(query);
-    });
-
-    this.filteredTrainingNotifications.set(filtered);
   }
 
   private setHeadlineInfo(): void {
