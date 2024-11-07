@@ -10,20 +10,6 @@
     <app-floating-label-input [label]="'Title'" [(value)]="trainingPlanEditView.title" [required]="true" />
 
     <app-floating-label-input
-      [label]="'Trainings / Week'"
-      [(value)]="trainingPlanEditView.trainingFrequency"
-      [required]="true"
-      type="select"
-      [options]="[
-        { value: 2, label: '2' },
-        { value: 3, label: '3' },
-        { value: 4, label: '4' },
-        { value: 5, label: '5' },
-        { value: 6, label: '6' },
-      ]"
-    />
-
-    <app-floating-label-input
       [label]="'Trainingdauer (Wochen)'"
       [(value)]="trainingPlanEditView.trainingBlockLength"
       [required]="true"
@@ -39,4 +25,6 @@
       ]"
     />
   </div>
+
+  <app-training-day-selection [(selectedDays)]="trainingPlanEditView.trainingDays" />
 }

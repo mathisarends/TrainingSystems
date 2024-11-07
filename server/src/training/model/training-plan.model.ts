@@ -14,7 +14,7 @@ export class TrainingPlan extends Document {
   title: string;
 
   @Prop({ required: true })
-  trainingFrequency: number;
+  trainingDays: string[];
 
   @Prop()
   lastUpdated: Date;

@@ -18,13 +18,13 @@ export class CreateTrainingPlanService {
   ) {
     const trainingWeeksPlaceholder = this.createNewTrainingPlanWithPlaceholders(
       createTrainingPlanDto.trainingBlockLength,
-      createTrainingPlanDto.trainingFrequency,
+      createTrainingPlanDto.trainingDays.length,
     );
 
     const newTrainingPlan = new this.trainingPlanModel({
       userId: userId,
       title: createTrainingPlanDto.title,
-      trainingFrequency: createTrainingPlanDto.trainingFrequency,
+      trainingDays: createTrainingPlanDto.trainingDays,
       lastUpdated: new Date(),
       trainingWeeks: trainingWeeksPlaceholder,
       coverImageBase64: createTrainingPlanDto.coverImageBase64,

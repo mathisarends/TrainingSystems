@@ -98,7 +98,7 @@ export class TrainingPlanViewService {
   ): TrainingDayViewDto {
     return {
       title: trainingPlan.title,
-      trainingFrequency: trainingPlan.trainingFrequency,
+      trainingFrequency: trainingPlan.trainingDays.length,
       trainingBlockLength: trainingPlan.trainingWeeks.length,
       trainingDay,
       weightRecommandations: weightRecommendations,

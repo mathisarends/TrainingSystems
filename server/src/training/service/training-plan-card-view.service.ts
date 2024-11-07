@@ -41,7 +41,7 @@ export class TrainingPlanCardViewService {
       title: trainingPlan.title,
       blockLength: trainingPlan.trainingWeeks.length,
       weightRecomamndationBase: trainingPlan.weightRecommandationBase,
-      trainingFrequency: trainingPlan.trainingFrequency,
+      trainingFrequency: trainingPlan.trainingDays.length,
       lastUpdated: trainingPlan.lastUpdated,
       coverImageBase64: trainingPlan.coverImageBase64 ?? '',
       pictureUrl: pictureUrl,
@@ -57,7 +57,7 @@ export class TrainingPlanCardViewService {
   private getPercentageOfTrainingPlanFinished(
     trainingPlan: TrainingPlan,
   ): number {
-    const trainingFrequency = trainingPlan.trainingFrequency;
+    const trainingFrequency = trainingPlan.trainingDays.length;
     const totalTrainingDays =
       trainingFrequency * trainingPlan.trainingWeeks.length;
     const { weekIndex, dayIndex } = trainingPlan.mostRecentTrainingDayLocator;

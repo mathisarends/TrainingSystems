@@ -1,12 +1,22 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  ArrayUnique,
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateTrainingPlanDto {
   @IsString()
   @IsNotEmpty()
   title: string;
 
-  @IsNumber()
-  trainingFrequency: number;
+  @IsArray()
+  @ArrayUnique()
+  @IsNotEmpty({ each: true })
+  @IsString({ each: true })
+  trainingDays: string[];
 
   @IsNumber()
   trainingBlockLength: number;

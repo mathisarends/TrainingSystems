@@ -26,7 +26,7 @@ export class EditTrainingPlanService {
     return {
       id: trainingPlan.id,
       title: trainingPlan.title,
-      trainingFrequency: trainingPlan.trainingFrequency,
+      trainingDays: trainingPlan.trainingDays,
       weightRecommandationBase: trainingPlan.weightRecommandationBase,
       trainingBlockLength: trainingPlan.trainingWeeks.length,
       coverImageBase64: trainingPlan.coverImageBase64 || '',

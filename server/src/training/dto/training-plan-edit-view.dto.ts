@@ -9,7 +9,7 @@ import { WeightRecommendation } from '../model/weight-recommandation.enum';
 export interface TrainingPlanEditViewDto {
   id: string;
   title: string;
-  trainingFrequency: number;
+  trainingDays: string[];
   weightRecommandationBase: WeightRecommendation;
   trainingBlockLength: number;
   coverImageBase64: string;
