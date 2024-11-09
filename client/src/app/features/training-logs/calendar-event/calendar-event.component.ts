@@ -1,4 +1,5 @@
 import { Component, HostListener, input } from '@angular/core';
+import { Router } from '@angular/router';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { IconName } from '../../../shared/icon/icon-name';
 import { CalendarDashboardPopupComponent } from '../calendar-dashboard-popup/calendar-dashboard-popup.component';
@@ -14,21 +15,37 @@ export class CalendarEventComponent {
   protected readonly IconBackgroundColor = IconName;
   trainingDayCalendarEntry = input.required<TrainingDayCalendarEntry>();
 
-  constructor(private modalService: ModalService) {}
+  isTrainingLog = input.required<boolean>();
+
+  constructor(
+    private router: Router,
+    private modalService: ModalService,
+  ) {}
 
   @HostListener('click')
   onHostClick() {
     const weekIndex = this.parseWeekIndexFormLabel(this.trainingDayCalendarEntry().label);
     const dayIndex = this.parseDayIndexFromLabel(this.trainingDayCalendarEntry().label);
 
-    this.modalService.open({
-      title: `${this.trainingDayCalendarEntry().label} ${this.trainingDayCalendarEntry().planTitle.toUpperCase()}`,
-      component: CalendarDashboardPopupComponent,
-      componentData: {
-        trainingPlanId: this.trainingDayCalendarEntry().planId,
-        weekIndex,
-        dayIndex,
-      },
+    if (this.isTrainingLog()) {
+      this.modalService.open({
+        title: `${this.trainingDayCalendarEntry().label} ${this.trainingDayCalendarEntry().planTitle.toUpperCase()}`,
+        component: CalendarDashboardPopupComponent,
+        hasFooter: false,
+        componentData: {
+          trainingPlanId: this.trainingDayCalendarEntry().planId,
+          weekIndex,
+          dayIndex,
+        },
+      });
+    } else {
+      this.navigateToTrainingDay(weekIndex, dayIndex);
+    }
+  }
+
+  private navigateToTrainingDay(weekIndex: number, dayIndex: number): void {
+    this.router.navigate(['/training/view'], {
+      queryParams: { planId: this.trainingDayCalendarEntry().planId, week: weekIndex, day: dayIndex },
     });
   }
 
