@@ -21,6 +21,10 @@ export function httpErrorInterceptor(req: HttpRequest<unknown>, next: HttpHandle
         return throwError(() => error);
       }
 
+      if (req.url.includes('/training/most-recent-plan-link')) {
+        return throwError(() => error);
+      }
+
       const serverError: ErrorResponseDto = error.error || { error: 'Ein unerwarteter Fehler ist aufgetreten.' };
       const errorMessage = `Client Error Code: ${error.status}\nMessage: ${serverError.error || error.message}`;
 

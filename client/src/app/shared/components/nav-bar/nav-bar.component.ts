@@ -1,5 +1,6 @@
-import { Component, effect, Injector, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, effect, Renderer2, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
+import { catchError, EMPTY } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { IconName } from '../../icon/icon-name';
 import { IconComponent } from '../../icon/icon.component';
@@ -15,7 +16,7 @@ import { NavItem } from './nav-item';
   templateUrl: './nav-bar.component.html',
   styleUrls: ['./nav-bar.component.scss'],
 })
-export class NavBarComponent implements OnInit {
+export class NavBarComponent {
   protected IconName = IconName;
 
   // Routen ideen heir allowed routes ergänzen
@@ -32,22 +33,18 @@ export class NavBarComponent implements OnInit {
 
   /**
    * Signal storing the current active route.
-   * This signal is updated when the route changes.
    */
   protected activeRoute: WritableSignal<string> = signal('');
+
+  private clickedElement: HTMLElement | null = null;
 
   constructor(
     protected routeWatcherService: RouteWatcherService,
     protected notificationService: NotificationService,
+    private renderer: Renderer2,
     private httpService: HttpService,
     private router: Router,
-    private injector: Injector,
-  ) {}
-
-  /**
-   * The `effect` function tracks changes in the current route and updates the active route
-   */
-  ngOnInit(): void {
+  ) {
     effect(
       () => {
         let currentRoute = this.routeWatcherService.getCurrentRouteSignal()();
@@ -60,13 +57,12 @@ export class NavBarComponent implements OnInit {
           if (this.isMongooseObjectIdInRoute()) {
             currentRoute = '';
           } else {
-            console.log('is not in route');
             currentRoute = '/profile';
           }
         }
         this.activeRoute.set(currentRoute);
       },
-      { allowSignalWrites: true, injector: this.injector },
+      { allowSignalWrites: true },
     );
   }
 
@@ -75,9 +71,11 @@ export class NavBarComponent implements OnInit {
    *
    * @param route The route to navigate to.
    */
-  protected setActive(route: string): void {
+  protected setActive(route: string, event: Event): void {
+    this.clickedElement = event.currentTarget as HTMLElement;
+
     if (this.isActivityRoute(route)) {
-      this.redirectToMostRecentTrainingDay();
+      this.redirectToMostRecentTrainingDay(event);
       return;
     }
 
@@ -88,19 +86,33 @@ export class NavBarComponent implements OnInit {
     return this.navItems.some((item) => item.route === route);
   }
 
-  private redirectToMostRecentTrainingDay() {
-    this.httpService.get<string>('/training/most-recent-plan-link').subscribe((link) => {
-      const url = new URL(link);
-      const path = url.pathname;
+  private redirectToMostRecentTrainingDay(event: Event) {
+    this.httpService
+      .get<string>('/training/most-recent-plan-link')
+      .pipe(
+        catchError((error) => {
+          if (error.status === 404 && this.clickedElement) {
+            console.log('🚀 ~ NavBarComponent ~ catchError ~ this.clickedElement:', this.clickedElement);
+            // Entferne die `active`-Klasse vom gespeicherten Element
+            this.clickedElement.blur(); // Entfernt den Fokus von dem Element
+            this.renderer.addClass(this.clickedElement, 'inactive');
+            this.router.navigateByUrl('/');
+          }
+          return EMPTY;
+        }),
+      )
+      .subscribe((link) => {
+        const url = new URL(link);
+        const path = url.pathname;
 
-      const queryParams = {
-        planId: url.searchParams.get('planId'),
-        week: url.searchParams.get('week'),
-        day: url.searchParams.get('day'),
-      };
+        const queryParams = {
+          planId: url.searchParams.get('planId'),
+          week: url.searchParams.get('week'),
+          day: url.searchParams.get('day'),
+        };
 
-      this.router.navigate([path], { queryParams });
-    });
+        this.router.navigate([path], { queryParams });
+      });
   }
 
   /**

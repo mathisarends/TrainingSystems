@@ -40,6 +40,11 @@
   color: #eee;
 }
 
+.nav-item.inactive {
+  color: #6c757d;
+  transition: color 0.3s ease-in-out;
+}
+
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -54,5 +59,9 @@
     bottom: 2%;
     border-radius: 1rem;
     padding: 0.75rem 1rem;
+  }
+
+  .nav-item:hover {
+    color: #6c757d;
   }
 }
