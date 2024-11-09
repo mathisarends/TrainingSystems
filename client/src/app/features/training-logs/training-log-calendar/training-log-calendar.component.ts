@@ -1,14 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, model, signal, WritableSignal } from '@angular/core';
+import { Observable } from 'rxjs';
+import { HttpService } from '../../../core/services/http-client.service';
+import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
 import { IconName } from '../../../shared/icon/icon-name';
 import { CalendarEventComponent } from './calendar-event/calendar-event.component';
+import { TrainingDayCalendarDataDto } from './dto/training-day-calendar-data.dto';
 import { IsCurrentDayPipe } from './is-current-day.pipe';
 import { MonthNavigationComponent } from './month-navigation/month-navigation.component';
 
 @Component({
   selector: 'app-training-log-calendar',
   standalone: true,
-  imports: [CommonModule, MonthNavigationComponent, IsCurrentDayPipe, CalendarEventComponent],
+  imports: [CommonModule, MonthNavigationComponent, IsCurrentDayPipe, CalendarEventComponent, SpinnerComponent],
   templateUrl: './training-log-calendar.component.html',
   styleUrls: ['./training-log-calendar.component.scss'],
 })
@@ -23,13 +27,17 @@ export class TrainingLogCalendarComponent {
   daysFromPreviousMonth: WritableSignal<number[]> = signal([]);
   daysFromNextMonth: WritableSignal<number[]> = signal([]);
 
-  constructor() {
+  trainingDayCalendarData$: Observable<TrainingDayCalendarDataDto> | undefined = undefined;
+
+  constructor(private httpService: HttpService) {
     effect(
       () => {
         this.generateCalendar();
       },
       { allowSignalWrites: true },
     );
+
+    this.trainingDayCalendarData$ = this.httpService.get<TrainingDayCalendarDataDto>('/training-calendar');
   }
 
   private generateCalendar() {

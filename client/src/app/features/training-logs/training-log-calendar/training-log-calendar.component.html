@@ -1,31 +1,35 @@
-<div class="calendar-grid">
-  <div class="day-name">Mo</div>
-  <div class="day-name">Di</div>
-  <div class="day-name">Mi</div>
-  <div class="day-name">Do</div>
-  <div class="day-name">Fr</div>
-  <div class="day-name">Sa</div>
-  <div class="day-name">So</div>
+@if (trainingDayCalendarData$ | async; as trainingDayCalendarData) {
+  <div class="calendar-grid">
+    <div class="day-name">Mo</div>
+    <div class="day-name">Di</div>
+    <div class="day-name">Mi</div>
+    <div class="day-name">Do</div>
+    <div class="day-name">Fr</div>
+    <div class="day-name">Sa</div>
+    <div class="day-name">So</div>
 
-  @for (day of daysFromPreviousMonth(); track day) {
-    <div class="day other-month">
-      <div class="day-number">{{ day }}</div>
-    </div>
-  }
-
-  @for (day of daysInMonth(); track day) {
-    <div class="day">
-      <div class="day-number" [ngClass]="{ 'current-day': day | isCurrentDay: currentMonth() : currentYear() }">
-        {{ day }}
+    @for (day of daysFromPreviousMonth(); track day) {
+      <div class="day other-month">
+        <div class="day-number">{{ day }}</div>
       </div>
-    </div>
-  }
+    }
 
-  @for (day of daysFromNextMonth(); track day) {
-    <div class="day other-month">
-      <div class="day-number">{{ day }}</div>
-    </div>
-  }
-</div>
+    @for (day of daysInMonth(); track day) {
+      <div class="day">
+        <div class="day-number" [ngClass]="{ 'current-day': day | isCurrentDay: currentMonth() : currentYear() }">
+          {{ day }}
+        </div>
+      </div>
+    }
 
-<app-month-navigation [(currentMonth)]="currentMonth" [(currentYear)]="currentYear" />
+    @for (day of daysFromNextMonth(); track day) {
+      <div class="day other-month">
+        <div class="day-number">{{ day }}</div>
+      </div>
+    }
+  </div>
+
+  <app-month-navigation [(currentMonth)]="currentMonth" [(currentYear)]="currentYear" />
+} @else {
+  <app-spinner />
+}
