@@ -19,10 +19,11 @@ export class TrainingCalendarService {
               plan.startDate,
               weekIndex,
               dayIndex,
+              plan.trainingDays,
             );
             return {
               dayId: day.id,
-              position: `W${weekIndex + 1}D${dayIndex + 1}`,
+              label: `W${weekIndex + 1}D${dayIndex + 1}`,
               trainingDate,
               endTime: day.endTime,
             };
@@ -41,10 +42,11 @@ export class TrainingCalendarService {
               plan.startDate,
               weekIndex,
               dayIndex,
+              plan.trainingDays,
             );
             return {
               dayId: day.id,
-              position: `W${weekIndex + 1}D${dayIndex + 1}`,
+              label: `W${weekIndex + 1}D${dayIndex + 1}`,
               trainingDate,
               endTime: day.endTime,
             };
@@ -55,16 +57,16 @@ export class TrainingCalendarService {
 
     return {
       finishedTrainings: finishedTrainings.map(
-        ({ dayId, position, trainingDate }) => ({
+        ({ dayId, label, trainingDate }) => ({
           dayId,
-          position,
+          label,
           trainingDate,
         }),
       ),
       upComingTrainings: upComingTrainings.map(
-        ({ dayId, position, trainingDate }) => ({
+        ({ dayId, label, trainingDate }) => ({
           dayId,
-          position,
+          label,
           trainingDate,
         }),
       ),
@@ -75,9 +77,38 @@ export class TrainingCalendarService {
     startDate: Date,
     weekIndex: number,
     dayIndex: number,
+    trainingDays: string[],
   ): Date {
-    const trainingDate = new Date(startDate);
-    trainingDate.setDate(startDate.getDate() + weekIndex * 7 + dayIndex);
+    const dayMap = {
+      Mo: 0,
+      Di: 1,
+      Mi: 2,
+      Do: 3,
+      Fr: 4,
+      Sa: 5,
+      So: 6,
+    };
+
+    // Indizes der Trainingstage (z. B. [0, 2, 4] für Mo, Mi, Fr)
+    const trainingDayIndices = trainingDays.map((day) => dayMap[day]);
+
+    trainingDayIndices.sort((a, b) => a - b);
+
+    const firstDayOfWeek = new Date(startDate);
+    firstDayOfWeek.setDate(startDate.getDate() + weekIndex * 7);
+
+    let trainingDate = new Date(firstDayOfWeek);
+    const numTrainingDays = trainingDayIndices.length;
+
+    const offsetIndex = dayIndex % numTrainingDays;
+    const fullWeeksOffset = Math.floor(dayIndex / numTrainingDays) * 7;
+
+    trainingDate.setDate(
+      firstDayOfWeek.getDate() +
+        fullWeeksOffset +
+        trainingDayIndices[offsetIndex],
+    );
+
     return trainingDate;
   }
 }
