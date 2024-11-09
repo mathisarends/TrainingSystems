@@ -14,11 +14,6 @@ import { IconName } from './icon-name';
   styleUrl: './icon.component.scss',
 })
 export class IconComponent {
-  /**
-   * Exposes the `IconName` enum to the template for type-safe access to icon names.
-   *
-   * @protected
-   */
   protected readonly IconName = IconName;
 
   /**

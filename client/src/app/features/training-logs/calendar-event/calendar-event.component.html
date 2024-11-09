@@ -1,0 +1,7 @@
+@if (isTrainingLog()) {
+  <app-icon [name]="IconName.CHECK_CIRCLE" [color]="'#32CD32'" />
+} @else {
+  <app-icon [name]="IconName.Zap" [fillIcon]="true" [color]="'#FFA500'" />
+}
+
+{{ trainingDayCalendarEntry().label }}

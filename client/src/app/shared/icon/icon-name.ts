@@ -57,4 +57,5 @@ export enum IconName {
   TRENDING_UP = 'feather-trending-up',
   TRENDING_DOWN = 'feather-trending-down',
   HEART = 'heart',
+  CHECK_CIRCLE = 'check-circle',
 }

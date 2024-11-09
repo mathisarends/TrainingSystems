@@ -2,17 +2,19 @@ import { Component, HostListener, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { IconName } from '../../../shared/icon/icon-name';
+import { IconComponent } from '../../../shared/icon/icon.component';
 import { CalendarDashboardPopupComponent } from '../calendar-dashboard-popup/calendar-dashboard-popup.component';
 import { TrainingDayCalendarEntry } from '../training-log-calendar/dto/training-day-calendar-entry';
 
 @Component({
   selector: 'app-calendar-event',
   standalone: true,
-  template: `{{ trainingDayCalendarEntry().label }}`,
+  imports: [IconComponent],
+  templateUrl: './calendar-event.component.html',
   styleUrls: ['./calendar-event.component.scss'],
 })
 export class CalendarEventComponent {
-  protected readonly IconBackgroundColor = IconName;
+  protected readonly IconName = IconName;
 
   /**
    * The calendar entry representing a specific training day.
