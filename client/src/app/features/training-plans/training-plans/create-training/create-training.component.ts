@@ -5,7 +5,6 @@ import { HttpService } from '../../../../core/services/http-client.service';
 import { FloatingLabelInputComponent } from '../../../../shared/components/floating-label-input/floating-label-input.component';
 import { ToDropDownOptionsPipe } from '../../../../shared/components/floating-label-input/to-dropdown-options.pipe';
 import { OnConfirm } from '../../../../shared/components/modal/on-confirm';
-import { ToastService } from '../../../../shared/components/toast/toast.service';
 import { TrainingBannerComponent } from '../../../../shared/components/training-banner/training-banner.component';
 import { ImageUploadService } from '../../../../shared/service/image-upload.service';
 import { TrainingSessionService } from '../../../training-session/training-session-service';
@@ -47,7 +46,6 @@ export class CreateTrainingComponent implements OnInit, OnConfirm {
     private trainingPlanService: TrainingPlanService,
     private httpClient: HttpService,
     private imageUploadService: ImageUploadService,
-    private toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -65,7 +63,6 @@ export class CreateTrainingComponent implements OnInit, OnConfirm {
 
     return this.httpClient.post<void>('/training', this.trainingPlanEditView.toDto()).pipe(
       tap(() => {
-        this.toastService.success('Plan erstellt');
         this.trainingPlanService.trainingPlanChanged();
       }),
     );

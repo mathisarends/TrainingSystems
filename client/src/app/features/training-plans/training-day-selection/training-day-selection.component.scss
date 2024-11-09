@@ -13,20 +13,18 @@
 }
 
 .day {
-  padding-block: 0.825rem;
+  padding-block: 0.75rem;
   border-right: 1px solid #e0e0e0;
+  color: grey;
   display: grid;
   place-items: center;
-  transition:
-    background-color 0.2s ease,
-    color 0.3s ease;
+  transition: color 0.3s ease;
 
   &:last-of-type {
     border: none;
   }
 
   &.selected {
-    background-color: #89cff0;
-    color: #ffffff;
+    color: #0073ff;
   }
 }

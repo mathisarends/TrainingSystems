@@ -106,6 +106,10 @@ export class TrainingLogsComponent implements OnInit, AfterViewInit {
       },
       { allowSignalWrites: true },
     );
+
+    this.httpService.get('/training-calendar').subscribe((response) => {
+      console.log('response', response);
+    });
   }
 
   /**
