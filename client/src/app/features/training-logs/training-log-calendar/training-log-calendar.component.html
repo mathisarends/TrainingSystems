@@ -19,6 +19,10 @@
         <div class="day-number" [ngClass]="{ 'current-day': day | isCurrentDay: currentMonth() : currentYear() }">
           {{ day }}
         </div>
+
+        @if (day | trainingLabel: currentMonth() : currentYear() : trainingDayCalendarData; as trainingLabel) {
+          <app-calendar-event [title]="trainingLabel" />
+        }
       </div>
     }
 

@@ -8,11 +8,19 @@ import { CalendarEventComponent } from './calendar-event/calendar-event.componen
 import { TrainingDayCalendarDataDto } from './dto/training-day-calendar-data.dto';
 import { IsCurrentDayPipe } from './is-current-day.pipe';
 import { MonthNavigationComponent } from './month-navigation/month-navigation.component';
+import { TrainingLabelPipe } from './training-day-label.pipe';
 
 @Component({
   selector: 'app-training-log-calendar',
   standalone: true,
-  imports: [CommonModule, MonthNavigationComponent, IsCurrentDayPipe, CalendarEventComponent, SpinnerComponent],
+  imports: [
+    CommonModule,
+    MonthNavigationComponent,
+    IsCurrentDayPipe,
+    CalendarEventComponent,
+    SpinnerComponent,
+    TrainingLabelPipe,
+  ],
   templateUrl: './training-log-calendar.component.html',
   styleUrls: ['./training-log-calendar.component.scss'],
 })
@@ -60,5 +68,22 @@ export class TrainingLogCalendarComponent {
     const remainingDays = 7 - (totalDays % 7);
     const daysFromNextMonth = remainingDays < 7 ? Array.from({ length: remainingDays }, (_, i) => i + 1) : [];
     this.daysFromNextMonth.set(daysFromNextMonth);
+  }
+
+  getTrainingLabelForDay(day: number, month: number, year: number, data: TrainingDayCalendarDataDto): string | null {
+    const dateToCheck = new Date(year, month, day);
+
+    // Suche nach einem Trainingseintrag für das aktuelle Datum
+    const trainingEntry = [...data.finishedTrainings, ...data.upComingTrainings].find((training) => {
+      const trainingDate = new Date(training.trainingDate);
+      return (
+        trainingDate.getFullYear() === dateToCheck.getFullYear() &&
+        trainingDate.getMonth() === dateToCheck.getMonth() &&
+        trainingDate.getDate() === dateToCheck.getDate()
+      );
+    });
+
+    // Gib den label zurück, wenn ein Trainingseintrag gefunden wurde, sonst null
+    return trainingEntry ? trainingEntry.label : null;
   }
 }
