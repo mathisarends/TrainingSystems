@@ -1,9 +1,7 @@
 <div class="icon-label-container">
   <div class="icon-box" [ngStyle]="{ 'background-color': iconBackgroundColor() }">
-    <app-icon [name]="iconName()" [size]="22" [color]="'white'" />
+    <app-icon [name]="iconName()" [size]="22" [color]="'white'" [isTilting]="iconTilting()" />
   </div>
   <p>{{ label() }}</p>
 </div>
-@if (showChevronIcon()) {
-  <app-icon [name]="IconName.CHEVRON_RIGHT" [size]="26" [color]="'grey'" />
-}
+<app-icon [name]="IconName.CHEVRON_RIGHT" [size]="26" [color]="'grey'" />

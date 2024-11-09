@@ -19,4 +19,6 @@ export interface NavItem {
    * The icon associated with the navigation item, represented by the `IconName` enumeration.
    */
   icon: IconName;
+
+  associatedRoutes: string[];
 }

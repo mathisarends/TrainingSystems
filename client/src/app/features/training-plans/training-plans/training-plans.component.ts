@@ -2,6 +2,7 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, effect, Injector, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { ModalSize } from '../../../core/services/modal/modalSize';
 import { toggleCollapseAnimation } from '../../../shared/animations/toggle-collapse';
@@ -12,7 +13,6 @@ import { IconListeItemComponent } from '../../../shared/components/icon-list-ite
 import { SkeletonCardComponent } from '../../../shared/components/loader/skeleton-card/skeleton-card.component';
 import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
-import { ToastService } from '../../../shared/components/toast/toast.service';
 import { IconName } from '../../../shared/icon/icon-name';
 import { KeyboardService } from '../../../shared/service/keyboard.service';
 import { HeaderService } from '../../header/header.service';
@@ -71,14 +71,16 @@ export class TrainingPlansComponent implements OnInit {
    */
   isLoading = signal(true);
 
+  wiggleIcons = signal(false);
+
   constructor(
     protected trainingPlanService: TrainingPlanService,
     private modalService: ModalService,
     private headerService: HeaderService,
+    private route: ActivatedRoute,
     private keyboardService: KeyboardService,
     private injector: Injector,
     private destroyRef: DestroyRef,
-    private toastService: ToastService,
   ) {}
 
   /**
@@ -86,6 +88,8 @@ export class TrainingPlansComponent implements OnInit {
    * Loads training plans, subscribes to search input and modal events, and listens for "Ctrl + F".
    */
   ngOnInit(): void {
+    this.checkForRedirectionFromActivity();
+
     this.setHeaderInfo();
 
     this.loadTrainingPlans();
@@ -202,6 +206,21 @@ export class TrainingPlansComponent implements OnInit {
       },
       { injector: this.injector, allowSignalWrites: true },
     );
+  }
+
+  private checkForRedirectionFromActivity(): void {
+    this.route.queryParams.subscribe((params) => {
+      if (params['source'] === 'activity') {
+        this.triggerWiggleEffect();
+      }
+    });
+  }
+
+  private triggerWiggleEffect(): void {
+    this.wiggleIcons.set(true);
+    setTimeout(() => {
+      this.wiggleIcons.set(false);
+    }, 4000);
   }
 
   /**

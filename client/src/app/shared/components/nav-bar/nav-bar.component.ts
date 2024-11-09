@@ -25,10 +25,10 @@ export class NavBarComponent {
    * Array of navigation items defining the label, route, and associated icon for each navigation button.
    */
   protected navItems: NavItem[] = [
-    { label: 'Home', route: '/', icon: this.IconName.HOME },
-    { label: 'Training', route: '', icon: this.IconName.Activity },
-    { label: 'Logs', route: '/logs', icon: this.IconName.CALENDAR },
-    { label: 'Profil', route: '/profile', icon: this.IconName.User },
+    { label: 'Home', route: '/', associatedRoutes: [], icon: this.IconName.HOME },
+    { label: 'Training', route: '', associatedRoutes: [], icon: this.IconName.Activity },
+    { label: 'Logs', route: '/logs', associatedRoutes: [], icon: this.IconName.CALENDAR },
+    { label: 'Profil', route: '/profile', associatedRoutes: [], icon: this.IconName.User },
   ];
 
   /**
@@ -50,8 +50,10 @@ export class NavBarComponent {
         let currentRoute = this.routeWatcherService.getCurrentRouteSignal()();
 
         if (!this.isRouteRepresentedInNavbar(currentRoute)) {
-          if (this.isLoginSucessRoute(currentRoute)) {
+          if (this.isLoginSucessRoute(currentRoute) || this.isRedirectFromActivityRoute(currentRoute)) {
             currentRoute = '/';
+            this.activeRoute.set(currentRoute);
+            return;
           }
 
           if (this.isMongooseObjectIdInRoute()) {
@@ -92,11 +94,8 @@ export class NavBarComponent {
       .pipe(
         catchError((error) => {
           if (error.status === 404 && this.clickedElement) {
-            console.log('🚀 ~ NavBarComponent ~ catchError ~ this.clickedElement:', this.clickedElement);
-            // Entferne die `active`-Klasse vom gespeicherten Element
-            this.clickedElement.blur(); // Entfernt den Fokus von dem Element
             this.renderer.addClass(this.clickedElement, 'inactive');
-            this.router.navigateByUrl('/');
+            this.router.navigateByUrl('/?source=activity');
           }
           return EMPTY;
         }),
@@ -136,5 +135,9 @@ export class NavBarComponent {
 
   private isLoginSucessRoute(url: string): boolean {
     return url.includes('?login=success');
+  }
+
+  private isRedirectFromActivityRoute(url: string) {
+    return url.includes('?source=activity');
   }
 }

@@ -39,4 +39,9 @@ export class IconComponent {
    * This input is optional and defaults to `false` if not provided.
    */
   fillIcon = input<boolean>(false);
+
+  /**
+   * Signal to toggle the tilt animation.
+   */
+  isTilting = input(false);
 }
