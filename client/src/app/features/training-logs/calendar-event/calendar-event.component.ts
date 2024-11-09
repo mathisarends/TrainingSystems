@@ -13,8 +13,15 @@ import { TrainingDayCalendarEntry } from '../training-log-calendar/dto/training-
 })
 export class CalendarEventComponent {
   protected readonly IconBackgroundColor = IconName;
+
+  /**
+   * The calendar entry representing a specific training day.
+   */
   trainingDayCalendarEntry = input.required<TrainingDayCalendarEntry>();
 
+  /**
+   * Indicates wether its an prospective or retrospective view to the training day.
+   */
   isTrainingLog = input.required<boolean>();
 
   constructor(
@@ -27,7 +34,7 @@ export class CalendarEventComponent {
     const weekIndex = this.parseWeekIndexFormLabel(this.trainingDayCalendarEntry().label);
     const dayIndex = this.parseDayIndexFromLabel(this.trainingDayCalendarEntry().label);
 
-    if (this.isTrainingLog()) {
+    if (!this.isTrainingLog()) {
       this.modalService.open({
         title: `${this.trainingDayCalendarEntry().label} ${this.trainingDayCalendarEntry().planTitle.toUpperCase()}`,
         component: CalendarDashboardPopupComponent,
