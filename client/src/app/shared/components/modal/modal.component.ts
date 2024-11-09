@@ -20,6 +20,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { firstValueFrom, Observable } from 'rxjs';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { ModalSize } from '../../../core/services/modal/modalSize';
+import { MobileDeviceDetectionService } from '../../../platform/mobile-device-detection.service';
 import { DraggableDirective } from '../../directives/draggable.directive';
 import { IconName } from '../../icon/icon-name';
 import { KeyboardService } from '../../service/keyboard.service';
@@ -104,6 +105,7 @@ export class ModalComponent implements AfterViewInit, OnInit {
   @Output() closed = new EventEmitter<void>();
 
   constructor(
+    protected mobileDeviceDetectionService: MobileDeviceDetectionService,
     private environmentInjector: EnvironmentInjector,
     private modalService: ModalService,
     private keyboardService: KeyboardService,
