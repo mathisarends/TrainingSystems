@@ -6,9 +6,9 @@ import { SpinnerComponent } from '../../../shared/components/spinner/spinner.com
 import { IconName } from '../../../shared/icon/icon-name';
 import { CalendarEventComponent } from './calendar-event/calendar-event.component';
 import { TrainingDayCalendarDataDto } from './dto/training-day-calendar-data.dto';
+import { ExtractTrainingDayFromCalendarDataPipe } from './extract-training-day-from-calendar-data.pipe';
 import { IsCurrentDayPipe } from './is-current-day.pipe';
 import { MonthNavigationComponent } from './month-navigation/month-navigation.component';
-import { TrainingLabelPipe } from './training-day-label.pipe';
 
 @Component({
   selector: 'app-training-log-calendar',
@@ -19,7 +19,7 @@ import { TrainingLabelPipe } from './training-day-label.pipe';
     IsCurrentDayPipe,
     CalendarEventComponent,
     SpinnerComponent,
-    TrainingLabelPipe,
+    ExtractTrainingDayFromCalendarDataPipe,
   ],
   templateUrl: './training-log-calendar.component.html',
   styleUrls: ['./training-log-calendar.component.scss'],

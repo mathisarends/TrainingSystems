@@ -1,12 +1,18 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { TrainingDayCalendarDataDto } from './dto/training-day-calendar-data.dto';
+import { TrainingDayCalendarEntry } from './dto/training-day-calendar-entry';
 
 @Pipe({
-  name: 'trainingLabel',
+  name: 'extractTrainingDayFromCalendarData',
   standalone: true,
 })
-export class TrainingLabelPipe implements PipeTransform {
-  transform(day: number, month: number, year: number, data: TrainingDayCalendarDataDto): string | null {
+export class ExtractTrainingDayFromCalendarDataPipe implements PipeTransform {
+  transform(
+    day: number,
+    month: number,
+    year: number,
+    data: TrainingDayCalendarDataDto,
+  ): TrainingDayCalendarEntry | undefined {
     const dateToCheck = new Date(year, month, day);
 
     const trainingEntry = [...data.finishedTrainings, ...data.upComingTrainings].find((training) => {
@@ -18,6 +24,6 @@ export class TrainingLabelPipe implements PipeTransform {
       );
     });
 
-    return trainingEntry ? trainingEntry.label : null;
+    return trainingEntry ?? undefined;
   }
 }

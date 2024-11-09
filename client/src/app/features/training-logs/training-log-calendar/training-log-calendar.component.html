@@ -20,8 +20,11 @@
           {{ day }}
         </div>
 
-        @if (day | trainingLabel: currentMonth() : currentYear() : trainingDayCalendarData; as trainingLabel) {
-          <app-calendar-event [title]="trainingLabel" />
+        @if (
+          day | extractTrainingDayFromCalendarData: currentMonth() : currentYear() : trainingDayCalendarData;
+          as trainingDayCalendarEntry
+        ) {
+          <app-calendar-event [title]="trainingDayCalendarEntry.label" />
         }
       </div>
     }
