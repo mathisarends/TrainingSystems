@@ -23,6 +23,8 @@ export class TrainingCalendarService {
             );
             return {
               dayId: day.id,
+              planTitle: plan.title,
+              planId: plan.id,
               label: `W${weekIndex + 1}D${dayIndex + 1}`,
               trainingDate,
               endTime: day.endTime,
@@ -46,6 +48,8 @@ export class TrainingCalendarService {
             );
             return {
               dayId: day.id,
+              planTitle: plan.title,
+              planId: plan.id,
               label: `W${weekIndex + 1}D${dayIndex + 1}`,
               trainingDate,
               endTime: day.endTime,
@@ -57,15 +61,19 @@ export class TrainingCalendarService {
 
     return {
       finishedTrainings: finishedTrainings.map(
-        ({ dayId, label, trainingDate }) => ({
+        ({ dayId, planTitle, planId, label, trainingDate }) => ({
           dayId,
+          planTitle,
+          planId,
           label,
           trainingDate,
         }),
       ),
       upComingTrainings: upComingTrainings.map(
-        ({ dayId, label, trainingDate }) => ({
+        ({ dayId, planTitle, planId, label, trainingDate }) => ({
           dayId,
+          planTitle,
+          planId,
           label,
           trainingDate,
         }),

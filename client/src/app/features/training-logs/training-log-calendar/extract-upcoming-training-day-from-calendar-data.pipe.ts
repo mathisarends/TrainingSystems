@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { TrainingDayCalendarDataDto } from './dto/training-day-calendar-data.dto';
 import { TrainingDayCalendarEntry } from './dto/training-day-calendar-entry';
 
 @Pipe({
@@ -11,11 +10,11 @@ export class ExtractTrainingDayFromCalendarDataPipe implements PipeTransform {
     day: number,
     month: number,
     year: number,
-    data: TrainingDayCalendarDataDto,
+    upComingTrainings: TrainingDayCalendarEntry[],
   ): TrainingDayCalendarEntry | undefined {
     const dateToCheck = new Date(year, month, day);
 
-    const trainingEntry = [...data.finishedTrainings, ...data.upComingTrainings].find((training) => {
+    const trainingEntry = upComingTrainings.find((training) => {
       const trainingDate = new Date(training.trainingDate);
       return (
         trainingDate.getFullYear() === dateToCheck.getFullYear() &&

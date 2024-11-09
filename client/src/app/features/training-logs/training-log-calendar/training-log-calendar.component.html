@@ -21,10 +21,25 @@
         </div>
 
         @if (
-          day | extractTrainingDayFromCalendarData: currentMonth() : currentYear() : trainingDayCalendarData;
+          day
+            | extractTrainingDayFromCalendarData
+              : currentMonth()
+              : currentYear()
+              : trainingDayCalendarData.upComingTrainings;
           as trainingDayCalendarEntry
         ) {
-          <app-calendar-event [title]="trainingDayCalendarEntry.label" />
+          <app-calendar-event [trainingDayCalendarEntry]="trainingDayCalendarEntry" />
+        }
+
+        @if (
+          day
+            | extractTrainingDayFromCalendarData
+              : currentMonth()
+              : currentYear()
+              : trainingDayCalendarData.finishedTrainings;
+          as trainingDayCalendarEntry
+        ) {
+          <app-calendar-event [trainingDayCalendarEntry]="trainingDayCalendarEntry" />
         }
       </div>
     }

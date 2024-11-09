@@ -4,9 +4,9 @@ import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
 import { IconName } from '../../../shared/icon/icon-name';
-import { CalendarEventComponent } from './calendar-event/calendar-event.component';
+import { CalendarEventComponent } from '../calendar-event/calendar-event.component';
 import { TrainingDayCalendarDataDto } from './dto/training-day-calendar-data.dto';
-import { ExtractTrainingDayFromCalendarDataPipe } from './extract-training-day-from-calendar-data.pipe';
+import { ExtractTrainingDayFromCalendarDataPipe } from './extract-upcoming-training-day-from-calendar-data.pipe';
 import { IsCurrentDayPipe } from './is-current-day.pipe';
 import { MonthNavigationComponent } from './month-navigation/month-navigation.component';
 
