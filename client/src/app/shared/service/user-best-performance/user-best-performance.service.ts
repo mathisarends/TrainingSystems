@@ -11,19 +11,21 @@ import { UserBestPerformanceDto } from './user-best-performance.dto';
 export class UserBestPerformanceService {
   userBestPerformanceMap: Map<ExerciseName, UserBestPerformanceDto> = new Map();
 
-  constructor(private httpService: HttpService,  private trainingPlanDataService: TrainingPlanDataService, private toastService: ToastService) {
+  constructor(
+    private httpService: HttpService,
+    private trainingPlanDataService: TrainingPlanDataService,
+    private toastService: ToastService,
+  ) {
     this.fetchAndSetUserBestPerformanceMap();
   }
 
   determineExerciseBasedOnFieldName(fieldName: string): Exercise | undefined {
     const exerciseNumber = Number(fieldName.charAt(13));
-  
-    if (
-      !this.trainingPlanDataService.trainingDay()
-    ) {
+
+    if (!this.trainingPlanDataService.trainingDay()) {
       return undefined;
     }
-  
+
     return this.trainingPlanDataService.trainingDay()!.exercises[exerciseNumber - 1];
   }
 
@@ -42,21 +44,22 @@ export class UserBestPerformanceService {
   }
 
   makeNewBestPerformanceEntry(exercise: Exercise) {
-    this.httpService.put<UserBestPerformanceDto>("/user-best-performance", {exercise}).subscribe(userBestPerformanceDto => {
-      this.userBestPerformanceMap.set(userBestPerformanceDto.exerciseName, userBestPerformanceDto);
-  
-      this.startConfetti();
-    });
+    console.log('🚀 ~ UserBestPerformanceService ~ makeNewBestPerformanceEntry ~ exercise:', exercise);
+    this.httpService
+      .put<UserBestPerformanceDto>('/user-best-performance', { exercise })
+      .subscribe((userBestPerformanceDto) => {
+        this.userBestPerformanceMap.set(userBestPerformanceDto.exerciseName, userBestPerformanceDto);
+
+        this.startConfetti();
+      });
   }
 
   private fetchAndSetUserBestPerformanceMap() {
-    this.httpService.get<{ [key: string]: UserBestPerformanceDto }>("/user-best-performance")
-      .subscribe((response) => {
-        this.userBestPerformanceMap = new Map<ExerciseName, UserBestPerformanceDto>(
-          Object.entries(response) as [ExerciseName, UserBestPerformanceDto][]
-        );
-  
-      });
+    this.httpService.get<{ [key: string]: UserBestPerformanceDto }>('/user-best-performance').subscribe((response) => {
+      this.userBestPerformanceMap = new Map<ExerciseName, UserBestPerformanceDto>(
+        Object.entries(response) as [ExerciseName, UserBestPerformanceDto][],
+      );
+    });
   }
 
   private startConfetti() {

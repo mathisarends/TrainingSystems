@@ -4,7 +4,7 @@
     <p class="value">{{ unit() }}</p>
     <div class="trend-container" [ngClass]="{ positive: isPositiveTrend(), negative: !isPositiveTrend() }">
       <div class="trend-info">
-        <app-icon [name]="isPositiveTrend() ? IconName.TRENDING_UP : IconName.TRENDING_DOWN"></app-icon>
+        <app-icon [name]="isPositiveTrend() ? IconName.TRENDING_UP : IconName.TRENDING_DOWN" />
         {{ differenceFromLastSession() }}
       </div>
     </div>

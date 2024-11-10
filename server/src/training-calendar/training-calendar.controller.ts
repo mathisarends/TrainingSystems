@@ -1,5 +1,6 @@
 import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { GetUser } from 'src/decorators/user.decorator';
+import { TrainingRetrospectivePopupCardInfo } from './dto/training-retrospective-popup-card-info.dto';
 import { TrainingCalendarService } from './training-calendar.service';
 import { TrainingDayInfoService } from './training-day-info.service';
 
@@ -13,6 +14,21 @@ export class TrainingCalendarController {
   @Get()
   async getCalendarDataForUser(@GetUser() userId: string) {
     return this.trainingCalendarService.getCalendarDataForUser(userId);
+  }
+
+  @Get('/training-day/popup-card/:planId/:weekIndex/:dayIndex')
+  async getTrainingRetrospectivePopupCardInfo(
+    @GetUser() userId: string,
+    @Param('planId') planId: string,
+    @Param('weekIndex', ParseIntPipe) weekIndex: number,
+    @Param('dayIndex', ParseIntPipe) dayIndex: number,
+  ): Promise<TrainingRetrospectivePopupCardInfo> {
+    return await this.trainingDayInfoService.getTrainingRetrospectivePopupCardInfo(
+      userId,
+      planId,
+      weekIndex,
+      dayIndex,
+    );
   }
 
   @Get('/training-day-info/:planId/:weekIndex/:dayIndex')

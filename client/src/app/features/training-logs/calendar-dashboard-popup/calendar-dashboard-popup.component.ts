@@ -1,21 +1,21 @@
 import { DatePipe } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, effect, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { GroupedBarChartComponent } from '../../../shared/components/charts/grouped-bar-chart/grouped-bar-chart.component';
 import { DashboardCardComponent } from '../../../shared/components/dashboard-card/dashboard-card.component';
 import { IconBackgroundColor } from '../../../shared/components/icon-list-item/icon-background-color';
-import { IconListeItemComponent } from '../../../shared/components/icon-list-item/icon-list-item.component';
 import { OnToggleView } from '../../../shared/components/modal/on-toggle-view';
 import { IconName } from '../../../shared/icon/icon-name';
 import { ImageDownloadService } from '../../../shared/service/image-download.service';
 import { ShareService } from '../../../shared/service/social-media-share.service';
 import { TrainingDay } from '../../training-plans/training-view/training-day';
+import { TrainingRetrospectivePopupCardInfo } from './training-retrospective.popup-card.dto';
 
 @Component({
   standalone: true,
-  imports: [DashboardCardComponent, GroupedBarChartComponent, IconListeItemComponent],
+  imports: [DashboardCardComponent, GroupedBarChartComponent],
   selector: 'app-calendar-dashboard-popup',
   templateUrl: './calendar-dashboard-popup.component.html',
   styleUrls: ['./calendar-dashboard-popup.component.scss'],
@@ -61,12 +61,30 @@ export class CalendarDashboardPopupComponent implements OnToggleView {
    */
   dayIndex = signal(0);
 
+  tonnage = signal(0);
+  tonangeDifferenceFromlastWeek = signal(0);
+
   constructor(
     private router: Router,
     private httpService: HttpService,
     private shareService: ShareService,
     private datePipe: DatePipe,
-  ) {}
+  ) {
+    effect(() => {
+      if (this.trainingPlanId()) {
+        this.httpService
+          .get<TrainingRetrospectivePopupCardInfo>(
+            `/training-calendar/training-day/popup-card/${this.trainingPlanId()}/${this.weekIndex()}/${this.dayIndex()}`,
+          )
+          .subscribe((response: TrainingRetrospectivePopupCardInfo) => {
+            this.tonnage.set(response.tonnage);
+            this.tonangeDifferenceFromlastWeek.set(response.tonnageDifferenceFromLastWeek);
+
+            this.mapResponseDataToChart(response);
+          });
+      }
+    });
+  }
 
   onConfirm(): void {
     this.router.navigate(['/training/view'], {
@@ -78,6 +96,27 @@ export class CalendarDashboardPopupComponent implements OnToggleView {
     this.fetchTrainingDayInfo().subscribe((trainingDay) => {
       this.shareTrainingLog(trainingDay);
     });
+  }
+
+  /**
+   * Processes the response data for training retrospective and sets up chart data.
+   * @param response - The response from the training retrospective endpoint.
+   */
+  private mapResponseDataToChart(response: TrainingRetrospectivePopupCardInfo): void {
+    const labels = Object.keys(response.tonnageComparisonOverWeekSpan);
+
+    const datasets = response.tonnageComparisonOverWeekSpan[labels[0]].map((_, weekIndex) => {
+      return {
+        label: `Week ${weekIndex + 1}`,
+        data: labels.map((category) => response.tonnageComparisonOverWeekSpan[category][weekIndex] || 0),
+        backgroundColor: `rgba(${54 + weekIndex * 20}, ${162 - weekIndex * 10}, ${235 - weekIndex * 15}, 0.6)`, // Adjust colors as needed
+      };
+    });
+
+    this.mockChartData = {
+      labels,
+      datasets,
+    };
   }
 
   /**

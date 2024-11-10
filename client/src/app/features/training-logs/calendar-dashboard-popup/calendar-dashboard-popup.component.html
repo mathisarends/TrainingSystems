@@ -2,19 +2,17 @@
   <app-dashboard-card
     [icon]="IconName.BAR_CHART"
     [iconBackgroundColor]="IconBackgroundColor.DodgerBlue"
-    [unit]="'23'"
-    [differenceFromLastSession]="2.3"
+    [unit]="tonnage()"
+    [differenceFromLastSession]="tonangeDifferenceFromlastWeek()"
     [title]="'Tonnage (in kg)'"
-    [explanationText]="'from last week'"
   />
 
   <app-dashboard-card
     [icon]="IconName.CLOCK"
     [iconBackgroundColor]="IconBackgroundColor.DarkGray"
-    [unit]="'55'"
+    [unit]="55"
     [differenceFromLastSession]="-5"
     [title]="'Dauer (Minuten)'"
-    [explanationText]="'from last week'"
   />
 </div>
 

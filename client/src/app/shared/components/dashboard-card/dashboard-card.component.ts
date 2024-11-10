@@ -18,9 +18,8 @@ export class DashboardCardComponent {
 
   icon = input.required<IconName>();
   iconBackgroundColor = input.required<IconBackgroundColor>();
-  unit = input.required<string>();
+  unit = input.required<number>();
   differenceFromLastSession = input.required<number>();
   title = input.required<string>();
   isPositiveTrend = computed(() => this.differenceFromLastSession() > 0);
-  explanationText = input.required<string>();
 }
