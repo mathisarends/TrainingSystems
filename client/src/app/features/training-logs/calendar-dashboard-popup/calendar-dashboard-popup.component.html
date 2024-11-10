@@ -1,21 +1,25 @@
-<div class="grid-container">
-  <app-dashboard-card
-    [icon]="IconName.BAR_CHART"
-    [iconBackgroundColor]="IconBackgroundColor.DodgerBlue"
-    [unit]="tonnage()"
-    [differenceFromLastSession]="tonangeDifferenceFromlastWeek()"
-    [title]="'Tonnage (in kg)'"
-  />
+@if (loadingComplete()) {
+  <div class="grid-container">
+    <app-dashboard-card
+      [icon]="IconName.BAR_CHART"
+      [iconBackgroundColor]="IconBackgroundColor.DodgerBlue"
+      [unit]="tonnage()"
+      [differenceFromLastSession]="tonangeDifferenceFromlastWeek()"
+      [title]="'Tonnage (in kg)'"
+    />
 
-  <app-dashboard-card
-    [icon]="IconName.CLOCK"
-    [iconBackgroundColor]="IconBackgroundColor.DarkGray"
-    [unit]="55"
-    [differenceFromLastSession]="-5"
-    [title]="'Dauer (Minuten)'"
-  />
-</div>
+    <app-dashboard-card
+      [icon]="IconName.CLOCK"
+      [iconBackgroundColor]="IconBackgroundColor.DarkGray"
+      [unit]="55"
+      [differenceFromLastSession]="-5"
+      [title]="'Dauer (Minuten)'"
+    />
+  </div>
 
-<app-grouped-bar-chart [data]="mockChartData" [yAxisTitle]="'Tonnage (kg)'" />
+  <app-grouped-bar-chart [data]="mockChartData()!" [yAxisTitle]="'Tonnage (KG)'" />
 
-<app-grouped-bar-chart [data]="mockChartData" [yAxisTitle]="'Est. Max (kg)'" />
+  <app-grouped-bar-chart [data]="mockChartData()!" [yAxisTitle]="'Est. Max (KG)'" />
+} @else {
+  ...Loading
+}

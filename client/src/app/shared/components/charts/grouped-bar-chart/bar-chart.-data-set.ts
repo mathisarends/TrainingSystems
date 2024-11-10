@@ -12,5 +12,5 @@ export interface BarChartDataset {
   label: string;
   data: number[];
   backgroundColor: string;
-  borderColor: string;
+  borderColor?: string;
 }

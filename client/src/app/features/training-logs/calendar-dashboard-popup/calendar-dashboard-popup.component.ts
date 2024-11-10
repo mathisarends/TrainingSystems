@@ -1,11 +1,14 @@
 import { DatePipe } from '@angular/common';
-import { Component, effect, signal } from '@angular/core';
+import { Component, computed, effect, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
+import { ChartData } from '../../../shared/components/charts/chart-data';
+import { BarChartDataset } from '../../../shared/components/charts/grouped-bar-chart/bar-chart.-data-set';
 import { GroupedBarChartComponent } from '../../../shared/components/charts/grouped-bar-chart/grouped-bar-chart.component';
 import { DashboardCardComponent } from '../../../shared/components/dashboard-card/dashboard-card.component';
 import { IconBackgroundColor } from '../../../shared/components/icon-list-item/icon-background-color';
+import { ChartSkeletonComponent } from '../../../shared/components/loader/chart-skeleton/chart-skeleton.component';
 import { OnToggleView } from '../../../shared/components/modal/on-toggle-view';
 import { IconName } from '../../../shared/icon/icon-name';
 import { ImageDownloadService } from '../../../shared/service/image-download.service';
@@ -15,7 +18,7 @@ import { TrainingRetrospectivePopupCardInfo } from './training-retrospective.pop
 
 @Component({
   standalone: true,
-  imports: [DashboardCardComponent, GroupedBarChartComponent],
+  imports: [DashboardCardComponent, GroupedBarChartComponent, ChartSkeletonComponent],
   selector: 'app-calendar-dashboard-popup',
   templateUrl: './calendar-dashboard-popup.component.html',
   styleUrls: ['./calendar-dashboard-popup.component.scss'],
@@ -25,26 +28,7 @@ export class CalendarDashboardPopupComponent implements OnToggleView {
   protected readonly IconName = IconName;
   protected readonly IconBackgroundColor = IconBackgroundColor;
 
-  mockChartData = {
-    labels: ['Squat', 'Bench Press', 'Deadlift'],
-    datasets: [
-      {
-        label: 'Week 1',
-        data: [150, 100, 200],
-        backgroundColor: 'rgba(54, 162, 235, 0.6)',
-      },
-      {
-        label: 'Week 2',
-        data: [160, 105, 210],
-        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-      },
-      {
-        label: 'Current Week',
-        data: [170, 110, 220],
-        backgroundColor: 'rgba(255, 99, 132, 0.6)',
-      },
-    ],
-  };
+  mockChartData: WritableSignal<ChartData<BarChartDataset> | undefined> = signal(undefined);
 
   /**
    * Holds the ID of the current training plan.
@@ -63,6 +47,8 @@ export class CalendarDashboardPopupComponent implements OnToggleView {
 
   tonnage = signal(0);
   tonangeDifferenceFromlastWeek = signal(0);
+
+  loadingComplete = computed(() => this.mockChartData());
 
   constructor(
     private router: Router,
@@ -105,18 +91,21 @@ export class CalendarDashboardPopupComponent implements OnToggleView {
   private mapResponseDataToChart(response: TrainingRetrospectivePopupCardInfo): void {
     const labels = Object.keys(response.tonnageComparisonOverWeekSpan);
 
-    const datasets = response.tonnageComparisonOverWeekSpan[labels[0]].map((_, weekIndex) => {
+    const datasets: BarChartDataset[] = response.tonnageComparisonOverWeekSpan[labels[0]].map((_, weekIndex) => {
       return {
         label: `Week ${weekIndex + 1}`,
         data: labels.map((category) => response.tonnageComparisonOverWeekSpan[category][weekIndex] || 0),
-        backgroundColor: `rgba(${54 + weekIndex * 20}, ${162 - weekIndex * 10}, ${235 - weekIndex * 15}, 0.6)`, // Adjust colors as needed
+        backgroundColor: `rgba(${54 + weekIndex * 30}, ${162 - weekIndex * 20}, ${235 - weekIndex * 15}, 0.6)`,
       };
     });
 
-    this.mockChartData = {
-      labels,
-      datasets,
+    // Create the ChartData object
+    const chartData: ChartData<BarChartDataset> = {
+      labels: labels,
+      datasets: datasets,
     };
+
+    this.mockChartData.set(chartData);
   }
 
   /**
