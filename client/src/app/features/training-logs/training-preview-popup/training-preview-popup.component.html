@@ -1,0 +1,15 @@
+@if (trainingDay$ | async; as trainingDay) {
+  <div class="exercise-list">
+    @if (trainingDay.exercises.length === 0) {
+      <app-alert [alertText]="'Für diesen Trainingstag wurden noch keine Übungen definiert'" [alertType]="'light'" />
+    } @else {
+      @for (exercise of trainingDay.exercises; track exercise) {
+        <div class="exercise-list-item">
+          {{ exercise.exercise }}: {{ exercise.sets }} x {{ exercise.reps }} &#64; {{ exercise.targetRPE }} RPE
+        </div>
+      }
+    }
+  </div>
+} @else {
+  <app-chart-skeleton />
+}

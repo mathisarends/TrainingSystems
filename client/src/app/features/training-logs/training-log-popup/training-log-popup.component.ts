@@ -21,11 +21,11 @@ import { TrainingRetrospectivePopupCardInfo } from './training-retrospective.pop
   standalone: true,
   imports: [DashboardCardComponent, GroupedBarChartComponent, ChartSkeletonComponent],
   selector: 'app-calendar-dashboard-popup',
-  templateUrl: './calendar-dashboard-popup.component.html',
-  styleUrls: ['./calendar-dashboard-popup.component.scss'],
+  templateUrl: './training-log-popup.component.html',
+  styleUrls: ['./training-log-popup.component.scss'],
   providers: [ShareService, DatePipe, ImageDownloadService],
 })
-export class CalendarDashboardPopupComponent implements OnToggleView {
+export class TrainingLogPopupComponent implements OnToggleView {
   protected readonly IconName = IconName;
   protected readonly IconBackgroundColor = IconBackgroundColor;
 

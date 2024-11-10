@@ -4,8 +4,9 @@ import { ModalService } from '../../../core/services/modal/modalService';
 import { ModalSize } from '../../../core/services/modal/modalSize';
 import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
-import { CalendarDashboardPopupComponent } from '../calendar-dashboard-popup/calendar-dashboard-popup.component';
 import { TrainingDayCalendarEntry } from '../training-log-calendar/dto/training-day-calendar-entry';
+import { TrainingLogPopupComponent } from '../training-log-popup/training-log-popup.component';
+import { TrainingPreviewPopupComponent } from '../training-preview-popup/training-preview-popup.component';
 
 @Component({
   selector: 'app-calendar-event',
@@ -39,8 +40,8 @@ export class CalendarEventComponent {
 
     if (this.isTrainingLog()) {
       this.modalService.open({
-        title: `${this.trainingDayCalendarEntry().label} ${this.trainingDayCalendarEntry().planTitle.toUpperCase()}`,
-        component: CalendarDashboardPopupComponent,
+        title: this.getModalTitle(),
+        component: TrainingLogPopupComponent,
         size: ModalSize.LARGE,
         buttonText: 'Zum Trainingstag',
         secondaryButtonText: 'Teilen',
@@ -51,12 +52,21 @@ export class CalendarEventComponent {
         },
       });
     } else {
-      // TODO: do something different here maybe display exercises
-
-      // exercise overview
-      // progress highlights of current block during that day
-      this.navigateToTrainingDay(weekIndex, dayIndex);
+      this.modalService.open({
+        component: TrainingPreviewPopupComponent,
+        title: this.getModalTitle(),
+        buttonText: 'Zum Trainingstag',
+        componentData: {
+          trainingPlanId: this.trainingDayCalendarEntry().planId,
+          weekIndex,
+          dayIndex,
+        },
+      });
     }
+  }
+
+  private getModalTitle(): string {
+    return `${this.trainingDayCalendarEntry().label} ${this.trainingDayCalendarEntry().planTitle.toUpperCase()}`;
   }
 
   private navigateToTrainingDay(weekIndex: number, dayIndex: number): void {
