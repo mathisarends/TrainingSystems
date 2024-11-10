@@ -33,6 +33,8 @@
   color: #fff;
 }
 
-.btn-destructive:hover {
+.btn-destructive:hover,
+.btn-destructive:active {
   background-color: #d32f2f;
+  color: #fff;
 }

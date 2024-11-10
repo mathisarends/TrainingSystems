@@ -1,6 +1,7 @@
 import { Component, HostListener, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalService } from '../../../core/services/modal/modalService';
+import { ModalSize } from '../../../core/services/modal/modalSize';
 import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
 import { CalendarDashboardPopupComponent } from '../calendar-dashboard-popup/calendar-dashboard-popup.component';
@@ -40,7 +41,9 @@ export class CalendarEventComponent {
       this.modalService.open({
         title: `${this.trainingDayCalendarEntry().label} ${this.trainingDayCalendarEntry().planTitle.toUpperCase()}`,
         component: CalendarDashboardPopupComponent,
-        hasFooter: false,
+        size: ModalSize.LARGE,
+        buttonText: 'Zum Trainingstag',
+        secondaryButtonText: 'Teilen',
         componentData: {
           trainingPlanId: this.trainingDayCalendarEntry().planId,
           weekIndex,

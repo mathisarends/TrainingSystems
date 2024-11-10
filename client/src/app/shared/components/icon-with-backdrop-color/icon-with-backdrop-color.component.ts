@@ -12,6 +12,8 @@ import { IconBackgroundColor } from '../icon-list-item/icon-background-color';
   imports: [IconComponent, CommonModule],
 })
 export class IconWithBackdropColorComponent {
+  protected readonly IconName = IconName;
+
   icon = input.required<IconName>();
   iconColor = input.required<IconBackgroundColor>();
   iconBackgroundColor = computed(() => this.setOpacity(this.iconColor(), 0.2));

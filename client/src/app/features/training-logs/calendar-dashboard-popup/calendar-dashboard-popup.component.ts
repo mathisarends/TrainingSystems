@@ -1,23 +1,50 @@
 import { DatePipe } from '@angular/common';
-import { Component, effect, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { firstValueFrom, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
+import { GroupedBarChartComponent } from '../../../shared/components/charts/grouped-bar-chart/grouped-bar-chart.component';
 import { DashboardCardComponent } from '../../../shared/components/dashboard-card/dashboard-card.component';
+import { IconBackgroundColor } from '../../../shared/components/icon-list-item/icon-background-color';
+import { IconListeItemComponent } from '../../../shared/components/icon-list-item/icon-list-item.component';
+import { OnToggleView } from '../../../shared/components/modal/on-toggle-view';
 import { IconName } from '../../../shared/icon/icon-name';
+import { ImageDownloadService } from '../../../shared/service/image-download.service';
 import { ShareService } from '../../../shared/service/social-media-share.service';
 import { TrainingDay } from '../../training-plans/training-view/training-day';
 
 @Component({
   standalone: true,
-  imports: [DashboardCardComponent],
+  imports: [DashboardCardComponent, GroupedBarChartComponent, IconListeItemComponent],
   selector: 'app-calendar-dashboard-popup',
   templateUrl: './calendar-dashboard-popup.component.html',
   styleUrls: ['./calendar-dashboard-popup.component.scss'],
-  providers: [ShareService, DatePipe],
+  providers: [ShareService, DatePipe, ImageDownloadService],
 })
-export class CalendarDashboardPopupComponent {
+export class CalendarDashboardPopupComponent implements OnToggleView {
   protected readonly IconName = IconName;
+  protected readonly IconBackgroundColor = IconBackgroundColor;
+
+  mockChartData = {
+    labels: ['Squat', 'Bench Press', 'Deadlift'],
+    datasets: [
+      {
+        label: 'Week 1',
+        data: [150, 100, 200],
+        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+      },
+      {
+        label: 'Week 2',
+        data: [160, 105, 210],
+        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+      },
+      {
+        label: 'Current Week',
+        data: [170, 110, 220],
+        backgroundColor: 'rgba(255, 99, 132, 0.6)',
+      },
+    ],
+  };
 
   /**
    * Holds the ID of the current training plan.
@@ -39,24 +66,24 @@ export class CalendarDashboardPopupComponent {
     private httpService: HttpService,
     private shareService: ShareService,
     private datePipe: DatePipe,
-  ) {
-    effect(() => {
-      this.fetchTrainingDayInfo().subscribe((response) => console.log('response', response));
+  ) {}
+
+  onConfirm(): void {
+    this.router.navigate(['/training/view'], {
+      queryParams: { planId: this.trainingPlanId(), week: this.weekIndex(), day: this.dayIndex() },
     });
   }
 
-  protected navigateToTrainingDay(): void {
-    this.router.navigate(['/training/view'], {
-      queryParams: { planId: this.trainingPlanId(), week: this.weekIndex(), day: this.dayIndex() },
+  onToggleView(): void {
+    this.fetchTrainingDayInfo().subscribe((trainingDay) => {
+      this.shareTrainingLog(trainingDay);
     });
   }
 
   /**
    * Shares the training log details via WhatsApp, including the date, exercises, sets, reps, and weights.
    */
-  protected async shareTrainingLog(): Promise<void> {
-    const trainingDay = await firstValueFrom(this.fetchTrainingDayInfo());
-
+  private shareTrainingLog(trainingDay: TrainingDay): void {
     const formattedDate = this.datePipe.transform(trainingDay.startTime, 'EEEE, dd.MM.yyyy');
 
     const translatedDate = this.translateDayOfWeek(formattedDate);

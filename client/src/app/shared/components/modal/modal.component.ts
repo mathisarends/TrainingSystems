@@ -27,13 +27,14 @@ import { KeyboardService } from '../../service/keyboard.service';
 import { DataMap } from '../../types/data-map';
 import { ButtonComponent } from '../button/button.component';
 import { CircularIconButtonComponent } from '../circular-icon-button/circular-icon-button.component';
+import { PaginationComponent } from '../pagination/pagination.component';
 import { OnConfirm } from './on-confirm';
 import { OnToggleView } from './on-toggle-view';
 
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [ButtonComponent, CommonModule, DraggableDirective, CircularIconButtonComponent],
+  imports: [ButtonComponent, CommonModule, DraggableDirective, CircularIconButtonComponent, PaginationComponent],
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
   providers: [KeyboardService],

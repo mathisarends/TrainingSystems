@@ -1,0 +1,12 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding-block: 0.5rem;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2.25rem;
+}

@@ -13,7 +13,6 @@ import { SpinnerComponent } from '../../shared/components/spinner/spinner.compon
 import { ToastService } from '../../shared/components/toast/toast.service';
 import { IconName } from '../../shared/icon/icon-name';
 import { ImageUploadService } from '../../shared/service/image-upload.service';
-import { NotificationService } from '../../shared/service/notification.service';
 import { GymTicketComponent } from '../gym-ticket/gym-ticket.component';
 import { GymTicketService } from '../gym-ticket/gym-ticket.service';
 import { HeaderService } from '../header/header.service';
@@ -58,7 +57,6 @@ export class ProfileComponent2 implements OnInit {
 
   constructor(
     protected profileService: ProfileService,
-    protected notificationService: NotificationService,
     private authService: AuthService,
     private headerService: HeaderService,
     private modalService: ModalService,

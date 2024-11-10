@@ -1,7 +1,23 @@
-<app-dashboard-card
-  [icon]="IconName.Activity"
-  [unit]="'23'"
-  [differenceFromLastSession]="2.3"
-  [title]="'Tonnage (in kg)'"
-  [explanationText]="'from last week'"
-/>
+<div class="grid-container">
+  <app-dashboard-card
+    [icon]="IconName.BAR_CHART"
+    [iconBackgroundColor]="IconBackgroundColor.DodgerBlue"
+    [unit]="'23'"
+    [differenceFromLastSession]="2.3"
+    [title]="'Tonnage (in kg)'"
+    [explanationText]="'from last week'"
+  />
+
+  <app-dashboard-card
+    [icon]="IconName.CLOCK"
+    [iconBackgroundColor]="IconBackgroundColor.DarkGray"
+    [unit]="'55'"
+    [differenceFromLastSession]="-5"
+    [title]="'Dauer (Minuten)'"
+    [explanationText]="'from last week'"
+  />
+</div>
+
+<app-grouped-bar-chart [data]="mockChartData" [yAxisTitle]="'Tonnage (kg)'" />
+
+<app-grouped-bar-chart [data]="mockChartData" [yAxisTitle]="'Est. Max (kg)'" />

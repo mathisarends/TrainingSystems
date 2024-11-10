@@ -17,6 +17,7 @@ export class DashboardCardComponent {
   protected readonly IconBackgroundColor = IconBackgroundColor;
 
   icon = input.required<IconName>();
+  iconBackgroundColor = input.required<IconBackgroundColor>();
   unit = input.required<string>();
   differenceFromLastSession = input.required<number>();
   title = input.required<string>();
