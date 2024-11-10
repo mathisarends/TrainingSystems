@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, computed, effect, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
+import { ChartDataDto } from '@shared/charts/chart-data.dto';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { ChartData } from '../../../shared/components/charts/chart-data';
@@ -28,27 +29,52 @@ export class CalendarDashboardPopupComponent implements OnToggleView {
   protected readonly IconName = IconName;
   protected readonly IconBackgroundColor = IconBackgroundColor;
 
-  mockChartData: WritableSignal<ChartData<BarChartDataset> | undefined> = signal(undefined);
+  loadingComplete = computed(() => this.volumeComparisonChartData() && this.performanceComparisonChartData());
 
   /**
-   * Holds the ID of the current training plan.
+   * Holds the proceessed chart data for volume comparison over weeks.
+   */
+  volumeComparisonChartData: WritableSignal<ChartData<BarChartDataset> | undefined> = signal(undefined);
+
+  /**
+   * Holds the proceessed chart data for performance comparison over weeks.
+   */
+  performanceComparisonChartData: WritableSignal<ChartData<BarChartDataset> | undefined> = signal(undefined);
+
+  /**
+   * Signal storing the ID of the current training plan. Passed from the calendar-event.component.
    */
   trainingPlanId = signal('');
 
   /**
-   * Holds the index of the current training week (0-based).
+   * Signal holding the current training week index (0-based). Passed from the calendar-event.component.
    */
   weekIndex = signal(0);
 
   /**
-   * Holds the index of the current training day (0-based).
+   * Signal holding the current training day index (0-based). Passed from the calendar-event.component.
    */
   dayIndex = signal(0);
 
+  /**
+   * Holds the total tonnage for the current training day.
+   */
   tonnage = signal(0);
+
+  /**
+   * Holds the difference in tonnage compared to the previous week.
+   */
   tonangeDifferenceFromlastWeek = signal(0);
 
-  loadingComplete = computed(() => this.mockChartData());
+  /**
+   * Holds the duration of the current training session in minutes.
+   */
+  duration = signal(0);
+
+  /**
+   * Holds the duration difference compared to the previous week.
+   */
+  durationDifferenceFromLastWeek = signal(0);
 
   constructor(
     private router: Router,
@@ -66,12 +92,19 @@ export class CalendarDashboardPopupComponent implements OnToggleView {
             this.tonnage.set(response.tonnage);
             this.tonangeDifferenceFromlastWeek.set(response.tonnageDifferenceFromLastWeek);
 
-            this.mapResponseDataToChart(response);
+            this.duration.set(response.duration);
+            this.durationDifferenceFromLastWeek.set(response.durationDifferenceFromLastWeek);
+
+            this.mapResponseDataToChart(response.tonnageComparisonOverWeekSpan, true);
+            this.mapResponseDataToChart(response.performanceComparisonOverWeekSpan, false);
           });
       }
     });
   }
 
+  /**
+   * Navigates to the training day view with the current plan, week, and day as query parameters.
+   */
   onConfirm(): void {
     this.router.navigate(['/training/view'], {
       queryParams: { planId: this.trainingPlanId(), week: this.weekIndex(), day: this.dayIndex() },
@@ -86,30 +119,33 @@ export class CalendarDashboardPopupComponent implements OnToggleView {
 
   /**
    * Processes the response data for training retrospective and sets up chart data.
-   * @param response - The response from the training retrospective endpoint.
    */
-  private mapResponseDataToChart(response: TrainingRetrospectivePopupCardInfo): void {
-    const labels = Object.keys(response.tonnageComparisonOverWeekSpan);
+  private mapResponseDataToChart(chartDataDto: ChartDataDto, isTonnageChart: boolean): void {
+    const labels = Object.keys(chartDataDto);
 
-    const datasets: BarChartDataset[] = response.tonnageComparisonOverWeekSpan[labels[0]].map((_, weekIndex) => {
+    const datasets: BarChartDataset[] = chartDataDto[labels[0]].map((_, weekIndex) => {
       return {
         label: `Week ${weekIndex + 1}`,
-        data: labels.map((category) => response.tonnageComparisonOverWeekSpan[category][weekIndex] || 0),
+        data: labels.map((category) => chartDataDto[category][weekIndex] || 0),
         backgroundColor: `rgba(${54 + weekIndex * 30}, ${162 - weekIndex * 20}, ${235 - weekIndex * 15}, 0.6)`,
       };
     });
 
-    // Create the ChartData object
     const chartData: ChartData<BarChartDataset> = {
       labels: labels,
       datasets: datasets,
     };
 
-    this.mockChartData.set(chartData);
+    if (isTonnageChart) {
+      this.volumeComparisonChartData.set(chartData);
+    } else {
+      this.performanceComparisonChartData.set(chartData);
+    }
   }
 
   /**
    * Shares the training log details via WhatsApp, including the date, exercises, sets, reps, and weights.
+   * @param trainingDay - The training day data to be shared.
    */
   private shareTrainingLog(trainingDay: TrainingDay): void {
     const formattedDate = this.datePipe.transform(trainingDay.startTime, 'EEEE, dd.MM.yyyy');
@@ -151,6 +187,9 @@ export class CalendarDashboardPopupComponent implements OnToggleView {
     );
   }
 
+  /**
+   * Fetches the training day information for the current plan, week, and day.
+   */
   private fetchTrainingDayInfo(): Observable<TrainingDay> {
     return this.httpService.get(
       `/training-calendar/training-day-info/${this.trainingPlanId()}/${this.weekIndex()}/${this.dayIndex()}`,
