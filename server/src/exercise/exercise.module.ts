@@ -1,14 +1,18 @@
-import { forwardRef, Module } from '@nestjs/common';
-import { UsersModule } from 'src/users/users.module';
-import { UsersService } from 'src/users/users.service';
+import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 import { ExerciseUpdateService } from './exercise-update.service';
 import { ExerciseController } from './exercise.controller';
 import { ExerciseService } from './exercise.service';
+import { Exercise, ExerciseSchema } from './model/exercise.model';
 
 @Module({
-  imports: [forwardRef(() => UsersModule)],
+  imports: [
+    MongooseModule.forFeature([
+      { name: Exercise.name, schema: ExerciseSchema },
+    ]),
+  ],
   controllers: [ExerciseController],
-  providers: [ExerciseService, ExerciseUpdateService, UsersService],
-  exports: [ExerciseService],
+  providers: [ExerciseService, ExerciseUpdateService],
+  exports: [ExerciseService, MongooseModule],
 })
 export class ExerciseModule {}

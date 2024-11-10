@@ -37,7 +37,7 @@ export class CalendarEventComponent {
     const weekIndex = this.parseWeekIndexFormLabel(this.trainingDayCalendarEntry().label);
     const dayIndex = this.parseDayIndexFromLabel(this.trainingDayCalendarEntry().label);
 
-    if (!this.isTrainingLog()) {
+    if (this.isTrainingLog()) {
       this.modalService.open({
         title: `${this.trainingDayCalendarEntry().label} ${this.trainingDayCalendarEntry().planTitle.toUpperCase()}`,
         component: CalendarDashboardPopupComponent,

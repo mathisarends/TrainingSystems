@@ -1,6 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { ApiData } from 'src/types/api-data';
-import { User } from 'src/users/user.model';
+import { Exercise } from './model/exercise.model';
 import { UserExercise } from './model/user-exercise.model';
 import { ExerciseCategoryType } from './types/exercise-category-type.enum';
 import { UserExerciseCategory } from './types/user-exercise-category';
@@ -11,12 +13,30 @@ import { UserExerciseCategory } from './types/user-exercise-category';
 
 @Injectable()
 export class ExerciseUpdateService {
-  async updateExercisesForUser(user: User, changedData: ApiData) {
+  constructor(
+    @InjectModel(Exercise.name) private readonly exerciseModel: Model<Exercise>,
+  ) {}
+
+  async updateExercisesForUser(userId: string, changedData: ApiData) {
+    const userExercises = await this.exerciseModel.findOne({ userId }).exec();
+    if (!userExercises) {
+      throw new NotFoundException('No exercises found for the given user ID.');
+    }
+
     const changedCategoriesMap = this.mapChangedDataToCategories(changedData);
+    console.log(
+      '🚀 ~ ExerciseUpdateService ~ updateExercisesForUser ~ changedCategoriesMap:',
+      changedCategoriesMap,
+    );
 
     Object.entries(changedCategoriesMap).forEach(
       ([category, { fieldNames, newValues }]) => {
-        const exercisesForCategory = user.exercises[category];
+        const exercisesForCategory = userExercises.exercises[category];
+
+        console.log(
+          '🚀 ~ ExerciseUpdateService ~ updateExercisesForUser ~ exercisesForCategory:',
+          exercisesForCategory,
+        );
 
         fieldNames.forEach((fieldName, index) => {
           this.processExerciseChanges(
@@ -29,8 +49,8 @@ export class ExerciseUpdateService {
       },
     );
 
-    user.markModified('exercises');
-    return await user.save();
+    userExercises.markModified('exercises');
+    return await userExercises.save();
   }
 
   /**

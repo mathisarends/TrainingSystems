@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ExerciseModule } from 'src/exercise/exercise.module';
 import { ExerciseService } from 'src/exercise/exercise.service';
 import { PushNotificationsModule } from 'src/push-notifications/push-notifications.module';
 import { TrainingPlanViewModule } from 'src/training/training-plan-view/training-plan-view.module';
@@ -26,6 +27,7 @@ import { TrainingRoutineService } from './training-routine.service';
     PushNotificationsModule,
     TrainingModule,
     UsersModule,
+    ExerciseModule,
   ],
   controllers: [TrainingRoutineController],
   providers: [

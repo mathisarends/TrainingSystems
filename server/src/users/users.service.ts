@@ -57,10 +57,12 @@ export class UsersService {
       name,
       email,
       profilePicture,
-      exercises: this.exerciseService.getDefaultExercisesForUser(),
     });
 
-    return await newUser.save();
+    const user = await newUser.save();
+    await this.exerciseService.setDefaultExercisesForUser(user.id);
+
+    return user;
   }
 
   async deleteUserById(id: string) {
