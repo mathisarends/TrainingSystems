@@ -163,8 +163,8 @@ export class TrainingViewComponent implements OnInit {
     });
   }
 
-  private openTrainingExerciseList() {
-    this.modalService.open({
+  private async openTrainingExerciseList() {
+    const confirmed = await this.modalService.open({
       component: TrainingExercisesListComponent,
       title: 'Übungen anordnen',
       providers: [
@@ -174,7 +174,9 @@ export class TrainingViewComponent implements OnInit {
       ],
     });
 
-    this.saveTrainingData$().subscribe(() => {});
+    if (confirmed) {
+      this.saveTrainingData$().subscribe(() => {});
+    }
   }
 
   private setHeadlineInfo(trainingPlanTitle: string) {

@@ -51,6 +51,10 @@ export class CalendarEventComponent {
         },
       });
     } else {
+      // TODO: do something different here maybe display exercises
+
+      // exercise overview
+      // progress highlights of current block during that day
       this.navigateToTrainingDay(weekIndex, dayIndex);
     }
   }
