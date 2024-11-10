@@ -18,21 +18,21 @@
   justify-content: space-between;
   align-items: center;
   overflow: hidden;
-  width: 100%;
   min-width: 245px;
-  max-width: 600px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   position: relative;
   margin-bottom: 0.5rem;
   white-space: nowrap;
-  transform: translateY(100%); 
-  opacity: 0; 
-  transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.35), opacity 0.25s ease;
+  transform: translateY(100%);
+  opacity: 0;
+  transition:
+    transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.35),
+    opacity 0.25s ease;
 }
 
 .toast.active {
-  transform: translateY(0); 
-  opacity: 1; 
+  transform: translateY(0);
+  opacity: 1;
 }
 
 .toast.error {

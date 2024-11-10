@@ -7,6 +7,7 @@ import { IconComponent } from '../../icon/icon.component';
 import { NotificationService } from '../../service/notification.service';
 import { RouteWatcherService } from '../../service/route-watcher.service';
 import { NotificationBadgeComponent } from '../notification-badge/notification-badge.component';
+import { ToastService } from '../toast/toast.service';
 import { NavItem } from './nav-item';
 
 @Component({
@@ -41,6 +42,7 @@ export class NavBarComponent {
   constructor(
     protected routeWatcherService: RouteWatcherService,
     protected notificationService: NotificationService,
+    private toastService: ToastService,
     private renderer: Renderer2,
     private httpService: HttpService,
     private router: Router,
@@ -95,6 +97,7 @@ export class NavBarComponent {
         catchError((error) => {
           if (error.status === 404 && this.clickedElement) {
             this.renderer.addClass(this.clickedElement, 'inactive');
+            this.toastService.success('Kein Training vorhanden');
             this.router.navigateByUrl('/?source=activity');
           }
           return EMPTY;
