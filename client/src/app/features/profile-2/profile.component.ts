@@ -48,11 +48,11 @@ export class ProfileComponent2 implements OnInit {
   activityCalendarData$!: Observable<ActivityCalendarData>;
 
   protected readonly listItems: IconListItem[] = [
-    { label: 'Exercises', iconName: IconName.DATABASE, iconBackgroundColor: IconBackgroundColor.DodgerBlue }, // Blau für Information
-    { label: 'Progression', iconName: IconName.BAR_CHART, iconBackgroundColor: IconBackgroundColor.LimeGreen }, // Grün für Fortschritt
-    { label: 'Ticket', iconName: IconName.IMAGE, iconBackgroundColor: IconBackgroundColor.Turquoise }, // Türkis für Dokumente oder Support
-    { label: 'Settings', iconName: IconName.SETTINGS, iconBackgroundColor: IconBackgroundColor.DarkGray }, // Grau für Einstellungen
-    { label: 'Account löschen', iconName: IconName.Trash, iconBackgroundColor: IconBackgroundColor.OrangeRed }, // Rot für kritische Aktionen
+    { label: 'Exercises', iconName: IconName.DATABASE, iconBackgroundColor: IconBackgroundColor.DodgerBlue },
+    { label: 'Progression', iconName: IconName.BAR_CHART, iconBackgroundColor: IconBackgroundColor.LimeGreen },
+    { label: 'Ticket', iconName: IconName.IMAGE, iconBackgroundColor: IconBackgroundColor.Turquoise },
+    { label: 'Settings', iconName: IconName.SETTINGS, iconBackgroundColor: IconBackgroundColor.DarkGray },
+    { label: 'Account löschen', iconName: IconName.Trash, iconBackgroundColor: IconBackgroundColor.OrangeRed },
   ];
 
   constructor(

@@ -1,0 +1,10 @@
+<div class="image-container">
+  <img [src]="trainingPlan().coverImageBase64 ?? '/images/training/training_3.jpg'" alt="A" />
+</div>
+<div class="card-content">
+  <h3>{{ trainingPlan().title }}</h3>
+  <p>{{ trainingPlan().trainingFrequency }} Trainings / Week</p>
+  <p>{{ currentPercentage() }} % complete</p>
+</div>
+
+<app-more-options-button [options]="options" />
