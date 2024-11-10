@@ -43,8 +43,10 @@ export class UserBestPerformanceService {
     return false;
   }
 
-  makeNewBestPerformanceEntry(exercise: Exercise) {
-    console.log('🚀 ~ UserBestPerformanceService ~ makeNewBestPerformanceEntry ~ exercise:', exercise);
+  makeNewBestPerformanceEntry(exercise: Exercise, weight: number) {
+    if (!exercise.weight) {
+      exercise.weight = weight.toString();
+    }
     this.httpService
       .put<UserBestPerformanceDto>('/user-best-performance', { exercise })
       .subscribe((userBestPerformanceDto) => {
@@ -69,7 +71,7 @@ export class UserBestPerformanceService {
         spread: 70,
         origin: { y: 0.9 },
       });
-    }, 125);
+    }, 300);
 
     this.toastService.achievement('New PR');
 

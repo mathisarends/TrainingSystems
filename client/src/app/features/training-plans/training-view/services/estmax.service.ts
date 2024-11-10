@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormService } from '../../../../core/services/form.service';
 import { UserBestPerformanceService } from '../../../../shared/service/user-best-performance/user-best-performance.service';
+import { Exercise } from '../training-exercise';
 import { ExerciseTableRowService } from './exercise-table-row.service';
 
 @Injectable()
@@ -34,7 +35,8 @@ export class EstMaxService {
       const exercise = this.userBestPerformanceService.determineExerciseBasedOnFieldName(estMaxInput.name);
 
       if (exercise && this.userBestPerformanceService.isNewBestPerformance(exercise.category, estMax)) {
-        this.userBestPerformanceService.makeNewBestPerformanceEntry(exercise);
+        this.ensureRelevantDataIsSetInExercise(exercise, reps, weight, rpe);
+        this.userBestPerformanceService.makeNewBestPerformanceEntry(exercise, weight);
       }
 
       this.formService.addChange(estMaxInput.name, estMaxInput.value);
@@ -59,6 +61,12 @@ export class EstMaxService {
         }
       }
     }
+  }
+
+  private ensureRelevantDataIsSetInExercise(exercise: Exercise, reps: number, weight: number, rpe: number) {
+    exercise.reps = reps;
+    exercise.weight = weight.toString();
+    exercise.actualRPE = rpe.toString();
   }
 
   /**
