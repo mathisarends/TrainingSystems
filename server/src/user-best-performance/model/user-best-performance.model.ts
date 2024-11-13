@@ -67,13 +67,23 @@ export const UserBestPerformanceSchema =
  * up to date, allowing for easy restoration of previous states.
  */
 UserBestPerformanceSchema.pre('findOneAndUpdate', function (next) {
+  const MAX_HISTORY_LENGTH = 3;
   const update = this.getUpdate() as UserBestPerformance;
 
-  if (update.previousRecords && update.previousRecords.length >= 2) {
+  if (
+    update.previousRecords &&
+    update.previousRecords.length >= MAX_HISTORY_LENGTH
+  ) {
     update.previousRecords.shift();
   }
 
-  if (update.sets && update.reps && update.weight && update.actualRPE && update.estMax) {
+  if (
+    update.sets &&
+    update.reps &&
+    update.weight &&
+    update.actualRPE &&
+    update.estMax
+  ) {
     update.previousRecords = update.previousRecords || [];
     update.previousRecords.push({
       sets: update.sets,

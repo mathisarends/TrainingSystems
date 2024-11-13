@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 
 import { AuthGuard } from './core/guards/auth.guard';
 import { GettingStartedComponent } from './features/auth/getting-started/getting-started.component';
+import { BestPerformanceComponent } from './features/best-performance/best-performance.component';
 import { ExercisesComponent } from './features/exercise-page/components/exercise/exercises.component';
 import { ProfileComponent2 } from './features/profile-2/profile.component';
 import { TrainingLogCalendarComponent } from './features/training-logs/training-log-calendar/training-calendar.component';
@@ -32,6 +33,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
   },
   { path: 'profile', component: ProfileComponent2, canActivate: [AuthGuard] },
+  { path: 'profile/best-performance', component: BestPerformanceComponent, canActivate: [AuthGuard] },
   {
     path: 'profile/exercises',
     component: ExercisesComponent,

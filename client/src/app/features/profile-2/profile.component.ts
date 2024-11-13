@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { ModalService } from '../../core/services/modal/modalService';
+import { ModalSize } from '../../core/services/modal/modalSize';
 import { IconBackgroundColor } from '../../shared/components/icon-list-item/icon-background-color';
 import { IconListItem } from '../../shared/components/icon-list-item/icon-list-item';
 import { IconListeItemComponent } from '../../shared/components/icon-list-item/icon-list-item.component';
@@ -13,6 +14,7 @@ import { SpinnerComponent } from '../../shared/components/spinner/spinner.compon
 import { ToastService } from '../../shared/components/toast/toast.service';
 import { IconName } from '../../shared/icon/icon-name';
 import { ImageUploadService } from '../../shared/service/image-upload.service';
+import { BestPerformanceComponent } from '../best-performance/best-performance.component';
 import { GymTicketComponent } from '../gym-ticket/gym-ticket.component';
 import { GymTicketService } from '../gym-ticket/gym-ticket.service';
 import { HeaderService } from '../header/header.service';
@@ -49,6 +51,7 @@ export class ProfileComponent2 implements OnInit {
 
   protected readonly listItems: IconListItem[] = [
     { label: 'Exercises', iconName: IconName.DATABASE, iconBackgroundColor: IconBackgroundColor.DodgerBlue },
+    { label: 'Bestleistungen', iconName: IconName.AWARD, iconBackgroundColor: IconBackgroundColor.Orange },
     { label: 'Progression', iconName: IconName.BAR_CHART, iconBackgroundColor: IconBackgroundColor.LimeGreen },
     { label: 'Ticket', iconName: IconName.IMAGE, iconBackgroundColor: IconBackgroundColor.Turquoise },
     { label: 'Settings', iconName: IconName.SETTINGS, iconBackgroundColor: IconBackgroundColor.DarkGray },
@@ -106,6 +109,13 @@ export class ProfileComponent2 implements OnInit {
       this.showDeleteAccountDialog();
     } else if (label === 'Progression') {
       this.router.navigate(['profile/progression']);
+    } else if (label === 'Bestleistungen') {
+      this.modalService.open({
+        component: BestPerformanceComponent,
+        title: 'Bestleistungen',
+        size: ModalSize.LARGE,
+        buttonText: 'Fortsetzen',
+      });
     } else if (label === 'Social') {
       this.modalService.open({
         component: FriendModalComponent,

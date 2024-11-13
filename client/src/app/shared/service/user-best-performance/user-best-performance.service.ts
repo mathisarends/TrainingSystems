@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import confetti from 'canvas-confetti';
+import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { TrainingPlanDataService } from '../../../features/training-plans/training-view/services/training-plan-data.service';
 import { Exercise } from '../../../features/training-plans/training-view/training-exercise';
@@ -10,13 +11,19 @@ import { UserBestPerformanceDto } from './user-best-performance.dto';
 @Injectable()
 export class UserBestPerformanceService {
   userBestPerformanceMap: Map<ExerciseName, UserBestPerformanceDto> = new Map();
+  isInitialized = signal(false);
 
   constructor(
     private httpService: HttpService,
     private trainingPlanDataService: TrainingPlanDataService,
     private toastService: ToastService,
   ) {
-    this.fetchAndSetUserBestPerformanceMap();
+    this.fetchUserBestPerformanceData().subscribe((response) => {
+      this.userBestPerformanceMap = new Map<ExerciseName, UserBestPerformanceDto>(
+        Object.entries(response) as [ExerciseName, UserBestPerformanceDto][],
+      );
+      this.isInitialized.set(true);
+    });
   }
 
   determineExerciseBasedOnFieldName(fieldName: string): Exercise | undefined {
@@ -56,12 +63,8 @@ export class UserBestPerformanceService {
       });
   }
 
-  private fetchAndSetUserBestPerformanceMap() {
-    this.httpService.get<{ [key: string]: UserBestPerformanceDto }>('/user-best-performance').subscribe((response) => {
-      this.userBestPerformanceMap = new Map<ExerciseName, UserBestPerformanceDto>(
-        Object.entries(response) as [ExerciseName, UserBestPerformanceDto][],
-      );
-    });
+  fetchUserBestPerformanceData(): Observable<{ [key: string]: UserBestPerformanceDto }> {
+    return this.httpService.get<{ [key: string]: UserBestPerformanceDto }>('/user-best-performance');
   }
 
   private startConfetti() {

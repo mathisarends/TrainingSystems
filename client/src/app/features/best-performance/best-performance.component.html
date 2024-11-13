@@ -1,0 +1,5 @@
+@if (isInitialized()) {
+  {{ userBestPerformanceMap.get('Squat') | json }}
+} @else {
+  <app-chart-skeleton />
+}
