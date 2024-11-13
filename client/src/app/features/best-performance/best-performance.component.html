@@ -1,5 +1,18 @@
 @if (isInitialized()) {
-  {{ userBestPerformanceMap | mapProperty: 'Squat' | json }}
+  @if (squatPerformance() && squatPerformanceDashboardCardInfo()) {
+    <app-dashboard-card
+      [title]="squatPerformanceDashboardCardInfo()!.title"
+      [icon]="IconName.BAR_CHART"
+      [unit]="squatPerformanceDashboardCardInfo()!.unit"
+      [differenceFromLastSession]="squatPerformanceDashboardCardInfo()!.prIncrement"
+    />
+  }
+
+  @if (benchPerformance() && benchPerformanceDashboardCardInfo()) {}
+
+  @if (deadliftPerformance() && deadliftPerformanceDashboardCardInfo()) {}
+
+  @if (overheadpressPerformance() && overheadpressPerformanceDashboardCardInfo()) {}
 } @else {
   <app-chart-skeleton />
 }

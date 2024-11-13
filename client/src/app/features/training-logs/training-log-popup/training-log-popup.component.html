@@ -2,14 +2,12 @@
   <div class="flex-container">
     <app-dashboard-card
       [icon]="IconName.BAR_CHART"
-      [iconBackgroundColor]="IconBackgroundColor.DodgerBlue"
       [unit]="tonnage()"
       [differenceFromLastSession]="tonangeDifferenceFromlastWeek()"
       [title]="'Tonnage (in KG)'"
     />
     <app-dashboard-card
       [icon]="IconName.CLOCK"
-      [iconBackgroundColor]="IconBackgroundColor.DarkGray"
       [unit]="duration()"
       [differenceFromLastSession]="durationDifferenceFromLastWeek()"
       [title]="'Dauer (Minuten)'"
