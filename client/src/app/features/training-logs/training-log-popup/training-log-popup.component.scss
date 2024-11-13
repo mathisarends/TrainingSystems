@@ -8,4 +8,8 @@
 .flex-container {
   display: flex;
   gap: 2.25rem;
+
+  & > * {
+    flex-grow: 1;
+  }
 }

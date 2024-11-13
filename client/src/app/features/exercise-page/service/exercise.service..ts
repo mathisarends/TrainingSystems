@@ -22,8 +22,8 @@ export class ExerciseService {
    *
    * @returns An `Observable` that completes when the reset operation is finished.
    */
-  resetExercises(): Observable<void> {
-    return this.httpClient.post('/exercise/reset');
+  resetExercises(): Observable<ExerciseDataDTO> {
+    return this.httpClient.delete('/exercise');
   }
 
   /**

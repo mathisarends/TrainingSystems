@@ -56,6 +56,7 @@ export class CalendarEventComponent {
         component: TrainingPreviewPopupComponent,
         title: this.getModalTitle(),
         buttonText: 'Zum Trainingstag',
+        size: ModalSize.MEDIUM,
         componentData: {
           trainingPlanId: this.trainingDayCalendarEntry().planId,
           weekIndex,
@@ -67,12 +68,6 @@ export class CalendarEventComponent {
 
   private getModalTitle(): string {
     return `${this.trainingDayCalendarEntry().label} ${this.trainingDayCalendarEntry().planTitle.toUpperCase()}`;
-  }
-
-  private navigateToTrainingDay(weekIndex: number, dayIndex: number): void {
-    this.router.navigate(['/training/view'], {
-      queryParams: { planId: this.trainingDayCalendarEntry().planId, week: weekIndex, day: dayIndex },
-    });
   }
 
   private parseWeekIndexFormLabel(label: string): number {

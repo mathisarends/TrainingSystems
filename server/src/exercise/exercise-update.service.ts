@@ -24,19 +24,10 @@ export class ExerciseUpdateService {
     }
 
     const changedCategoriesMap = this.mapChangedDataToCategories(changedData);
-    console.log(
-      '🚀 ~ ExerciseUpdateService ~ updateExercisesForUser ~ changedCategoriesMap:',
-      changedCategoriesMap,
-    );
 
     Object.entries(changedCategoriesMap).forEach(
       ([category, { fieldNames, newValues }]) => {
         const exercisesForCategory = userExercises.exercises[category];
-
-        console.log(
-          '🚀 ~ ExerciseUpdateService ~ updateExercisesForUser ~ exercisesForCategory:',
-          exercisesForCategory,
-        );
 
         fieldNames.forEach((fieldName, index) => {
           this.processExerciseChanges(
@@ -100,15 +91,15 @@ export class ExerciseUpdateService {
       case 4:
         return ExerciseCategoryType.OVERHEADPRESS;
       case 5:
-        return ExerciseCategoryType.BACK;
-      case 6:
         return ExerciseCategoryType.CHEST;
+      case 6:
+        return ExerciseCategoryType.BACK;
       case 7:
         return ExerciseCategoryType.SHOULDER;
       case 8:
-        return ExerciseCategoryType.BICEPS;
-      case 9:
         return ExerciseCategoryType.TRICEPS;
+      case 9:
+        return ExerciseCategoryType.BICEPS;
       case 10:
         return ExerciseCategoryType.LEGS;
       default:

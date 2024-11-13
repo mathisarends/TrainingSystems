@@ -129,7 +129,9 @@ export class ExercisesComponent implements OnInit {
     this.setHeaderInfo();
 
     this.autoSaveService.inputChanged$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-      this.exerciseService.updateExercises(this.formService.getChanges()).subscribe();
+      this.exerciseService.updateExercises(this.formService.getChanges()).subscribe(() => {
+        this.formService.clearChanges();
+      });
     });
   }
 
@@ -157,10 +159,7 @@ export class ExercisesComponent implements OnInit {
     });
 
     if (confirmed) {
-      this.exerciseService.resetExercises().subscribe(() => {
-        this.exerciseData$ = this.exerciseService.loadExerciseData();
-        this.toastService.success('Übungskatalog zurückgesetzt!');
-      });
+      this.exerciseData$ = this.exerciseService.resetExercises();
     }
   }
 }
