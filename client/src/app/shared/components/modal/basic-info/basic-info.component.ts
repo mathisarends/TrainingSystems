@@ -4,9 +4,7 @@ import { Component, Input } from '@angular/core';
   selector: 'app-basic-info',
   standalone: true,
   imports: [],
-  template: `<div class="info-container">
-    {{ text }}
-  </div>`,
+  template: `{{ text }}`,
   styleUrl: './basic-info.component.scss',
 })
 export class BasicInfoComponent {
