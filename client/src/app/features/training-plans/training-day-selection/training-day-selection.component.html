@@ -1,8 +1,5 @@
-Trainingstage auswählen
-<div class="week-day-grid">
-  @for (day of weekDays; track day) {
-    <div class="day" [class.selected]="day | isDaySelected: selectedDays()" (click)="toggleDay(day)">
-      {{ day }}
-    </div>
-  }
-</div>
+@for (day of weekDays; track day) {
+  <div class="day" [class.selected]="day | isDaySelected: selectedDays()" (click)="toggleDay(day)">
+    {{ day }}
+  </div>
+}

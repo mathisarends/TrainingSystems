@@ -8,6 +8,7 @@ import { ChartSkeletonComponent } from '../../shared/components/loader/chart-ske
 import { IconName } from '../../shared/icon/icon-name';
 import { UserBestPerformanceDto } from '../../shared/service/user-best-performance/user-best-performance.dto';
 
+// TODO: nach dem fix der historie hier weiter machen
 @Component({
   selector: 'app-best-performance',
   standalone: true,
@@ -22,6 +23,7 @@ export class BestPerformanceComponent implements OnInit {
   squatPerformanceDashboardCardInfo = computed(() =>
     this.getDashboardCardComponentDataPerCategory(this.squatPerformance()),
   );
+  squatChartData = computed(() => {});
 
   benchPerformance = signal<UserBestPerformanceDto | undefined>(undefined);
   benchPerformanceDashboardCardInfo = computed(() =>
@@ -56,13 +58,16 @@ export class BestPerformanceComponent implements OnInit {
     return this.httpService.get<{ [key: string]: UserBestPerformanceDto }>('/user-best-performance');
   }
 
+  /* private getBestPerformanceProgression(userBestPerformanceDto?: UserBestPerformanceDto): ChartData<BarChartDataset>  {
+    for (const previousRecord of userBestPerformanceDto?.previousRecords) {
+
+    }
+  }
+ */
   private getDashboardCardComponentDataPerCategory(userBestPerformanceDto?: UserBestPerformanceDto) {
     if (!userBestPerformanceDto) {
       return undefined;
     }
-
-    const prIncrement = this.getPrIncrement(userBestPerformanceDto);
-    console.log('🚀 ~ BestPerformanceComponent ~ getDashboardCardComponentDataPerCategory ~ prIncrement:', prIncrement);
 
     return {
       title: userBestPerformanceDto.category + ' | ' + userBestPerformanceDto.exerciseName,

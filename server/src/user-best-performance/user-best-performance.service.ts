@@ -12,10 +12,10 @@ export class UserBestPerformanceService {
     private userBestPerformanceModel: Model<UserBestPerformance>,
   ) {}
 
-  async getExerciseRecordsByUserId(
-    userId: string,
-  ) {
-    const records = await this.userBestPerformanceModel.find({ userId: userId }).exec();
+  async getExerciseRecordsByUserId(userId: string) {
+    const records = await this.userBestPerformanceModel
+      .find({ userId: userId })
+      .exec();
 
     const recordsMap = new Map<string, UserBestPerformance>();
 
@@ -28,8 +28,7 @@ export class UserBestPerformanceService {
       }
     });
 
-
-    return  Object.fromEntries(recordsMap);
+    return Object.fromEntries(recordsMap);
   }
 
   /**
@@ -69,6 +68,7 @@ export class UserBestPerformanceService {
     return exerciseRecord;
   }
 
+  // TODO: hier müsste man diese findOneAndUpdate mal korrekt umsetzen?
   /**
    * Saves a new user exercise record or updates an existing one.
    */
@@ -76,7 +76,6 @@ export class UserBestPerformanceService {
     userId: string,
     exercise: Exercise,
   ): Promise<UserBestPerformance> {
-
     return await this.userBestPerformanceModel
       .findOneAndUpdate(
         { userId: userId, exerciseName: exercise.exercise },
