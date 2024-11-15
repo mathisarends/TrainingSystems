@@ -1,4 +1,6 @@
 import { Component, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Observable, Subject } from 'rxjs';
 import { OnConfirm } from '../on-confirm';
 
 // TODDO: finish deletion keyword
@@ -11,12 +13,13 @@ import { OnConfirm } from '../on-confirm';
   templateUrl: './delete-confirmation.component.html',
   styleUrls: ['./delete-confirmation.component.scss'],
   standalone: true,
+  imports: [FormsModule],
 })
 export class DeleteConfirmationComponent implements OnConfirm {
   /**
    * Holds the deletion confirmation text to prompt the user.
    */
-  deletionText = signal<string>('');
+  infoText = signal<string>('');
 
   /**
    * Holds the required keyword that the user must type to confirm deletion.
@@ -29,14 +32,22 @@ export class DeleteConfirmationComponent implements OnConfirm {
   deletionKeyWordUserInput = signal<string>('');
 
   /**
-   * Confirms the deletion action if the user input matches the required keyword.
-   * Intended to be called when the user clicks the "Confirm" button.
+   * Subject to emit when deletion is confirmed.
    */
-  onConfirm(): void {
+  private confirmationSubject = new Subject<void>();
+
+  /**
+   * Confirms the deletion action if the user input matches the required keyword.
+   * Emits to the confirmation subject when the deletion is confirmed.
+   */
+  onConfirm(): Observable<void> {
     if (this.deletionKeyWordUserInput() === this.deletionKeyWord()) {
       console.log('Deletion confirmed');
+      this.confirmationSubject.next();
+      this.confirmationSubject.complete();
     } else {
       console.warn('Deletion keyword does not match');
     }
+    return this.confirmationSubject.asObservable();
   }
 }

@@ -162,13 +162,18 @@ export class ModalComponent implements AfterViewInit, OnInit {
    */
   async confirm() {
     const componentInstance = this.childComponentRef.instance;
+
     if (this.implementsOnConfirm(componentInstance)) {
       const result = componentInstance.onConfirm();
 
       if (result instanceof Observable) {
         this.isLoading.set(true);
-        await firstValueFrom(result);
-        this.isLoading.set(false);
+
+        try {
+          await firstValueFrom(result);
+        } finally {
+          this.isLoading.set(false);
+        }
       }
     }
 

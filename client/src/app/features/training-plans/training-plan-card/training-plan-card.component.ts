@@ -139,12 +139,16 @@ export class TrainingPlanCardComponent implements OnInit {
    * Handles deletion depending on the type of the training plan.
    */
   async showDeleteTrainingPlanModal(): Promise<void> {
-    const confirmed = await this.modalService.openBasicInfoModal({
+    const inputedKeyword = '123312';
+
+    const confirmed = await this.modalService.openDeletionModal({
       title: 'Trainingsplan löschen',
       buttonText: 'Löschen',
       isDestructiveAction: true,
       infoText:
         'Bist du dir sicher, dass du dieses Element löschen willst? Diese Änderung kann nicht mehr rückgängig gemacht werden!',
+      deletionKeyWord: this.trainingPlan().title,
+      deletionKeyWordUserInput: inputedKeyword,
     });
 
     if (!confirmed) {

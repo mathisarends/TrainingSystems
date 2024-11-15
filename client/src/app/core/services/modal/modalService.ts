@@ -8,9 +8,10 @@ import {
   signal,
 } from '@angular/core';
 import { BasicInfoComponent } from '../../../shared/components/modal/basic-info/basic-info.component';
+import { DeleteConfirmationComponent } from '../../../shared/components/modal/delete-confirmation/delete-confirmation.component';
 import { ModalOverlayComponent } from '../../../shared/components/modal/modal-overlay/modal-overlay.component';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
-import { BasicInfoModalOptions, ModalOptions } from './modal-options';
+import { BasicInfoModalOptions, DeleteModalModalOptions, ModalOptions } from './modal-options';
 import { ModalSize } from './modalSize';
 
 @Injectable({
@@ -123,6 +124,21 @@ export class ModalService {
       size: options.size,
       componentData: {
         text: options.infoText,
+      },
+    });
+  }
+
+  openDeletionModal(options: DeleteModalModalOptions) {
+    return this.open({
+      component: DeleteConfirmationComponent,
+      title: options.title,
+      buttonText: options.buttonText ?? 'Löschen',
+      isDestructiveAction: true,
+      size: options.size,
+      confirmationRequired: true,
+      componentData: {
+        text: options.infoText,
+        deletionKeyWord: options.deletionKeyWord,
       },
     });
   }
