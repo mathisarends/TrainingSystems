@@ -1,7 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Observable, Subject } from 'rxjs';
+import { IconName } from '../../../icon/icon-name';
+import { IconComponent } from '../../../icon/icon.component';
+import { AlertComponent } from '../../alert/alert.component';
+import { ModalConfirmationService } from '../modal-confirmation.service';
 import { OnConfirm } from '../on-confirm';
+import { DeleteValidationPipe } from './deletion-validation-class.pipe';
 
 // TODDO: finish deletion keyword
 /**
@@ -13,9 +18,11 @@ import { OnConfirm } from '../on-confirm';
   templateUrl: './delete-confirmation.component.html',
   styleUrls: ['./delete-confirmation.component.scss'],
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, AlertComponent, CommonModule, DeleteValidationPipe, IconComponent],
 })
 export class DeleteConfirmationComponent implements OnConfirm {
+  protected readonly IconName = IconName;
+
   /**
    * Holds the deletion confirmation text to prompt the user.
    */
@@ -31,23 +38,16 @@ export class DeleteConfirmationComponent implements OnConfirm {
    */
   deletionKeyWordUserInput = signal<string>('');
 
-  /**
-   * Subject to emit when deletion is confirmed.
-   */
-  private confirmationSubject = new Subject<void>();
+  constructor(private modalConfirmationService: ModalConfirmationService) {}
 
   /**
    * Confirms the deletion action if the user input matches the required keyword.
    * Emits to the confirmation subject when the deletion is confirmed.
    */
-  onConfirm(): Observable<void> {
+  onConfirm(): void {
     if (this.deletionKeyWordUserInput() === this.deletionKeyWord()) {
-      console.log('Deletion confirmed');
-      this.confirmationSubject.next();
-      this.confirmationSubject.complete();
-    } else {
-      console.warn('Deletion keyword does not match');
+      console.log('confirm here though');
+      this.modalConfirmationService.confirm();
     }
-    return this.confirmationSubject.asObservable();
   }
 }

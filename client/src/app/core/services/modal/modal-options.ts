@@ -64,5 +64,4 @@ export interface BasicInfoModalOptions
 
 export interface DeleteModalModalOptions extends BasicInfoModalOptions {
   deletionKeyWord: string;
-  deletionKeyWordUserInput: string;
 }

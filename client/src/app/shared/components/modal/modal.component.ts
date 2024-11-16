@@ -17,7 +17,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { firstValueFrom, Observable } from 'rxjs';
+import { filter, first, firstValueFrom, Observable } from 'rxjs';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { ModalSize } from '../../../core/services/modal/modalSize';
 import { MobileDeviceDetectionService } from '../../../platform/mobile-device-detection.service';
@@ -28,6 +28,7 @@ import { DataMap } from '../../types/data-map';
 import { ButtonComponent } from '../button/button.component';
 import { CircularIconButtonComponent } from '../circular-icon-button/circular-icon-button.component';
 import { PaginationComponent } from '../pagination/pagination.component';
+import { ModalConfirmationService } from './modal-confirmation.service';
 import { OnConfirm } from './on-confirm';
 import { OnToggleView } from './on-toggle-view';
 
@@ -107,6 +108,7 @@ export class ModalComponent implements AfterViewInit, OnInit {
 
   constructor(
     protected mobileDeviceDetectionService: MobileDeviceDetectionService,
+    private modalConfirmationService: ModalConfirmationService,
     private environmentInjector: EnvironmentInjector,
     private modalService: ModalService,
     private keyboardService: KeyboardService,
@@ -166,6 +168,10 @@ export class ModalComponent implements AfterViewInit, OnInit {
     if (this.implementsOnConfirm(componentInstance)) {
       const result = componentInstance.onConfirm();
 
+      if (this.confirmationRequired) {
+        await this.handleConfirmationRequired();
+      }
+
       if (result instanceof Observable) {
         this.isLoading.set(true);
 
@@ -207,6 +213,19 @@ export class ModalComponent implements AfterViewInit, OnInit {
       .subscribe(() => {
         this.confirm();
       });
+  }
+
+  private async handleConfirmationRequired() {
+    const confirmed = await firstValueFrom(
+      this.modalConfirmationService.requestConfirmation().pipe(
+        filter((value): value is boolean => value === true),
+        first(),
+      ),
+    );
+
+    if (confirmed) {
+      this.confirmed.emit();
+    }
   }
 
   /**

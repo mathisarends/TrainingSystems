@@ -4,7 +4,6 @@ import { Component, DestroyRef, effect, Injector, OnInit, signal, ViewChild, Wri
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { ModalService } from '../../../core/services/modal/modalService';
-import { ModalSize } from '../../../core/services/modal/modalSize';
 import { toggleCollapseAnimation } from '../../../shared/animations/toggle-collapse';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
 import { CircularIconButtonComponent } from '../../../shared/components/circular-icon-button/circular-icon-button.component';
@@ -131,7 +130,6 @@ export class TrainingPlansComponent implements OnInit {
       component: CreateTrainingComponent,
       title: 'Trainingsplan erstellen',
       buttonText: 'Erstellen',
-      size: ModalSize.LARGE,
     });
   }
 
@@ -139,7 +137,6 @@ export class TrainingPlansComponent implements OnInit {
     this.modalService.open({
       component: CreateSessionComponent,
       title: 'Trainingsession erstellen',
-      size: ModalSize.LARGE,
     });
   }
 

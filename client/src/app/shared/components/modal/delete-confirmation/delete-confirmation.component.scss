@@ -1,0 +1,45 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.form-group {
+  padding: 0.5em 0.725em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  position: relative;
+
+  app-icon {
+    position: absolute;
+    right: 1.65rem;
+    bottom: 1.3rem;
+    color: #27ae60;
+  }
+}
+
+#deletion-input {
+  border: 2px solid rgb(215, 215, 215);
+  border-radius: 4px;
+  padding: 0.5rem;
+  font-size: 1rem;
+  color: #2c3e50;
+  outline: none;
+  transition: all 0.3s ease;
+
+  &:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+  }
+}
+
+#deletion-input::placeholder {
+  color: #95a5a6;
+}
+
+.valid-input {
+  border: 2px solid #27ae60 !important;
+  background-color: #eafaf1;
+  color: #2c3e50;
+}

@@ -1,5 +1,17 @@
-{{ infoText() }}
+<app-alert [alertText]="infoText()" [alertType]="'light'" />
 
-<p>Please type "{{ deletionKeyWord() }}" to confirm deletion.</p>
+<div class="form-group">
+  <label for="deletion-input">Bitte gebe "{{ deletionKeyWord() }}" ein um den Inhalt zu löschen.</label>
 
-<input type="text" [(ngModel)]="deletionKeyWordUserInput" placeholder="Enter confirmation keyword" />
+  <input
+    id="deletion-input"
+    type="text"
+    [(ngModel)]="deletionKeyWordUserInput"
+    [ngClass]="deletionKeyWordUserInput() | validationClass: deletionKeyWord()"
+    placeholder="Enter confirmation keyword"
+  />
+
+  @if (deletionKeyWord() === deletionKeyWordUserInput()) {
+    <app-icon [name]="IconName.CHECK_CIRCLE" />
+  }
+</div>
