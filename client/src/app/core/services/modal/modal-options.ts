@@ -1,5 +1,5 @@
 import { Provider } from '@angular/core';
-import { ModalTab } from '../../../shared/components/modal/modal-tab/modal-tab';
+import { ModalTab } from '../../../shared/components/modal/types/modal-tab';
 import { ModalSize } from './modalSize';
 /**
  * Interface for modal options.

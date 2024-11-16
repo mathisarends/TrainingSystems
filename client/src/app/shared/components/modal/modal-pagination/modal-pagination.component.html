@@ -1,0 +1,9 @@
+@for (tab of modalTabs(); track tab.label; let index = $index) {
+  <div (click)="switchTab(tab)" [ngClass]="{ active: tab === activeTab() }">
+    {{ tab.label }}
+  </div>
+
+  @if (index < modalTabs().length - 1) {
+    <app-icon [name]="IconName.ARROW_RIGHT" />
+  }
+}

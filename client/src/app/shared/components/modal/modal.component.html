@@ -15,15 +15,7 @@
       </div>
       @if (footer) {
         <div class="modal-footer">
-          <div class="modal-pagination">
-            @for (tab of tabs(); track tab.label; let index = $index) {
-              <div>{{ tab.label }}</div>
-
-              @if (index < tabs().length - 1) {
-                <app-icon [name]="IconName.ARROW_RIGHT" />
-              }
-            }
-          </div>
+          <app-modal-pagination [modalTabs]="tabs()" [(activeTab)]="activeTab" />
 
           @if (secondaryButtonText) {
             <app-button [variant]="'SECONDARY'" [textContent]="secondaryButtonText" (clicked)="toggleModalView()" />

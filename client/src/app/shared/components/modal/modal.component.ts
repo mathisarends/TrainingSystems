@@ -29,14 +29,22 @@ import { DataMap } from '../../types/data-map';
 import { ButtonComponent } from '../button/button.component';
 import { CircularIconButtonComponent } from '../circular-icon-button/circular-icon-button.component';
 import { ModalConfirmationService } from './modal-confirmation.service';
-import { ModalTab } from './modal-tab/modal-tab';
+import { ModalPaginationComponent } from './modal-pagination/modal-pagination.component';
 import { OnConfirm } from './on-confirm';
 import { OnToggleView } from './on-toggle-view';
+import { ModalTab } from './types/modal-tab';
 
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [ButtonComponent, CommonModule, DraggableDirective, CircularIconButtonComponent, IconComponent],
+  imports: [
+    ButtonComponent,
+    CommonModule,
+    DraggableDirective,
+    CircularIconButtonComponent,
+    IconComponent,
+    ModalPaginationComponent,
+  ],
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
   providers: [KeyboardService],
@@ -101,6 +109,8 @@ export class ModalComponent implements AfterViewInit, OnInit {
    */
   tabs = signal<ModalTab[]>([]);
 
+  activeTab = signal(this.tabs()[0]);
+
   /**
    * Emits an event when the confirm action is triggered by the user (e.g., clicking the confirm button).
    */
@@ -119,7 +129,13 @@ export class ModalComponent implements AfterViewInit, OnInit {
     private keyboardService: KeyboardService,
     private destroyRef: DestroyRef,
     private injector: Injector,
-  ) {}
+  ) {
+    effect(() => {
+      if (this.activeTab()) {
+        this.loadTabComponent(this.activeTab());
+      }
+    });
+  }
 
   ngOnInit(): void {
     effect(
@@ -158,7 +174,7 @@ export class ModalComponent implements AfterViewInit, OnInit {
   /**
    * Closes the modal and emits the `cancelled` event.
    */
-  close() {
+  close(): void {
     this.cancelled.emit();
     this.modalService.close();
   }
@@ -261,6 +277,21 @@ export class ModalComponent implements AfterViewInit, OnInit {
       .subscribe(() => {
         this.confirm();
       });
+  }
+
+  private loadTabComponent(modalTab: ModalTab): void {
+    // Entferne die bestehende Komponente, falls vorhanden
+    this.modalContent.clear();
+
+    // Erstelle die neue Komponente dynamisch
+    const componentRef = createComponent(modalTab.component, {
+      environmentInjector: this.environmentInjector,
+      elementInjector: this.modalContent.injector,
+    });
+
+    this.title = modalTab.label;
+
+    this.modalContent.insert(componentRef.hostView);
   }
 
   /**

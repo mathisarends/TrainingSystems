@@ -46,7 +46,6 @@ export class DeleteConfirmationComponent implements OnConfirm {
    */
   onConfirm(): void {
     if (this.deletionKeyWordUserInput() === this.deletionKeyWord()) {
-      console.log('confirm here though');
       this.modalConfirmationService.confirm();
     }
   }

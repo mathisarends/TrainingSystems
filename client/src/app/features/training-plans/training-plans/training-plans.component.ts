@@ -10,7 +10,7 @@ import { CircularIconButtonComponent } from '../../../shared/components/circular
 import { IconBackgroundColor } from '../../../shared/components/icon-list-item/icon-background-color';
 import { IconListeItemComponent } from '../../../shared/components/icon-list-item/icon-list-item.component';
 import { SkeletonCardComponent } from '../../../shared/components/loader/skeleton-card/skeleton-card.component';
-import { ModalTab } from '../../../shared/components/modal/modal-tab/modal-tab';
+import { ModalTab } from '../../../shared/components/modal/types/modal-tab';
 import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
 import { IconName } from '../../../shared/icon/icon-name';

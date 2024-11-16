@@ -1,0 +1,10 @@
+:host {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: smaller;
+}
+
+.active {
+  text-decoration: underline;
+}
