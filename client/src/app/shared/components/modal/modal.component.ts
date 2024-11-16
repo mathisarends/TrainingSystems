@@ -3,6 +3,7 @@ import {
   AfterViewInit,
   Component,
   ComponentRef,
+  computed,
   createComponent,
   DestroyRef,
   effect,
@@ -109,7 +110,15 @@ export class ModalComponent implements AfterViewInit, OnInit {
    */
   tabs = signal<ModalTab[]>([]);
 
-  activeTab = signal(this.tabs()[0]);
+  activeTab: WritableSignal<ModalTab | undefined> = signal(undefined);
+
+  /**
+   * Computed property to get the index of the active tab.
+   */
+  activeTabIndex = computed(() => {
+    const currentTab = this.activeTab();
+    return currentTab ? this.tabs().findIndex((tab) => tab.label === currentTab.label) : -1;
+  });
 
   /**
    * Emits an event when the confirm action is triggered by the user (e.g., clicking the confirm button).
@@ -130,9 +139,16 @@ export class ModalComponent implements AfterViewInit, OnInit {
     private destroyRef: DestroyRef,
     private injector: Injector,
   ) {
+    effect(
+      () => {
+        this.activeTab.set(this.tabs()[0]);
+      },
+      { allowSignalWrites: true },
+    );
+
     effect(() => {
       if (this.activeTab()) {
-        this.loadTabComponent(this.activeTab());
+        this.loadTabComponent(this.activeTab()!);
       }
     });
   }

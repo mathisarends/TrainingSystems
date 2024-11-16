@@ -1,0 +1,24 @@
+<app-alert
+  [alertText]="
+    'Die ausgewählten Trainingstage bestimmen deine Trainingsfrequenz und werden automatisch in deinen Trainingskalender eingetragen. So behältst du immer den Überblick!'
+  "
+  [alertType]="'light'"
+/>
+
+<div class="calendar-grid">
+  <div class="day-name">Mo</div>
+  <div class="day-name">Di</div>
+  <div class="day-name">Mi</div>
+  <div class="day-name">Do</div>
+  <div class="day-name">Fr</div>
+  <div class="day-name">Sa</div>
+  <div class="day-name">So</div>
+
+  @for (dayNumber of [1, 2, 3, 4, 5, 6, 7]; track dayNumber) {
+    <div class="day">
+      <div class="day-number" [ngClass]="{ 'selected-day': dayNumber % 2 === 0 }">
+        {{ dayNumber }}
+      </div>
+    </div>
+  }
+</div>

@@ -22,6 +22,7 @@ import { TrainingPlanCardView } from '../training-view/models/exercise/training-
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
 import { CreateSessionComponent } from './create-session/create-session.component';
 import { CreateTrainingComponent } from './create-training/create-training.component';
+import { TrainingSchedulingComponent } from './training-scheduling/training-scheduling.component';
 
 /**
  * Component to manage and display training plans.
@@ -134,7 +135,7 @@ export class TrainingPlansComponent implements OnInit {
       },
       {
         label: 'Kalendar',
-        component: CreateSessionComponent,
+        component: TrainingSchedulingComponent,
       },
     ];
 
