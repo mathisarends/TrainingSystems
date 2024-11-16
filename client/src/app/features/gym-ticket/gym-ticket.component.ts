@@ -33,6 +33,10 @@ export class GymTicketComponent extends AbstractImageCropperComponent implements
   override ngOnInit(): void {
     super.ngOnInit();
     this.NO_IMAGE_AVAILABLE.set('noGymTicketAvailable');
+
+    this.gymTicketService.getGymTicket().subscribe((gymTicket) => {
+      this.image.set(gymTicket);
+    });
   }
 
   uploadImage(image: string) {

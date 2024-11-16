@@ -64,7 +64,6 @@ export class ProfileComponent2 implements OnInit {
     private headerService: HeaderService,
     private modalService: ModalService,
     private toastService: ToastService,
-    private gymTicketService: GymTicketService,
     private imageUploadService: ImageUploadService,
     private router: Router,
     private route: ActivatedRoute,
@@ -96,12 +95,6 @@ export class ProfileComponent2 implements OnInit {
         componentData: {
           image: '',
         },
-      });
-
-      this.gymTicketService.getGymTicket().subscribe((ticket: string) => {
-        this.modalService.updateComponentData({
-          image: ticket ?? 'noGymTicketAvailable',
-        });
       });
     } else if (label === 'Exercises') {
       this.router.navigate(['profile/exercises']);

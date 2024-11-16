@@ -98,19 +98,6 @@ export class ModalService {
     });
   }
 
-  // signal basiert umsetzen für den modalService:
-  /**
-   * Updates the component data of the modal's child component.
-   * @param newComponentData - The new data to update the child component with.
-   */
-  updateComponentData(newComponentData: any) {
-    if (this.modalComponentRef) {
-      this.modalComponentRef.instance.childComponentData.set(newComponentData);
-    } else {
-      console.warn('Modal component reference is not available for updating data.');
-    }
-  }
-
   /**
    * Opens a basic info modal with predefined options.
    *
