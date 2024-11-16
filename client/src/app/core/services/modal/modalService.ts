@@ -84,6 +84,10 @@ export class ModalService {
         this.modalComponentRef.instance.childComponentData.set(options.componentData);
       }
 
+      if (options.tabs) {
+        this.modalComponentRef.instance.tabs.set(options.tabs);
+      }
+
       this.isVisible.set(true);
 
       this.modalComponentRef.instance.confirmed.subscribe(() => {

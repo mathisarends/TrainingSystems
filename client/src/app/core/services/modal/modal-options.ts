@@ -1,4 +1,5 @@
 import { Provider } from '@angular/core';
+import { ModalTab } from '../../../shared/components/modal/modal-tab/modal-tab';
 import { ModalSize } from './modalSize';
 /**
  * Interface for modal options.
@@ -8,6 +9,8 @@ export interface ModalOptions {
    * The Angular component to be displayed in the modal.
    */
   component: any;
+
+  tabs?: ModalTab[];
 
   /**
    * The title of the modal.

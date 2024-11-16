@@ -10,6 +10,20 @@
   cursor: move;
 }
 
+.modal-footer {
+  justify-content: space-between;
+
+  .modal-pagination {
+    display: flex;
+    gap: 0.5rem;
+    font-size: smaller;
+
+    & div:first-of-type {
+      text-decoration: underline;
+    }
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

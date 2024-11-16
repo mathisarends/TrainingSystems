@@ -23,19 +23,20 @@ import { ModalSize } from '../../../core/services/modal/modalSize';
 import { MobileDeviceDetectionService } from '../../../platform/mobile-device-detection.service';
 import { DraggableDirective } from '../../directives/draggable.directive';
 import { IconName } from '../../icon/icon-name';
+import { IconComponent } from '../../icon/icon.component';
 import { KeyboardService } from '../../service/keyboard.service';
 import { DataMap } from '../../types/data-map';
 import { ButtonComponent } from '../button/button.component';
 import { CircularIconButtonComponent } from '../circular-icon-button/circular-icon-button.component';
-import { PaginationComponent } from '../pagination/pagination.component';
 import { ModalConfirmationService } from './modal-confirmation.service';
+import { ModalTab } from './modal-tab/modal-tab';
 import { OnConfirm } from './on-confirm';
 import { OnToggleView } from './on-toggle-view';
 
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [ButtonComponent, CommonModule, DraggableDirective, CircularIconButtonComponent, PaginationComponent],
+  imports: [ButtonComponent, CommonModule, DraggableDirective, CircularIconButtonComponent, IconComponent],
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
   providers: [KeyboardService],
@@ -45,6 +46,7 @@ export class ModalComponent implements AfterViewInit, OnInit {
 
   @ViewChild('modalContent', { read: ViewContainerRef })
   modalContent!: ViewContainerRef;
+
   childComponentRef!: ComponentRef<any>;
 
   isLoading = signal(false);
@@ -52,7 +54,7 @@ export class ModalComponent implements AfterViewInit, OnInit {
   /**
    * The title of the modal. This is displayed in the modal header.
    */
-  title: string = 'Default Title';
+  title: string = 'Modal title';
 
   /**
    * Determines whether the action associated with the modal is destructive (e.g., deletion).
@@ -95,6 +97,11 @@ export class ModalComponent implements AfterViewInit, OnInit {
   confirmationRequired: boolean = true;
 
   /**
+   * Holds the modal tabs.
+   */
+  tabs = signal<ModalTab[]>([]);
+
+  /**
    * Emits an event when the confirm action is triggered by the user (e.g., clicking the confirm button).
    */
   @Output() confirmed = new EventEmitter<void>();
@@ -103,8 +110,6 @@ export class ModalComponent implements AfterViewInit, OnInit {
    * Emits an event when the cancel action is triggered by the user (e.g., clicking the cancel button or closing the modal).
    */
   @Output() cancelled = new EventEmitter<void>();
-
-  @Output() closed = new EventEmitter<void>();
 
   constructor(
     protected mobileDeviceDetectionService: MobileDeviceDetectionService,
@@ -196,25 +201,6 @@ export class ModalComponent implements AfterViewInit, OnInit {
     }
   }
 
-  /**
-   * Initializes keyboard listeners for 'Escape' and 'Enter' keys.
-   */
-  private initializeKeyboardListeners(): void {
-    this.keyboardService
-      .escapePressed$()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.modalService.close();
-      });
-
-    this.keyboardService
-      .enterPressed$()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.confirm();
-      });
-  }
-
   private async handleConfirmationRequired() {
     const confirmed = await firstValueFrom(
       this.modalConfirmationService.requestConfirmation().pipe(
@@ -256,6 +242,25 @@ export class ModalComponent implements AfterViewInit, OnInit {
         this.childComponentRef.instance[key] = data[key];
       }
     });
+  }
+
+  /**
+   * Initializes keyboard listeners for 'Escape' and 'Enter' keys.
+   */
+  private initializeKeyboardListeners(): void {
+    this.keyboardService
+      .escapePressed$()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.modalService.close();
+      });
+
+    this.keyboardService
+      .enterPressed$()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.confirm();
+      });
   }
 
   /**
