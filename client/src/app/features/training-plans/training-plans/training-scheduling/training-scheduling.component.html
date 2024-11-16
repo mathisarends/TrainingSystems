@@ -10,9 +10,9 @@
     <div class="day-name">{{ day }}</div>
   }
 
-  @for (dayNumber of [1, 2, 3, 4, 5, 6, 7]; track dayNumber) {
-    <div class="day">
-      <div class="day-number" [ngClass]="{ 'selected-day': dayNumber % 2 === 0 }">
+  @for (dayNumber of dayNumbers(); track dayNumber) {
+    <div class="day" (click)="toggleTrainingDayByNumber(dayNumber)">
+      <div class="day-number" [ngClass]="{ 'selected-day': trainingDays().has(days()[dayNumber - 1]) }">
         {{ dayNumber }}
       </div>
     </div>
