@@ -6,13 +6,9 @@
 />
 
 <div class="calendar-grid">
-  <div class="day-name">Mo</div>
-  <div class="day-name">Di</div>
-  <div class="day-name">Mi</div>
-  <div class="day-name">Do</div>
-  <div class="day-name">Fr</div>
-  <div class="day-name">Sa</div>
-  <div class="day-name">So</div>
+  @for (day of days(); track day) {
+    <div class="day-name">{{ day }}</div>
+  }
 
   @for (dayNumber of [1, 2, 3, 4, 5, 6, 7]; track dayNumber) {
     <div class="day">

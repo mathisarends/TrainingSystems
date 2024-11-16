@@ -15,7 +15,7 @@ export class ModalPaginationComponent {
   protected readonly IconName = IconName;
   modalTabs = input<ModalTab[]>([]);
 
-  activeTab = model.required<ModalTab>();
+  activeTab = model<ModalTab | undefined>(undefined);
 
   protected switchTab(tab: ModalTab): void {
     this.activeTab.set(tab);

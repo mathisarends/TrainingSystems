@@ -14,8 +14,10 @@
         <ng-template #modalContent></ng-template>
       </div>
       @if (footer) {
-        <div class="modal-footer">
-          <app-modal-pagination [modalTabs]="tabs()" [(activeTab)]="activeTab" />
+        <div class="modal-footer" [ngClass]="{ 'pagination-footer': tabs().length > 0 }">
+          @if (activeTab()) {
+            <app-modal-pagination [modalTabs]="tabs()" [(activeTab)]="activeTab!" />
+          }
 
           @if (secondaryButtonText) {
             <app-button [variant]="'SECONDARY'" [textContent]="secondaryButtonText" (clicked)="toggleModalView()" />

@@ -37,6 +37,10 @@
     top: 7.5px;
     right: 7.5px;
   }
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .day:hover {

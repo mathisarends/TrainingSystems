@@ -110,7 +110,7 @@ export class ModalComponent implements AfterViewInit, OnInit {
    */
   tabs = signal<ModalTab[]>([]);
 
-  activeTab: WritableSignal<ModalTab | undefined> = signal(undefined);
+  activeTab = signal<ModalTab | undefined>(undefined);
 
   /**
    * Computed property to get the index of the active tab.
