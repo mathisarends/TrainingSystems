@@ -1,5 +1,0 @@
-@for (day of weekDays; track day) {
-  <div class="day" [class.selected]="day | isDaySelected: selectedDays()" (click)="toggleDay(day)">
-    {{ day }}
-  </div>
-}

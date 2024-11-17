@@ -43,7 +43,7 @@ import { TrainingSchedulingComponent } from './training-scheduling/training-sche
   ],
   templateUrl: './training-plans.component.html',
   styleUrls: ['./training-plans.component.scss'],
-  providers: [KeyboardService, TrainingSessionService],
+  providers: [TrainingSessionService],
   animations: [toggleCollapseAnimation],
 })
 export class TrainingPlansComponent implements OnInit {

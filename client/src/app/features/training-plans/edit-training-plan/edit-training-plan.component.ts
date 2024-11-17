@@ -9,7 +9,6 @@ import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.
 import { ToastService } from '../../../shared/components/toast/toast.service';
 import { TrainingBannerComponent } from '../../../shared/components/training-banner/training-banner.component';
 import { TrainingPlanEditView } from '../model/training-plan-edit-view';
-import { TrainingDaySelectionComponent } from '../training-day-selection/training-day-selection.component';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
 import { EditTrainingPlanService } from './edit-training-plan.service';
 
@@ -27,7 +26,6 @@ import { EditTrainingPlanService } from './edit-training-plan.service';
     FloatingLabelInputComponent,
     ImageCropperComponent,
     TrainingBannerComponent,
-    TrainingDaySelectionComponent
   ],
   templateUrl: './edit-training-plan.component.html',
   styleUrls: ['./edit-training-plan.component.scss'],

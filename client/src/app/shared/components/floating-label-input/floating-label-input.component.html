@@ -6,7 +6,7 @@
         [class.is-invalid]="isInvalid()"
         id="floatingInput"
         (input)="onInputChange($event)"
-        [value]="value()"
+        [(value)]="value"
       />
     }
     @case ('select') {

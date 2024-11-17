@@ -21,13 +21,6 @@
     }
   }
 }
-
-.cdk-drag-preview {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-  transform: scale(1.1);
-  border-radius: 8px;
-}
-
 .training-plan-grid {
   display: grid;
   gap: 1rem;
@@ -46,6 +39,13 @@
     flex: 1 1 50%;
   }
 }
+
+@media screen and (max-width: 1200px) {
+  .empty-training-list-container {
+    flex-direction: column;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .container.heading-container {
     padding-left: 0;
@@ -55,13 +55,5 @@
   .training-plan-card-container {
     touch-action: manipulation;
     transform: none;
-  }
-
-  .cdk-drag-preview {
-    transform: none;
-  }
-
-  .empty-training-list-container {
-    flex-direction: column;
   }
 }

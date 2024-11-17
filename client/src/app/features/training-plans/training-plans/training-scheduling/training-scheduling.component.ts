@@ -19,17 +19,17 @@ export class TrainingSchedulingComponent {
 
   trainingDays = signal(new Set(['Mo', 'Mi', 'Fr']));
 
-  toggleTrainingDayByNumber(dayNumber: number): void {
-    console.log('🚀 ~ TrainingSchedulingComponent ~ toggleTrainingDayByNumber ~ dayNumber:', dayNumber);
-    // Hole den entsprechenden Tag basierend auf der dayNumber
+  protected toggleTrainingDayByNumber(dayNumber: number): void {
     const day = this.days()[dayNumber - 1];
-    if (!day) return; // Falls ungültig, abbrechen
+    if (!day) {
+      // Falls ungültig, abbrechen
+    }
 
     const updatedDays = new Set(this.trainingDays());
     if (updatedDays.has(day)) {
-      updatedDays.delete(day); // Tag abwählen
+      updatedDays.delete(day);
     } else {
-      updatedDays.add(day); // Tag auswählen
+      updatedDays.add(day);
     }
     this.trainingDays.set(updatedDays);
   }

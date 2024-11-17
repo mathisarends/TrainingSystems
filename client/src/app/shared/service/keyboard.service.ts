@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { fromEvent, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class KeyboardService {
   constructor() {}
 

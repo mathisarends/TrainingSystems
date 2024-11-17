@@ -9,20 +9,13 @@ import { TrainingBannerComponent } from '../../../../shared/components/training-
 import { ImageUploadService } from '../../../../shared/service/image-upload.service';
 import { TrainingSessionService } from '../../../training-session/training-session-service';
 import { TrainingPlanEditView } from '../../model/training-plan-edit-view';
-import { TrainingDaySelectionComponent } from '../../training-day-selection/training-day-selection.component';
 import { TrainingPlanType } from '../../training-view/models/training-plan-type';
 import { TrainingPlanService } from '../../training-view/services/training-plan.service';
 
 @Component({
   selector: 'app-create-training-form',
   standalone: true,
-  imports: [
-    CommonModule,
-    FloatingLabelInputComponent,
-    ToDropDownOptionsPipe,
-    TrainingBannerComponent,
-    TrainingDaySelectionComponent,
-  ],
+  imports: [CommonModule, FloatingLabelInputComponent, ToDropDownOptionsPipe, TrainingBannerComponent],
   templateUrl: './create-training.component.html',
   styleUrls: ['./create-training.component.scss'],
   providers: [TrainingSessionService],
@@ -58,7 +51,7 @@ export class CreateTrainingComponent implements OnInit, OnConfirm {
    */
   onConfirm(): Observable<void> {
     if (!this.trainingPlanEditView.isValid()) {
-      return of(); // Gibt ein leeres Observable zurück, wenn die Validierung fehlschlägt
+      return of();
     }
 
     return this.httpClient.post<void>('/training', this.trainingPlanEditView.toDto()).pipe(
