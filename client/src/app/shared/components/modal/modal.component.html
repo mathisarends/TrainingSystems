@@ -10,7 +10,7 @@
         <h5 class="modal-title">{{ title }}</h5>
         <app-circular-icon-button [icon]="IconName.X" (click)="close()" />
       </div>
-      <div class="modal-body">
+      <div class="modal-body" [ngClass]="{ 'modal-tab-body': tabs().length > 0 }">
         <ng-template #modalContent></ng-template>
       </div>
       @if (footer) {
