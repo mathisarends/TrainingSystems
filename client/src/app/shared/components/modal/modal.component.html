@@ -24,9 +24,10 @@
           }
 
           @let buttonVariant = isDestructiveAction ? 'DESTRUCTIVE' : 'PRIMARY';
+          @let buttonText = tabs().length > 0 && activeTabIndex() < tabs().length - 1 ? 'Weiter' : confirmButtonText;
           <app-button
             [variant]="buttonVariant"
-            [textContent]="confirmButtonText"
+            [textContent]="buttonText"
             (clicked)="confirm()"
             [isLoading]="isLoading()"
           />

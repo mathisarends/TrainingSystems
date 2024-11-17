@@ -202,6 +202,11 @@ export class ModalComponent implements AfterViewInit, OnInit {
   async confirm() {
     const componentInstance = this.childComponentRef.instance;
 
+    if (this.isModalGroupAndNotLastTab()) {
+      this.switchToNextTab();
+      return;
+    }
+
     if (this.implementsOnConfirm(componentInstance)) {
       const result = componentInstance.onConfirm();
 
@@ -221,6 +226,22 @@ export class ModalComponent implements AfterViewInit, OnInit {
     }
 
     this.confirmed.emit();
+  }
+
+  private isModalGroupAndNotLastTab(): boolean {
+    const isModalGroup = this.tabs().length > 0;
+    const isNotLastTab = this.activeTabIndex() < this.tabs().length - 1;
+
+    return isModalGroup && isNotLastTab;
+  }
+
+  private switchToNextTab(): void {
+    const nextTabIndex = this.activeTabIndex() + 1;
+    if (nextTabIndex > this.tabs().length - 1) {
+      throw new Error('Next tab is non exisitng');
+    }
+
+    this.activeTab.set(this.tabs()[nextTabIndex]);
   }
 
   /**
