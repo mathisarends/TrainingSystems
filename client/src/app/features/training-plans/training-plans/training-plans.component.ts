@@ -17,6 +17,7 @@ import { IconName } from '../../../shared/icon/icon-name';
 import { KeyboardService } from '../../../shared/service/keyboard.service';
 import { HeaderService } from '../../header/header.service';
 import { TrainingSessionService } from '../../training-session/training-session-service';
+import { TrainingPlanEditView } from '../model/training-plan-edit-view';
 import { TrainingPlanCardComponent } from '../training-plan-card/training-plan-card.component';
 import { TrainingPlanCardView } from '../training-view/models/exercise/training-plan-card-view-dto';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
@@ -139,8 +140,16 @@ export class TrainingPlansComponent implements OnInit {
       },
     ];
 
+    const trainingPlanEditView = TrainingPlanEditView.fromDto();
+
     this.modalService.open({
       component: CreateTrainingComponent,
+      providers: [
+        {
+          provide: TrainingPlanEditView,
+          useValue: trainingPlanEditView,
+        },
+      ],
       tabs: modalTabs,
       title: 'Trainingsplan erstellen',
       buttonText: 'Erstellen',

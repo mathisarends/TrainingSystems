@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, signal } from '@angular/core';
 import { AlertComponent } from '../../../../shared/components/alert/alert.component';
+import { TrainingPlanEditView } from '../../model/training-plan-edit-view';
 import { DaySelectedPipe } from './day-selected-pipe';
 
 @Component({
@@ -17,7 +18,7 @@ export class TrainingSchedulingComponent {
     return this.days().map((_, index) => index + 1);
   });
 
-  trainingDays = signal(new Set(['Mo', 'Mi', 'Fr']));
+  constructor(protected trainingPlanEditView: TrainingPlanEditView) {}
 
   protected toggleTrainingDayByNumber(dayNumber: number): void {
     const day = this.days()[dayNumber - 1];
@@ -25,12 +26,12 @@ export class TrainingSchedulingComponent {
       // Falls ungültig, abbrechen
     }
 
-    const updatedDays = new Set(this.trainingDays());
+    const updatedDays = new Set(this.trainingPlanEditView.trainingDays());
     if (updatedDays.has(day)) {
       updatedDays.delete(day);
     } else {
       updatedDays.add(day);
     }
-    this.trainingDays.set(updatedDays);
+    this.trainingPlanEditView.trainingDays.set(updatedDays);
   }
 }

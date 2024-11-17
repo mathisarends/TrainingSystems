@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { Observable, of, tap } from 'rxjs';
 import { HttpService } from '../../../../core/services/http-client.service';
 import { FloatingLabelInputComponent } from '../../../../shared/components/floating-label-input/floating-label-input.component';
@@ -20,13 +20,8 @@ import { TrainingPlanService } from '../../training-view/services/training-plan.
   styleUrls: ['./create-training.component.scss'],
   providers: [TrainingSessionService],
 })
-export class CreateTrainingComponent implements OnInit, OnConfirm {
+export class CreateTrainingComponent implements OnConfirm {
   protected readonly TrainingPlanType = TrainingPlanType;
-
-  /**
-   * The training plan object that contains the form fields using Angular signals.
-   */
-  trainingPlanEditView!: TrainingPlanEditView;
 
   /**
    * Signal indicating whether the training plan is loading.
@@ -36,14 +31,11 @@ export class CreateTrainingComponent implements OnInit, OnConfirm {
   selectedPlanId = signal<string>('');
 
   constructor(
+    protected trainingPlanEditView: TrainingPlanEditView,
     private trainingPlanService: TrainingPlanService,
     private httpClient: HttpService,
     private imageUploadService: ImageUploadService,
   ) {}
-
-  ngOnInit(): void {
-    this.trainingPlanEditView = TrainingPlanEditView.fromDto();
-  }
 
   /**
    * Handles form submission using signals.
