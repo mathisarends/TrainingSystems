@@ -5,6 +5,7 @@ export interface TrainingPlanEditViewDto {
   weightRecommandationBase: WeightRecommendationBase;
   trainingBlockLength: number;
   coverImageBase64: string;
+  startDate: Date;
 }
 
 /**

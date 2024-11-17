@@ -10,8 +10,7 @@ export class TrainingPlanEditView {
   trainingDays: WritableSignal<Set<string>>;
   trainingBlockLength: WritableSignal<number>;
   coverImageBase64: WritableSignal<string>;
-
-  referencePlanId: WritableSignal<string | undefined> = signal(undefined);
+  startDate: WritableSignal<Date>;
 
   protected readonly defaultValues = {
     id: '',
@@ -20,6 +19,7 @@ export class TrainingPlanEditView {
     trainingBlockLength: 4,
     weightRecommendationBase: WeightRecommendationBase.LASTWEEK,
     coverImageBase64: '',
+    startDate: this.getNextMonday(),
   };
 
   /**
@@ -31,6 +31,8 @@ export class TrainingPlanEditView {
     this.trainingDays = signal(this.defaultValues.trainingDays);
     this.trainingBlockLength = signal(this.defaultValues.trainingBlockLength);
     this.coverImageBase64 = signal(this.defaultValues.coverImageBase64);
+    this.startDate = signal(this.defaultValues.startDate);
+    console.log('🚀 ~ TrainingPlanEditView ~ constructor ~ this.startDate:', this.startDate());
 
     // If DTO is provided, override the default values
     if (dto) {
@@ -76,6 +78,7 @@ export class TrainingPlanEditView {
     this.trainingDays.set(new Set(dto.trainingDays));
     this.trainingBlockLength.set(dto.trainingBlockLength);
     this.coverImageBase64.set(dto.coverImageBase64 || this.defaultValues.coverImageBase64);
+    this.startDate.set(dto.startDate);
   }
 
   /**
@@ -88,5 +91,17 @@ export class TrainingPlanEditView {
     this.trainingDays.set(this.defaultValues.trainingDays);
     this.trainingBlockLength.set(this.defaultValues.trainingBlockLength);
     this.coverImageBase64.set(this.defaultValues.coverImageBase64);
+  }
+
+  /**
+   * Utility method to calculate the next Monday.
+   */
+  private getNextMonday(): Date {
+    const today = new Date();
+    const day = today.getDay();
+    const diff = (8 - day) % 7 || 7;
+    today.setDate(today.getDate() + diff);
+    today.setHours(0, 0, 0, 0);
+    return today;
   }
 }

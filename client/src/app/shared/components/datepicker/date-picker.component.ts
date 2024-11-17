@@ -1,40 +1,72 @@
-import { Component, effect, Injector, model, OnInit, signal } from '@angular/core';
+import { Component, effect, model, signal } from '@angular/core';
 
-// TODO: use this to filter log data for certain dates + (initially laod all)
 @Component({
   selector: 'app-date-picker',
-  standalone: true, // Standalone-Komponente
-  imports: [],
+  standalone: true,
   templateUrl: './date-picker.component.html',
   styleUrls: ['./date-picker.component.scss'],
-  providers: [],
 })
-export class DatePickerComponent implements OnInit {
+export class DatePickerComponent {
   /**
-   * Stores the selected date.
+   * Signal to store the selected date as a `Date` object.
    */
   selectedDate = model.required<Date>();
 
   /**
-   * Signal storing the date in a string format (yyyy-mm-dd) for template binding.
+   * Signal to store the selected date as a string (yyyy-mm-dd) for template binding.
    */
   templateDate = signal('');
 
-  constructor(private injector: Injector) {}
-
-  /**
-   * Initializes the component by syncing the selected date with the template string format.
-   */
-  ngOnInit(): void {
-    const templateDate = this.selectedDate().toISOString().substring(0, 10);
-    this.templateDate.set(templateDate);
-
+  constructor() {
+    // Effect to update `templateDate` when `selectedDate` changes
     effect(
       () => {
-        const newDate = new Date(this.templateDate());
-        this.selectedDate.set(newDate);
+        this.updateTemplateDate(this.selectedDate());
       },
-      { allowSignalWrites: true, injector: this.injector },
+      { allowSignalWrites: true },
     );
+
+    // Effect to update `selectedDate` when `templateDate` changes
+    effect(
+      () => {
+        this.updateSelectedDate(this.templateDate());
+      },
+      { allowSignalWrites: true },
+    );
+  }
+
+  /**
+   * Updates the `templateDate` signal with a formatted version of `selectedDate`.
+   */
+  private updateTemplateDate(date: Date): void {
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+
+    const formattedDate = `${year}-${month}-${day}`;
+    console.log('🚀 ~ DatePickerComponent ~ updateTemplateDate ~ formattedDate:', formattedDate);
+
+    if (formattedDate !== this.templateDate()) {
+      this.templateDate.set(formattedDate);
+    }
+  }
+
+  /**
+   * Updates the `selectedDate` signal based on the `templateDate` string.
+   */
+  private updateSelectedDate(dateString: string): void {
+    const [year, month, day] = dateString.split('-').map(Number);
+
+    // Ensure valid date components
+    if (!year || !month || !day) {
+      return;
+    }
+
+    // Create a new Date object in local time
+    const newDate = new Date(year, month - 1, day);
+
+    if (!isNaN(newDate.getTime()) && this.selectedDate().getTime() !== newDate.getTime()) {
+      this.selectedDate.set(newDate);
+    }
   }
 }

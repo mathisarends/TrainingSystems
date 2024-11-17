@@ -1,6 +1,6 @@
 <app-alert
   [alertText]="
-    'Die ausgewählten Trainingstage bestimmen deine Trainingsfrequenz und werden automatisch in deinen Trainingskalender eingetragen. So behältst du immer den Überblick!'
+    'Die ausgewählten Trainingstage bestimmen deine Trainingsfrequenz und werden automatisch in deinen Trainingskalender eingetragen.'
   "
   [alertType]="'light'"
 />
@@ -23,3 +23,5 @@
     </div>
   }
 </div>
+
+<app-date-picker [(selectedDate)]="trainingPlanEditView.startDate" />
