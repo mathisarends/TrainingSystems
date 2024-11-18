@@ -18,7 +18,6 @@ export class TrainingPlanEditView {
     trainingBlockLength: 4,
     weightRecommendationBase: WeightRecommendationBase.LASTWEEK,
     coverImageBase64: '',
-    startDate: this.getNextMonday(),
   };
 
   /**
@@ -87,17 +86,5 @@ export class TrainingPlanEditView {
     this.trainingDays.set(this.defaultValues.trainingDays);
     this.trainingBlockLength.set(this.defaultValues.trainingBlockLength);
     this.coverImageBase64.set(this.defaultValues.coverImageBase64);
-  }
-
-  /**
-   * Utility method to calculate the next Monday.
-   */
-  private getNextMonday(): Date {
-    const today = new Date();
-    const day = today.getDay();
-    const diff = (8 - day) % 7 || 7;
-    today.setDate(today.getDate() + diff);
-    today.setHours(0, 0, 0, 0);
-    return today;
   }
 }
