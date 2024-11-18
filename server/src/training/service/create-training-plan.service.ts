@@ -23,8 +23,6 @@ export class CreateTrainingPlanService {
       createTrainingPlanDto.trainingDays.length,
     );
 
-    const startDate = await this.determineStartDate(userId);
-
     const newTrainingPlan = new this.trainingPlanModel({
       userId: userId,
       title: createTrainingPlanDto.title,
@@ -32,7 +30,7 @@ export class CreateTrainingPlanService {
       lastUpdated: new Date(),
       trainingWeeks: trainingWeeksPlaceholder,
       coverImageBase64: createTrainingPlanDto.coverImageBase64,
-      startDate: startDate,
+      startDate: createTrainingPlanDto.startDate,
     });
 
     return await newTrainingPlan.save();

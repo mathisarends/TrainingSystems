@@ -1,4 +1,4 @@
-import { Component, effect, model, signal } from '@angular/core';
+import { Component, effect, input, model, signal } from '@angular/core';
 
 @Component({
   selector: 'app-date-picker',
@@ -11,6 +11,8 @@ export class DatePickerComponent {
    * Signal to store the selected date as a `Date` object.
    */
   selectedDate = model.required<Date>();
+
+  firstDate = input<string>(this.getNextMonday());
 
   /**
    * Signal to store the selected date as a string (yyyy-mm-dd) for template binding.
@@ -25,6 +27,15 @@ export class DatePickerComponent {
       },
       { allowSignalWrites: true },
     );
+  }
+
+  protected getNextMonday(): string {
+    const today = new Date();
+    const day = today.getDay(); // 0 = Sonntag, 1 = Montag, etc.
+    const diff = day === 0 ? 1 : 8 - day; // Unterschied bis zum nächsten Montag
+    const nextMonday = new Date(today);
+    nextMonday.setDate(today.getDate() + diff);
+    return nextMonday.toISOString().split('T')[0]; // Format YYYY-MM-DD
   }
 
   /**

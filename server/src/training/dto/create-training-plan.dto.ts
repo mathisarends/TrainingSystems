@@ -1,6 +1,8 @@
+import { Type } from 'class-transformer';
 import {
   ArrayUnique,
   IsArray,
+  IsDate,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -24,4 +26,8 @@ export class CreateTrainingPlanDto {
   @IsOptional()
   @IsString()
   coverImageBase64?: string;
+
+  @IsDate()
+  @Type(() => Date)
+  startDate: Date;
 }

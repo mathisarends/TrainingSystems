@@ -55,6 +55,7 @@ export class TrainingPlanEditView {
       trainingDays: Array.from(this.trainingDays()),
       trainingBlockLength: Number(this.trainingBlockLength()),
       coverImageBase64: this.coverImageBase64(),
+      startDate: this.startDate(),
     };
 
     if (this.id()) {
