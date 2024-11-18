@@ -1,7 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { catchError, forkJoin, map, Observable, of, Subject, tap } from 'rxjs';
 import { HttpService } from '../../../../core/services/http-client.service';
-import { BasicConfirmationResponse } from '../../../../shared/dto/basic-confirmation-response';
 import { TrainingSessionCardViewDto } from '../../../training-session/model/training-session-card-view-dto';
 import { TrainingPlanCardView } from '../models/exercise/training-plan-card-view-dto';
 
@@ -25,13 +24,8 @@ export class TrainingPlanService {
     this.trainingPlansChangedSubject.next();
   }
 
-  /**
-   * Reorders the training plans by sending the new order to the backend.
-   * @param trainingPlanIds The new order of training plan IDs.
-   * @returns An Observable of the server confirmation response.
-   */
-  reorderTrainingPlans(trainingPlanIds: string[]): Observable<BasicConfirmationResponse> {
-    return this.httpService.post('/training/reorder', { updatedOrder: trainingPlanIds });
+  getFirstAvailableDateForTrainingPlan(): Observable<string> {
+    return this.httpService.get('/training/first-available-date');
   }
 
   /**

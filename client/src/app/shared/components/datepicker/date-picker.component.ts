@@ -12,7 +12,7 @@ export class DatePickerComponent {
    */
   selectedDate = model.required<Date>();
 
-  firstDate = input<string>(this.getNextMonday());
+  firstSelectableDate = input<string>(this.getNextMonday());
 
   /**
    * Signal to store the selected date as a string (yyyy-mm-dd) for template binding.

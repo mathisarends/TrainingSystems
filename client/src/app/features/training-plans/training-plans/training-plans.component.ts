@@ -1,4 +1,4 @@
-import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, effect, Injector, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -103,16 +103,6 @@ export class TrainingPlansComponent implements OnInit {
     this.setupKeyBoardEventListeners();
 
     this.setupFilterLogic();
-  }
-
-  /**
-   * Handles reordering of training plans via drag-and-drop and updates the order on the server.
-   * @param event - The drag-and-drop event that contains the previous and new indices.
-   */
-  protected updateTrainingPlanOrder(event: CdkDragDrop<TrainingPlanCardView[]>) {
-    moveItemInArray(this.filteredTrainingPlans(), event.previousIndex, event.currentIndex);
-    const reorderedIds = this.filteredTrainingPlans().map((plan) => plan.id);
-    this.trainingPlanService.reorderTrainingPlans(reorderedIds).subscribe();
   }
 
   /**

@@ -10,7 +10,6 @@ export class TrainingPlanEditView {
   trainingDays: WritableSignal<Set<string>>;
   trainingBlockLength: WritableSignal<number>;
   coverImageBase64: WritableSignal<string>;
-  startDate: WritableSignal<Date>;
 
   protected readonly defaultValues = {
     id: '',
@@ -31,7 +30,6 @@ export class TrainingPlanEditView {
     this.trainingDays = signal(this.defaultValues.trainingDays);
     this.trainingBlockLength = signal(this.defaultValues.trainingBlockLength);
     this.coverImageBase64 = signal(this.defaultValues.coverImageBase64);
-    this.startDate = signal(this.defaultValues.startDate);
 
     // If DTO is provided, override the default values
     if (dto) {
@@ -55,7 +53,6 @@ export class TrainingPlanEditView {
       trainingDays: Array.from(this.trainingDays()),
       trainingBlockLength: Number(this.trainingBlockLength()),
       coverImageBase64: this.coverImageBase64(),
-      startDate: this.startDate(),
     };
 
     if (this.id()) {
@@ -78,7 +75,6 @@ export class TrainingPlanEditView {
     this.trainingDays.set(new Set(dto.trainingDays));
     this.trainingBlockLength.set(dto.trainingBlockLength);
     this.coverImageBase64.set(dto.coverImageBase64 || this.defaultValues.coverImageBase64);
-    this.startDate.set(dto.startDate);
   }
 
   /**

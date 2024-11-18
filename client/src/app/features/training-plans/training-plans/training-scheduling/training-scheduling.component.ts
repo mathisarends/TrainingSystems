@@ -13,8 +13,6 @@ import { DaySelectedPipe } from './day-selected-pipe';
   styleUrls: ['./training-scheduling.component.scss'],
 })
 export class TrainingSchedulingComponent {
-  currentDate = new Date();
-
   days = signal(['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']);
 
   dayNumbers = computed(() => {
@@ -25,9 +23,6 @@ export class TrainingSchedulingComponent {
 
   protected toggleTrainingDayByNumber(dayNumber: number): void {
     const day = this.days()[dayNumber - 1];
-    if (!day) {
-      // Falls ungültig, abbrechen
-    }
 
     const updatedDays = new Set(this.trainingPlanEditView.trainingDays());
     if (updatedDays.has(day)) {
