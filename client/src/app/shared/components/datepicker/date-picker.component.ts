@@ -25,14 +25,6 @@ export class DatePickerComponent {
       },
       { allowSignalWrites: true },
     );
-
-    // Effect to update `selectedDate` when `templateDate` changes
-    effect(
-      () => {
-        this.updateSelectedDate(this.templateDate());
-      },
-      { allowSignalWrites: true },
-    );
   }
 
   /**
@@ -44,7 +36,6 @@ export class DatePickerComponent {
     const day = ('0' + date.getDate()).slice(-2);
 
     const formattedDate = `${year}-${month}-${day}`;
-    console.log('🚀 ~ DatePickerComponent ~ updateTemplateDate ~ formattedDate:', formattedDate);
 
     if (formattedDate !== this.templateDate()) {
       this.templateDate.set(formattedDate);
@@ -52,17 +43,22 @@ export class DatePickerComponent {
   }
 
   /**
-   * Updates the `selectedDate` signal based on the `templateDate` string.
+   * Callback, der aufgerufen wird, wenn das Datum geändert wird.
+   * @param event Event-Objekt des change-Ereignisses
    */
-  private updateSelectedDate(dateString: string): void {
+  onDateChanged(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+
+    const dateString = inputElement.value;
+
+    this.templateDate.set(dateString);
+
     const [year, month, day] = dateString.split('-').map(Number);
 
-    // Ensure valid date components
     if (!year || !month || !day) {
       return;
     }
 
-    // Create a new Date object in local time
     const newDate = new Date(year, month - 1, day);
 
     if (!isNaN(newDate.getTime()) && this.selectedDate().getTime() !== newDate.getTime()) {

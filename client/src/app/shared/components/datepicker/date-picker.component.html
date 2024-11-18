@@ -1,1 +1,1 @@
-<input type="date" [(value)]="templateDate" />
+<input type="date" [value]="templateDate()" (change)="onDateChanged($event)" />

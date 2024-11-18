@@ -32,7 +32,6 @@ export class TrainingPlanEditView {
     this.trainingBlockLength = signal(this.defaultValues.trainingBlockLength);
     this.coverImageBase64 = signal(this.defaultValues.coverImageBase64);
     this.startDate = signal(this.defaultValues.startDate);
-    console.log('🚀 ~ TrainingPlanEditView ~ constructor ~ this.startDate:', this.startDate());
 
     // If DTO is provided, override the default values
     if (dto) {
