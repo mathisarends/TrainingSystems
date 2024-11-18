@@ -1,0 +1,9 @@
+@for (option of options; track option) {
+  <app-training-plan-type-card
+    [title]="option.title"
+    [description]="option.description"
+    [cardPicture]="option.cardPicture"
+    [(isSelected)]="option.selected"
+    (click)="onCardSelected(option.id)"
+  />
+}

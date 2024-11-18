@@ -1,12 +1,12 @@
 import { Component, HostBinding, HostListener, input, model } from '@angular/core';
 
 @Component({
-  selector: 'app-training-plan-type-select',
+  selector: 'app-training-plan-type-card',
   standalone: true,
-  templateUrl: './training-plan-type-select.component.html',
-  styleUrls: ['./training-plan-type-select.component.scss'],
+  templateUrl: './training-plan-type-card.component.html',
+  styleUrls: ['./training-plan-type-card.component.scss'],
 })
-export class TrainingPlanTypeSelectComponent {
+export class TrainingPlanTypeCard {
   title = input.required<string>();
   description = input.required<string>();
   cardPicture = input.required<string>();

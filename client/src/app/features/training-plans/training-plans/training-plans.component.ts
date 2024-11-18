@@ -23,6 +23,7 @@ import { TrainingPlanCardView } from '../training-view/models/exercise/training-
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
 import { CreateSessionComponent } from './create-session/create-session.component';
 import { CreateTrainingComponent } from './create-training/create-training.component';
+import { TrainingPlanTypeSelectionComponent } from './training-plan-type-selection/training-plan-type-selection.component';
 import { TrainingSchedulingComponent } from './training-scheduling/training-scheduling.component';
 
 /**
@@ -120,6 +121,11 @@ export class TrainingPlansComponent implements OnInit {
    */
   protected createNewPlan(): void {
     const modalTabs: ModalTab[] = [
+      {
+        label: 'Plan',
+        component: TrainingPlanTypeSelectionComponent,
+      },
+
       {
         label: 'Allgemein',
         component: CreateTrainingComponent,
