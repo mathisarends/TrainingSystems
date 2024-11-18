@@ -13,7 +13,7 @@ export class TrainingPlanTypeSelectionComponent {
     {
       id: 'plan',
       title: 'Trainingsplan',
-      description: 'Plane ein strukturiertes Training über mehrere Wochen.',
+      description: 'Plane ein Training über mehrere Wochen.',
       cardPicture: '/images/training_plan_card.webp',
       selected: true,
     },

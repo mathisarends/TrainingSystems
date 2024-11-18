@@ -2,15 +2,37 @@ import { signal, WritableSignal } from '@angular/core';
 import { TrainingPlanEditViewDto, WeightRecommendationBase } from '../edit-training-plan/training-plan-edit-view-dto';
 
 /**
- * Class that represents a training plan with reactive properties using Angular Signals.
+ * Represents a training plan during creation or editing modal group.
  */
 export class TrainingPlanEditView {
+  /**
+   * Signal storing the unique identifier of the training plan. Only avaible in edit mode.
+   */
   id: WritableSignal<string>;
+
+  /**
+   * Holds the title of the training plan.
+   */
   title: WritableSignal<string>;
+
+  /**
+   * Holds a set of selected training days.
+   */
   trainingDays: WritableSignal<Set<string>>;
+
+  /**
+   * Holds the length of the training block (in weeks).
+   */
   trainingBlockLength: WritableSignal<number>;
+
+  /**
+   * Holds the cover image in Base64 format.
+   */
   coverImageBase64: WritableSignal<string>;
 
+  /**
+   * Default values for initializing a new training plan.
+   */
   protected readonly defaultValues = {
     id: '',
     title: '',
@@ -21,7 +43,9 @@ export class TrainingPlanEditView {
   };
 
   /**
-   * Make the constructor private to force usage of `setTrainingPlan`.
+   * Private constructor to enforce the use of the `fromDto` factory method.
+   *
+   * @param dto - Optional DTO to initialize the training plan.
    */
   private constructor(dto?: TrainingPlanEditViewDto) {
     this.id = signal(this.defaultValues.id);
@@ -30,14 +54,16 @@ export class TrainingPlanEditView {
     this.trainingBlockLength = signal(this.defaultValues.trainingBlockLength);
     this.coverImageBase64 = signal(this.defaultValues.coverImageBase64);
 
-    // If DTO is provided, override the default values
     if (dto) {
       this.setTrainingPlan(dto);
     }
   }
 
   /**
-   * Factory method to create a new instance of `TrainingPlan`.
+   * Factory method to create a new instance of `TrainingPlanEditView` from a DTO.
+   *
+   * @param dto - Optional DTO to initialize the training plan.
+   * @returns A new instance of `TrainingPlanEditView`.
    */
   static fromDto(dto?: TrainingPlanEditViewDto): TrainingPlanEditView {
     return new TrainingPlanEditView(dto);
@@ -61,6 +87,11 @@ export class TrainingPlanEditView {
     return dto as TrainingPlanEditViewDto;
   }
 
+  /**
+   * Checks if the training plan is valid.
+   *
+   * @returns `true` if the training plan is valid, otherwise `false`.
+   */
   isValid(): boolean {
     return this.title().trim().length > 0 && !!this.trainingDays() && !!this.trainingBlockLength();
   }
