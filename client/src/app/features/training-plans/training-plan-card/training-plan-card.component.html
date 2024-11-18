@@ -1,10 +1,5 @@
 <div class="card card-custom bg-white border-white border-0 mb-3">
-  <div
-    class="card-custom-img"
-    [ngStyle]="{
-      'background-image': 'url(' + (trainingPlan().coverImageBase64 || '/images/training/training_3.jpg') + ')',
-    }"
-  ></div>
+  <img [src]="trainingPlan().coverImageBase64 || '/images/training/training_3.jpg'" class="card-custom-img" />
   <div class="card-custom-avatar">
     <img class="img-fluid" [src]="trainingPlan().pictureUrl ?? '/images/profile-placeholder.webp'" alt="Avatar" />
   </div>
