@@ -4,6 +4,7 @@ import {
   EnvironmentInjector,
   Injectable,
   Injector,
+  Provider,
   createComponent,
   signal,
 } from '@angular/core';
@@ -51,7 +52,7 @@ export class ModalService {
 
       const modalInjector = Injector.create({
         parent: this.injector,
-        providers: options.providers ?? [],
+        providers: this.resolveProviderMap(options.providerMap),
       });
 
       this.modalComponentRef = createComponent(ModalComponent, {
@@ -150,7 +151,11 @@ export class ModalService {
     });
   }
 
-  private resolveProviderMap(providerMap: Map<any, any>): Array<{ provide: any; useValue: any }> {
+  private resolveProviderMap(providerMap?: Map<any, any>): Provider[] {
+    if (!providerMap) {
+      return [];
+    }
+
     return Array.from(providerMap.entries()).map(([provide, useValue]) => ({
       provide,
       useValue,

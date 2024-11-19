@@ -1,4 +1,3 @@
-import { Provider } from '@angular/core';
 import { ModalTab } from '../../../shared/components/modal/types/modal-tab';
 import { ModalSize } from './modalSize';
 /**
@@ -51,7 +50,7 @@ export interface ModalOptions {
 
   hasFooter?: boolean;
 
-  providers?: Provider[];
+  providerMap?: Map<any, any>;
 }
 
 export interface ModalTabOptions {

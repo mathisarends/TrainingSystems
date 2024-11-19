@@ -167,11 +167,10 @@ export class TrainingViewComponent implements OnInit {
     const confirmed = await this.modalService.open({
       component: TrainingExercisesListComponent,
       title: 'Übungen anordnen',
-      providers: [
-        { provide: TrainingPlanDataService, useValue: this.trainingDataService },
-        { provide: FormService, useValue: this.formService },
-        { provide: TrainingDayLocatorService, useValue: this.trainingDayLocatorService },
-      ],
+      providerMap: new Map()
+        .set(TrainingPlanDataService, this.trainingDataService)
+        .set(FormService, this.formService)
+        .set(TrainingDayLocatorService, this.trainingDayLocatorService),
     });
 
     if (confirmed) {
