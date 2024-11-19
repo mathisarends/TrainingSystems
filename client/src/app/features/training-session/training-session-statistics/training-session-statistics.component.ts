@@ -9,6 +9,7 @@ import { LineChartComponent } from '../../../shared/components/charts/line-chart
 import { ChartSkeletonComponent } from '../../../shared/components/loader/chart-skeleton/chart-skeleton.component';
 import { ImageDownloadService } from '../../../shared/service/image-download.service';
 import { HeaderService } from '../../header/header.service';
+import { SetHeadlineInfo } from '../../header/set-headline-info';
 import { TrainingDayChartType } from '../../training-plans/training-plan-statistics/training-day-chart-type';
 import { ChartColorService } from '../../training-plans/training-view/services/chart-color.service';
 import { TrainingSessionStatisticsService } from './training-session-statistics.service';
@@ -21,7 +22,7 @@ import { TrainingSessionStatisticsService } from './training-session-statistics.
   styleUrls: ['./training-session-statistics.component.scss'],
   providers: [TrainingSessionStatisticsService, ImageDownloadService],
 })
-export class TrainingSesssionStatisticsComponent implements OnInit {
+export class TrainingSesssionStatisticsComponent implements OnInit, SetHeadlineInfo {
   /**
    * The current training plan ID.
    */
@@ -68,6 +69,19 @@ export class TrainingSesssionStatisticsComponent implements OnInit {
       },
       { allowSignalWrites: true, injector: this.injector },
     );
+  }
+
+  /**
+   * Sets the headline information for the page.
+   * Updates the header with the given title and a fixed subtitle ('stats').
+   *
+   * @param title - The main title to display in the header.
+   */
+  setHeadlineInfo(title: string): void {
+    this.headerService.setHeadlineInfo({
+      title: title,
+      subTitle: 'stats',
+    });
   }
 
   private fetchTitleAndExercises(id: string): void {
@@ -123,19 +137,6 @@ export class TrainingSesssionStatisticsComponent implements OnInit {
    */
   private generateWeekLabels(length: number): string[] {
     return Array.from({ length }, (_, index) => `Session ${index + 1}`);
-  }
-
-  /**
-   * Sets the headline information for the page.
-   * Updates the header with the given title and a fixed subtitle ('stats').
-   *
-   * @param title - The main title to display in the header.
-   */
-  private setHeadlineInfo(title: string): void {
-    this.headerService.setHeadlineInfo({
-      title: title,
-      subTitle: 'stats',
-    });
   }
 
   /**

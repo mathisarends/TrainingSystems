@@ -17,6 +17,7 @@ import { SpinnerComponent } from '../../../shared/components/spinner/spinner.com
 import { IconName } from '../../../shared/icon/icon-name';
 import { KeyboardService } from '../../../shared/service/keyboard.service';
 import { HeaderService } from '../../header/header.service';
+import { SetHeadlineInfo } from '../../header/set-headline-info';
 import { TrainingSessionService } from '../../training-session/training-session-service';
 import { TrainingPlanEditView } from '../model/training-plan-edit-view';
 import { TrainingPlanCardComponent } from '../training-plan-card/training-plan-card.component';
@@ -49,7 +50,7 @@ import { TrainingSchedulingComponent } from './training-scheduling/training-sche
   providers: [TrainingSessionService],
   animations: [toggleCollapseAnimation],
 })
-export class TrainingPlansComponent implements OnInit {
+export class TrainingPlansComponent implements OnInit, SetHeadlineInfo {
   @ViewChild(SearchBarComponent) searchBar!: SearchBarComponent;
 
   protected readonly IconName = IconName;
@@ -94,7 +95,7 @@ export class TrainingPlansComponent implements OnInit {
   ngOnInit(): void {
     this.checkForRedirectionFromActivity();
 
-    this.setHeaderInfo();
+    this.setHeadlineInfo();
 
     this.loadTrainingPlans();
 
@@ -105,6 +106,27 @@ export class TrainingPlansComponent implements OnInit {
     this.setupKeyBoardEventListeners();
 
     this.setupFilterLogic();
+  }
+
+  /**
+   * Sets up the header information, including buttons and options.
+   * The header contains controls for creating new plans and toggling the search bar.
+   */
+  setHeadlineInfo(): void {
+    const options = [
+      { icon: IconName.PLUS, label: 'Erstellen', callback: this.createNewPlan.bind(this) },
+      {
+        icon: IconName.Activity,
+        label: 'Session',
+        callback: this.createNewSession.bind(this),
+      },
+      { icon: IconName.SEARCH, label: 'Suchen', callback: this.toggleSearchBarVisibility.bind(this) },
+    ];
+
+    this.headerService.setHeadlineInfo({
+      title: 'Training',
+      buttons: [{ icon: IconName.MORE_VERTICAL, options }],
+    });
   }
 
   /**
@@ -164,27 +186,6 @@ export class TrainingPlansComponent implements OnInit {
       buttonText: 'Verstanden',
       infoText:
         'Ein Trainingsplan ist ideal, wenn du langfristig deine Fitnessziele erreichen möchtest. Er basiert auf dem Prinzip der Blockperiodisierung und verteilt dein Training über mehrere Wochen mit zunehmendem Volumen und steigender Intensität. So kannst du systematisch Fortschritte erzielen und die Belastung kontinuierlich steigern. \n\nEine Session hingegen ist eine einzelne, wiederholbare Trainingseinheit, die unabhängig oder als Teil eines Plans genutzt werden kann. Sie eignet sich perfekt für gezielte Einheiten, die du nach Belieben in dein Training integrieren kannst. Ob Plan oder Session – die Wahl hängt ganz von deinem Trainingsstil und deinen Zielen ab!',
-    });
-  }
-
-  /**
-   * Sets up the header information, including buttons and options.
-   * The header contains controls for creating new plans and toggling the search bar.
-   */
-  private setHeaderInfo(): void {
-    const options = [
-      { icon: IconName.PLUS, label: 'Erstellen', callback: this.createNewPlan.bind(this) },
-      {
-        icon: IconName.Activity,
-        label: 'Session',
-        callback: this.createNewSession.bind(this),
-      },
-      { icon: IconName.SEARCH, label: 'Suchen', callback: this.toggleSearchBarVisibility.bind(this) },
-    ];
-
-    this.headerService.setHeadlineInfo({
-      title: 'Training',
-      buttons: [{ icon: IconName.MORE_VERTICAL, options }],
     });
   }
 

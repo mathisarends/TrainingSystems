@@ -7,6 +7,7 @@ import { ModalSize } from '../../../core/services/modal/modalSize';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
 import { IconName } from '../../../shared/icon/icon-name';
 import { HeaderService } from '../../header/header.service';
+import { SetHeadlineInfo } from '../../header/set-headline-info';
 import { CalendarEventComponent } from '../calendar-event/calendar-event.component';
 import { TrainingDayCalendarDataDto } from './dto/training-day-calendar-data.dto';
 import { ExtractTrainingDayFromCalendarDataPipe } from './extract-upcoming-training-day-from-calendar-data.pipe';
@@ -28,7 +29,7 @@ import { MonthNavigationComponent } from './month-navigation/month-navigation.co
   styleUrls: ['./training-calendar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TrainingLogCalendarComponent {
+export class TrainingLogCalendarComponent implements SetHeadlineInfo {
   protected readonly IconName = IconName;
   monthNames: string[] = [
     'Januar',
@@ -75,6 +76,25 @@ export class TrainingLogCalendarComponent {
     this.trainingDayCalendarData$ = this.httpService.get<TrainingDayCalendarDataDto>('/training-calendar');
   }
 
+  setHeadlineInfo(): void {
+    this.headerService.setHeadlineInfo({
+      title: this.currentMonthName(),
+      subTitle: this.currentYear().toString(),
+      buttons: [
+        {
+          icon: IconName.MORE_VERTICAL,
+          options: [
+            {
+              icon: IconName.INFO,
+              label: 'Hinweise',
+              callback: () => this.openInfoModal(),
+            },
+          ],
+        },
+      ],
+    });
+  }
+
   private generateCalendar() {
     const daysInCurrentMonth = new Date(this.currentYear(), this.currentMonth() + 1, 0).getDate();
 
@@ -95,25 +115,6 @@ export class TrainingLogCalendarComponent {
     const remainingDays = 7 - (totalDays % 7);
     const daysFromNextMonth = remainingDays < 7 ? Array.from({ length: remainingDays }, (_, i) => i + 1) : [];
     this.daysFromNextMonth.set(daysFromNextMonth);
-  }
-
-  private setHeadlineInfo(): void {
-    this.headerService.setHeadlineInfo({
-      title: this.currentMonthName(),
-      subTitle: this.currentYear().toString(),
-      buttons: [
-        {
-          icon: IconName.MORE_VERTICAL,
-          options: [
-            {
-              icon: IconName.INFO,
-              label: 'Hinweise',
-              callback: () => this.openInfoModal(),
-            },
-          ],
-        },
-      ],
-    });
   }
 
   private openInfoModal() {

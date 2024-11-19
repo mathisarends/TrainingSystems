@@ -7,11 +7,11 @@ import { ModalService } from '../../../../core/services/modal/modalService';
 import { DropdownComponent } from '../../../../shared/components/dropdown/dropdown.component';
 import { InputComponent } from '../../../../shared/components/input/input.component';
 import { MoreOptionListItem } from '../../../../shared/components/more-options-button/more-option-list-item';
-import { ToastService } from '../../../../shared/components/toast/toast.service';
 import { InteractiveElementDirective } from '../../../../shared/directives/interactive-element.directive';
 import { IconName } from '../../../../shared/icon/icon-name';
 import { AutoSaveService } from '../../../../shared/service/auto-save.service';
 import { HeaderService } from '../../../header/header.service';
+import { SetHeadlineInfo } from '../../../header/set-headline-info';
 import { ExerciseDataDTO } from '../../../training-plans/training-view/exerciseDataDto';
 import { ExerciseService } from '../../service/exercise.service.';
 import { ExerciseTableSkeletonComponent } from '../exercise-table-skeleton/exercise-table-skeleton.component';
@@ -34,7 +34,7 @@ import { ExerciseTableSkeletonComponent } from '../exercise-table-skeleton/exerc
   templateUrl: './exercises.component.html',
   styleUrls: ['./exercises.component.scss'],
 })
-export class ExercisesComponent implements OnInit {
+export class ExercisesComponent implements OnInit, SetHeadlineInfo {
   /**
    * Observable that emits the exercise data or `null` if there's an error or the data is still loading.
    */
@@ -110,7 +110,6 @@ export class ExercisesComponent implements OnInit {
   ]);
 
   constructor(
-    private toastService: ToastService,
     private modalService: ModalService,
     private headerService: HeaderService,
     private exerciseService: ExerciseService,
@@ -126,7 +125,7 @@ export class ExercisesComponent implements OnInit {
   ngOnInit(): void {
     this.exerciseData$ = this.exerciseService.loadExerciseData();
 
-    this.setHeaderInfo();
+    this.setHeadlineInfo();
 
     this.autoSaveService.inputChanged$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       this.exerciseService.updateExercises(this.formService.getChanges()).subscribe(() => {
@@ -135,7 +134,7 @@ export class ExercisesComponent implements OnInit {
     });
   }
 
-  private setHeaderInfo() {
+  setHeadlineInfo() {
     const nmoreOptions: MoreOptionListItem[] = [
       { label: 'Zurücksetzen', icon: IconName.Trash, callback: this.onReset.bind(this) },
     ];

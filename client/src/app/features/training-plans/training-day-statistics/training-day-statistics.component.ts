@@ -22,6 +22,7 @@ import { ChangeProfilePictureConfirmationComponent } from '../../profile-2/chang
 import { ChartColorService } from '../training-view/services/chart-color.service';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
 
+import { SetHeadlineInfo } from '../../header/set-headline-info';
 import { ChartDataDto } from './chart-data-dto';
 import { TrainingDayChartType } from './training-day-chart-type';
 import { TrainingStatisticsService } from './training-statistics.service';
@@ -49,7 +50,7 @@ import { TrainingStatisticsService } from './training-statistics.service';
   templateUrl: './training-day-statistics.component.html',
   styleUrls: ['./training-day-statistics.component.scss'],
 })
-export class TrainingDayStatisticsComponent implements OnInit {
+export class TrainingDayStatisticsComponent implements OnInit, SetHeadlineInfo {
   /**
    * Indicates whether the data has been fully loaded.
    */
@@ -120,6 +121,19 @@ export class TrainingDayStatisticsComponent implements OnInit {
       },
       { allowSignalWrites: true, injector: this.injector },
     );
+  }
+
+  /**
+   * Sets the headline information for the page.
+   * Updates the header with the given title and a fixed subtitle ('stats').
+   *
+   * @param title - The main title to display in the header.
+   */
+  setHeadlineInfo(title: string): void {
+    this.headerService.setHeadlineInfo({
+      title: title,
+      subTitle: 'stats',
+    });
   }
 
   /**
@@ -246,19 +260,6 @@ export class TrainingDayStatisticsComponent implements OnInit {
       backgroundColor: colors.backgroundColor,
       fill: true,
     };
-  }
-
-  /**
-   * Sets the headline information for the page.
-   * Updates the header with the given title and a fixed subtitle ('stats').
-   *
-   * @param title - The main title to display in the header.
-   */
-  private setHeadlineInfo(title: string): void {
-    this.headerService.setHeadlineInfo({
-      title: title,
-      subTitle: 'stats',
-    });
   }
 
   /**

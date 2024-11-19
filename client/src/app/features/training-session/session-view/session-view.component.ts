@@ -26,6 +26,7 @@ import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
 import { AutoSaveService } from '../../../shared/service/auto-save.service';
 import { HeaderService } from '../../header/header.service';
+import { SetHeadlineInfo } from '../../header/set-headline-info';
 import { ExerciseDataService } from '../../training-plans/training-view/exercise-data.service';
 import { ExerciseDataDTO } from '../../training-plans/training-view/exerciseDataDto';
 import { EstMaxService } from '../../training-plans/training-view/services/estmax.service';
@@ -51,7 +52,7 @@ import { TrainingSessionService } from '../training-session-service';
   styleUrls: ['./session-view.component.scss'],
   providers: [TrainingSessionService, ExerciseDataService, EstMaxService],
 })
-export class SessionViewComponent implements OnInit {
+export class SessionViewComponent implements OnInit, SetHeadlineInfo {
   @ViewChild('trainingTable') trainingTable!: ElementRef;
   protected readonly IconName = IconName;
 
@@ -148,6 +149,24 @@ export class SessionViewComponent implements OnInit {
     });
   }
 
+  /**
+   * Sets the headline information for the current training session.
+   *
+   * @param trainingSession The training session data.
+   */
+  setHeadlineInfo(trainingSesssion: TrainingSessionDto) {
+    this.headerService.setHeadlineInfo({
+      title: trainingSesssion.title,
+      subTitle: `V${this.version()}`,
+      buttons: [
+        {
+          icon: IconName.MORE_VERTICAL,
+          options: [{ label: 'Trainieren', icon: IconName.Activity, callback: this.startNewSesson.bind(this) }],
+        },
+      ],
+    });
+  }
+
   protected navigateToVersion(version: number) {
     if (version < 1) {
       return;
@@ -181,24 +200,6 @@ export class SessionViewComponent implements OnInit {
   private setTrainingSessionExercises() {
     const trainingSessionExercises = this.trainingSession()!.getExercisesDataForVersion(this.version());
     this.trainingSessionExercises.set(trainingSessionExercises);
-  }
-
-  /**
-   * Sets the headline information for the current training session.
-   *
-   * @param trainingSession The training session data.
-   */
-  private setHeadlineInfo(trainingSesssion: TrainingSessionDto) {
-    this.headerService.setHeadlineInfo({
-      title: trainingSesssion.title,
-      subTitle: `V${this.version()}`,
-      buttons: [
-        {
-          icon: IconName.MORE_VERTICAL,
-          options: [{ label: 'Trainieren', icon: IconName.Activity, callback: this.startNewSesson.bind(this) }],
-        },
-      ],
-    });
   }
 
   private async startNewSesson() {

@@ -9,6 +9,7 @@ import { ToastService } from '../../../shared/components/toast/toast.service';
 import { BasicConfirmationResponse } from '../../../shared/dto/basic-confirmation-response';
 import { IconComponent } from '../../../shared/icon/icon.component';
 import { HeaderService } from '../../header/header.service';
+import { SetHeadlineInfo } from '../../header/set-headline-info';
 import { PulsatingCircleComponent } from '../components/pulsating-circle.componen';
 import { LoginModalComponent } from '../login-modal/login-modal.component';
 
@@ -21,7 +22,7 @@ declare const google: any;
   templateUrl: './getting-started.component.html',
   styleUrls: ['./getting-started.component.scss'],
 })
-export class GettingStartedComponent implements OnInit {
+export class GettingStartedComponent implements OnInit, SetHeadlineInfo {
   @ViewChild('googleLoginButton') googleLoginButton!: ElementRef;
 
   private document = inject(DOCUMENT);
@@ -37,7 +38,7 @@ export class GettingStartedComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    this.headerService.setHeadlineInfo({ title: 'Start' });
+    this.setHeadlineInfo();
 
     if (!GettingStartedComponent.isGoogleScriptLoaded) {
       await this.loadGoogleClientScript();
@@ -46,6 +47,10 @@ export class GettingStartedComponent implements OnInit {
 
     // Initialize Google login if the script loaded successfully
     this.initializeGoogleLogin();
+  }
+
+  setHeadlineInfo(): void {
+    this.headerService.setHeadlineInfo({ title: 'Start' });
   }
 
   private loadGoogleClientScript(): Promise<void> {

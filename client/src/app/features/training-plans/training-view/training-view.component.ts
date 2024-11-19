@@ -24,6 +24,7 @@ import { IconComponent } from '../../../shared/icon/icon.component';
 import { AutoSaveService } from '../../../shared/service/auto-save.service';
 import { UserBestPerformanceService } from '../../../shared/service/user-best-performance/user-best-performance.service';
 import { HeaderService } from '../../header/header.service';
+import { SetHeadlineInfo } from '../../header/set-headline-info';
 import { FormatTimePipe } from '../format-time.pipe';
 import { AutoProgressionComponent } from './auto-progression/auto-progression.component';
 import { RepInputDirective } from './directives/rep-input.directive';
@@ -78,7 +79,7 @@ import { TrainingViewService } from './training-view-service';
   templateUrl: './training-view.component.html',
   styleUrls: ['./training-view.component.scss'],
 })
-export class TrainingViewComponent implements OnInit {
+export class TrainingViewComponent implements OnInit, SetHeadlineInfo {
   protected readonly IconName = IconName;
   protected readonly NavigationDirection = NavigationDirection;
 
@@ -122,6 +123,19 @@ export class TrainingViewComponent implements OnInit {
     });
 
     this.initializeAutoSaveLogic();
+  }
+
+  setHeadlineInfo(trainingPlanTitle: string) {
+    this.headerService.setHeadlineInfo({
+      title: trainingPlanTitle,
+      subTitle: this.getSubtitle(),
+      buttons: [
+        {
+          icon: IconName.MORE_VERTICAL,
+          options: this.determineHeadlineOptions(),
+        },
+      ],
+    });
   }
 
   protected swipeLeft = () => this.navigationService.navigateDay(this.trainingDayIndex() + 1);
@@ -183,19 +197,6 @@ export class TrainingViewComponent implements OnInit {
     if (confirmed) {
       this.saveTrainingData$().subscribe(() => {});
     }
-  }
-
-  private setHeadlineInfo(trainingPlanTitle: string) {
-    this.headerService.setHeadlineInfo({
-      title: trainingPlanTitle,
-      subTitle: this.getSubtitle(),
-      buttons: [
-        {
-          icon: IconName.MORE_VERTICAL,
-          options: this.determineHeadlineOptions(),
-        },
-      ],
-    });
   }
 
   private determineHeadlineOptions(): MoreOptionListItem[] {

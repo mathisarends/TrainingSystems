@@ -13,6 +13,7 @@ import { SelectComponent } from '../../shared/components/select/select.component
 import { IconName } from '../../shared/icon/icon-name';
 import { ImageDownloadService } from '../../shared/service/image-download.service';
 import { HeaderService } from '../header/header.service';
+import { SetHeadlineInfo } from '../header/set-headline-info';
 import { TrainingDayChartType } from '../training-plans/training-plan-statistics/training-day-chart-type';
 import { TrainingStatisticsService } from '../training-plans/training-plan-statistics/training-statistics.service';
 import { ChartColorService } from '../training-plans/training-view/services/chart-color.service';
@@ -27,7 +28,7 @@ import { TrainingStatisticsDataView } from './training-statistics-data-view';
   styleUrls: ['./statistics.component.scss'],
   providers: [ImageDownloadService, StatisticsService, TrainingStatisticsService],
 })
-export class StatisticsComponent implements OnInit {
+export class StatisticsComponent implements OnInit, SetHeadlineInfo {
   protected readonly TrainingStatisticsDataView = TrainingStatisticsDataView;
 
   trainingPlanTitles = signal<string[]>([]);
@@ -63,16 +64,20 @@ export class StatisticsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.headerService.setHeadlineInfo({
-      title: 'Statistiken',
-      buttons: [{ icon: IconName.PLUS, callback: () => {} }],
-    });
+    this.setHeadlineInfo();
 
     this.fetchAndSetCategoryMetadata();
     this.initializeTrainingPlanSelection();
     this.initializeDataViewOptions();
 
     this.handleConfigurationParamUpdate();
+  }
+
+  setHeadlineInfo(): void {
+    this.headerService.setHeadlineInfo({
+      title: 'Statistiken',
+      buttons: [{ icon: IconName.PLUS, callback: () => {} }],
+    });
   }
 
   private handleConfigurationParamUpdate() {

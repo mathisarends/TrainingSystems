@@ -19,6 +19,7 @@ import { ToSelectItemPipe } from '../../../shared/components/select/to-select-it
 import { ImageDownloadService } from '../../../shared/service/image-download.service';
 import { KeyboardService } from '../../../shared/service/keyboard.service';
 import { HeaderService } from '../../header/header.service';
+import { SetHeadlineInfo } from '../../header/set-headline-info';
 import { ChartColorService } from '../training-view/services/chart-color.service';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
 import { TrainingDayChartType } from './training-day-chart-type';
@@ -45,7 +46,7 @@ import { TrainingStatisticsService } from './training-statistics.service';
   templateUrl: './training-plan-statistics.component.html',
   styleUrls: ['./training-plan-statistics.component.scss'],
 })
-export class TrainingPlanStatisticsComponent implements OnInit {
+export class TrainingPlanStatisticsComponent implements OnInit, SetHeadlineInfo {
   /**
    * Indicates whether the data has been fully loaded.
    */
@@ -117,6 +118,19 @@ export class TrainingPlanStatisticsComponent implements OnInit {
       },
       { allowSignalWrites: true, injector: this.injector },
     );
+  }
+
+  /**
+   * Sets the headline information for the page.
+   * Updates the header with the given title and a fixed subtitle ('stats').
+   *
+   * @param title - The main title to display in the header.
+   */
+  setHeadlineInfo(title: string): void {
+    this.headerService.setHeadlineInfo({
+      title: title,
+      subTitle: 'stats',
+    });
   }
 
   /**
@@ -258,19 +272,6 @@ export class TrainingPlanStatisticsComponent implements OnInit {
       backgroundColor: colors.backgroundColor,
       fill: true,
     };
-  }
-
-  /**
-   * Sets the headline information for the page.
-   * Updates the header with the given title and a fixed subtitle ('stats').
-   *
-   * @param title - The main title to display in the header.
-   */
-  private setHeadlineInfo(title: string): void {
-    this.headerService.setHeadlineInfo({
-      title: title,
-      subTitle: 'stats',
-    });
   }
 
   /**

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { ModalOptionsBuilder } from '../../core/services/modal/modal-options-builder';
@@ -18,6 +18,7 @@ import { UserBestPerformanceService } from '../../shared/service/user-best-perfo
 import { GymTicketComponent } from '../gym-ticket/gym-ticket.component';
 import { GymTicketService } from '../gym-ticket/gym-ticket.service';
 import { HeaderService } from '../header/header.service';
+import { SetHeadlineInfo } from '../header/set-headline-info';
 import { ActivityCalendarData } from './activity-calendar/activity-calendar-data';
 import { ActivityCalendar } from './activity-calendar/activity-calendar.component';
 import { ChangeProfilePictureConfirmationComponent } from './change-profile-picture-confirmation/change-profile-picture-confirmation.component';
@@ -40,14 +41,15 @@ import { SettingsComponent } from './settings/settings.component';
   styleUrls: ['profile.component.scss'],
   providers: [GymTicketService],
 })
-export class ProfileComponent2 implements OnInit {
+export class ProfileComponent2 implements OnInit, SetHeadlineInfo {
   protected IconName = IconName;
 
   @ViewChild('profilePicture', { static: false })
   profilePictureElement!: ElementRef;
 
-  activityCalendarData$!: Observable<ActivityCalendarData>;
-
+  /**
+   * List of items displayed in the profile menu with their corresponding actions.
+   */
   protected readonly listItems: IconListItem[] = [
     {
       label: 'Exercises',
@@ -87,9 +89,11 @@ export class ProfileComponent2 implements OnInit {
       label: 'Account löschen',
       iconName: IconName.Trash,
       iconBackgroundColor: IconBackgroundColor.OrangeRed,
-      onItemClicked: () => {},
+      onItemClicked: () => this.showDeleteAccountDialog(),
     },
   ];
+
+  activityCalendarData$!: Observable<ActivityCalendarData>;
 
   constructor(
     protected profileService: ProfileService,
@@ -99,45 +103,33 @@ export class ProfileComponent2 implements OnInit {
     private toastService: ToastService,
     private imageUploadService: ImageUploadService,
     private router: Router,
-    private route: ActivatedRoute,
   ) {}
 
   ngOnInit() {
     this.setHeadlineInfo();
-
-    this.initializeActivityCalendar();
-
-    this.route.queryParams.subscribe((params) => {
-      if (params['openSettings'] === 'true') {
-        this.showSettingsModal();
-      }
-    });
-  }
-
-  private initializeActivityCalendar(): void {
     this.activityCalendarData$ = this.profileService.getActivityCalendarData();
   }
 
-  private showUserTicketModal(): void {
-    const modalOptions = new ModalOptionsBuilder()
-      .setComponent(GymTicketComponent)
-      .setTitle('Gym Ticket')
-      .setButtonText('Speichern')
-      .build();
-
-    this.modalService.open(modalOptions);
+  /**
+   * Sets the headline information in the header service.
+   * Includes options for logging out.
+   */
+  setHeadlineInfo(): void {
+    this.headerService.setHeadlineInfo({
+      title: 'Profile',
+      buttons: [
+        {
+          icon: IconName.MORE_VERTICAL,
+          options: [{ label: 'Logout', icon: IconName.LOG_OUT, callback: () => this.authService.logout() }],
+        },
+      ],
+    });
   }
 
-  private showUserbestPerformanceModal(): void {
-    const modalOptions = new ModalOptionsBuilder()
-      .setComponent(UserBestPerformanceService)
-      .setTitle('Bestleistungen')
-      .setButtonText('Verstanden')
-      .build();
-
-    this.modalService.open(modalOptions);
-  }
-
+  /**
+   * Handles the logic for changing the profile picture.
+   * Opens a modal for confirmation and possible cropping of the image.
+   */
   protected async showProfilePictureChangeDialog(event: Event) {
     const uploadedPictureBase64Str = await this.imageUploadService.handleImageUpload(event, true);
 
@@ -163,6 +155,9 @@ export class ProfileComponent2 implements OnInit {
     this.modalService.open(modalOptions);
   }
 
+  /**
+   * Opens the settings modal for modifying user preferences.
+   */
   private showSettingsModal() {
     const modalConfig = new ModalOptionsBuilder()
       .setComponent(SettingsComponent)
@@ -173,6 +168,36 @@ export class ProfileComponent2 implements OnInit {
     this.modalService.open(modalConfig);
   }
 
+  /**
+   * Opens the modal to display user best performance data.
+   */
+  private showUserbestPerformanceModal(): void {
+    const modalOptions = new ModalOptionsBuilder()
+      .setComponent(UserBestPerformanceService)
+      .setTitle('Bestleistungen')
+      .setButtonText('Verstanden')
+      .build();
+
+    this.modalService.open(modalOptions);
+  }
+
+  /**
+   * Opens the modal to display the user's gym ticket.
+   */
+  private showUserTicketModal(): void {
+    const modalOptions = new ModalOptionsBuilder()
+      .setComponent(GymTicketComponent)
+      .setTitle('Gym Ticket')
+      .setButtonText('Speichern')
+      .build();
+
+    this.modalService.open(modalOptions);
+  }
+
+  /**
+   * Opens a modal to confirm account deletion.
+   * If confirmed, the account deletion process is initiated.
+   */
   private async showDeleteAccountDialog() {
     const confirmed = await this.modalService.openDeletionModal({
       title: 'Account löschen',
@@ -188,22 +213,9 @@ export class ProfileComponent2 implements OnInit {
     }
   }
 
-  private setHeadlineInfo(): void {
-    this.headerService.setHeadlineInfo({
-      title: 'Profile',
-      buttons: [
-        {
-          icon: IconName.MORE_VERTICAL,
-          options: [{ label: 'Logout', icon: IconName.LOG_OUT, callback: this.handleLogout.bind(this) }],
-        },
-      ],
-    });
-  }
-
-  private handleLogout(): void {
-    this.authService.logout();
-  }
-
+  /**
+   * Handles the account deletion process and shows a success toast on completion.
+   */
   private handleAccountDeletion() {
     this.profileService.deleteAccount().subscribe((response) => {
       this.authService.logout();
