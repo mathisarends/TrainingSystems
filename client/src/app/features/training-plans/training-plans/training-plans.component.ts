@@ -138,17 +138,10 @@ export class TrainingPlansComponent implements OnInit {
 
     const trainingPlanEditView = TrainingPlanEditView.fromDto();
 
-    this.modalService.open({
-      component: CreateTrainingComponent,
-      providers: [
-        {
-          provide: TrainingPlanEditView,
-          useValue: trainingPlanEditView,
-        },
-      ],
+    this.modalService.openModalTabs({
+      providerMap: new Map().set(TrainingPlanEditView, trainingPlanEditView),
       tabs: modalTabs,
-      title: 'Trainingsplan erstellen',
-      buttonText: 'Erstellen',
+      continueButtonText: 'Erstellen',
     });
   }
 

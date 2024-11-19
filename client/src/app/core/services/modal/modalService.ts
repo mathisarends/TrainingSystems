@@ -12,7 +12,7 @@ import { DeleteConfirmationComponent } from '../../../shared/components/modal/de
 import { ModalConfirmationService } from '../../../shared/components/modal/modal-confirmation.service';
 import { ModalOverlayComponent } from '../../../shared/components/modal/modal-overlay/modal-overlay.component';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
-import { BasicInfoModalOptions, DeleteModalModalOptions, ModalOptions } from './modal-options';
+import { BasicInfoModalOptions, DeleteModalModalOptions, ModalOptions, ModalTabOptions } from './modal-options';
 import { ModalSize } from './modalSize';
 
 @Injectable({
@@ -100,6 +100,61 @@ export class ModalService {
         this.close();
       });
     });
+  }
+
+  openModalTabs(options: ModalTabOptions) {
+    return new Promise<boolean>((resolve) => {
+      this.overlayComponentRef = createComponent(ModalOverlayComponent, {
+        environmentInjector: this.environmentInjector,
+        elementInjector: this.injector,
+      });
+
+      this.appRef.attachView(this.overlayComponentRef.hostView);
+      document.body.appendChild(this.overlayComponentRef.location.nativeElement);
+
+      const modalInjector = Injector.create({
+        parent: this.injector,
+        providers: this.resolveProviderMap(options.providerMap),
+      });
+
+      this.modalComponentRef = createComponent(ModalComponent, {
+        environmentInjector: this.environmentInjector,
+        elementInjector: modalInjector,
+      });
+
+      this.appRef.attachView(this.modalComponentRef.hostView);
+      document.body.appendChild(this.modalComponentRef.location.nativeElement);
+
+      this.modalComponentRef.instance.size = options.size ?? ModalSize.MEDIUM;
+      this.modalComponentRef.instance.confirmationRequired = options.confirmationRequired ?? false;
+
+      if (options.continueButtonText) {
+        this.modalComponentRef.instance.confirmButtonText = options.continueButtonText;
+      }
+
+      if (options.tabs) {
+        this.modalComponentRef.instance.tabs.set(options.tabs);
+      }
+
+      this.isVisible.set(true);
+
+      this.modalComponentRef.instance.confirmed.subscribe(() => {
+        resolve(true);
+        this.close();
+      });
+
+      this.modalComponentRef.instance.cancelled.subscribe(() => {
+        resolve(false);
+        this.close();
+      });
+    });
+  }
+
+  private resolveProviderMap(providerMap: Map<any, any>): Array<{ provide: any; useValue: any }> {
+    return Array.from(providerMap.entries()).map(([provide, useValue]) => ({
+      provide,
+      useValue,
+    }));
   }
 
   /**

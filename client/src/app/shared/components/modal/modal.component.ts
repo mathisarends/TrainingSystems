@@ -98,7 +98,7 @@ export class ModalComponent implements AfterViewInit, OnInit {
   /**
    * Controls whether the footer (usually containing buttons) is visible in the modal.
    */
-  footer: boolean = false;
+  footer: boolean = true;
 
   /**
    * Indicates whether a confirmation is required for the action (e.g., form validation before closing).

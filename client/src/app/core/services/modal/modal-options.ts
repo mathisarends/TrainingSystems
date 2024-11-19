@@ -54,6 +54,27 @@ export interface ModalOptions {
   providers?: Provider[];
 }
 
+export interface ModalTabOptions {
+  tabs: ModalTab[];
+
+  /**
+   * The text to display on the modal's button.
+   */
+  continueButtonText?: string;
+
+  /**
+   * The size of the modal. Optional.
+   */
+  size?: ModalSize;
+
+  /**
+   * Auf true zu setzen, wenn man z.B. Formvalidierung innerhalb einer Komponente benutzen will
+   */
+  confirmationRequired?: boolean;
+
+  providerMap: Map<any, any>;
+}
+
 /**
  * Interface for the basic info modal options, inheriting only specific properties from ModalOptions.
  */
