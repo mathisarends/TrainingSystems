@@ -16,4 +16,6 @@ export interface IconListItem {
    * The background color of the icon.
    */
   iconBackgroundColor: IconBackgroundColor;
+
+  onItemClicked: () => void | Promise<void>;
 }

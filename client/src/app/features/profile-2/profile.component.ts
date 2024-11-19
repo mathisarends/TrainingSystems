@@ -49,12 +49,46 @@ export class ProfileComponent2 implements OnInit {
   activityCalendarData$!: Observable<ActivityCalendarData>;
 
   protected readonly listItems: IconListItem[] = [
-    { label: 'Exercises', iconName: IconName.DATABASE, iconBackgroundColor: IconBackgroundColor.DodgerBlue },
-    { label: 'Bestleistungen', iconName: IconName.AWARD, iconBackgroundColor: IconBackgroundColor.Orange },
-    { label: 'Progression', iconName: IconName.BAR_CHART, iconBackgroundColor: IconBackgroundColor.LimeGreen },
-    { label: 'Ticket', iconName: IconName.IMAGE, iconBackgroundColor: IconBackgroundColor.Turquoise },
-    { label: 'Settings', iconName: IconName.SETTINGS, iconBackgroundColor: IconBackgroundColor.DarkGray },
-    { label: 'Account löschen', iconName: IconName.Trash, iconBackgroundColor: IconBackgroundColor.OrangeRed },
+    {
+      label: 'Exercises',
+      iconName: IconName.DATABASE,
+      iconBackgroundColor: IconBackgroundColor.DodgerBlue,
+      onItemClicked: () => {
+        this.router.navigate(['profile/exercises']);
+      },
+    },
+    {
+      label: 'Bestleistungen',
+      iconName: IconName.AWARD,
+      iconBackgroundColor: IconBackgroundColor.Orange,
+      onItemClicked: () => this.showUserbestPerformanceModal(),
+    },
+    {
+      label: 'Progression',
+      iconName: IconName.BAR_CHART,
+      iconBackgroundColor: IconBackgroundColor.LimeGreen,
+      onItemClicked: () => {
+        this.router.navigate(['profile/progression']);
+      },
+    },
+    {
+      label: 'Ticket',
+      iconName: IconName.IMAGE,
+      iconBackgroundColor: IconBackgroundColor.Turquoise,
+      onItemClicked: () => this.showUserTicketModal(),
+    },
+    {
+      label: 'Settings',
+      iconName: IconName.SETTINGS,
+      iconBackgroundColor: IconBackgroundColor.DarkGray,
+      onItemClicked: () => this.showSettingsModal(),
+    },
+    {
+      label: 'Account löschen',
+      iconName: IconName.Trash,
+      iconBackgroundColor: IconBackgroundColor.OrangeRed,
+      onItemClicked: () => {},
+    },
   ];
 
   constructor(
@@ -75,7 +109,7 @@ export class ProfileComponent2 implements OnInit {
 
     this.route.queryParams.subscribe((params) => {
       if (params['openSettings'] === 'true') {
-        this.displaySettingsModal();
+        this.showSettingsModal();
       }
     });
   }
@@ -84,36 +118,24 @@ export class ProfileComponent2 implements OnInit {
     this.activityCalendarData$ = this.profileService.getActivityCalendarData();
   }
 
-  protected async onListItemClicked(label: string) {
-    if (label === 'Ticket') {
-      const modalOptions = new ModalOptionsBuilder()
-        .setComponent(GymTicketComponent)
-        .setTitle('Gym Ticket')
-        .setButtonText('Speichern')
-        .build();
+  private showUserTicketModal(): void {
+    const modalOptions = new ModalOptionsBuilder()
+      .setComponent(GymTicketComponent)
+      .setTitle('Gym Ticket')
+      .setButtonText('Speichern')
+      .build();
 
-      this.modalService.open(modalOptions);
-    } else if (label === 'Exercises') {
-      this.router.navigate(['profile/exercises']);
-    } else if (label === 'Account löschen') {
-      this.showDeleteAccountDialog();
-    } else if (label === 'Progression') {
-      this.router.navigate(['profile/progression']);
-    } else if (label === 'Bestleistungen') {
-      const modalOptions = new ModalOptionsBuilder()
-        .setComponent(UserBestPerformanceService)
-        .setTitle('Bestleistungen')
-        .setButtonText('Verstanden')
-        .build();
+    this.modalService.open(modalOptions);
+  }
 
-      this.modalService.open(modalOptions);
-    } else {
-      this.modalService.openBasicInfoModal({
-        title: label,
-        buttonText: 'Schließen',
-        infoText: 'Leider noch nicht implementiert. Komm später wieder',
-      });
-    }
+  private showUserbestPerformanceModal(): void {
+    const modalOptions = new ModalOptionsBuilder()
+      .setComponent(UserBestPerformanceService)
+      .setTitle('Bestleistungen')
+      .setButtonText('Verstanden')
+      .build();
+
+    this.modalService.open(modalOptions);
   }
 
   protected async showProfilePictureChangeDialog(event: Event) {
@@ -141,7 +163,7 @@ export class ProfileComponent2 implements OnInit {
     this.modalService.open(modalOptions);
   }
 
-  private displaySettingsModal() {
+  private showSettingsModal() {
     const modalConfig = new ModalOptionsBuilder()
       .setComponent(SettingsComponent)
       .setTitle('Einstellungen')
@@ -152,12 +174,13 @@ export class ProfileComponent2 implements OnInit {
   }
 
   private async showDeleteAccountDialog() {
-    const confirmed = await this.modalService.openBasicInfoModal({
+    const confirmed = await this.modalService.openDeletionModal({
       title: 'Account löschen',
       buttonText: 'Löschen',
       isDestructiveAction: true,
       infoText:
         'Bist du dir sicher, dass du deinen Account löschen willst? Du musst diese Aktion per Email bestätigen.',
+      deletionKeyWord: this.profileService.username()!,
     });
 
     if (confirmed) {

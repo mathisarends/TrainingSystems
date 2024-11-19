@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, input, output } from '@angular/core';
+import { Component, HostListener, input } from '@angular/core';
 import { IconName } from '../../icon/icon-name';
 import { IconComponent } from '../../icon/icon.component';
 import { IconBackgroundColor } from './icon-background-color';
@@ -29,21 +29,15 @@ export class IconListeItemComponent {
    */
   iconBackgroundColor = input.required<IconBackgroundColor>();
 
-  /**
-   * An event emitter that emits the current `IconListItem` when the component
-   * is clicked.
-   */
-  itemClicked = output<string>();
+  onItemClicked = input<() => void>();
 
   iconTilting = input(false);
 
-  /**
-   * Handles the click event on the component. When the user clicks anywhere
-   * on the component, this method is triggered, emitting the `itemClicked` event
-   * with the current `IconListItem`.
-   */
   @HostListener('click')
   onClick() {
-    this.itemClicked.emit(this.label());
+    const clickHandler = this.onItemClicked();
+    if (clickHandler) {
+      clickHandler();
+    }
   }
 }
