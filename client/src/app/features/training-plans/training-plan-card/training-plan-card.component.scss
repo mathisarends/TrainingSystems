@@ -1,7 +1,17 @@
-.card {
-  transition: transform 0.3s ease; /* Definiert die Dauer und die Art der Animation */
+:host {
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  transition: transform 0.3s ease;
   transition: box-shadow 0.3s ease;
   transition: filter 0.3s ease;
+
+  border: 1px solid #e0e0e0;
+  background: #fff;
+  --bs-bg-opacity: 0.5;
+  color: var(--dark-grey);
 
   &:hover {
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
@@ -17,14 +27,13 @@
   margin-right: 0.325rem;
 }
 
-.card-text {
+.card-title {
   margin-bottom: 0.5rem;
 }
 
-.card-custom {
-  overflow: hidden;
-  min-height: 450px;
-  box-shadow: 0 0 12px rgba(10, 10, 10, 0.3);
+.card-text {
+  margin-bottom: 0.25rem;
+  font-size: 0.9em;
 }
 
 .card-custom-img {
@@ -37,11 +46,12 @@
   object-fit: cover;
 }
 
-.card-body {
-  padding-top: 2.5rem;
+.card-body,
+.card-footer {
+  padding: 2.35rem 1rem;
 }
 
-.card-custom-avatar img {
+.profile-picture img {
   border-radius: 50%;
   border: 5px solid rgb(248, 249, 250);
   box-shadow: 0 0 15px rgba(10, 10, 10, 0.3);

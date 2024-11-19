@@ -1,61 +1,61 @@
-<div class="card card-custom bg-white border-white border-0 mb-3">
-  <img [src]="trainingPlan().coverImageBase64 || '/images/training/training_3.jpg'" class="card-custom-img" />
-  <div class="card-custom-avatar">
-    <img class="img-fluid" [src]="trainingPlan().pictureUrl ?? '/images/profile-placeholder.webp'" alt="Avatar" />
-  </div>
-  <div class="card-body" style="overflow-y: auto">
-    @let titlePrefix = trainingPlanType() === TrainingPlanType.PLAN ? 'Plan' : 'Session';
+<img
+  [src]="trainingPlan().coverImageBase64 || '/images/training/training_3.jpg'"
+  class="card-custom-img"
+  [alt]="'banner'"
+/>
+<div class="profile-picture">
+  <img [src]="trainingPlan().pictureUrl ?? '/images/profile-placeholder.webp'" alt="Avatar" />
+</div>
+<div class="card-body">
+  @let titlePrefix = trainingPlanType() === TrainingPlanType.PLAN ? 'Plan' : 'Session';
 
-    <h4 class="card-title">
-      <span class="title-prefix">{{ titlePrefix }}</span
-      >{{ trainingPlan().title }}
-    </h4>
+  <h4 class="card-title">
+    <span class="title-prefix">{{ titlePrefix }}</span
+    >{{ trainingPlan().title }}
+  </h4>
 
-    @if (trainingPlan().trainingFrequency) {
-      <p class="card-text">{{ trainingPlan().trainingFrequency }} Trainings / Woche</p>
-    }
+  @if (trainingPlan().trainingFrequency) {
+    <p class="card-text">{{ trainingPlan().trainingFrequency }} Trainings / Woche</p>
+  }
 
-    <p class="card-text ml-3"></p>
+  <p class="card-text">
+    {{ trainingPlan().lastUpdated | formatDate }}
+  </p>
 
+  @if (trainingPlan().averageTrainingDayDuration) {
     <p class="card-text d-flex gap-2">
-      {{ trainingPlan().lastUpdated | formatDate }}
+      <app-icon [name]="IconName.CLOCK" [size]="15" />
+      {{ trainingPlan().averageTrainingDayDuration }}
     </p>
+  }
+</div>
+<div class="card-footer" style="background: inherit; border-color: inherit">
+  <div>
+    <app-icon-button
+      [tooltipTitle]="'Ansehen'"
+      [iconName]="IconName.EYE"
+      (buttonClick)="viewTrainingPlan(trainingPlan().id)"
+    />
 
-    @if (trainingPlan().averageTrainingDayDuration) {
-      <p class="card-text d-flex gap-2">
-        <app-icon [name]="IconName.CLOCK" [size]="15" />
-        {{ trainingPlan().averageTrainingDayDuration }}
-      </p>
-    }
+    <app-icon-button
+      [tooltipTitle]="'Statistiken'"
+      [iconName]="IconName.BAR_CHART"
+      (buttonClick)="viewStatistics(trainingPlan().id)"
+    />
+
+    <app-icon-button
+      [tooltipTitle]="'Bearbeiten'"
+      [iconName]="IconName.Edit"
+      (buttonClick)="showEditTrainingPlanModal(trainingPlan().id)"
+    />
+
+    <app-icon-button
+      [tooltipTitle]="'Löschen'"
+      [iconName]="IconName.Trash"
+      (buttonClick)="showDeleteTrainingPlanModal()"
+    />
   </div>
-  <div class="card-footer" style="background: inherit; border-color: inherit">
-    <div>
-      <app-icon-button
-        [tooltipTitle]="'Ansehen'"
-        [iconName]="IconName.EYE"
-        (buttonClick)="viewTrainingPlan(trainingPlan().id)"
-      />
-
-      <app-icon-button
-        [tooltipTitle]="'Statistiken'"
-        [iconName]="IconName.BAR_CHART"
-        (buttonClick)="viewStatistics(trainingPlan().id)"
-      />
-
-      <app-icon-button
-        [tooltipTitle]="'Bearbeiten'"
-        [iconName]="IconName.Edit"
-        (buttonClick)="showEditTrainingPlanModal(trainingPlan().id)"
-      />
-
-      <app-icon-button
-        [tooltipTitle]="'Löschen'"
-        [iconName]="IconName.Trash"
-        (buttonClick)="showDeleteTrainingPlanModal()"
-      />
-    </div>
-    @if (trainingPlan().percentageFinished) {
-      <div>{{ trainingPlan().percentageFinished }}%</div>
-    }
-  </div>
+  @if (trainingPlan().percentageFinished) {
+    <div>{{ trainingPlan().percentageFinished }}%</div>
+  }
 </div>
