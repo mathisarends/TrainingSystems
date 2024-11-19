@@ -7,7 +7,7 @@ export interface ModalOptions {
   /**
    * The Angular component to be displayed in the modal.
    */
-  component: any;
+  component?: any;
 
   tabs?: ModalTab[];
 
@@ -51,27 +51,6 @@ export interface ModalOptions {
   hasFooter?: boolean;
 
   providerMap?: Map<any, any>;
-}
-
-export interface ModalTabOptions {
-  tabs: ModalTab[];
-
-  /**
-   * The text to display on the modal's button.
-   */
-  continueButtonText?: string;
-
-  /**
-   * The size of the modal. Optional.
-   */
-  size?: ModalSize;
-
-  /**
-   * Auf true zu setzen, wenn man z.B. Formvalidierung innerhalb einer Komponente benutzen will
-   */
-  confirmationRequired?: boolean;
-
-  providerMap: Map<any, any>;
 }
 
 /**

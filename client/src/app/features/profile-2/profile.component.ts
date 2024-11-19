@@ -3,8 +3,8 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
+import { ModalOptionsBuilder } from '../../core/services/modal/modal-options-builder';
 import { ModalService } from '../../core/services/modal/modalService';
-import { ModalSize } from '../../core/services/modal/modalSize';
 import { IconBackgroundColor } from '../../shared/components/icon-list-item/icon-background-color';
 import { IconListItem } from '../../shared/components/icon-list-item/icon-list-item';
 import { IconListeItemComponent } from '../../shared/components/icon-list-item/icon-list-item.component';
@@ -14,14 +14,13 @@ import { SpinnerComponent } from '../../shared/components/spinner/spinner.compon
 import { ToastService } from '../../shared/components/toast/toast.service';
 import { IconName } from '../../shared/icon/icon-name';
 import { ImageUploadService } from '../../shared/service/image-upload.service';
-import { BestPerformanceComponent } from '../best-performance/best-performance.component';
+import { UserBestPerformanceService } from '../../shared/service/user-best-performance/user-best-performance.service';
 import { GymTicketComponent } from '../gym-ticket/gym-ticket.component';
 import { GymTicketService } from '../gym-ticket/gym-ticket.service';
 import { HeaderService } from '../header/header.service';
 import { ActivityCalendarData } from './activity-calendar/activity-calendar-data';
 import { ActivityCalendar } from './activity-calendar/activity-calendar.component';
 import { ChangeProfilePictureConfirmationComponent } from './change-profile-picture-confirmation/change-profile-picture-confirmation.component';
-import { FriendModalComponent } from './friend-modal/friend-modal.component';
 import { ProfileService } from './service/profileService';
 import { SettingsComponent } from './settings/settings.component';
 
@@ -87,15 +86,13 @@ export class ProfileComponent2 implements OnInit {
 
   protected async onListItemClicked(label: string) {
     if (label === 'Ticket') {
-      this.modalService.open({
-        component: GymTicketComponent,
-        title: 'Gym Ticket',
-        buttonText: 'Speichern',
-        secondaryButtonText: 'Zuschneiden',
-        componentData: {
-          image: '',
-        },
-      });
+      const modalOptions = new ModalOptionsBuilder()
+        .setComponent(GymTicketComponent)
+        .setTitle('Gym Ticket')
+        .setButtonText('Speichern')
+        .build();
+
+      this.modalService.open(modalOptions);
     } else if (label === 'Exercises') {
       this.router.navigate(['profile/exercises']);
     } else if (label === 'Account löschen') {
@@ -103,18 +100,13 @@ export class ProfileComponent2 implements OnInit {
     } else if (label === 'Progression') {
       this.router.navigate(['profile/progression']);
     } else if (label === 'Bestleistungen') {
-      this.modalService.open({
-        component: BestPerformanceComponent,
-        title: 'Bestleistungen',
-        size: ModalSize.LARGE,
-        buttonText: 'Fortsetzen',
-      });
-    } else if (label === 'Social') {
-      this.modalService.open({
-        component: FriendModalComponent,
-        title: 'Test',
-        buttonText: 'Test',
-      });
+      const modalOptions = new ModalOptionsBuilder()
+        .setComponent(UserBestPerformanceService)
+        .setTitle('Bestleistungen')
+        .setButtonText('Verstanden')
+        .build();
+
+      this.modalService.open(modalOptions);
     } else {
       this.modalService.openBasicInfoModal({
         title: label,
@@ -133,24 +125,30 @@ export class ProfileComponent2 implements OnInit {
 
     const currentProfilePicture = this.profileService.pictureUrl();
 
-    this.modalService.open({
-      component: ChangeProfilePictureConfirmationComponent,
-      title: 'Profilbild ändern',
-      buttonText: 'Bestäigen',
-      secondaryButtonText: 'Zuschneiden',
-      componentData: {
-        oldProfilePicture: currentProfilePicture,
-        image: uploadedPictureBase64Str,
-      },
-    });
+    const componentData = {
+      oldProfilePicture: currentProfilePicture,
+      image: uploadedPictureBase64Str,
+    };
+
+    const modalOptions = new ModalOptionsBuilder()
+      .setComponent(ChangeProfilePictureConfirmationComponent)
+      .setTitle('Profilbild ändern')
+      .setButtonText('Bestätigen')
+      .setAlternativeButtonText('Zuschneiden')
+      .setComponentData(componentData)
+      .build();
+
+    this.modalService.open(modalOptions);
   }
 
   private displaySettingsModal() {
-    this.modalService.open({
-      component: SettingsComponent,
-      title: 'Einstellungen',
-      buttonText: 'Speichern',
-    });
+    const modalConfig = new ModalOptionsBuilder()
+      .setComponent(SettingsComponent)
+      .setTitle('Einstellungen')
+      .setButtonText('Speichern')
+      .build();
+
+    this.modalService.open(modalConfig);
   }
 
   private async showDeleteAccountDialog() {

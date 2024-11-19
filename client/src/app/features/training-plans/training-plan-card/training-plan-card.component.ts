@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, effect, Injector, input, OnInit, output, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { ModalOptionsBuilder } from '../../../core/services/modal/modal-options-builder';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { ModalSize } from '../../../core/services/modal/modalSize';
 import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
@@ -102,25 +103,29 @@ export class TrainingPlanCardComponent implements OnInit {
    */
   async showEditTrainingPlanModal(id: string): Promise<void> {
     if (this.isTrainingSessionCard()) {
-      await this.modalService.open({
-        component: EditTrainingSessionComponent,
-        title: 'Session bearbeiten',
-        buttonText: 'Speichern',
-        size: ModalSize.LARGE,
-        componentData: {
+      const modalOptions = new ModalOptionsBuilder()
+        .setComponent(EditTrainingSessionComponent)
+        .setTitle('Session bearbeiten')
+        .setButtonText('Speichern')
+        .setSize(ModalSize.LARGE)
+        .setComponent({
           id: id,
-        },
-      });
+        })
+        .build();
+
+      await this.modalService.open(modalOptions);
     } else {
-      await this.modalService.open({
-        component: EditTrainingPlanComponent,
-        title: 'Trainingsplan bearbeiten',
-        buttonText: 'Speichern',
-        size: ModalSize.LARGE,
-        componentData: {
+      const modalOptions = new ModalOptionsBuilder()
+        .setComponent(EditTrainingPlanComponent)
+        .setTitle('Trainingsplan bearbeiten')
+        .setButtonText('Speichern')
+        .setSize(ModalSize.LARGE)
+        .setComponentData({
           id: id,
-        },
-      });
+        })
+        .build();
+
+      await this.modalService.open(modalOptions);
     }
   }
 

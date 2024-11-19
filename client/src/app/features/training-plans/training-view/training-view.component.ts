@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { forkJoin, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { FormService } from '../../../core/services/form.service';
+import { ModalOptionsBuilder } from '../../../core/services/modal/modal-options-builder';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
 import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
@@ -153,25 +154,31 @@ export class TrainingViewComponent implements OnInit {
   }
 
   private openAutoProgressionModal() {
-    this.modalService.open({
-      component: AutoProgressionComponent,
-      title: 'Automatische Progression',
-      buttonText: 'Übernehmen',
-      componentData: {
+    const modalOptions = new ModalOptionsBuilder()
+      .setComponent(AutoProgressionComponent)
+      .setTitle('Automatische Progression')
+      .setButtonText('Übernhemen')
+      .setComponentData({
         planId: this.planId,
-      },
-    });
+      })
+      .build();
+
+    this.modalService.open(modalOptions);
   }
 
   private async openTrainingExerciseList() {
-    const confirmed = await this.modalService.open({
-      component: TrainingExercisesListComponent,
-      title: 'Übungen anordnen',
-      providerMap: new Map()
-        .set(TrainingPlanDataService, this.trainingDataService)
-        .set(FormService, this.formService)
-        .set(TrainingDayLocatorService, this.trainingDayLocatorService),
-    });
+    const providerMap = new Map()
+      .set(TrainingPlanDataService, this.trainingDataService)
+      .set(FormService, this.formService)
+      .set(TrainingDayLocatorService, this.trainingDayLocatorService);
+
+    const modalConfig = new ModalOptionsBuilder()
+      .setComponent(TrainingExercisesListComponent)
+      .setTitle('Übungen anordnen')
+      .setProviderMap(providerMap)
+      .build();
+
+    const confirmed = await this.modalService.open(modalConfig);
 
     if (confirmed) {
       this.saveTrainingData$().subscribe(() => {});

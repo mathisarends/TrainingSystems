@@ -202,7 +202,6 @@ export class SessionViewComponent implements OnInit {
   }
 
   private async startNewSesson() {
-    console.log('start new session');
     const confirmed = await this.modalService.openBasicInfoModal({
       title: 'Neues Training',
       infoText: 'Bist du dir sicher, dass du ein neues Training starten willst?',

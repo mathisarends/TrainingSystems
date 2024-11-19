@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, effect, Injector, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
+import { ModalOptionsBuilder } from '../../../core/services/modal/modal-options-builder';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { toggleCollapseAnimation } from '../../../shared/animations/toggle-collapse';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
@@ -137,19 +138,24 @@ export class TrainingPlansComponent implements OnInit {
     ];
 
     const trainingPlanEditView = TrainingPlanEditView.fromDto();
+    const providerMap = new Map().set(TrainingPlanEditView, trainingPlanEditView);
 
-    this.modalService.openModalTabs({
-      providerMap: new Map().set(TrainingPlanEditView, trainingPlanEditView),
-      tabs: modalTabs,
-      continueButtonText: 'Erstellen',
-    });
+    const modalOptions = new ModalOptionsBuilder()
+      .setTabs(modalTabs)
+      .setProviderMap(providerMap)
+      .setButtonText('Erstellen')
+      .build();
+
+    this.modalService.openModalTabs(modalOptions);
   }
 
   protected createNewSession(): void {
-    this.modalService.open({
-      component: CreateSessionComponent,
-      title: 'Trainingsession erstellen',
-    });
+    const modalOptions = new ModalOptionsBuilder()
+      .setComponent(CreateSessionComponent)
+      .setTitle('Trainingsession erstellen')
+      .build();
+
+    this.modalService.open(modalOptions);
   }
 
   protected openTrainingTypeExplanation(): void {

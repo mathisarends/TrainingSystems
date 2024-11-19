@@ -13,7 +13,7 @@ import { DeleteConfirmationComponent } from '../../../shared/components/modal/de
 import { ModalConfirmationService } from '../../../shared/components/modal/modal-confirmation.service';
 import { ModalOverlayComponent } from '../../../shared/components/modal/modal-overlay/modal-overlay.component';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
-import { BasicInfoModalOptions, DeleteModalModalOptions, ModalOptions, ModalTabOptions } from './modal-options';
+import { BasicInfoModalOptions, DeleteModalModalOptions, ModalOptions } from './modal-options';
 import { ModalSize } from './modalSize';
 
 @Injectable({
@@ -103,7 +103,7 @@ export class ModalService {
     });
   }
 
-  openModalTabs(options: ModalTabOptions) {
+  openModalTabs(options: ModalOptions) {
     return new Promise<boolean>((resolve) => {
       this.overlayComponentRef = createComponent(ModalOverlayComponent, {
         environmentInjector: this.environmentInjector,
@@ -129,8 +129,8 @@ export class ModalService {
       this.modalComponentRef.instance.size = options.size ?? ModalSize.MEDIUM;
       this.modalComponentRef.instance.confirmationRequired = options.confirmationRequired ?? false;
 
-      if (options.continueButtonText) {
-        this.modalComponentRef.instance.confirmButtonText = options.continueButtonText;
+      if (options.buttonText) {
+        this.modalComponentRef.instance.confirmButtonText = options.buttonText;
       }
 
       if (options.tabs) {

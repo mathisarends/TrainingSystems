@@ -3,6 +3,7 @@ import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core'
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { HttpService } from '../../../core/services/http-client.service';
+import { ModalOptionsBuilder } from '../../../core/services/modal/modal-options-builder';
 import { ModalService } from '../../../core/services/modal/modalService';
 import { ToastService } from '../../../shared/components/toast/toast.service';
 import { BasicConfirmationResponse } from '../../../shared/dto/basic-confirmation-response';
@@ -82,11 +83,13 @@ export class GettingStartedComponent implements OnInit {
   protected triggerGoogleLogin() {
     google.accounts.id.prompt((notification: any) => {
       if (notification.isNotDisplayed()) {
-        this.modalService.open({
-          component: LoginModalComponent,
-          title: 'Google Login',
-          hasFooter: false,
-        });
+        const modalOptions = new ModalOptionsBuilder()
+          .setComponent(LoginModalComponent)
+          .setTitle('Google Login')
+          .setHasFooter(true)
+          .build();
+
+        this.modalService.open(modalOptions);
       }
     });
   }
