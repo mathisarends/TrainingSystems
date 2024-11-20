@@ -224,6 +224,9 @@ export class ModalComponent implements AfterViewInit, OnInit {
         }
       }
     }
+    if (this.modalService.onSubmitCallback) {
+      this.modalService.onSubmitCallback();
+    }
 
     this.confirmed.emit();
   }

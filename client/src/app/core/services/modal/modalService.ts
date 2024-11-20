@@ -27,6 +27,8 @@ export class ModalService {
 
   loading = signal(false);
 
+  onSubmitCallback?: () => void | Promise<void>;
+
   constructor(
     private appRef: ApplicationRef,
     private injector: Injector,
@@ -135,6 +137,10 @@ export class ModalService {
 
       if (options.tabs) {
         this.modalComponentRef.instance.tabs.set(options.tabs);
+      }
+
+      if (options.onSubmitCallback) {
+        this.onSubmitCallback = options.onSubmitCallback;
       }
 
       this.isVisible.set(true);

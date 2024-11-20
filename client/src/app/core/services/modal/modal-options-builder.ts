@@ -1,5 +1,5 @@
 import { ModalTab } from '../../../shared/components/modal/types/modal-tab';
-import { BasicInfoModalOptions, DeleteModalModalOptions, ModalOptions } from './modal-options';
+import { ModalOptions } from './modal-options';
 import { ModalSize } from './modalSize';
 
 export class ModalOptionsBuilder<T extends ModalOptions = ModalOptions> {
@@ -97,23 +97,8 @@ export class ModalOptionsBuilder<T extends ModalOptions = ModalOptions> {
     return this;
   }
 
-  /**
-   * Sets the informational text for the modal.
-   */
-  setInfoText(infoText: string): this {
-    if ('infoText' in this.options) {
-      (this.options as BasicInfoModalOptions).infoText = infoText;
-    }
-    return this;
-  }
-
-  /**
-   * Sets the deletion keyword for the modal.
-   */
-  setDeletionKeyword(deletionKeyword: string): this {
-    if ('deletionKeyWord' in this.options) {
-      (this.options as DeleteModalModalOptions).deletionKeyWord = deletionKeyword;
-    }
+  setOnSubmitCallback(onSubmitCallback: () => void | Promise<void>) {
+    this.options.onSubmitCallback = onSubmitCallback;
     return this;
   }
 

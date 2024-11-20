@@ -133,6 +133,7 @@ export class TrainingPlansComponent implements OnInit, SetHeadlineInfo {
       .setTabs(modalTabs)
       .setProviderMap(providerMap)
       .setButtonText('Erstellen')
+      .setOnSubmitCallback(() => console.log(''))
       .build();
 
     this.modalService.openModalTabs(modalOptions);
