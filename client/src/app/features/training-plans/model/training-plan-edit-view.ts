@@ -1,5 +1,6 @@
 import { signal, WritableSignal } from '@angular/core';
-import { TrainingPlanEditViewDto, WeightRecommendationBase } from '../edit-training-plan/training-plan-edit-view-dto';
+import { CreateTrainingPlanDto } from './create-training-plan.dto';
+import { TrainingPlanEditViewDto } from './training-plan-edit-view-dto';
 
 /**
  * Represents a training plan during creation or editing modal group.
@@ -38,7 +39,6 @@ export class TrainingPlanEditView {
     title: '',
     trainingDays: new Set<string>(['Mo', 'Mi', 'Fr']),
     trainingBlockLength: 4,
-    weightRecommendationBase: WeightRecommendationBase.LASTWEEK,
     coverImageBase64: '',
   };
 
@@ -73,18 +73,26 @@ export class TrainingPlanEditView {
    * Convert the class back to a plain object for form submission.
    */
   toDto(): TrainingPlanEditViewDto {
-    const dto: Partial<TrainingPlanEditViewDto> = {
+    if (!this.id()) {
+      throw new Error('ID is not defined use toCreateDto()-method instead');
+    }
+
+    return {
+      title: this.title(),
+      trainingDays: Array.from(this.trainingDays()),
+      trainingBlockLength: Number(this.trainingBlockLength()),
+      coverImageBase64: this.coverImageBase64(),
+      id: this.id(),
+    };
+  }
+
+  toCreateDto(): CreateTrainingPlanDto {
+    return {
       title: this.title(),
       trainingDays: Array.from(this.trainingDays()),
       trainingBlockLength: Number(this.trainingBlockLength()),
       coverImageBase64: this.coverImageBase64(),
     };
-
-    if (this.id()) {
-      dto.id = this.id();
-    }
-
-    return dto as TrainingPlanEditViewDto;
   }
 
   /**

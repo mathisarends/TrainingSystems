@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { BasicConfirmationResponse } from '../../../shared/dto/basic-confirmation-response';
-import { TrainingPlanEditViewDto } from './training-plan-edit-view-dto';
+import { TrainingPlanEditViewDto } from '../model/training-plan-edit-view-dto';
 
 @Injectable()
 export class EditTrainingPlanService {

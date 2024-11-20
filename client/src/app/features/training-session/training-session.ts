@@ -1,5 +1,4 @@
 import { signal, WritableSignal } from '@angular/core'; // Import signal
-import { WeightRecommendationBase } from '../training-plans/edit-training-plan/training-plan-edit-view-dto';
 import { TrainingDay } from '../training-plans/training-view/training-day';
 import { Exercise } from '../training-plans/training-view/training-exercise';
 import { TrainingSessionDto } from './model/training-session-dto';
@@ -18,7 +17,6 @@ export class TrainingSession {
     title: '',
     trainingFrequency: 4,
     trainingBlockLength: 4,
-    weightRecommendationBase: WeightRecommendationBase.LASTWEEK,
     coverImageBase64: '',
     recentlyViewedCategoriesInStatisticSection: [],
   };

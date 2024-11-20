@@ -40,6 +40,7 @@ import { TrainingSchedulingComponent } from './training-scheduling/training-sche
   ],
   templateUrl: './training-plans.component.html',
   styleUrls: ['./training-plans.component.scss'],
+  providers: [TrainingPlanService],
 })
 export class TrainingPlansComponent implements OnInit, SetHeadlineInfo {
   /**

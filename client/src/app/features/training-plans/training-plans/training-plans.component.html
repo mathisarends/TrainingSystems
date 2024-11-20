@@ -1,27 +1,23 @@
-<div class="row">
-  @if (!isLoading()) {
-    @if (trainingPlanService.trainingPlans().length === 0) {
-      <app-alert
-        [alertText]="
-          'Du hast noch keine Trainingspläne erstellt! Starte jetzt, indem du entweder eine individuelle Session für gezieltes Training erstellst, oder einen umfassenden Trainingsplan, der dir hilft, deine langfristigen Ziele zu erreichen.'
-        "
-        [alertType]="'light'"
-      />
-    } @else if (filteredTrainingPlans().length === 0) {
-      <app-alert alertText="Keine deiner bestehenden Trainingpläne passen zu dieser Suchanfrage!" />
-    }
-    <div class="training-plan-grid">
-      @for (trainingPlan of filteredTrainingPlans(); track trainingPlan.id) {
-        <div class="training-plan-card-container">
-          <app-training-plan-card [trainingPlan]="trainingPlan" />
-        </div>
-      }
-    </div>
-  } @else {
-    <div class="training-plan-grid">
-      @for (k of [1, 2, 3]; track k) {
-        <app-skeleton-card />
-      }
-    </div>
+@if (!isLoading()) {
+  @if (trainingPlanService.trainingPlans().length === 0) {
+    <app-alert
+      [alertText]="
+        'Du hast noch keine Trainingspläne erstellt! Starte jetzt, indem du entweder eine individuelle Session für gezieltes Training erstellst, oder einen umfassenden Trainingsplan, der dir hilft, deine langfristigen Ziele zu erreichen.'
+      "
+      [alertType]="'light'"
+    />
   }
-</div>
+  <div class="training-plan-grid">
+    @for (trainingPlan of trainingPlanService.trainingPlans(); track trainingPlan.id) {
+      <div class="training-plan-card-container">
+        <app-training-plan-card [trainingPlan]="trainingPlan" />
+      </div>
+    }
+  </div>
+} @else {
+  <div class="training-plan-grid">
+    @for (k of [1, 2, 3]; track k) {
+      <app-skeleton-card />
+    }
+  </div>
+}

@@ -5,20 +5,31 @@ import { TrainingSessionCardViewDto } from '../../../training-session/model/trai
 import { TrainingPlanEditView } from '../../model/training-plan-edit-view';
 import { TrainingPlanCardView } from '../models/exercise/training-plan-card-view-dto';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class TrainingPlanService {
+  /**
+   * Used to notify components of changes to training plans.
+   */
   private trainingPlansChangedSubject = new Subject<void>();
 
+  /**
+   * Observable stream for training plan changes.
+   */
   trainingPlansChanged$ = this.trainingPlansChangedSubject.asObservable();
 
+  /**
+   * Holds the cached training plans.
+   */
   trainingPlans = signal<TrainingPlanCardView[]>([]);
 
   constructor(private httpService: HttpService) {}
 
+  /**
+   * Creates a new training plan by sending the data to the backend.
+   * Emits a notification when the creation is successful.
+   */
   createTrainingPlan(trainingPlanEditView: TrainingPlanEditView): Observable<void> {
-    return this.httpService.post<void>('/training', trainingPlanEditView.toDto()).pipe(
+    return this.httpService.post<void>('/training', trainingPlanEditView.toCreateDto()).pipe(
       tap(() => {
         this.trainingPlanChanged();
       }),
@@ -33,17 +44,10 @@ export class TrainingPlanService {
     this.trainingPlansChangedSubject.next();
   }
 
-  getFirstAvailableDateForTrainingPlan(): Observable<string> {
-    return this.httpService.get('/training/first-available-date');
-  }
-
   /**
    * Fetches the training plans and session card views from the backend
    * and updates the trainingPlans signal.
    * Combines both results into one array for further use.
-   * If fetching training sessions fails, it returns an empty array for sessions,
-   * preserving the expected data type.
-   * @returns An Observable of the combined result array.
    */
   loadAndCacheTrainingPlans(): Observable<(TrainingPlanCardView | TrainingSessionCardViewDto)[]> {
     const trainingPlans$: Observable<TrainingPlanCardView[]> = this.httpService.get('/training');
