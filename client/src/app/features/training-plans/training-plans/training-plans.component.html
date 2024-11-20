@@ -1,6 +1,3 @@
-<div class="search-bar-container" [@toggleCollapse]="isSearchbarCollapsed() ? 'collapsed' : 'expanded'">
-  <app-search-bar [(searchQuery)]="trainingPlanSearchQuery" />
-</div>
 <div class="row">
   @if (!isLoading()) {
     @if (trainingPlanService.trainingPlans().length === 0) {
@@ -10,29 +7,6 @@
         "
         [alertType]="'light'"
       />
-      <div class="empty-training-list-container">
-        <app-icon-list-item
-          [label]="'Trainingsplan erstellen'"
-          [iconName]="IconName.CALENDAR"
-          [iconBackgroundColor]="IconBackgroundColor.MediumSlateBlue"
-          [iconTilting]="wiggleIcons()"
-          (click)="createNewPlan()"
-        />
-        <app-icon-list-item
-          [label]="'Session erstellen'"
-          [iconName]="IconName.Activity"
-          [iconBackgroundColor]="IconBackgroundColor.DodgerBlue"
-          [iconTilting]="wiggleIcons()"
-          (click)="createNewSession()"
-        />
-        <app-icon-list-item
-          [label]="'Trainingsplan vs Session'"
-          [iconName]="IconName.INFO"
-          [iconBackgroundColor]="IconBackgroundColor.LimeGreen"
-          [iconTilting]="wiggleIcons()"
-          (click)="openTrainingTypeExplanation()"
-        />
-      </div>
     } @else if (filteredTrainingPlans().length === 0) {
       <app-alert alertText="Keine deiner bestehenden Trainingpläne passen zu dieser Suchanfrage!" />
     }

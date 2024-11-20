@@ -200,7 +200,7 @@ export class ModalComponent implements AfterViewInit, OnInit {
    * Calls `onConfirm` if the child component implements `ConfirmableComponent` and waits for its completion.
    */
   async confirm() {
-    const componentInstance = this.childComponentRef.instance;
+    const componentInstance = this.childComponentRef?.instance ?? this.activeTab()?.component;
 
     if (this.isModalGroupAndNotLastTab()) {
       this.switchToNextTab();
