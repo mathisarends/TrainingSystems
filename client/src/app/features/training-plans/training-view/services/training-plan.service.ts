@@ -2,6 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { catchError, forkJoin, map, Observable, of, Subject, tap } from 'rxjs';
 import { HttpService } from '../../../../core/services/http-client.service';
 import { TrainingSessionCardViewDto } from '../../../training-session/model/training-session-card-view-dto';
+import { TrainingPlanEditView } from '../../model/training-plan-edit-view';
 import { TrainingPlanCardView } from '../models/exercise/training-plan-card-view-dto';
 
 @Injectable({
@@ -15,6 +16,14 @@ export class TrainingPlanService {
   trainingPlans = signal<TrainingPlanCardView[]>([]);
 
   constructor(private httpService: HttpService) {}
+
+  createTrainingPlan(trainingPlanEditView: TrainingPlanEditView): Observable<void> {
+    return this.httpService.post<void>('/training', trainingPlanEditView.toDto()).pipe(
+      tap(() => {
+        this.trainingPlanChanged();
+      }),
+    );
+  }
 
   /**
    * Emits a notification when the training plans have changed.

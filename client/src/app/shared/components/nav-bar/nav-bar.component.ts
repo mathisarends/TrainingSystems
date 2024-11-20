@@ -79,7 +79,7 @@ export class NavBarComponent {
     this.clickedElement = event.currentTarget as HTMLElement;
 
     if (this.isActivityRoute(route)) {
-      this.redirectToMostRecentTrainingDay(event);
+      this.redirectToMostRecentTrainingDay();
       return;
     }
 
@@ -90,14 +90,13 @@ export class NavBarComponent {
     return this.navItems.some((item) => item.route === route);
   }
 
-  private redirectToMostRecentTrainingDay(event: Event) {
+  private redirectToMostRecentTrainingDay() {
     this.httpService
       .get<string>('/training/most-recent-plan-link')
       .pipe(
         catchError((error) => {
           if (error.status === 404 && this.clickedElement) {
             this.renderer.addClass(this.clickedElement, 'inactive');
-            this.toastService.success('Kein Training vorhanden');
             this.router.navigateByUrl('/?source=activity');
           }
           return EMPTY;
