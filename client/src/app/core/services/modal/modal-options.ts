@@ -72,18 +72,3 @@ export interface ModalOptions {
    */
   onSubmitCallback?: () => void | Promise<void>;
 }
-
-/**
- * Interface for the basic info modal options, inheriting only specific properties from ModalOptions.
- */
-export interface BasicInfoModalOptions
-  extends Pick<ModalOptions, 'title' | 'buttonText' | 'isDestructiveAction' | 'hasFooter' | 'size'> {
-  /**
-   * The text message to display in the modal.
-   */
-  infoText: string;
-}
-
-export interface DeleteModalModalOptions extends BasicInfoModalOptions {
-  deletionKeyWord: string;
-}

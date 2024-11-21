@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, signal, WritableSignal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
+import { BasicInfoModalOptionsBuilder } from '../../../core/services/modal/basic-info/basic-info-modal-options-builder';
 import { ModalService } from '../../../core/services/modal/modal.service';
-import { ModalSize } from '../../../core/services/modal/modalSize';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
 import { IconName } from '../../../shared/icon/icon-name';
 import { HeaderService } from '../../header/header.service';
@@ -118,11 +118,13 @@ export class TrainingLogCalendarComponent implements SetHeadlineInfo {
   }
 
   private openInfoModal() {
-    this.modalService.openBasicInfoModal({
-      title: 'Hinweise',
-      size: ModalSize.LARGE,
-      infoText:
+    const modalOptions = new BasicInfoModalOptionsBuilder()
+      .setTitle('Hinweise')
+      .setInfoText(
         'In diesem Kalender werden alle geplanten Trainings aus deinen Trainingsplänen angezeigt. Zusätzlich kannst du retrospektiv alle vergangenen Trainingseinheiten einsehen. Mit einem Klick auf die einzelnen Tage erhältst du detaillierte Informationen zu deiner Trainingsprogression, inklusive der erreichten Ziele und der wichtigsten Leistungsstatistiken.',
-    });
+      )
+      .build();
+
+    this.modalService.openBasicInfoModal(modalOptions);
   }
 }

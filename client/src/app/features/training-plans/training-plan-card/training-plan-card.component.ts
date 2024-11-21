@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { DeleteModalOptionsBuilder } from '../../../core/services/modal/deletion/delete-modal-options.builder';
 import { ModalOptionsBuilder } from '../../../core/services/modal/modal-options-builder';
 import { ModalService } from '../../../core/services/modal/modal.service';
 import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
@@ -120,21 +121,18 @@ export class TrainingPlanCardComponent {
   /**
    * Handles deletion depending on the type of the training plan.
    */
-  async showDeleteTrainingPlanModal(): Promise<void> {
-    const confirmed = await this.modalService.openDeletionModal({
-      title: 'Trainingsplan löschen',
-      buttonText: 'Löschen',
-      isDestructiveAction: true,
-      infoText:
+  showDeleteTrainingPlanModal(): void {
+    const deleteModalOptions = new DeleteModalOptionsBuilder()
+      .setTitle('Trainingsplan löschen')
+      .setButtonText('Löschen')
+      .setInfoText(
         'Bist du dir sicher, dass du diesen Trainingsplan löschen willst? Diese Änderung kann nicht mehr rückgängig gemacht werden!',
-      deletionKeyWord: this.trainingPlan().title,
-    });
+      )
+      .setDeletionKeyword(this.trainingPlan().title)
+      .setOnSubmitCallback(() => this.deleteTrainingPlan())
+      .build();
 
-    if (!confirmed) {
-      return;
-    }
-
-    this.deleteTrainingPlan();
+    this.modalService.openDeletionModal(deleteModalOptions);
   }
 
   /**

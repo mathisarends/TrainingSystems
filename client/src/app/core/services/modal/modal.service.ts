@@ -13,7 +13,9 @@ import { DeleteConfirmationComponent } from '../../../shared/components/modal/de
 import { ModalConfirmationService } from '../../../shared/components/modal/modal-confirmation.service';
 import { ModalOverlayComponent } from '../../../shared/components/modal/modal-overlay/modal-overlay.component';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
-import { BasicInfoModalOptions, DeleteModalModalOptions, ModalOptions } from './modal-options';
+import { BasicInfoModalOptions } from './basic-info/basic-info-modal-options';
+import { DeleteModalModalOptions } from './deletion/delete-modal-options';
+import { ModalOptions } from './modal-options';
 import { ModalSize } from './modalSize';
 
 @Injectable({
@@ -87,8 +89,8 @@ export class ModalService {
         this.modalComponentRef.instance.childComponentData.set(options.componentData);
       }
 
-      if (options.tabs) {
-        this.modalComponentRef.instance.tabs.set(options.tabs);
+      if (options.onSubmitCallback) {
+        this.onSubmitCallback = options.onSubmitCallback;
       }
 
       this.isVisible.set(true);
@@ -179,8 +181,6 @@ export class ModalService {
       component: BasicInfoComponent,
       title: options.title,
       buttonText: options.buttonText ?? 'Verstanden',
-      isDestructiveAction: options.isDestructiveAction,
-      size: options.size,
       componentData: {
         infoText: options.infoText,
       },
@@ -188,12 +188,15 @@ export class ModalService {
   }
 
   openDeletionModal(options: DeleteModalModalOptions) {
+    if (options.onSubmitCallback) {
+      this.onSubmitCallback = options.onSubmitCallback;
+    }
+
     return this.open({
       component: DeleteConfirmationComponent,
       title: options.title,
       buttonText: options.buttonText ?? 'Löschen',
       isDestructiveAction: true,
-      size: options.size,
       confirmationRequired: true,
       componentData: {
         infoText: options.infoText,

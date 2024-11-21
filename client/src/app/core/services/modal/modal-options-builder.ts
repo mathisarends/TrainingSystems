@@ -2,7 +2,7 @@ import { ModalTab } from '../../../shared/components/modal/types/modal-tab';
 import { ModalOptions } from './modal-options';
 import { ModalSize } from './modalSize';
 
-export class ModalOptionsBuilder<T extends ModalOptions = ModalOptions> {
+export class ModalOptionsBuilder {
   /**
    * Base configuration for the modal options.
    */
@@ -105,11 +105,11 @@ export class ModalOptionsBuilder<T extends ModalOptions = ModalOptions> {
   /**
    * Builds the modal options and validates that at least a component or a tab group is defined.
    */
-  build(): T {
+  build(): ModalOptions {
     if (!this.options.component && !this.options.tabs) {
       throw new Error('Component or tab group.');
     }
 
-    return this.options as T;
+    return this.options;
   }
 }
