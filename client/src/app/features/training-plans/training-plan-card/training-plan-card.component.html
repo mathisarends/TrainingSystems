@@ -7,12 +7,7 @@
   <img [src]="trainingPlan().pictureUrl ?? '/images/profile-placeholder.webp'" alt="Avatar" />
 </div>
 <div class="card-body">
-  @let titlePrefix = trainingPlanType() === TrainingPlanType.PLAN ? 'Plan' : 'Session';
-
-  <h4 class="card-title">
-    <span class="title-prefix">{{ titlePrefix }}</span
-    >{{ trainingPlan().title }}
-  </h4>
+  <h4 class="card-title"><span class="title-prefix">PLAN</span>{{ trainingPlan().title }}</h4>
 
   @if (trainingPlan().trainingFrequency) {
     <p class="card-text">{{ trainingPlan().trainingFrequency }} Trainings / Woche</p>
@@ -46,7 +41,7 @@
     <app-icon-button
       [tooltipTitle]="'Bearbeiten'"
       [iconName]="IconName.Edit"
-      (buttonClick)="showEditTrainingPlanModal(trainingPlan().id)"
+      (buttonClick)="showEditTrainingPlanModal()"
     />
 
     <app-icon-button

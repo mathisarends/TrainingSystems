@@ -1,0 +1,7 @@
+<label>{{ label() }}</label>
+<input [placeholder]="placeholder()" [(value)]="value" [class.invalid]="!isValid()" />
+@if (!isValid()) {
+  <div class="error-message">{{ getErrorMessage() }}</div>
+}
+
+FEst

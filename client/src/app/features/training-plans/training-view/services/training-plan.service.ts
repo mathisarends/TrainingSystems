@@ -1,8 +1,10 @@
 import { Injectable, signal } from '@angular/core';
 import { catchError, forkJoin, map, Observable, of, Subject, tap } from 'rxjs';
 import { HttpService } from '../../../../core/services/http-client.service';
+import { BasicConfirmationResponse } from '../../../../shared/dto/basic-confirmation-response';
 import { TrainingSessionCardViewDto } from '../../../training-session/model/training-session-card-view-dto';
 import { TrainingPlanEditView } from '../../model/training-plan-edit-view';
+import { TrainingPlanEditViewDto } from '../../model/training-plan-edit-view-dto';
 import { TrainingPlanCardView } from '../models/exercise/training-plan-card-view-dto';
 
 @Injectable()
@@ -30,6 +32,18 @@ export class TrainingPlanService {
    */
   createTrainingPlan(trainingPlanEditView: TrainingPlanEditView): Observable<void> {
     return this.httpService.post<void>('/training', trainingPlanEditView.toCreateDto()).pipe(
+      tap(() => {
+        this.trainingPlanChanged();
+      }),
+    );
+  }
+
+  getPlanForEdit(id: string): Observable<TrainingPlanEditViewDto> {
+    return this.httpService.get<TrainingPlanEditViewDto>(`/training-plan/edit/${id}`);
+  }
+
+  editTrainingPlan(id: string, formData: TrainingPlanEditViewDto): Observable<BasicConfirmationResponse> {
+    return this.httpService.patch<BasicConfirmationResponse>(`/training-plan/edit/${id}`, formData).pipe(
       tap(() => {
         this.trainingPlanChanged();
       }),
