@@ -3,7 +3,7 @@ import { Component, computed, DestroyRef, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { forkJoin, Observable } from 'rxjs';
+import { firstValueFrom, forkJoin, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { FormService } from '../../../core/services/form.service';
 import { ModalOptionsBuilder } from '../../../core/services/modal/modal-options-builder';
@@ -180,23 +180,22 @@ export class TrainingViewComponent implements OnInit, SetHeadlineInfo {
     this.modalService.open(modalOptions);
   }
 
-  private async openTrainingExerciseList() {
+  private openTrainingExerciseList(): void {
     const providerMap = new Map()
       .set(TrainingPlanDataService, this.trainingDataService)
       .set(FormService, this.formService)
       .set(TrainingDayLocatorService, this.trainingDayLocatorService);
 
-    const modalConfig = new ModalOptionsBuilder()
+    const modalOptions = new ModalOptionsBuilder()
       .setComponent(TrainingExercisesListComponent)
       .setTitle('Übungen anordnen')
       .setProviderMap(providerMap)
+      .setOnSubmitCallback(async () => {
+        await firstValueFrom(this.saveTrainingData$());
+      })
       .build();
 
-    const confirmed = await this.modalService.open(modalConfig);
-
-    if (confirmed) {
-      this.saveTrainingData$().subscribe(() => {});
-    }
+    this.modalService.open(modalOptions);
   }
 
   private determineHeadlineOptions(): MoreOptionListItem[] {

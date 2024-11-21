@@ -3,6 +3,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
+import { DeleteModalOptionsBuilder } from '../../core/services/modal/deletion/delete-modal-options.builder';
 import { ModalOptionsBuilder } from '../../core/services/modal/modal-options-builder';
 import { ModalService } from '../../core/services/modal/modal.service';
 import { IconBackgroundColor } from '../../shared/components/icon-list-item/icon-background-color';
@@ -198,25 +199,24 @@ export class ProfileComponent2 implements OnInit, SetHeadlineInfo {
    * Opens a modal to confirm account deletion.
    * If confirmed, the account deletion process is initiated.
    */
-  private async showDeleteAccountDialog() {
-    const confirmed = await this.modalService.openDeletionModal({
-      title: 'Account löschen',
-      buttonText: 'Löschen',
-      isDestructiveAction: true,
-      infoText:
+  private showDeleteAccountDialog(): void {
+    const modalDeleteOptions = new DeleteModalOptionsBuilder()
+      .setTitle('Account löschen')
+      .setButtonText('Löschen')
+      .setInfoText(
         'Bist du dir sicher, dass du deinen Account löschen willst? Du musst diese Aktion per Email bestätigen.',
-      deletionKeyWord: this.profileService.username()!,
-    });
+      )
+      .setDeletionKeyword(this.profileService.username()!)
+      .setOnSubmitCallback(() => this.deleteAccoutn())
+      .build();
 
-    if (confirmed) {
-      this.handleAccountDeletion();
-    }
+    this.modalService.openDeletionModal(modalDeleteOptions);
   }
 
   /**
    * Handles the account deletion process and shows a success toast on completion.
    */
-  private handleAccountDeletion() {
+  private deleteAccoutn() {
     this.profileService.deleteAccount().subscribe((response) => {
       this.authService.logout();
       this.toastService.success(response.message);

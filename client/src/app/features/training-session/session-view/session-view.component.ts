@@ -15,6 +15,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { FormService } from '../../../core/services/form.service';
+import { BasicInfoModalOptionsBuilder } from '../../../core/services/modal/basic-info/basic-info-modal-options-builder';
 import { ModalService } from '../../../core/services/modal/modal.service';
 import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
 import { InputComponent } from '../../../shared/components/input/input.component';
@@ -202,23 +203,26 @@ export class SessionViewComponent implements OnInit, SetHeadlineInfo {
     this.trainingSessionExercises.set(trainingSessionExercises);
   }
 
-  private async startNewSesson() {
-    const confirmed = await this.modalService.openBasicInfoModal({
-      title: 'Neues Training',
-      infoText: 'Bist du dir sicher, dass du ein neues Training starten willst?',
-      buttonText: 'Starten',
-    });
+  private startNewSesson() {
+    const basicInfoModalOptions = new BasicInfoModalOptionsBuilder()
+      .setTitle('Neues Training')
+      .setInfoText('Bist du dir sicher, dass du ein neues Training starten willst?')
+      .setButtonText('Starten')
+      .setOnSubmitCallback(() => this.startNewTrainingSession())
+      .build();
 
-    if (confirmed) {
-      this.trainingSessionService.startNewTrainingSession(this.sessionId()).subscribe((response) => {
-        this.router.navigate(['/session/view'], {
-          queryParams: {
-            sessionId: this.sessionId(),
-            version: response.version,
-          },
-        });
+    this.modalService.openBasicInfoModal(basicInfoModalOptions);
+  }
+
+  private startNewTrainingSession(): void {
+    this.trainingSessionService.startNewTrainingSession(this.sessionId()).subscribe((response) => {
+      this.router.navigate(['/session/view'], {
+        queryParams: {
+          sessionId: this.sessionId(),
+          version: response.version,
+        },
       });
-    }
+    });
   }
 
   /**

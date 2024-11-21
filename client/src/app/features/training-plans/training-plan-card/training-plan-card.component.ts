@@ -12,7 +12,6 @@ import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
 import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
 import { FormatDatePipe } from '../../../shared/pipes/format-date.pipe';
-import { TrainingSessionService } from '../../training-session/training-session-service';
 import { TrainingPlanEditView } from '../model/training-plan-edit-view';
 import { TrainingPlanEditViewDto } from '../model/training-plan-edit-view-dto';
 import { EditTrainingPlanComponent } from '../training-plans/edit-training/edit-training.component';
@@ -31,7 +30,7 @@ import { TrainingWeekDayDto } from './training-week-day-dto';
   imports: [CommonModule, TooltipDirective, IconButtonComponent, IconComponent, FormatDatePipe],
   templateUrl: './training-plan-card.component.html',
   styleUrls: ['./training-plan-card.component.scss'],
-  providers: [TrainingPlanCardService, TrainingSessionService],
+  providers: [TrainingPlanCardService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TrainingPlanCardComponent {

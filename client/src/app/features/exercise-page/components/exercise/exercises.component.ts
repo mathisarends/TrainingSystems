@@ -3,6 +3,7 @@ import { Component, DestroyRef, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
 import { FormService } from '../../../../core/services/form.service';
+import { BasicInfoModalOptionsBuilder } from '../../../../core/services/modal/basic-info/basic-info-modal-options-builder';
 import { ModalService } from '../../../../core/services/modal/modal.service';
 import { DropdownComponent } from '../../../../shared/components/dropdown/dropdown.component';
 import { InputComponent } from '../../../../shared/components/input/input.component';
@@ -136,7 +137,7 @@ export class ExercisesComponent implements OnInit, SetHeadlineInfo {
 
   setHeadlineInfo() {
     const nmoreOptions: MoreOptionListItem[] = [
-      { label: 'Zurücksetzen', icon: IconName.Trash, callback: this.onReset.bind(this) },
+      { label: 'Zurücksetzen', icon: IconName.Trash, callback: () => this.showResetExercisesModal() },
     ];
 
     this.headerService.setHeadlineInfo({
@@ -148,17 +149,21 @@ export class ExercisesComponent implements OnInit, SetHeadlineInfo {
   /**
    * Resets the exercises to their default settings after confirming via a modal dialog.
    */
-  async onReset(): Promise<void> {
-    const confirmed = await this.modalService.openBasicInfoModal({
-      title: 'Übungen zurücksetzen',
-      buttonText: 'Zurücksetzen',
-      isDestructiveAction: true,
-      infoText:
+  showResetExercisesModal(): void {
+    const basicInfoModalOptions = new BasicInfoModalOptionsBuilder()
+      .setTitle('Übungen zurücksetzen')
+      .setButtonText('Zurücksetzen')
+      .setIsDestructiveAction(true)
+      .setInfoText(
         'Bist du dir sicher, dass du die Übungen auf die Standarteinstellungen zurücksetzen willst? Die Änderungen können danach nicht wieder rückgängig gemacht werden!',
-    });
+      )
+      .setOnSubmitCallback(() => this.resetExercsies())
+      .build();
 
-    if (confirmed) {
-      this.exerciseData$ = this.exerciseService.resetExercises();
-    }
+    this.modalService.openBasicInfoModal(basicInfoModalOptions);
+  }
+
+  resetExercsies(): void {
+    this.exerciseData$ = this.exerciseService.resetExercises();
   }
 }

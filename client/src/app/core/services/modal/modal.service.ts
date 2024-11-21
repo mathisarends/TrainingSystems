@@ -44,66 +44,22 @@ export class ModalService {
    * @param options - The options for the modal dialog.
    * @returns A promise that resolves when the modal is confirmed or rejected.
    */
-  open(options: ModalOptions): Promise<boolean> {
-    return new Promise<boolean>((resolve) => {
-      this.overlayComponentRef = createComponent(ModalOverlayComponent, {
-        environmentInjector: this.environmentInjector,
-        elementInjector: this.injector,
-      });
+  open(options: ModalOptions): void {
+    this.createOverlayComponent();
 
-      this.appRef.attachView(this.overlayComponentRef.hostView);
-      document.body.appendChild(this.overlayComponentRef.location.nativeElement);
+    this.createModalComponent(options);
 
-      const modalInjector = Injector.create({
-        parent: this.injector,
-        providers: this.resolveProviderMap(options.providerMap),
-      });
+    // Set modal options
+    this.setModalInstanceOptions(options);
 
-      this.modalComponentRef = createComponent(ModalComponent, {
-        environmentInjector: this.environmentInjector,
-        elementInjector: modalInjector,
-      });
+    this.isVisible.set(true);
 
-      this.appRef.attachView(this.modalComponentRef.hostView);
-      document.body.appendChild(this.modalComponentRef.location.nativeElement);
+    this.modalComponentRef.instance.confirmed.subscribe(() => {
+      this.close();
+    });
 
-      this.modalComponentRef.instance.childComponentType = options.component;
-      this.modalComponentRef.instance.title = options.title;
-      this.modalComponentRef.instance.size = options.size ?? ModalSize.MEDIUM;
-      this.modalComponentRef.instance.footer = options.hasFooter ?? true;
-      this.modalComponentRef.instance.confirmationRequired = options.confirmationRequired ?? false;
-
-      if (options.isDestructiveAction) {
-        this.modalComponentRef.instance.isDestructiveAction = true;
-      }
-
-      if (options.buttonText) {
-        this.modalComponentRef.instance.confirmButtonText = options.buttonText;
-      }
-
-      if (options.secondaryButtonText) {
-        this.modalComponentRef.instance.secondaryButtonText = options.secondaryButtonText;
-      }
-
-      if (options.componentData) {
-        this.modalComponentRef.instance.childComponentData.set(options.componentData);
-      }
-
-      if (options.onSubmitCallback) {
-        this.onSubmitCallback = options.onSubmitCallback;
-      }
-
-      this.isVisible.set(true);
-
-      this.modalComponentRef.instance.confirmed.subscribe(() => {
-        resolve(true);
-        this.close();
-      });
-
-      this.modalComponentRef.instance.cancelled.subscribe(() => {
-        resolve(false);
-        this.close();
-      });
+    this.modalComponentRef.instance.cancelled.subscribe(() => {
+      this.close();
     });
   }
 
@@ -176,8 +132,12 @@ export class ModalService {
    * @param options - The specific options for the basic info modal.
    * @returns A promise that resolves when the modal is confirmed or rejected.
    */
-  openBasicInfoModal(options: BasicInfoModalOptions): Promise<boolean> {
-    return this.open({
+  openBasicInfoModal(options: BasicInfoModalOptions): void {
+    if (options.onSubmitCallback) {
+      this.onSubmitCallback = options.onSubmitCallback;
+    }
+
+    this.open({
       component: BasicInfoComponent,
       title: options.title,
       buttonText: options.buttonText ?? 'Verstanden',
@@ -217,5 +177,64 @@ export class ModalService {
     this.modalConfirmationService.cancel();
 
     this.isVisible.set(false);
+  }
+
+  private createOverlayComponent(): void {
+    this.overlayComponentRef = createComponent(ModalOverlayComponent, {
+      environmentInjector: this.environmentInjector,
+      elementInjector: this.injector,
+    });
+    this.appRef.attachView(this.overlayComponentRef.hostView);
+    document.body.appendChild(this.overlayComponentRef.location.nativeElement);
+  }
+
+  private createModalComponent(options: ModalOptions): void {
+    const modalInjector = Injector.create({
+      parent: this.injector,
+      providers: this.resolveProviderMap(options.providerMap),
+    });
+
+    this.modalComponentRef = createComponent(ModalComponent, {
+      environmentInjector: this.environmentInjector,
+      elementInjector: modalInjector,
+    });
+    this.appRef.attachView(this.modalComponentRef.hostView);
+    document.body.appendChild(this.modalComponentRef.location.nativeElement);
+  }
+
+  private setModalInstanceOptions(options: ModalOptions): void {
+    this.modalComponentRef.instance.childComponentType = options.component;
+    this.modalComponentRef.instance.title = options.title;
+    this.modalComponentRef.instance.size = options.size ?? ModalSize.MEDIUM;
+    this.modalComponentRef.instance.footer = options.hasFooter ?? true;
+    this.modalComponentRef.instance.confirmationRequired = options.confirmationRequired ?? false;
+
+    if (options.isDestructiveAction) {
+      this.modalComponentRef.instance.isDestructiveAction = true;
+    }
+
+    if (options.buttonText) {
+      this.modalComponentRef.instance.confirmButtonText = options.buttonText;
+    }
+
+    if (options.secondaryButtonText) {
+      this.modalComponentRef.instance.secondaryButtonText = options.secondaryButtonText;
+    }
+
+    if (options.componentData) {
+      this.modalComponentRef.instance.childComponentData.set(options.componentData);
+    }
+
+    if (options.onSubmitCallback) {
+      this.onSubmitCallback = options.onSubmitCallback;
+    }
+  }
+
+  private destroyModal(): void {
+    this.appRef.detachView(this.modalComponentRef.hostView);
+    this.modalComponentRef.destroy();
+
+    this.appRef.detachView(this.overlayComponentRef.hostView);
+    this.overlayComponentRef.destroy();
   }
 }
