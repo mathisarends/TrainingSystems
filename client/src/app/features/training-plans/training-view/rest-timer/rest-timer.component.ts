@@ -1,5 +1,5 @@
 import { Component, effect, Injector, OnInit, signal, WritableSignal } from '@angular/core';
-import { ModalService } from '../../../../core/services/modal/modalService';
+import { ModalService } from '../../../../core/services/modal/modal.service';
 import { PercentageCircleVisualisationComponent } from '../../../../shared/components/percentage-circle-visualisation/percentage-circle-visualisation.component';
 import { Percentage } from '../../../../shared/components/percentage-circle-visualisation/percentage.type';
 import { IconName } from '../../../../shared/icon/icon-name';

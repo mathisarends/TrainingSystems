@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, effect, HostBinding, HostListener, Injector, OnInit, signal } from '@angular/core';
-import { ModalService } from '../../../../core/services/modal/modalService';
+import { ModalService } from '../../../../core/services/modal/modal.service';
 import { toggleCollapseAnimation } from '../../../../shared/animations/toggle-collapse';
 import { IconBackgroundColor } from '../../../../shared/components/icon-list-item/icon-background-color';
 import { IconName } from '../../../../shared/icon/icon-name';

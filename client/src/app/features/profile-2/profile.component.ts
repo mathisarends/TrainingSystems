@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { ModalOptionsBuilder } from '../../core/services/modal/modal-options-builder';
-import { ModalService } from '../../core/services/modal/modalService';
+import { ModalService } from '../../core/services/modal/modal.service';
 import { IconBackgroundColor } from '../../shared/components/icon-list-item/icon-background-color';
 import { IconListItem } from '../../shared/components/icon-list-item/icon-list-item';
 import { IconListeItemComponent } from '../../shared/components/icon-list-item/icon-list-item.component';

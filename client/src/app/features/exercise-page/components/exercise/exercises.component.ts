@@ -3,7 +3,7 @@ import { Component, DestroyRef, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
 import { FormService } from '../../../../core/services/form.service';
-import { ModalService } from '../../../../core/services/modal/modalService';
+import { ModalService } from '../../../../core/services/modal/modal.service';
 import { DropdownComponent } from '../../../../shared/components/dropdown/dropdown.component';
 import { InputComponent } from '../../../../shared/components/input/input.component';
 import { MoreOptionListItem } from '../../../../shared/components/more-options-button/more-option-list-item';

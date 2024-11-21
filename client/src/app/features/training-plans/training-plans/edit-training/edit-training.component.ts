@@ -5,7 +5,6 @@ import { ToDropDownOptionsPipe } from '../../../../shared/components/floating-la
 import { FormInputComponent } from '../../../../shared/components/form-input/form-input.component';
 import { TrainingBannerComponent } from '../../../../shared/components/training-banner/training-banner.component';
 import { ImageUploadService } from '../../../../shared/service/image-upload.service';
-import { TrainingSessionService } from '../../../training-session/training-session-service';
 import { TrainingPlanEditView } from '../../model/training-plan-edit-view';
 import { TrainingPlanType } from '../../training-view/models/training-plan-type';
 
@@ -19,19 +18,16 @@ import { TrainingPlanType } from '../../training-view/models/training-plan-type'
     TrainingBannerComponent,
     FormInputComponent,
   ],
-  templateUrl: './create-training.component.html',
-  styleUrls: ['./create-training.component.scss'],
-  providers: [TrainingSessionService],
+  templateUrl: './edit-training.component.html',
+  styleUrls: ['./edit-training.component.scss'],
 })
-export class CreateTrainingComponent {
+export class EditTrainingPlanComponent {
   protected readonly TrainingPlanType = TrainingPlanType;
 
   /**
    * Signal indicating whether the training plan is loading.
    */
   loading = signal(true);
-
-  selectedPlanId = signal<string>('');
 
   constructor(
     protected trainingPlanEditView: TrainingPlanEditView,

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, OnInit, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ModalOptionsBuilder } from '../../../core/services/modal/modal-options-builder';
-import { ModalService } from '../../../core/services/modal/modalService';
+import { ModalService } from '../../../core/services/modal/modal.service';
 import { AlertComponent } from '../../../shared/components/alert/alert.component';
 import { CircularIconButtonComponent } from '../../../shared/components/circular-icon-button/circular-icon-button.component';
 import { IconListeItemComponent } from '../../../shared/components/icon-list-item/icon-list-item.component';
@@ -18,7 +18,7 @@ import { TrainingPlanEditView } from '../model/training-plan-edit-view';
 import { TrainingPlanCardComponent } from '../training-plan-card/training-plan-card.component';
 import { TrainingPlanCardView } from '../training-view/models/exercise/training-plan-card-view-dto';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
-import { CreateTrainingComponent } from './create-training/create-training.component';
+import { EditTrainingPlanComponent } from './edit-training/edit-training.component';
 import { TrainingSchedulingComponent } from './training-scheduling/training-scheduling.component';
 
 /**
@@ -102,7 +102,7 @@ export class TrainingPlansComponent implements OnInit, SetHeadlineInfo {
     const modalTabs: ModalTab[] = [
       {
         label: 'Allgemein',
-        component: CreateTrainingComponent,
+        component: EditTrainingPlanComponent,
       },
       {
         label: 'Kalendar',

@@ -1,6 +1,5 @@
 import { Component, HostListener, input } from '@angular/core';
-import { Router } from '@angular/router';
-import { ModalService } from '../../../core/services/modal/modalService';
+import { ModalService } from '../../../core/services/modal/modal.service';
 import { ModalSize } from '../../../core/services/modal/modalSize';
 import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
@@ -28,10 +27,7 @@ export class CalendarEventComponent {
    */
   isTrainingLog = input.required<boolean>();
 
-  constructor(
-    private router: Router,
-    private modalService: ModalService,
-  ) {}
+  constructor(private modalService: ModalService) {}
 
   @HostListener('click')
   onHostClick() {

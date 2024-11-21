@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { ModalOptionsBuilder } from '../../../core/services/modal/modal-options-builder';
-import { ModalService } from '../../../core/services/modal/modalService';
+import { ModalService } from '../../../core/services/modal/modal.service';
 import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
 import { ModalTab } from '../../../shared/components/modal/types/modal-tab';
 import { ToastService } from '../../../shared/components/toast/toast.service';
@@ -14,7 +14,7 @@ import { FormatDatePipe } from '../../../shared/pipes/format-date.pipe';
 import { TrainingSessionService } from '../../training-session/training-session-service';
 import { TrainingPlanEditView } from '../model/training-plan-edit-view';
 import { TrainingPlanEditViewDto } from '../model/training-plan-edit-view-dto';
-import { CreateTrainingComponent } from '../training-plans/create-training/create-training.component';
+import { EditTrainingPlanComponent } from '../training-plans/edit-training/edit-training.component';
 import { TrainingSchedulingComponent } from '../training-plans/training-scheduling/training-scheduling.component';
 import { TrainingPlanCardView } from '../training-view/models/exercise/training-plan-card-view-dto';
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
@@ -52,7 +52,6 @@ export class TrainingPlanCardComponent {
     private toastService: ToastService,
     private trainingPlanCardService: TrainingPlanCardService,
     private trainingPlanService: TrainingPlanService,
-    private trainingSessionService: TrainingSessionService,
   ) {}
 
   /**
@@ -85,7 +84,7 @@ export class TrainingPlanCardComponent {
     const modalTabs: ModalTab[] = [
       {
         label: 'Allgemein',
-        component: CreateTrainingComponent,
+        component: EditTrainingPlanComponent,
       },
       {
         label: 'Kalendar',
@@ -135,26 +134,15 @@ export class TrainingPlanCardComponent {
       return;
     }
 
-    // Call the appropriate delete handler based on the type
-    this.handleDeleteForTrainingPlan();
+    this.deleteTrainingPlan();
   }
 
   /**
    * Deletes a training plan.
    */
-  private handleDeleteForTrainingPlan(): void {
+  private deleteTrainingPlan(): void {
     this.trainingPlanCardService.deleteTrainingPlan(this.trainingPlan().id).subscribe(() => {
       this.toastService.success('Plan gelöscht');
-      this.emitChanges();
-    });
-  }
-
-  /**
-   * Deletes a training session.
-   */
-  private handleDeleteForTrainingSession(): void {
-    this.trainingSessionService.deleteTrainingSession(this.trainingPlan().id).subscribe(() => {
-      this.toastService.success('Session gelöscht');
       this.emitChanges();
     });
   }

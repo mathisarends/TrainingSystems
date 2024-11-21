@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, signal, WritableSignal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
-import { ModalService } from '../../../core/services/modal/modalService';
+import { ModalService } from '../../../core/services/modal/modal.service';
 import { ModalSize } from '../../../core/services/modal/modalSize';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
 import { IconName } from '../../../shared/icon/icon-name';

@@ -2,7 +2,6 @@ import { Injectable, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, map, Observable, of } from 'rxjs';
 import { HttpService } from './http-client.service';
-import { ModalService } from './modal/modalService';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +11,6 @@ export class AuthService {
 
   constructor(
     private httpService: HttpService,
-    private modalService: ModalService,
     private router: Router,
   ) {}
 

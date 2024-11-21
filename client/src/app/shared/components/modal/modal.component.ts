@@ -19,7 +19,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter, first, firstValueFrom, Observable } from 'rxjs';
-import { ModalService } from '../../../core/services/modal/modalService';
+import { ModalService } from '../../../core/services/modal/modal.service';
 import { ModalSize } from '../../../core/services/modal/modalSize';
 import { MobileDeviceDetectionService } from '../../../platform/mobile-device-detection.service';
 import { DraggableDirective } from '../../directives/draggable.directive';

@@ -7,7 +7,7 @@ import { forkJoin, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { FormService } from '../../../core/services/form.service';
 import { ModalOptionsBuilder } from '../../../core/services/modal/modal-options-builder';
-import { ModalService } from '../../../core/services/modal/modalService';
+import { ModalService } from '../../../core/services/modal/modal.service';
 import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
 import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
 import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
