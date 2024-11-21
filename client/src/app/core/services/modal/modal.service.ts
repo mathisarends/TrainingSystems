@@ -49,7 +49,6 @@ export class ModalService {
 
     this.createModalComponent(options);
 
-    // Set modal options
     this.setModalInstanceOptions(options);
 
     this.isVisible.set(true);
@@ -64,54 +63,24 @@ export class ModalService {
   }
 
   openModalTabs(options: ModalOptions) {
-    return new Promise<boolean>((resolve) => {
-      this.overlayComponentRef = createComponent(ModalOverlayComponent, {
-        environmentInjector: this.environmentInjector,
-        elementInjector: this.injector,
-      });
+    this.createOverlayComponent();
 
-      this.appRef.attachView(this.overlayComponentRef.hostView);
-      document.body.appendChild(this.overlayComponentRef.location.nativeElement);
+    this.createModalComponent(options);
 
-      const modalInjector = Injector.create({
-        parent: this.injector,
-        providers: this.resolveProviderMap(options.providerMap),
-      });
+    this.setModalInstanceOptions(options);
 
-      this.modalComponentRef = createComponent(ModalComponent, {
-        environmentInjector: this.environmentInjector,
-        elementInjector: modalInjector,
-      });
+    if (options.tabs) {
+      this.modalComponentRef.instance.tabs.set(options.tabs);
+    }
 
-      this.appRef.attachView(this.modalComponentRef.hostView);
-      document.body.appendChild(this.modalComponentRef.location.nativeElement);
+    this.isVisible.set(true);
 
-      this.modalComponentRef.instance.size = options.size ?? ModalSize.MEDIUM;
-      this.modalComponentRef.instance.confirmationRequired = options.confirmationRequired ?? false;
+    this.modalComponentRef.instance.confirmed.subscribe(() => {
+      this.close();
+    });
 
-      if (options.buttonText) {
-        this.modalComponentRef.instance.confirmButtonText = options.buttonText;
-      }
-
-      if (options.tabs) {
-        this.modalComponentRef.instance.tabs.set(options.tabs);
-      }
-
-      if (options.onSubmitCallback) {
-        this.onSubmitCallback = options.onSubmitCallback;
-      }
-
-      this.isVisible.set(true);
-
-      this.modalComponentRef.instance.confirmed.subscribe(() => {
-        resolve(true);
-        this.close();
-      });
-
-      this.modalComponentRef.instance.cancelled.subscribe(() => {
-        resolve(false);
-        this.close();
-      });
+    this.modalComponentRef.instance.cancelled.subscribe(() => {
+      this.close();
     });
   }
 
@@ -228,13 +197,5 @@ export class ModalService {
     if (options.onSubmitCallback) {
       this.onSubmitCallback = options.onSubmitCallback;
     }
-  }
-
-  private destroyModal(): void {
-    this.appRef.detachView(this.modalComponentRef.hostView);
-    this.modalComponentRef.destroy();
-
-    this.appRef.detachView(this.overlayComponentRef.hostView);
-    this.overlayComponentRef.destroy();
   }
 }

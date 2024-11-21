@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, signal } from '@angular/core';
-import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { DatePickerComponent } from '../../../../shared/components/datepicker/date-picker.component';
+import { InfoComponent } from '../../../../shared/components/info/info.component';
 import { TrainingPlanEditView } from '../../model/training-plan-edit-view';
 import { DaySelectedPipe } from './day-selected-pipe';
 
 @Component({
   selector: 'app-training-scheduling',
   standalone: true,
-  imports: [AlertComponent, CommonModule, DaySelectedPipe, DatePickerComponent],
+  imports: [InfoComponent, CommonModule, DaySelectedPipe, DatePickerComponent],
   templateUrl: './training-scheduling.component.html',
   styleUrls: ['./training-scheduling.component.scss'],
 })

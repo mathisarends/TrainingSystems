@@ -1,13 +1,13 @@
 import { DOCUMENT } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
-import { AlertComponent } from '../../../shared/components/alert/alert.component';
+import { InfoComponent } from '../../../shared/components/info/info.component';
 
 declare const google: any;
 
 @Component({
   selector: 'app-login-modal',
   standalone: true,
-  imports: [AlertComponent],
+  imports: [InfoComponent],
   templateUrl: './login-modal.component.html',
   styleUrls: ['./login-modal.component.scss'],
 })

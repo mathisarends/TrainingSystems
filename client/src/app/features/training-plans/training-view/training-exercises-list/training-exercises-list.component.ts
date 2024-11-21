@@ -2,14 +2,13 @@
 import { CdkDrag, CdkDragDrop, CdkDragPlaceholder, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component } from '@angular/core';
 import { FormService } from '../../../../core/services/form.service';
-import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { TrainingDayLocatorService } from '../services/training-day-locator.service';
 import { TrainingPlanDataService } from '../services/training-plan-data.service';
 
 @Component({
   selector: 'app-training-exercises-list',
   standalone: true,
-  imports: [CdkDropList, CdkDrag, CdkDragPlaceholder, AlertComponent],
+  imports: [CdkDropList, CdkDrag, CdkDragPlaceholder],
   templateUrl: './training-exercises-list.component.html',
   styleUrls: ['./training-exercises-list.component.scss'],
 })

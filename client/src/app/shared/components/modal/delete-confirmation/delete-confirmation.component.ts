@@ -3,7 +3,7 @@ import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IconName } from '../../../icon/icon-name';
 import { IconComponent } from '../../../icon/icon.component';
-import { AlertComponent } from '../../alert/alert.component';
+import { InfoComponent } from '../../info/info.component';
 import { ModalConfirmationService } from '../modal-confirmation.service';
 import { OnConfirm } from '../on-confirm';
 import { DeleteValidationPipe } from './deletion-validation-class.pipe';
@@ -18,7 +18,7 @@ import { DeleteValidationPipe } from './deletion-validation-class.pipe';
   templateUrl: './delete-confirmation.component.html',
   styleUrls: ['./delete-confirmation.component.scss'],
   standalone: true,
-  imports: [FormsModule, AlertComponent, CommonModule, DeleteValidationPipe, IconComponent],
+  imports: [FormsModule, InfoComponent, CommonModule, DeleteValidationPipe, IconComponent],
 })
 export class DeleteConfirmationComponent implements OnConfirm {
   protected readonly IconName = IconName;

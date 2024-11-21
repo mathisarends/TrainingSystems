@@ -1,7 +1,7 @@
 @if (trainingDay$ | async; as trainingDay) {
   <div class="exercise-list">
     @if (trainingDay.exercises.length === 0) {
-      <app-alert [alertText]="'Für diesen Trainingstag wurden noch keine Übungen definiert'" [alertType]="'light'" />
+      <p>Für diesen Trainingstag wurden noch keine Übungen definiert</p>
     } @else {
       @for (exercise of trainingDay.exercises; track exercise) {
         <div class="exercise-list-item">

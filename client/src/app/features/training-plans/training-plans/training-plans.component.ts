@@ -1,15 +1,11 @@
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, OnInit, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ModalOptionsBuilder } from '../../../core/services/modal/modal-options-builder';
 import { ModalService } from '../../../core/services/modal/modal.service';
-import { AlertComponent } from '../../../shared/components/alert/alert.component';
-import { CircularIconButtonComponent } from '../../../shared/components/circular-icon-button/circular-icon-button.component';
-import { IconListeItemComponent } from '../../../shared/components/icon-list-item/icon-list-item.component';
+import { InfoComponent } from '../../../shared/components/info/info.component';
 import { SkeletonCardComponent } from '../../../shared/components/loader/skeleton-card/skeleton-card.component';
 import { ModalTab } from '../../../shared/components/modal/types/modal-tab';
-import { SearchBarComponent } from '../../../shared/components/search-bar/search-bar.component';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
 import { IconName } from '../../../shared/icon/icon-name';
 import { HeaderService } from '../../header/header.service';
@@ -27,17 +23,7 @@ import { TrainingSchedulingComponent } from './training-scheduling/training-sche
 @Component({
   selector: 'app-training-plans',
   standalone: true,
-  imports: [
-    AlertComponent,
-    CommonModule,
-    TrainingPlanCardComponent,
-    SkeletonCardComponent,
-    CircularIconButtonComponent,
-    SearchBarComponent,
-    DragDropModule,
-    SpinnerComponent,
-    IconListeItemComponent,
-  ],
+  imports: [CommonModule, TrainingPlanCardComponent, SkeletonCardComponent, SpinnerComponent, InfoComponent],
   templateUrl: './training-plans.component.html',
   styleUrls: ['./training-plans.component.scss'],
   providers: [TrainingPlanService],

@@ -3,7 +3,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AverageTrainingDayDurationDto } from '@shared/charts/average-training-day-duration.dto';
 import { ChartDataDto } from '@shared/charts/chart-data.dto';
 import { forkJoin } from 'rxjs';
-import { AlertComponent } from '../../../shared/components/alert/alert.component';
 import { ChartData } from '../../../shared/components/charts/chart-data';
 import { BarChartDataset } from '../../../shared/components/charts/grouped-bar-chart/bar-chart.-data-set';
 import { GroupedBarChartComponent } from '../../../shared/components/charts/grouped-bar-chart/grouped-bar-chart.component';
@@ -42,7 +41,7 @@ import { TrainingStatisticsService } from './training-statistics.service';
     GroupedBarChartComponent,
     NoStatisticsAvailableComponent,
   ],
-  providers: [TrainingStatisticsService, KeyboardService, PaginationComponent, ImageDownloadService, AlertComponent],
+  providers: [TrainingStatisticsService, KeyboardService, PaginationComponent, ImageDownloadService],
   templateUrl: './training-plan-statistics.component.html',
   styleUrls: ['./training-plan-statistics.component.scss'],
 })

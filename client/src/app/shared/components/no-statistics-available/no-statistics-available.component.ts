@@ -1,13 +1,13 @@
 import { Component, input } from '@angular/core';
 import { IconName } from '../../icon/icon-name';
-import { AlertComponent } from '../alert/alert.component';
 import { IconBackgroundColor } from '../icon-list-item/icon-background-color';
 import { IconListeItemComponent } from '../icon-list-item/icon-list-item.component';
+import { InfoComponent } from '../info/info.component';
 
 @Component({
   selector: 'app-no-statistics-available',
   standalone: true,
-  imports: [IconListeItemComponent, AlertComponent],
+  imports: [IconListeItemComponent, InfoComponent],
   templateUrl: './no-statistics-available.component.html',
   styleUrls: ['./no-statistics-available.component.scss'],
 })

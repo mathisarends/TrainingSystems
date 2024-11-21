@@ -1,15 +1,15 @@
 import { Component, input, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpService } from '../../../../core/services/http-client.service';
-import { AlertComponent } from '../../../../shared/components/alert/alert.component';
 import { FloatingLabelInputComponent } from '../../../../shared/components/floating-label-input/floating-label-input.component';
+import { InfoComponent } from '../../../../shared/components/info/info.component';
 import { OnConfirm } from '../../../../shared/components/modal/on-confirm';
 import { ToastService } from '../../../../shared/components/toast/toast.service';
 
 @Component({
   selector: 'app-auto-progression',
   standalone: true,
-  imports: [ReactiveFormsModule, AlertComponent, FloatingLabelInputComponent],
+  imports: [ReactiveFormsModule, InfoComponent, FloatingLabelInputComponent],
   templateUrl: './auto-progression.component.html',
   styleUrl: './auto-progression.component.scss',
 })

@@ -3,7 +3,6 @@ import { Component, effect, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
-import { AlertComponent } from '../../../shared/components/alert/alert.component';
 import { ChartSkeletonComponent } from '../../../shared/components/loader/chart-skeleton/chart-skeleton.component';
 import { OnConfirm } from '../../../shared/components/modal/on-confirm';
 import { TrainingDay } from '../../training-plans/training-view/training-day';
@@ -11,7 +10,7 @@ import { TrainingDay } from '../../training-plans/training-view/training-day';
 @Component({
   selector: 'app-training-preview-popup',
   standalone: true,
-  imports: [ChartSkeletonComponent, AsyncPipe, AlertComponent],
+  imports: [ChartSkeletonComponent, AsyncPipe],
   templateUrl: './training-preview-popup.component.html',
   styleUrls: ['./training-preview-popup.component.scss'],
 })
