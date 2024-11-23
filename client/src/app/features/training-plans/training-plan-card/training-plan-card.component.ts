@@ -97,7 +97,7 @@ export class TrainingPlanCardComponent {
       .setTitle('Trainingsplan bearbeiten')
       .setButtonText('Speichern')
       .setProviderMap(providerMap)
-      .setOnSubmitCallback(() => this.editTrainingPlan(trainingPlanEditView.toDto()))
+      .setOnSubmitCallback(async () => this.editTrainingPlan(trainingPlanEditView.toDto()))
       .build();
 
     await this.modalService.openModalTabs(modalOptions);
@@ -126,7 +126,7 @@ export class TrainingPlanCardComponent {
       .setButtonText('Löschen')
       .setInfoText('Diese Änderung kann nicht mehr rückgängig gemacht werden!')
       .setDeletionKeyword(this.trainingPlan().title)
-      .setOnSubmitCallback(() => this.deleteTrainingPlan())
+      .setOnSubmitCallback(async () => this.deleteTrainingPlan())
       .build();
 
     this.modalService.openDeletionModal(deleteModalOptions);

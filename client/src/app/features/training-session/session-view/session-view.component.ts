@@ -208,7 +208,7 @@ export class SessionViewComponent implements OnInit, SetHeadlineInfo {
       .setTitle('Neues Training')
       .setInfoText('Bist du dir sicher, dass du ein neues Training starten willst?')
       .setButtonText('Starten')
-      .setOnSubmitCallback(() => this.startNewTrainingSession())
+      .setOnSubmitCallback(async () => this.startNewTrainingSession())
       .build();
 
     this.modalService.openBasicInfoModal(basicInfoModalOptions);

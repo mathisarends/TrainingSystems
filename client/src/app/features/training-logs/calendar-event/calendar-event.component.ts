@@ -69,7 +69,7 @@ export class CalendarEventComponent {
         weekIndex: this.weekIndex(),
         dayIndex: this.dayIndex(),
       })
-      .setOnSubmitCallback(() => console.log(this.navigateToTrainingDay()))
+      .setOnSubmitCallback(async () => this.navigateToTrainingDay())
       .build();
 
     this.modalService.open(modalOptions);
@@ -88,7 +88,7 @@ export class CalendarEventComponent {
         weekIndex: this.weekIndex(),
         dayIndex: this.dayIndex(),
       })
-      .setOnSubmitCallback(() => console.log(this.navigateToTrainingDay()))
+      .setOnSubmitCallback(async () => this.navigateToTrainingDay())
       .build();
 
     this.modalService.open(modalOptions);

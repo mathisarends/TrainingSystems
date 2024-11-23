@@ -70,7 +70,7 @@ export interface ModalOptions {
    * A callback function to be executed when the modal's primary action is triggered.
    * Can be synchronous or asynchronous. Optional.
    */
-  onSubmitCallback?: () => void | Promise<void>;
+  onSubmitCallback?: () => Promise<void>;
 
   /**
    * A callback function to be executed when the modal's primary action is triggered.

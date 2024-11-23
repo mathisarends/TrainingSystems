@@ -28,7 +28,7 @@ export class ModalService {
 
   loading = signal(false);
 
-  onSubmitCallback?: () => void | Promise<void>;
+  onSubmitCallback?: () => Promise<void>;
 
   onValidateCallback?: () => true | string | void;
 

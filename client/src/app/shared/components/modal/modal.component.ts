@@ -8,10 +8,9 @@ import {
   DestroyRef,
   effect,
   EnvironmentInjector,
-  EventEmitter,
   Injector,
   OnInit,
-  Output,
+  output,
   signal,
   ViewChild,
   ViewContainerRef,
@@ -113,20 +112,11 @@ export class ModalComponent implements AfterViewInit, OnInit {
   /**
    * Computed property to get the index of the active tab.
    */
-  activeTabIndex = computed(() => {
-    const currentTab = this.activeTab();
-    return currentTab ? this.tabs().findIndex((tab) => tab.label === currentTab.label) : -1;
-  });
+  activeTabIndex = computed(() => this.getActiveTabIndex());
 
-  /**
-   * Emits an event when the confirm action is triggered by the user (e.g., clicking the confirm button).
-   */
-  @Output() confirmed = new EventEmitter<void>();
+  confirmed = output<void>();
 
-  /**
-   * Emits an event when the cancel action is triggered by the user (e.g., clicking the cancel button or closing the modal).
-   */
-  @Output() cancelled = new EventEmitter<void>();
+  cancelled = output<void>();
 
   constructor(
     protected mobileDeviceDetectionService: MobileDeviceDetectionService,
@@ -190,7 +180,6 @@ export class ModalComponent implements AfterViewInit, OnInit {
    */
   close(): void {
     this.cancelled.emit();
-    this.modalService.close();
   }
 
   /**
@@ -308,6 +297,11 @@ export class ModalComponent implements AfterViewInit, OnInit {
    */
   private isSignal(property: any): boolean {
     return property && typeof property === 'function' && 'set' in property;
+  }
+
+  private getActiveTabIndex(): number {
+    const currentTab = this.activeTab();
+    return currentTab ? this.tabs().findIndex((tab) => tab.label === currentTab.label) : -1;
   }
 
   /**

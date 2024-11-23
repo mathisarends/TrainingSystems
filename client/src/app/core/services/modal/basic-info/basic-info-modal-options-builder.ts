@@ -52,7 +52,7 @@ export class BasicInfoModalOptionsBuilder {
   /**
    * Sets the callback function for the modal's primary action.
    */
-  setOnSubmitCallback(callback: () => void | Promise<void>): this {
+  setOnSubmitCallback(callback: () => Promise<void>): this {
     this.options.onSubmitCallback = callback;
     return this;
   }

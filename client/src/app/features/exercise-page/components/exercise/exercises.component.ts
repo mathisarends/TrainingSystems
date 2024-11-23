@@ -157,7 +157,7 @@ export class ExercisesComponent implements OnInit, SetHeadlineInfo {
       .setInfoText(
         'Bist du dir sicher, dass du die Übungen auf die Standarteinstellungen zurücksetzen willst? Die Änderungen können danach nicht wieder rückgängig gemacht werden!',
       )
-      .setOnSubmitCallback(() => this.resetExercsies())
+      .setOnSubmitCallback(async () => this.resetExercsies())
       .build();
 
     this.modalService.openBasicInfoModal(basicInfoModalOptions);

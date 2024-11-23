@@ -207,7 +207,7 @@ export class ProfileComponent2 implements OnInit, SetHeadlineInfo {
         'Bist du dir sicher, dass du deinen Account löschen willst? Du musst diese Aktion per Email bestätigen.',
       )
       .setDeletionKeyword(this.profileService.username()!)
-      .setOnSubmitCallback(() => this.deleteAccoutn())
+      .setOnSubmitCallback(async () => this.deleteAccoutn())
       .build();
 
     this.modalService.openDeletionModal(modalDeleteOptions);
