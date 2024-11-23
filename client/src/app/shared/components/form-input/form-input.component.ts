@@ -1,15 +1,12 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   computed,
   effect,
-  ElementRef,
   HostListener,
   input,
   model,
   signal,
-  viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
@@ -21,9 +18,7 @@ import { FormsModule } from '@angular/forms';
   imports: [FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormInputComponent<T extends string | number> implements AfterViewInit {
-  private inputElement = viewChild<ElementRef<HTMLInputElement>>('inputElement');
-
+export class FormInputComponent<T extends string | number> {
   /**
    * A unique identifier for the input field.
    * Used to associate the label and input element.
@@ -77,11 +72,6 @@ export class FormInputComponent<T extends string | number> implements AfterViewI
   isTouched = signal(false);
 
   /**
-   * Determines wether the input is focused at first render.
-   */
-  focus = input(false);
-
-  /**
    * Computes the validity of the input field based on the following:
    * - If the field has not been touched, it is considered valid (initial state).
    * - After being touched, validity depends on:
@@ -105,22 +95,6 @@ export class FormInputComponent<T extends string | number> implements AfterViewI
       },
       { allowSignalWrites: true },
     );
-  }
-
-  ngAfterViewInit(): void {
-    if (this.focus()) {
-      this.setFocus();
-    }
-  }
-
-  /**
-   * Sets focus to the input element.
-   */
-  private setFocus(): void {
-    if (this.inputElement) {
-      this.inputElement()!.nativeElement.focus();
-      this.isFocused.set(true); // Update the signal
-    }
   }
 
   /**
