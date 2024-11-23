@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IconName } from '../../../icon/icon-name';
 import { IconComponent } from '../../../icon/icon.component';
@@ -24,14 +24,14 @@ export class DeleteConfirmationComponent implements OnConfirm {
   protected readonly IconName = IconName;
 
   /**
-   * Holds the deletion confirmation text to prompt the user.
-   */
-  infoText = signal<string>('');
-
-  /**
    * Holds the required keyword that the user must type to confirm deletion.
    */
   deletionKeyWord = signal<string>('');
+
+  deleteMessage = computed(
+    () =>
+      `Bist du sicher, dass du diesen Inhalt löschen möchtest? Bitte gib "${this.deletionKeyWord()}" ein, um den Löschvorgang zu bestätigen.`,
+  );
 
   /**
    * Holds the user's input for the deletion keyword.

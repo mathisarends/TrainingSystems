@@ -128,7 +128,6 @@ export class ModalService {
       isDestructiveAction: true,
       confirmationRequired: true,
       componentData: {
-        infoText: options.infoText,
         deletionKeyWord: options.deletionKeyWord,
       },
     });
