@@ -18,7 +18,6 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { filter, first, firstValueFrom, Observable } from 'rxjs';
 import { ModalService } from '../../../core/services/modal/modal.service';
 import { ModalSize } from '../../../core/services/modal/modalSize';
 import { MobileDeviceDetectionService } from '../../../platform/mobile-device-detection.service';
@@ -29,9 +28,9 @@ import { KeyboardService } from '../../service/keyboard.service';
 import { DataMap } from '../../types/data-map';
 import { ButtonComponent } from '../button/button.component';
 import { CircularIconButtonComponent } from '../circular-icon-button/circular-icon-button.component';
+import { ToastService } from '../toast/toast.service';
 import { ModalConfirmationService } from './modal-confirmation.service';
 import { ModalPaginationComponent } from './modal-pagination/modal-pagination.component';
-import { OnConfirm } from './on-confirm';
 import { OnToggleView } from './on-toggle-view';
 import { ModalTab } from './types/modal-tab';
 
@@ -135,6 +134,7 @@ export class ModalComponent implements AfterViewInit, OnInit {
     private modalConfirmationService: ModalConfirmationService,
     private environmentInjector: EnvironmentInjector,
     private modalService: ModalService,
+    private toastService: ToastService,
     private keyboardService: KeyboardService,
     private destroyRef: DestroyRef,
     private injector: Injector,
@@ -200,30 +200,19 @@ export class ModalComponent implements AfterViewInit, OnInit {
    * Calls `onConfirm` if the child component implements `ConfirmableComponent` and waits for its completion.
    */
   async confirm() {
-    const componentInstance = this.childComponentRef?.instance ?? this.activeTab()?.component;
-
     if (this.isModalGroupAndNotLastTab()) {
       this.switchToNextTab();
       return;
     }
 
-    if (this.implementsOnConfirm(componentInstance)) {
-      const result = componentInstance.onConfirm();
-
-      if (this.confirmationRequired) {
-        await this.handleConfirmationRequired();
-      }
-
-      if (result instanceof Observable) {
-        this.isLoading.set(true);
-
-        try {
-          await firstValueFrom(result);
-        } finally {
-          this.isLoading.set(false);
-        }
+    if (this.modalService.onValidateCallback) {
+      const validationResult = this.modalService.onValidateCallback();
+      if (typeof validationResult === 'string') {
+        this.toastService.error(validationResult);
+        return;
       }
     }
+
     if (this.modalService.onSubmitCallback) {
       this.modalService.onSubmitCallback();
     }
@@ -255,26 +244,6 @@ export class ModalComponent implements AfterViewInit, OnInit {
     if (this.implementsOnToggleView(componentInstance)) {
       componentInstance.onToggleView();
     }
-  }
-
-  private async handleConfirmationRequired() {
-    const confirmed = await firstValueFrom(
-      this.modalConfirmationService.requestConfirmation().pipe(
-        filter((value): value is boolean => value === true),
-        first(),
-      ),
-    );
-
-    if (confirmed) {
-      this.confirmed.emit();
-    }
-  }
-
-  /**
-   * Type guard to check if a component is ConfirmableComponent
-   */
-  private implementsOnConfirm(component: any): component is OnConfirm {
-    return (component as OnConfirm).onConfirm !== undefined;
   }
 
   /**
@@ -320,10 +289,8 @@ export class ModalComponent implements AfterViewInit, OnInit {
   }
 
   private loadTabComponent(modalTab: ModalTab): void {
-    // Entferne die bestehende Komponente, falls vorhanden
     this.modalContent.clear();
 
-    // Erstelle die neue Komponente dynamisch
     const componentRef = createComponent(modalTab.component, {
       environmentInjector: this.environmentInjector,
       elementInjector: this.modalContent.injector,

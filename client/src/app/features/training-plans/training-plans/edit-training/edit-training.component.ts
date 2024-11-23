@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { FloatingLabelInputComponent } from '../../../../shared/components/floating-label-input/floating-label-input.component';
 import { ToDropDownOptionsPipe } from '../../../../shared/components/floating-label-input/to-dropdown-options.pipe';
 import { FormInputComponent } from '../../../../shared/components/form-input/form-input.component';
@@ -23,11 +23,6 @@ import { TrainingPlanType } from '../../training-view/models/training-plan-type'
 })
 export class EditTrainingPlanComponent {
   protected readonly TrainingPlanType = TrainingPlanType;
-
-  /**
-   * Signal indicating whether the training plan is loading.
-   */
-  loading = signal(true);
 
   constructor(
     protected trainingPlanEditView: TrainingPlanEditView,

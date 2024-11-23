@@ -97,8 +97,13 @@ export class ModalOptionsBuilder {
     return this;
   }
 
-  setOnSubmitCallback(onSubmitCallback: () => void | Promise<void>) {
+  setOnSubmitCallback(onSubmitCallback: () => void | Promise<void>): this {
     this.options.onSubmitCallback = onSubmitCallback;
+    return this;
+  }
+
+  setOnValidateCallback(onValidateCallback: () => true | string | void): this {
+    this.options.onValidateCallback = onValidateCallback;
     return this;
   }
 

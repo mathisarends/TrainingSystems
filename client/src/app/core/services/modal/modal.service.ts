@@ -31,6 +31,8 @@ export class ModalService {
 
   onSubmitCallback?: () => void | Promise<void>;
 
+  onValidateCallback?: () => true | string | void;
+
   constructor(
     private appRef: ApplicationRef,
     private injector: Injector,
@@ -144,6 +146,9 @@ export class ModalService {
     this.overlayComponentRef.destroy();
     this.modalConfirmationService.cancel();
 
+    this.onValidateCallback = undefined;
+    this.onSubmitCallback = undefined;
+
     this.isVisible.set(false);
   }
 
@@ -195,6 +200,10 @@ export class ModalService {
 
     if (options.onSubmitCallback) {
       this.onSubmitCallback = options.onSubmitCallback;
+    }
+
+    if (options.onValidateCallback) {
+      this.onValidateCallback = options.onValidateCallback;
     }
   }
 }

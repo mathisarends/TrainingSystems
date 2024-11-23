@@ -74,8 +74,7 @@ export interface ModalOptions {
 
   /**
    * A callback function to be executed when the modal's primary action is triggered.
-   * Validates the user input.
-   * Returns `true` if the validation is successful, or a string containing the error message if validation fails.
+   * Validates the user input
    */
-  onValidateCallback?: () => string | true;
+  onValidateCallback?: () => true | string | void;
 }

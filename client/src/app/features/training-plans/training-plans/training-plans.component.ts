@@ -7,6 +7,7 @@ import { InfoComponent } from '../../../shared/components/info/info.component';
 import { SkeletonCardComponent } from '../../../shared/components/loader/skeleton-card/skeleton-card.component';
 import { ModalTab } from '../../../shared/components/modal/types/modal-tab';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
+import { ToastService } from '../../../shared/components/toast/toast.service';
 import { IconName } from '../../../shared/icon/icon-name';
 import { HeaderService } from '../../header/header.service';
 import { SetHeadlineInfo } from '../../header/set-headline-info';
@@ -42,6 +43,7 @@ export class TrainingPlansComponent implements OnInit, SetHeadlineInfo {
   constructor(
     protected trainingPlanService: TrainingPlanService,
     private modalService: ModalService,
+    private toastService: ToastService,
     private headerService: HeaderService,
     private destroyRef: DestroyRef,
   ) {}
@@ -104,6 +106,13 @@ export class TrainingPlansComponent implements OnInit, SetHeadlineInfo {
       .setProviderMap(providerMap)
       .setButtonText('Erstellen')
       .setOnSubmitCallback(() => this.createNewPlan(trainingPlanEditView))
+      .setOnValidateCallback(() => {
+        if (trainingPlanEditView.isValid()) {
+          return true;
+        }
+
+        return 'Bitte füllen Sie alle verpflichtenden Felder aus';
+      })
       .build();
 
     this.modalService.openModalTabs(modalOptions);
