@@ -1,5 +1,5 @@
 @if (trainingDayCalendarData$ | async; as trainingDayCalendarData) {
-  <div class="calendar-grid" appSwipe (swipeLeft)="navigateToPreviousMonth()" (swipeRight)="navigateToNextMonth()">
+  <div class="calendar-grid" appSwipe [swipeLeft]="navigateToNextMonth" [swipeRight]="navigateToPreviousMonth">
     <div class="day-name">Mo</div>
     <div class="day-name">Di</div>
     <div class="day-name">Mi</div>

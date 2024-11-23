@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, signal, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, OnInit, signal, WritableSignal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { BasicInfoModalOptionsBuilder } from '../../../core/services/modal/basic-info/basic-info-modal-options-builder';
@@ -32,8 +32,12 @@ import { MonthNavigationComponent } from './month-navigation/month-navigation.co
   styleUrls: ['./training-calendar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TrainingLogCalendarComponent implements SetHeadlineInfo {
+export class TrainingLogCalendarComponent implements OnInit, SetHeadlineInfo {
   protected readonly IconName = IconName;
+
+  /**
+   * Array of month names for calendar display.
+   */
   monthNames: string[] = [
     'Januar',
     'Februar',
@@ -48,19 +52,44 @@ export class TrainingLogCalendarComponent implements SetHeadlineInfo {
     'November',
     'Dezember',
   ];
-
+  /**
+   * Signal representing the current day of the month.
+   */
   currentDay = signal(new Date().getDate());
 
+  /**
+   * Signal representing the current month (0-based index).
+   */
   currentMonth = signal(new Date().getMonth());
 
+  /**
+   * Computed signal that maps the current month index to its name.
+   */
   currentMonthName = computed(() => this.monthNames[this.currentMonth()]);
 
+  /**
+   * Signal representing the current year.
+   */
   currentYear = signal(new Date().getFullYear());
 
+  /**
+   * Signal holding the days within the current month.
+   */
   daysInMonth: WritableSignal<number[]> = signal([]);
+
+  /**
+   * Signal holding days from the previous month that appear in the current month's calendar view.
+   */
   daysFromPreviousMonth: WritableSignal<number[]> = signal([]);
+
+  /**
+   * Signal holding days from the next month that appear in the current month's calendar view.
+   */
   daysFromNextMonth: WritableSignal<number[]> = signal([]);
 
+  /**
+   * Observable providing the training calendar data from the server.
+   */
   trainingDayCalendarData$: Observable<TrainingDayCalendarDataDto> | undefined = undefined;
 
   constructor(
@@ -69,13 +98,7 @@ export class TrainingLogCalendarComponent implements SetHeadlineInfo {
     private headerService: HeaderService,
     private keyboardService: KeyboardService,
   ) {
-    this.keyboardService.arrowLeftPressed$().subscribe(() => {
-      this.navigateToPreviousMonth();
-    });
-
-    this.keyboardService.arrowRightPressed$().subscribe(() => {
-      this.navigateToNextMonth();
-    });
+    this.setupKeyboardListeners();
 
     effect(
       () => {
@@ -88,6 +111,13 @@ export class TrainingLogCalendarComponent implements SetHeadlineInfo {
     this.trainingDayCalendarData$ = this.httpService.get<TrainingDayCalendarDataDto>('/training-calendar');
   }
 
+  ngOnInit(): void {
+    this.navigateToPreviousMonth = this.navigateToPreviousMonth.bind(this);
+    this.navigateToNextMonth = this.navigateToNextMonth.bind(this);
+  }
+  /**
+   * Updates the headline information in the header based on the current month and year.
+   */
   setHeadlineInfo(): void {
     this.headerService.setHeadlineInfo({
       title: this.currentMonthName(),
@@ -107,6 +137,9 @@ export class TrainingLogCalendarComponent implements SetHeadlineInfo {
     });
   }
 
+  /**
+   * Navigates to the previous month, adjusting the year if necessary.
+   */
   protected navigateToPreviousMonth(): void {
     const currentMonth = this.currentMonth();
     const currentYear = this.currentYear();
@@ -119,6 +152,9 @@ export class TrainingLogCalendarComponent implements SetHeadlineInfo {
     }
   }
 
+  /**
+   * Navigates to the next month, adjusting the year if necessary.
+   */
   protected navigateToNextMonth(): void {
     const currentMonth = this.currentMonth();
     const currentYear = this.currentYear();
@@ -131,6 +167,10 @@ export class TrainingLogCalendarComponent implements SetHeadlineInfo {
     }
   }
 
+  /**
+   * Generates the calendar view for the current month, including days from the previous
+   * and next months to fill the calendar grid.
+   */
   private generateCalendar() {
     const daysInCurrentMonth = new Date(this.currentYear(), this.currentMonth() + 1, 0).getDate();
 
@@ -153,6 +193,22 @@ export class TrainingLogCalendarComponent implements SetHeadlineInfo {
     this.daysFromNextMonth.set(daysFromNextMonth);
   }
 
+  /**
+   * Setup the keyboard listeners so that arrow functions can be used to navigate between months.
+   */
+  private setupKeyboardListeners(): void {
+    this.keyboardService.arrowLeftPressed$().subscribe(() => {
+      this.navigateToPreviousMonth();
+    });
+
+    this.keyboardService.arrowRightPressed$().subscribe(() => {
+      this.navigateToNextMonth();
+    });
+  }
+
+  /**
+   * Opens an informational modal about the calendar features.
+   */
   private openInfoModal() {
     const modalOptions = new BasicInfoModalOptionsBuilder()
       .setTitle('Hinweise')
