@@ -1,7 +1,17 @@
-<label>{{ label() }}</label>
-<input [placeholder]="placeholder()" [(value)]="value" [class.invalid]="!isValid()" />
-@if (!isValid()) {
-  <div class="error-message">{{ getErrorMessage() }}</div>
+@if (label()) {
+  <label class="floating-label" [class.active]="isFocused()">
+    {{ label() }}
+  </label>
 }
 
-FEst
+<input
+  type="text"
+  [placeholder]="placeholder()"
+  [(ngModel)]="value"
+  [class.invalid]="!isValid()"
+  [required]="required()"
+/>
+
+@if (isValid()) {
+  <span class="error-message">{{ getErrorMessage() }}</span>
+}

@@ -1,18 +1,5 @@
 <app-training-banner [(imageSrc)]="trainingPlanEditView.coverImageBase64" />
 
-<div class="input-group">
-  <app-floating-label-input [label]="'Titel'" [(value)]="trainingPlanEditView.title" [required]="true" />
+<app-form-input [label]="'Titel'" [(value)]="trainingPlanEditView.title" />
 
-  <app-floating-label-input
-    [label]="'Blocklänge (Wochen)'"
-    [(value)]="trainingPlanEditView.trainingBlockLength"
-    [required]="true"
-    type="select"
-    [options]="[
-      { value: 3, label: '3' },
-      { value: 4, label: '4' },
-      { value: 5, label: '5' },
-      { value: 6, label: '6' },
-    ]"
-  />
-</div>
+<app-form-input [label]="'Blocklänge (Wochen)'" [(value)]="trainingPlanEditView.trainingBlockLength" />

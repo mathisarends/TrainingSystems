@@ -20,7 +20,6 @@ import { KeyboardService } from '../../../shared/service/keyboard.service';
 import { HeaderService } from '../../header/header.service';
 import { SetHeadlineInfo } from '../../header/set-headline-info';
 import { ChartColorService } from '../training-view/services/chart-color.service';
-import { TrainingPlanService } from '../training-view/services/training-plan.service';
 import { TrainingDayChartType } from './training-day-chart-type';
 import { TrainingStatisticsService } from './training-statistics.service';
 
@@ -89,7 +88,6 @@ export class TrainingPlanStatisticsComponent implements OnInit, SetHeadlineInfo 
   sessionDurationChartData = signal<ChartData<PolarAreaChartDataset>>({ datasets: [], labels: [] });
 
   constructor(
-    protected trainingPlanService: TrainingPlanService,
     private chartColorService: ChartColorService,
     private trainingStatisticService: TrainingStatisticsService,
     private headerService: HeaderService,
