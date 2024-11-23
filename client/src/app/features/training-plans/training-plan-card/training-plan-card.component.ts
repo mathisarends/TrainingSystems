@@ -100,13 +100,7 @@ export class TrainingPlanCardComponent {
       .setOnSubmitCallback(async () => this.editTrainingPlan(trainingPlanEditView.toDto()))
       .build();
 
-    await this.modalService.openModalTabs(modalOptions);
-  }
-
-  editTrainingPlan(trainingPlanEditViewDto: TrainingPlanEditViewDto): void {
-    this.trainingPlanService.editTrainingPlan(this.trainingPlan().id, trainingPlanEditViewDto).subscribe((response) => {
-      this.toastService.success(response.message);
-    });
+    this.modalService.openModalTabs(modalOptions);
   }
 
   viewStatistics(id: string): void {
@@ -132,14 +126,17 @@ export class TrainingPlanCardComponent {
     this.modalService.openDeletionModal(deleteModalOptions);
   }
 
+  private async editTrainingPlan(trainingPlanEditViewDto: TrainingPlanEditViewDto): Promise<void> {
+    await firstValueFrom(this.trainingPlanService.editTrainingPlan(this.trainingPlan().id, trainingPlanEditViewDto));
+  }
+
   /**
    * Deletes a training plan.
    */
-  private deleteTrainingPlan(): void {
-    this.trainingPlanCardService.deleteTrainingPlan(this.trainingPlan().id).subscribe(() => {
-      this.toastService.success('Plan gelöscht');
-      this.emitChanges();
-    });
+  private async deleteTrainingPlan(): Promise<void> {
+    await firstValueFrom(this.trainingPlanCardService.deleteTrainingPlan(this.trainingPlan().id));
+    this.toastService.success('Plan gelöscht');
+    this.emitChanges();
   }
 
   /**

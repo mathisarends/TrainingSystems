@@ -6,6 +6,7 @@
   transition: transform 0.3s ease;
   transition: box-shadow 0.3s ease;
   transition: filter 0.3s ease;
+  border-radius: 0.35rem;
 
   background: #fff;
   color: var(--dark-grey);
@@ -43,6 +44,13 @@
   background-position: center;
   border-color: inherit;
   object-fit: cover;
+  border-top-left-radius: 0.35rem;
+  border-top-right-radius: 0.35rem;
+}
+
+.card-footer {
+  border-bottom-left-radius: 0.35rem;
+  border-bottom-right-radius: 0.35rem;
 }
 
 .card-body,
