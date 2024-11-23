@@ -17,7 +17,7 @@
     </div>
   } @else {
     <div class="training-plan-grid">
-      @for (k of [1, 2, 3]; track k) {
+      @for (skeleton of skeletonCardCount(); track skeleton) {
         <app-skeleton-card />
       }
     </div>
