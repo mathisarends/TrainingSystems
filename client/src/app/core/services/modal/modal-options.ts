@@ -71,4 +71,11 @@ export interface ModalOptions {
    * Can be synchronous or asynchronous. Optional.
    */
   onSubmitCallback?: () => void | Promise<void>;
+
+  /**
+   * A callback function to be executed when the modal's primary action is triggered.
+   * Validates the user input.
+   * Returns `true` if the validation is successful, or a string containing the error message if validation fails.
+   */
+  onValidateCallback?: () => string | true;
 }

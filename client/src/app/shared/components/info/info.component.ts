@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { IconName } from '../../icon/icon-name';
 import { IconComponent } from '../../icon/icon.component';
 
 @Component({
@@ -11,7 +10,5 @@ import { IconComponent } from '../../icon/icon.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InfoComponent {
-  protected readonly IconName = IconName;
-
   infoText = input.required<string>();
 }

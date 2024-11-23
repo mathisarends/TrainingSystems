@@ -12,22 +12,33 @@
 }
 
 .btn-primary {
-  background-color: #2c74cb;
-  color: #ebf3fb;
+  background-color: var(--accent-button-color);
+  color: #fff;
 }
 
-.btn-primary:hover {
-  background-color: #0056b3;
+.btn-primary:hover,
+.btn-primary:active {
+  background-color: var(--accent-button-color-active);
 }
 
 .btn-secondary {
-  background-color: #ebf3fb;
-  color: #557ebe;
+  background-color: transparent;
+  color: var(--dark-grey);
+  border: unset;
 }
 
 .btn-secondary:hover {
-  background-color: #cfe7ff;
+  background-color: #f6f8fa;
+  color: #444d56;
+  border-color: #c1c7cd;
 }
+
+.btn-secondary:active {
+  background-color: #ebedef;
+  color: #2e363d;
+  border-color: #b0b7bd;
+}
+
 .btn-destructive {
   background-color: var(--error-color);
   color: #fff;
