@@ -40,8 +40,6 @@ export class TrainingPlanCard2Component {
 
   constructor() {
     effect(() => {
-      console.log('🚀 ~ TrainingPlanCard2Component ~ effect ~ trainingPlan().:', this.trainingPlan());
-
       if (this.trainingPlan().percentageFinished) {
         this.animateProgress(this.trainingPlan().percentageFinished!);
       }
