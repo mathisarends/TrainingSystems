@@ -1,5 +1,10 @@
 <app-training-banner [(imageSrc)]="trainingPlanEditView.coverImageBase64" />
 
-<app-form-input [label]="'Titel'" [(value)]="trainingPlanEditView.title" />
+<app-form-input
+  [label]="'Titel'"
+  [(value)]="trainingPlanEditView.title"
+  [validationPattern]="'^(?!\s*$).+'"
+  [validationErrorMessage]="'Titel ist erforderlich'"
+/>
 
 <app-form-input [label]="'Blocklänge (Wochen)'" [(value)]="trainingPlanEditView.trainingBlockLength" />

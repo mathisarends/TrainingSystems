@@ -10,6 +10,8 @@ import { FormsModule } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormInputComponent<T extends string | number> {
+  protected readonly fieldId: string = `form-input-${Math.random().toString(36)}`;
+
   /**
    * The label for the input field.
    */
@@ -33,16 +35,25 @@ export class FormInputComponent<T extends string | number> {
    */
   validationPattern = input<string | undefined>(undefined);
 
+  validationErrorMessage = input('');
+
   /**
    * Signal for whether the input is currently focused.
    */
   isFocused = signal(false);
+
+  isTouched = signal(false);
 
   /**
    * Computes the input validity based on `required` and `validationPattern`.
    */
   isValid = computed(() => {
     const currentValue = this.value();
+
+    if (!this.isTouched()) {
+      return true;
+    }
+
     if (this.required() && (currentValue === '' || currentValue === null)) {
       return false;
     }
@@ -52,7 +63,6 @@ export class FormInputComponent<T extends string | number> {
         const regex = new RegExp(this.validationPattern()!);
         return regex.test(currentValue);
       } catch (error) {
-        console.error('Invalid regex pattern:', error);
         return false;
       }
     }
@@ -74,56 +84,21 @@ export class FormInputComponent<T extends string | number> {
   });
 
   /**
-   * Gets an error message for invalid input.
-   */
-  getErrorMessage(): string {
-    const currentValue = this.value();
-    if (this.required() && (currentValue === '' || currentValue === null)) {
-      return 'This field is required.';
-    }
-
-    if (typeof currentValue === 'string' && this.validationPattern()) {
-      try {
-        const regex = new RegExp(this.validationPattern()!);
-        if (!regex.test(currentValue)) {
-          return 'Invalid input format.';
-        }
-      } catch (error) {
-        return 'Invalid validation pattern.';
-      }
-    }
-
-    if (typeof currentValue === 'number') {
-      if (this.validationPattern()) {
-        try {
-          const regex = new RegExp(this.validationPattern()!);
-          if (!regex.test(currentValue.toString())) {
-            return 'Invalid number format.';
-          }
-        } catch (error) {
-          return 'Invalid validation pattern.';
-        }
-      }
-    }
-
-    return '';
-  }
-
-  /**
    * Handles focus event using HostListener.
    * Sets the `isFocused` signal to true when the input gains focus.
    */
-  @HostListener('focusin', ['$event'])
-  onFocusIn(event: FocusEvent): void {
+  @HostListener('focusin')
+  onFocusIn(): void {
     this.isFocused.set(true);
+    this.isTouched.set(true);
   }
 
   /**
    * Handles blur event using HostListener.
    * Sets the `isFocused` signal to false when the input loses focus.
    */
-  @HostListener('focusout', ['$event'])
-  onFocusOut(event: FocusEvent): void {
+  @HostListener('focusout')
+  onFocusOut(): void {
     this.isFocused.set(false);
   }
 }

@@ -1,17 +1,18 @@
 @if (label()) {
-  <label class="floating-label" [class.active]="isFocused()">
+  <label class="floating-label" [class.active]="isFocused()" [class.invalid]="!isValid()" [for]="fieldId">
     {{ label() }}
   </label>
 }
 
 <input
   type="text"
+  [id]="fieldId"
   [placeholder]="placeholder()"
   [(ngModel)]="value"
   [class.invalid]="!isValid()"
   [required]="required()"
 />
 
-@if (isValid()) {
-  <span class="error-message">{{ getErrorMessage() }}</span>
+@if (!isValid() && isTouched() && validationErrorMessage()) {
+  <span class="error-message">{{ validationErrorMessage() }}</span>
 }
