@@ -268,39 +268,6 @@ export class ModalComponent implements AfterViewInit, OnInit {
   }
 
   /**
-   * Initializes keyboard listeners for 'Escape' and 'Enter' keys.
-   */
-  private initializeKeyboardListeners(): void {
-    this.keyboardService
-      .escapePressed$()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.modalService.close();
-      });
-
-    this.keyboardService
-      .enterPressed$()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.confirm();
-      });
-
-    this.keyboardService
-      .arrowLeftPressed$()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.switchToPreviousTab();
-      });
-
-    this.keyboardService
-      .arrowRightPressed$()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.switchToNextTabWithOverflow();
-      });
-  }
-
-  /**
    * Switches to the previous tab in the modal, with overflow handling to loop back to the last tab.
    */
   private switchToPreviousTab(): void {
@@ -341,5 +308,38 @@ export class ModalComponent implements AfterViewInit, OnInit {
    */
   private isSignal(property: any): boolean {
     return property && typeof property === 'function' && 'set' in property;
+  }
+
+  /**
+   * Initializes keyboard listeners for 'Escape' and 'Enter' keys.
+   */
+  private initializeKeyboardListeners(): void {
+    this.keyboardService
+      .escapePressed$()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.modalService.close();
+      });
+
+    this.keyboardService
+      .enterPressed$()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.confirm();
+      });
+
+    this.keyboardService
+      .arrowLeftPressed$()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.switchToPreviousTab();
+      });
+
+    this.keyboardService
+      .arrowRightPressed$()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.switchToNextTabWithOverflow();
+      });
   }
 }

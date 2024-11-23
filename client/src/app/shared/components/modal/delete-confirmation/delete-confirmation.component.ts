@@ -4,8 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { IconName } from '../../../icon/icon-name';
 import { IconComponent } from '../../../icon/icon.component';
 import { InfoComponent } from '../../info/info.component';
-import { ModalConfirmationService } from '../modal-confirmation.service';
-import { OnConfirm } from '../on-confirm';
 import { DeleteValidationPipe } from './deletion-validation-class.pipe';
 
 // TODDO: finish deletion keyword
@@ -21,7 +19,7 @@ import { DeleteValidationPipe } from './deletion-validation-class.pipe';
   imports: [FormsModule, InfoComponent, CommonModule, DeleteValidationPipe, IconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DeleteConfirmationComponent implements OnConfirm {
+export class DeleteConfirmationComponent {
   protected readonly IconName = IconName;
 
   /**
@@ -38,16 +36,4 @@ export class DeleteConfirmationComponent implements OnConfirm {
    * Holds the user's input for the deletion keyword.
    */
   deletionKeyWordUserInput = signal<string>('');
-
-  constructor(private modalConfirmationService: ModalConfirmationService) {}
-
-  /**
-   * Confirms the deletion action if the user input matches the required keyword.
-   * Emits to the confirmation subject when the deletion is confirmed.
-   */
-  onConfirm(): void {
-    if (this.deletionKeyWordUserInput() === this.deletionKeyWord()) {
-      this.modalConfirmationService.confirm();
-    }
-  }
 }

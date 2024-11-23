@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import { BasicInfoComponent } from '../../../shared/components/modal/basic-info/basic-info.component';
 import { DeleteConfirmationComponent } from '../../../shared/components/modal/delete-confirmation/delete-confirmation.component';
-import { ModalConfirmationService } from '../../../shared/components/modal/modal-confirmation.service';
 import { ModalOverlayComponent } from '../../../shared/components/modal/modal-overlay/modal-overlay.component';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
 import { BasicInfoModalOptions } from './basic-info/basic-info-modal-options';
@@ -37,7 +36,6 @@ export class ModalService {
     private appRef: ApplicationRef,
     private injector: Injector,
     private environmentInjector: EnvironmentInjector,
-    private modalConfirmationService: ModalConfirmationService,
   ) {}
 
   /**
@@ -144,7 +142,6 @@ export class ModalService {
 
     this.appRef.detachView(this.overlayComponentRef.hostView);
     this.overlayComponentRef.destroy();
-    this.modalConfirmationService.cancel();
 
     this.onValidateCallback = undefined;
     this.onSubmitCallback = undefined;
