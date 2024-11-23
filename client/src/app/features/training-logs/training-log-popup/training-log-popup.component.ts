@@ -102,15 +102,6 @@ export class TrainingLogPopupComponent implements OnToggleView {
     });
   }
 
-  /**
-   * Navigates to the training day view with the current plan, week, and day as query parameters.
-   */
-  onConfirm(): void {
-    this.router.navigate(['/training/view'], {
-      queryParams: { planId: this.trainingPlanId(), week: this.weekIndex(), day: this.dayIndex() },
-    });
-  }
-
   onToggleView(): void {
     this.fetchTrainingDayInfo().subscribe((trainingDay) => {
       this.shareTrainingLog(trainingDay);

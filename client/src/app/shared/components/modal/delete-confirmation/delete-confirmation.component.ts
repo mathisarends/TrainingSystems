@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IconName } from '../../../icon/icon-name';
 import { IconComponent } from '../../../icon/icon.component';
@@ -19,6 +19,7 @@ import { DeleteValidationPipe } from './deletion-validation-class.pipe';
   styleUrls: ['./delete-confirmation.component.scss'],
   standalone: true,
   imports: [FormsModule, InfoComponent, CommonModule, DeleteValidationPipe, IconComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeleteConfirmationComponent implements OnConfirm {
   protected readonly IconName = IconName;

@@ -29,7 +29,6 @@ import { DataMap } from '../../types/data-map';
 import { ButtonComponent } from '../button/button.component';
 import { CircularIconButtonComponent } from '../circular-icon-button/circular-icon-button.component';
 import { ToastService } from '../toast/toast.service';
-import { ModalConfirmationService } from './modal-confirmation.service';
 import { ModalPaginationComponent } from './modal-pagination/modal-pagination.component';
 import { OnToggleView } from './on-toggle-view';
 import { ModalTab } from './types/modal-tab';
@@ -131,7 +130,6 @@ export class ModalComponent implements AfterViewInit, OnInit {
 
   constructor(
     protected mobileDeviceDetectionService: MobileDeviceDetectionService,
-    private modalConfirmationService: ModalConfirmationService,
     private environmentInjector: EnvironmentInjector,
     private modalService: ModalService,
     private toastService: ToastService,
