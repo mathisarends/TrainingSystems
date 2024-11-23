@@ -124,9 +124,7 @@ export class TrainingPlanCardComponent {
     const deleteModalOptions = new DeleteModalOptionsBuilder()
       .setTitle('Trainingsplan löschen')
       .setButtonText('Löschen')
-      .setInfoText(
-        'Bist du dir sicher, dass du diesen Trainingsplan löschen willst? Diese Änderung kann nicht mehr rückgängig gemacht werden!',
-      )
+      .setInfoText('Diese Änderung kann nicht mehr rückgängig gemacht werden!')
       .setDeletionKeyword(this.trainingPlan().title)
       .setOnSubmitCallback(() => this.deleteTrainingPlan())
       .build();

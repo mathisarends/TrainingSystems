@@ -62,7 +62,8 @@ body {
   transition: filter 0.2s ease-in-out;
 }
 
-.blur-background app-header {
+.blur-background app-header,
+.blur-background app-nav-bar {
   filter: blur(2px);
   transition: filter 0.2s ease-in-out;
 }

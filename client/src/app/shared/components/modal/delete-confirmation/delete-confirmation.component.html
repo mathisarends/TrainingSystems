@@ -6,6 +6,7 @@
   <input
     id="deletion-input"
     type="text"
+    autocomplete="off"
     [(ngModel)]="deletionKeyWordUserInput"
     [ngClass]="deletionKeyWordUserInput() | validationClass: deletionKeyWord()"
     placeholder="Enter confirmation keyword"
