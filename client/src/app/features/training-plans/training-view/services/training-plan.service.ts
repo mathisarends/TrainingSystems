@@ -10,6 +10,11 @@ import { TrainingPlanCardView } from '../models/exercise/training-plan-card-view
 @Injectable()
 export class TrainingPlanService {
   /**
+   * Key used to store the count of training plans and sessions in local storage.
+   */
+  private readonly entryCountStorageKey = 'trainingPlansEntryCount';
+
+  /**
    * Used to notify components of changes to training plans.
    */
   private trainingPlansChangedSubject = new Subject<void>();
@@ -59,9 +64,8 @@ export class TrainingPlanService {
   }
 
   /**
-   * Fetches the training plans and session card views from the backend
-   * and updates the trainingPlans signal.
-   * Combines both results into one array for further use.
+   * Fetches the training plans and session card views from the backend,
+   * updates the trainingPlans signal, and stores the entry count in local storage.
    */
   loadAndCacheTrainingPlans(): Observable<(TrainingPlanCardView | TrainingSessionCardViewDto)[]> {
     const trainingPlans$: Observable<TrainingPlanCardView[]> = this.httpService.get('/training');
@@ -70,7 +74,22 @@ export class TrainingPlanService {
 
     return forkJoin([trainingPlans$, trainingSessions$]).pipe(
       map(([trainingPlans, trainingSessions]) => [...trainingPlans, ...trainingSessions]),
-      tap((combinedResults) => this.trainingPlans.set(combinedResults)),
+      tap((combinedResults) => {
+        this.trainingPlans.set(combinedResults);
+
+        // Save the count of combined results to local storage
+        const entryCount = combinedResults.length;
+        localStorage.setItem(this.entryCountStorageKey, entryCount.toString());
+      }),
     );
+  }
+
+  /**
+   * Retrieves the stored count of training plans and sessions from local storage.
+   * If no count is stored, it returns 0.
+   */
+  getTrainingPlansEntryCount(): number {
+    const entryCount = localStorage.getItem(this.entryCountStorageKey);
+    return entryCount ? parseInt(entryCount, 10) : 0;
   }
 }

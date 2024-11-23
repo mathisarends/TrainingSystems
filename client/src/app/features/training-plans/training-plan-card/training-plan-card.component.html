@@ -26,29 +26,13 @@
 </div>
 <div class="card-footer" style="background: inherit; border-color: inherit">
   <div>
-    <app-icon-button
-      [tooltipTitle]="'Ansehen'"
-      [iconName]="IconName.EYE"
-      (buttonClick)="viewTrainingPlan(trainingPlan().id)"
-    />
+    <app-icon-button [iconName]="IconName.EYE" (buttonClick)="viewTrainingPlan(trainingPlan().id)" />
 
-    <app-icon-button
-      [tooltipTitle]="'Statistiken'"
-      [iconName]="IconName.BAR_CHART"
-      (buttonClick)="viewStatistics(trainingPlan().id)"
-    />
+    <app-icon-button [iconName]="IconName.BAR_CHART" (buttonClick)="viewStatistics(trainingPlan().id)" />
 
-    <app-icon-button
-      [tooltipTitle]="'Bearbeiten'"
-      [iconName]="IconName.Edit"
-      (buttonClick)="showEditTrainingPlanModal()"
-    />
+    <app-icon-button [iconName]="IconName.Edit" (buttonClick)="showEditTrainingPlanModal()" />
 
-    <app-icon-button
-      [tooltipTitle]="'Löschen'"
-      [iconName]="IconName.Trash"
-      (buttonClick)="showDeleteTrainingPlanModal()"
-    />
+    <app-icon-button [iconName]="IconName.Trash" (buttonClick)="showDeleteTrainingPlanModal()" />
   </div>
   @if (trainingPlan().percentageFinished) {
     <div>{{ trainingPlan().percentageFinished }}%</div>

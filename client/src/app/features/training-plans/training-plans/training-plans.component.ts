@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, computed, DestroyRef, OnInit, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { firstValueFrom } from 'rxjs';
 import { ModalOptionsBuilder } from '../../../core/services/modal/modal-options-builder';
@@ -8,7 +8,6 @@ import { InfoComponent } from '../../../shared/components/info/info.component';
 import { SkeletonCardComponent } from '../../../shared/components/loader/skeleton-card/skeleton-card.component';
 import { ModalTab } from '../../../shared/components/modal/types/modal-tab';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
-import { ToastService } from '../../../shared/components/toast/toast.service';
 import { IconName } from '../../../shared/icon/icon-name';
 import { HeaderService } from '../../header/header.service';
 import { SetHeadlineInfo } from '../../header/set-headline-info';
@@ -41,10 +40,16 @@ export class TrainingPlansComponent implements OnInit, SetHeadlineInfo {
    */
   isLoading = signal(true);
 
+  trainingPlanEntryCount = signal(0);
+
+  /**
+   * Signal representing the number of skeleton cards to display while loading.
+   */
+  skeletonCardCount = computed(() => Array.from({ length: this.trainingPlanEntryCount() }, (_, i) => i));
+
   constructor(
     protected trainingPlanService: TrainingPlanService,
     private modalService: ModalService,
-    private toastService: ToastService,
     private headerService: HeaderService,
     private destroyRef: DestroyRef,
   ) {}
@@ -54,6 +59,8 @@ export class TrainingPlansComponent implements OnInit, SetHeadlineInfo {
    * Loads training plans, subscribes to search input and modal events, and listens for "Ctrl + F".
    */
   ngOnInit(): void {
+    this.trainingPlanEntryCount.set(this.trainingPlanService.getTrainingPlansEntryCount());
+
     this.setHeadlineInfo();
 
     this.loadTrainingPlans();
