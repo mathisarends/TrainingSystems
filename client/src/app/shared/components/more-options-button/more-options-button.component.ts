@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, HostListener, input, signal } from '@angular/core';
 import { toggleCollapseAnimation } from '../../animations/toggle-collapse';
 import { IconName } from '../../icon/icon-name';
 import { IconComponent } from '../../icon/icon.component';
@@ -16,6 +16,7 @@ import { MoreOptionListItem } from './more-option-list-item';
   templateUrl: './more-options-button.component.html',
   styleUrls: ['./more-options-button.component.scss'],
   animations: [toggleCollapseAnimation],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MoreOptionsButtonComponent {
   protected readonly IconName = IconName;

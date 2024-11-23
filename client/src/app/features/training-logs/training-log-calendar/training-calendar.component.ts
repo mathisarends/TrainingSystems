@@ -1,5 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, OnInit, signal, WritableSignal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  effect,
+  OnInit,
+  signal,
+  WritableSignal,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { BasicInfoModalOptionsBuilder } from '../../../core/services/modal/basic-info/basic-info-modal-options-builder';
@@ -97,6 +107,7 @@ export class TrainingLogCalendarComponent implements OnInit, SetHeadlineInfo {
     private modalService: ModalService,
     private headerService: HeaderService,
     private keyboardService: KeyboardService,
+    private destroyRef: DestroyRef,
   ) {
     this.setupKeyboardListeners();
 
@@ -197,13 +208,19 @@ export class TrainingLogCalendarComponent implements OnInit, SetHeadlineInfo {
    * Setup the keyboard listeners so that arrow functions can be used to navigate between months.
    */
   private setupKeyboardListeners(): void {
-    this.keyboardService.arrowLeftPressed$().subscribe(() => {
-      this.navigateToPreviousMonth();
-    });
+    this.keyboardService
+      .arrowLeftPressed$()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.navigateToPreviousMonth();
+      });
 
-    this.keyboardService.arrowRightPressed$().subscribe(() => {
-      this.navigateToNextMonth();
-    });
+    this.keyboardService
+      .arrowRightPressed$()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.navigateToNextMonth();
+      });
   }
 
   /**

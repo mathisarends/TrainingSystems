@@ -12,6 +12,7 @@
   [(ngModel)]="value"
   [class.invalid]="!isValid()"
   [required]="required()"
+  [spellcheck]="false"
 />
 
 @if (!isValid() && isTouched() && validationErrorMessage()) {
