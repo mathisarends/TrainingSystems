@@ -35,4 +35,24 @@ export class KeyboardService {
   enterPressed$(): Observable<KeyboardEvent> {
     return fromEvent<KeyboardEvent>(document, 'keydown').pipe(filter((event: KeyboardEvent) => event.key === 'Enter'));
   }
+
+  /**
+   * Emits an event when the "ArrowLeft" key is pressed.
+   * @returns An Observable of KeyboardEvent for "ArrowLeft".
+   */
+  arrowLeftPressed$(): Observable<KeyboardEvent> {
+    return fromEvent<KeyboardEvent>(document, 'keydown').pipe(
+      filter((event: KeyboardEvent) => event.key === 'ArrowLeft'),
+    );
+  }
+
+  /**
+   * Emits an event when the "ArrowRight" key is pressed.
+   * @returns An Observable of KeyboardEvent for "ArrowRight".
+   */
+  arrowRightPressed$(): Observable<KeyboardEvent> {
+    return fromEvent<KeyboardEvent>(document, 'keydown').pipe(
+      filter((event: KeyboardEvent) => event.key === 'ArrowRight'),
+    );
+  }
 }

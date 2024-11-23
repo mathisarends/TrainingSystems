@@ -5,7 +5,9 @@ import { HttpService } from '../../../core/services/http-client.service';
 import { BasicInfoModalOptionsBuilder } from '../../../core/services/modal/basic-info/basic-info-modal-options-builder';
 import { ModalService } from '../../../core/services/modal/modal.service';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
+import { SwipeDirective } from '../../../shared/directives/swipe.directive';
 import { IconName } from '../../../shared/icon/icon-name';
+import { KeyboardService } from '../../../shared/service/keyboard.service';
 import { HeaderService } from '../../header/header.service';
 import { SetHeadlineInfo } from '../../header/set-headline-info';
 import { CalendarEventComponent } from '../calendar-event/calendar-event.component';
@@ -24,6 +26,7 @@ import { MonthNavigationComponent } from './month-navigation/month-navigation.co
     CalendarEventComponent,
     SpinnerComponent,
     ExtractTrainingDayFromCalendarDataPipe,
+    SwipeDirective,
   ],
   templateUrl: './training-calendar.component.html',
   styleUrls: ['./training-calendar.component.scss'],
@@ -64,7 +67,16 @@ export class TrainingLogCalendarComponent implements SetHeadlineInfo {
     private httpService: HttpService,
     private modalService: ModalService,
     private headerService: HeaderService,
+    private keyboardService: KeyboardService,
   ) {
+    this.keyboardService.arrowLeftPressed$().subscribe(() => {
+      this.navigateToPreviousMonth();
+    });
+
+    this.keyboardService.arrowRightPressed$().subscribe(() => {
+      this.navigateToNextMonth();
+    });
+
     effect(
       () => {
         this.generateCalendar();
@@ -93,6 +105,30 @@ export class TrainingLogCalendarComponent implements SetHeadlineInfo {
         },
       ],
     });
+  }
+
+  protected navigateToPreviousMonth(): void {
+    const currentMonth = this.currentMonth();
+    const currentYear = this.currentYear();
+
+    if (currentMonth === 0) {
+      this.currentMonth.set(11);
+      this.currentYear.set(currentYear - 1);
+    } else {
+      this.currentMonth.set(currentMonth - 1);
+    }
+  }
+
+  protected navigateToNextMonth(): void {
+    const currentMonth = this.currentMonth();
+    const currentYear = this.currentYear();
+
+    if (currentMonth === 11) {
+      this.currentMonth.set(0);
+      this.currentYear.set(currentYear + 1);
+    } else {
+      this.currentMonth.set(currentMonth + 1);
+    }
   }
 
   private generateCalendar() {
