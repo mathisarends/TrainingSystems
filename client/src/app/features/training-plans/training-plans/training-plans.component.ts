@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, OnInit, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { firstValueFrom } from 'rxjs';
 import { ModalOptionsBuilder } from '../../../core/services/modal/modal-options-builder';
 import { ModalService } from '../../../core/services/modal/modal.service';
 import { InfoComponent } from '../../../shared/components/info/info.component';
@@ -119,7 +120,7 @@ export class TrainingPlansComponent implements OnInit, SetHeadlineInfo {
     this.modalService.openModalTabs(modalOptions);
   }
 
-  private createNewPlan(trainnigPlanEditView: TrainingPlanEditView): void {
-    this.trainingPlanService.createTrainingPlan(trainnigPlanEditView).subscribe();
+  private async createNewPlan(trainnigPlanEditView: TrainingPlanEditView): Promise<void> {
+    await firstValueFrom(this.trainingPlanService.createTrainingPlan(trainnigPlanEditView));
   }
 }

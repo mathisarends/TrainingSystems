@@ -154,15 +154,11 @@ export class ModalComponent implements AfterViewInit, OnInit {
     this.initializeKeyboardListeners();
   }
 
-  ngAfterViewInit() {
-    this.loadChildComponent();
-  }
-
   /**
    * Loads the child component dynamically into the modal content.
    * The component's inputs will be set from the passed `childComponentData`.
    */
-  loadChildComponent() {
+  ngAfterViewInit() {
     if (!this.childComponentType) {
       return;
     }
@@ -201,7 +197,16 @@ export class ModalComponent implements AfterViewInit, OnInit {
     }
 
     if (this.modalService.onSubmitCallback) {
-      this.modalService.onSubmitCallback();
+      this.isLoading.set(true);
+      try {
+        await this.modalService.onSubmitCallback();
+        this.confirmed.emit();
+      } catch (error) {
+        this.toastService.error('An error occurred while processing the request.');
+        console.error(error);
+      } finally {
+        this.isLoading.set(false);
+      }
     }
 
     this.confirmed.emit();
