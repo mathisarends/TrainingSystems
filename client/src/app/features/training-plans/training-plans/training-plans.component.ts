@@ -99,6 +99,7 @@ export class TrainingPlansComponent implements OnInit, SetHeadlineInfo {
     ];
 
     const trainingPlanEditView = TrainingPlanEditView.fromDto();
+
     const providerMap = new Map().set(TrainingPlanEditView, trainingPlanEditView);
 
     const modalOptions = new ModalOptionsBuilder()

@@ -1,4 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, HostListener, input, model, signal } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  HostListener,
+  input,
+  model,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -9,7 +21,9 @@ import { FormsModule } from '@angular/forms';
   imports: [FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormInputComponent<T extends string | number> {
+export class FormInputComponent<T extends string | number> implements AfterViewInit {
+  private inputElement = viewChild<ElementRef<HTMLInputElement>>('inputElement');
+
   /**
    * A unique identifier for the input field.
    * Used to associate the label and input element.
@@ -63,6 +77,11 @@ export class FormInputComponent<T extends string | number> {
   isTouched = signal(false);
 
   /**
+   * Determines wether the input is focused at first render.
+   */
+  focus = input(false);
+
+  /**
    * Computes the validity of the input field based on the following:
    * - If the field has not been touched, it is considered valid (initial state).
    * - After being touched, validity depends on:
@@ -76,6 +95,33 @@ export class FormInputComponent<T extends string | number> {
 
     return this.checkRequired() && this.checkValidationPattern();
   });
+
+  constructor() {
+    effect(
+      () => {
+        if (this.value() && !this.isTouched()) {
+          this.isTouched.set(true);
+        }
+      },
+      { allowSignalWrites: true },
+    );
+  }
+
+  ngAfterViewInit(): void {
+    if (this.focus()) {
+      this.setFocus();
+    }
+  }
+
+  /**
+   * Sets focus to the input element.
+   */
+  private setFocus(): void {
+    if (this.inputElement) {
+      this.inputElement()!.nativeElement.focus();
+      this.isFocused.set(true); // Update the signal
+    }
+  }
 
   /**
    * Checks if the required validation passes.
@@ -122,7 +168,6 @@ export class FormInputComponent<T extends string | number> {
   @HostListener('focusin')
   onFocusIn(): void {
     this.isFocused.set(true);
-    this.isTouched.set(true);
   }
 
   /**

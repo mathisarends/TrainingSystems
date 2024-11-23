@@ -5,6 +5,7 @@
   [(value)]="trainingPlanEditView.title"
   [required]="true"
   [validationPattern]="'^(?!\s*$).+'"
+  [focus]="trainingPlanEditView.isCreationMode()"
   [validationErrorMessage]="'Titel ist erforderlich'"
 />
 

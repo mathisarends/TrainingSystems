@@ -32,6 +32,11 @@ export class TrainingPlanEditView {
   coverImageBase64: WritableSignal<string>;
 
   /**
+   * Determines whether the view is in creation workflow.
+   */
+  isCreationMode = signal(false);
+
+  /**
    * Default values for initializing a new training plan.
    */
   protected readonly defaultValues = {
@@ -56,6 +61,10 @@ export class TrainingPlanEditView {
 
     if (dto) {
       this.setTrainingPlan(dto);
+    }
+
+    if (!dto) {
+      this.isCreationMode.set(true);
     }
   }
 
