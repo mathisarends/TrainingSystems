@@ -3,8 +3,16 @@
 <app-form-input
   [label]="'Titel'"
   [(value)]="trainingPlanEditView.title"
+  [required]="true"
   [validationPattern]="'^(?!\s*$).+'"
   [validationErrorMessage]="'Titel ist erforderlich'"
 />
 
-<app-form-input [label]="'Blocklänge (Wochen)'" [(value)]="trainingPlanEditView.trainingBlockLength" />
+<app-form-input
+  [label]="'Blocklänge (Wochen)'"
+  [(value)]="trainingPlanEditView.trainingBlockLength"
+  [required]="true"
+  [type]="'number'"
+  [validationPattern]="'^[3-8]$'"
+  [validationErrorMessage]="'Blocklänge muss eine Zahl zwischen 3 und 8 sein.'"
+/>

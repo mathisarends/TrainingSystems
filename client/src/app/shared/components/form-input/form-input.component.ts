@@ -10,82 +10,114 @@ import { FormsModule } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormInputComponent<T extends string | number> {
+  /**
+   * A unique identifier for the input field.
+   * Used to associate the label and input element.
+   */
   protected readonly fieldId: string = `form-input-${Math.random().toString(36)}`;
 
   /**
-   * The label for the input field.
+   * The label displayed above the input field.
    */
   label = input<string>('');
 
   /**
-   * Placeholder text for the input field.
+   * The type of the input field (e.g., 'text' or 'number').
+   */
+  type = input<'text' | 'number'>('text');
+
+  /**
+   * Placeholder text displayed inside the input field.
    */
   placeholder = input<string>('');
 
   /**
-   * Signal for the current value of the input.
-   * Allows string or number based on generic type `T`.
+   * A signal representing the current value of the input field.
+   * Supports both string and number types based on generic type `T`.
    */
   value = model<T | ''>('' as T | '');
 
+  /**
+   * Indicates whether the input field is required.
+   */
   required = input(false);
 
   /**
-   * Validation pattern to validate the input value.
+   * A regex pattern to validate the input value.
    */
   validationPattern = input<string | undefined>(undefined);
 
-  validationErrorMessage = input('');
+  /**
+   * The error message displayed when validation fails.
+   */
+  validationErrorMessage = input<string>('');
 
   /**
-   * Signal for whether the input is currently focused.
+   * Tracks whether the input field currently has focus.
    */
   isFocused = signal(false);
 
+  /**
+   * Tracks whether the input field has been interacted with.
+   */
   isTouched = signal(false);
 
   /**
-   * Computes the input validity based on `required` and `validationPattern`.
+   * Computes the validity of the input field based on the following:
+   * - If the field has not been touched, it is considered valid (initial state).
+   * - After being touched, validity depends on:
+   *   1. Whether the input is required.
+   *   2. Whether the value matches the provided validation pattern.
    */
   isValid = computed(() => {
-    const currentValue = this.value();
-
     if (!this.isTouched()) {
       return true;
     }
 
-    if (this.required() && (currentValue === '' || currentValue === null)) {
-      return false;
-    }
-
-    if (typeof currentValue === 'string' && this.validationPattern()) {
-      try {
-        const regex = new RegExp(this.validationPattern()!);
-        return regex.test(currentValue);
-      } catch (error) {
-        return false;
-      }
-    }
-
-    if (typeof currentValue === 'number') {
-      // If a validation pattern is present, convert the number to a string for pattern matching.
-      if (this.validationPattern()) {
-        try {
-          const regex = new RegExp(this.validationPattern()!);
-          return regex.test(currentValue.toString());
-        } catch (error) {
-          console.error('Invalid regex pattern:', error);
-          return false;
-        }
-      }
-    }
-
-    return true;
+    return this.checkRequired() && this.checkValidationPattern();
   });
 
   /**
-   * Handles focus event using HostListener.
-   * Sets the `isFocused` signal to true when the input gains focus.
+   * Checks if the required validation passes.
+   * Returns true if the field is not required or if it has a non-empty value.
+   */
+  private checkRequired(): boolean {
+    const currentValue = this.value();
+    if (this.required() && (currentValue === '' || currentValue === null)) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Validates the input value against the provided regex pattern.
+   * Returns true if no validation pattern is provided or if the value matches the pattern.
+   */
+  private checkValidationPattern(): boolean {
+    const currentValue = this.value();
+    const pattern = this.validationPattern();
+    if (!pattern) {
+      return true; // No pattern to validate against
+    }
+
+    try {
+      const regex = new RegExp(pattern);
+      if (typeof currentValue === 'string') {
+        return regex.test(currentValue);
+      }
+      if (typeof currentValue === 'number') {
+        return regex.test(currentValue.toString());
+      }
+    } catch (error) {
+      console.error('Invalid regex pattern:', error);
+    }
+
+    return false;
+  }
+
+  /**
+   * Handles the `focusin` event when the input field gains focus.
+   * Sets `isFocused` to true and marks the field as `isTouched`.
    */
   @HostListener('focusin')
   onFocusIn(): void {
@@ -94,8 +126,8 @@ export class FormInputComponent<T extends string | number> {
   }
 
   /**
-   * Handles blur event using HostListener.
-   * Sets the `isFocused` signal to false when the input loses focus.
+   * Handles the `focusout` event when the input field loses focus.
+   * Sets `isFocused` to false.
    */
   @HostListener('focusout')
   onFocusOut(): void {

@@ -1,11 +1,11 @@
 @if (label()) {
   <label class="floating-label" [class.active]="isFocused()" [class.invalid]="!isValid()" [for]="fieldId">
-    {{ label() }}
+    {{ label() + (required() ? '*' : '') }}
   </label>
 }
 
 <input
-  type="text"
+  [type]="type()"
   [id]="fieldId"
   [placeholder]="placeholder()"
   [(ngModel)]="value"

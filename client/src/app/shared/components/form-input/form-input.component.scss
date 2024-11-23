@@ -22,7 +22,7 @@
 
     &.invalid {
       border-color: var(--error-color);
-      background-color: #fdecea;
+      background: #fcf8f8;
     }
   }
 
@@ -47,7 +47,7 @@
 
     &.invalid {
       color: var(--error-color);
-      background: #fef3f2;
+      background: #fcf8f8;
     }
   }
 
