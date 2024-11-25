@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, effect, Inject, signal } from '@angular/core';
 import { ImageCropperComponent } from 'ngx-image-cropper';
 import { ImageCropperWithIconComponent } from '../../../shared/components/image-cropper/image-cropper-with-icon.component';
-import { OnToggleView } from '../../../shared/components/modal/on-toggle-view';
 import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
 import { PROFILE_PICTURE_URL } from './profile-picture-injection-token';
@@ -21,7 +20,7 @@ import { PROFILE_PICTURE_URL } from './profile-picture-injection-token';
   templateUrl: './change-profile-picture-confirmation.component.html',
   styleUrl: './change-profile-picture-confirmation.component.scss',
 })
-export class ChangeProfilePictureConfirmationComponent implements OnToggleView {
+export class ChangeProfilePictureConfirmationComponent  {
   protected readonly IconName = IconName;
 
   oldProfilePicture = signal('');
@@ -45,11 +44,5 @@ export class ChangeProfilePictureConfirmationComponent implements OnToggleView {
     );
   }
 
-  /**
-   * Toggles the crop view mode.
-   */
-  onToggleView(): void {
-    this.isCropView.set(!this.isCropView());
-    this.confirmCropSignal.set(false);
-  }
+
 }

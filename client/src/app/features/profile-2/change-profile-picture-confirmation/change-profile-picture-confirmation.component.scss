@@ -1,5 +1,11 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 @media (max-width: 767.98px) {
-  .d-flex {
-    flex-direction: column !important;
+  :host {
+    flex-direction: column;
   }
 }

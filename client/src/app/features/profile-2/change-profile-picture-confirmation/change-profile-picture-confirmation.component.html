@@ -1,24 +1,16 @@
-@if (isCropView()) {
-  <app-image-cropper-with-icon [(image)]="image" />
-} @else {
-  <div class="text-center p-3">
-    <div class="d-flex justify-content-center align-items-center">
-      <div>
-        <img
-          [src]="oldProfilePicture() || '/images/profile-placeholder.webp'"
-          alt="Altes Profilbild"
-          class="img-thumbnail"
-          style="width: 150px; height: 150px"
-        />
-        <p>Altes Profilbild</p>
-      </div>
-      <div class="mx-3">
-        <app-icon [name]="IconName.ARROW_RIGHT" [size]="32" style="font-size: 3rem; color: #007bff" />
-      </div>
-      <div>
-        <img [src]="image()" alt="Neues Profilbild" class="img-thumbnail" style="width: 150px; height: 150px" />
-        <p>Neues Profilbild</p>
-      </div>
-    </div>
-  </div>
-}
+<div>
+  <img
+    [src]="oldProfilePicture() || '/images/profile-placeholder.webp'"
+    alt="Altes Profilbild"
+    class="img-thumbnail"
+    style="width: 150px; height: 150px"
+  />
+  <p>Altes Profilbild</p>
+</div>
+<div class="mx-3">
+  <app-icon [name]="IconName.ARROW_RIGHT" [size]="32" style="font-size: 3rem; color: #007bff" />
+</div>
+<div>
+  <img [src]="image()" alt="Neues Profilbild" class="img-thumbnail" style="width: 150px; height: 150px" />
+  <p>Neues Profilbild</p>
+</div>
