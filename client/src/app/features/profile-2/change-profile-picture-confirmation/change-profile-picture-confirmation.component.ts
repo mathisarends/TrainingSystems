@@ -1,14 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, Injector, signal } from '@angular/core';
+import { Component, effect, Inject, signal } from '@angular/core';
 import { ImageCropperComponent } from 'ngx-image-cropper';
-import { AbstractImageCropperComponent } from '../../../shared/components/abstract-image-cropper/abstract-image-cropper.component';
 import { ImageCropperWithIconComponent } from '../../../shared/components/image-cropper/image-cropper-with-icon.component';
 import { OnToggleView } from '../../../shared/components/modal/on-toggle-view';
-import { ToastService } from '../../../shared/components/toast/toast.service';
 import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
-import { ProfileService } from '../service/profileService';
-import { UpdateProfilePictureDto } from '../service/update-profile-picture-dto';
+import { PROFILE_PICTURE_URL } from './profile-picture-injection-token';
 
 /**
  * HHandles the functionality for
@@ -35,22 +32,18 @@ export class ChangeProfilePictureConfirmationComponent implements OnToggleView {
 
   confirmCropSignal = signal(false);
 
-  constructor(
-    private readonly profileService: ProfileService,
-    private readonly toastService: ToastService,
-    private injector: Injector,
-  ) {
+  constructor(@Inject(PROFILE_PICTURE_URL) private profilePictureUrl: string) {
+    this.image.set(profilePictureUrl);
+
     effect(
       () => {
         if (this.image()) {
           this.isCropView.set(false);
         }
       },
-      { allowSignalWrites: true, injector: this.injector },
+      { allowSignalWrites: true },
     );
   }
-
-  uploadImage(image: string): void {}
 
   /**
    * Toggles the crop view mode.
@@ -58,23 +51,5 @@ export class ChangeProfilePictureConfirmationComponent implements OnToggleView {
   onToggleView(): void {
     this.isCropView.set(!this.isCropView());
     this.confirmCropSignal.set(false);
-  }
-
-  onConfirm(): void {
-    if (this.isCropView()) {
-      this.confirmCropSignal.set(true);
-      this.isCropView.set(false);
-    } else {
-      const updateProfilePictureDto: UpdateProfilePictureDto = {
-        profilePicture: this.image(),
-      };
-
-      this.profileService.uploadProfilePicture(updateProfilePictureDto).subscribe((response) => {
-        this.toastService.success(response.message);
-        this.profileService.pictureUrl.set(this.image());
-
-        this.profileService.fetchAndSetProfileData();
-      });
-    }
   }
 }

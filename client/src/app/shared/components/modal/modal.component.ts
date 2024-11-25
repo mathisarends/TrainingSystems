@@ -200,7 +200,6 @@ export class ModalComponent implements AfterViewInit, OnInit {
       this.isLoading.set(true);
       try {
         await this.modalService.onSubmitCallback();
-        this.confirmed.emit();
       } catch (error) {
         this.toastService.error('An error occurred while processing the request.');
         console.error(error);

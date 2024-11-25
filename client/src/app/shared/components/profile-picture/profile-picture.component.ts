@@ -2,7 +2,6 @@ import { Component, HostListener, input, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { IconName } from '../../icon/icon-name';
 import { IconComponent } from '../../icon/icon.component';
-import { MoreOptionListItem } from '../more-options-button/more-option-list-item';
 import { MoreOptionsList } from '../more-options-list/more-options-list.component';
 
 @Component({
@@ -17,8 +16,6 @@ export class ProfilePictureComponent {
 
   profilePicture = input('');
 
-  options = input<MoreOptionListItem[]>([]);
-
   isCollapsed = signal(true);
 
   constructor(private router: Router) {}
@@ -27,10 +24,6 @@ export class ProfilePictureComponent {
   handleProfileClick(event: Event): void {
     event.preventDefault();
 
-    if (this.options().length > 0) {
-      this.isCollapsed.set(!this.isCollapsed());
-    } else {
-      this.router.navigate(['profile']);
-    }
+    this.router.navigate(['profile']);
   }
 }

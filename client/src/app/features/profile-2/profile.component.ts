@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { DeleteModalOptionsBuilder } from '../../core/services/modal/deletion/delete-modal-options.builder';
 import { ModalOptionsBuilder } from '../../core/services/modal/modal-options-builder';
@@ -23,6 +23,7 @@ import { SetHeadlineInfo } from '../header/set-headline-info';
 import { ActivityCalendarData } from './activity-calendar/activity-calendar-data';
 import { ActivityCalendar } from './activity-calendar/activity-calendar.component';
 import { ChangeProfilePictureConfirmationComponent } from './change-profile-picture-confirmation/change-profile-picture-confirmation.component';
+import { PROFILE_PICTURE_URL } from './change-profile-picture-confirmation/profile-picture-injection-token';
 import { ProfileService } from './service/profileService';
 import { SettingsComponent } from './settings/settings.component';
 
@@ -142,8 +143,9 @@ export class ProfileComponent2 implements OnInit, SetHeadlineInfo {
 
     const componentData = {
       oldProfilePicture: currentProfilePicture,
-      image: uploadedPictureBase64Str,
     };
+
+    const providerMap = new Map().set(PROFILE_PICTURE_URL, uploadedPictureBase64Str);
 
     const modalOptions = new ModalOptionsBuilder()
       .setComponent(ChangeProfilePictureConfirmationComponent)
@@ -151,9 +153,16 @@ export class ProfileComponent2 implements OnInit, SetHeadlineInfo {
       .setButtonText('Bestätigen')
       .setAlternativeButtonText('Zuschneiden')
       .setComponentData(componentData)
+      .setProviderMap(providerMap)
+      .setOnSubmitCallback(async () => await this.uploadProfilePicture(providerMap.get(PROFILE_PICTURE_URL)))
       .build();
 
     this.modalService.open(modalOptions);
+  }
+
+  private async uploadProfilePicture(profilePicture: string): Promise<void> {
+    await firstValueFrom(this.profileService.uploadProfilePicture({ profilePicture }));
+    this.profileService.fetchAndSetProfileData();
   }
 
   /**
@@ -207,7 +216,7 @@ export class ProfileComponent2 implements OnInit, SetHeadlineInfo {
         'Bist du dir sicher, dass du deinen Account löschen willst? Du musst diese Aktion per Email bestätigen.',
       )
       .setDeletionKeyword(this.profileService.username()!)
-      .setOnSubmitCallback(async () => this.deleteAccoutn())
+      .setOnSubmitCallback(async () => this.deleteAccount())
       .build();
 
     this.modalService.openDeletionModal(modalDeleteOptions);
@@ -216,7 +225,7 @@ export class ProfileComponent2 implements OnInit, SetHeadlineInfo {
   /**
    * Handles the account deletion process and shows a success toast on completion.
    */
-  private deleteAccoutn() {
+  private deleteAccount() {
     this.profileService.deleteAccount().subscribe((response) => {
       this.authService.logout();
       this.toastService.success(response.message);
