@@ -1,4 +1,4 @@
-import { Directive, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
+import { Directive, OnInit, signal } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { ImageUploadService } from '../../service/image-upload.service';
 import { OnConfirm } from '../modal/on-confirm';
@@ -10,12 +10,6 @@ import { ToastService } from '../toast/toast.service';
  */
 @Directive()
 export abstract class AbstractImageCropperComponent implements OnInit, OnConfirm, OnToggleView {
-  @ViewChild('confirmCropIcon') confirmCropIcon!: ElementRef;
-  svgStyles: { [key: string]: string } = {
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-  };
   /**
    * Signal that holds the state of "no image available".
    */
@@ -93,11 +87,6 @@ export abstract class AbstractImageCropperComponent implements OnInit, OnConfirm
       console.error('Blob is not defined in ImageCroppedEvent');
       return;
     }
-
-    this.svgStyles = {
-      top: `${event.imagePosition.y1 + event.imagePosition.y2 / 2}px`,
-      left: `${event.imagePosition.x2 + 10}px`,
-    };
 
     try {
       const base64 = await this.convertBlobToBase64(event.blob);

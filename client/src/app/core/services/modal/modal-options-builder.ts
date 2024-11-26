@@ -1,3 +1,4 @@
+import { Injector } from '@angular/core';
 import { ModalTab } from '../../../shared/components/modal/types/modal-tab';
 import { ModalOptions } from './modal-options';
 import { ModalSize } from './modalSize';
@@ -94,6 +95,11 @@ export class ModalOptionsBuilder {
    */
   setHasFooter(hasFooter: boolean): this {
     this.options.hasFooter = hasFooter;
+    return this;
+  }
+
+  setInjector(injector: Injector): this {
+    this.options.injector = injector;
     return this;
   }
 

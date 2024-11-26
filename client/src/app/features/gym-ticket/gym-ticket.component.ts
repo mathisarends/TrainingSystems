@@ -1,14 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ImageCropperComponent } from 'ngx-image-cropper';
-import { AbstractImageCropperComponent } from '../../shared/components/abstract-image-cropper/abstract-image-cropper.component';
 import { CircularIconButtonComponent } from '../../shared/components/circular-icon-button/circular-icon-button.component';
 import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
-import { ToastService } from '../../shared/components/toast/toast.service';
 import { IconName } from '../../shared/icon/icon-name';
 import { ImageDownloadService } from '../../shared/service/image-download.service';
 import { ImageUploadService } from '../../shared/service/image-upload.service';
 import { GymTicketService } from './gym-ticket.service';
-import { GymTicketDto } from './model/gym-ticket-dto';
 
 @Component({
   selector: 'app-ticket',
@@ -16,41 +13,32 @@ import { GymTicketDto } from './model/gym-ticket-dto';
   imports: [ImageCropperComponent, SkeletonComponent, CircularIconButtonComponent],
   templateUrl: './gym-ticket.component.html',
   styleUrls: ['./gym-ticket.component.scss'],
-  providers: [GymTicketService, ImageDownloadService],
+  providers: [ImageDownloadService],
 })
-export class GymTicketComponent extends AbstractImageCropperComponent implements OnInit {
+export class GymTicketComponent {
   protected readonly IconName = IconName;
 
   constructor(
-    private gymTicketService: GymTicketService,
+    protected gymTicketService: GymTicketService,
     private imageDownloadService: ImageDownloadService,
-    imageUploadService: ImageUploadService,
-    toastService: ToastService,
-  ) {
-    super(imageUploadService, toastService);
-  }
+    private imageUploadService: ImageUploadService,
+  ) {}
 
-  override ngOnInit(): void {
-    super.ngOnInit();
-    this.NO_IMAGE_AVAILABLE.set('noGymTicketAvailable');
+  /**
+   * Uploads the image and sets the uploaded image in `imageSignal`.
+   */
+  protected async displayUploadedImage(event: Event) {
+    const uploadedImageBase64Str = await this.imageUploadService.handleImageUpload(event);
 
-    this.gymTicketService.getGymTicket().subscribe((gymTicket) => {
-      this.image.set(gymTicket);
-    });
-  }
+    if (!uploadedImageBase64Str) {
+      return;
+    }
 
-  uploadImage(image: string) {
-    const gymTicketDto: GymTicketDto = {
-      gymTicket: image,
-    };
-
-    this.gymTicketService.uploadGymTicket(gymTicketDto).subscribe((response) => {
-      this.toastService.success(response.message);
-    });
+    this.gymTicketService.gymTicket.set(uploadedImageBase64Str);
   }
 
   downloadImage(event: Event): void {
     event.stopPropagation();
-    this.imageDownloadService.downloadImage(this.image(), 'gym-ticket.png');
+    this.imageDownloadService.downloadImage(this.gymTicketService.gymTicket(), 'gym-ticket.png');
   }
 }

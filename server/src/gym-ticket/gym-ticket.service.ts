@@ -11,13 +11,20 @@ export class GymTicketService {
     private readonly gymTicketModel: Model<GymTicket>,
   ) {}
 
-  async updateGymTicketForUser(userId: string, gymTicketDto: GymTicketDto) {
-    const gymTicket = new this.gymTicketModel({
-      gymTicket: gymTicketDto.gymTicket,
-      userId: userId,
-    });
-
-    return await gymTicket.save();
+  /**
+   * Updates the gym ticket for a user. If it does not exist, a new entry will be created.
+   */
+  async updateGymTicketForUser(
+    userId: string,
+    gymTicketDto: GymTicketDto,
+  ): Promise<GymTicket> {
+    return await this.gymTicketModel
+      .findOneAndUpdate(
+        { userId: userId },
+        { $set: { gymTicket: gymTicketDto.gymTicket } },
+        { upsert: true, new: true },
+      )
+      .exec();
   }
 
   async getGymTicketByUserId(userId: string): Promise<string> {
