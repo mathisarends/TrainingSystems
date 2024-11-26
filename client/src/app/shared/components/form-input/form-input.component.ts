@@ -69,7 +69,7 @@ export class FormInputComponent<T extends string | number> {
   /**
    * Tracks whether the input field has been interacted with.
    */
-  isTouched = signal(false);
+  isTouched = model(false);
 
   /**
    * Computes the validity of the input field based on the following:

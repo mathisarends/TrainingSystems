@@ -3,14 +3,13 @@ import { Component, computed, effect, signal } from '@angular/core';
 import { InfoComponent } from '../../../../shared/components/info/info.component';
 import { ModalValidationService } from '../../../../shared/components/modal/modal-validation.service';
 import { Validatable } from '../../../../shared/components/modal/validatable';
-import { SliderComponent } from '../../../../shared/components/slider/slider.component';
 import { TrainingPlanEditView } from '../../model/training-plan-edit-view';
 import { DaySelectedPipe } from './day-selected-pipe';
 
 @Component({
   selector: 'app-training-scheduling',
   standalone: true,
-  imports: [InfoComponent, CommonModule, DaySelectedPipe, SliderComponent],
+  imports: [InfoComponent, CommonModule, DaySelectedPipe],
   templateUrl: './training-scheduling.component.html',
   styleUrls: ['./training-scheduling.component.scss'],
 })

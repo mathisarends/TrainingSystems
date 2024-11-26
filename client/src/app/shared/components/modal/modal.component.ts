@@ -193,7 +193,6 @@ export class ModalComponent implements AfterViewInit, OnInit {
 
   /**
    * Confirms the modal's action and emits the `confirmed` event.
-   * Calls `onConfirm` if the child component implements `ConfirmableComponent` and waits for its completion.
    */
   async confirm() {
     if (this.isModalGroupAndNotLastTab()) {

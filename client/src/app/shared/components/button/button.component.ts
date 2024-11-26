@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, input, output } from '@angular/core';
+import { ModalValidationService } from '../modal/modal-validation.service';
 import { ButtonLoaderComponent } from './button-loader/button-loader.component';
 
 @Component({
@@ -28,10 +29,13 @@ export class ButtonComponent {
 
   disabled = input(false);
 
+  constructor(private modalValidationService: ModalValidationService) {}
+
   @HostListener('click', ['$event'])
   onClick(event: Event) {
     if (this.disabled()) {
       event.preventDefault();
+      this.modalValidationService.triggerFormValidation();
       return;
     }
 
