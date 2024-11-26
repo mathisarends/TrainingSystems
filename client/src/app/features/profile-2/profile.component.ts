@@ -163,7 +163,6 @@ export class ProfileComponent2 implements OnInit, SetHeadlineInfo {
 
   private async uploadProfilePicture(profilePicture: string): Promise<void> {
     await firstValueFrom(this.profileService.uploadProfilePicture({ profilePicture }));
-    this.profileService.fetchAndSetProfileData();
   }
 
   /**
@@ -213,7 +212,6 @@ export class ProfileComponent2 implements OnInit, SetHeadlineInfo {
 
   private async updateUserTicket(): Promise<void> {
     const gymTicket = this.gymTicketService.gymTicket();
-    console.log('🚀 ~ ProfileComponent2 ~ updateUserTicket ~ gymTicket:', gymTicket);
     await firstValueFrom(this.gymTicketService.uploadGymTicket({ gymTicket }));
   }
 
