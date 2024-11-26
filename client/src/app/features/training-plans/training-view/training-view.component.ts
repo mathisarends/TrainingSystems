@@ -27,6 +27,7 @@ import { HeaderService } from '../../header/header.service';
 import { SetHeadlineInfo } from '../../header/set-headline-info';
 import { FormatTimePipe } from '../format-time.pipe';
 import { AutoProgressionComponent } from './auto-progression/auto-progression.component';
+import { AutoProgressionService } from './auto-progression/auto-progression.service';
 import { RepInputDirective } from './directives/rep-input.directive';
 import { RpeInputDirective } from './directives/rpe-input.directive';
 import { WeightInputDirective } from './directives/weight-input.directive';
@@ -75,6 +76,7 @@ import { TrainingViewService } from './training-view-service';
     ExerciseDataService,
     TrainingDayLocatorService,
     UserBestPerformanceService,
+    AutoProgressionService,
   ],
   templateUrl: './training-view.component.html',
   styleUrls: ['./training-view.component.scss'],
@@ -101,6 +103,7 @@ export class TrainingViewComponent implements OnInit, SetHeadlineInfo {
     protected navigationService: TrainingViewNavigationService,
     protected exerciseDataService: ExerciseDataService,
     protected trainingDataService: TrainingPlanDataService,
+    private autoProgressionService: AutoProgressionService,
   ) {}
 
   /**
@@ -168,16 +171,20 @@ export class TrainingViewComponent implements OnInit, SetHeadlineInfo {
   }
 
   private openAutoProgressionModal() {
+    const providerMap = new Map().set(AutoProgressionService, this.autoProgressionService);
+
     const modalOptions = new ModalOptionsBuilder()
       .setComponent(AutoProgressionComponent)
       .setTitle('Automatische Progression')
-      .setButtonText('Übernhemen')
-      .setComponentData({
-        planId: this.planId,
-      })
+      .setProviderMap(providerMap)
+      .setOnSubmitCallback(async () => this.applyAutoProgression())
       .build();
 
     this.modalService.open(modalOptions);
+  }
+
+  private async applyAutoProgression(): Promise<void> {
+    await firstValueFrom(this.autoProgressionService.confirmAutoProgression(this.planId()));
   }
 
   private openTrainingExerciseList(): void {

@@ -195,19 +195,17 @@ export class ProfileComponent2 implements OnInit, SetHeadlineInfo {
    * Opens the modal to display the user's gym ticket.
    */
   private showUserTicketModal(): void {
-    this.gymTicketService.getGymTicket().subscribe(() => {
-      const providerMap = new Map().set(GymTicketService, this.gymTicketService);
+    const providerMap = new Map().set(GymTicketService, this.gymTicketService);
 
-      const modalOptions = new ModalOptionsBuilder()
-        .setComponent(GymTicketComponent)
-        .setTitle('Gym Ticket')
-        .setButtonText('Speichern')
-        .setProviderMap(providerMap)
-        .setOnSubmitCallback(async () => this.updateUserTicket())
-        .build();
+    const modalOptions = new ModalOptionsBuilder()
+      .setComponent(GymTicketComponent)
+      .setTitle('Gym Ticket')
+      .setButtonText('Speichern')
+      .setProviderMap(providerMap)
+      .setOnSubmitCallback(async () => this.updateUserTicket())
+      .build();
 
-      this.modalService.open(modalOptions);
-    });
+    this.modalService.open(modalOptions);
   }
 
   private async updateUserTicket(): Promise<void> {

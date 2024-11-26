@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, OnInit, signal } from '@angular/core';
 import { ImageCropperComponent } from 'ngx-image-cropper';
 import { CircularIconButtonComponent } from '../../shared/components/circular-icon-button/circular-icon-button.component';
 import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
@@ -10,19 +11,25 @@ import { GymTicketService } from './gym-ticket.service';
 @Component({
   selector: 'app-ticket',
   standalone: true,
-  imports: [ImageCropperComponent, SkeletonComponent, CircularIconButtonComponent],
+  imports: [ImageCropperComponent, SkeletonComponent, CircularIconButtonComponent, AsyncPipe],
   templateUrl: './gym-ticket.component.html',
   styleUrls: ['./gym-ticket.component.scss'],
   providers: [ImageDownloadService],
 })
-export class GymTicketComponent {
+export class GymTicketComponent implements OnInit {
   protected readonly IconName = IconName;
+
+  loading = signal(true);
 
   constructor(
     protected gymTicketService: GymTicketService,
     private imageDownloadService: ImageDownloadService,
     private imageUploadService: ImageUploadService,
   ) {}
+
+  ngOnInit(): void {
+    this.gymTicketService.getGymTicket().subscribe(() => this.loading.set(false));
+  }
 
   /**
    * Uploads the image and sets the uploaded image in `imageSignal`.

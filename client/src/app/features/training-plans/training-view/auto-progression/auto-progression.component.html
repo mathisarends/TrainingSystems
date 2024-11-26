@@ -1,11 +1,7 @@
-<app-info
-  [infoText]="'Stelle sicher, dass du deinen Trainingsplan bereits vollständig erstellt und gespeichert hast.'"
-/>
-
 <div class="input-group">
   <app-floating-label-input
     [label]="'RPE Anstieg pro Woche'"
-    [(value)]="rpeProgressionOption"
+    [(value)]="autoProgressionService.rpeProgressionOption"
     [type]="'select'"
     [options]="[
       { label: '0.5', value: 0.5 },
@@ -15,7 +11,7 @@
 
   <app-floating-label-input
     [label]="'Letzte Woche als Deload planen?'"
-    [(value)]="isDeloadWeekOptionSelection"
+    [(value)]="autoProgressionService.isDeloadWeekOptionSelection"
     [type]="'select'"
     [options]="[
       { label: 'Ja', value: true },
