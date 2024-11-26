@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, effect, signal } from '@angular/core';
 import { DatePickerComponent } from '../../../../shared/components/datepicker/date-picker.component';
 import { InfoComponent } from '../../../../shared/components/info/info.component';
+import { ModalValidationService } from '../../../../shared/components/modal/modal-validation.service';
+import { Validatable } from '../../../../shared/components/modal/validatable';
 import { TrainingPlanEditView } from '../../model/training-plan-edit-view';
 import { DaySelectedPipe } from './day-selected-pipe';
 
@@ -12,14 +14,26 @@ import { DaySelectedPipe } from './day-selected-pipe';
   templateUrl: './training-scheduling.component.html',
   styleUrls: ['./training-scheduling.component.scss'],
 })
-export class TrainingSchedulingComponent {
+export class TrainingSchedulingComponent implements Validatable {
   days = signal(['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']);
 
   dayNumbers = computed(() => {
     return this.days().map((_, index) => index + 1);
   });
 
-  constructor(protected trainingPlanEditView: TrainingPlanEditView) {}
+  isSelectionValid = computed(() => this.trainingPlanEditView.isTrainingFrequencyValid());
+
+  constructor(
+    protected trainingPlanEditView: TrainingPlanEditView,
+    protected modalValidatonService: ModalValidationService,
+  ) {
+    effect(
+      () => {
+        this.validate();
+      },
+      { allowSignalWrites: true },
+    );
+  }
 
   protected toggleTrainingDayByNumber(dayNumber: number): void {
     const day = this.days()[dayNumber - 1];
@@ -31,5 +45,14 @@ export class TrainingSchedulingComponent {
       updatedDays.add(day);
     }
     this.trainingPlanEditView.trainingDays.set(updatedDays);
+  }
+
+  validate(): void {
+    const isValid = this.trainingPlanEditView.isTrainingFrequencyValid();
+    this.modalValidatonService.updateValidationState(isValid);
+  }
+
+  ngOnDestroy(): void {
+    this.modalValidatonService.updateValidationState(true);
   }
 }

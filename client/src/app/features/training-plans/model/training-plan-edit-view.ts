@@ -101,7 +101,20 @@ export class TrainingPlanEditView {
    * @returns `true` if the training plan is valid, otherwise `false`.
    */
   isValid(): boolean {
-    return this.title().trim().length > 0 && !!this.trainingDays() && !!this.trainingBlockLength();
+    return (
+      this.title().trim().length > 0 &&
+      !!this.trainingDays() &&
+      this.isTrainingBlockLengthValid() &&
+      this.isTrainingBlockLengthValid()
+    );
+  }
+
+  isTrainingBlockLengthValid(): boolean {
+    return this.trainingBlockLength() >= 3 && this.trainingBlockLength() <= 8;
+  }
+
+  isTrainingFrequencyValid(): boolean {
+    return this.trainingDays().size >= 2 && this.trainingDays().size <= 7;
   }
 
   /**

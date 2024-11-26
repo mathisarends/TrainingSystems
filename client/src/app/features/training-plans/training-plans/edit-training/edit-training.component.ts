@@ -40,7 +40,7 @@ export class EditTrainingPlanComponent implements Validatable {
   }
 
   validate(): void {
-    if (this.trainingPlanEditView.title() && this.trainingPlanEditView.trainingBlockLength()) {
+    if (this.trainingPlanEditView.title() && this.trainingPlanEditView.isTrainingBlockLengthValid()) {
       this.modalValidationService.updateValidationState(true);
     } else {
       this.modalValidationService.updateValidationState(false);

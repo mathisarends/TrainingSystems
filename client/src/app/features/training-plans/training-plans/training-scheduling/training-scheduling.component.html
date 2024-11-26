@@ -22,3 +22,7 @@
     </div>
   }
 </div>
+
+@if (!isSelectionValid()) {
+  <p class="error-message">Trainingsplan muss mindestens 2 Trainingtage haben</p>
+}

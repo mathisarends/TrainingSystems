@@ -59,3 +59,9 @@
   display: grid;
   place-items: center;
 }
+
+.error-message {
+  transform: translateY(-5px);
+  color: var(--error-color);
+  font-size: 0.9em;
+}

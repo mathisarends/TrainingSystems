@@ -273,26 +273,6 @@ export class ModalComponent implements AfterViewInit, OnInit {
     });
   }
 
-  /**
-   * Switches to the previous tab in the modal, with overflow handling to loop back to the last tab.
-   */
-  private switchToPreviousTab(): void {
-    const currentIndex = this.activeTabIndex();
-    const previousIndex = (currentIndex - 1 + this.tabs().length) % this.tabs().length;
-
-    this.activeTab.set(this.tabs()[previousIndex]);
-  }
-
-  /**
-   * Switches to the next tab in the modal, with overflow handling to loop back to the first tab.
-   */
-  private switchToNextTabWithOverflow(): void {
-    const currentIndex = this.activeTabIndex();
-    const nextIndex = (currentIndex + 1) % this.tabs().length;
-
-    this.activeTab.set(this.tabs()[nextIndex]);
-  }
-
   private loadTabComponent(modalTab: ModalTab): void {
     this.modalContent.clear();
 
@@ -337,20 +317,6 @@ export class ModalComponent implements AfterViewInit, OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.confirm();
-      });
-
-    this.keyboardService
-      .arrowLeftPressed$()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.switchToPreviousTab();
-      });
-
-    this.keyboardService
-      .arrowRightPressed$()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.switchToNextTabWithOverflow();
       });
   }
 }
