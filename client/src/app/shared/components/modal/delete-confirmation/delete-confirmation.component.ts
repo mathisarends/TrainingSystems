@@ -55,4 +55,8 @@ export class DeleteConfirmationComponent implements OnInit, Validatable {
     const isValid = this.deletionKeyWordUserInput() === this.deletionKeyWord();
     this.modalValidationService.updateValidationState(isValid);
   }
+
+  ngOnDestroy(): void {
+    this.modalValidationService.updateValidationState(true);
+  }
 }
