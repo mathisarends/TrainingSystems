@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { ChartSkeletonComponent } from '../../../shared/components/loader/chart-skeleton/chart-skeleton.component';
-import { OnConfirm } from '../../../shared/components/modal/on-confirm';
 import { TrainingDay } from '../../training-plans/training-view/training-day';
 
 @Component({
@@ -14,7 +13,7 @@ import { TrainingDay } from '../../training-plans/training-view/training-day';
   templateUrl: './training-preview-popup.component.html',
   styleUrls: ['./training-preview-popup.component.scss'],
 })
-export class TrainingPreviewPopupComponent implements OnConfirm {
+export class TrainingPreviewPopupComponent {
   /**
    * ID of the training plan to preview.
    */
@@ -40,12 +39,6 @@ export class TrainingPreviewPopupComponent implements OnConfirm {
       if (this.trainingPlanId()) {
         this.trainingDay$ = this.fetchTrainingDayInfo();
       }
-    });
-  }
-
-  onConfirm(): void {
-    this.router.navigate(['/training/view'], {
-      queryParams: { planId: this.trainingPlanId(), week: this.weekIndex(), day: this.dayIndex() },
     });
   }
 

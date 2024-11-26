@@ -6,6 +6,7 @@
   [required]="true"
   [validationPattern]="'^(?!\s*$).+'"
   [validationErrorMessage]="'Titel ist erforderlich'"
+  [isTouched]="markInputFieldsAsTouched()"
 />
 
 <app-form-input
@@ -15,4 +16,5 @@
   [type]="'number'"
   [validationPattern]="'^[3-8]$'"
   [validationErrorMessage]="'Blocklänge muss eine Zahl zwischen 3 und 8 sein.'"
+  [isTouched]="markInputFieldsAsTouched()"
 />
