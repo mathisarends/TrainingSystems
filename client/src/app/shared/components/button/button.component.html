@@ -1,5 +1,6 @@
 <button
   class="btn"
+  [disabled]="disabled()"
   [ngClass]="{
     'btn-primary': variant() === 'PRIMARY',
     'btn-secondary': variant() === 'SECONDARY',

@@ -29,6 +29,7 @@ import { ButtonComponent } from '../button/button.component';
 import { CircularIconButtonComponent } from '../circular-icon-button/circular-icon-button.component';
 import { ToastService } from '../toast/toast.service';
 import { ModalPaginationComponent } from './modal-pagination/modal-pagination.component';
+import { ModalValidationService } from './modal-validation.service';
 import { OnToggleView } from './on-toggle-view';
 import { ModalTab } from './types/modal-tab';
 
@@ -118,8 +119,11 @@ export class ModalComponent implements AfterViewInit, OnInit {
 
   cancelled = output<void>();
 
+  isPrimaryButtonDisabled = signal(false);
+
   constructor(
     protected mobileDeviceDetectionService: MobileDeviceDetectionService,
+    private modalValidationService: ModalValidationService,
     private environmentInjector: EnvironmentInjector,
     private modalService: ModalService,
     private toastService: ToastService,
@@ -139,6 +143,15 @@ export class ModalComponent implements AfterViewInit, OnInit {
         this.loadTabComponent(this.activeTab()!);
       }
     });
+
+    effect(
+      () => {
+        const validationState = this.modalValidationService.isValid();
+
+        this.isPrimaryButtonDisabled.set(!validationState);
+      },
+      { allowSignalWrites: true },
+    );
   }
 
   ngOnInit(): void {

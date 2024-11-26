@@ -28,6 +28,7 @@
           <app-button
             [variant]="buttonVariant"
             [textContent]="buttonText"
+            [disabled]="isPrimaryButtonDisabled()"
             (clicked)="confirm()"
             [isLoading]="isLoading()"
           />

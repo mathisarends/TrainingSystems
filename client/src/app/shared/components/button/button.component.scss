@@ -11,6 +11,11 @@
   gap: 1rem;
 }
 
+.btn.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
 .btn-primary {
   background-color: var(--accent-button-color);
   color: #fff;

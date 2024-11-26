@@ -26,8 +26,15 @@ export class ButtonComponent {
 
   clicked = output<Event>();
 
+  disabled = input(false);
+
   @HostListener('click', ['$event'])
   onClick(event: Event) {
+    if (this.disabled()) {
+      event.preventDefault();
+      return;
+    }
+
     this.clicked.emit(event);
   }
 }
