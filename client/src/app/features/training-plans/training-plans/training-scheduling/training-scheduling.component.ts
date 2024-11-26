@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, effect, signal } from '@angular/core';
-import { DatePickerComponent } from '../../../../shared/components/datepicker/date-picker.component';
 import { InfoComponent } from '../../../../shared/components/info/info.component';
 import { ModalValidationService } from '../../../../shared/components/modal/modal-validation.service';
 import { Validatable } from '../../../../shared/components/modal/validatable';
+import { SliderComponent } from '../../../../shared/components/slider/slider.component';
 import { TrainingPlanEditView } from '../../model/training-plan-edit-view';
 import { DaySelectedPipe } from './day-selected-pipe';
 
 @Component({
   selector: 'app-training-scheduling',
   standalone: true,
-  imports: [InfoComponent, CommonModule, DaySelectedPipe, DatePickerComponent],
+  imports: [InfoComponent, CommonModule, DaySelectedPipe, SliderComponent],
   templateUrl: './training-scheduling.component.html',
   styleUrls: ['./training-scheduling.component.scss'],
 })
