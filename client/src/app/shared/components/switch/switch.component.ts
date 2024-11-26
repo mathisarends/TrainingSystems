@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
 import { IconName } from '../../icon/icon-name';
 import { IconComponent } from '../../icon/icon.component';
 
@@ -13,6 +13,8 @@ import { IconComponent } from '../../icon/icon.component';
 })
 export class SwitchComponent {
   protected readonly IconName = IconName;
+
+  label = input('');
   isChecked = model(false);
 
   protected toggle() {

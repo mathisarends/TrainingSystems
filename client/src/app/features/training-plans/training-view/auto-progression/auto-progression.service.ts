@@ -19,7 +19,7 @@ export class AutoProgressionService {
 
     const autoProgressionDto = {
       withDeloadWeek: this.isDeloadWeekOptionSelection(),
-      rpeProgression: this.rpeProgressionOption(),
+      rpeProgression: Number(this.rpeProgressionOption()),
     };
 
     return this.httpService

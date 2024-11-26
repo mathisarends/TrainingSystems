@@ -1,3 +1,6 @@
+@if (label()) {
+  <p>{{ label() }}</p>
+}
 <div class="switch" [ngClass]="{ on: isChecked() }" (click)="toggle()">
   <div class="handle">
     @if (isChecked()) {

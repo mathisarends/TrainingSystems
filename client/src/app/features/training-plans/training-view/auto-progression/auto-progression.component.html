@@ -1,21 +1,14 @@
-<div class="input-group">
-  <app-floating-label-input
-    [label]="'RPE Anstieg pro Woche'"
-    [(value)]="autoProgressionService.rpeProgressionOption"
-    [type]="'select'"
-    [options]="[
-      { label: '0.5', value: 0.5 },
-      { label: '1', value: 1 },
-    ]"
-  />
+<app-floating-label-input
+  [label]="'RPE Anstieg pro Woche'"
+  [(value)]="autoProgressionService.rpeProgressionOption"
+  [type]="'select'"
+  [options]="[
+    { label: '0.5', value: 0.5 },
+    { label: '1', value: 1 },
+  ]"
+/>
 
-  <app-floating-label-input
-    [label]="'Letzte Woche als Deload planen?'"
-    [(value)]="autoProgressionService.isDeloadWeekOptionSelection"
-    [type]="'select'"
-    [options]="[
-      { label: 'Ja', value: true },
-      { label: 'Nein', value: false },
-    ]"
-  />
-</div>
+<app-switch
+  [(isChecked)]="autoProgressionService.isDeloadWeekOptionSelection"
+  [label]="'Letzte Woche als Deload planen?'"
+/>

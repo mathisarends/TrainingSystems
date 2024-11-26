@@ -1,3 +1,9 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
 .switch {
   width: 55px;
   height: 30px;
