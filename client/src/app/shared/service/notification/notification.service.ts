@@ -38,21 +38,11 @@ export class NotificationService {
    *
    * @param id - The ID of the notification to delete.
    */
-  deleteTrainingDayNotification(id: string): Observable<any> {
-    return this.httpService.delete(`/training-log/training-day/${id}`).pipe(
+  deleteTrainingDayNotification(): Observable<any> {
+    return this.httpService.delete('/training-log/notifications').pipe(
       tap(() => {
         this.trainingDayNotifications.set([]);
       }),
     );
-  }
-
-  /**
-   * Fetches a specific training day by ID.
-   *
-   * @param id - The ID of the training day to fetch.
-   * @returns An Observable of the fetched training day data.
-   */
-  getTrainingDayById(id: string): Observable<any> {
-    return this.httpService.get<any>(`/training-log/training-day/${id}`);
   }
 }

@@ -5,6 +5,7 @@ import { ModalService } from '../../../core/services/modal/modal.service';
 import { ModalSize } from '../../../core/services/modal/modalSize';
 import { IconName } from '../../../shared/icon/icon-name';
 import { IconComponent } from '../../../shared/icon/icon.component';
+import { NotificationService } from '../../../shared/service/notification/notification.service';
 import { TrainingDayCalendarEntry } from '../training-log-calendar/dto/training-day-calendar-entry';
 import { TrainingLogPopupComponent } from '../training-log-popup/training-log-popup.component';
 import { TrainingPreviewPopupComponent } from '../training-preview-popup/training-preview-popup.component';
@@ -42,16 +43,25 @@ export class CalendarEventComponent {
 
   constructor(
     private modalService: ModalService,
+    private notificationService: NotificationService,
     private router: Router,
   ) {}
 
   @HostListener('click')
   onHostClick() {
     if (this.isTrainingLog()) {
+      this.clearNotificationsIfNecessary();
       this.openTrainingLog();
     } else {
       this.openTrainingPreview();
     }
+  }
+
+  private clearNotificationsIfNecessary(): void {
+    if (this.eventType() !== CalendarEvent.NOTIFICATION) {
+      return;
+    }
+    this.notificationService.deleteTrainingDayNotification().subscribe();
   }
 
   private openTrainingLog(): void {
