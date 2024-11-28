@@ -6,6 +6,8 @@
   [required]="true"
   [validationPattern]="'^(?!\s*$).+'"
   [validationErrorMessage]="'Titel ist erforderlich'"
+  [icon]="IconName.REFRESH_CW"
+  (iconClicked)="makeTrainingPlanTitleSuggestion()"
   [isTouched]="markInputFieldsAsTouched()"
 />
 

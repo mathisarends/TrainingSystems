@@ -5,6 +5,7 @@ import { FormInputComponent } from '../../../../shared/components/form-input/for
 import { ModalValidationService } from '../../../../shared/components/modal/modal-validation.service';
 import { Validatable } from '../../../../shared/components/modal/validatable';
 import { TrainingBannerComponent } from '../../../../shared/components/training-banner/training-banner.component';
+import { IconName } from '../../../../shared/icon/icon-name';
 import { ImageUploadService } from '../../../../shared/service/image-upload.service';
 import { TrainingPlanEditView } from '../../model/training-plan-edit-view';
 
@@ -16,6 +17,8 @@ import { TrainingPlanEditView } from '../../model/training-plan-edit-view';
   styleUrls: ['./edit-training.component.scss'],
 })
 export class EditTrainingPlanComponent implements OnInit, Validatable {
+  protected readonly IconName = IconName;
+
   markInputFieldsAsTouched = signal(false);
 
   constructor(
@@ -38,6 +41,10 @@ export class EditTrainingPlanComponent implements OnInit, Validatable {
     });
   }
 
+  ngOnDestroy(): void {
+    this.modalValidationService.updateValidationState(true);
+  }
+
   /**
    * Handles image upload and updates the corresponding signal.
    */
@@ -57,7 +64,8 @@ export class EditTrainingPlanComponent implements OnInit, Validatable {
     }
   }
 
-  ngOnDestroy(): void {
-    this.modalValidationService.updateValidationState(true);
+  protected makeTrainingPlanTitleSuggestion(): void {
+    const randomSuggestion = this.trainingPlanEditView.getRandomTrainingPlanTitle();
+    this.trainingPlanEditView.title.set(randomSuggestion);
   }
 }

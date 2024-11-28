@@ -58,4 +58,5 @@ export enum IconName {
   TRENDING_DOWN = 'feather-trending-down',
   HEART = 'heart',
   CHECK_CIRCLE = 'check-circle',
+  REFRESH_CW = 'refresh-cw',
 }

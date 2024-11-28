@@ -31,6 +31,26 @@ export class TrainingPlanEditView {
    */
   coverImageBase64: WritableSignal<string>;
 
+  trainingTitleSuggestions = signal([
+    'Volume',
+    'Strength',
+    'Power',
+    'Progression',
+    'Peaking',
+    'Intensity',
+    'Deload',
+    'Foundation',
+    'Build',
+    'Load',
+    'CompReady',
+    'Recovery',
+    'Push',
+    'PowerBlock',
+    'StrengthBase',
+  ]);
+
+  lastSuggestedTitle = signal('');
+
   /**
    * Default values for initializing a new training plan.
    */
@@ -138,5 +158,15 @@ export class TrainingPlanEditView {
     this.trainingDays.set(this.defaultValues.trainingDays);
     this.trainingBlockLength.set(this.defaultValues.trainingBlockLength);
     this.coverImageBase64.set(this.defaultValues.coverImageBase64);
+  }
+
+  /**
+   * Provides random training plan title suggestions.
+   */
+  getRandomTrainingPlanTitle(previousTitle: string | null = null): string {
+    const filteredTitles = this.trainingTitleSuggestions().filter((title) => title !== previousTitle);
+
+    const randomIndex = Math.floor(Math.random() * filteredTitles.length);
+    return filteredTitles[randomIndex];
   }
 }

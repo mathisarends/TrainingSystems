@@ -6,16 +6,19 @@ import {
   HostListener,
   input,
   model,
+  output,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { IconName } from '../../icon/icon-name';
+import { IconComponent } from '../../icon/icon.component';
 
 @Component({
   selector: 'app-form-input',
   standalone: true,
   templateUrl: './form-input.component.html',
   styleUrls: ['./form-input.component.scss'],
-  imports: [FormsModule],
+  imports: [FormsModule, IconComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormInputComponent<T extends string | number> {
@@ -72,6 +75,18 @@ export class FormInputComponent<T extends string | number> {
   isTouched = model(false);
 
   /**
+   * The icon displayed alongside the input field.
+   * Represents an action or visual cue for the user.
+   */
+  icon = model<IconName | undefined>(undefined);
+
+  /**
+   * Event emitted when the icon is clicked.
+   * Can trigger specific actions or behaviors in the parent component.
+   */
+  iconClicked = output<void>();
+
+  /**
    * Computes the validity of the input field based on the following:
    * - If the field has not been touched, it is considered valid (initial state).
    * - After being touched, validity depends on:
@@ -95,6 +110,24 @@ export class FormInputComponent<T extends string | number> {
       },
       { allowSignalWrites: true },
     );
+  }
+
+  /**
+   * Handles the `focusin` event when the input field gains focus.
+   * Sets `isFocused` to true and marks the field as `isTouched`.
+   */
+  @HostListener('focusin')
+  onFocusIn(): void {
+    this.isFocused.set(true);
+  }
+
+  /**
+   * Handles the `focusout` event when the input field loses focus.
+   * Sets `isFocused` to false.
+   */
+  @HostListener('focusout')
+  onFocusOut(): void {
+    this.isFocused.set(false);
   }
 
   /**
@@ -135,21 +168,7 @@ export class FormInputComponent<T extends string | number> {
     return false;
   }
 
-  /**
-   * Handles the `focusin` event when the input field gains focus.
-   * Sets `isFocused` to true and marks the field as `isTouched`.
-   */
-  @HostListener('focusin')
-  onFocusIn(): void {
-    this.isFocused.set(true);
-  }
-
-  /**
-   * Handles the `focusout` event when the input field loses focus.
-   * Sets `isFocused` to false.
-   */
-  @HostListener('focusout')
-  onFocusOut(): void {
-    this.isFocused.set(false);
+  protected emitIconClicked(event: Event): void {
+    this.iconClicked.emit();
   }
 }

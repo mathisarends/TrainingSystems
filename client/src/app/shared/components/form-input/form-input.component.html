@@ -17,3 +17,7 @@
 @if (!isValid() && isTouched() && validationErrorMessage()) {
   <span class="error-message">{{ validationErrorMessage() }}</span>
 }
+
+@if (icon()) {
+  <app-icon [name]="icon()!" (click)="emitIconClicked($event)" />
+}
