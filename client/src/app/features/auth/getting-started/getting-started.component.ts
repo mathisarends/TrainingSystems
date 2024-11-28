@@ -5,7 +5,6 @@ import { AuthService } from '../../../core/services/auth.service';
 import { HttpService } from '../../../core/services/http-client.service';
 import { ModalOptionsBuilder } from '../../../core/services/modal/modal-options-builder';
 import { ModalService } from '../../../core/services/modal/modal.service';
-import { ToastService } from '../../../shared/components/toast/toast.service';
 import { BasicConfirmationResponse } from '../../../shared/dto/basic-confirmation-response';
 import { IconComponent } from '../../../shared/icon/icon.component';
 import { HeaderService } from '../../header/header.service';
@@ -33,7 +32,6 @@ export class GettingStartedComponent implements OnInit, SetHeadlineInfo {
     private authService: AuthService,
     private httpService: HttpService,
     private modalService: ModalService,
-    private toastService: ToastService,
     private headerService: HeaderService,
   ) {}
 
@@ -105,7 +103,6 @@ export class GettingStartedComponent implements OnInit, SetHeadlineInfo {
         credential: response.credential,
       })
       .subscribe((response) => {
-        this.toastService.success(response.message);
         this.authService.setAuthenticated(true);
         this.router.navigate(['/']);
       });
