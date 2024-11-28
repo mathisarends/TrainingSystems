@@ -15,8 +15,6 @@
   </div>
 
   <app-grouped-bar-chart [data]="volumeComparisonChartData()!" [yAxisTitle]="'Tonnage (KG)'" />
-
-  <app-grouped-bar-chart [data]="performanceComparisonChartData()!" [yAxisTitle]="'Est. Max (KG)'" />
 } @else {
   <app-chart-skeleton />
 }

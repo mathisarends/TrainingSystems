@@ -1,6 +1,5 @@
 import { DatePipe } from '@angular/common';
 import { Component, computed, effect, signal, WritableSignal } from '@angular/core';
-import { Router } from '@angular/router';
 import { ChartDataDto } from '@shared/charts/chart-data.dto';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
@@ -29,17 +28,12 @@ export class TrainingLogPopupComponent implements OnToggleView {
   protected readonly IconName = IconName;
   protected readonly IconBackgroundColor = IconBackgroundColor;
 
-  loadingComplete = computed(() => this.volumeComparisonChartData() && this.performanceComparisonChartData());
+  loadingComplete = computed(() => this.volumeComparisonChartData());
 
   /**
    * Holds the proceessed chart data for volume comparison over weeks.
    */
   volumeComparisonChartData: WritableSignal<ChartData<BarChartDataset> | undefined> = signal(undefined);
-
-  /**
-   * Holds the proceessed chart data for performance comparison over weeks.
-   */
-  performanceComparisonChartData: WritableSignal<ChartData<BarChartDataset> | undefined> = signal(undefined);
 
   /**
    * Signal storing the ID of the current training plan. Passed from the calendar-event.component.
@@ -77,7 +71,6 @@ export class TrainingLogPopupComponent implements OnToggleView {
   durationDifferenceFromLastWeek = signal(0);
 
   constructor(
-    private router: Router,
     private httpService: HttpService,
     private shareService: ShareService,
     private datePipe: DatePipe,
@@ -95,8 +88,8 @@ export class TrainingLogPopupComponent implements OnToggleView {
             this.duration.set(response.duration);
             this.durationDifferenceFromLastWeek.set(response.durationDifferenceFromLastWeek);
 
-            this.mapResponseDataToChart(response.tonnageComparisonOverWeekSpan, true);
-            this.mapResponseDataToChart(response.performanceComparisonOverWeekSpan, false);
+            this.mapResponseDataToChart(response.tonnageComparisonOverWeekSpan);
+            this.mapResponseDataToChart(response.performanceComparisonOverWeekSpan);
           });
       }
     });
@@ -111,7 +104,7 @@ export class TrainingLogPopupComponent implements OnToggleView {
   /**
    * Processes the response data for training retrospective and sets up chart data.
    */
-  private mapResponseDataToChart(chartDataDto: ChartDataDto, isTonnageChart: boolean): void {
+  private mapResponseDataToChart(chartDataDto: ChartDataDto): void {
     const labels = Object.keys(chartDataDto);
 
     const datasets: BarChartDataset[] = chartDataDto[labels[0]].map((_, weekIndex) => {
@@ -127,11 +120,7 @@ export class TrainingLogPopupComponent implements OnToggleView {
       datasets: datasets,
     };
 
-    if (isTonnageChart) {
-      this.volumeComparisonChartData.set(chartData);
-    } else {
-      this.performanceComparisonChartData.set(chartData);
-    }
+    this.volumeComparisonChartData.set(chartData);
   }
 
   /**
