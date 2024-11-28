@@ -8,6 +8,7 @@ import { IconComponent } from '../../../shared/icon/icon.component';
 import { TrainingDayCalendarEntry } from '../training-log-calendar/dto/training-day-calendar-entry';
 import { TrainingLogPopupComponent } from '../training-log-popup/training-log-popup.component';
 import { TrainingPreviewPopupComponent } from '../training-preview-popup/training-preview-popup.component';
+import { CalendarEvent } from './calendare-event.enum';
 
 @Component({
   selector: 'app-calendar-event',
@@ -18,16 +19,14 @@ import { TrainingPreviewPopupComponent } from '../training-preview-popup/trainin
 })
 export class CalendarEventComponent {
   protected readonly IconName = IconName;
+  protected readonly CalendarEvent = CalendarEvent;
 
   /**
    * The calendar entry representing a specific training day.
    */
   trainingDayCalendarEntry = input.required<TrainingDayCalendarEntry>();
 
-  /**
-   * Indicates wether its an prospective or retrospective view to the training day.
-   */
-  isTrainingLog = input.required<boolean>();
+  eventType = input(CalendarEvent.PROSPECTIVE);
 
   /**
    * Computed property to extract the zero-based week index from the training day label.
@@ -123,5 +122,9 @@ export class CalendarEventComponent {
     const dayRegex = /D(\d+)/;
     const match = dayRegex.exec(label);
     return match ? Number(match[1]) - 1 : -1;
+  }
+
+  private isTrainingLog(): boolean {
+    return this.eventType() === CalendarEvent.LOG || this.eventType() === CalendarEvent.NOTIFICATION;
   }
 }

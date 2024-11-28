@@ -18,12 +18,15 @@ import { SpinnerComponent } from '../../../shared/components/spinner/spinner.com
 import { SwipeDirective } from '../../../shared/directives/swipe.directive';
 import { IconName } from '../../../shared/icon/icon-name';
 import { KeyboardService } from '../../../shared/service/keyboard.service';
+import { NotificationService } from '../../../shared/service/notification/notification.service';
 import { HeaderService } from '../../header/header.service';
 import { SetHeadlineInfo } from '../../header/set-headline-info';
 import { CalendarEventComponent } from '../calendar-event/calendar-event.component';
+import { CalendarEvent } from '../calendar-event/calendare-event.enum';
 import { TrainingDayCalendarDataDto } from './dto/training-day-calendar-data.dto';
-import { ExtractTrainingDayFromCalendarDataPipe } from './extract-upcoming-training-day-from-calendar-data.pipe';
+import { ExtractTrainingDayFromCalendarDataPipe } from './extract-training-day-from-calendar-data.pipe';
 import { IsCurrentDayPipe } from './is-current-day.pipe';
+import { MatchesTrainingNotificationPipe } from './matches-training-notification-date.pipe';
 import { MonthNavigationComponent } from './month-navigation/month-navigation.component';
 
 @Component({
@@ -37,6 +40,7 @@ import { MonthNavigationComponent } from './month-navigation/month-navigation.co
     SpinnerComponent,
     ExtractTrainingDayFromCalendarDataPipe,
     SwipeDirective,
+    MatchesTrainingNotificationPipe,
   ],
   templateUrl: './training-calendar.component.html',
   styleUrls: ['./training-calendar.component.scss'],
@@ -44,6 +48,7 @@ import { MonthNavigationComponent } from './month-navigation/month-navigation.co
 })
 export class TrainingLogCalendarComponent implements OnInit, SetHeadlineInfo {
   protected readonly IconName = IconName;
+  protected readonly CalendarEvent = CalendarEvent;
 
   /**
    * Array of month names for calendar display.
@@ -103,6 +108,7 @@ export class TrainingLogCalendarComponent implements OnInit, SetHeadlineInfo {
   trainingDayCalendarData$: Observable<TrainingDayCalendarDataDto> | undefined = undefined;
 
   constructor(
+    protected notificationService: NotificationService,
     private httpService: HttpService,
     private modalService: ModalService,
     private headerService: HeaderService,

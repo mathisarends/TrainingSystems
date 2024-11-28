@@ -1,7 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
-import { TrainingDayFinishedNotification } from '../../../features/usage-statistics/training-finished-notification';
 import { TrainingDayFinishedNotificationDto } from './training-day-finished-notification.dto';
 
 /**
@@ -15,7 +14,7 @@ export class NotificationService {
   /**
    * Signal holding the training day notifications for the user.
    */
-  trainingDayNotifications = signal<TrainingDayFinishedNotification[]>([]);
+  trainingDayNotifications = signal<TrainingDayFinishedNotificationDto[]>([]);
 
   amountOfUnseenNotifications = signal(0);
 
@@ -27,8 +26,9 @@ export class NotificationService {
    */
   fetchAndSetTrainingDayNotifications(): Observable<TrainingDayFinishedNotificationDto[]> {
     return this.httpService.get<TrainingDayFinishedNotificationDto[]>('/training-log/notifications').pipe(
-      tap((trainingFinishedDto: TrainingDayFinishedNotificationDto[]) => {
-        this.amountOfUnseenNotifications.set(trainingFinishedDto.length);
+      tap((trainingDayFinishedNotifications: TrainingDayFinishedNotificationDto[]) => {
+        this.trainingDayNotifications.set(trainingDayFinishedNotifications);
+        this.amountOfUnseenNotifications.set(trainingDayFinishedNotifications.length);
       }),
     );
   }
@@ -37,14 +37,11 @@ export class NotificationService {
    * Deletes a training day notification by ID and updates the `trainingDayNotifications` signal.
    *
    * @param id - The ID of the notification to delete.
-   * @returns An Observable representing the result of the delete operation.
    */
   deleteTrainingDayNotification(id: string): Observable<any> {
     return this.httpService.delete(`/training-log/training-day/${id}`).pipe(
       tap(() => {
-        // Remove the deleted notification from the signal
-        const updatedNotifications = this.trainingDayNotifications().filter((notification) => notification.id !== id);
-        this.trainingDayNotifications.set(updatedNotifications);
+        this.trainingDayNotifications.set([]);
       }),
     );
   }

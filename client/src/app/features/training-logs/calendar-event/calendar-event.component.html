@@ -1,7 +1,9 @@
-@if (isTrainingLog()) {
+@if (eventType() === CalendarEvent.LOG) {
   <app-icon [name]="IconName.CHECK_CIRCLE" [color]="'#32CD32'" />
-} @else {
+} @else if (eventType() === CalendarEvent.PROSPECTIVE) {
   <app-icon [name]="IconName.Activity" [fillIcon]="true" [color]="'#a78bfa'" />
+} @else {
+  <app-icon [name]="IconName.INFO" [color]="'orange'" />
 }
 
 {{ trainingDayCalendarEntry().label }}

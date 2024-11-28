@@ -28,7 +28,14 @@
               : trainingDayCalendarData.finishedTrainings;
           as trainingDayCalendarEntry
         ) {
-          <app-calendar-event [trainingDayCalendarEntry]="trainingDayCalendarEntry" [isTrainingLog]="true" />
+          @if (trainingDayCalendarEntry | matchesTrainingNotification: notificationService.trainingDayNotifications()) {
+            <app-calendar-event
+              [trainingDayCalendarEntry]="trainingDayCalendarEntry"
+              [eventType]="CalendarEvent.NOTIFICATION"
+            />
+          } @else {
+            <app-calendar-event [trainingDayCalendarEntry]="trainingDayCalendarEntry" [eventType]="CalendarEvent.LOG" />
+          }
         }
 
         @if (
@@ -39,7 +46,10 @@
               : trainingDayCalendarData.upComingTrainings;
           as trainingDayCalendarEntry
         ) {
-          <app-calendar-event [trainingDayCalendarEntry]="trainingDayCalendarEntry" [isTrainingLog]="false" />
+          <app-calendar-event
+            [trainingDayCalendarEntry]="trainingDayCalendarEntry"
+            [eventType]="CalendarEvent.PROSPECTIVE"
+          />
         }
       </div>
     }
