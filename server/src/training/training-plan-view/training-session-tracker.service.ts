@@ -2,10 +2,11 @@ import { NotificationPayloadDto } from 'src/push-notifications/model/notificatio
 import { PushNotificationsService } from 'src/push-notifications/push-notifications.service';
 import { TrainingDay } from 'src/training/model/training-day.schema';
 import { TrainingService } from 'src/training/training.service';
+import { TrainingPlan } from '../model/training-plan.model';
 import { InactivityTimeoutManager } from './inactivity-timeout-manager';
 
 export class TrainingSessionTracker {
-  private readonly INACTIVITY_TIMEOUT_DURATION: number = 45 * 60 * 1000;
+  private readonly INACTIVITY_TIMEOUT_DURATION: number = 15 * 1000;
   private readonly MINIMUM_TRAINING_DURATION_IN_MINUTES: number = 30;
   private inactivityTimeoutManager: InactivityTimeoutManager;
 
@@ -81,7 +82,7 @@ export class TrainingSessionTracker {
       this.trainingDay.id,
     );
 
-    this.addRelevantTrackingDataToTrainingDay(trainingDay);
+    await this.addRelevantTrackingDataToTrainingDay(trainingDay);
     await this.sendTrainingSummaryPushNotification();
   }
 
@@ -93,7 +94,6 @@ export class TrainingSessionTracker {
       tag: 'training-summary-notification',
       vibrate: [200, 100, 200],
     };
-
     await this.pushNotificationService.sendNotification(
       this.userId,
       this.fingerprint,
@@ -101,11 +101,59 @@ export class TrainingSessionTracker {
     );
   }
 
-  private addRelevantTrackingDataToTrainingDay(trainingDay: TrainingDay): void {
+  private async addRelevantTrackingDataToTrainingDay(
+    trainingDay: TrainingDay,
+  ): Promise<void> {
     trainingDay.startTime = this.trainingDay.startTime;
     trainingDay.recording = false;
     trainingDay.endTime = this.trainingDay.endTime;
     trainingDay.durationInMinutes = this.trainingDay.durationInMinutes;
+
+    const trainingPlan =
+      await this.trainingService.getTrainingPlanByTrainingDay(
+        this.userId,
+        trainingDay,
+      );
+
+    if (!trainingPlan) {
+      throw new Error('TrainingPlan not found');
+    }
+
+    const updated = this.updateTrainingDayInWeeks(trainingPlan, trainingDay);
+
+    if (!updated) {
+      throw new Error('TrainingDay not found in any TrainingWeek');
+    }
+
+    trainingPlan.markModified('trainingWeeks');
+
+    await trainingPlan.save();
+  }
+
+  /**
+   * Updates the training day within the appropriate week in the training plan.
+   * Modifications must be applied at the week level due to the nested structure.
+   * @returns True if the training day was successfully updated; otherwise, false.
+   */
+  private updateTrainingDayInWeeks(
+    trainingPlan: TrainingPlan,
+    trainingDay: TrainingDay,
+  ): boolean {
+    for (const week of trainingPlan.trainingWeeks) {
+      const dayIndex = week.trainingDays.findIndex(
+        (day) => day.id === trainingDay.id,
+      );
+
+      if (dayIndex !== -1) {
+        week.trainingDays[dayIndex].startTime = trainingDay.startTime;
+        week.trainingDays[dayIndex].endTime = trainingDay.endTime;
+        week.trainingDays[dayIndex].recording = trainingDay.recording;
+        week.trainingDays[dayIndex].durationInMinutes =
+          trainingDay.durationInMinutes;
+        return true;
+      }
+    }
+    return false;
   }
 
   private isMinimumTrainingDurationMet(trainingDuration: number) {

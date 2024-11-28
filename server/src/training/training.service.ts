@@ -79,6 +79,19 @@ export class TrainingService {
     return trainingDayDetails;
   }
 
+  async getTrainingPlanByTrainingDay(
+    userId: string,
+    trainingDay: TrainingDay,
+  ): Promise<TrainingPlan | undefined> {
+    const trainingPlans = await this.getTrainingPlansByUser(userId);
+
+    return trainingPlans.find((trainingPlan) =>
+      trainingPlan.trainingWeeks.some((week) =>
+        week.trainingDays.some((day) => day.id === trainingDay.id),
+      ),
+    );
+  }
+
   async deleteByUserAndTrainingId(userId: string, trainingPlanId: string) {
     const deleteResult = await this.trainingPlanModel.deleteOne({
       userId: userId,

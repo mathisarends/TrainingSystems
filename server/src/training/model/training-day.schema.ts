@@ -4,9 +4,6 @@ import { Exercise, ExerciseSchema } from './exercise.schema';
 
 @Schema()
 export class TrainingDay extends Document {
-  @Prop({ required: true })
-  id: string;
-
   @Prop()
   durationInMinutes?: number;
 

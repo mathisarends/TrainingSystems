@@ -60,11 +60,11 @@ export class TrainingPlanViewUpdateService {
             userId,
             fingerprint,
           );
+
         trainingSessionTracker.handleActivitySignal();
         break;
       }
     }
-
   }
 
   private updateTrainingDay(
@@ -114,9 +114,6 @@ export class TrainingPlanViewUpdateService {
       }
     }
   }
-
-
-
 
   // DELETE this incomprehensive logic. API in frontend does not exist anymore.
   private isDeletedExercise(

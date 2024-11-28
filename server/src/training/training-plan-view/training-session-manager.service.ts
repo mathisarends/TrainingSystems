@@ -10,7 +10,6 @@ export class TrainingSessionManagerService {
   private trackers: Map<TrainingDayId, TrainingSessionTracker> = new Map();
 
   constructor(
-    private readonly trainingSessionTracker: TrainingSessionTracker,
     private readonly trainingService: TrainingService,
     private readonly pushNotificationService: PushNotificationsService,
   ) {}
