@@ -7,8 +7,8 @@ import { TrainingPlan } from '../model/training-plan.model';
 import { InactivityTimeoutManager } from './inactivity-timeout-manager';
 
 export class TrainingSessionTracker {
-  private readonly INACTIVITY_TIMEOUT_DURATION: number = 15 * 1000;
-  private readonly MINIMUM_TRAINING_DURATION_IN_MINUTES: number = 30;
+  private readonly INACTIVITY_TIMEOUT_DURATION = 35 * 60 * 1000;
+  private readonly MINIMUM_TRAINING_DURATION_IN_MINUTES = 30;
   private inactivityTimeoutManager: InactivityTimeoutManager;
 
   constructor(
@@ -73,11 +73,11 @@ export class TrainingSessionTracker {
   }
 
   private async handleSessionTimeout(): Promise<void> {
-    /* if (
+    if (
       !this.isMinimumTrainingDurationMet(this.trainingDay.durationInMinutes!)
     ) {
       return;
-    } */
+    }
 
     const trainingDay = await this.trainingService.getCertainTrainingDay(
       this.userId,
