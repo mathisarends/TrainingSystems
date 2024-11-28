@@ -41,7 +41,6 @@ export class PauseTimeService {
     this.remainingTime.set(pauseTime);
 
     this.persistStateToLocalStorage(exerciseName, pauseTime);
-    this.startKeepAliveOnServer();
 
     this.serviceWorkerService.sendMessageToServiceWorker({
       command: 'start',
@@ -79,8 +78,6 @@ export class PauseTimeService {
    * Sets up event listeners and service worker message listeners.
    */
   private setupListeners(): void {
-    window.addEventListener('beforeunload', this.stopKeepAliveOnServer.bind(this));
-
     this.serviceWorkerService.listenForMessages((event: MessageEvent) => {
       if (event.data.command === 'currentTime') {
         this.remainingTime.set(event.data.currentTime);
@@ -100,7 +97,6 @@ export class PauseTimeService {
           this.clearKeepAlive();
           new Audio('./audio/boxing_bell.mp3').play();
           localStorage.removeItem('initialTime');
-          this.stopKeepAliveOnServer();
         }
       },
       { allowSignalWrites: true, injector: this.injector },
@@ -125,20 +121,6 @@ export class PauseTimeService {
   private persistStateToLocalStorage(exerciseName: string, pauseTime: number): void {
     localStorage.setItem('currentExercise', exerciseName);
     localStorage.setItem('initialTime', pauseTime.toString());
-  }
-
-  /**
-   * Starts the server keep-alive.
-   */
-  private startKeepAliveOnServer(): void {
-    this.httpService.post('/training-timer').subscribe();
-  }
-
-  /**
-   * Stops the server keep-alive.
-   */
-  private stopKeepAliveOnServer(): void {
-    this.httpService.delete('/training-timer').subscribe();
   }
 
   /**

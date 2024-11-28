@@ -15,7 +15,6 @@ import { TrainingPlanCardViewService } from './service/training-plan-card-view.s
 import { TrainingPlanUtilsService } from './service/training-plan-utils.service';
 import { TrainingPlanViewValidationService } from './service/training-plan-view-validation.service';
 import { TrainingPlanStatisticsModule } from './training-plan-statistics/training-plan-statistics.module';
-import { TrainingPlanTimerModule } from './training-plan-timer/training-plan-timer.module';
 import { TrainingPlanViewModule } from './training-plan-view/training-plan-view.module';
 import { TrainingService } from './training.service';
 
@@ -32,7 +31,6 @@ import { TrainingService } from './training.service';
     UsersModule,
     TrainingPlanViewModule,
     TrainingPlanStatisticsModule,
-    TrainingPlanTimerModule,
   ],
   controllers: [TrainingController, TrainingPlanEditController],
   providers: [
