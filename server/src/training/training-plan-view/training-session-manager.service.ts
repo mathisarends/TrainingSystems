@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { TrainingDayId } from 'src/push-notifications/model/training-day.type';
 import { PushNotificationsService } from 'src/push-notifications/push-notifications.service';
+import { TrainingLogService } from 'src/training-log/training-log.service';
 import { TrainingDay } from 'src/training/model/training-day.schema';
 import { TrainingService } from 'src/training/training.service';
 import { TrainingSessionTracker } from './training-session-tracker.service';
@@ -12,6 +13,7 @@ export class TrainingSessionManagerService {
   constructor(
     private readonly trainingService: TrainingService,
     private readonly pushNotificationService: PushNotificationsService,
+    private readonly TrainingLogService: TrainingLogService,
   ) {}
 
   async getOrCreateTracker(
@@ -31,6 +33,7 @@ export class TrainingSessionManagerService {
       () => this.removeTracker(trainingDayId),
       this.trainingService,
       this.pushNotificationService,
+      this.TrainingLogService,
     );
 
     this.trackers.set(trainingDayId, newTracker);

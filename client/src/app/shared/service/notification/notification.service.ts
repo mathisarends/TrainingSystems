@@ -1,7 +1,8 @@
 import { Injectable, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { HttpService } from '../../core/services/http-client.service';
-import { TrainingDayFinishedNotification } from '../../features/usage-statistics/training-finished-notification';
+import { HttpService } from '../../../core/services/http-client.service';
+import { TrainingDayFinishedNotification } from '../../../features/usage-statistics/training-finished-notification';
+import { TrainingDayFinishedNotificationDto } from './training-day-finished-notification.dto';
 
 /**
  * Service for handling notification-related operations.
@@ -24,10 +25,10 @@ export class NotificationService {
    * Fetches the training day notifications from the server and updates the `trainingDayNotifications` signal.
    * @returns An Observable of the fetched training day notifications.
    */
-  fetchAndSetTrainingDayNotifications(): Observable<number> {
-    return this.httpService.get<number>('/training-log/notifications').pipe(
-      tap((amountOfUnseenNotifications: number) => {
-        this.amountOfUnseenNotifications.set(amountOfUnseenNotifications);
+  fetchAndSetTrainingDayNotifications(): Observable<TrainingDayFinishedNotificationDto[]> {
+    return this.httpService.get<TrainingDayFinishedNotificationDto[]>('/training-log/notifications').pipe(
+      tap((trainingFinishedDto: TrainingDayFinishedNotificationDto[]) => {
+        this.amountOfUnseenNotifications.set(trainingFinishedDto.length);
       }),
     );
   }

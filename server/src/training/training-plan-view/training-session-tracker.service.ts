@@ -1,5 +1,6 @@
 import { NotificationPayloadDto } from 'src/push-notifications/model/notification-payload.dto';
 import { PushNotificationsService } from 'src/push-notifications/push-notifications.service';
+import { TrainingLogService } from 'src/training-log/training-log.service';
 import { TrainingDay } from 'src/training/model/training-day.schema';
 import { TrainingService } from 'src/training/training.service';
 import { TrainingPlan } from '../model/training-plan.model';
@@ -17,6 +18,7 @@ export class TrainingSessionTracker {
     private readonly removeTrackerCallback: () => void,
     private readonly trainingService: TrainingService,
     private readonly pushNotificationService: PushNotificationsService,
+    private readonly trainingLogService: TrainingLogService,
   ) {
     this.inactivityTimeoutManager = new InactivityTimeoutManager(
       this.INACTIVITY_TIMEOUT_DURATION,
@@ -71,11 +73,11 @@ export class TrainingSessionTracker {
   }
 
   private async handleSessionTimeout(): Promise<void> {
-    if (
+    /* if (
       !this.isMinimumTrainingDurationMet(this.trainingDay.durationInMinutes!)
     ) {
       return;
-    }
+    } */
 
     const trainingDay = await this.trainingService.getCertainTrainingDay(
       this.userId,
@@ -84,6 +86,8 @@ export class TrainingSessionTracker {
 
     await this.addRelevantTrackingDataToTrainingDay(trainingDay);
     await this.sendTrainingSummaryPushNotification();
+
+    await this.trainingLogService.createTrainingLogNotification(this.userId);
   }
 
   private async sendTrainingSummaryPushNotification() {

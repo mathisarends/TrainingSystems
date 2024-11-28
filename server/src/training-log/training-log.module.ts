@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TrainingModule } from 'src/training/training.module';
 import { TrainingService } from 'src/training/training.service';
@@ -12,7 +12,7 @@ import { TrainingLogService } from './training-log.service';
 
 @Module({
   imports: [
-    TrainingModule,
+    forwardRef(() => TrainingModule),
     MongooseModule.forFeature([
       {
         name: TrainingLogNotification.name,
@@ -22,5 +22,6 @@ import { TrainingLogService } from './training-log.service';
   ],
   controllers: [TrainingLogController],
   providers: [TrainingLogService, TrainingDayService, TrainingService],
+  exports: [TrainingLogService, MongooseModule],
 })
 export class TrainingLogModule {}

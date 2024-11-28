@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ExerciseModule } from 'src/exercise/exercise.module';
 import { ExerciseService } from 'src/exercise/exercise.service';
 import { PushNotificationsModule } from 'src/push-notifications/push-notifications.module';
+import { TrainingLogModule } from 'src/training-log/training-log.module';
 import { TrainingPlanViewModule } from 'src/training/training-plan-view/training-plan-view.module';
 import { TrainingSessionManagerService } from 'src/training/training-plan-view/training-session-manager.service';
 import { TrainingSessionTracker } from 'src/training/training-plan-view/training-session-tracker.service';
@@ -23,6 +24,7 @@ import { TrainingRoutineService } from './training-routine.service';
     MongooseModule.forFeature([
       { name: TrainingRoutine.name, schema: TrainingRoutineSchema },
     ]),
+    TrainingLogModule,
     TrainingPlanViewModule,
     PushNotificationsModule,
     TrainingModule,

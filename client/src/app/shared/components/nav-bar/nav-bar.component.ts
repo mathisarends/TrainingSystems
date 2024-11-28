@@ -4,10 +4,9 @@ import { catchError, EMPTY } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { IconName } from '../../icon/icon-name';
 import { IconComponent } from '../../icon/icon.component';
-import { NotificationService } from '../../service/notification.service';
+import { NotificationService } from '../../service/notification/notification.service';
 import { RouteWatcherService } from '../../service/route-watcher.service';
 import { NotificationBadgeComponent } from '../notification-badge/notification-badge.component';
-import { ToastService } from '../toast/toast.service';
 import { NavItem } from './nav-item';
 
 @Component({
@@ -42,7 +41,6 @@ export class NavBarComponent {
   constructor(
     protected routeWatcherService: RouteWatcherService,
     protected notificationService: NotificationService,
-    private toastService: ToastService,
     private renderer: Renderer2,
     private httpService: HttpService,
     private router: Router,

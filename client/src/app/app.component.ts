@@ -12,8 +12,7 @@ import { ServiceWorkerService } from './platform/service-worker.service';
 import { NavBarComponent } from './shared/components/nav-bar/nav-bar.component';
 import { SpinnerComponent } from './shared/components/spinner/spinner.component';
 import { ToastComponent } from './shared/components/toast/toast.component';
-import { NotificationService } from './shared/service/notification.service';
-import { WebSocketService } from './shared/service/webSocket/web-socket.service';
+import { NotificationService } from './shared/service/notification/notification.service';
 
 @Component({
   selector: 'app-root',
@@ -42,7 +41,6 @@ export class AppComponent implements OnInit {
     private authService: AuthService,
     private profileService: ProfileService,
     private notificationService: NotificationService,
-    private webSocketService: WebSocketService,
     private destroyRef: DestroyRef,
   ) {}
 
