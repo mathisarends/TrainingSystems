@@ -42,11 +42,9 @@ export class TrainingPlanEditView {
     'Foundation',
     'Build',
     'Load',
-    'CompReady',
+    'Humble',
     'Recovery',
     'Push',
-    'PowerBlock',
-    'StrengthBase',
   ]);
 
   lastSuggestedTitle = signal('');

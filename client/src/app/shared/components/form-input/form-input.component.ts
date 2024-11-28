@@ -22,10 +22,7 @@ import { IconComponent } from '../../icon/icon.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormInputComponent<T extends string | number> {
-  /**
-   * A unique identifier for the input field.
-   * Used to associate the label and input element.
-   */
+  protected readonly IconName = IconName;
   protected readonly fieldId: string = `form-input-${Math.random().toString(36)}`;
 
   /**
@@ -168,7 +165,7 @@ export class FormInputComponent<T extends string | number> {
     return false;
   }
 
-  protected emitIconClicked(event: Event): void {
+  protected emitIconClicked(): void {
     this.iconClicked.emit();
   }
 }

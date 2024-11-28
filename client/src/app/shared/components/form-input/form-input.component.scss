@@ -16,7 +16,7 @@
       box-shadow 0.2s;
 
     &:focus {
-      border-color: #6200ea;
+      border-color: var(--accent-color);
       outline: none;
     }
 
@@ -42,7 +42,7 @@
       color 0.2s linear;
 
     &.active {
-      color: #6200ea;
+      color: var(--accent-color);
     }
 
     &.invalid {
@@ -61,6 +61,7 @@
 
 app-icon {
   position: absolute;
-  top: 2.425rem;
-  right: 0.85rem;
+  bottom: 0.9rem;
+  right: 1rem;
+  color: var(--accent-color);
 }

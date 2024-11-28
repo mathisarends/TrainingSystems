@@ -1,16 +1,10 @@
 <app-info [infoText]="deleteMessage()" />
 
-<div class="form-group">
-  <input
-    id="deletion-input"
-    type="text"
-    autocomplete="off"
-    [(ngModel)]="deletionKeyWordUserInput"
-    [ngClass]="deletionKeyWordUserInput() | validationClass: deletionKeyWord()"
-    placeholder="Enter confirmation keyword"
-  />
-
-  @if (deletionKeyWord() === deletionKeyWordUserInput()) {
-    <app-icon [name]="IconName.CHECK_CIRCLE" />
-  }
-</div>
+<app-form-input
+  [label]="'Löschvorgang bestätigen'"
+  [(value)]="deletionKeyWordUserInput"
+  [isTouched]="markInputFieldAsTouched()"
+  [validationPattern]="deletionKeyWordRegex()"
+  [placeholder]="'Enter deletion keyword'"
+  [icon]="icon()"
+/>

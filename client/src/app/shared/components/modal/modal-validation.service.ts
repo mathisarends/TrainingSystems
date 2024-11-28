@@ -1,6 +1,5 @@
 import { Injectable, signal } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { ModalService } from '../../../core/services/modal/modal.service';
 
 @Injectable({ providedIn: 'root' })
 export class ModalValidationService {
@@ -15,8 +14,6 @@ export class ModalValidationService {
    * Observable to notify subscribers to trigger form validation.
    */
   triggerFormValidation$: Observable<void> = this.triggerFormValidationSubject.asObservable();
-
-  constructor(private modalService: ModalService) {}
 
   updateValidationState(isValid: boolean): void {
     this.isValid.set(isValid);

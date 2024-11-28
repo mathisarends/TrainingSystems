@@ -19,5 +19,9 @@
 }
 
 @if (icon()) {
-  <app-icon [name]="icon()!" (click)="emitIconClicked($event)" />
+  @if (icon() === IconName.CHECK_CIRCLE) {
+    <app-icon [name]="icon()!" (click)="emitIconClicked()" [size]="20" [color]="'#27ae60'" />
+  } @else {
+    <app-icon [name]="icon()!" (click)="emitIconClicked()" [size]="20" />
+  }
 }
