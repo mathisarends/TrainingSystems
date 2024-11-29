@@ -1,0 +1,14 @@
+button {
+  cursor: pointer;
+  color: grey;
+  width: 100%;
+  z-index: 10;
+  background-color: rgb(246, 246, 248);
+  border: none;
+  font-size: 16px;
+  height: 25px;
+}
+
+button:active {
+  cursor: n-resize;
+}
