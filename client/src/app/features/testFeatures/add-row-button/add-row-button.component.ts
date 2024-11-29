@@ -39,16 +39,10 @@ export class AddRowButtonComponent {
    */
   removeRow = output<void>();
 
-  /**
-   * Host binding to dynamically control the animation state based on visibility.
-   */
   @HostBinding('class.visible') get isButtonVisible(): boolean {
     return this.isVisible();
   }
 
-  /**
-   * Host binding to add the animation trigger to the host element.
-   */
   @HostBinding('@buttonVisibility') get animationState(): 'visible' | 'hidden' {
     return this.isVisible() ? 'visible' : 'hidden';
   }

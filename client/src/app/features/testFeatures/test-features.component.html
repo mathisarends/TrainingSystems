@@ -1,4 +1,4 @@
-<div class="training-grid">
+<div class="training-grid" #trainingGrid>
   <div class="day-name">Category</div>
   <div class="day-name">Exercise</div>
   <div class="day-name">Sets</div>
@@ -11,7 +11,7 @@
 
   @for (exercise of numberOfExercises(); track exercise; let exerciseIndex = $index) {
     @for (k of [1, 2, 3, 4, 5, 6, 7, 8, 9]; track k) {
-      <div class="day" (mouseover)="checkForLastRowHover(exerciseIndex)">
+      <div class="day">
         <input class="transparent-input" [value]="exerciseIndex" />
       </div>
     }

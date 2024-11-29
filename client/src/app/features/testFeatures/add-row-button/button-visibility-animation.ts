@@ -21,5 +21,5 @@ export const buttonVisibilityAnimation = trigger('buttonVisibility', [
       transform: 'scale(1)',
     }),
   ),
-  transition('hidden <=> visible', [animate('300ms ease-in-out')]),
+  transition('hidden <=> visible', [animate('200ms ease-in-out')]),
 ]);
