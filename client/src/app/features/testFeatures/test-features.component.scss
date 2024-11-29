@@ -1,0 +1,42 @@
+.training-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 0;
+}
+
+.day {
+  padding: 5px;
+  border-bottom: 1px solid var(--calendar-border-color);
+  border-right: 1px solid var(--calendar-border-color);
+
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  color: midnightblue;
+
+  &:nth-child(9n + 1) {
+    border-left: 1px solid var(--calendar-border-color);
+  }
+}
+
+.day:hover {
+  background-color: var(--calendar-hover-color);
+}
+
+.day-name {
+  text-align: center;
+  padding: 8px;
+  padding-left: 4px;
+  font-size: smaller;
+  border-bottom: 1px solid var(--calendar-border-color);
+}
+
+.add-row-btn {
+  cursor: n-resize;
+  color: grey;
+  width: 100%;
+  z-index: 10;
+  background-color: rgb(246, 246, 248);
+  border: none;
+  font-size: 16px;
+}

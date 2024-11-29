@@ -1,4 +1,4 @@
-.calendar-grid {
+:host {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 0;
@@ -8,14 +8,14 @@
   text-align: center;
   padding: 8px;
   font-size: smaller;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--calendar-border-color);
 }
 
 .day {
   position: relative;
   padding: 5px;
-  border-bottom: 1px solid #e0e0e0;
-  border-right: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--calendar-border-color);
+  border-right: 1px solid var(--calendar-border-color);
 
   min-height: 7rem;
   box-sizing: border-box;
@@ -23,7 +23,7 @@
   flex-direction: column;
 
   &:nth-child(7n + 1) {
-    border-left: 1px solid #e0e0e0;
+    border-left: 1px solid var(--calendar-border-color);
   }
 
   .day-number {
@@ -40,7 +40,7 @@
 }
 
 .day:hover {
-  background-color: #f9f9f9;
+  background-color: var(--calendar-hover-color);
 }
 
 .current-day {
@@ -67,4 +67,3 @@
   align-items: flex-end;
   width: 100%;
 }
-

@@ -78,14 +78,14 @@
             <td class="weight-data-cell" data-cell="Weight">
               @let weightRecommandation = trainingDataService.weightRecommendations[i];
               <input
-              [id]="exercise._id ?? ''"
-              weightInput
-              type="tel"
-              class="transparent-input weight"
-              [name]="namePrefix + 'weight'"
-              [placeholder]="trainingDataService.weightRecommendations[i] ?? ''"
-              [(value)]="exercise.weight"
-            />
+                [id]="exercise._id ?? ''"
+                weightInput
+                type="tel"
+                class="transparent-input weight"
+                [name]="namePrefix + 'weight'"
+                [placeholder]="trainingDataService.weightRecommendations[i] ?? ''"
+                [(value)]="exercise.weight"
+              />
             </td>
             <td data-cell="RPE">
               <app-input
