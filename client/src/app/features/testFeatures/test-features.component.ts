@@ -15,6 +15,8 @@ export class TestFeaturesComponent {
 
   numberOfExercises = computed(() => Array.from({ length: this.numberOfRows() }, (_, i) => i + 1));
 
+  showAddRowButton = signal(false);
+
   /**
    * Fügt eine neue Zeile (Übung) hinzu, indem `numberOfRows` erhöht wird.
    */
@@ -24,5 +26,11 @@ export class TestFeaturesComponent {
 
   removeRow(): void {
     this.numberOfRows.update((rows) => rows - 1);
+  }
+
+  checkForLastRowHover(exerciseIndex: number): void {
+    const isLastExercise = this.numberOfExercises().length - 1 === exerciseIndex;
+    console.log('🚀 ~ TestFeaturesComponent ~ checkForLastRowHover ~ isLastExercise:', isLastExercise);
+    this.showAddRowButton.set(isLastExercise);
   }
 }

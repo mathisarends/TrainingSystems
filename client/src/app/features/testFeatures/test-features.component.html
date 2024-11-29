@@ -9,13 +9,13 @@
   <div class="day-name">MAX</div>
   <div class="day-name">Notes</div>
 
-  @for (exercise of numberOfExercises(); track exercise) {
+  @for (exercise of numberOfExercises(); track exercise; let exerciseIndex = $index) {
     @for (k of [1, 2, 3, 4, 5, 6, 7, 8, 9]; track k) {
-      <div class="day">
-        <input class="transparent-input" />
+      <div class="day" (mouseover)="checkForLastRowHover(exerciseIndex)">
+        <input class="transparent-input" [value]="exerciseIndex" />
       </div>
     }
   }
 </div>
 
-<app-add-row-button (addRow)="addRow()" (removeRow)="removeRow()" />
+<app-add-row-button [isVisible]="showAddRowButton()" (addRow)="addRow()" (removeRow)="removeRow()"></app-add-row-button>

@@ -1,14 +1,23 @@
-import { ChangeDetectionStrategy, Component, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, input, output, signal } from '@angular/core';
+import { buttonVisibilityAnimation } from './button-visibility-animation';
 
 @Component({
   selector: 'app-add-row-button',
   standalone: true,
-  template: `<button (mousedown)="startDrag($event)" (click)="emitAddRow()">+</button>`,
+  template: `@if (isVisible()) {
+    <button (mousedown)="startDrag($event)" (click)="emitAddRow()">+</button>
+  }`,
   styleUrls: ['./add-row-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [buttonVisibilityAnimation],
 })
 export class AddRowButtonComponent {
   isDragging = signal(false);
+
+  /**
+   * Controls an animation whether the button is visible via an animation. Only visible when user hovers over last table row.
+   */
+  isVisible = input(false);
 
   /**
    * Signal to store the initial Y-coordinate of the mouse when dragging starts.
@@ -29,6 +38,20 @@ export class AddRowButtonComponent {
    * Output signal to emit when a row should be removed.
    */
   removeRow = output<void>();
+
+  /**
+   * Host binding to dynamically control the animation state based on visibility.
+   */
+  @HostBinding('class.visible') get isButtonVisible(): boolean {
+    return this.isVisible();
+  }
+
+  /**
+   * Host binding to add the animation trigger to the host element.
+   */
+  @HostBinding('@buttonVisibility') get animationState(): 'visible' | 'hidden' {
+    return this.isVisible() ? 'visible' : 'hidden';
+  }
 
   /**
    * Starts the dragging process by setting the initial mouse position,
@@ -83,6 +106,9 @@ export class AddRowButtonComponent {
     }
   };
 
+  /**
+   * Emits and add-row Event after a simple click.
+   */
   emitAddRow(): void {
     this.addRow.emit();
   }
