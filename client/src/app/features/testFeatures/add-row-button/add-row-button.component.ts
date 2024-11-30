@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, HostBinding, input, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  HostBinding,
+  input,
+  output,
+  Renderer2,
+  signal,
+} from '@angular/core';
 import { buttonVisibilityAnimation } from './button-visibility-animation';
 
 @Component({
@@ -45,6 +54,18 @@ export class AddRowButtonComponent {
 
   @HostBinding('@buttonVisibility') get animationState(): 'visible' | 'hidden' {
     return this.isVisible() ? 'visible' : 'hidden';
+  }
+
+  constructor(private renderer: Renderer2) {
+    effect(() => {
+      const isDragging = this.isDragging();
+
+      if (isDragging) {
+        this.renderer.setStyle(document.body, 'cursor', 'n-resize');
+      } else {
+        this.renderer.removeStyle(document.body, 'cursor');
+      }
+    });
   }
 
   /**
