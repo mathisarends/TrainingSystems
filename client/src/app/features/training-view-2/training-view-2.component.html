@@ -15,3 +15,8 @@
 </div>
 
 <app-add-row-button [isVisible]="showAddRowButton()" (addRow)="addRow()" (removeRow)="removeRow()" />
+@if (!showAddRowButton()) {
+  <div class="placeholder-for-add-button"></div>
+}
+
+<app-navigation-arrows />
