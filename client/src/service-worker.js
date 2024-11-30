@@ -1,6 +1,5 @@
 importScripts('timer.js');
 importScripts('notification-manager.js');
-importScripts('web-socket-manager.js');
 
 const notificationManager = new self.NotificationManager();
 const timer = new self.Timer(notificationManager);
@@ -86,6 +85,7 @@ self.addEventListener('message', function (event) {
       timer.continueTimer();
       break;
     case 'keepAlive':
+      console.log('keep alive received');
       timer.restartRestPauseTimer(data.duration - 1);
       break;
     case 'setTime':

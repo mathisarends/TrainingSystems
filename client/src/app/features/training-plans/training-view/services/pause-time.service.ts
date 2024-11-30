@@ -1,5 +1,4 @@
 import { effect, Injectable, Injector, signal } from '@angular/core';
-import { HttpService } from '../../../../core/services/http-client.service';
 import { ServiceWorkerService } from '../../../../platform/service-worker.service';
 import { WakeLockService } from './wake-lock.service';
 
@@ -15,7 +14,6 @@ export class PauseTimeService {
 
   constructor(
     private serviceWorkerService: ServiceWorkerService,
-    private httpService: HttpService,
     private wakeLockService: WakeLockService,
     private injector: Injector,
   ) {
@@ -29,6 +27,7 @@ export class PauseTimeService {
     this.restoreStateFromLocalStorage();
     this.setupListeners();
     this.setupTimerExpiredEffect();
+    this.startKeepAliveSignal();
   }
 
   /**
@@ -47,7 +46,18 @@ export class PauseTimeService {
       duration: pauseTime,
     });
 
+    this.startKeepAliveSignal();
+
     this.currentExercise.set(exerciseName);
+  }
+
+  private startKeepAliveSignal() {
+    this.keepAliveIntervalId = setTimeout(() => {
+      this.serviceWorkerService.sendMessageToServiceWorker({
+        command: 'keepAlive',
+        duration: this.remainingTime(),
+      });
+    }, 20 * 1000);
   }
 
   /**
