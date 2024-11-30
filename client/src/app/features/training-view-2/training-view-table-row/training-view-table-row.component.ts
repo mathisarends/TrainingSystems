@@ -30,13 +30,27 @@ export class TrainingViewTableRowComponent {
     const firstAvailableExcercise = this.exerciseDataService.categorizedExercises()[exerciseCategory][0];
     this.updateExerciseProperty('exercise', firstAvailableExcercise);
 
-    if (exerciseCategory === '- Bitte Auswählen -') {
+    if (this.isPlaceholderCategory(exerciseCategory)) {
       this.exercise.update((current) => ({
         ...current,
         sets: 0,
         reps: 0,
         weight: '0',
         targetRPE: 0,
+        actualRPE: '0',
+        estMax: 0,
+        notes: '',
+      }));
+    } else {
+      const { defaultSets, defaultReps, defaultRPE } =
+        this.exerciseDataService.defaultRepSchemeByCategory()[exerciseCategory];
+
+      this.exercise.update((current) => ({
+        ...current,
+        sets: defaultSets,
+        reps: defaultReps,
+        weight: '0',
+        targetRPE: defaultRPE,
         actualRPE: '0',
         estMax: 0,
         notes: '',
@@ -54,5 +68,9 @@ export class TrainingViewTableRowComponent {
       ...current,
       [key]: value,
     }));
+  }
+
+  private isPlaceholderCategory(exerciseCategory: string): boolean {
+    return exerciseCategory === '- Bitte Auswählen -';
   }
 }
