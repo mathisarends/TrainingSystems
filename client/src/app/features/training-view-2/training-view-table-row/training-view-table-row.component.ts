@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
 import { ExerciseCategories } from '../../training-plans/model/exercise-categories';
 import { ExerciseDataService } from '../../training-plans/training-view/exercise-data.service';
+import { PauseTimeService } from '../../training-plans/training-view/services/pause-time.service';
 import { Exercise } from '../../training-plans/training-view/training-exercise';
 import { EstMaxService2 } from '../estMax2.service';
 
@@ -23,6 +24,7 @@ export class TrainingViewTableRowComponent {
   constructor(
     protected exerciseDataService: ExerciseDataService,
     private estMaxService2: EstMaxService2,
+    private pauseTimeService: PauseTimeService,
   ) {
     effect(() => {
       const exercise = this.exercise();
@@ -34,8 +36,10 @@ export class TrainingViewTableRowComponent {
     this.updateExerciseProperty('weight', weight);
 
     const estMax = this.estMaxService2.calcEstMax(this.exercise());
-
     this.updateExerciseProperty('estMax', estMax);
+
+    const pauseTime = this.exerciseDataService.categoryPauseTimes()[this.exercise().category];
+    this.pauseTimeService.startPauseTimer(pauseTime, this.exercise().exercise);
   }
 
   protected onRepsChange(reps: number) {
