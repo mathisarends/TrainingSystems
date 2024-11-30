@@ -14,14 +14,23 @@ import { BasicInfoModalOptionsBuilder } from '../../core/services/modal/basic-in
 import { ModalService } from '../../core/services/modal/modal.service';
 import { DropdownComponent } from '../../shared/components/dropdown/dropdown.component';
 import { InputComponent } from '../../shared/components/input/input.component';
+import { ExerciseCategories } from '../training-plans/model/exercise-categories';
 import { Exercise } from '../training-plans/training-view/training-exercise';
 import { AddRowButtonComponent } from './add-row-button/add-row-button.component';
 import { CategoryValues } from './category-values.eum';
+import { TrainingViewTableRowComponent } from './training-view-table-row/training-view-table-row.component';
 
 @Component({
   selector: 'app-training-view-2',
   standalone: true,
-  imports: [CommonModule, FormsModule, AddRowButtonComponent, DropdownComponent, InputComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    AddRowButtonComponent,
+    DropdownComponent,
+    InputComponent,
+    TrainingViewTableRowComponent,
+  ],
   templateUrl: './training-view-2.component.html',
   styleUrls: ['./training-view-2.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -102,7 +111,7 @@ export class TrainingView2Component implements AfterViewInit, OnDestroy {
     this.testEntries.update((entries) => [
       ...entries,
       {
-        category: '',
+        category: ExerciseCategories.PLACEHOLDER,
         exercise: '',
         sets: 0,
         reps: 0,

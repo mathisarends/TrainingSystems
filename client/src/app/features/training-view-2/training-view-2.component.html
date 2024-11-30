@@ -10,31 +10,7 @@
   <div class="column-name">Notes</div>
 
   @for (entry of testEntries(); track entry) {
-    <div class="exercise-field">
-      <app-dropdown [options]="categoryOptions()" [(selectedValue)]="entry.category" />
-    </div>
-    <div class="exercise-field">{{ entry.exercise }}</div>
-    <div class="exercise-field">
-      <input type="number" class="transparent-input" [(ngModel)]="entry.sets" />
-    </div>
-    <div class="exercise-field">
-      <input type="number" class="transparent-input" [(ngModel)]="entry.reps" />
-    </div>
-    <div class="exercise-field">
-      <input type="text" class="transparent-input" [(ngModel)]="entry.weight" />
-    </div>
-    <div class="exercise-field">
-      <input type="number" class="transparent-input" [(ngModel)]="entry.targetRPE" />
-    </div>
-    <div class="exercise-field">
-      <input type="text" class="transparent-input" [(ngModel)]="entry.actualRPE" />
-    </div>
-    <div class="exercise-field">
-      <input type="number" class="transparent-input" [(ngModel)]="entry.estMax" />
-    </div>
-    <div class="exercise-field">
-      <input type="text" class="transparent-input left-aligned" [(ngModel)]="entry.notes" />
-    </div>
+    <app-training-view-table-row [exercise]="entry" />
   }
 </div>
 

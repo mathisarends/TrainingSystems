@@ -1,0 +1,59 @@
+<div class="exercise-field">
+  <app-dropdown
+    [options]="categoryOptions()"
+    [(selectedValue)]="exercise().category"
+    [ngStyle]="{
+      opacity: exercise().category === '- Bitte Auswählen -' ? 0 : 1,
+    }"
+  />
+</div>
+<div class="exercise-field">{{ exercise().exercise }}</div>
+<div class="exercise-field">
+  <input
+    type="number"
+    class="transparent-input"
+    [(ngModel)]="exercise().sets"
+    [ngStyle]="{
+      opacity: exercise().category === '- Bitte Auswählen -' ? 0 : 1,
+    }"
+  />
+</div>
+<div class="exercise-field">
+  <input
+    type="number"
+    class="transparent-input"
+    [(ngModel)]="exercise().reps"
+    [ngStyle]="{
+      opacity: exercise().category === '- Bitte Auswählen -' ? 0 : 1,
+    }"
+  />
+</div>
+<div class="exercise-field">
+  <input type="text" class="transparent-input" [(ngModel)]="exercise().weight" />
+</div>
+<div class="exercise-field">
+  <input
+    type="number"
+    class="transparent-input"
+    [(ngModel)]="exercise().targetRPE"
+    [ngStyle]="{
+      opacity: exercise().category === '- Bitte Auswählen -' ? 0 : 1,
+    }"
+  />
+</div>
+<div class="exercise-field">
+  <input type="text" class="transparent-input" [(ngModel)]="exercise().actualRPE" />
+</div>
+<div class="exercise-field">
+  <input
+    type="number"
+    class="transparent-input"
+    [(ngModel)]="exercise().estMax"
+    [ngStyle]="{
+      opacity: exercise().category === '- Bitte Auswählen -' ? 0 : 1,
+    }"
+  />
+</div>
+<div class="exercise-field">
+  <input type="text" class="transparent-input left-aligned" [(ngModel)]="exercise().notes" />
+</div>

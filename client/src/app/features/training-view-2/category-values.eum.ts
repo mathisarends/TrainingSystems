@@ -1,12 +1,13 @@
 export enum CategoryValues {
-  SQUAT = 'Sqaut',
+  PLACEHOLDER = '- Bitte Auswählen -',
+  SQUAT = 'Squat',
   BENCH = 'Bench',
   DEADLIFT = 'Deadlift',
   OVERHEADPRESS = 'Overheadpress',
   CHEST = 'Chest',
   BACK = 'Back',
   SHOULDER = 'Shoulder',
-  Triceps = 'Tricpes',
+  Triceps = 'Triceps',
   BICEPS = 'Biceps',
   LEGS = 'Legs',
 }

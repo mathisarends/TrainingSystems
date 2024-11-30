@@ -2,7 +2,6 @@
  * Represents an exercise within a workout routine.
  */
 export interface Exercise {
-
   _id?: string;
 
   /**
