@@ -5,18 +5,18 @@ import { GettingStartedComponent } from './features/auth/getting-started/getting
 import { BestPerformanceComponent } from './features/best-performance/best-performance.component';
 import { ExercisesComponent } from './features/exercise-page/components/exercise/exercises.component';
 import { ProfileComponent2 } from './features/profile-2/profile.component';
-import { TestFeaturesComponent } from './features/testFeatures/test-features.component';
 import { TrainingLogCalendarComponent } from './features/training-logs/training-log-calendar/training-calendar.component';
 import { TrainingPlanStatisticsComponent } from './features/training-plans/training-plan-statistics/training-plan-statistics.component';
 import { TrainingPlansComponent } from './features/training-plans/training-plans/training-plans.component';
 import { TrainingViewComponent } from './features/training-plans/training-view/training-view.component';
 import { SessionViewComponent } from './features/training-session/session-view/session-view.component';
 import { TrainingSesssionStatisticsComponent } from './features/training-session/training-session-statistics/training-session-statistics.component';
+import { TrainingView2Component } from './features/training-view-2/training-view-2.component';
 import { StatisticsComponent } from './features/usage-statistics/statistics.component';
 import { SpinnerComponent } from './shared/components/spinner/spinner.component';
 
 export const routes: Routes = [
-  { path: 'test', component: TestFeaturesComponent },
+  { path: 'test', component: TrainingView2Component },
   { path: 'getting-started', component: GettingStartedComponent },
   { path: 'profile/progression', component: StatisticsComponent, canActivate: [AuthGuard] },
   {

@@ -19,14 +19,14 @@ import { AddRowButtonComponent } from './add-row-button/add-row-button.component
 import { CategoryValues } from './category-values.eum';
 
 @Component({
-  selector: 'app-test-features',
+  selector: 'app-training-view-2',
   standalone: true,
   imports: [CommonModule, FormsModule, AddRowButtonComponent, DropdownComponent, InputComponent],
-  templateUrl: './test-features.component.html',
-  styleUrls: ['./test-features.component.scss'],
+  templateUrl: './training-view-2.component.html',
+  styleUrls: ['./training-view-2.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TestFeaturesComponent implements AfterViewInit, OnDestroy {
+export class TrainingView2Component implements AfterViewInit, OnDestroy {
   trainingGrid = viewChild<ElementRef>('trainingGrid');
 
   categoryOptions = signal<string[]>(Object.values(CategoryValues));
