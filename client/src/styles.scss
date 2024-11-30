@@ -104,7 +104,12 @@ textarea.form-control {
   width: 100%;
 
   text-align: center;
+
+  &.left-aligned {
+    text-align: left;
+  }
 }
+
 .transparent-input:focus {
   border: none;
   outline: none;

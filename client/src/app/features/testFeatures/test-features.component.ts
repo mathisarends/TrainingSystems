@@ -9,15 +9,17 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { BasicInfoModalOptionsBuilder } from '../../core/services/modal/basic-info/basic-info-modal-options-builder';
 import { ModalService } from '../../core/services/modal/modal.service';
+import { InputComponent } from '../../shared/components/input/input.component';
 import { Exercise } from '../training-plans/training-view/training-exercise';
 import { AddRowButtonComponent } from './add-row-button/add-row-button.component';
 
 @Component({
   selector: 'app-test-features',
   standalone: true,
-  imports: [CommonModule, AddRowButtonComponent],
+  imports: [CommonModule, FormsModule, AddRowButtonComponent, InputComponent],
   templateUrl: './test-features.component.html',
   styleUrls: ['./test-features.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,7 +37,6 @@ export class TestFeaturesComponent implements AfterViewInit, OnDestroy {
       targetRPE: 8,
       actualRPE: '6',
       estMax: 120,
-      notes: 'Felt good, increased weight from last week',
     },
     {
       category: 'Hypertrophy',
@@ -46,7 +47,6 @@ export class TestFeaturesComponent implements AfterViewInit, OnDestroy {
       targetRPE: 7,
       actualRPE: '6',
       estMax: 70,
-      notes: 'Focused on form and tempo',
     },
     {
       category: 'Hypertrophy',
@@ -57,7 +57,6 @@ export class TestFeaturesComponent implements AfterViewInit, OnDestroy {
       targetRPE: 7,
       actualRPE: '6',
       estMax: 70,
-      notes: 'Focused on form and tempo',
     },
   ]);
 

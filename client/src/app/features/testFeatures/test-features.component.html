@@ -1,20 +1,38 @@
 <div class="training-grid" #trainingGrid>
-  <div class="day-name">Category</div>
-  <div class="day-name">Exercise</div>
-  <div class="day-name">Sets</div>
-  <div class="day-name">Reps</div>
-  <div class="day-name">Weight</div>
-  <div class="day-name">RPE</div>
-  <div class="day-name">&#64;RPE</div>
-  <div class="day-name">MAX</div>
-  <div class="day-name">Notes</div>
+  <div class="column-name">Category</div>
+  <div class="column-name">Exercise</div>
+  <div class="column-name">Sets</div>
+  <div class="column-name">Reps</div>
+  <div class="column-name">Weight</div>
+  <div class="column-name">RPE</div>
+  <div class="column-name">&#64;RPE</div>
+  <div class="column-name">MAX</div>
+  <div class="column-name">Notes</div>
 
-  @for (exercise of numberOfExercises(); track exercise; let exerciseIndex = $index) {
-    @for (k of [1, 2, 3, 4, 5, 6, 7, 8, 9]; track k) {
-      <div class="day">
-        <input class="transparent-input" [value]="exerciseIndex" />
-      </div>
-    }
+  @for (entry of testEntries(); track entry) {
+    <div class="exercise-field">{{ entry.category }}</div>
+    <div class="exercise-field">{{ entry.exercise }}</div>
+    <div class="exercise-field">
+      <input type="number" class="transparent-input" [(ngModel)]="entry.sets" />
+    </div>
+    <div class="exercise-field">
+      <input type="number" class="transparent-input" [(ngModel)]="entry.reps" />
+    </div>
+    <div class="exercise-field">
+      <input type="text" class="transparent-input" [(ngModel)]="entry.weight" />
+    </div>
+    <div class="exercise-field">
+      <input type="number" class="transparent-input" [(ngModel)]="entry.targetRPE" />
+    </div>
+    <div class="exercise-field">
+      <input type="text" class="transparent-input" [(ngModel)]="entry.actualRPE" />
+    </div>
+    <div class="exercise-field">
+      <input type="number" class="transparent-input" [(ngModel)]="entry.estMax" />
+    </div>
+    <div class="exercise-field">
+      <input type="text" class="transparent-input left-aligned" [(ngModel)]="entry.notes" />
+    </div>
   }
 </div>
 

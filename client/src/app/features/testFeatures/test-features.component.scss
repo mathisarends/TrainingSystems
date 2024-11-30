@@ -1,32 +1,41 @@
 .training-grid {
   display: grid;
-  grid-template-columns: repeat(9, 1fr);
+  grid-template-columns: minmax(150px, 1.75fr) repeat(7, 1fr) minmax(150px, 1.75fr);
   gap: 0;
 }
 
-.day {
-  padding: 5px;
+.exercise-field {
+  padding: 7.5px;
   border-bottom: 1px solid var(--calendar-border-color);
   border-right: 1px solid var(--calendar-border-color);
-
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  color: midnightblue;
+  text-align: center;
 
   &:nth-child(9n + 1) {
     border-left: 1px solid var(--calendar-border-color);
   }
 }
 
-.day:hover {
+.exercise-field:hover {
   background-color: var(--calendar-hover-color);
 }
 
-.day-name {
+.column-name {
   text-align: center;
   padding: 8px;
   padding-left: 4px;
-  font-size: smaller;
   border-bottom: 1px solid var(--calendar-border-color);
+}
+
+.exercise-field:nth-child(9n + 1),
+.exercise-field:nth-child(9n + 2),
+.exercise-field:nth-child(9n + 9) {
+  text-align: left;
+  padding-left: 10px;
+}
+
+.column-name:nth-child(1),
+.column-name:nth-child(2),
+.column-name:nth-child(9) {
+  text-align: left;
+  padding-left: 10px;
 }
