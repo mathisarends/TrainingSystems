@@ -64,7 +64,6 @@ export class TestFeaturesComponent implements AfterViewInit, OnDestroy {
   /**
    * Computed signal to generate an array of exercise indices based on the number of rows.
    */
-
   numberOfExercises = computed(() => Array.from({ length: this.testEntries().length }, (_, i) => i + 1));
 
   /**
@@ -125,17 +124,19 @@ export class TestFeaturesComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    const modalOptions = new BasicInfoModalOptionsBuilder()
-      .setTitle('Warnung')
-      .setButtonText('Verstanden')
-      .setInfoText(
-        'Du bist dabei eine Übung zu löschen. Bestätige den Vorgang, wenn dies gewollt ist, falls nicht, schließe dieses Modal.',
-      )
-      .setIsDestructiveAction(true)
-      .setOnSubmitCallback(async () => this.allowRemovalOfDefinedRows.set(true))
-      .build();
+    if (!this.modalService.isVisible()) {
+      const modalOptions = new BasicInfoModalOptionsBuilder()
+        .setTitle('Warnung')
+        .setButtonText('Verstanden')
+        .setInfoText(
+          'Du bist dabei eine Übung zu löschen. Bestätige den Vorgang, wenn dies gewollt ist, falls nicht, schließe dieses Modal.',
+        )
+        .setIsDestructiveAction(true)
+        .setOnSubmitCallback(async () => this.allowRemovalOfDefinedRows.set(true))
+        .build();
 
-    this.modalService.openBasicInfoModal(modalOptions);
+      this.modalService.openBasicInfoModal(modalOptions);
+    }
   }
 
   private getLastExerciseEntry(): Exercise | undefined {
