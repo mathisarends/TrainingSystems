@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, model, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
+import { ExerciseDataService } from '../../training-plans/training-view/exercise-data.service';
 import { Exercise } from '../../training-plans/training-view/training-exercise';
-import { CategoryValues } from '../category-values.eum';
 
 // TODO: hier in den Aufrufstellen einen weg finden tatsächlich das two way binding hier zu verwenden, damit die Datenstruktur immer aktuell bleibt
 @Component({
@@ -17,7 +17,15 @@ import { CategoryValues } from '../category-values.eum';
 export class TrainingViewTableRowComponent {
   exercise = model.required<Exercise>();
 
-  categoryOptions = signal<string[]>(Object.values(CategoryValues));
+  constructor(protected exerciseDataService: ExerciseDataService) {
+    effect(
+      () => {
+        const category = this.exercise().category;
+        console.log('🚀 ~ TrainingViewTableRowComponent ~ effect ~ category:', category);
+      },
+      { allowSignalWrites: true },
+    );
+  }
 
   /**
    * Updates a specific property of the `exercise` signal.

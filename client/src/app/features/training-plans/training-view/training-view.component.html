@@ -44,7 +44,7 @@
               <app-dropdown
                 [name]="namePrefix + '_category'"
                 class="exercise-category-selector"
-                [options]="exerciseDataService.exerciseCategories"
+                [options]="exerciseDataService.exerciseCategories()"
                 [directiveUsed]="'category-select'"
                 [(selectedValue)]="exercise.category"
                 [ngStyle]="{
@@ -56,7 +56,7 @@
               <app-dropdown
                 [name]="namePrefix + 'exercise_name'"
                 class="exercise-name-selector"
-                [options]="exerciseDataService.categorizedExercises[exercise.category]"
+                [options]="exerciseDataService.categorizedExercises()[exercise.category]"
                 [(selectedValue)]="exercise.exercise"
                 [ngStyle]="{
                   opacity: exercise.category === '- Bitte Auswählen -' || !exercise.category ? 0 : 1,

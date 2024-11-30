@@ -6,6 +6,7 @@ import {
   computed,
   ElementRef,
   OnDestroy,
+  OnInit,
   signal,
   viewChild,
 } from '@angular/core';
@@ -16,7 +17,9 @@ import { DropdownComponent } from '../../shared/components/dropdown/dropdown.com
 import { InputComponent } from '../../shared/components/input/input.component';
 import { NavigationArrowsComponent } from '../../shared/components/navigation-arrows/navigation-arrows.component';
 import { ExerciseCategories } from '../training-plans/model/exercise-categories';
+import { ExerciseDataService } from '../training-plans/training-view/exercise-data.service';
 import { Exercise } from '../training-plans/training-view/training-exercise';
+import { TrainingViewService } from '../training-plans/training-view/training-view-service';
 import { AddRowButtonComponent } from './add-row-button/add-row-button.component';
 import { CategoryValues } from './category-values.eum';
 import { TrainingViewTableRowComponent } from './training-view-table-row/training-view-table-row.component';
@@ -35,9 +38,10 @@ import { TrainingViewTableRowComponent } from './training-view-table-row/trainin
   ],
   templateUrl: './training-view-2.component.html',
   styleUrls: ['./training-view-2.component.scss'],
+  providers: [TrainingViewService, ExerciseDataService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TrainingView2Component implements AfterViewInit, OnDestroy {
+export class TrainingView2Component implements OnInit, AfterViewInit, OnDestroy {
   trainingGrid = viewChild<ElementRef>('trainingGrid');
 
   categoryOptions = signal<string[]>(Object.values(CategoryValues));
@@ -92,7 +96,17 @@ export class TrainingView2Component implements AfterViewInit, OnDestroy {
    */
   private mouseMoveListener!: (event: MouseEvent) => void;
 
-  constructor(private modalService: ModalService) {}
+  constructor(
+    private modalService: ModalService,
+    private trainingViewService: TrainingViewService,
+    private exerciseDataService: ExerciseDataService,
+  ) {}
+
+  ngOnInit(): void {
+    this.trainingViewService.loadExerciseData().subscribe((exerciseData) => {
+      this.exerciseDataService.setExerciseData(exerciseData);
+    });
+  }
 
   /**
    * Registers a global mouse move listener after the view is initialized.

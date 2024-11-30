@@ -1,4 +1,4 @@
-import { Injectable, signal, WritableSignal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Observable, of, tap } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { ExerciseDataDTO } from './exerciseDataDto';
@@ -11,7 +11,7 @@ import { TrainingPlanDto } from './trainingPlanDto';
  */
 @Injectable()
 export class TrainingViewService {
-  private exerciseData: WritableSignal<ExerciseDataDTO | undefined> = signal(undefined);
+  private exerciseData = signal<ExerciseDataDTO | undefined>(undefined);
 
   constructor(private httpService: HttpService) {}
 

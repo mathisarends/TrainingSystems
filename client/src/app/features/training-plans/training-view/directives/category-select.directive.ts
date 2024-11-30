@@ -34,7 +34,7 @@ export class CategorySelectDirective {
   @HostListener('change', ['$event'])
   async onChange(event: Event): Promise<void> {
     const categorySelector = event.target as HTMLSelectElement;
-    await this.updateInputValues(categorySelector, this.exerciseDataService.defaultRepSchemeByCategory);
+    await this.updateInputValues(categorySelector, this.exerciseDataService.defaultRepSchemeByCategory());
   }
 
   /**
@@ -72,7 +72,7 @@ export class CategorySelectDirective {
       this.exerciseTableRowService.getInputsByElement(categorySelector);
     const category = categorySelector.value;
 
-    const firstExerciseOptionForCategory = this.exerciseDataService.categorizedExercises[categorySelector.value][0];
+    const firstExerciseOptionForCategory = this.exerciseDataService.categorizedExercises()[categorySelector.value][0];
 
     const defaultValues = defaultRepSchemeByCategory[category];
 

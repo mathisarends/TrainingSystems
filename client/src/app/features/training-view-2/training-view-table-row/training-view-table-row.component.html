@@ -1,13 +1,23 @@
 <div class="exercise-field">
   <app-dropdown
-    [options]="categoryOptions()"
+    [options]="exerciseDataService.exerciseCategories()"
     [(selectedValue)]="exercise().category"
     [ngStyle]="{
       opacity: exercise().category === '- Bitte Auswählen -' ? 0 : 1,
     }"
   />
 </div>
-<div class="exercise-field">{{ exercise().exercise }}</div>
+<div class="exercise-field">
+  <!-- TODO: das hier muss sauberer gemacht werden nach der Migration-->
+  <app-dropdown
+    class="exercise-name-selector"
+    [options]="exerciseDataService.categorizedExercises()[exercise().category]"
+    [(selectedValue)]="exercise().exercise"
+    [ngStyle]="{
+      opacity: exercise().category === '- Bitte Auswählen -' || !exercise().category ? 0 : 1,
+    }"
+  />
+</div>
 <div class="exercise-field">
   <input
     type="number"
