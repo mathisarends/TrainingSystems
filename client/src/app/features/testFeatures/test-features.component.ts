@@ -9,6 +9,9 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { BasicInfoModalOptionsBuilder } from '../../core/services/modal/basic-info/basic-info-modal-options-builder';
+import { ModalService } from '../../core/services/modal/modal.service';
+import { Exercise } from '../training-plans/training-view/training-exercise';
 import { AddRowButtonComponent } from './add-row-button/add-row-button.component';
 
 @Component({
@@ -22,26 +25,61 @@ import { AddRowButtonComponent } from './add-row-button/add-row-button.component
 export class TestFeaturesComponent implements AfterViewInit, OnDestroy {
   trainingGrid = viewChild<ElementRef>('trainingGrid');
 
-  /**
-   * Signal to manage the number of rows (exercises) in the table.
-   */
-  private numberOfRows = signal(4);
+  testEntries = signal<Exercise[]>([
+    {
+      category: 'Strength',
+      exercise: 'Squat',
+      sets: 4,
+      reps: 8,
+      weight: '100',
+      targetRPE: 8,
+      actualRPE: '6',
+      estMax: 120,
+      notes: 'Felt good, increased weight from last week',
+    },
+    {
+      category: 'Hypertrophy',
+      exercise: 'Bench Press',
+      sets: 3,
+      reps: 12,
+      weight: '60',
+      targetRPE: 7,
+      actualRPE: '6',
+      estMax: 70,
+      notes: 'Focused on form and tempo',
+    },
+    {
+      category: 'Hypertrophy',
+      exercise: 'Bench Press',
+      sets: 3,
+      reps: 12,
+      weight: '60',
+      targetRPE: 7,
+      actualRPE: '6',
+      estMax: 70,
+      notes: 'Focused on form and tempo',
+    },
+  ]);
 
   /**
    * Computed signal to generate an array of exercise indices based on the number of rows.
    */
 
-  numberOfExercises = computed(() => Array.from({ length: this.numberOfRows() }, (_, i) => i + 1));
+  numberOfExercises = computed(() => Array.from({ length: this.testEntries().length }, (_, i) => i + 1));
 
   /**
    * Signal controlling the visibility of the "Add Row" button.
    */
   showAddRowButton = signal(false);
 
+  allowRemovalOfDefinedRows = signal(false);
+
   /**
    * Listener for mouse move events to check the mouse position.
    */
   private mouseMoveListener!: (event: MouseEvent) => void;
+
+  constructor(private modalService: ModalService) {}
 
   /**
    * Registers a global mouse move listener after the view is initialized.
@@ -59,11 +97,50 @@ export class TestFeaturesComponent implements AfterViewInit, OnDestroy {
   }
 
   protected addRow(): void {
-    this.numberOfRows.update((rows) => rows + 1);
+    this.testEntries.update((entries) => [
+      ...entries,
+      {
+        category: '',
+        exercise: '',
+        sets: 0,
+        reps: 0,
+        weight: '',
+        targetRPE: 0,
+        actualRPE: '',
+        estMax: 0,
+        notes: '',
+      },
+    ]);
   }
 
   protected removeRow(): void {
-    this.numberOfRows.update((rows) => rows - 1);
+    const entryToRemove = this.getLastExerciseEntry();
+
+    if (this.isEntryEmpty(entryToRemove) || this.allowRemovalOfDefinedRows()) {
+      this.testEntries.update((entries) => entries.slice(0, -1));
+      return;
+    }
+
+    const modalOptions = new BasicInfoModalOptionsBuilder()
+      .setTitle('Warnung')
+      .setButtonText('Verstanden')
+      .setInfoText(
+        'Du bist dabei eine Übung zu löschen. Bestätige den Vorgang, wenn dies gewollt ist, falls nicht, schließe dieses Modal.',
+      )
+      .setIsDestructiveAction(true)
+      .setOnSubmitCallback(async () => this.allowRemovalOfDefinedRows.set(true))
+      .build();
+
+    this.modalService.openBasicInfoModal(modalOptions);
+  }
+
+  private getLastExerciseEntry(): Exercise {
+    const lastIndex = this.testEntries().length - 1;
+    return this.testEntries()[lastIndex];
+  }
+
+  private isEntryEmpty(entry: any): boolean {
+    return Object.values(entry).some((value) => value === '');
   }
 
   /**

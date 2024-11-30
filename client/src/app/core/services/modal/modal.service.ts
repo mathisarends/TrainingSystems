@@ -110,6 +110,7 @@ export class ModalService {
       component: BasicInfoComponent,
       title: options.title,
       buttonText: options.buttonText ?? 'Verstanden',
+      isDestructiveAction: options.isDestructiveAction,
       componentData: {
         infoText: options.infoText,
       },
