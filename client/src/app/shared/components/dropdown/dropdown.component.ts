@@ -21,7 +21,7 @@ export class DropdownComponent {
    * The name of the select input, used to uniquely identify the control.
    * This input is required and must be provided by the parent component.
    */
-  name = input.required<string>();
+  name = input<string>();
 
   /**
    * The currently selected value for the select dropdown.

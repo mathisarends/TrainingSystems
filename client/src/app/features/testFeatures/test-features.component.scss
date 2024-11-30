@@ -1,6 +1,10 @@
 .training-grid {
   display: grid;
-  grid-template-columns: minmax(150px, 1.75fr) repeat(7, 1fr) minmax(150px, 1.75fr);
+  grid-template-columns:
+    minmax(175px, 1fr) /* Category */
+    minmax(175px, 1fr) /* Exercise */
+    repeat(6, 1fr) /* Sets, Reps, Weight, RPE, @RPE, MAX */
+    minmax(175px, 1fr); /* Notes */
   gap: 0;
 }
 

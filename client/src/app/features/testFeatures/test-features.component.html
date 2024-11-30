@@ -6,11 +6,13 @@
   <div class="column-name">Weight</div>
   <div class="column-name">RPE</div>
   <div class="column-name">&#64;RPE</div>
-  <div class="column-name">MAX</div>
+  <div class="column-name">Est. Max</div>
   <div class="column-name">Notes</div>
 
   @for (entry of testEntries(); track entry) {
-    <div class="exercise-field">{{ entry.category }}</div>
+    <div class="exercise-field">
+      <app-dropdown [options]="categoryOptions()" [(selectedValue)]="entry.category" />
+    </div>
     <div class="exercise-field">{{ entry.exercise }}</div>
     <div class="exercise-field">
       <input type="number" class="transparent-input" [(ngModel)]="entry.sets" />
@@ -36,4 +38,4 @@
   }
 </div>
 
-<app-add-row-button [isVisible]="showAddRowButton()" (addRow)="addRow()" (removeRow)="removeRow()"></app-add-row-button>
+<app-add-row-button [isVisible]="showAddRowButton()" (addRow)="addRow()" (removeRow)="removeRow()" />

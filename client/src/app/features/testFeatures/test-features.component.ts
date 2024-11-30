@@ -12,14 +12,16 @@ import {
 import { FormsModule } from '@angular/forms';
 import { BasicInfoModalOptionsBuilder } from '../../core/services/modal/basic-info/basic-info-modal-options-builder';
 import { ModalService } from '../../core/services/modal/modal.service';
+import { DropdownComponent } from '../../shared/components/dropdown/dropdown.component';
 import { InputComponent } from '../../shared/components/input/input.component';
 import { Exercise } from '../training-plans/training-view/training-exercise';
 import { AddRowButtonComponent } from './add-row-button/add-row-button.component';
+import { CategoryValues } from './category-values.eum';
 
 @Component({
   selector: 'app-test-features',
   standalone: true,
-  imports: [CommonModule, FormsModule, AddRowButtonComponent, InputComponent],
+  imports: [CommonModule, FormsModule, AddRowButtonComponent, DropdownComponent, InputComponent],
   templateUrl: './test-features.component.html',
   styleUrls: ['./test-features.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,10 +29,12 @@ import { AddRowButtonComponent } from './add-row-button/add-row-button.component
 export class TestFeaturesComponent implements AfterViewInit, OnDestroy {
   trainingGrid = viewChild<ElementRef>('trainingGrid');
 
+  categoryOptions = signal<string[]>(Object.values(CategoryValues));
+
   testEntries = signal<Exercise[]>([
     {
-      category: 'Strength',
-      exercise: 'Squat',
+      category: 'Squat',
+      exercise: 'Lowbar-Squat',
       sets: 4,
       reps: 8,
       weight: '100',
@@ -39,7 +43,7 @@ export class TestFeaturesComponent implements AfterViewInit, OnDestroy {
       estMax: 120,
     },
     {
-      category: 'Hypertrophy',
+      category: 'Bench',
       exercise: 'Bench Press',
       sets: 3,
       reps: 12,
@@ -49,8 +53,8 @@ export class TestFeaturesComponent implements AfterViewInit, OnDestroy {
       estMax: 70,
     },
     {
-      category: 'Hypertrophy',
-      exercise: 'Bench Press',
+      category: 'Legs',
+      exercise: 'GHR',
       sets: 3,
       reps: 12,
       weight: '60',
