@@ -116,6 +116,10 @@ export class TestFeaturesComponent implements AfterViewInit, OnDestroy {
   protected removeRow(): void {
     const entryToRemove = this.getLastExerciseEntry();
 
+    if (!entryToRemove) {
+      return;
+    }
+
     if (this.isEntryEmpty(entryToRemove) || this.allowRemovalOfDefinedRows()) {
       this.testEntries.update((entries) => entries.slice(0, -1));
       return;
@@ -134,7 +138,11 @@ export class TestFeaturesComponent implements AfterViewInit, OnDestroy {
     this.modalService.openBasicInfoModal(modalOptions);
   }
 
-  private getLastExerciseEntry(): Exercise {
+  private getLastExerciseEntry(): Exercise | undefined {
+    if (this.testEntries().length === 0) {
+      return undefined;
+    }
+
     const lastIndex = this.testEntries().length - 1;
     return this.testEntries()[lastIndex];
   }
