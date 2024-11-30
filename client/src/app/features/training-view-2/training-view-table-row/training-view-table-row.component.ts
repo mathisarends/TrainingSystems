@@ -2,8 +2,10 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, effect, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
+import { ExerciseCategories } from '../../training-plans/model/exercise-categories';
 import { ExerciseDataService } from '../../training-plans/training-view/exercise-data.service';
 import { Exercise } from '../../training-plans/training-view/training-exercise';
+import { EstMaxService2 } from '../estMax2.service';
 
 // TODO: hier in den Aufrufstellen einen weg finden tatsächlich das two way binding hier zu verwenden, damit die Datenstruktur immer aktuell bleibt
 @Component({
@@ -13,15 +15,43 @@ import { Exercise } from '../../training-plans/training-view/training-exercise';
   templateUrl: './training-view-table-row.component.html',
   styleUrls: ['./training-view-table-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [EstMaxService2],
 })
 export class TrainingViewTableRowComponent {
   exercise = model.required<Exercise>();
 
-  constructor(protected exerciseDataService: ExerciseDataService) {
+  constructor(
+    protected exerciseDataService: ExerciseDataService,
+    private estMaxService2: EstMaxService2,
+  ) {
     effect(() => {
       const exercise = this.exercise();
       console.log('🚀 ~ TrainingViewTableRowComponent ~ effect ~ exercise:', exercise);
     });
+  }
+
+  protected onWeightChange(weight: string) {
+    this.updateExerciseProperty('weight', weight);
+
+    const estMax = this.estMaxService2.calcEstMax(this.exercise());
+
+    this.updateExerciseProperty('estMax', estMax);
+  }
+
+  protected onRepsChange(reps: number) {
+    this.updateExerciseProperty('reps', reps);
+
+    const estMax = this.estMaxService2.calcEstMax(this.exercise());
+
+    this.updateExerciseProperty('estMax', estMax);
+  }
+
+  protected onAcutalRpeChange(rpe: string) {
+    this.updateExerciseProperty('actualRPE', rpe);
+
+    const estMax = this.estMaxService2.calcEstMax(this.exercise());
+
+    this.updateExerciseProperty('estMax', estMax);
   }
 
   protected onExerciseCategoryChange(exerciseCategory: string) {
@@ -35,9 +65,9 @@ export class TrainingViewTableRowComponent {
         ...current,
         sets: 0,
         reps: 0,
-        weight: '0',
+        weight: undefined,
         targetRPE: 0,
-        actualRPE: '0',
+        actualRPE: undefined,
         estMax: 0,
         notes: '',
       }));
@@ -49,9 +79,9 @@ export class TrainingViewTableRowComponent {
         ...current,
         sets: defaultSets,
         reps: defaultReps,
-        weight: '0',
+        weight: undefined,
         targetRPE: defaultRPE,
-        actualRPE: '0',
+        actualRPE: undefined,
         estMax: 0,
         notes: '',
       }));
@@ -71,6 +101,6 @@ export class TrainingViewTableRowComponent {
   }
 
   private isPlaceholderCategory(exerciseCategory: string): boolean {
-    return exerciseCategory === '- Bitte Auswählen -';
+    return exerciseCategory === ExerciseCategories.PLACEHOLDER;
   }
 }

@@ -9,7 +9,6 @@
   />
 </div>
 <div class="exercise-field">
-  <!-- TODO: das hier muss sauberer gemacht werden nach der Migration-->
   <app-dropdown
     class="exercise-name-selector"
     [options]="exerciseDataService.categorizedExercises()[exercise().category]"
@@ -36,7 +35,7 @@
     type="number"
     class="transparent-input"
     [(ngModel)]="exercise().reps"
-    (ngModelChange)="updateExerciseProperty('reps', $event)"
+    (ngModelChange)="onRepsChange($event)"
     [ngStyle]="{
       opacity: exercise().category === '- Bitte Auswählen -' ? 0 : 1,
     }"
@@ -47,9 +46,7 @@
     type="text"
     class="transparent-input"
     [(ngModel)]="exercise().weight"
-    [ngStyle]="{
-      opacity: exercise().category === '- Bitte Auswählen -' || exercise().weight === '0' ? 0 : 1,
-    }"
+    (ngModelChange)="onWeightChange($event)"
   />
 </div>
 <div class="exercise-field">
@@ -68,6 +65,7 @@
     type="text"
     class="transparent-input"
     [(ngModel)]="exercise().actualRPE"
+    (ngModelChange)="onAcutalRpeChange($event)"
     [ngStyle]="{
       opacity: exercise().actualRPE === '0' ? 0 : 1,
     }"

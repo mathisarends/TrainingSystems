@@ -56,6 +56,6 @@ export class DropdownComponent {
   onChange(event: Event) {
     const newValue = (event.target as HTMLSelectElement).value;
     this.selectedValue.set(newValue);
-    this.valueChange.emit(newValue); // Emits the event
+    this.valueChange.emit(newValue);
   }
 }

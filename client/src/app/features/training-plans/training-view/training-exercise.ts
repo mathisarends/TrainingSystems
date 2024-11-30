@@ -27,7 +27,7 @@ export interface Exercise {
   /**
    * The weight to be used for the exercise (can be a string to accommodate different units).
    */
-  weight: string;
+  weight?: string;
 
   /**
    * The target Rate of Perceived Exertion (RPE) for the exercise.
@@ -37,12 +37,12 @@ export interface Exercise {
   /**
    * The actual Rate of Perceived Exertion (RPE) experienced during the exercise.
    */
-  actualRPE: string;
+  actualRPE?: string;
 
   /**
    * The estimated maximum weight that can be lifted for one repetition (1RM).
    */
-  estMax: number;
+  estMax?: number;
 
   /**
    * Notes associated with the current day
