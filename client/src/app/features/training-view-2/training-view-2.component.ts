@@ -14,6 +14,7 @@ import { BasicInfoModalOptionsBuilder } from '../../core/services/modal/basic-in
 import { ModalService } from '../../core/services/modal/modal.service';
 import { DropdownComponent } from '../../shared/components/dropdown/dropdown.component';
 import { InputComponent } from '../../shared/components/input/input.component';
+import { NavigationArrowsComponent } from '../../shared/components/navigation-arrows/navigation-arrows.component';
 import { ExerciseCategories } from '../training-plans/model/exercise-categories';
 import { Exercise } from '../training-plans/training-view/training-exercise';
 import { AddRowButtonComponent } from './add-row-button/add-row-button.component';
@@ -30,6 +31,7 @@ import { TrainingViewTableRowComponent } from './training-view-table-row/trainin
     DropdownComponent,
     InputComponent,
     TrainingViewTableRowComponent,
+    NavigationArrowsComponent,
   ],
   templateUrl: './training-view-2.component.html',
   styleUrls: ['./training-view-2.component.scss'],

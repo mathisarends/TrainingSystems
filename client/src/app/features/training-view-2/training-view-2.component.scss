@@ -5,22 +5,6 @@
     minmax(175px, 1fr) /* Exercise */
     repeat(6, 1fr) /* Sets, Reps, Weight, RPE, @RPE, MAX */
     minmax(175px, 1fr); /* Notes */
-  gap: 0;
-}
-
-.exercise-field {
-  padding: 7.5px;
-  border-bottom: 1px solid var(--calendar-border-color);
-  border-right: 1px solid var(--calendar-border-color);
-  text-align: center;
-
-  &:nth-child(9n + 1) {
-    border-left: 1px solid var(--calendar-border-color);
-  }
-}
-
-.exercise-field:hover {
-  background-color: var(--calendar-hover-color);
 }
 
 .column-name {
@@ -30,16 +14,15 @@
   border-bottom: 1px solid var(--calendar-border-color);
 }
 
-.exercise-field:nth-child(9n + 1),
-.exercise-field:nth-child(9n + 2),
-.exercise-field:nth-child(9n + 9) {
-  text-align: left;
-  padding-left: 10px;
-}
-
 .column-name:nth-child(1),
 .column-name:nth-child(2),
 .column-name:nth-child(9) {
   text-align: left;
   padding-left: 10px;
+}
+
+.placeholder-for-add-button {
+  height: 25px;
+  width: 100%;
+  opacity: 1;
 }

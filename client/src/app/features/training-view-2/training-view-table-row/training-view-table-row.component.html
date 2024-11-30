@@ -13,6 +13,7 @@
     type="number"
     class="transparent-input"
     [(ngModel)]="exercise().sets"
+    (ngModelChange)="updateExerciseProperty('sets', $event)"
     [ngStyle]="{
       opacity: exercise().category === '- Bitte Auswählen -' ? 0 : 1,
     }"
@@ -23,6 +24,7 @@
     type="number"
     class="transparent-input"
     [(ngModel)]="exercise().reps"
+    (ngModelChange)="updateExerciseProperty('sets', $event)"
     [ngStyle]="{
       opacity: exercise().category === '- Bitte Auswählen -' ? 0 : 1,
     }"
@@ -36,6 +38,7 @@
     type="number"
     class="transparent-input"
     [(ngModel)]="exercise().targetRPE"
+    (ngModelChange)="updateExerciseProperty('sets', $event)"
     [ngStyle]="{
       opacity: exercise().category === '- Bitte Auswählen -' ? 0 : 1,
     }"
@@ -49,11 +52,17 @@
     type="number"
     class="transparent-input"
     [(ngModel)]="exercise().estMax"
+    (ngModelChange)="updateExerciseProperty('sets', $event)"
     [ngStyle]="{
       opacity: exercise().category === '- Bitte Auswählen -' ? 0 : 1,
     }"
   />
 </div>
 <div class="exercise-field">
-  <input type="text" class="transparent-input left-aligned" [(ngModel)]="exercise().notes" />
+  <input
+    type="text"
+    class="transparent-input left-aligned"
+    [(ngModel)]="exercise().notes"
+    (ngModelChange)="updateExerciseProperty('sets', $event)"
+  />
 </div>

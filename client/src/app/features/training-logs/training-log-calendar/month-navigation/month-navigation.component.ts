@@ -3,6 +3,7 @@ import { CircularIconButtonComponent } from '../../../../shared/components/circu
 import { IconName } from '../../../../shared/icon/icon-name';
 import { IconComponent } from '../../../../shared/icon/icon.component';
 
+// TODO: refactor haben wir so an mehrerern Stellen im Repo
 @Component({
   selector: 'app-month-navigation',
   standalone: true,
