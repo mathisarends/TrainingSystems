@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, model, output } from '@angular/core';
 import { CategorySelectDirective } from '../../../features/training-plans/training-view/directives/category-select.directive';
 import { InteractiveElementDirective } from '../../directives/interactive-element.directive';
 import { DetermineSelectOptionValuePipe } from './determine-select-option-value.pipe';
@@ -27,12 +27,7 @@ export class DropdownComponent {
    * The currently selected value for the select dropdown.
    * This input is required and is used to indicate which option should be selected by default.
    */
-  selectedValue = input.required<string | number>();
-
-  /**
-   * Emits its value when the value is changed.
-   */
-  selectedValueChange = output<string | number>();
+  selectedValue = model.required<string | number>();
 
   /**
    * The list of option that are displayed in the user interface.
@@ -50,6 +45,8 @@ export class DropdownComponent {
    */
   directiveUsed = input<'interactiveElementDirective' | 'category-select'>('interactiveElementDirective');
 
+  valueChange = output<string | number>();
+
   /**
    * Handles the `change` event from the select element.
    * Emits the new selected value through the `selectionChanged` output.
@@ -58,6 +55,7 @@ export class DropdownComponent {
    */
   onChange(event: Event) {
     const newValue = (event.target as HTMLSelectElement).value;
-    this.selectedValueChange.emit(newValue);
+    this.selectedValue.set(newValue);
+    this.valueChange.emit(newValue); // Emits the event
   }
 }

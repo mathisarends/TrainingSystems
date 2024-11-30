@@ -2,6 +2,7 @@
   <app-dropdown
     [options]="exerciseDataService.exerciseCategories()"
     [(selectedValue)]="exercise().category"
+    (valueChange)="onExerciseCategoryChange($any($event))"
     [ngStyle]="{
       opacity: exercise().category === '- Bitte Auswählen -' ? 0 : 1,
     }"
@@ -13,6 +14,7 @@
     class="exercise-name-selector"
     [options]="exerciseDataService.categorizedExercises()[exercise().category]"
     [(selectedValue)]="exercise().exercise"
+    (valueChange)="updateExerciseProperty('exercise', $any($event))"
     [ngStyle]="{
       opacity: exercise().category === '- Bitte Auswählen -' || !exercise().category ? 0 : 1,
     }"
@@ -34,7 +36,7 @@
     type="number"
     class="transparent-input"
     [(ngModel)]="exercise().reps"
-    (ngModelChange)="updateExerciseProperty('sets', $event)"
+    (ngModelChange)="updateExerciseProperty('reps', $event)"
     [ngStyle]="{
       opacity: exercise().category === '- Bitte Auswählen -' ? 0 : 1,
     }"
@@ -48,7 +50,7 @@
     type="number"
     class="transparent-input"
     [(ngModel)]="exercise().targetRPE"
-    (ngModelChange)="updateExerciseProperty('sets', $event)"
+    (ngModelChange)="updateExerciseProperty('targetRPE', $event)"
     [ngStyle]="{
       opacity: exercise().category === '- Bitte Auswählen -' ? 0 : 1,
     }"
@@ -62,7 +64,7 @@
     type="number"
     class="transparent-input"
     [(ngModel)]="exercise().estMax"
-    (ngModelChange)="updateExerciseProperty('sets', $event)"
+    (ngModelChange)="updateExerciseProperty('estMax', $event)"
     [ngStyle]="{
       opacity: exercise().category === '- Bitte Auswählen -' ? 0 : 1,
     }"
@@ -71,8 +73,8 @@
 <div class="exercise-field">
   <input
     type="text"
-    class="transparent-input left-aligned"
+    class="transparent-input"
     [(ngModel)]="exercise().notes"
-    (ngModelChange)="updateExerciseProperty('sets', $event)"
+    (ngModelChange)="updateExerciseProperty('notes', $event)"
   />
 </div>

@@ -27,7 +27,10 @@ export class PauseTimeService {
     this.restoreStateFromLocalStorage();
     this.setupListeners();
     this.setupTimerExpiredEffect();
-    this.startKeepAliveSignal();
+
+    if (this.remainingTime()) {
+      this.startKeepAliveSignal();
+    }
   }
 
   /**

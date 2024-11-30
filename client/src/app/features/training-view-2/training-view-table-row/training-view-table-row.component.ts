@@ -18,13 +18,17 @@ export class TrainingViewTableRowComponent {
   exercise = model.required<Exercise>();
 
   constructor(protected exerciseDataService: ExerciseDataService) {
-    effect(
-      () => {
-        const category = this.exercise().category;
-        console.log('🚀 ~ TrainingViewTableRowComponent ~ effect ~ category:', category);
-      },
-      { allowSignalWrites: true },
-    );
+    effect(() => {
+      const exercise = this.exercise();
+      console.log('🚀 ~ TrainingViewTableRowComponent ~ effect ~ exercise:', exercise);
+    });
+  }
+
+  protected onExerciseCategoryChange(exerciseCategory: string) {
+    this.updateExerciseProperty('category', exerciseCategory);
+
+    const firstAvailableExcercise = this.exerciseDataService.categorizedExercises()[exerciseCategory][0];
+    this.updateExerciseProperty('exercise', firstAvailableExcercise);
   }
 
   /**
