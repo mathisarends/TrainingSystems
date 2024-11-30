@@ -43,7 +43,14 @@
   />
 </div>
 <div class="exercise-field">
-  <input type="text" class="transparent-input" [(ngModel)]="exercise().weight" />
+  <input
+    type="text"
+    class="transparent-input"
+    [(ngModel)]="exercise().weight"
+    [ngStyle]="{
+      opacity: exercise().category === '- Bitte Auswählen -' ? 0 : 1,
+    }"
+  />
 </div>
 <div class="exercise-field">
   <input
@@ -57,7 +64,14 @@
   />
 </div>
 <div class="exercise-field">
-  <input type="text" class="transparent-input" [(ngModel)]="exercise().actualRPE" />
+  <input
+    type="text"
+    class="transparent-input"
+    [(ngModel)]="exercise().actualRPE"
+    [ngStyle]="{
+      opacity: exercise().category === '- Bitte Auswählen -' ? 0 : 1,
+    }"
+  />
 </div>
 <div class="exercise-field">
   <input

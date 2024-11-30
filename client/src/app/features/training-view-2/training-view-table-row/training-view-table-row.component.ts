@@ -29,6 +29,19 @@ export class TrainingViewTableRowComponent {
 
     const firstAvailableExcercise = this.exerciseDataService.categorizedExercises()[exerciseCategory][0];
     this.updateExerciseProperty('exercise', firstAvailableExcercise);
+
+    if (exerciseCategory === '- Bitte Auswählen -') {
+      this.exercise.update((current) => ({
+        ...current,
+        sets: 0,
+        reps: 0,
+        weight: '0',
+        targetRPE: 0,
+        actualRPE: '0',
+        estMax: 0,
+        notes: '',
+      }));
+    }
   }
 
   /**
