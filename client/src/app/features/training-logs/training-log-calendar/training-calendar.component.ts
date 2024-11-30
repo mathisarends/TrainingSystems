@@ -14,6 +14,7 @@ import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { BasicInfoModalOptionsBuilder } from '../../../core/services/modal/basic-info/basic-info-modal-options-builder';
 import { ModalService } from '../../../core/services/modal/modal.service';
+import { NavigationArrowsComponent } from '../../../shared/components/navigation-arrows/navigation-arrows.component';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
 import { SwipeDirective } from '../../../shared/directives/swipe.directive';
 import { IconName } from '../../../shared/icon/icon-name';
@@ -27,20 +28,19 @@ import { TrainingDayCalendarDataDto } from './dto/training-day-calendar-data.dto
 import { ExtractTrainingDayFromCalendarDataPipe } from './extract-training-day-from-calendar-data.pipe';
 import { IsCurrentDayPipe } from './is-current-day.pipe';
 import { MatchesTrainingNotificationPipe } from './matches-training-notification-date.pipe';
-import { MonthNavigationComponent } from './month-navigation/month-navigation.component';
 
 @Component({
   selector: 'app-training-log-calendar',
   standalone: true,
   imports: [
     CommonModule,
-    MonthNavigationComponent,
     IsCurrentDayPipe,
     CalendarEventComponent,
     SpinnerComponent,
     ExtractTrainingDayFromCalendarDataPipe,
     SwipeDirective,
     MatchesTrainingNotificationPipe,
+    NavigationArrowsComponent,
   ],
   templateUrl: './training-calendar.component.html',
   styleUrls: ['./training-calendar.component.scss'],

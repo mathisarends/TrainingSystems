@@ -61,7 +61,7 @@
     }
   </div>
 
-  <app-month-navigation [(currentMonth)]="currentMonth" [(currentYear)]="currentYear" />
+  <app-navigation-arrows (navigateLeft)="navigateToPreviousMonth()" (navigateRight)="navigateToNextMonth()" />
 } @else {
   <app-spinner />
 }
