@@ -1,7 +1,7 @@
 import { Directive, ElementRef, HostListener } from '@angular/core';
 
 @Directive()
-export abstract class AbstractInputHandler {
+export abstract class AbstractDoubleClickHandler {
   /**
    * Delimiter used to split input values.
    * Can be overridden in subclasses.

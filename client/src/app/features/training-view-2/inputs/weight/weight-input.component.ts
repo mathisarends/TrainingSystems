@@ -1,15 +1,15 @@
-import { Component, input, model, output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, effect, ElementRef, input, model, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AbstractInputHandler } from '../abstract-input-handler';
+import { AbstractDoubleClickHandler } from '../abstract-double-click-handler';
 
 @Component({
   selector: 'app-weight-input',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './weight-input.component.html',
-  styleUrls: ['./weight-input.component.component.scss'],
 })
-export class WeightInputComponent extends AbstractInputHandler {
+export class WeightInputComponent extends AbstractDoubleClickHandler {
   /**
    * Weight input value as a signal.
    */
@@ -18,12 +18,22 @@ export class WeightInputComponent extends AbstractInputHandler {
   /**
    * Number of sets required for the input.
    */
-  numberOfSets = input<number>(3);
+  numberOfSets = input.required<number>();
 
   /**
    * Emits the weight change.
    */
   weightChanged = output<string>();
+
+  constructor(protected override elementRef: ElementRef) {
+    super(elementRef);
+
+    effect(() => {
+      if (this.weight()) {
+        this.weightChanged.emit(this.weight()!);
+      }
+    });
+  }
 
   protected handleDoubleClick(): void {
     const weightArray = this.parseInputValues(this.weight() ?? '');

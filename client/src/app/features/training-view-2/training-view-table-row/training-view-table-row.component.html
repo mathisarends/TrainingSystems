@@ -60,16 +60,10 @@
   />
 </div>
 <div class="exercise-field">
-  <input
-    type="text"
-    rpeInputDirective2
+  <app-rpe-input
+    [(rpe)]="exercise().actualRPE"
     [numberOfSets]="exercise().sets"
-    class="transparent-input"
-    [(ngModel)]="exercise().actualRPE"
-    (ngModelChange)="onAcutalRpeChange($event)"
-    [ngStyle]="{
-      opacity: exercise().actualRPE === '0' ? 0 : 1,
-    }"
+    (rpeChanged)="onAcutalRpeChange($event)"
   />
 </div>
 <div class="exercise-field">
