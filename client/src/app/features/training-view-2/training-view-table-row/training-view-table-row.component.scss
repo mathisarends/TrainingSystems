@@ -49,6 +49,10 @@
       content: attr(data-label) '';
       text-align: left;
     }
+
+    &:hover {
+      background-color: unset;
+    }
   }
 
   :host:nth-child(even) {
