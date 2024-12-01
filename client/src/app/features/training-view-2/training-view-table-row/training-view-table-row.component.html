@@ -53,8 +53,6 @@
     type="number"
     class="transparent-input"
     [(ngModel)]="exercise().targetRPE"
-    min="6"
-    max="10"
     (ngModelChange)="updateExerciseProperty('targetRPE', $event)"
     [ngStyle]="{
       opacity: exercise().category === '- Bitte Auswählen -' ? 0 : 1,
