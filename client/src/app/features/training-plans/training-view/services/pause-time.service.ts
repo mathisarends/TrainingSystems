@@ -1,4 +1,5 @@
 import { effect, Injectable, Injector, signal } from '@angular/core';
+import { HttpService } from '../../../../core/services/http-client.service';
 import { ServiceWorkerService } from '../../../../platform/service-worker.service';
 import { WakeLockService } from './wake-lock.service';
 
@@ -15,6 +16,7 @@ export class PauseTimeService {
   constructor(
     private serviceWorkerService: ServiceWorkerService,
     private wakeLockService: WakeLockService,
+    private httpService: HttpService,
     private injector: Injector,
   ) {
     this.initializeService();
@@ -130,6 +132,10 @@ export class PauseTimeService {
     this.currentExercise.set(savedExercise);
     this.initialTime = savedInitialTime;
     this.remainingTime.set(this.initialTime);
+
+    if (this.remainingTime() === 0) {
+      this.stopKeepAliveOnServer();
+    }
   }
 
   /**
