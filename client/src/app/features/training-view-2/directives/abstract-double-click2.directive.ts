@@ -1,5 +1,4 @@
-import { AfterViewInit, Directive, ElementRef, HostListener } from '@angular/core';
-import { ExerciseTableRowService } from '../services/exercise-table-row.service';
+import { AfterViewInit, Directive, ElementRef, HostListener, input } from '@angular/core';
 
 /**
  * Abstract Directive that extends the InteractiveElementDirective
@@ -7,9 +6,9 @@ import { ExerciseTableRowService } from '../services/exercise-table-row.service'
  * methods to parse and duplicate input values.
  */
 @Directive()
-export abstract class AbstractDoubleClickDirective implements AfterViewInit {
+export abstract class AbstractDoubleClickDirective2 implements AfterViewInit {
   protected inputElement!: HTMLInputElement;
-  protected delimiter: string = ' '; // Default delimiter is a space
+  protected delimiter: string = ' ';
 
   /**
    * Stores the timestamp of the last click event.
@@ -23,10 +22,9 @@ export abstract class AbstractDoubleClickDirective implements AfterViewInit {
    */
   protected doubleClickThreshold: number = 300;
 
-  constructor(
-    protected exerciseTableRowService: ExerciseTableRowService,
-    protected elementRef: ElementRef,
-  ) {}
+  numberOfSets = input<number>(3);
+
+  constructor(protected elementRef: ElementRef) {}
 
   /**
    * Lifecycle hook that runs after the view is initialized.
@@ -58,7 +56,8 @@ export abstract class AbstractDoubleClickDirective implements AfterViewInit {
    */
   protected handleDoubleClick(): void {
     const inputValues = this.parseInputValues();
-    const amountOfSets = this.getAmountOfSets();
+    const amountOfSets = this.numberOfSets();
+    console.log('🚀 ~ AbstractDoubleClickDirective2 ~ handleDoubleClick ~ amountOfSets:', amountOfSets);
 
     const isSetLeft = inputValues.length < amountOfSets;
     if (!isSetLeft) {
@@ -74,7 +73,6 @@ export abstract class AbstractDoubleClickDirective implements AfterViewInit {
     // Dismiss the keyboard on mobile devices by removing focus from the input element
     this.inputElement.blur();
     this.inputElement.dispatchEvent(new Event('change'));
-    console.log('dispatch event');
   }
 
   private shouldApplyPlaceholderValue(parsedInputValues: number[]): boolean {
@@ -92,7 +90,7 @@ export abstract class AbstractDoubleClickDirective implements AfterViewInit {
   protected isLastSet(): boolean {
     const inputValues = this.parseInputValues();
 
-    return inputValues.length === this.getAmountOfSets();
+    return inputValues.length === this.numberOfSets();
   }
 
   /**
@@ -119,12 +117,5 @@ export abstract class AbstractDoubleClickDirective implements AfterViewInit {
   protected duplicateLastInput(values: number[]): void {
     const lastInput = values[values.length - 1];
     this.inputElement.value = `${this.inputElement.value}${this.delimiter}${lastInput}`;
-  }
-
-  /**
-   * Retrieves the total number of sets from the ExerciseTableRowService.
-   */
-  protected getAmountOfSets(): number {
-    return Number(this.exerciseTableRowService.getSetInputByElement(this.inputElement).value);
   }
 }

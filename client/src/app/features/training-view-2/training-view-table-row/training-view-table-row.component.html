@@ -42,11 +42,10 @@
   />
 </div>
 <div class="exercise-field">
-  <input
-    type="text"
-    class="transparent-input"
-    [(ngModel)]="exercise().weight"
-    (ngModelChange)="onWeightChange($event)"
+  <app-weight-input
+    [(weight)]="exercise().weight"
+    [numberOfSets]="exercise().sets"
+    (weightChanged)="onWeightChanged($event)"
   />
 </div>
 <div class="exercise-field">
@@ -54,6 +53,8 @@
     type="number"
     class="transparent-input"
     [(ngModel)]="exercise().targetRPE"
+    min="6"
+    max="10"
     (ngModelChange)="updateExerciseProperty('targetRPE', $event)"
     [ngStyle]="{
       opacity: exercise().category === '- Bitte Auswählen -' ? 0 : 1,
@@ -63,6 +64,8 @@
 <div class="exercise-field">
   <input
     type="text"
+    rpeInputDirective2
+    [numberOfSets]="exercise().sets"
     class="transparent-input"
     [(ngModel)]="exercise().actualRPE"
     (ngModelChange)="onAcutalRpeChange($event)"

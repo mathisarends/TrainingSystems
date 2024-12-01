@@ -1,6 +1,5 @@
 import { Directive, ElementRef, HostListener } from '@angular/core';
 import { FormService } from '../../../../core/services/form.service';
-import { ToastService } from '../../../../shared/components/toast/toast.service';
 import { AutoSaveService } from '../../../../shared/service/auto-save.service';
 import { EstMaxService } from '../services/estmax.service';
 import { ExerciseTableRowService } from '../services/exercise-table-row.service';
@@ -24,9 +23,8 @@ export class RpeInputDirective extends AbstractDoubleClickDirective {
 
     protected override exerciseTableRowService: ExerciseTableRowService,
     protected override elementRef: ElementRef,
-    protected override toastService: ToastService,
   ) {
-    super(exerciseTableRowService, elementRef, toastService);
+    super(exerciseTableRowService, elementRef);
   }
 
   @HostListener('change', ['$event'])

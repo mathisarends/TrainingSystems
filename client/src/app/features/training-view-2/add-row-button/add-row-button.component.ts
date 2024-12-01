@@ -61,7 +61,7 @@ export class AddRowButtonComponent {
       const isDragging = this.isDragging();
 
       if (isDragging) {
-        this.renderer.setStyle(document.body, 'cursor', 'n-resize');
+        this.renderer.setStyle(document.body, 'cursor', 'row-resize');
       } else {
         this.renderer.removeStyle(document.body, 'cursor');
       }

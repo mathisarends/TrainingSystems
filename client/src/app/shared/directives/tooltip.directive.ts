@@ -1,4 +1,4 @@
-import { DestroyRef, Directive, effect, ElementRef, HostListener, Input, Renderer2 } from '@angular/core';
+import { DestroyRef, Directive, ElementRef, HostListener, Input, Renderer2 } from '@angular/core';
 import { RouteWatcherService } from '../service/route-watcher.service';
 
 /**
@@ -22,11 +22,6 @@ export class TooltipDirective {
       if (this.tooltipElement) {
         this.renderer.removeChild(document.body, this.tooltipElement);
       }
-    });
-
-    effect(() => {
-      let _currentRoute = this.routeWatcherService.getCurrentRouteSignal()();
-      this.hideTooltip();
     });
   }
 
@@ -61,10 +56,6 @@ export class TooltipDirective {
   private createTooltipElement() {
     this.tooltipElement = this.renderer.createElement('div');
     this.renderer.addClass(this.tooltipElement, 'tooltip-container');
-
-    const arrow = this.renderer.createElement('div');
-    this.renderer.addClass(arrow, 'tooltip-arrow');
-    this.renderer.appendChild(this.tooltipElement, arrow);
 
     const text = this.renderer.createElement('span');
     this.renderer.addClass(text, 'tooltip-text');

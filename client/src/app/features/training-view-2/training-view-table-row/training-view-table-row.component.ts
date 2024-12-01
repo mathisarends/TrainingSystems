@@ -6,13 +6,23 @@ import { ExerciseCategories } from '../../training-plans/model/exercise-categori
 import { ExerciseDataService } from '../../training-plans/training-view/exercise-data.service';
 import { PauseTimeService } from '../../training-plans/training-view/services/pause-time.service';
 import { Exercise } from '../../training-plans/training-view/training-exercise';
+import { RpeInputDirective2 } from '../directives/rpe-input-2.directive';
+import { WeightInputDirective2 } from '../directives/weight-input-2.directive';
 import { EstMaxService2 } from '../estMax2.service';
+import { WeightInputComponent } from '../inputs/weight/weight-input.component';
 
 // TODO: hier in den Aufrufstellen einen weg finden tatsächlich das two way binding hier zu verwenden, damit die Datenstruktur immer aktuell bleibt
 @Component({
   selector: 'app-training-view-table-row',
   standalone: true,
-  imports: [DropdownComponent, FormsModule, CommonModule],
+  imports: [
+    DropdownComponent,
+    FormsModule,
+    CommonModule,
+    RpeInputDirective2,
+    WeightInputDirective2,
+    WeightInputComponent,
+  ],
   templateUrl: './training-view-table-row.component.html',
   styleUrls: ['./training-view-table-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,7 +42,7 @@ export class TrainingViewTableRowComponent {
     });
   }
 
-  protected onWeightChange(weight: string) {
+  protected onWeightChanged(weight: string) {
     this.updateExerciseProperty('weight', weight);
 
     const estMax = this.estMaxService2.calcEstMax(this.exercise());
