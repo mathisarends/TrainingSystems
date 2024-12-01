@@ -70,4 +70,18 @@ export class RpeInputComponent extends AbstractDoubleClickHandler {
       this.rpe.set(averageRpe);
     }
   }
+
+  protected override validateInput(input: string): string {
+    const baseValidatedInput = super.validateInput(input);
+
+    const rpeArray = this.parseInputValues(baseValidatedInput);
+
+    const validatedRpeArray = rpeArray.map((value) => {
+      if (value < 5) return 5;
+      if (value > 10) return 10;
+      return value;
+    });
+
+    return validatedRpeArray.join(this.delimiter);
+  }
 }
