@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
 import { ExerciseCategories } from '../../training-plans/model/exercise-categories';
@@ -11,7 +11,6 @@ import { EstMaxService2 } from '../estMax2.service';
 import { RpeInputComponent } from '../inputs/rpe/rpe-input.component';
 import { WeightInputComponent } from '../inputs/weight/weight-input.component';
 
-// TODO: hier in den Aufrufstellen einen weg finden tatsächlich das two way binding hier zu verwenden, damit die Datenstruktur immer aktuell bleibt
 @Component({
   selector: 'app-training-view-table-row',
   standalone: true,
@@ -24,93 +23,126 @@ import { WeightInputComponent } from '../inputs/weight/weight-input.component';
 export class TrainingViewTableRowComponent {
   exercise = model.required<Exercise>();
 
+  isPlaceholderCategory = computed(() => this.exercise().category === ExerciseCategories.PLACEHOLDER);
+
   constructor(
     protected exerciseDataService: ExerciseDataService,
     private estMaxService2: EstMaxService2,
     private pauseTimeService: PauseTimeService,
-  ) {
-    effect(() => {
-      const exercise = this.exercise();
-      console.log('🚀 ~ TrainingViewTableRowComponent ~ effect ~ exercise:', exercise);
-    });
-  }
+  ) {}
 
-  protected onWeightChanged(weight: string) {
+  /**
+   * Handles changes to the weight input, updates estMax, and starts the pause timer.
+   */
+  protected onWeightChanged(weight: string): void {
     this.updateExerciseProperty('weight', weight);
-
-    const estMax = this.estMaxService2.calcEstMax(this.exercise());
-    this.updateExerciseProperty('estMax', estMax);
-
-    const pauseTime = this.exerciseDataService.categoryPauseTimes()[this.exercise().category];
-
-    if (pauseTime) {
-      this.pauseTimeService.startPauseTimer(pauseTime, this.exercise().exercise);
-    }
+    this.updateEstMax();
+    this.startPauseTimer();
   }
 
-  protected onRepsChange(reps: number) {
+  /**
+   * Handles changes to the reps input and updates estMax.
+   */
+  protected onRepsChange(reps: number): void {
     this.updateExerciseProperty('reps', reps);
-
-    const estMax = this.estMaxService2.calcEstMax(this.exercise());
-
-    this.updateExerciseProperty('estMax', estMax);
+    this.updateEstMax();
   }
 
-  protected onAcutalRpeChange(rpe: string) {
+  /**
+   * Handles changes to the actual RPE input and updates estMax.
+   */
+  protected onActualRpeChange(rpe: string): void {
     this.updateExerciseProperty('actualRPE', rpe);
-
-    const estMax = this.estMaxService2.calcEstMax(this.exercise());
-
-    this.updateExerciseProperty('estMax', estMax);
+    this.updateEstMax();
   }
 
-  protected onExerciseCategoryChange(exerciseCategory: string) {
-    this.updateExerciseProperty('category', exerciseCategory);
+  /**
+   * Handles changes to the exercise category and resets exercise defaults.
+   */
+  protected onExerciseCategoryChange(exerciseCategory: string): void {
+    const isPlaceholder = exerciseCategory === ExerciseCategories.PLACEHOLDER;
+    const defaultValues = isPlaceholder ? this.getPlaceholderDefaults() : this.getCategoryDefaults(exerciseCategory);
 
-    const firstAvailableExcercise = this.exerciseDataService.categorizedExercises()[exerciseCategory][0];
-    this.updateExerciseProperty('exercise', firstAvailableExcercise);
-
-    if (this.isPlaceholderCategory(exerciseCategory)) {
-      this.exercise.update((current) => ({
-        ...current,
-        sets: 0,
-        reps: 0,
-        weight: undefined,
-        targetRPE: 0,
-        actualRPE: undefined,
-        estMax: 0,
-        notes: '',
-      }));
-    } else {
-      const { defaultSets, defaultReps, defaultRPE } =
-        this.exerciseDataService.defaultRepSchemeByCategory()[exerciseCategory];
-
-      this.exercise.update((current) => ({
-        ...current,
-        sets: defaultSets,
-        reps: defaultReps,
-        weight: undefined,
-        targetRPE: defaultRPE,
-        actualRPE: undefined,
-        estMax: 0,
-        notes: '',
-      }));
-    }
+    this.updateExercise({
+      category: exerciseCategory,
+      exercise: this.getFirstExercise(exerciseCategory),
+      ...defaultValues,
+    });
   }
 
   /**
    * Updates a specific property of the `exercise` signal.
-   * @param key The name of the property to be updated.
-   * @param value The new value for the specified property.
    */
-  updateExerciseProperty<K extends keyof Exercise>(key: K, value: Exercise[K]): void {
+  protected updateExerciseProperty<K extends keyof Exercise>(key: K, value: Exercise[K]): void {
     this.exercise.update((current) => ({
       ...current,
       [key]: value,
     }));
   }
 
-  private isPlaceholderCategory(exerciseCategory: string): boolean {
-    return exerciseCategory === ExerciseCategories.PLACEHOLDER;
+  /**
+   * Updates multiple properties of the exercise signal in one call.
+   */
+  private updateExercise(updates: Partial<Exercise>): void {
+    this.exercise.update((current) => ({
+      ...current,
+      ...updates,
+    }));
+  }
+
+  /**
+   * Calculates and updates the estimated max value for the exercise.
+   */
+  private updateEstMax(): void {
+    const estMax = this.estMaxService2.calcEstMax(this.exercise());
+    this.updateExerciseProperty('estMax', estMax);
+  }
+
+  /**
+   * Starts the pause timer based on the current exercise category, if applicable.
+   */
+  private startPauseTimer(): void {
+    const pauseTime = this.exerciseDataService.categoryPauseTimes()[this.exercise().category];
+    if (pauseTime) {
+      this.pauseTimeService.startPauseTimer(pauseTime, this.exercise().exercise);
+    }
+  }
+
+  /**
+   * Retrieves default values for a placeholder category.
+   */
+  private getPlaceholderDefaults(): Partial<Exercise> {
+    return {
+      sets: 0,
+      reps: 0,
+      weight: undefined,
+      targetRPE: 0,
+      actualRPE: undefined,
+      estMax: 0,
+      notes: '',
+    };
+  }
+
+  /**
+   * Retrieves default values for a given category.
+   */
+  private getCategoryDefaults(category: string): Partial<Exercise> {
+    const { defaultSets, defaultReps, defaultRPE } = this.exerciseDataService.defaultRepSchemeByCategory()[category];
+    return {
+      sets: defaultSets,
+      reps: defaultReps,
+      weight: undefined,
+      targetRPE: defaultRPE,
+      actualRPE: undefined,
+      estMax: 0,
+      notes: '',
+    };
+  }
+
+  /**
+   * Returns the first available exercise for a given category.
+   */
+  private getFirstExercise(category: string): string {
+    return this.exerciseDataService.categorizedExercises()[category]?.[0] || '';
   }
 }

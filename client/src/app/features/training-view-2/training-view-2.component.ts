@@ -13,6 +13,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { BasicInfoModalOptionsBuilder } from '../../core/services/modal/basic-info/basic-info-modal-options-builder';
 import { ModalService } from '../../core/services/modal/modal.service';
+import { MobileDeviceDetectionService } from '../../platform/mobile-device-detection.service';
 import { DropdownComponent } from '../../shared/components/dropdown/dropdown.component';
 import { InputComponent } from '../../shared/components/input/input.component';
 import { NavigationArrowsComponent } from '../../shared/components/navigation-arrows/navigation-arrows.component';
@@ -100,6 +101,7 @@ export class TrainingView2Component implements OnInit, AfterViewInit, OnDestroy 
     private modalService: ModalService,
     private trainingViewService: TrainingViewService,
     private exerciseDataService: ExerciseDataService,
+    protected mobileDeviceDetectionService: MobileDeviceDetectionService,
   ) {}
 
   ngOnInit(): void {

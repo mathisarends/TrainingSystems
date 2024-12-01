@@ -3,9 +3,7 @@
     [options]="exerciseDataService.exerciseCategories()"
     [(selectedValue)]="exercise().category"
     (valueChange)="onExerciseCategoryChange($any($event))"
-    [ngStyle]="{
-      opacity: exercise().category === '- Bitte Auswählen -' ? 0 : 1,
-    }"
+    [class.placeholder]="isPlaceholderCategory()"
   />
 </div>
 <div class="exercise-field" data-label="Exercise">
@@ -14,10 +12,8 @@
     [options]="exerciseDataService.categorizedExercises()[exercise().category]"
     [(selectedValue)]="exercise().exercise"
     (valueChange)="updateExerciseProperty('exercise', $any($event))"
-    [disabled]="exercise().category === '- Bitte Auswählen -'"
-    [ngStyle]="{
-      opacity: exercise().category === '- Bitte Auswählen -' || !exercise().category ? 0 : 1,
-    }"
+    [disabled]="isPlaceholderCategory()"
+    [class.placeholder]="isPlaceholderCategory()"
   />
 </div>
 <div class="exercise-field" data-label="Sets">
@@ -26,9 +22,7 @@
     class="transparent-input"
     [(ngModel)]="exercise().sets"
     (ngModelChange)="updateExerciseProperty('sets', $event)"
-    [ngStyle]="{
-      opacity: exercise().category === '- Bitte Auswählen -' ? 0 : 1,
-    }"
+    [class.placeholder]="isPlaceholderCategory()"
   />
 </div>
 <div class="exercise-field" data-label="Reps">
@@ -37,9 +31,7 @@
     class="transparent-input"
     [(ngModel)]="exercise().reps"
     (ngModelChange)="onRepsChange($event)"
-    [ngStyle]="{
-      opacity: exercise().category === '- Bitte Auswählen -' ? 0 : 1,
-    }"
+    [class.placeholder]="isPlaceholderCategory()"
   />
 </div>
 <div class="exercise-field" data-label="Weight">
@@ -56,16 +48,14 @@
     targetRPE
     [(ngModel)]="exercise().targetRPE"
     (ngModelChange)="updateExerciseProperty('targetRPE', $event)"
-    [ngStyle]="{
-      opacity: exercise().category === '- Bitte Auswählen -' ? 0 : 1,
-    }"
+    [class.placeholder]="isPlaceholderCategory()"
   />
 </div>
 <div class="exercise-field" data-label="@RPE">
   <app-rpe-input
     [(rpe)]="exercise().actualRPE"
     [numberOfSets]="exercise().sets"
-    (rpeChanged)="onAcutalRpeChange($event)"
+    (rpeChanged)="onActualRpeChange($event)"
   />
 </div>
 <div class="exercise-field" data-label="Est. Max">
@@ -74,9 +64,7 @@
     class="transparent-input"
     [(ngModel)]="exercise().estMax"
     (ngModelChange)="updateExerciseProperty('estMax', $event)"
-    [ngStyle]="{
-      opacity: exercise().estMax === 0 ? 0 : 1,
-    }"
+    [class.placeholder]="isPlaceholderCategory() || !exercise().estMax"
   />
 </div>
 <div class="exercise-field notes" data-label="Notes">

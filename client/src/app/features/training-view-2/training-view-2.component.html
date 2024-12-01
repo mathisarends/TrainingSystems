@@ -14,7 +14,11 @@
   }
 </div>
 
-<app-add-row-button [isVisible]="showAddRowButton()" (addRow)="addRow()" (removeRow)="removeRow()" />
+<app-add-row-button
+  [isVisible]="showAddRowButton() || mobileDeviceDetectionService.isMobileDevice"
+  (addRow)="addRow()"
+  (removeRow)="removeRow()"
+/>
 @if (!showAddRowButton()) {
   <div class="placeholder-for-add-button"></div>
 }
