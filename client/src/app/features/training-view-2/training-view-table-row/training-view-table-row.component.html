@@ -1,4 +1,4 @@
-<div class="exercise-field">
+<div class="exercise-field" data-label="Category">
   <app-dropdown
     [options]="exerciseDataService.exerciseCategories()"
     [(selectedValue)]="exercise().category"
@@ -8,7 +8,7 @@
     }"
   />
 </div>
-<div class="exercise-field">
+<div class="exercise-field" data-label="Exercise">
   <app-dropdown
     class="exercise-name-selector"
     [options]="exerciseDataService.categorizedExercises()[exercise().category]"
@@ -20,7 +20,7 @@
     }"
   />
 </div>
-<div class="exercise-field">
+<div class="exercise-field" data-label="Sets">
   <input
     type="number"
     class="transparent-input"
@@ -31,7 +31,7 @@
     }"
   />
 </div>
-<div class="exercise-field">
+<div class="exercise-field" data-label="Reps">
   <input
     type="number"
     class="transparent-input"
@@ -42,14 +42,14 @@
     }"
   />
 </div>
-<div class="exercise-field">
+<div class="exercise-field" data-label="Weight">
   <app-weight-input
     [(weight)]="exercise().weight"
     [numberOfSets]="exercise().sets"
     (weightChanged)="onWeightChanged($event)"
   />
 </div>
-<div class="exercise-field">
+<div class="exercise-field" data-label="RPE">
   <input
     type="number"
     class="transparent-input"
@@ -61,14 +61,14 @@
     }"
   />
 </div>
-<div class="exercise-field">
+<div class="exercise-field" data-label="@RPE">
   <app-rpe-input
     [(rpe)]="exercise().actualRPE"
     [numberOfSets]="exercise().sets"
     (rpeChanged)="onAcutalRpeChange($event)"
   />
 </div>
-<div class="exercise-field">
+<div class="exercise-field" data-label="Est. Max">
   <input
     type="number"
     class="transparent-input"
@@ -79,7 +79,7 @@
     }"
   />
 </div>
-<div class="exercise-field">
+<div class="exercise-field notes" data-label="Notes">
   <input
     type="text"
     class="transparent-input"

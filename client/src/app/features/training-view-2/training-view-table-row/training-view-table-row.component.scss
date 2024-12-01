@@ -24,10 +24,38 @@
   padding-left: 10px;
 }
 
-// TODO: hier irgendwie so das mobile design tackeln
-/* @media screen and (max-width: 768px) {
+@media (max-width: 768px) {
   :host {
+    display: flex;
+    flex-direction: column;
+    border-top: 4px solid rgb(216, 216, 216);
+  }
+
+  .exercise-field {
     display: grid;
+    grid-template-columns: 17ch auto;
+    padding: 1rem 0.75rem;
+    border: none;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &::before {
+      content: attr(data-label) '';
+      text-align: left;
+    }
+  }
+
+  :host:nth-child(even) {
+    background-color: var(--stripe-color-dark);
+  }
+
+  :host:nth-child(odd) {
+    background-color: var(--stripe-color-light);
+  }
+
+  :host:first-of-type {
+    border: none;
   }
 }
- */
