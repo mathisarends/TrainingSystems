@@ -14,6 +14,7 @@
     [options]="exerciseDataService.categorizedExercises()[exercise().category]"
     [(selectedValue)]="exercise().exercise"
     (valueChange)="updateExerciseProperty('exercise', $any($event))"
+    [disabled]="exercise().category === '- Bitte Auswählen -'"
     [ngStyle]="{
       opacity: exercise().category === '- Bitte Auswählen -' || !exercise().category ? 0 : 1,
     }"

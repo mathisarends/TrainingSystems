@@ -45,6 +45,8 @@ export class DropdownComponent {
    */
   directiveUsed = input<'interactiveElementDirective' | 'category-select'>('interactiveElementDirective');
 
+  disabled = input(false);
+
   valueChange = output<string | number>();
 
   /**
