@@ -6,6 +6,7 @@ import { ExerciseCategories } from '../../training-plans/model/exercise-categori
 import { ExerciseDataService } from '../../training-plans/training-view/exercise-data.service';
 import { PauseTimeService } from '../../training-plans/training-view/services/pause-time.service';
 import { Exercise } from '../../training-plans/training-view/training-exercise';
+import { TargetRpeDirective } from '../directives/target-rpe.directive';
 import { EstMaxService2 } from '../estMax2.service';
 import { RpeInputComponent } from '../inputs/rpe/rpe-input.component';
 import { WeightInputComponent } from '../inputs/weight/weight-input.component';
@@ -14,7 +15,7 @@ import { WeightInputComponent } from '../inputs/weight/weight-input.component';
 @Component({
   selector: 'app-training-view-table-row',
   standalone: true,
-  imports: [DropdownComponent, FormsModule, CommonModule, RpeInputComponent, WeightInputComponent],
+  imports: [DropdownComponent, FormsModule, CommonModule, RpeInputComponent, WeightInputComponent, TargetRpeDirective],
   templateUrl: './training-view-table-row.component.html',
   styleUrls: ['./training-view-table-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
