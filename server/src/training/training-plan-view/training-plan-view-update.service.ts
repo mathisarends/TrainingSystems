@@ -53,6 +53,13 @@ export class TrainingPlanViewUpdateService {
           fieldValue,
         )
       ) {
+        trainingPlan.mostRecentTrainingDayLocator = {
+          dayIndex: dayIndex,
+          weekIndex: weekIndex,
+        };
+
+        await trainingPlan.save();
+
         const trainingSessionTracker =
           await this.trainingSessionManagerService.getOrCreateTracker(
             trainingDay,
