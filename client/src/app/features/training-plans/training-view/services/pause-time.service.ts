@@ -29,10 +29,6 @@ export class PauseTimeService {
     this.restoreStateFromLocalStorage();
     this.setupListeners();
     this.setupTimerExpiredEffect();
-
-    if (this.remainingTime()) {
-      this.startKeepAliveSignal();
-    }
   }
 
   /**
@@ -52,18 +48,7 @@ export class PauseTimeService {
       duration: pauseTime,
     });
 
-    this.startKeepAliveSignal();
-
     this.currentExercise.set(exerciseName);
-  }
-
-  private startKeepAliveSignal() {
-    this.keepAliveIntervalId = setTimeout(() => {
-      this.serviceWorkerService.sendMessageToServiceWorker({
-        command: 'keepAlive',
-        duration: this.remainingTime(),
-      });
-    }, 20 * 1000);
   }
 
   /**

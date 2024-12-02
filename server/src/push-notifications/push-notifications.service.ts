@@ -24,6 +24,8 @@ export class PushNotificationsService {
     fingerprint: string,
     pushSubscriptionDto: CreatePushSubscriptionDto,
   ) {
+    console.log('🚀 ~ PushNotificationsService ~ fingerprint:', fingerprint);
+    console.log('🚀 ~ PushNotificationsService ~ userId:', userId);
     const { endpoint, keys } = pushSubscriptionDto;
 
     const updatedSubscription = await this.subscriptionModel

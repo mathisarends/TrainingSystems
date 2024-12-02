@@ -2,26 +2,26 @@ import { Injectable } from '@nestjs/common';
 import { NotificationPayloadDto } from 'src/push-notifications/model/notification-payload.dto';
 import { PushNotificationsService } from 'src/push-notifications/push-notifications.service';
 
-/**
- * Sends a keep-alive signal to the service-worker in order to prevent the timer from stopping.
- */
 @Injectable()
 export class RestTimerKeepAliveService {
-  private activeSessions: Set<string> = new Set();
-  private readonly intervalDuration = 20 * 1000;
+  private activeSessions: Map<string, NodeJS.Timeout> = new Map();
+  private readonly sessionTimeout = 20 * 1000;
 
   constructor(
     private readonly pushNotificationService: PushNotificationsService,
-  ) {
-    setInterval(() => this.checkAndSendKeepAlive(), this.intervalDuration);
-  }
+  ) {}
 
   /**
    * Starts the keep-alive timer for a user and fingerprint combination.
    */
   startTimer(userId: string, fingerprint: string): void {
     const key = this.generateCompositeKey(userId, fingerprint);
-    this.activeSessions.add(key);
+
+    if (this.activeSessions.has(key)) {
+      clearTimeout(this.activeSessions.get(key));
+    }
+
+    this.scheduleKeepAlive(userId, fingerprint);
   }
 
   /**
@@ -29,17 +29,41 @@ export class RestTimerKeepAliveService {
    */
   stopTimer(userId: string, fingerprint: string): void {
     const key = this.generateCompositeKey(userId, fingerprint);
-    this.activeSessions.delete(key);
+
+    // Clear the existing timer
+    if (this.activeSessions.has(key)) {
+      clearTimeout(this.activeSessions.get(key));
+      this.activeSessions.delete(key);
+    }
   }
 
   /**
-   * Periodically checks active sessions and sends keep-alive signals.
+   * Schedules the next keep-alive signal for a session.
    */
-  private async checkAndSendKeepAlive(): Promise<void> {
-    for (const key of this.activeSessions) {
-      const { userId, fingerprint } = this.extractUserIdAndFingerprint(key);
-      await this.sendKeepAliveSignal(userId, fingerprint);
-    }
+  private scheduleKeepAlive(userId: string, fingerprint: string): void {
+    console.log(
+      '🚀 ~ RestTimerKeepAliveService ~ scheduleKeepAlive ~ fingerprint:',
+      fingerprint,
+    );
+    console.log(
+      '🚀 ~ RestTimerKeepAliveService ~ scheduleKeepAlive ~ userId:',
+      userId,
+    );
+    const key = this.generateCompositeKey(userId, fingerprint);
+
+    const timer = setTimeout(async () => {
+      try {
+        await this.sendKeepAliveSignal(userId, fingerprint);
+        if (this.activeSessions.has(key)) {
+          this.scheduleKeepAlive(userId, fingerprint);
+        }
+      } catch (error) {
+        console.error(`Error sending keep-alive for ${userId}:`, error);
+        this.stopTimer(userId, fingerprint);
+      }
+    }, this.sessionTimeout);
+
+    this.activeSessions.set(key, timer);
   }
 
   /**
@@ -54,19 +78,11 @@ export class RestTimerKeepAliveService {
       body: 'Keeping timer alive',
     };
 
-    try {
-      await this.pushNotificationService.sendNotification(
-        userId,
-        fingerprint,
-        payload,
-      );
-      console.log(`Keep-alive signal sent to user ${userId}`);
-    } catch (error) {
-      console.error(
-        `Failed to send keep-alive signal to user ${userId}`,
-        error,
-      );
-    }
+    await this.pushNotificationService.sendNotification(
+      userId,
+      fingerprint,
+      payload,
+    );
   }
 
   /**
@@ -74,16 +90,5 @@ export class RestTimerKeepAliveService {
    */
   private generateCompositeKey(userId: string, fingerprint: string): string {
     return `${userId}-${fingerprint}`;
-  }
-
-  /**
-   * Extracts userId and fingerprint from a composite key.
-   */
-  private extractUserIdAndFingerprint(compositeKey: string): {
-    userId: string;
-    fingerprint: string;
-  } {
-    const [userId, fingerprint] = compositeKey.split('-');
-    return { userId, fingerprint };
   }
 }
