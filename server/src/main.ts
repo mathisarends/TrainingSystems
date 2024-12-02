@@ -13,6 +13,8 @@ async function bootstrap() {
   app.use(json({ limit: '10mb' }));
   app.use(urlencoded({ extended: true, limit: '10mb' }));
 
+  app.useLogger(['log', 'error', 'warn', 'debug']);
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

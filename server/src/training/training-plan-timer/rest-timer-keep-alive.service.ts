@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { NotificationPayloadDto } from 'src/push-notifications/model/notification-payload.dto';
 import { PushNotificationsService } from 'src/push-notifications/push-notifications.service';
 
 @Injectable()
 export class RestTimerKeepAliveService {
+  private readonly logger = new Logger(RestTimerKeepAliveService.name);
+
   private activeSessions: Map<string, NodeJS.Timeout> = new Map();
   private readonly sessionTimeout = 20 * 1000;
 
@@ -37,11 +39,6 @@ export class RestTimerKeepAliveService {
    * Schedules the next keep-alive signal for a session.
    */
   private scheduleKeepAlive(userId: string): void {
-    console.log(
-      '🚀 ~ RestTimerKeepAliveService ~ scheduleKeepAlive ~ userId:',
-      userId,
-    );
-
     const timer = setTimeout(async () => {
       try {
         await this.sendKeepAliveSignal(userId);
@@ -49,7 +46,10 @@ export class RestTimerKeepAliveService {
           this.scheduleKeepAlive(userId);
         }
       } catch (error) {
-        console.error(`Error sending keep-alive for ${userId}:`, error);
+        this.logger.error(
+          `Failed to send keep-alive signal to user: ${userId}`,
+          error.stack,
+        );
         this.stopTimer(userId);
       }
     }, this.sessionTimeout);
@@ -61,10 +61,8 @@ export class RestTimerKeepAliveService {
    * Sends a keep-alive signal to the user.
    */
   private async sendKeepAliveSignal(userId: string): Promise<void> {
-    console.log(
-      '🚀 ~ RestTimerKeepAliveService ~ sendKeepAliveSignal ~ userId:',
-      userId,
-    );
+    this.logger.debug(`Sending keep-alive signal to user: ${userId}`);
+
     const payload: NotificationPayloadDto = {
       title: 'Keep Alive',
       body: 'Keeping timer alive',

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as webPush from 'web-push';
@@ -8,6 +8,8 @@ import { UserPushSubscription } from './model/user-push-subscription.model';
 
 @Injectable()
 export class PushNotificationsService {
+  private readonly logger = new Logger(PushNotificationsService.name);
+
   constructor(
     @InjectModel(UserPushSubscription.name)
     private readonly subscriptionModel: Model<UserPushSubscription>,
@@ -23,9 +25,6 @@ export class PushNotificationsService {
     userId: string,
     pushSubscriptionDto: CreatePushSubscriptionDto,
   ) {
-    await this.deleteSubscriptionsForUser(userId);
-    console.log('🚀 ~ PushNotificationsService ~ userId:', userId);
-
     const { endpoint, keys } = pushSubscriptionDto;
 
     const updatedSubscription = await this.subscriptionModel
@@ -66,11 +65,11 @@ export class PushNotificationsService {
       } catch (error) {
         console.error(`Error sending push notification: ${error.message}`);
 
-        // Handle invalid subscription (e.g., client unsubscribed) by removing it from the database
         if (error.statusCode === 410) {
           const deleteCount = await this.deleteSubscription(subscription.id);
-          console.log(
-            `Deleted ${deleteCount} invalid subscription: ${subscription.subscription.endpoint}`,
+          this.logger.debug(
+            `Failed to send keep-alive signal to user: ${userId} and delete ${deleteCount} entries`,
+            error.stack,
           );
         }
       }
