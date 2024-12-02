@@ -19,7 +19,6 @@ export class TrainingSessionManagerService {
   async getOrCreateTracker(
     trainingDay: TrainingDay,
     userId: string,
-    fingerprint: string,
   ): Promise<TrainingSessionTracker> {
     const trainingDayId = trainingDay.id;
     const tracker = this.getTrackerById(trainingDayId);
@@ -29,7 +28,6 @@ export class TrainingSessionManagerService {
     const newTracker = new TrainingSessionTracker(
       trainingDay,
       userId,
-      fingerprint,
       () => this.removeTracker(trainingDayId),
       this.trainingService,
       this.pushNotificationService,

@@ -6,9 +6,6 @@ export class UserPushSubscription extends Document {
   @Prop({ required: true, type: Types.ObjectId, ref: 'User' })
   userId: Types.ObjectId;
 
-  @Prop({ required: true })
-  fingerprint: string;
-
   @Prop({
     required: true,
     type: {

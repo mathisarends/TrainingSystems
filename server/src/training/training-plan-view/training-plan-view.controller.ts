@@ -9,7 +9,6 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { GetUser } from 'src/decorators/user.decorator';
-import { FingerprintService } from 'src/push-notifications/fingerprint.service';
 import { ApiData } from 'src/types/api-data';
 import { TrainingDayExerciseDto } from './model/training-day-exercise.dto';
 import { TrainingPlanViewUpdateService } from './training-plan-view-update.service';
@@ -21,7 +20,6 @@ export class TrainingPlanViewController {
   constructor(
     private readonly trainingPlanViewService: TrainingPlanViewService,
     private readonly tariningPlanViewUpdateService: TrainingPlanViewUpdateService,
-    private readonly fingerprintService: FingerprintService,
     private readonly trainingViewUpdateService2: TrainingPlanViewUpdateService2,
   ) {}
 
@@ -48,12 +46,9 @@ export class TrainingPlanViewController {
     @Param('week', ParseIntPipe) weekIndex: number,
     @Param('day', ParseIntPipe) dayIndex: number,
     @Body() trainingDayExerciseDto: TrainingDayExerciseDto,
-    @Req() req: Request,
   ) {
-    const fingerprint = this.fingerprintService.generateFingerprint(req); // fingerpring könnte man auch richtig gut als annotation und über middleware steuern
     return await this.trainingViewUpdateService2.updateTrainingDataForTrainingDay(
       userId,
-      fingerprint,
       trainingPlanId,
       weekIndex,
       dayIndex,
@@ -70,15 +65,12 @@ export class TrainingPlanViewController {
     @Body() changedData: ApiData,
     @Req() req: Request,
   ): Promise<void> {
-    const fingerprint = this.fingerprintService.generateFingerprint(req);
-
     return await this.tariningPlanViewUpdateService.updateTrainingDataForTrainingDay(
       userId,
       trainingPlanId,
       weekIndex,
       dayIndex,
       changedData,
-      fingerprint,
     );
   }
 }

@@ -53,7 +53,6 @@ export class TrainingRoutineViewService {
     trainingRoutineId: string,
     versionNumber: number,
     requestBody: ApiData,
-    fingerprint: string,
   ) {
     const trainingRoutine = await this.findTrainingRoutineOrFail(
       userId,
@@ -78,7 +77,6 @@ export class TrainingRoutineViewService {
           await this.trainingSessionManager.getOrCreateTracker(
             trainingRoutineVersion,
             userId,
-            fingerprint,
           );
         trainingSessionTracker.handleActivitySignal();
         break;

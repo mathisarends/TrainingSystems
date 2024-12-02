@@ -21,19 +21,18 @@ export class PushNotificationsService {
 
   async createPushNotificationSubscriptionForUser(
     userId: string,
-    fingerprint: string,
     pushSubscriptionDto: CreatePushSubscriptionDto,
   ) {
-    console.log('🚀 ~ PushNotificationsService ~ fingerprint:', fingerprint);
+    await this.deleteSubscriptionsForUser(userId);
     console.log('🚀 ~ PushNotificationsService ~ userId:', userId);
+
     const { endpoint, keys } = pushSubscriptionDto;
 
     const updatedSubscription = await this.subscriptionModel
       .findOneAndUpdate(
-        { userId, fingerprint },
+        { userId },
         {
           userId,
-          fingerprint,
           subscription: { endpoint, keys },
         },
         { new: true, upsert: true },
@@ -48,13 +47,9 @@ export class PushNotificationsService {
    */
   async sendNotification(
     userId: string,
-    fingerprint: string,
     notificationPayloadDto: NotificationPayloadDto,
   ): Promise<void> {
-    const subscriptions = await this.getSubscriptionsByUserId(
-      userId,
-      fingerprint,
-    );
+    const subscriptions = await this.getSubscriptionsByUserId(userId);
 
     if (subscriptions.length === 0) {
       throw new NotFoundException(
@@ -73,9 +68,9 @@ export class PushNotificationsService {
 
         // Handle invalid subscription (e.g., client unsubscribed) by removing it from the database
         if (error.statusCode === 410) {
-          await this.deleteSubscription(subscription.id);
+          const deleteCount = await this.deleteSubscription(subscription.id);
           console.log(
-            `Deleted invalid subscription: ${subscription.subscription.endpoint}`,
+            `Deleted ${deleteCount} invalid subscription: ${subscription.subscription.endpoint}`,
           );
         }
       }
@@ -87,16 +82,18 @@ export class PushNotificationsService {
    */
   private async getSubscriptionsByUserId(
     userId: string,
-    fingerprint: string,
   ): Promise<UserPushSubscription[]> {
-    return await this.subscriptionModel.find({ userId, fingerprint }).exec();
+    return await this.subscriptionModel.find({ userId }).exec();
   }
 
   /**
-   * Deletes a single subscription by its ID.
+   * Deletes a single subscription by its ID and returns the number of deleted entries.
    */
-  private async deleteSubscription(subscriptionId: string): Promise<void> {
-    await this.subscriptionModel.findByIdAndDelete(subscriptionId).exec();
+  private async deleteSubscription(subscriptionId: string): Promise<number> {
+    const result = await this.subscriptionModel
+      .deleteOne({ _id: subscriptionId })
+      .exec();
+    return result.deletedCount || 0;
   }
 
   /**

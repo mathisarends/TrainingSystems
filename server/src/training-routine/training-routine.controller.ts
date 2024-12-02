@@ -7,12 +7,9 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  Put,
-  Req,
+  Put
 } from '@nestjs/common';
-import { Request } from 'express';
 import { GetUser } from 'src/decorators/user.decorator';
-import { FingerprintService } from 'src/push-notifications/fingerprint.service';
 import { ApiData } from 'src/types/api-data';
 import { CreateTrainingRoutineDto } from './dto/create-training-routine.dto';
 import { EditTrainingRoutineDto } from './dto/edit-training-routine.dto';
@@ -25,7 +22,6 @@ export class TrainingRoutineController {
   constructor(
     private readonly trainingRoutineService: TrainingRoutineService,
     private readonly trainingRoutineViewService: TrainingRoutineViewService,
-    private readonly fingerprintService: FingerprintService,
   ) {}
 
   @Get('/')
@@ -136,17 +132,13 @@ export class TrainingRoutineController {
     @GetUser() userId: string,
     @Param('id') trainingRoutineId: string,
     @Param('version', ParseIntPipe) versionNumber: number,
-    @Req() req: Request,
     @Body() requestBody: ApiData,
   ) {
-    const fingerprint = this.fingerprintService.generateFingerprint(req);
-
     return await this.trainingRoutineViewService.updateTrainingSessionVersion(
       userId,
       trainingRoutineId,
       versionNumber,
       requestBody,
-      fingerprint,
     );
   }
 }

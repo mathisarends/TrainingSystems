@@ -14,81 +14,62 @@ export class RestTimerKeepAliveService {
   /**
    * Starts the keep-alive timer for a user and fingerprint combination.
    */
-  startTimer(userId: string, fingerprint: string): void {
-    const key = this.generateCompositeKey(userId, fingerprint);
-
-    if (this.activeSessions.has(key)) {
-      clearTimeout(this.activeSessions.get(key));
+  startTimer(userId: string): void {
+    if (this.activeSessions.has(userId)) {
+      clearTimeout(this.activeSessions.get(userId));
     }
 
-    this.scheduleKeepAlive(userId, fingerprint);
+    this.scheduleKeepAlive(userId);
   }
 
   /**
    * Stops the keep-alive timer for a user and fingerprint combination.
    */
-  stopTimer(userId: string, fingerprint: string): void {
-    const key = this.generateCompositeKey(userId, fingerprint);
-
+  stopTimer(userId: string): void {
     // Clear the existing timer
-    if (this.activeSessions.has(key)) {
-      clearTimeout(this.activeSessions.get(key));
-      this.activeSessions.delete(key);
+    if (this.activeSessions.has(userId)) {
+      clearTimeout(this.activeSessions.get(userId));
+      this.activeSessions.delete(userId);
     }
   }
 
   /**
    * Schedules the next keep-alive signal for a session.
    */
-  private scheduleKeepAlive(userId: string, fingerprint: string): void {
-    console.log(
-      '🚀 ~ RestTimerKeepAliveService ~ scheduleKeepAlive ~ fingerprint:',
-      fingerprint,
-    );
+  private scheduleKeepAlive(userId: string): void {
     console.log(
       '🚀 ~ RestTimerKeepAliveService ~ scheduleKeepAlive ~ userId:',
       userId,
     );
-    const key = this.generateCompositeKey(userId, fingerprint);
 
     const timer = setTimeout(async () => {
       try {
-        await this.sendKeepAliveSignal(userId, fingerprint);
-        if (this.activeSessions.has(key)) {
-          this.scheduleKeepAlive(userId, fingerprint);
+        await this.sendKeepAliveSignal(userId);
+        if (this.activeSessions.has(userId)) {
+          this.scheduleKeepAlive(userId);
         }
       } catch (error) {
         console.error(`Error sending keep-alive for ${userId}:`, error);
-        this.stopTimer(userId, fingerprint);
+        this.stopTimer(userId);
       }
     }, this.sessionTimeout);
 
-    this.activeSessions.set(key, timer);
+    this.activeSessions.set(userId, timer);
   }
 
   /**
    * Sends a keep-alive signal to the user.
    */
-  private async sendKeepAliveSignal(
-    userId: string,
-    fingerprint: string,
-  ): Promise<void> {
+  private async sendKeepAliveSignal(userId: string): Promise<void> {
+    console.log(
+      '🚀 ~ RestTimerKeepAliveService ~ sendKeepAliveSignal ~ userId:',
+      userId,
+    );
     const payload: NotificationPayloadDto = {
       title: 'Keep Alive',
       body: 'Keeping timer alive',
     };
 
-    await this.pushNotificationService.sendNotification(
-      userId,
-      fingerprint,
-      payload,
-    );
-  }
-
-  /**
-   * Generates a composite key combining userId and fingerprint.
-   */
-  private generateCompositeKey(userId: string, fingerprint: string): string {
-    return `${userId}-${fingerprint}`;
+    await this.pushNotificationService.sendNotification(userId, payload);
   }
 }

@@ -13,7 +13,6 @@ export class TrainingPlanViewUpdateService2 {
 
   async updateTrainingDataForTrainingDay(
     userId: string,
-    fingerprint: string,
     trainingPlanId: string,
     weekIndex: number,
     dayIndex: number,

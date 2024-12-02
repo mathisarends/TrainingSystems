@@ -1,7 +1,6 @@
 // push-notifications.module.ts
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { FingerprintService } from './fingerprint.service';
 import {
   UserPushSubscription,
   UserPushSubscriptionSchema,
@@ -15,8 +14,8 @@ import { PushNotificationsService } from './push-notifications.service';
       { name: UserPushSubscription.name, schema: UserPushSubscriptionSchema },
     ]),
   ],
-  providers: [PushNotificationsService, FingerprintService],
+  providers: [PushNotificationsService],
   controllers: [PushNotificationsController],
-  exports: [PushNotificationsService, FingerprintService, MongooseModule],
+  exports: [PushNotificationsService, MongooseModule],
 })
 export class PushNotificationsModule {}

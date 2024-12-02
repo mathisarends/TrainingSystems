@@ -14,7 +14,6 @@ export class TrainingSessionTracker {
   constructor(
     private readonly trainingDay: TrainingDay,
     private readonly userId: string,
-    private readonly fingerprint: string,
     private readonly removeTrackerCallback: () => void,
     private readonly trainingService: TrainingService,
     private readonly pushNotificationService: PushNotificationsService,
@@ -100,7 +99,6 @@ export class TrainingSessionTracker {
     };
     await this.pushNotificationService.sendNotification(
       this.userId,
-      this.fingerprint,
       notificationPayload,
     );
   }
