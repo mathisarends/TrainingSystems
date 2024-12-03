@@ -24,10 +24,7 @@
     <div class="placeholder-for-add-button"></div>
   }
 
-  <app-navigation-arrows
-    (onNavigateLeft)="navigateToPreviousTrainingDay()"
-    (onNavigateRight)="navigateToNextTrainingDay()"
-  />
+  <app-navigation-arrows (onNavigateLeft)="navigateToPreviousDay()" (onNavigateRight)="navigateToNextDay()" />
 } @else {
   <app-spinner />
 }
