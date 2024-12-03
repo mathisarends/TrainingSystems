@@ -181,6 +181,10 @@ export class TrainingView2Component implements OnInit, AfterViewInit, OnDestroy 
     }
   }
 
+  protected navigateToPreviousTrainingDay(): void {}
+
+  protected navigateToNextTrainingDay(): void {}
+
   private loadData(planId: string, week: number, day: number): void {
     forkJoin({
       trainingPlanDto: this.trainingViewService.loadTrainingPlan(planId, week, day),

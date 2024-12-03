@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavigationDirection } from './models/navigation-direction.enum';
-import { TrainingDayLocatorService } from './services/training-day-locator.service';
 import { TrainingPlanDataService } from './services/training-plan-data.service';
 
 @Injectable()
@@ -9,54 +8,57 @@ export class TrainingViewNavigationService {
   constructor(
     private router: Router,
     private trainingDataService: TrainingPlanDataService,
-    private trainingDayLocatorService: TrainingDayLocatorService,
   ) {}
 
-  navigateDay(day: number): void {
-    let weekIndex = this.trainingDayLocatorService.trainingWeekIndex();
-
-    if (day >= this.trainingDataService.trainingFrequency) {
-      const isLastWeek = weekIndex === this.trainingDataService.trainingBlockLength - 1;
-
-      weekIndex = isLastWeek ? 0 : weekIndex + 1;
-      day = 0;
-    } else if (day < 0) {
-      day = this.trainingDataService.trainingFrequency - 1;
-      weekIndex = weekIndex > 0 ? weekIndex - 1 : this.trainingDataService.trainingBlockLength - 1;
-    }
-
+  navigateToDay(week: number, day: number): void {
     this.router.navigate([], {
-      queryParams: {
-        week: weekIndex,
-        day: day,
-      },
+      queryParams: { week, day },
       queryParamsHandling: 'merge',
     });
   }
 
-  navigateWeek(navigationDirection: NavigationDirection, day: number): void {
-    let currentWeekIndex = this.trainingDayLocatorService.trainingWeekIndex();
+  navigateToWeek(navigationDirection: NavigationDirection, currentWeekIndex: number, day: number): void {
+    let targetWeek: number;
 
-    let targetWeek = currentWeekIndex;
-
-    if (currentWeekIndex === 0 && navigationDirection === NavigationDirection.BACKWARD) {
-      targetWeek = this.trainingDataService.trainingBlockLength - 1;
-    } else if (
-      currentWeekIndex === this.trainingDataService.trainingBlockLength - 1 &&
-      navigationDirection === NavigationDirection.FORWARD
-    ) {
-      targetWeek = 0;
+    if (navigationDirection === NavigationDirection.FORWARD) {
+      targetWeek = currentWeekIndex === this.trainingDataService.trainingBlockLength - 1 ? 0 : currentWeekIndex + 1;
     } else {
-      const direction = navigationDirection === NavigationDirection.FORWARD ? 1 : -1;
-      targetWeek += direction;
+      targetWeek = currentWeekIndex === 0 ? this.trainingDataService.trainingBlockLength - 1 : currentWeekIndex - 1;
     }
 
-    this.router.navigate([], {
-      queryParams: {
-        week: targetWeek,
-        day: day,
-      },
-      queryParamsHandling: 'merge',
-    });
+    this.navigateToDay(targetWeek, day);
+  }
+
+  navigateToNextDay(trainingDayIndex: number, trainingWeekIndex: number): void {
+    const nextDay = trainingDayIndex + 1;
+
+    const isEndOfWeek = nextDay >= this.trainingDataService.trainingFrequency;
+    const nextWeek = isEndOfWeek
+      ? (trainingWeekIndex + 1) % this.trainingDataService.trainingBlockLength
+      : trainingWeekIndex;
+    const day = isEndOfWeek ? 0 : nextDay;
+
+    this.navigateToDay(nextWeek, day);
+  }
+
+  navigateToPreviousDay(trainingDayIndex: number, trainingWeekIndex: number): void {
+    const previousDay = trainingDayIndex - 1;
+
+    const isStartOfWeek = previousDay < 0;
+
+    let previousWeek: number;
+    if (isStartOfWeek) {
+      if (trainingWeekIndex === 0) {
+        previousWeek = this.trainingDataService.trainingBlockLength - 1;
+      } else {
+        previousWeek = trainingWeekIndex - 1;
+      }
+    } else {
+      previousWeek = trainingWeekIndex;
+    }
+
+    const day = isStartOfWeek ? this.trainingDataService.trainingFrequency - 1 : previousDay;
+
+    this.navigateToDay(previousWeek, day);
   }
 }

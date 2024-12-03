@@ -8,6 +8,7 @@ import { ProfileComponent2 } from './features/profile-2/profile.component';
 import { TrainingLogCalendarComponent } from './features/training-logs/training-log-calendar/training-calendar.component';
 import { TrainingPlanStatisticsComponent } from './features/training-plans/training-plan-statistics/training-plan-statistics.component';
 import { TrainingPlansComponent } from './features/training-plans/training-plans/training-plans.component';
+import { TrainingViewComponent } from './features/training-plans/training-view/training-view.component';
 import { SessionViewComponent } from './features/training-session/session-view/session-view.component';
 import { TrainingSesssionStatisticsComponent } from './features/training-session/training-session-statistics/training-session-statistics.component';
 import { TrainingView2Component } from './features/training-view-2/training-view-2.component';
@@ -47,7 +48,7 @@ export const routes: Routes = [
   },
   {
     path: 'training/view',
-    component: TrainingView2Component,
+    component: TrainingViewComponent,
     canActivate: [AuthGuard],
   },
   {

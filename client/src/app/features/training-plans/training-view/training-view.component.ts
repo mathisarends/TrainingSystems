@@ -104,7 +104,9 @@ export class TrainingViewComponent implements OnInit, SetHeadlineInfo {
     protected exerciseDataService: ExerciseDataService,
     protected trainingDataService: TrainingPlanDataService,
     private autoProgressionService: AutoProgressionService,
-  ) {}
+  ) {
+    this.bindSwipeHandlers();
+  }
 
   /**
    * Initializes the component.
@@ -141,12 +143,39 @@ export class TrainingViewComponent implements OnInit, SetHeadlineInfo {
     });
   }
 
-  protected swipeLeft = () => this.navigationService.navigateDay(this.trainingDayIndex() + 1);
-  protected swipeRight = () => this.navigationService.navigateDay(this.trainingDayIndex() - 1);
-  protected swipeDiagonalTopLeftToBottomRight = () =>
-    this.navigationService.navigateWeek(NavigationDirection.BACKWARD, this.trainingDayIndex());
-  protected swipeDiagonalTopRightToBottomLeft = () =>
-    this.navigationService.navigateWeek(NavigationDirection.FORWARD, this.trainingDayIndex());
+  protected swipeLeft(): void {
+    this.navigationService.navigateToNextDay(this.trainingDayIndex(), this.trainingWeekIndex());
+  }
+
+  protected swipeRight(): void {
+    this.navigationService.navigateToPreviousDay(this.trainingDayIndex(), this.trainingWeekIndex());
+  }
+
+  protected swipeDiagonalTopLeftToBottomRight(): void {
+    this.navigationService.navigateToWeek(
+      NavigationDirection.BACKWARD,
+      this.trainingWeekIndex(),
+      this.trainingDayIndex(),
+    );
+  }
+
+  protected swipeDiagonalTopRightToBottomLeft(): void {
+    this.navigationService.navigateToWeek(
+      NavigationDirection.FORWARD,
+      this.trainingWeekIndex(),
+      this.trainingDayIndex(),
+    );
+  }
+
+  /**
+   * Bindet Swipe-Handler-Methoden an das aktuelle `this`.
+   */
+  private bindSwipeHandlers(): void {
+    this.swipeLeft = this.swipeLeft.bind(this);
+    this.swipeRight = this.swipeRight.bind(this);
+    this.swipeDiagonalTopLeftToBottomRight = this.swipeDiagonalTopLeftToBottomRight.bind(this);
+    this.swipeDiagonalTopRightToBottomLeft = this.swipeDiagonalTopRightToBottomLeft.bind(this);
+  }
 
   /**
    * Loads training data and exercise data for the specified plan, week, and day.
