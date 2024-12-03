@@ -49,6 +49,8 @@ export class TrainingPlanEditView {
 
   lastSuggestedTitle = signal('');
 
+  startDate = signal(new Date());
+
   /**
    * Default values for initializing a new training plan.
    */
@@ -65,7 +67,7 @@ export class TrainingPlanEditView {
    *
    * @param dto - Optional DTO to initialize the training plan.
    */
-  private constructor(dto?: TrainingPlanEditViewDto) {
+  private constructor(dto?: TrainingPlanEditViewDto, startDate?: string) {
     this.id = signal(this.defaultValues.id);
     this.title = signal(this.defaultValues.title);
     this.trainingDays = signal(this.defaultValues.trainingDays);
@@ -75,6 +77,10 @@ export class TrainingPlanEditView {
     if (dto) {
       this.setTrainingPlan(dto);
     }
+
+    if (startDate) {
+      this.startDate.set(new Date(startDate));
+    }
   }
 
   /**
@@ -83,8 +89,8 @@ export class TrainingPlanEditView {
    * @param dto - Optional DTO to initialize the training plan.
    * @returns A new instance of `TrainingPlanEditView`.
    */
-  static fromDto(dto?: TrainingPlanEditViewDto): TrainingPlanEditView {
-    return new TrainingPlanEditView(dto);
+  static fromDto(dto?: TrainingPlanEditViewDto, startDate?: string): TrainingPlanEditView {
+    return new TrainingPlanEditView(dto, startDate);
   }
 
   /**
@@ -101,6 +107,7 @@ export class TrainingPlanEditView {
       trainingBlockLength: Number(this.trainingBlockLength()),
       coverImageBase64: this.coverImageBase64(),
       id: this.id(),
+      startDate: this.startDate().toISOString(),
     };
   }
 
@@ -110,6 +117,7 @@ export class TrainingPlanEditView {
       trainingDays: Array.from(this.trainingDays()),
       trainingBlockLength: Number(this.trainingBlockLength()),
       coverImageBase64: this.coverImageBase64(),
+      startDate: this.startDate().toISOString(),
     };
   }
 

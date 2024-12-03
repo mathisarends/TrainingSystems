@@ -23,8 +23,6 @@ export class CreateTrainingPlanService {
       createTrainingPlanDto.trainingDays.length,
     );
 
-    const startDate = await this.determineStartDate(userId);
-
     const newTrainingPlan = new this.trainingPlanModel({
       userId: userId,
       title: createTrainingPlanDto.title,
@@ -32,25 +30,15 @@ export class CreateTrainingPlanService {
       lastUpdated: new Date(),
       trainingWeeks: trainingWeeksPlaceholder,
       coverImageBase64: createTrainingPlanDto.coverImageBase64,
-      startDate: startDate,
+      startDate: createTrainingPlanDto.startDate,
     });
 
     return await newTrainingPlan.save();
   }
 
-  private createNewTrainingPlanWithPlaceholders(
-    weeks: number,
-    daysPerWeek: number,
-  ) {
-    return Array.from({ length: weeks }, () => ({
-      trainingDays: Array.from({ length: daysPerWeek }, () => ({
-        id: uuidv4(),
-        exercises: [],
-      })),
-    }));
-  }
-
-  private async determineStartDate(userId: string): Promise<Date> {
+  async getNextAvailableStartDateForNewTrainingPlan(
+    userId: string,
+  ): Promise<Date> {
     const userTrainingPlans =
       await this.trainingService.getTrainingPlansByUser(userId);
 
@@ -69,6 +57,18 @@ export class CreateTrainingPlanService {
     startDate.setDate(startDate.getDate() + totalDays);
 
     return startDate;
+  }
+
+  private createNewTrainingPlanWithPlaceholders(
+    weeks: number,
+    daysPerWeek: number,
+  ) {
+    return Array.from({ length: weeks }, () => ({
+      trainingDays: Array.from({ length: daysPerWeek }, () => ({
+        id: uuidv4(),
+        exercises: [],
+      })),
+    }));
   }
 
   /**

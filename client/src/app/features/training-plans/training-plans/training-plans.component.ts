@@ -95,36 +95,38 @@ export class TrainingPlansComponent implements OnInit, SetHeadlineInfo {
    * Opens the modal to create a new training plan.
    */
   protected openCreateNewPlanModal(): void {
-    const modalTabs: ModalTab[] = [
-      {
-        label: 'Allgemein',
-        component: EditTrainingPlanComponent,
-      },
-      {
-        label: 'Kalendar',
-        component: TrainingSchedulingComponent,
-      },
-    ];
+    this.trainingPlanService.getNextAvailableStartDateForNewTrainingPlan().subscribe((startDate) => {
+      const modalTabs: ModalTab[] = [
+        {
+          label: 'Allgemein',
+          component: EditTrainingPlanComponent,
+        },
+        {
+          label: 'Kalendar',
+          component: TrainingSchedulingComponent,
+        },
+      ];
 
-    const trainingPlanEditView = TrainingPlanEditView.fromDto();
+      const trainingPlanEditView = TrainingPlanEditView.fromDto(undefined, startDate);
 
-    const providerMap = new Map().set(TrainingPlanEditView, trainingPlanEditView);
+      const providerMap = new Map().set(TrainingPlanEditView, trainingPlanEditView);
 
-    const modalOptions = new ModalOptionsBuilder()
-      .setTabs(modalTabs)
-      .setProviderMap(providerMap)
-      .setButtonText('Erstellen')
-      .setOnSubmitCallback(async () => this.createNewPlan(trainingPlanEditView))
-      .setOnValidateCallback(() => {
-        if (trainingPlanEditView.isValid()) {
-          return true;
-        }
+      const modalOptions = new ModalOptionsBuilder()
+        .setTabs(modalTabs)
+        .setProviderMap(providerMap)
+        .setButtonText('Erstellen')
+        .setOnSubmitCallback(async () => this.createNewPlan(trainingPlanEditView))
+        .setOnValidateCallback(() => {
+          if (trainingPlanEditView.isValid()) {
+            return true;
+          }
 
-        return 'Bitte füllen Sie alle verpflichtenden Felder aus';
-      })
-      .build();
+          return 'Bitte füllen Sie alle verpflichtenden Felder aus';
+        })
+        .build();
 
-    this.modalService.openModalTabs(modalOptions);
+      this.modalService.openModalTabs(modalOptions);
+    });
   }
 
   private async createNewPlan(trainnigPlanEditView: TrainingPlanEditView): Promise<void> {

@@ -23,8 +23,6 @@ export class TrainingSchedulingComponent implements Validatable {
 
   isSelectionValid = computed(() => this.trainingPlanEditView.isTrainingFrequencyValid());
 
-  startDate = signal(new Date());
-
   constructor(
     protected trainingPlanEditView: TrainingPlanEditView,
     protected modalValidatonService: ModalValidationService,
@@ -32,6 +30,8 @@ export class TrainingSchedulingComponent implements Validatable {
     effect(
       () => {
         this.validate();
+        const test = this.trainingPlanEditView.startDate();
+        console.log('🚀 ~ TrainingSchedulingComponent ~ test:', test);
       },
       { allowSignalWrites: true },
     );

@@ -16,13 +16,6 @@
   <p class="card-text">
     {{ trainingPlan().lastUpdated | formatDate }}
   </p>
-
-  @if (trainingPlan().averageTrainingDayDuration) {
-    <p class="card-text d-flex gap-2">
-      <app-icon [name]="IconName.CLOCK" [size]="15" />
-      {{ trainingPlan().averageTrainingDayDuration }}
-    </p>
-  }
 </div>
 <div class="card-footer" style="background: inherit; border-color: inherit">
   <div>

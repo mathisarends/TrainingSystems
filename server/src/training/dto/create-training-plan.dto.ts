@@ -6,6 +6,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { IsIsoDateString } from 'src/utils/validators/is-iso-date-string.validator';
 
 export class CreateTrainingPlanDto {
   @IsString()
@@ -24,4 +25,7 @@ export class CreateTrainingPlanDto {
   @IsOptional()
   @IsString()
   coverImageBase64?: string;
+
+  @IsIsoDateString()
+  startDate: string;
 }

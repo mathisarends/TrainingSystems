@@ -18,4 +18,6 @@ export interface CreateTrainingPlanDto {
    * Holds the cover image in Base64 format.
    */
   coverImageBase64: string;
+
+  startDate: string;
 }

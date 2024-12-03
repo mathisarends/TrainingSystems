@@ -85,6 +85,15 @@ export class TrainingPlanService {
   }
 
   /**
+   * Returns the next available start date for a newly created training plan.
+   */
+  getNextAvailableStartDateForNewTrainingPlan(): Observable<string> {
+    return this.httpService
+      .get<{ startDate: string }>('/training/next-available-start-date')
+      .pipe(map((dateWrapper) => dateWrapper.startDate));
+  }
+
+  /**
    * Retrieves the stored count of training plans and sessions from local storage.
    * If no count is stored, it returns 0.
    */

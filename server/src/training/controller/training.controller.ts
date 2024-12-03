@@ -111,4 +111,16 @@ export class TrainingController {
       await this.trainingPlanUtilsService.getMostRecentTrainingPlanLink(userId);
     return res.status(200).json(link);
   }
+
+  @Get('next-available-start-date')
+  async getNextAvailableStartDateForNewTrainingPlan(
+    @GetUser() userId: string,
+    @Res() res: Response,
+  ) {
+    const nextAvailableStartDate =
+      await this.createTrainingPlanService.getNextAvailableStartDateForNewTrainingPlan(
+        userId,
+      );
+    return res.json({ startDate: nextAvailableStartDate.toISOString() });
+  }
 }

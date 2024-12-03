@@ -13,7 +13,7 @@ export class DatePickerComponent {
   /**
    * Signal to store the selected date as a `Date` object.
    */
-  value = model<Date>(new Date());
+  value = model(new Date());
 
   /**
    * Input to determine the granularity of the date picker (e.g., WEEK or DAY).
@@ -46,22 +46,9 @@ export class DatePickerComponent {
   templateDate = signal('');
 
   constructor() {
-    // Effect to update `templateDate` when `selectedDate` changes
     effect(
       () => {
         this.updateTemplateDate(this.value());
-      },
-      { allowSignalWrites: true },
-    );
-
-    effect(
-      () => {
-        if (this.isWeekGranularity()) {
-          const nextMonday = new Date(this.getNextMonday());
-          if (this.value().getTime() !== nextMonday.getTime()) {
-            this.value.set(nextMonday);
-          }
-        }
       },
       { allowSignalWrites: true },
     );
