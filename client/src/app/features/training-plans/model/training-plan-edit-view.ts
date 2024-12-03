@@ -51,6 +51,8 @@ export class TrainingPlanEditView {
 
   startDate = signal(new Date());
 
+  firstSelectableStartDate = signal('');
+
   /**
    * Default values for initializing a new training plan.
    */
@@ -80,6 +82,7 @@ export class TrainingPlanEditView {
 
     if (startDate) {
       this.startDate.set(new Date(startDate));
+      this.firstSelectableStartDate.set(this.formatDateForMinAttributeInDatepicker(startDate));
     }
   }
 
@@ -174,5 +177,14 @@ export class TrainingPlanEditView {
 
     const randomIndex = Math.floor(Math.random() * filteredTitles.length);
     return filteredTitles[randomIndex];
+  }
+
+  private formatDateForMinAttributeInDatepicker(date: Date | string): string {
+    const isoDate = new Date(date);
+    const year = isoDate.getFullYear();
+    const month = ('0' + (isoDate.getMonth() + 1)).slice(-2);
+    const day = ('0' + isoDate.getDate()).slice(-2);
+
+    return `${year}-${month}-${day}`;
   }
 }

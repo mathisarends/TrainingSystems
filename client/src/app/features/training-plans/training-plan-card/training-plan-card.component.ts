@@ -78,7 +78,11 @@ export class TrainingPlanCardComponent {
     const trainingPlanEditViewDto = await firstValueFrom(
       this.trainingPlanService.getPlanForEdit(this.trainingPlan().id),
     );
-    const trainingPlanEditView = TrainingPlanEditView.fromDto(trainingPlanEditViewDto);
+
+    const trainingPlanEditView = TrainingPlanEditView.fromDto(
+      trainingPlanEditViewDto,
+      trainingPlanEditViewDto.startDate,
+    );
     const providerMap = new Map().set(TrainingPlanEditView, trainingPlanEditView);
 
     const modalTabs: ModalTab[] = [

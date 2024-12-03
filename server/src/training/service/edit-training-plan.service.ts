@@ -33,6 +33,7 @@ export class EditTrainingPlanService {
       weightRecommandationBase: trainingPlan.weightRecommandationBase,
       trainingBlockLength: trainingPlan.trainingWeeks.length,
       coverImageBase64: trainingPlan.coverImageBase64 || '',
+      startDate: trainingPlan.startDate.toISOString(),
     };
   }
 

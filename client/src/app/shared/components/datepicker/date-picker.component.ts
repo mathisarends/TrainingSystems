@@ -13,7 +13,7 @@ export class DatePickerComponent {
   /**
    * Signal to store the selected date as a `Date` object.
    */
-  value = model(new Date());
+  value = model.required<Date>();
 
   /**
    * Input to determine the granularity of the date picker (e.g., WEEK or DAY).
@@ -23,12 +23,7 @@ export class DatePickerComponent {
   /**
    * Computed signal for the first selectable date based on the granularity.
    */
-  firstSelectableDate = computed(() => {
-    if (this.isWeekGranularity()) {
-      return this.getNextMonday();
-    }
-    return this.getToday();
-  });
+  firstSelectableDate = input<string | undefined>(undefined);
 
   /**
    * Computed signal for the date step based on the granularity.
@@ -87,7 +82,7 @@ export class DatePickerComponent {
     const diff = day === 0 ? 1 : 8 - day;
     const nextMonday = new Date(today);
     nextMonday.setDate(today.getDate() + diff);
-    return nextMonday.toISOString().split('T')[0];
+    return nextMonday.toISOString().split('T')[0].split('T')[0];
   }
 
   /**
