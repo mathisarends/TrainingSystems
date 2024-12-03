@@ -25,12 +25,35 @@ export class WeightInputComponent extends AbstractDoubleClickHandler {
    */
   weightChanged = output<string>();
 
+  /**
+   * Stores the previous weight to compare changes.
+   */
+  private previousWeight: string | undefined;
+
+  /**
+   * Tracks whether the component has been fully initialized.
+   */
+  private isInitialized = false;
+
   constructor(protected override elementRef: ElementRef) {
     super(elementRef);
 
     effect(() => {
-      if (this.weight()) {
-        this.weightChanged.emit(this.weight()!);
+      if (!this.isInitialized) {
+        this.previousWeight = this.weight();
+        this.isInitialized = true;
+      }
+    });
+
+    // Prevents change emits on update
+    effect(() => {
+      const currentWeight = this.weight();
+
+      if (this.isInitialized && this.focused() && currentWeight !== this.previousWeight) {
+        this.previousWeight = currentWeight;
+        if (currentWeight) {
+          this.weightChanged.emit(currentWeight);
+        }
       }
     });
   }

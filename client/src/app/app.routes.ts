@@ -52,6 +52,11 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'training/view2',
+    component: TrainingView2Component,
+    canActivate: [AuthGuard],
+  },
+  {
     path: 'session/view',
     component: SessionViewComponent,
     canActivate: [AuthGuard],

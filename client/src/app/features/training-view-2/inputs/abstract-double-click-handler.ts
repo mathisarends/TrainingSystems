@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener } from '@angular/core';
+import { Directive, ElementRef, HostListener, signal } from '@angular/core';
 
 @Directive()
 export abstract class AbstractDoubleClickHandler {
@@ -18,6 +18,12 @@ export abstract class AbstractDoubleClickHandler {
    */
   protected doubleClickThreshold: number = 300;
 
+  /**
+   * Indicates whether the input field has been focused by the user.
+   * Used to ensure changes are only emitted after user interaction.
+   */
+  protected focused = signal(false);
+
   constructor(protected elementRef: ElementRef) {}
 
   /**
@@ -33,6 +39,7 @@ export abstract class AbstractDoubleClickHandler {
     }
 
     this.lastClickTime = currentTime;
+    this.focused.set(true);
   }
 
   /**

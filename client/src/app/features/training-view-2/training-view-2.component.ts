@@ -23,7 +23,6 @@ import { MobileDeviceDetectionService } from '../../platform/mobile-device-detec
 import { DropdownComponent } from '../../shared/components/dropdown/dropdown.component';
 import { InputComponent } from '../../shared/components/input/input.component';
 import { MoreOptionListItem } from '../../shared/components/more-options-button/more-option-list-item';
-import { NavigationArrowsComponent } from '../../shared/components/navigation-arrows/navigation-arrows.component';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 import { IconName } from '../../shared/icon/icon-name';
@@ -37,6 +36,7 @@ import { TrainingDayLocatorService } from '../training-plans/training-view/servi
 import { TrainingPlanDataService } from '../training-plans/training-view/services/training-plan-data.service';
 import { Exercise } from '../training-plans/training-view/training-exercise';
 import { TrainingViewNavigationService } from '../training-plans/training-view/training-view-navigation.service';
+import { TrainingViewNavigationComponent } from '../training-plans/training-view/training-view-navigation/training-view-navigation.component';
 import { TrainingViewService } from '../training-plans/training-view/training-view-service';
 import { AddRowButtonComponent } from './add-row-button/add-row-button.component';
 import { TrainingViewTableRowComponent } from './training-view-table-row/training-view-table-row.component';
@@ -51,7 +51,7 @@ import { TrainingViewTableRowComponent } from './training-view-table-row/trainin
     DropdownComponent,
     InputComponent,
     TrainingViewTableRowComponent,
-    NavigationArrowsComponent,
+    TrainingViewNavigationComponent,
     PaginationComponent,
     SpinnerComponent,
   ],
@@ -63,12 +63,16 @@ import { TrainingViewTableRowComponent } from './training-view-table-row/trainin
     TrainingDayLocatorService,
     TrainingPlanDataService,
     AutoProgressionService,
+    TrainingViewNavigationService,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TrainingView2Component implements OnInit, AfterViewInit, OnDestroy {
   trainingGrid = viewChild<ElementRef>('trainingGrid');
 
+  /**
+   * Holds res the list of exercises for the current training day.
+   */
   exercises = signal<Exercise[]>([]);
 
   /**
@@ -81,10 +85,24 @@ export class TrainingView2Component implements OnInit, AfterViewInit, OnDestroy 
    */
   allowRemovalOfDefinedRows = signal(false);
 
+  /**
+   * Stores the ID of the current training plan.
+   */
   planId = signal('');
+
+  /**
+   * Index of the current training week.
+   */
   trainingWeekIndex = signal(0);
+
+  /**
+   * Index of the current training day.
+   */
   trainingDayIndex = signal(0);
 
+  /**
+   * Indicates whether the view has been fully initialized.
+   */
   viewInitialized = signal(false);
 
   /**
@@ -119,9 +137,9 @@ export class TrainingView2Component implements OnInit, AfterViewInit, OnDestroy 
       this.planId.set(params['planId']);
       this.trainingWeekIndex.set(Number(params['week']));
       this.trainingDayIndex.set(Number(params['day']));
-    });
 
-    this.loadData(this.planId(), this.trainingWeekIndex(), this.trainingDayIndex());
+      this.loadData(this.planId(), this.trainingWeekIndex(), this.trainingDayIndex());
+    });
   }
 
   setHeadlineInfo(trainingPlanTitle: string) {

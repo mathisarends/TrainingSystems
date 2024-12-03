@@ -24,7 +24,7 @@
     <div class="placeholder-for-add-button"></div>
   }
 
-  <app-navigation-arrows (onNavigateLeft)="navigateToPreviousDay()" (onNavigateRight)="navigateToNextDay()" />
+  <app-training-view-navigation [trainingWeekIndex]="trainingWeekIndex()" [trainingDayIndex]="trainingDayIndex()" />
 } @else {
   <app-spinner />
 }
