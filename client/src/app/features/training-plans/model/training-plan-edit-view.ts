@@ -1,4 +1,4 @@
-import { signal, WritableSignal } from '@angular/core';
+import { signal } from '@angular/core';
 import { CreateTrainingPlanDto } from './create-training-plan.dto';
 import { TrainingPlanEditViewDto } from './training-plan-edit-view-dto';
 
@@ -9,73 +9,42 @@ export class TrainingPlanEditView {
   /**
    * Signal storing the unique identifier of the training plan. Only avaible in edit mode.
    */
-  id: WritableSignal<string>;
+  id = signal('');
 
   /**
    * Holds the title of the training plan.
    */
-  title: WritableSignal<string>;
+  title = signal('');
 
   /**
    * Holds a set of selected training days.
    */
-  trainingDays: WritableSignal<Set<string>>;
+  trainingDays = signal(new Set<string>(['Mo', 'Mi', 'Fr']));
 
   /**
    * Holds the length of the training block (in weeks).
    */
-  trainingBlockLength: WritableSignal<number>;
+  trainingBlockLength = signal(4);
 
   /**
    * Holds the cover image in Base64 format.
    */
-  coverImageBase64: WritableSignal<string>;
+  coverImageBase64 = signal('');
 
-  trainingTitleSuggestions = signal([
-    'Volume',
-    'Strength',
-    'Power',
-    'Progression',
-    'Peaking',
-    'Intensity',
-    'Deload',
-    'Foundation',
-    'Build',
-    'Load',
-    'Humble',
-    'Recovery',
-    'Push',
-  ]);
-
-  lastSuggestedTitle = signal('');
-
+  /**
+   * Signal to store the starting date of the training plan.
+   */
   startDate = signal(new Date());
 
+  /**
+   * Signal to store the earliest selectable start date for the date picker.
+   */
   firstSelectableStartDate = signal('');
 
   /**
-   * Default values for initializing a new training plan.
-   */
-  protected readonly defaultValues = {
-    id: '',
-    title: '',
-    trainingDays: new Set<string>(['Mo', 'Mi', 'Fr']),
-    trainingBlockLength: 4,
-    coverImageBase64: '',
-  };
-
-  /**
    * Private constructor to enforce the use of the `fromDto` factory method.
-   *
-   * @param dto - Optional DTO to initialize the training plan.
    */
   private constructor(dto?: TrainingPlanEditViewDto, startDate?: string) {
-    this.id = signal(this.defaultValues.id);
-    this.title = signal(this.defaultValues.title);
-    this.trainingDays = signal(this.defaultValues.trainingDays);
-    this.trainingBlockLength = signal(this.defaultValues.trainingBlockLength);
-    this.coverImageBase64 = signal(this.defaultValues.coverImageBase64);
-
     if (dto) {
       this.setTrainingPlan(dto);
     }
@@ -87,10 +56,14 @@ export class TrainingPlanEditView {
   }
 
   /**
+   * Factory method to create a new instance of `TrainingPlanEditView` from a minimalistic first available start date.
+   */
+  static fromCreateDto(firstAvailableStartDate: string) {
+    return new TrainingPlanEditView(undefined, firstAvailableStartDate);
+  }
+
+  /**
    * Factory method to create a new instance of `TrainingPlanEditView` from a DTO.
-   *
-   * @param dto - Optional DTO to initialize the training plan.
-   * @returns A new instance of `TrainingPlanEditView`.
    */
   static fromDto(dto?: TrainingPlanEditViewDto, startDate?: string): TrainingPlanEditView {
     return new TrainingPlanEditView(dto, startDate);
@@ -105,12 +78,8 @@ export class TrainingPlanEditView {
     }
 
     return {
-      title: this.title(),
-      trainingDays: Array.from(this.trainingDays()),
-      trainingBlockLength: Number(this.trainingBlockLength()),
-      coverImageBase64: this.coverImageBase64(),
       id: this.id(),
-      startDate: this.startDate().toISOString(),
+      ...this.toCreateDto(),
     };
   }
 
@@ -138,10 +107,17 @@ export class TrainingPlanEditView {
     );
   }
 
+  /**
+   * Checks if the training block length is within the valid range.
+   */
+
   isTrainingBlockLengthValid(): boolean {
     return this.trainingBlockLength() >= 3 && this.trainingBlockLength() <= 8;
   }
 
+  /**
+   * Checks if the number of training days is within the valid range.
+   */
   isTrainingFrequencyValid(): boolean {
     return this.trainingDays().size >= 2 && this.trainingDays().size <= 7;
   }
@@ -154,29 +130,31 @@ export class TrainingPlanEditView {
     this.title.set(dto.title);
     this.trainingDays.set(new Set(dto.trainingDays));
     this.trainingBlockLength.set(dto.trainingBlockLength);
-    this.coverImageBase64.set(dto.coverImageBase64 || this.defaultValues.coverImageBase64);
-  }
-
-  /**
-   * Resets the training plan properties to default values, or uses provided values if given.
-   * @param values Optional partial object to override default values.
-   */
-  resetToDefaults(): void {
-    this.id.set(this.defaultValues.id);
-    this.title.set(this.defaultValues.title);
-    this.trainingDays.set(this.defaultValues.trainingDays);
-    this.trainingBlockLength.set(this.defaultValues.trainingBlockLength);
-    this.coverImageBase64.set(this.defaultValues.coverImageBase64);
+    this.coverImageBase64.set(dto.coverImageBase64 || '');
   }
 
   /**
    * Provides random training plan title suggestions.
    */
-  getRandomTrainingPlanTitle(previousTitle: string | null = null): string {
-    const filteredTitles = this.trainingTitleSuggestions().filter((title) => title !== previousTitle);
+  getRandomTrainingPlanTitle(): string {
+    const suggestions = [
+      'Volume',
+      'Strength',
+      'Power',
+      'Progression',
+      'Peaking',
+      'Intensity',
+      'Deload',
+      'Foundation',
+      'Build',
+      'Load',
+      'Humble',
+      'Recovery',
+      'Push',
+    ];
 
-    const randomIndex = Math.floor(Math.random() * filteredTitles.length);
-    return filteredTitles[randomIndex];
+    const randomIndex = Math.floor(Math.random() * suggestions.length);
+    return suggestions[randomIndex];
   }
 
   private formatDateForMinAttributeInDatepicker(date: Date | string): string {

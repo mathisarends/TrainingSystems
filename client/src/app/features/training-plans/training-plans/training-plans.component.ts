@@ -107,7 +107,7 @@ export class TrainingPlansComponent implements OnInit, SetHeadlineInfo {
         },
       ];
 
-      const trainingPlanEditView = TrainingPlanEditView.fromDto(undefined, startDate);
+      const trainingPlanEditView = TrainingPlanEditView.fromCreateDto(startDate);
 
       const providerMap = new Map().set(TrainingPlanEditView, trainingPlanEditView);
 
