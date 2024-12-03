@@ -32,9 +32,11 @@ import { ExerciseCategories } from '../training-plans/model/exercise-categories'
 import { AutoProgressionComponent } from '../training-plans/training-view/auto-progression/auto-progression.component';
 import { AutoProgressionService } from '../training-plans/training-view/auto-progression/auto-progression.service';
 import { ExerciseDataService } from '../training-plans/training-view/exercise-data.service';
+import { NavigationDirection } from '../training-plans/training-view/models/navigation-direction.enum';
 import { TrainingDayLocatorService } from '../training-plans/training-view/services/training-day-locator.service';
 import { TrainingPlanDataService } from '../training-plans/training-view/services/training-plan-data.service';
 import { Exercise } from '../training-plans/training-view/training-exercise';
+import { TrainingViewNavigationService } from '../training-plans/training-view/training-view-navigation.service';
 import { TrainingViewService } from '../training-plans/training-view/training-view-service';
 import { AddRowButtonComponent } from './add-row-button/add-row-button.component';
 import { TrainingViewTableRowComponent } from './training-view-table-row/training-view-table-row.component';
@@ -97,10 +99,13 @@ export class TrainingView2Component implements OnInit, AfterViewInit, OnDestroy 
     protected mobileDeviceDetectionService: MobileDeviceDetectionService,
     private trainingPlanDataService: TrainingPlanDataService,
     private autoProgressionService: AutoProgressionService,
+    private navigationService: TrainingViewNavigationService,
     private headerService: HeaderService,
     private route: ActivatedRoute,
     private destroyRef: DestroyRef,
-  ) {}
+  ) {
+    this.bindSwipeHandlers();
+  }
 
   ngOnInit(): void {
     this.trainingViewService
@@ -147,6 +152,30 @@ export class TrainingView2Component implements OnInit, AfterViewInit, OnDestroy 
     document.removeEventListener('mousemove', this.mouseMoveListener);
   }
 
+  protected navigateToNextDay(): void {
+    this.navigationService.navigateToNextDay(this.trainingDayIndex(), this.trainingWeekIndex());
+  }
+
+  protected navigateToPreviousDay(): void {
+    this.navigationService.navigateToPreviousDay(this.trainingDayIndex(), this.trainingWeekIndex());
+  }
+
+  protected navigateToPreviousWeek(): void {
+    this.navigationService.navigateToWeek(
+      NavigationDirection.BACKWARD,
+      this.trainingWeekIndex(),
+      this.trainingDayIndex(),
+    );
+  }
+
+  protected navigateToNextWeek(): void {
+    this.navigationService.navigateToWeek(
+      NavigationDirection.FORWARD,
+      this.trainingWeekIndex(),
+      this.trainingDayIndex(),
+    );
+  }
+
   /**
    * Adds a new row to the exercise grid.
    */
@@ -181,9 +210,12 @@ export class TrainingView2Component implements OnInit, AfterViewInit, OnDestroy 
     }
   }
 
-  protected navigateToPreviousTrainingDay(): void {}
-
-  protected navigateToNextTrainingDay(): void {}
+  private bindSwipeHandlers(): void {
+    this.navigateToNextDay = this.navigateToNextDay.bind(this);
+    this.navigateToPreviousDay = this.navigateToPreviousDay.bind(this);
+    this.navigateToPreviousWeek = this.navigateToPreviousWeek.bind(this);
+    this.navigateToNextWeek = this.navigateToNextWeek.bind(this);
+  }
 
   private loadData(planId: string, week: number, day: number): void {
     forkJoin({
