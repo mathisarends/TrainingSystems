@@ -1,26 +1,30 @@
-<div class="training-grid" #trainingGrid>
-  <div class="column-name">Category</div>
-  <div class="column-name">Exercise</div>
-  <div class="column-name">Sets</div>
-  <div class="column-name">Reps</div>
-  <div class="column-name">Weight</div>
-  <div class="column-name">RPE</div>
-  <div class="column-name">&#64;RPE</div>
-  <div class="column-name">Est. Max</div>
-  <div class="column-name">Notes</div>
+@if (viewInitialized()) {
+  <div class="training-grid" #trainingGrid>
+    <div class="column-name">Category</div>
+    <div class="column-name">Exercise</div>
+    <div class="column-name">Sets</div>
+    <div class="column-name">Reps</div>
+    <div class="column-name">Weight</div>
+    <div class="column-name">RPE</div>
+    <div class="column-name">&#64;RPE</div>
+    <div class="column-name">Est. Max</div>
+    <div class="column-name">Notes</div>
 
-  @for (entry of testEntries(); track entry) {
-    <app-training-view-table-row [exercise]="entry" />
+    @for (entry of exercises(); track entry) {
+      <app-training-view-table-row [exercise]="entry" />
+    }
+  </div>
+
+  <app-add-row-button
+    [isVisible]="showAddRowButton() || mobileDeviceDetectionService.isMobileDevice"
+    (addRow)="addRow()"
+    (removeRow)="removeRow()"
+  />
+  @if (!showAddRowButton()) {
+    <div class="placeholder-for-add-button"></div>
   }
-</div>
 
-<app-add-row-button
-  [isVisible]="showAddRowButton() || mobileDeviceDetectionService.isMobileDevice"
-  (addRow)="addRow()"
-  (removeRow)="removeRow()"
-/>
-@if (!showAddRowButton()) {
-  <div class="placeholder-for-add-button"></div>
+  <app-navigation-arrows />
+} @else {
+  <app-spinner />
 }
-
-<app-navigation-arrows />

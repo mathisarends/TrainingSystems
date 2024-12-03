@@ -87,9 +87,9 @@ export class TrainingViewComponent implements OnInit, SetHeadlineInfo {
 
   viewInitialized = signal(false);
 
-  planId = computed(() => this.trainingDayLocatorService.planId);
-  trainingWeekIndex = computed(() => this.trainingDayLocatorService.trainingWeekIndex);
-  trainingDayIndex = computed(() => this.trainingDayLocatorService.trainingDayIndex);
+  planId = computed(() => this.trainingDayLocatorService.planId());
+  trainingWeekIndex = computed(() => this.trainingDayLocatorService.trainingWeekIndex());
+  trainingDayIndex = computed(() => this.trainingDayLocatorService.trainingDayIndex());
 
   constructor(
     private route: ActivatedRoute,
@@ -114,14 +114,14 @@ export class TrainingViewComponent implements OnInit, SetHeadlineInfo {
     this.headerService.setLoading();
 
     this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
-      this.trainingDayLocatorService.planId = params['planId'];
-      this.trainingDayLocatorService.trainingWeekIndex = Number(params['week']);
-      this.trainingDayLocatorService.trainingDayIndex = Number(params['day']);
+      this.trainingDayLocatorService.planId.set(params['planId']);
+      this.trainingDayLocatorService.trainingWeekIndex.set(Number(params['week']));
+      this.trainingDayLocatorService.trainingDayIndex.set(Number(params['day']));
 
       this.loadData(
-        this.trainingDayLocatorService.planId,
-        this.trainingDayLocatorService.trainingWeekIndex,
-        this.trainingDayLocatorService.trainingDayIndex,
+        this.trainingDayLocatorService.planId(),
+        this.trainingDayLocatorService.trainingWeekIndex(),
+        this.trainingDayLocatorService.trainingDayIndex(),
       );
     });
 

@@ -13,7 +13,7 @@ export class TrainingViewNavigationService {
   ) {}
 
   navigateDay(day: number): void {
-    let weekIndex = this.trainingDayLocatorService.trainingWeekIndex;
+    let weekIndex = this.trainingDayLocatorService.trainingWeekIndex();
 
     if (day >= this.trainingDataService.trainingFrequency) {
       const isLastWeek = weekIndex === this.trainingDataService.trainingBlockLength - 1;
@@ -35,7 +35,7 @@ export class TrainingViewNavigationService {
   }
 
   navigateWeek(navigationDirection: NavigationDirection, day: number): void {
-    let currentWeekIndex = this.trainingDayLocatorService.trainingWeekIndex;
+    let currentWeekIndex = this.trainingDayLocatorService.trainingWeekIndex();
 
     let targetWeek = currentWeekIndex;
 
