@@ -2,20 +2,22 @@ input[type='date'] {
   width: 8rem;
   padding: 12px;
   font-size: 16px;
-  border: 2px solid var(--color-grey);
   border-radius: 8px;
-  background-color: #f5f5f5;
-  color: #333;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #f9f6ff;
+  border: 1px solid white;
+  color: #4a4a4a;
+  box-shadow: 0 4px 8px rgba(159, 122, 234, 0.1);
   transition:
     border-color 0.3s ease,
     box-shadow 0.3s ease;
 }
 
 input[type='date']:hover {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 12px rgba(159, 122, 234, 0.2);
 }
 
 input[type='date']:focus {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  border-color: #7e5edc; /* Gleicher Farbton wie Hover */
+  box-shadow: 0 6px 12px rgba(159, 122, 234, 0.3);
+  outline: none;
 }

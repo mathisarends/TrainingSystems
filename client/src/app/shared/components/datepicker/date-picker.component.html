@@ -1,1 +1,7 @@
-<input type="date" [step]="7" [min]="firstSelectableDate()" [value]="templateDate()" (change)="onDateChanged($event)" />
+<input
+  type="date"
+  [step]="dateStep()"
+  [min]="firstSelectableDate()"
+  [value]="templateDate()"
+  (change)="onDateChanged($event)"
+/>

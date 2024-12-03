@@ -36,6 +36,9 @@ export class TrainingViewTableRowComponent {
    */
   protected onWeightChanged(weight: string): void {
     this.updateExerciseProperty('weight', weight);
+
+    // TODO: hier könnte man ansetzen und das weight parsen wenn es im richtigen Foramt ist und dann über einen optionalen
+    // Parameter dieses für die estMax calculation nutzen
     this.updateEstMax();
     this.startPauseTimer();
   }
