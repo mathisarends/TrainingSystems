@@ -15,14 +15,7 @@
     }
   </div>
 
-  <app-add-row-button
-    [isVisible]="showAddRowButton() || mobileDeviceDetectionService.isMobileDevice"
-    (addRow)="addRow()"
-    (removeRow)="removeRow()"
-  />
-  @if (!showAddRowButton()) {
-    <div class="placeholder-for-add-button"></div>
-  }
+  <app-add-row-button (addRow)="addRow()" (removeRow)="removeRow()" />
 
   <app-training-view-navigation [trainingWeekIndex]="trainingWeekIndex()" [trainingDayIndex]="trainingDayIndex()" />
 } @else {

@@ -1,32 +1,37 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   effect,
+  ElementRef,
   HostBinding,
-  input,
+  OnDestroy,
   output,
   Renderer2,
   signal,
 } from '@angular/core';
+import { MobileDeviceDetectionService } from '../../../platform/mobile-device-detection.service';
 import { buttonVisibilityAnimation } from './button-visibility-animation';
 
 @Component({
   selector: 'app-add-row-button',
   standalone: true,
   template: `@if (isVisible()) {
-    <button (mousedown)="startDrag($event)" (click)="emitAddRow()">+</button>
-  }`,
+      <button (mousedown)="startDrag($event)" (click)="emitAddRow()">+</button>
+    } @else {
+      <div class="placeholder"></div>
+    }`,
   styleUrls: ['./add-row-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [buttonVisibilityAnimation],
 })
-export class AddRowButtonComponent {
+export class AddRowButtonComponent implements AfterViewInit, OnDestroy {
   isDragging = signal(false);
 
   /**
    * Controls an animation whether the button is visible via an animation. Only visible when user hovers over last table row.
    */
-  isVisible = input(false);
+  isVisible = signal(false);
 
   /**
    * Signal to store the initial Y-coordinate of the mouse when dragging starts.
@@ -48,6 +53,10 @@ export class AddRowButtonComponent {
    */
   removeRow = output<void>();
 
+  private mouseMoveListener!: (event: MouseEvent) => void;
+
+  private throttleTimeout: any;
+
   @HostBinding('class.visible') get isButtonVisible(): boolean {
     return this.isVisible();
   }
@@ -56,7 +65,11 @@ export class AddRowButtonComponent {
     return this.isVisible() ? 'visible' : 'hidden';
   }
 
-  constructor(private renderer: Renderer2) {
+  constructor(
+    private renderer: Renderer2,
+    private elementRef: ElementRef,
+    private mobileDeviceDetectionService: MobileDeviceDetectionService,
+  ) {
     effect(() => {
       const isDragging = this.isDragging();
 
@@ -66,6 +79,25 @@ export class AddRowButtonComponent {
         this.renderer.removeStyle(document.body, 'cursor');
       }
     });
+  }
+
+  /**
+   * Registers a global mouse move listener after the view is initialized.
+   */
+  ngAfterViewInit(): void {
+    if (this.mobileDeviceDetectionService.isMobileDevice) {
+      this.isVisible.set(true);
+    } else {
+      this.mouseMoveListener = this.checkMousePosition.bind(this);
+      document.addEventListener('mousemove', this.mouseMoveListener);
+    }
+  }
+
+  /**
+   * Removes the global mouse move listener when the component is destroyed.
+   */
+  ngOnDestroy(): void {
+    document.removeEventListener('mousemove', this.mouseMoveListener);
   }
 
   /**
@@ -126,5 +158,25 @@ export class AddRowButtonComponent {
    */
   emitAddRow(): void {
     this.addRow.emit();
+  }
+
+  private checkMousePosition(event: MouseEvent): void {
+    const button = this.elementRef.nativeElement;
+
+    const gridRect = button.getBoundingClientRect();
+    const mouseX = event.clientX;
+    const mouseY = event.clientY;
+
+    const isMouseOverButton =
+      mouseX >= gridRect.left && mouseX <= gridRect.right && mouseY >= gridRect.top && mouseY <= gridRect.bottom;
+
+    const isBelowGrid = mouseY > gridRect.bottom && mouseY <= gridRect.bottom + 55;
+    const isOverLastExercise = mouseY <= gridRect.bottom && mouseY >= gridRect.bottom - 80;
+
+    const newVisibility = isMouseOverButton || isBelowGrid || isOverLastExercise;
+
+    if (this.isVisible() !== newVisibility) {
+      this.isVisible.set(newVisibility);
+    }
   }
 }

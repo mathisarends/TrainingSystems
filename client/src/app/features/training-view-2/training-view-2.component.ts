@@ -1,15 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  signal,
-  viewChild,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, OnInit, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -19,7 +9,6 @@ import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { BasicInfoModalOptionsBuilder } from '../../core/services/modal/basic-info/basic-info-modal-options-builder';
 import { ModalOptionsBuilder } from '../../core/services/modal/modal-options-builder';
 import { ModalService } from '../../core/services/modal/modal.service';
-import { MobileDeviceDetectionService } from '../../platform/mobile-device-detection.service';
 import { DropdownComponent } from '../../shared/components/dropdown/dropdown.component';
 import { InputComponent } from '../../shared/components/input/input.component';
 import { MoreOptionListItem } from '../../shared/components/more-options-button/more-option-list-item';
@@ -67,18 +56,13 @@ import { TrainingViewTableRowComponent } from './training-view-table-row/trainin
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TrainingView2Component implements OnInit, AfterViewInit, OnDestroy {
+export class TrainingView2Component implements OnInit {
   trainingGrid = viewChild<ElementRef>('trainingGrid');
 
   /**
    * Holds res the list of exercises for the current training day.
    */
   exercises = signal<Exercise[]>([]);
-
-  /**
-   * Controls the visibility of the "Add Row" button.
-   */
-  showAddRowButton = signal(false);
 
   /**
    * Flag to allow removal of defined rows.
@@ -105,16 +89,10 @@ export class TrainingView2Component implements OnInit, AfterViewInit, OnDestroy 
    */
   viewInitialized = signal(false);
 
-  /**
-   * Listener for global mouse move events.
-   */
-  private mouseMoveListener!: (event: MouseEvent) => void;
-
   constructor(
     private modalService: ModalService,
     private trainingViewService: TrainingViewService,
     private exerciseDataService: ExerciseDataService,
-    protected mobileDeviceDetectionService: MobileDeviceDetectionService,
     private trainingPlanDataService: TrainingPlanDataService,
     private autoProgressionService: AutoProgressionService,
     private navigationService: TrainingViewNavigationService,
@@ -153,21 +131,6 @@ export class TrainingView2Component implements OnInit, AfterViewInit, OnDestroy 
         },
       ],
     });
-  }
-
-  /**
-   * Registers a global mouse move listener after the view is initialized.
-   */
-  ngAfterViewInit(): void {
-    this.mouseMoveListener = this.checkMousePosition.bind(this);
-    document.addEventListener('mousemove', this.mouseMoveListener);
-  }
-
-  /**
-   * Removes the global mouse move listener when the component is destroyed.
-   */
-  ngOnDestroy(): void {
-    document.removeEventListener('mousemove', this.mouseMoveListener);
   }
 
   protected navigateToNextDay(): void {
@@ -228,13 +191,6 @@ export class TrainingView2Component implements OnInit, AfterViewInit, OnDestroy 
     }
   }
 
-  private bindSwipeHandlers(): void {
-    this.navigateToNextDay = this.navigateToNextDay.bind(this);
-    this.navigateToPreviousDay = this.navigateToPreviousDay.bind(this);
-    this.navigateToPreviousWeek = this.navigateToPreviousWeek.bind(this);
-    this.navigateToNextWeek = this.navigateToNextWeek.bind(this);
-  }
-
   private loadData(planId: string, week: number, day: number): void {
     forkJoin({
       trainingPlanDto: this.trainingViewService.loadTrainingPlan(planId, week, day),
@@ -291,7 +247,6 @@ export class TrainingView2Component implements OnInit, AfterViewInit, OnDestroy 
     this.modalService.open(modalOptions);
   }
 
-  // TODO: has to be reworked completely
   private openTrainingExerciseList(): void {
     const providerMap = new Map().set(TrainingPlanDataService, this.trainingPlanDataService);
 
@@ -324,7 +279,9 @@ export class TrainingView2Component implements OnInit, AfterViewInit, OnDestroy 
    * Displays a modal to confirm the removal of a row.
    */
   private showDeletionModal(): void {
-    if (this.modalService.isVisible()) return;
+    if (this.modalService.isVisible()) {
+      return;
+    }
 
     const modalOptions = new BasicInfoModalOptionsBuilder()
       .setTitle('Warnung')
@@ -339,19 +296,10 @@ export class TrainingView2Component implements OnInit, AfterViewInit, OnDestroy 
     this.modalService.openBasicInfoModal(modalOptions);
   }
 
-  /**
-   * Checks the mouse position to toggle the visibility of the "Add Row" button.
-   */
-  private checkMousePosition(event: MouseEvent): void {
-    const gridElement = this.trainingGrid()?.nativeElement;
-    if (!gridElement) return;
-
-    const gridRect = gridElement.getBoundingClientRect();
-    const mouseY = event.clientY;
-
-    const isBelowGrid = mouseY > gridRect.bottom && mouseY <= gridRect.bottom + 55;
-    const isOverLastExercise = mouseY <= gridRect.bottom && mouseY >= gridRect.bottom - 37;
-
-    this.showAddRowButton.set(isBelowGrid || isOverLastExercise);
+  private bindSwipeHandlers(): void {
+    this.navigateToNextDay = this.navigateToNextDay.bind(this);
+    this.navigateToPreviousDay = this.navigateToPreviousDay.bind(this);
+    this.navigateToPreviousWeek = this.navigateToPreviousWeek.bind(this);
+    this.navigateToNextWeek = this.navigateToNextWeek.bind(this);
   }
 }
