@@ -1,4 +1,5 @@
 import { Injectable, signal } from '@angular/core';
+import { ExerciseCategories } from '../../model/exercise-categories';
 import { Exercise } from '../training-exercise';
 import { TrainingPlanDto } from '../trainingPlanDto';
 
@@ -20,5 +21,25 @@ export class TrainingPlanDataService {
     this.trainingBlockLength.set(dto.trainingBlockLength);
     this.exercises.set(dto.trainingDay.exercises);
     this.weightRecommendations.set(dto.weightRecommandations);
+  }
+
+  addExercise(): void {
+    const newEntry: Exercise = {
+      category: ExerciseCategories.PLACEHOLDER,
+      exercise: '',
+      sets: 0,
+      reps: 0,
+      weight: undefined,
+      targetRPE: 0,
+      actualRPE: undefined,
+      estMax: 0,
+      notes: '',
+    };
+
+    this.exercises.update((entries) => [...entries, newEntry]);
+  }
+
+  removeLastExercise(): void {
+    this.exercises.update((entries) => entries.slice(0, -1));
   }
 }

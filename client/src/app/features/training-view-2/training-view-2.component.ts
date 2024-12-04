@@ -60,11 +60,6 @@ export class TrainingView2Component implements OnInit {
   trainingGrid = viewChild<ElementRef>('trainingGrid');
 
   /**
-   * Holds res the list of exercises for the current training day.
-   */
-  exercises = signal<Exercise[]>([]);
-
-  /**
    * Flag to allow removal of defined rows.
    */
   allowRemovalOfDefinedRows = signal(false);
@@ -93,7 +88,7 @@ export class TrainingView2Component implements OnInit {
     private modalService: ModalService,
     private trainingViewService: TrainingViewService,
     private exerciseDataService: ExerciseDataService,
-    private trainingPlanDataService: TrainingPlanDataService,
+    protected trainingPlanDataService: TrainingPlanDataService,
     private autoProgressionService: AutoProgressionService,
     private navigationService: TrainingViewNavigationService,
     private headerService: HeaderService,
@@ -158,25 +153,6 @@ export class TrainingView2Component implements OnInit {
   }
 
   /**
-   * Adds a new row to the exercise grid.
-   */
-  protected addRow(): void {
-    const newEntry: Exercise = {
-      category: ExerciseCategories.PLACEHOLDER,
-      exercise: '',
-      sets: 0,
-      reps: 0,
-      weight: undefined,
-      targetRPE: 0,
-      actualRPE: undefined,
-      estMax: 0,
-      notes: '',
-    };
-
-    this.exercises.update((entries) => [...entries, newEntry]);
-  }
-
-  /**
    * Removes the last row from the exercise grid, with confirmation if the row is not empty.
    */
   protected removeRow(): void {
@@ -185,7 +161,7 @@ export class TrainingView2Component implements OnInit {
     if (!lastEntry) return;
 
     if (this.isEntryEmpty(lastEntry) || this.allowRemovalOfDefinedRows()) {
-      this.exercises.update((entries) => entries.slice(0, -1));
+      this.trainingPlanDataService.removeLastExercise();
     } else {
       this.showDeletionModal();
     }
@@ -199,7 +175,6 @@ export class TrainingView2Component implements OnInit {
       .pipe(
         tap(({ trainingPlanDto, exerciseDataDto }) => {
           this.trainingPlanDataService.initializeFromDto(trainingPlanDto);
-          this.exercises.set(trainingPlanDto.trainingDay.exercises);
 
           this.exerciseDataService.setExerciseData(exerciseDataDto);
 
@@ -265,7 +240,8 @@ export class TrainingView2Component implements OnInit {
    * Returns the last entry in the exercise grid.
    */
   private getLastExerciseEntry(): Exercise | undefined {
-    return this.exercises().length > 0 ? this.exercises()[this.exercises().length - 1] : undefined;
+    const exercises = this.trainingPlanDataService.exercises();
+    return exercises.length > 0 ? exercises[exercises.length - 1] : undefined;
   }
 
   /**

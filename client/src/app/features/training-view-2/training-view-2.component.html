@@ -10,12 +10,12 @@
     <div class="column-name">Est. Max</div>
     <div class="column-name">Notes</div>
 
-    @for (entry of exercises(); track entry) {
-      <app-training-view-table-row [exercise]="entry" />
+    @for (exercise of trainingPlanDataService.exercises(); track exercise) {
+      <app-training-view-table-row [exercise]="exercise" />
     }
   </div>
 
-  <app-add-row-button (addRow)="addRow()" (removeRow)="removeRow()" />
+  <app-add-row-button (addRow)="trainingPlanDataService.addExercise()" (removeRow)="removeRow()" />
 
   <app-training-view-navigation [trainingWeekIndex]="trainingWeekIndex()" [trainingDayIndex]="trainingDayIndex()" />
 } @else {
