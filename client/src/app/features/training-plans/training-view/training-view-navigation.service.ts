@@ -21,9 +21,9 @@ export class TrainingViewNavigationService {
     let targetWeek: number;
 
     if (navigationDirection === NavigationDirection.FORWARD) {
-      targetWeek = currentWeekIndex === this.trainingDataService.trainingBlockLength - 1 ? 0 : currentWeekIndex + 1;
+      targetWeek = currentWeekIndex === this.trainingDataService.trainingBlockLength() - 1 ? 0 : currentWeekIndex + 1;
     } else {
-      targetWeek = currentWeekIndex === 0 ? this.trainingDataService.trainingBlockLength - 1 : currentWeekIndex - 1;
+      targetWeek = currentWeekIndex === 0 ? this.trainingDataService.trainingBlockLength() - 1 : currentWeekIndex - 1;
     }
 
     this.navigateToDay(targetWeek, day);
@@ -32,9 +32,9 @@ export class TrainingViewNavigationService {
   navigateToNextDay(trainingDayIndex: number, trainingWeekIndex: number): void {
     const nextDay = trainingDayIndex + 1;
 
-    const isEndOfWeek = nextDay >= this.trainingDataService.trainingFrequency;
+    const isEndOfWeek = nextDay >= this.trainingDataService.trainingFrequency();
     const nextWeek = isEndOfWeek
-      ? (trainingWeekIndex + 1) % this.trainingDataService.trainingBlockLength
+      ? (trainingWeekIndex + 1) % this.trainingDataService.trainingBlockLength()
       : trainingWeekIndex;
     const day = isEndOfWeek ? 0 : nextDay;
 
@@ -49,7 +49,7 @@ export class TrainingViewNavigationService {
     let previousWeek: number;
     if (isStartOfWeek) {
       if (trainingWeekIndex === 0) {
-        previousWeek = this.trainingDataService.trainingBlockLength - 1;
+        previousWeek = this.trainingDataService.trainingBlockLength() - 1;
       } else {
         previousWeek = trainingWeekIndex - 1;
       }
@@ -57,7 +57,7 @@ export class TrainingViewNavigationService {
       previousWeek = trainingWeekIndex;
     }
 
-    const day = isStartOfWeek ? this.trainingDataService.trainingFrequency - 1 : previousDay;
+    const day = isStartOfWeek ? this.trainingDataService.trainingFrequency() - 1 : previousDay;
 
     this.navigateToDay(previousWeek, day);
   }

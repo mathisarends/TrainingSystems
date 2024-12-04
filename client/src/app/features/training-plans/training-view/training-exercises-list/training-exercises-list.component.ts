@@ -20,7 +20,7 @@ export class TrainingExercisesListComponent {
   ) {}
 
   drop(event: CdkDragDrop<any[]>): void {
-    const exercises = this.trainingPlanDataService.trainingDay()!.exercises;
+    const exercises = this.trainingPlanDataService.exercises();
 
     moveItemInArray(exercises, event.previousIndex, event.currentIndex);
 
@@ -34,11 +34,11 @@ export class TrainingExercisesListComponent {
    * @param index Der Index der Übung im Array.
    */
   private trackExerciseChanges(index: number) {
-    if (!this.trainingPlanDataService.trainingDay()!.exercises) {
+    if (!this.trainingPlanDataService.exercises()) {
       return;
     }
 
-    const exercise = this.trainingPlanDataService.trainingDay()!.exercises[index];
+    const exercise = this.trainingPlanDataService.exercises()[index];
 
     const namePrefix = `day${this.trainingDayLocatorService.trainingDayIndex}_exercise${index + 1}_`;
 

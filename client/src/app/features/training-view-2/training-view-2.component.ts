@@ -221,7 +221,7 @@ export class TrainingView2Component implements OnInit {
       });
     }
 
-    if (this.trainingPlanDataService.trainingDay()?.exercises.length) {
+    if (this.trainingPlanDataService.exercises().length) {
       moreOptionsList.push({
         label: 'Anordnen',
         icon: IconName.DRAG,

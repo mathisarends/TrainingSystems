@@ -1,0 +1,5 @@
+@if (isVisible()) {
+  <button (mousedown)="startDrag($event)" (click)="emitAddRow()">+</button>
+} @else {
+  <div class="placeholder"></div>
+}

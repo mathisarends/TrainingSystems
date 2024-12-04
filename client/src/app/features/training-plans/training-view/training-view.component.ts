@@ -245,7 +245,7 @@ export class TrainingViewComponent implements OnInit, SetHeadlineInfo {
       });
     }
 
-    if (this.trainingDataService.trainingDay()?.exercises.length) {
+    if (this.trainingDataService.exercises().length) {
       moreOptionsList.push({
         label: 'Anordnen',
         icon: IconName.DRAG,

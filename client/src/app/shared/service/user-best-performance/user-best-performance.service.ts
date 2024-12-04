@@ -29,11 +29,11 @@ export class UserBestPerformanceService {
   determineExerciseBasedOnFieldName(fieldName: string): Exercise | undefined {
     const exerciseNumber = Number(fieldName.charAt(13));
 
-    if (!this.trainingPlanDataService.trainingDay()) {
+    if (!this.trainingPlanDataService.exercises()) {
       return undefined;
     }
 
-    return this.trainingPlanDataService.trainingDay()!.exercises[exerciseNumber - 1];
+    return this.trainingPlanDataService.exercises()[exerciseNumber - 1];
   }
 
   isNewBestPerformance(exerciseCategory: string, newEstMax: number): boolean {

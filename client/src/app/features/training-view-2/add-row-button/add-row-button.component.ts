@@ -16,11 +16,7 @@ import { buttonVisibilityAnimation } from './button-visibility-animation';
 @Component({
   selector: 'app-add-row-button',
   standalone: true,
-  template: `@if (isVisible()) {
-      <button (mousedown)="startDrag($event)" (click)="emitAddRow()">+</button>
-    } @else {
-      <div class="placeholder"></div>
-    }`,
+  templateUrl: './add-row-button.component.html',
   styleUrls: ['./add-row-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [buttonVisibilityAnimation],
@@ -54,8 +50,6 @@ export class AddRowButtonComponent implements AfterViewInit, OnDestroy {
   removeRow = output<void>();
 
   private mouseMoveListener!: (event: MouseEvent) => void;
-
-  private throttleTimeout: any;
 
   @HostBinding('class.visible') get isButtonVisible(): boolean {
     return this.isVisible();

@@ -1,6 +1,6 @@
 <app-pagination
   [currentPage]="trainingDayIndex()"
-  [totalPages]="trainingDataService.trainingFrequency"
+  [totalPages]="trainingDataService.trainingFrequency()"
   (pageChanged)="navigationService.navigateToDay(trainingWeekIndex(), $event)"
 />
 
