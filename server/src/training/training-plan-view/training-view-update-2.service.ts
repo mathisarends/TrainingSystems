@@ -3,6 +3,7 @@ import { Exercise } from '../model/exercise.schema';
 import { TrainingDay } from '../model/training-day.schema';
 import { TrainingPlanViewValidationService } from '../service/training-plan-view-validation.service';
 import { TrainingService } from '../training.service';
+import { TrainingDayExerciseDto } from './dto/training-day-exercise.dto';
 
 @Injectable()
 export class TrainingPlanViewUpdateService2 {
@@ -16,7 +17,7 @@ export class TrainingPlanViewUpdateService2 {
     trainingPlanId: string,
     weekIndex: number,
     dayIndex: number,
-    updatedExercise: Exercise,
+    updatedExercise: TrainingDayExerciseDto,
   ) {
     const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(
       userId,
@@ -38,43 +39,60 @@ export class TrainingPlanViewUpdateService2 {
     );
 
     if (!exercise) {
-      await trainingDay.save();
-      return;
+      const newExercise = this.createExercise(updatedExercise);
+      trainingDay.exercises.push(newExercise as Exercise);
+    } else {
+      this.updateExerciseProperties(exercise, updatedExercise);
     }
 
-    const changedFields = this.getChangedFields(exercise, updatedExercise);
-    console.log(
-      '🚀 ~ TrainingPlanViewUpdateService2 ~ changedFields:',
-      changedFields,
-    );
-
-    Object.assign(exercise, updatedExercise);
+    trainingPlan.markModified('trainingWeeks');
+    return await trainingPlan.save();
   }
 
   private findExerciseInTrainingDayById(
     trainingDay: TrainingDay,
-    updatedExercise: Exercise,
+    updatedExercise: TrainingDayExerciseDto,
   ): Exercise | undefined {
-    for (const exercise of trainingDay.exercises) {
-      if (exercise._id.toString() === updatedExercise._id.toString()) {
-        return exercise;
-      }
+    if (!updatedExercise.id) {
+      return undefined;
     }
-    return undefined;
+
+    return trainingDay.exercises.find(
+      (exercise) => exercise.id === updatedExercise.id,
+    );
   }
 
-  private getChangedFields(
-    originalExercise: Exercise,
-    updatedExerciseDto: Exercise,
-  ): string[] {
-    const changedFields: string[] = [];
+  private createExercise(updatedExercise: TrainingDayExerciseDto) {
+    return {
+      id: this.generateId(),
+      category: updatedExercise.category,
+      exercise: updatedExercise.exercise,
+      sets: updatedExercise.sets,
+      reps: updatedExercise.reps,
+      weight: updatedExercise.weight,
+      targetRPE: updatedExercise.targetRPE,
+      actualRPE: updatedExercise.actualRPE,
+      estMax: updatedExercise.estMax,
+      notes: updatedExercise.notes,
+    };
+  }
 
-    for (const key of Object.keys(updatedExerciseDto)) {
-      if (originalExercise[key] !== updatedExerciseDto[key]) {
-        changedFields.push(key);
-      }
-    }
+  private updateExerciseProperties(
+    exercise: Exercise,
+    updatedExercise: TrainingDayExerciseDto,
+  ): void {
+    exercise.category = updatedExercise.category;
+    exercise.exercise = updatedExercise.exercise;
+    exercise.sets = updatedExercise.sets;
+    exercise.reps = updatedExercise.reps;
+    exercise.weight = updatedExercise.weight;
+    exercise.targetRPE = updatedExercise.targetRPE;
+    exercise.actualRPE = updatedExercise.actualRPE;
+    exercise.estMax = updatedExercise.estMax;
+    exercise.notes = updatedExercise.notes;
+  }
 
-    return changedFields;
+  private generateId(): string {
+    return crypto.randomUUID();
   }
 }

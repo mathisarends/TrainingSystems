@@ -10,7 +10,7 @@ import {
 import { Request } from 'express';
 import { GetUser } from 'src/decorators/user.decorator';
 import { ApiData } from 'src/types/api-data';
-import { TrainingDayExerciseDto } from './model/training-day-exercise.dto';
+import { TrainingDayExerciseDto } from './dto/training-day-exercise.dto';
 import { TrainingPlanViewUpdateService } from './training-plan-view-update.service';
 import { TrainingPlanViewService } from './training-plan-view.service';
 import { TrainingPlanViewUpdateService2 } from './training-view-update-2.service';
@@ -52,7 +52,7 @@ export class TrainingPlanViewController {
       trainingPlanId,
       weekIndex,
       dayIndex,
-      trainingDayExerciseDto.exercise,
+      trainingDayExerciseDto,
     );
   }
 

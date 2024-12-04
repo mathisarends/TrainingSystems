@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
 import { ExerciseCategories } from '../../training-plans/model/exercise-categories';
@@ -29,7 +29,12 @@ export class TrainingViewTableRowComponent {
     protected exerciseDataService: ExerciseDataService,
     private estMaxService2: EstMaxService2,
     private pauseTimeService: PauseTimeService,
-  ) {}
+  ) {
+    effect(() => {
+      const exercise = this.exercise();
+      console.log('🚀 ~ TrainingViewTableRowComponent ~ effect ~ exercise:', exercise);
+    });
+  }
 
   /**
    * Handles changes to the weight input, updates estMax, and starts the pause timer.

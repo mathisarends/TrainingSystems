@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ExerciseCategoryType } from 'src/exercise/types/exercise-category-type.enum';
-import { Exercise } from 'src/training/model/exercise.schema';
+import { TrainingDayExerciseDto } from 'src/training/training-plan-view/dto/training-day-exercise.dto';
 import { UserBestPerformance } from './model/user-best-performance.model';
 
 @Injectable()
@@ -74,7 +74,7 @@ export class UserBestPerformanceService {
    */
   async saveUserRecordByExercise(
     userId: string,
-    exercise: Exercise,
+    exercise: TrainingDayExerciseDto,
   ): Promise<UserBestPerformance> {
     return await this.userBestPerformanceModel
       .findOneAndUpdate(

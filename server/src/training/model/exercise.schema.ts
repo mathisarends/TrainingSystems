@@ -7,6 +7,9 @@ import { Document } from 'mongoose';
 @Schema()
 export class Exercise extends Document {
   @Prop()
+  id: string;
+
+  @Prop()
   category: string;
 
   @Prop()
@@ -22,7 +25,7 @@ export class Exercise extends Document {
   weight: string;
 
   @Prop()
-  targetRPE: string;
+  targetRPE: number;
 
   @Prop()
   actualRPE: string;
@@ -42,7 +45,7 @@ export class ExerciseDto {
   sets: number;
   reps: number;
   weight: string;
-  targetRPE: string;
+  targetRPE: number;
   actualRPE: string;
   estMax?: number;
   notes?: string;

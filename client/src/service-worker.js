@@ -38,7 +38,6 @@ self.addEventListener('push', (event) => {
   const data = event.data.json();
 
   if (data.title === 'Keep Alive') {
-    console.log('keep alive via push');
     timer.restartRestPauseTimerWithExistingTime();
     return;
   }

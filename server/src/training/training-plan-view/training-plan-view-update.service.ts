@@ -139,7 +139,7 @@ export class TrainingPlanViewUpdateService {
       sets: 0,
       reps: 0,
       weight: '',
-      targetRPE: '',
+      targetRPE: 0,
       actualRPE: '',
       estMax: 0,
     };
@@ -187,7 +187,7 @@ export class TrainingPlanViewUpdateService {
         exercise.weight = fieldValue;
         break;
       case fieldName.endsWith('targetRPE'):
-        exercise.targetRPE = fieldValue;
+        exercise.targetRPE = Number(fieldValue);
         break;
       case fieldName.endsWith('actualRPE'):
         exercise.actualRPE = fieldValue;

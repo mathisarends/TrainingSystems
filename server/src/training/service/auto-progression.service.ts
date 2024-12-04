@@ -71,7 +71,7 @@ export class AutoProgressionService {
         }
 
         exercise.sets = Math.max(exerciseBeforeDeload.sets - 1, 0);
-        exercise.targetRPE = this.isMainCategory(exercise.category) ? '6' : '7';
+        exercise.targetRPE = this.isMainCategory(exercise.category) ? 6 : 7;
       });
     });
   }
@@ -113,48 +113,8 @@ export class AutoProgressionService {
         const rpeMax = this.isMainCategory(exercise.category) ? 9 : 10;
 
         const parsedRPE = Number(previousWeekExercise.targetRPE);
-        if (!isNaN(parsedRPE)) {
-          exercise.targetRPE = Math.min(
-            parsedRPE + rpeIncrease,
-            rpeMax,
-          ).toString();
-          return;
-        }
-
-        const rpeArray = this.parseStringToNumberArray(
-          previousWeekExercise.targetRPE,
-        );
-        if (!rpeArray) {
-          console.warn(
-            `Cannot parse targetRPE for exercise: ${exercise.exercise}`,
-          );
-          return;
-        }
-
-        const adjustedRpeArray = rpeArray.map((rpe) =>
-          Math.min(rpe + rpeIncrease, rpeMax),
-        );
-        exercise.targetRPE = adjustedRpeArray.join(';');
+        exercise.targetRPE = Math.min(parsedRPE + rpeIncrease, rpeMax);
       });
     });
-  }
-
-  /**
-   * Parses a delimited string of numbers into an array of numbers.
-   * @param value - The string to parse.
-   * @param delimiter - Delimiter used to separate numbers in the string.
-   * @returns An array of numbers if successfully parsed, otherwise null.
-   */
-  private parseStringToNumberArray(
-    value: string,
-    delimiter: string = ';',
-  ): number[] | null {
-    const parts = value.split(delimiter);
-    const numbers = parts.map((part) => Number(part.trim()));
-
-    if (numbers.every((num) => !isNaN(num))) {
-      return numbers;
-    }
-    return undefined;
   }
 }

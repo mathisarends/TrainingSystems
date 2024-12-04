@@ -23,6 +23,7 @@
   color: #6c757d;
   transition: color 0.3s;
   position: relative;
+  user-select: none;
 
   &:hover {
     color: white;
