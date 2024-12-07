@@ -85,7 +85,7 @@ export class TrainingLogPopupComponent implements OnToggleView {
             this.tonnage.set(response.tonnage);
             this.tonangeDifferenceFromlastWeek.set(response.tonnageDifferenceFromLastWeek);
 
-            this.duration.set(response.duration);
+            this.duration.set(response.durationInMinutes);
             this.durationDifferenceFromLastWeek.set(response.durationDifferenceFromLastWeek);
 
             this.mapResponseDataToChart(response.tonnageComparisonOverWeekSpan);

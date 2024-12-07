@@ -44,6 +44,7 @@ export class TrainingDayInfoService {
 
     const trainingDay =
       trainingPlan.trainingWeeks[weekIndex]?.trainingDays[dayIndex];
+
     if (!trainingDay) {
       throw new NotFoundException(
         `The training day could not be found for weekIndex ${weekIndex} and dayIndex ${dayIndex}`,
@@ -132,7 +133,6 @@ export class TrainingDayInfoService {
           performanceComparison[category] = [];
         }
 
-        // Add the highest estMax value for the current week index only if it exists
         if (numericEstMax > 0) {
           performanceComparison[category].push(numericEstMax);
         }
@@ -179,7 +179,7 @@ export class TrainingDayInfoService {
   }
 
   private getTonnagePerTrainingDay(trainingDay: TrainingDay): number {
-    let tonnage = 0;
+    const tonnageByExercise: { [exerciseName: string]: number } = {};
 
     for (const exercise of trainingDay.exercises) {
       const weight = Number(exercise.weight);
@@ -187,10 +187,20 @@ export class TrainingDayInfoService {
       if (isNaN(weight)) continue;
 
       const tonnagePerExercise = weight * exercise.sets * exercise.reps;
-      tonnage += tonnagePerExercise;
+
+      if (!tonnageByExercise[exercise.exercise]) {
+        tonnageByExercise[exercise.exercise] = 0;
+      }
+
+      tonnageByExercise[exercise.exercise] += tonnagePerExercise;
     }
 
-    return tonnage;
+    const totalTonnage = Object.values(tonnageByExercise).reduce(
+      (sum, val) => sum + val,
+      0,
+    );
+
+    return totalTonnage;
   }
 
   private trimTrailingZeros(array: number[]): number[] {
