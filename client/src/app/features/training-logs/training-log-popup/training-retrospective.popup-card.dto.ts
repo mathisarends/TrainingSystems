@@ -6,5 +6,4 @@ export interface TrainingRetrospectivePopupCardInfo {
   durationInMinutes: number;
   durationDifferenceFromLastWeek: number;
   tonnageComparisonOverWeekSpan: ChartDataDto;
-  performanceComparisonOverWeekSpan: ChartDataDto;
 }

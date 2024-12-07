@@ -64,8 +64,6 @@ export class TrainingDayInfoService {
       this.getDurationDifferenceFromLastWeek(trainingDay, previousTrainingDay);
     const tonnageComparisonOverWeekSpan =
       this.getTonnnageComparisonOverWeekSpan(trainingPlan, dayIndex);
-    const performanceComparisonOverWeekSpan =
-      this.getPerformanceComparisonOverWeekSpan(trainingPlan, dayIndex);
 
     const tonnage = this.getTonnagePerTrainingDay(trainingDay);
     const durationInMinutes = trainingDay.durationInMinutes;
@@ -74,7 +72,6 @@ export class TrainingDayInfoService {
       tonnageDifferenceFromLastWeek,
       durationDifferenceFromLastWeek,
       tonnageComparisonOverWeekSpan,
-      performanceComparisonOverWeekSpan,
       tonnage,
       durationInMinutes,
     };
@@ -89,6 +86,8 @@ export class TrainingDayInfoService {
     trainingPlan.trainingWeeks.forEach((week, weekIndex) => {
       const trainingDay = week.trainingDays[dayIndex];
 
+      const tonnageByCategoryForDay: { [category: string]: number } = {};
+
       trainingDay.exercises.forEach((exercise) => {
         const { category, weight, sets, reps } = exercise;
         const numericWeight = Number(weight);
@@ -98,13 +97,20 @@ export class TrainingDayInfoService {
 
         const tonnage = numericWeight * sets * reps;
 
+        if (!tonnageByCategoryForDay[category]) {
+          tonnageByCategoryForDay[category] = 0;
+        }
+
+        tonnageByCategoryForDay[category] += tonnage;
+      });
+
+      for (const category in tonnageByCategoryForDay) {
         if (!tonnageComparison[category]) {
           tonnageComparison[category] = [];
         }
 
-        // Add the tonnage value directly for the current week index
-        tonnageComparison[category].push(tonnage);
-      });
+        tonnageComparison[category].push(tonnageByCategoryForDay[category]);
+      }
     });
 
     for (const category in tonnageComparison) {
@@ -114,38 +120,6 @@ export class TrainingDayInfoService {
     }
 
     return tonnageComparison;
-  }
-
-  private getPerformanceComparisonOverWeekSpan(
-    trainingPlan: TrainingPlan,
-    dayIndex: number,
-  ): ExerciseCategoryComparisonDto {
-    const performanceComparison: ExerciseCategoryComparisonDto = {};
-
-    trainingPlan.trainingWeeks.forEach((week, weekIndex) => {
-      const trainingDay = week.trainingDays[dayIndex];
-
-      trainingDay.exercises.forEach((exercise) => {
-        const { category, estMax } = exercise;
-        const numericEstMax = estMax ?? 0;
-
-        if (!performanceComparison[category]) {
-          performanceComparison[category] = [];
-        }
-
-        if (numericEstMax > 0) {
-          performanceComparison[category].push(numericEstMax);
-        }
-      });
-    });
-
-    for (const category in performanceComparison) {
-      performanceComparison[category] = this.trimTrailingZeros(
-        performanceComparison[category],
-      );
-    }
-
-    return performanceComparison;
   }
 
   private getTonnageDifferenceFromLastWeek(
@@ -179,30 +153,25 @@ export class TrainingDayInfoService {
   }
 
   private getTonnagePerTrainingDay(trainingDay: TrainingDay): number {
-    const tonnageByExercise: { [exerciseName: string]: number } = {};
+    let tonnage = 0;
 
     for (const exercise of trainingDay.exercises) {
       const weight = Number(exercise.weight);
 
-      if (isNaN(weight)) continue;
-
-      const tonnagePerExercise = weight * exercise.sets * exercise.reps;
-
-      if (!tonnageByExercise[exercise.exercise]) {
-        tonnageByExercise[exercise.exercise] = 0;
+      if (isNaN(weight)) {
+        return;
       }
 
-      tonnageByExercise[exercise.exercise] += tonnagePerExercise;
+      const tonnagePerExercise = weight * exercise.sets * exercise.reps;
+      tonnage += tonnagePerExercise;
     }
 
-    const totalTonnage = Object.values(tonnageByExercise).reduce(
-      (sum, val) => sum + val,
-      0,
-    );
-
-    return totalTonnage;
+    return tonnage;
   }
 
+  /**
+   * Used in order to not send useless 0-entries in volume comparison.
+   */
   private trimTrailingZeros(array: number[]): number[] {
     let endIndex = array.length;
 
