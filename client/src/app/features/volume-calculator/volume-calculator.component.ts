@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { VolumeCalculatorService } from './volume-calculator.service';
 
 @Component({
   selector: 'app-volume-calculator',
@@ -7,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./volume-calculator.component.scss'],
 })
 export class VolumeCalculatorComponent {
-
+  constructor(private volumeCalculatorService: VolumeCalculatorService) {}
 }
