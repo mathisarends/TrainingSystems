@@ -12,7 +12,7 @@ import {
 export class TrainingDayExerciseDto {
   @IsOptional()
   @IsString()
-  id: string;
+  id?: string;
 
   @IsNotEmpty()
   @IsString()

@@ -52,9 +52,10 @@ export class CalendarEventComponent {
     if (this.isTrainingLog()) {
       this.clearNotificationsIfNecessary();
       this.openTrainingLog();
-    } else {
-      this.openTrainingPreview();
+      return;
     }
+
+    this.openTrainingPreview();
   }
 
   private clearNotificationsIfNecessary(): void {

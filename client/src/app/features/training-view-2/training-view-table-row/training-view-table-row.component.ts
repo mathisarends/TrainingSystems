@@ -32,7 +32,6 @@ export class TrainingViewTableRowComponent {
   ) {
     effect(() => {
       const exercise = this.exercise();
-      console.log('🚀 ~ TrainingViewTableRowComponent ~ effect ~ exercise:', exercise);
     });
   }
 

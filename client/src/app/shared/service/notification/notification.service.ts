@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
 import { TrainingDayFinishedNotificationDto } from './training-day-finished-notification.dto';
@@ -16,7 +16,7 @@ export class NotificationService {
    */
   trainingDayNotifications = signal<TrainingDayFinishedNotificationDto[]>([]);
 
-  amountOfUnseenNotifications = signal(0);
+  amountOfUnseenNotifications = computed(() => this.trainingDayNotifications.length);
 
   constructor(private httpService: HttpService) {}
 
@@ -28,7 +28,6 @@ export class NotificationService {
     return this.httpService.get<TrainingDayFinishedNotificationDto[]>('/training-log/notifications').pipe(
       tap((trainingDayFinishedNotifications: TrainingDayFinishedNotificationDto[]) => {
         this.trainingDayNotifications.set(trainingDayFinishedNotifications);
-        this.amountOfUnseenNotifications.set(trainingDayFinishedNotifications.length);
       }),
     );
   }
