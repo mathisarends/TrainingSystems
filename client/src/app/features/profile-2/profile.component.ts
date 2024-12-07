@@ -9,7 +9,6 @@ import { ModalService } from '../../core/services/modal/modal.service';
 import { IconBackgroundColor } from '../../shared/components/icon-list-item/icon-background-color';
 import { IconListItem } from '../../shared/components/icon-list-item/icon-list-item';
 import { IconListeItemComponent } from '../../shared/components/icon-list-item/icon-list-item.component';
-import { ChartSkeletonComponent } from '../../shared/components/loader/chart-skeleton/chart-skeleton.component';
 import { ProfilePictureWithInfoComponent } from '../../shared/components/profile-picture-with-info/profile-picture-with-info.component';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 import { ToastService } from '../../shared/components/toast/toast.service';
@@ -34,7 +33,6 @@ import { SettingsComponent } from './settings/settings.component';
     IconListeItemComponent,
     ActivityCalendar,
     CommonModule,
-    ChartSkeletonComponent,
     ProfilePictureWithInfoComponent,
     SpinnerComponent,
   ],
@@ -59,6 +57,14 @@ export class ProfileComponent2 implements OnInit, SetHeadlineInfo {
       iconBackgroundColor: IconBackgroundColor.DodgerBlue,
       onItemClicked: () => {
         this.router.navigate(['profile/exercises']);
+      },
+    },
+    {
+      label: 'Volumenrechner',
+      iconName: IconName.TRELLO,
+      iconBackgroundColor: IconBackgroundColor.MediumSlateBlue,
+      onItemClicked: () => {
+        this.router.navigate(['profile/volume-calculator']);
       },
     },
     {

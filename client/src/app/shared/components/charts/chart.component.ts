@@ -30,6 +30,8 @@ export abstract class ChartComponent<T extends ChartType> implements AfterViewIn
    */
   chart = signal<Chart<T> | null>(null);
 
+  protected chartDownloadable = input(false);
+
   constructor(
     protected injector: Injector,
     private imageDownloadService: ImageDownloadService,
