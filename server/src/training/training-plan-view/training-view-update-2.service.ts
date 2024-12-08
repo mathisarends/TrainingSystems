@@ -19,21 +19,28 @@ export class TrainingPlanViewUpdateService2 {
     dayIndex: number,
     updatedExercise: TrainingDayExerciseDto,
   ) {
-    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(userId, trainingPlanId);
-
-    const trainingDay = this.trainingPlanViewValidationService.findAndValidateTrainingDay(
-      trainingPlan,
-      weekIndex,
-      dayIndex,
+    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(
+      userId,
+      trainingPlanId,
     );
+
+    const trainingDay =
+      this.trainingPlanViewValidationService.findAndValidateTrainingDay(
+        trainingPlan,
+        weekIndex,
+        dayIndex,
+      );
 
     trainingPlan.lastUpdated = new Date();
 
-    const exercise = this.findExerciseInTrainingDayById(trainingDay, updatedExercise);
+    const exercise = this.findExerciseInTrainingDayById(
+      trainingDay,
+      updatedExercise,
+    );
 
     if (!exercise) {
       const newExercise = this.createExercise(updatedExercise);
-      trainingDay.exercises.push(newExercise as Exercise);
+      trainingDay.exercises.push(newExercise as unknown as Exercise);
     } else {
       this.updateExerciseProperties(exercise, updatedExercise);
     }
@@ -50,7 +57,9 @@ export class TrainingPlanViewUpdateService2 {
       return undefined;
     }
 
-    return trainingDay.exercises.find((exercise) => exercise.id === updatedExercise.id);
+    return trainingDay.exercises.find(
+      (exercise) => exercise.id === updatedExercise.id,
+    );
   }
 
   private createExercise(updatedExercise: TrainingDayExerciseDto) {
@@ -68,7 +77,10 @@ export class TrainingPlanViewUpdateService2 {
     };
   }
 
-  private updateExerciseProperties(exercise: Exercise, updatedExercise: TrainingDayExerciseDto): void {
+  private updateExerciseProperties(
+    exercise: Exercise,
+    updatedExercise: TrainingDayExerciseDto,
+  ): void {
     exercise.category = updatedExercise.category;
     exercise.exercise = updatedExercise.exercise;
     exercise.sets = updatedExercise.sets;

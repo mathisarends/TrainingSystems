@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
 import { ExerciseCategories } from '../../training-plans/model/exercise-categories';
@@ -10,6 +10,9 @@ import { TargetRpeDirective } from '../directives/target-rpe.directive';
 import { EstMaxService2 } from '../estMax2.service';
 import { RpeInputComponent } from '../inputs/rpe/rpe-input.component';
 import { WeightInputComponent } from '../inputs/weight/weight-input.component';
+import { TrainingViewTableRowService } from './training-view-table-row.service';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { skip } from 'rxjs';
 
 @Component({
   selector: 'app-training-view-table-row',
@@ -18,31 +21,24 @@ import { WeightInputComponent } from '../inputs/weight/weight-input.component';
   templateUrl: './training-view-table-row.component.html',
   styleUrls: ['./training-view-table-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [EstMaxService2],
 })
 export class TrainingViewTableRowComponent {
   exercise = model.required<Exercise>();
 
   isPlaceholderCategory = computed(() => this.exercise().category === ExerciseCategories.PLACEHOLDER);
 
-  private initialized = false;
-
   constructor(
     protected exerciseDataService: ExerciseDataService,
+    private trainingViewTableRowService: TrainingViewTableRowService,
     private estMaxService2: EstMaxService2,
     private pauseTimeService: PauseTimeService,
   ) {
-    effect(
-      () => {
-        if (!this.initialized) {
-          this.initialized = true;
-          return;
-        }
-
-        const exercise = this.exercise();
-      },
-      { allowSignalWrites: true },
-    );
+    toObservable(this.exercise)
+      .pipe(skip(1))
+      .subscribe((exercise) => {
+        console.log('Updated exercise:', exercise);
+        this.trainingViewTableRowService.saveExercise(exercise).subscribe();
+      });
   }
 
   /**

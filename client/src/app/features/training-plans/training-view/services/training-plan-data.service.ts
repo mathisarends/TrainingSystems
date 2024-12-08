@@ -44,4 +44,8 @@ export class TrainingPlanDataService {
   removeLastExercise(): void {
     this.exercises.update((entries) => entries.slice(0, -1));
   }
+
+  hasNoExercises(): boolean {
+    return this.exercises().length === 0;
+  }
 }

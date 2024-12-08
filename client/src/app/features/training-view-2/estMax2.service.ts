@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Exercise } from '../training-plans/training-view/training-exercise';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class EstMaxService2 {
   categoriesWithEstMax = ['Squat', 'Bench', 'Deadlift', 'Overheadpress'];
 

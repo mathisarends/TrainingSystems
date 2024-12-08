@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { MobileDeviceDetectionService } from '../../../platform/mobile-device-detection.service';
 import { buttonVisibilityAnimation } from './button-visibility-animation';
+import { TrainingPlanDataService } from '../../training-plans/training-view/services/training-plan-data.service';
 
 @Component({
   selector: 'app-add-row-button',
@@ -63,6 +64,7 @@ export class AddRowButtonComponent implements AfterViewInit, OnDestroy {
     private renderer: Renderer2,
     private elementRef: ElementRef,
     private mobileDeviceDetectionService: MobileDeviceDetectionService,
+    protected trainingPlanDataService: TrainingPlanDataService,
   ) {
     effect(() => {
       const isDragging = this.isDragging();
@@ -73,6 +75,13 @@ export class AddRowButtonComponent implements AfterViewInit, OnDestroy {
         this.renderer.removeStyle(document.body, 'cursor');
       }
     });
+
+    effect(
+      () => {
+        this.isVisible.set(this.trainingPlanDataService.hasNoExercises());
+      },
+      { allowSignalWrites: true },
+    );
   }
 
   /**
@@ -155,6 +164,10 @@ export class AddRowButtonComponent implements AfterViewInit, OnDestroy {
   }
 
   private checkMousePosition(event: MouseEvent): void {
+    if (this.trainingPlanDataService.hasNoExercises()) {
+      return;
+    }
+
     const button = this.elementRef.nativeElement;
 
     const gridRect = button.getBoundingClientRect();

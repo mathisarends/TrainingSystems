@@ -1,9 +1,19 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+  IsString,
+} from 'class-validator';
 
 /**
  * DTO for validating and transferring Exercise data.
  */
 export class TrainingDayExerciseDto {
+  @IsOptional()
+  @IsString()
+  _id?: string;
+
   @IsOptional()
   @IsString()
   id?: string;
@@ -26,22 +36,19 @@ export class TrainingDayExerciseDto {
   @IsPositive()
   reps: number;
 
-  @IsNotEmpty()
-  @IsString()
-  @IsPositive()
+  @IsOptional()
   weight: string;
 
   @IsNotEmpty()
-  @IsString()
+  @IsNumber()
+  @IsPositive()
   targetRPE: number;
 
   @IsOptional()
-  @IsString()
-  actualRPE: string;
+  actualRPE?: string;
 
   @IsOptional()
   @IsNumber()
-  @IsPositive()
   estMax?: number;
 
   @IsOptional()

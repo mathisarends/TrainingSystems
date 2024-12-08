@@ -65,7 +65,6 @@ import { TrainingViewService } from './training-view-service';
 })
 export class TrainingViewComponent implements OnInit, SetHeadlineInfo {
   protected readonly IconName = IconName;
-  protected readonly NavigationDirection = NavigationDirection;
 
   viewInitialized = signal(false);
 
