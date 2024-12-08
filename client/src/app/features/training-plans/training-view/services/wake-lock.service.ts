@@ -29,7 +29,6 @@ export class WakeLockService {
 
     try {
       this.wakeLock = await navigator.wakeLock.request('screen');
-      console.log('Wake lock is active');
     } catch (err) {
       const error = err as Error;
       console.error(`Failed to request wake lock: ${error.name}, ${error.message}`);
@@ -43,7 +42,6 @@ export class WakeLockService {
 
     try {
       await this.wakeLock.release();
-      console.log('Wake lock is released');
     } catch (err: unknown) {
       const error = err as Error;
       console.error(`Failed to release wake lock: ${error.name}, ${error.message}`);

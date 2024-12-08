@@ -32,6 +32,7 @@ export class TrainingViewTableRowComponent {
   ) {
     effect(() => {
       const exercise = this.exercise();
+      console.log('exercise', exercise);
     });
   }
 
@@ -68,11 +69,13 @@ export class TrainingViewTableRowComponent {
    */
   protected onExerciseCategoryChange(exerciseCategory: string): void {
     const isPlaceholder = exerciseCategory === ExerciseCategories.PLACEHOLDER;
-    const defaultValues = isPlaceholder ? this.getPlaceholderDefaults() : this.getCategoryDefaults(exerciseCategory);
+    const defaultValues = isPlaceholder
+      ? this.exerciseDataService.getPlaceholderDefaults()
+      : this.exerciseDataService.getCategoryDefaults(exerciseCategory);
 
     this.updateExercise({
       category: exerciseCategory,
-      exercise: this.getFirstExercise(exerciseCategory),
+      exercise: this.exerciseDataService.getFirstExercise(exerciseCategory),
       ...defaultValues,
     });
   }
@@ -108,48 +111,10 @@ export class TrainingViewTableRowComponent {
   /**
    * Starts the pause timer based on the current exercise category, if applicable.
    */
-  private startPauseTimer(): void {
+  private async startPauseTimer(): Promise<void> {
     const pauseTime = this.exerciseDataService.categoryPauseTimes()[this.exercise().category];
     if (pauseTime) {
-      this.pauseTimeService.startPauseTimer(pauseTime, this.exercise().exercise);
+      await this.pauseTimeService.startPauseTimer(pauseTime, this.exercise().exercise);
     }
-  }
-
-  /**
-   * Retrieves default values for a placeholder category.
-   */
-  private getPlaceholderDefaults(): Partial<Exercise> {
-    return {
-      sets: 0,
-      reps: 0,
-      weight: undefined,
-      targetRPE: 0,
-      actualRPE: undefined,
-      estMax: 0,
-      notes: '',
-    };
-  }
-
-  /**
-   * Retrieves default values for a given category.
-   */
-  private getCategoryDefaults(category: string): Partial<Exercise> {
-    const { defaultSets, defaultReps, defaultRPE } = this.exerciseDataService.defaultRepSchemeByCategory()[category];
-    return {
-      sets: defaultSets,
-      reps: defaultReps,
-      weight: undefined,
-      targetRPE: defaultRPE,
-      actualRPE: undefined,
-      estMax: 0,
-      notes: '',
-    };
-  }
-
-  /**
-   * Returns the first available exercise for a given category.
-   */
-  private getFirstExercise(category: string): string {
-    return this.exerciseDataService.categorizedExercises()[category]?.[0] || '';
   }
 }

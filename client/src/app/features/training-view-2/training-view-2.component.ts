@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, OnInit, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -9,10 +9,7 @@ import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { BasicInfoModalOptionsBuilder } from '../../core/services/modal/basic-info/basic-info-modal-options-builder';
 import { ModalOptionsBuilder } from '../../core/services/modal/modal-options-builder';
 import { ModalService } from '../../core/services/modal/modal.service';
-import { DropdownComponent } from '../../shared/components/dropdown/dropdown.component';
-import { InputComponent } from '../../shared/components/input/input.component';
 import { MoreOptionListItem } from '../../shared/components/more-options-button/more-option-list-item';
-import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 import { SpinnerComponent } from '../../shared/components/spinner/spinner.component';
 import { IconName } from '../../shared/icon/icon-name';
 import { HeaderService } from '../header/header.service';
@@ -37,28 +34,16 @@ import { TrainingViewTableRowComponent } from './training-view-table-row/trainin
     CommonModule,
     FormsModule,
     AddRowButtonComponent,
-    DropdownComponent,
-    InputComponent,
     TrainingViewTableRowComponent,
     TrainingViewNavigationComponent,
-    PaginationComponent,
     SpinnerComponent,
   ],
   templateUrl: './training-view-2.component.html',
   styleUrls: ['./training-view-2.component.scss'],
-  providers: [
-    TrainingViewService,
-    ExerciseDataService,
-    TrainingDayLocatorService,
-    TrainingPlanDataService,
-    AutoProgressionService,
-    TrainingViewNavigationService,
-  ],
+  providers: [TrainingViewService, TrainingDayLocatorService, AutoProgressionService, TrainingViewNavigationService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TrainingView2Component implements OnInit {
-  trainingGrid = viewChild<ElementRef>('trainingGrid');
-
   /**
    * Flag to allow removal of defined rows.
    */

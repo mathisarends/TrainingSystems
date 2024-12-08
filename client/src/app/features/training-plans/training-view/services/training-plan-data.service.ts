@@ -3,7 +3,9 @@ import { ExerciseCategories } from '../../model/exercise-categories';
 import { Exercise } from '../training-exercise';
 import { TrainingPlanDto } from '../trainingPlanDto';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class TrainingPlanDataService {
   title = signal('');
   trainingFrequency = signal(0);
