@@ -4,6 +4,8 @@ import { TrainingDay } from '../model/training-day.schema';
 import { TrainingPlanViewValidationService } from '../service/training-plan-view-validation.service';
 import { TrainingService } from '../training.service';
 import { TrainingDayExerciseDto } from './dto/training-day-exercise.dto';
+import { TrainingSessionManagerService } from './training-session-manager.service';
+import { TrainingPlan } from '../model/training-plan.model';
 
 /**
  * Service responsible for updating training data for a specific training day within a training plan.
@@ -14,6 +16,7 @@ export class TrainingPlanViewUpdateService2 {
   constructor(
     private readonly trainingService: TrainingService,
     private readonly trainingPlanViewValidationService: TrainingPlanViewValidationService,
+    private readonly trainingSessionManagerService: TrainingSessionManagerService,
   ) {}
 
   async updateTrainingDataForTrainingDay(
@@ -51,10 +54,162 @@ export class TrainingPlanViewUpdateService2 {
       this.updateExerciseProperties(exercise, updatedExercise);
     }
 
+    this.propagateChangesToFutureWeeks(
+      trainingPlan,
+      weekIndex,
+      dayIndex,
+      updatedExercise,
+    );
+
+    if (
+      exercise &&
+      this.hasWeightOrActualRpeChanged(exercise, updatedExercise)
+    ) {
+      const trainingSessionTracker =
+        await this.trainingSessionManagerService.getOrCreateTracker(
+          trainingDay,
+          userId,
+        );
+
+      trainingSessionTracker.handleActivitySignal();
+    }
+
+    trainingPlan.mostRecentTrainingDayLocator = {
+      dayIndex: dayIndex,
+      weekIndex: weekIndex,
+    };
+
     trainingPlan.markModified('trainingWeeks');
     await trainingPlan.save();
 
     return exercise ?? newExercise;
+  }
+
+  /**
+   * Propagates changes in a training day to future weeks within the training plan.
+   */
+  private propagateChangesToFutureWeeks(
+    trainingPlan: TrainingPlan,
+    startWeekIndex: number,
+    trainingDayIndex: number,
+    updatedExercise: TrainingDayExerciseDto,
+  ): void {
+    const fieldsToPropagate = this.getFieldsToPropagate();
+
+    for (
+      let weekIndex = startWeekIndex + 1;
+      weekIndex < trainingPlan.trainingWeeks.length;
+      weekIndex++
+    ) {
+      const futureTrainingDay = this.getTrainingDay(
+        trainingPlan,
+        weekIndex,
+        trainingDayIndex,
+      );
+
+      const exerciseIndex = this.getExerciseIndex(
+        trainingPlan,
+        startWeekIndex,
+        trainingDayIndex,
+        updatedExercise,
+      );
+
+      if (
+        exerciseIndex !== -1 &&
+        exerciseIndex < futureTrainingDay.exercises.length
+      ) {
+        // Update existing exercise
+        const futureExercise = futureTrainingDay.exercises[exerciseIndex];
+        this.updateExerciseFields(
+          futureExercise,
+          updatedExercise,
+          fieldsToPropagate,
+        );
+      } else {
+        const newExercise = this.createExerciseFromFields(
+          updatedExercise,
+          fieldsToPropagate,
+        );
+        futureTrainingDay.exercises.push(newExercise);
+      }
+    }
+  }
+
+  /**
+   * Retrieves a training day for a given week and day index.
+   */
+  private getTrainingDay(
+    trainingPlan: TrainingPlan,
+    weekIndex: number,
+    dayIndex: number,
+  ): TrainingDay {
+    return trainingPlan.trainingWeeks[weekIndex].trainingDays[dayIndex];
+  }
+
+  /**
+   * Finds the index of the exercise in the training day using the ID from the updated exercise.
+   */
+  private getExerciseIndex(
+    trainingPlan: TrainingPlan,
+    startWeekIndex: number,
+    dayIndex: number,
+    updatedExercise: TrainingDayExerciseDto,
+  ): number {
+    if (!updatedExercise.id) {
+      return -1;
+    }
+
+    const trainingDay = this.getTrainingDay(
+      trainingPlan,
+      startWeekIndex,
+      dayIndex,
+    );
+    return trainingDay.exercises.findIndex(
+      (ex) => ex.id === updatedExercise.id,
+    );
+  }
+
+  /**
+   * Updates only the specified fields in an existing exercise.
+   */
+  private updateExerciseFields(
+    exercise: Exercise,
+    updatedExercise: TrainingDayExerciseDto,
+    fieldsToUpdate: string[],
+  ): void {
+    fieldsToUpdate.forEach((field) => {
+      if (field in updatedExercise) {
+        exercise[field] = updatedExercise[field];
+      }
+    });
+  }
+
+  /**
+   * Creates a new exercise object based on the specified fields.
+   */
+  private createExerciseFromFields(
+    updatedExercise: TrainingDayExerciseDto,
+    fieldsToInclude: string[],
+  ): Exercise {
+    const newExercise: Partial<Exercise> = {};
+
+    fieldsToInclude.forEach((field) => {
+      if (field in updatedExercise) {
+        newExercise[field] = updatedExercise[field];
+      }
+    });
+
+    newExercise.id = this.generateId();
+
+    return {
+      ...newExercise,
+      sets: newExercise.sets || 0,
+      reps: newExercise.reps || 0,
+      exercise: newExercise.exercise || '',
+      category: newExercise.category || '',
+      targetRPE: newExercise.targetRPE || 0,
+      notes: newExercise.notes || '',
+    } as Exercise;
   }
 
   /**
@@ -107,6 +262,23 @@ export class TrainingPlanViewUpdateService2 {
     exercise.actualRPE = updatedExercise.actualRPE;
     exercise.estMax = updatedExercise.estMax;
     exercise.notes = updatedExercise.notes;
+  }
+
+  private hasWeightOrActualRpeChanged(
+    exercise: Exercise,
+    updatedExercise: TrainingDayExerciseDto,
+  ): boolean {
+    return (
+      exercise.weight !== updatedExercise.weight ||
+      exercise.actualRPE !== updatedExercise.actualRPE
+    );
+  }
+
+  /**
+   * Returns the list of fields to propagate to future weeks.
+   */
+  private getFieldsToPropagate(): string[] {
+    return ['category', 'sets', 'reps', 'exercise', 'targetRPE', 'notes'];
   }
 
   /**

@@ -13,6 +13,7 @@ import { WeightInputComponent } from '../inputs/weight/weight-input.component';
 import { TrainingViewTableRowService } from './training-view-table-row.service';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { skip } from 'rxjs';
+import { TrainingPlanDataService } from '../../training-plans/training-view/services/training-plan-data.service';
 
 @Component({
   selector: 'app-training-view-table-row',
@@ -30,6 +31,7 @@ export class TrainingViewTableRowComponent {
   constructor(
     protected exerciseDataService: ExerciseDataService,
     private trainingViewTableRowService: TrainingViewTableRowService,
+    private trainingPlanDataService: TrainingPlanDataService,
     private estMaxService2: EstMaxService2,
     private pauseTimeService: PauseTimeService,
   ) {
@@ -111,6 +113,7 @@ export class TrainingViewTableRowComponent {
    */
   private updateEstMax(): void {
     const estMax = this.estMaxService2.calcEstMax(this.exercise());
+
     this.updateExerciseProperty('estMax', estMax);
   }
 
