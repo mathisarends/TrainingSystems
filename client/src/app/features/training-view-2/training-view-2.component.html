@@ -24,7 +24,8 @@
 
   <app-add-row-button (addRow)="trainingPlanDataService.addExercise()" (removeRow)="removeRow()" />
 
-  <app-training-view-navigation [trainingWeekIndex]="trainingWeekIndex()" [trainingDayIndex]="trainingDayIndex()" />
+  <app-training-view-navigation [trainingWeekIndex]="trainingDayLocatorService.trainingWeekIndex()"
+                                [trainingDayIndex]="trainingDayLocatorService.trainingDayIndex()" />
 } @else {
   <app-spinner />
 }

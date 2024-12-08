@@ -18,7 +18,6 @@ import { AutoProgressionComponent } from '../training-plans/training-view/auto-p
 import { AutoProgressionService } from '../training-plans/training-view/auto-progression/auto-progression.service';
 import { ExerciseDataService } from '../training-plans/training-view/exercise-data.service';
 import { NavigationDirection } from '../training-plans/training-view/models/navigation-direction.enum';
-import { TrainingDayLocatorService } from '../training-plans/training-view/services/training-day-locator.service';
 import { TrainingPlanDataService } from '../training-plans/training-view/services/training-plan-data.service';
 import { Exercise } from '../training-plans/training-view/training-exercise';
 import { TrainingViewNavigationService } from '../training-plans/training-view/training-view-navigation.service';
@@ -27,6 +26,7 @@ import { TrainingViewService } from '../training-plans/training-view/training-vi
 import { AddRowButtonComponent } from './add-row-button/add-row-button.component';
 import { TrainingViewTableRowComponent } from './training-view-table-row/training-view-table-row.component';
 import { SwipeDirective } from '../../shared/directives/swipe.directive';
+import { TrainingDayLocatorService2 } from './training-day-locator.service';
 
 @Component({
   selector: 'app-training-view-2',
@@ -42,7 +42,7 @@ import { SwipeDirective } from '../../shared/directives/swipe.directive';
   ],
   templateUrl: './training-view-2.component.html',
   styleUrls: ['./training-view-2.component.scss'],
-  providers: [TrainingViewService, TrainingDayLocatorService, AutoProgressionService, TrainingViewNavigationService],
+  providers: [TrainingViewService, AutoProgressionService, TrainingViewNavigationService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TrainingView2Component implements OnInit {
@@ -52,21 +52,6 @@ export class TrainingView2Component implements OnInit {
   allowRemovalOfDefinedRows = signal(false);
 
   /**
-   * Stores the ID of the current training plan.
-   */
-  planId = signal('');
-
-  /**
-   * Index of the current training week.
-   */
-  trainingWeekIndex = signal(0);
-
-  /**
-   * Index of the current training day.
-   */
-  trainingDayIndex = signal(0);
-
-  /**
    * Indicates whether the view has been fully initialized.
    */
   viewInitialized = signal(false);
@@ -74,6 +59,7 @@ export class TrainingView2Component implements OnInit {
   constructor(
     private modalService: ModalService,
     private trainingViewService: TrainingViewService,
+    protected trainingDayLocatorService: TrainingDayLocatorService2,
     private exerciseDataService: ExerciseDataService,
     protected trainingPlanDataService: TrainingPlanDataService,
     private autoProgressionService: AutoProgressionService,
@@ -89,18 +75,23 @@ export class TrainingView2Component implements OnInit {
     this.exerciseDataService.loadExerciseData().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
 
     this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
-      this.planId.set(params['planId']);
-      this.trainingWeekIndex.set(Number(params['week']));
-      this.trainingDayIndex.set(Number(params['day']));
+      const planId = params['planId'];
+      const weekIndex = Number(params['week']);
+      const dayIndex = Number(params['day']);
 
-      this.loadData(this.planId(), this.trainingWeekIndex(), this.trainingDayIndex());
+      this.trainingDayLocatorService.initializeTrainingDayInformation(planId, weekIndex, dayIndex);
+
+      this.loadData(planId, weekIndex, dayIndex);
     });
   }
 
   setHeadlineInfo(trainingPlanTitle: string) {
+    const trainingWeekIndex = this.trainingDayLocatorService.trainingWeekIndex();
+    const trainingDayIndex = this.trainingDayLocatorService.trainingDayIndex();
+
     this.headerService.setHeadlineInfo({
       title: trainingPlanTitle,
-      subTitle: `W${this.trainingWeekIndex() + 1}D${this.trainingDayIndex() + 1}`,
+      subTitle: `W${trainingWeekIndex + 1}D${trainingDayIndex + 1}`,
       buttons: [
         {
           icon: IconName.MORE_VERTICAL,
@@ -111,27 +102,31 @@ export class TrainingView2Component implements OnInit {
   }
 
   protected navigateToNextDay(): void {
-    this.navigationService.navigateToNextDay(this.trainingDayIndex(), this.trainingWeekIndex());
+    this.navigationService.navigateToNextDay(
+      this.trainingDayLocatorService.trainingDayIndex(),
+      this.trainingDayLocatorService.trainingWeekIndex(),
+    );
   }
 
   protected navigateToPreviousDay(): void {
-    this.navigationService.navigateToPreviousDay(this.trainingDayIndex(), this.trainingWeekIndex());
+    this.navigationService.navigateToPreviousDay(
+      this.trainingDayLocatorService.trainingDayIndex(),
+      this.trainingDayLocatorService.trainingWeekIndex(),
+    );
   }
 
   protected navigateToPreviousWeek(): void {
-    this.navigationService.navigateToWeek(
-      NavigationDirection.BACKWARD,
-      this.trainingWeekIndex(),
-      this.trainingDayIndex(),
-    );
+    const trainingWeekIndex = this.trainingDayLocatorService.trainingWeekIndex();
+    const trainingDayIndex = this.trainingDayLocatorService.trainingDayIndex();
+
+    this.navigationService.navigateToWeek(NavigationDirection.BACKWARD, trainingWeekIndex, trainingDayIndex);
   }
 
   protected navigateToNextWeek(): void {
-    this.navigationService.navigateToWeek(
-      NavigationDirection.FORWARD,
-      this.trainingWeekIndex(),
-      this.trainingDayIndex(),
-    );
+    const trainingWeekIndex = this.trainingDayLocatorService.trainingWeekIndex();
+    const trainingDayIndex = this.trainingDayLocatorService.trainingDayIndex();
+
+    this.navigationService.navigateToWeek(NavigationDirection.FORWARD, trainingWeekIndex, trainingDayIndex);
   }
 
   /**
@@ -168,7 +163,7 @@ export class TrainingView2Component implements OnInit {
   private determineHeadlineOptions(): MoreOptionListItem[] {
     const moreOptionsList: MoreOptionListItem[] = [];
 
-    if (this.trainingWeekIndex() === 0) {
+    if (this.trainingDayLocatorService.trainingWeekIndex() === 0) {
       moreOptionsList.push({
         label: 'Progression',
         icon: IconName.Activity,
@@ -195,7 +190,10 @@ export class TrainingView2Component implements OnInit {
       .setTitle('Automatische Progression')
       .setProviderMap(providerMap)
       .setOnSubmitCallback(
-        async () => await firstValueFrom(this.autoProgressionService.confirmAutoProgression(this.planId())),
+        async () =>
+          await firstValueFrom(
+            this.autoProgressionService.confirmAutoProgression(this.trainingDayLocatorService.trainingPlanId()),
+          ),
       )
       .build();
 
