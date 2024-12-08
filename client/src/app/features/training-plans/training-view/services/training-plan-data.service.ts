@@ -27,6 +27,7 @@ export class TrainingPlanDataService {
 
   addExercise(): void {
     const newEntry: Exercise = {
+      id: undefined,
       category: ExerciseCategories.PLACEHOLDER,
       exercise: '',
       sets: 0,

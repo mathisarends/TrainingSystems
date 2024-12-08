@@ -36,8 +36,9 @@ export class TrainingViewTableRowComponent {
     toObservable(this.exercise)
       .pipe(skip(1))
       .subscribe((exercise) => {
-        console.log('Updated exercise:', exercise);
-        this.trainingViewTableRowService.saveExercise(exercise).subscribe();
+        this.trainingViewTableRowService.saveExercise(exercise).subscribe((exercise) => {
+          this.exercise().id = exercise.id;
+        });
       });
   }
 

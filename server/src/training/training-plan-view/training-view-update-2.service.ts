@@ -5,6 +5,10 @@ import { TrainingPlanViewValidationService } from '../service/training-plan-view
 import { TrainingService } from '../training.service';
 import { TrainingDayExerciseDto } from './dto/training-day-exercise.dto';
 
+/**
+ * Service responsible for updating training data for a specific training day within a training plan.
+ * Handles the creation, update, and validation of exercises and training days.
+ */
 @Injectable()
 export class TrainingPlanViewUpdateService2 {
   constructor(
@@ -38,17 +42,24 @@ export class TrainingPlanViewUpdateService2 {
       updatedExercise,
     );
 
+    let newExercise = undefined;
+
     if (!exercise) {
-      const newExercise = this.createExercise(updatedExercise);
+      newExercise = this.createExercise(updatedExercise);
       trainingDay.exercises.push(newExercise as unknown as Exercise);
     } else {
       this.updateExerciseProperties(exercise, updatedExercise);
     }
 
     trainingPlan.markModified('trainingWeeks');
-    return await trainingPlan.save();
+    await trainingPlan.save();
+
+    return exercise ?? newExercise;
   }
 
+  /**
+   * Finds an exercise in the training day by its ID.
+   */
   private findExerciseInTrainingDayById(
     trainingDay: TrainingDay,
     updatedExercise: TrainingDayExerciseDto,
@@ -62,6 +73,9 @@ export class TrainingPlanViewUpdateService2 {
     );
   }
 
+  /**
+   * Creates a new exercise object from the provided DTO.
+   */
   private createExercise(updatedExercise: TrainingDayExerciseDto) {
     return {
       id: this.generateId(),
@@ -77,6 +91,9 @@ export class TrainingPlanViewUpdateService2 {
     };
   }
 
+  /**
+   * Updates the properties of an existing exercise with data from the DTO.
+   */
   private updateExerciseProperties(
     exercise: Exercise,
     updatedExercise: TrainingDayExerciseDto,
@@ -92,6 +109,9 @@ export class TrainingPlanViewUpdateService2 {
     exercise.notes = updatedExercise.notes;
   }
 
+  /**
+   * Generates a unique ID for a new exercise.
+   */
   private generateId(): string {
     return crypto.randomUUID();
   }

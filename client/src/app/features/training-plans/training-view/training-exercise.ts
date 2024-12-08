@@ -4,6 +4,8 @@
 export interface Exercise {
   _id?: string;
 
+  id?: string;
+
   /**
    * The category or type of the exercise (e.g., strength, cardio).
    */

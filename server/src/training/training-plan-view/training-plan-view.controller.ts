@@ -12,6 +12,7 @@ import { TrainingDayExerciseDto } from './dto/training-day-exercise.dto';
 import { TrainingPlanViewUpdateService } from './training-plan-view-update.service';
 import { TrainingPlanViewService } from './training-plan-view.service';
 import { TrainingPlanViewUpdateService2 } from './training-view-update-2.service';
+import { ExerciseDto } from '../model/exercise.schema';
 
 @Controller('training-plan-view')
 export class TrainingPlanViewController {
@@ -43,7 +44,7 @@ export class TrainingPlanViewController {
     @Param('week', ParseIntPipe) weekIndex: number,
     @Param('day', ParseIntPipe) dayIndex: number,
     @Body() trainingDayExerciseDto: TrainingDayExerciseDto,
-  ) {
+  ): Promise<ExerciseDto> {
     return await this.trainingViewUpdateService2.updateTrainingDataForTrainingDay(
       userId,
       trainingPlanId,

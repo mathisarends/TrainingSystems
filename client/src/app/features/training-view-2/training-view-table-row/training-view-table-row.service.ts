@@ -13,7 +13,7 @@ export class TrainingViewTableRowService {
     private trainingDayLocatorService: TrainingDayLocatorService2,
   ) {}
 
-  saveExercise(exercise: Exercise): Observable<void> {
+  saveExercise(exercise: Exercise): Observable<Exercise> {
     const planId = this.trainingDayLocatorService.trainingPlanId();
     const weekIndex = this.trainingDayLocatorService.trainingWeekIndex();
     const dayIndex = this.trainingDayLocatorService.trainingDayIndex();
