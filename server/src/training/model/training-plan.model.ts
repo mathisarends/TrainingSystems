@@ -3,7 +3,6 @@ import { Document, Types } from 'mongoose';
 import { ExerciseCategoryType } from 'src/exercise/types/exercise-category-type.enum';
 import { MostRecentTrainingDayLocator } from './most-recent-training-day-locator';
 import { TrainingWeek, TrainingWeekSchema } from './training-week.schema';
-import { WeightRecommendation } from './weight-recommandation.enum';
 
 @Schema()
 export class TrainingPlan extends Document {
@@ -22,13 +21,6 @@ export class TrainingPlan extends Document {
   @Prop()
   lastUpdated: Date;
 
-  @Prop({
-    enum: WeightRecommendation,
-    required: true,
-    default: WeightRecommendation.LASTWEEK,
-  })
-  weightRecommandationBase: WeightRecommendation;
-
   @Prop({ type: [TrainingWeekSchema], default: [] })
   trainingWeeks: TrainingWeek[];
 
@@ -44,7 +36,11 @@ export class TrainingPlan extends Document {
   @Prop({
     type: [String],
     enum: Object.values(ExerciseCategoryType),
-    default: [ExerciseCategoryType.SQUAT, ExerciseCategoryType.BENCH, ExerciseCategoryType.DEADLIFT],
+    default: [
+      ExerciseCategoryType.SQUAT,
+      ExerciseCategoryType.BENCH,
+      ExerciseCategoryType.DEADLIFT,
+    ],
   })
   recentlyViewedCategoriesInStatisticSection?: ExerciseCategoryType[];
 }

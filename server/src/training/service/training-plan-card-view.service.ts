@@ -24,23 +24,28 @@ export class TrainingPlanCardViewService {
       userId: user.id,
     });
 
-    return trainingPlans.map((trainingPlan) => this.createCardView(trainingPlan, user.profilePicture));
+    return trainingPlans.map((trainingPlan) =>
+      this.createCardView(trainingPlan, user.profilePicture),
+    );
   }
 
   /**
    * Creates a card view for the training plan.
    */
-  private createCardView(trainingPlan: TrainingPlan, pictureUrl?: string): TrainingPlanCardViewDto {
+  private createCardView(
+    trainingPlan: TrainingPlan,
+    pictureUrl?: string,
+  ): TrainingPlanCardViewDto {
     return {
       id: trainingPlan.id,
       title: trainingPlan.title,
       blockLength: trainingPlan.trainingWeeks.length,
-      weightRecomamndationBase: trainingPlan.weightRecommandationBase,
       trainingFrequency: trainingPlan.trainingDays.length,
       lastUpdated: trainingPlan.lastUpdated,
       coverImageBase64: trainingPlan.coverImageBase64 ?? '',
       pictureUrl: pictureUrl,
-      percentageFinished: this.getPercentageOfTrainingPlanFinished(trainingPlan),
+      percentageFinished:
+        this.getPercentageOfTrainingPlanFinished(trainingPlan),
       averageTrainingDayDuration: this.getAverageTrainingDuration(trainingPlan),
     };
   }
@@ -48,9 +53,12 @@ export class TrainingPlanCardViewService {
   /**
    * Calculates the percentage of the training plan completed.
    */
-  private getPercentageOfTrainingPlanFinished(trainingPlan: TrainingPlan): number {
+  private getPercentageOfTrainingPlanFinished(
+    trainingPlan: TrainingPlan,
+  ): number {
     const trainingFrequency = trainingPlan.trainingDays.length;
-    const totalTrainingDays = trainingFrequency * trainingPlan.trainingWeeks.length;
+    const totalTrainingDays =
+      trainingFrequency * trainingPlan.trainingWeeks.length;
     const { weekIndex, dayIndex } = trainingPlan.mostRecentTrainingDayLocator;
 
     let completedDays: number;
@@ -81,7 +89,9 @@ export class TrainingPlanCardViewService {
   /**
    * Calculates the average training day duration in a human-readable format.
    */
-  private getAverageTrainingDuration(trainingPlan: TrainingPlan): string | undefined {
+  private getAverageTrainingDuration(
+    trainingPlan: TrainingPlan,
+  ): string | undefined {
     const durations: number[] = [];
 
     for (const week of trainingPlan.trainingWeeks) {
@@ -96,7 +106,10 @@ export class TrainingPlanCardViewService {
       return undefined;
     }
 
-    const totalDuration = durations.reduce((sum, duration) => sum + duration, 0);
+    const totalDuration = durations.reduce(
+      (sum, duration) => sum + duration,
+      0,
+    );
     const avgDuration = totalDuration / durations.length;
 
     const hours = Math.floor(avgDuration / 60);

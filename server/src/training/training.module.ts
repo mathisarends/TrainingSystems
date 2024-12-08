@@ -18,7 +18,6 @@ import { TrainingPlanStatisticsModule } from './training-plan-statistics/trainin
 import { TrainingPlanTimerModule } from './training-plan-timer/training-plan-timer.module';
 import { TrainingPlanViewModule } from './training-plan-view/training-plan-view.module';
 import { TrainingService } from './training.service';
-import { MigrationAddIdsToExercises } from './training-day-migration';
 
 @Module({
   imports: [
@@ -43,7 +42,6 @@ import { MigrationAddIdsToExercises } from './training-day-migration';
     PushNotificationsService,
     AutoProgressionService,
     UsersService,
-    MigrationAddIdsToExercises,
   ],
   exports: [TrainingService, TrainingPlanViewValidationService, MongooseModule],
 })

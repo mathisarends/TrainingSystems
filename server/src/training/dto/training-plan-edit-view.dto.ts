@@ -1,5 +1,3 @@
-import { WeightRecommendation } from '../model/weight-recommandation.enum';
-
 /**
  * Represents the data structure for editing a training plan.
  *
@@ -10,7 +8,6 @@ export interface TrainingPlanEditViewDto {
   id: string;
   title: string;
   trainingDays: string[];
-  weightRecommandationBase: WeightRecommendation;
   trainingBlockLength: number;
   coverImageBase64: string;
   startDate: string;

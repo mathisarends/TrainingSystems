@@ -73,6 +73,7 @@ export class TrainingView2Component implements OnInit {
 
   ngOnInit(): void {
     this.exerciseDataService.loadExerciseData().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+    this.headerService.setLoading();
 
     this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       const planId = params['planId'];

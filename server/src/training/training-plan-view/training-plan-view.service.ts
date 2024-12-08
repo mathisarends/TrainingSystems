@@ -3,7 +3,6 @@ import { TrainingDayViewDto } from '../dto/training-day-view.dto';
 import { Exercise } from '../model/exercise.schema';
 import { TrainingDay } from '../model/training-day.schema';
 import { TrainingPlan } from '../model/training-plan.model';
-import { WeightRecommendation } from '../model/weight-recommandation.enum';
 import { TrainingPlanViewValidationService } from '../service/training-plan-view-validation.service';
 import { TrainingService } from '../training.service';
 
@@ -23,19 +22,32 @@ export class TrainingPlanViewService {
     weekIndex: number,
     dayIndex: number,
   ): Promise<TrainingDayViewDto> {
-    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(userId, trainingPlanId);
+    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(
+      userId,
+      trainingPlanId,
+    );
 
-    const trainingDay = this.trainingPlanViewValidationService.findAndValidateTrainingDay(
+    const trainingDay =
+      this.trainingPlanViewValidationService.findAndValidateTrainingDay(
+        trainingPlan,
+        weekIndex,
+        dayIndex,
+      );
+
+    const weightRecommendations = this.generateWeightRecommendations(
       trainingPlan,
       weekIndex,
       dayIndex,
+      trainingDay,
     );
-
-    const weightRecommendations = this.generateWeightRecommendations(trainingPlan, weekIndex, dayIndex, trainingDay);
 
     await trainingPlan.save();
 
-    return this.toTrainingDayDto(trainingPlan, trainingDay, weightRecommendations);
+    return this.toTrainingDayDto(
+      trainingPlan,
+      trainingDay,
+      weightRecommendations,
+    );
   }
 
   /**
@@ -47,22 +59,19 @@ export class TrainingPlanViewService {
     dayIndex: number,
     trainingDay: TrainingDay,
   ): string[] {
-    if (this.shouldGenerateWeightRecommendations(trainingPlan, weekIndex)) {
-      const previousTrainingDay = this.trainingPlanViewValidationService.findAndValidateTrainingDay(
-        trainingPlan,
-        weekIndex,
-        dayIndex,
+    if (weekIndex > 0) {
+      const previousTrainingDay =
+        this.trainingPlanViewValidationService.findAndValidateTrainingDay(
+          trainingPlan,
+          weekIndex,
+          dayIndex,
+        );
+      return this.getWeightRecommendations(
+        trainingDay.exercises,
+        previousTrainingDay.exercises,
       );
-      return this.getWeightRecommendations(trainingDay.exercises, previousTrainingDay.exercises);
     }
     return [];
-  }
-
-  /**
-   * Checks if weight recommendations should be generated.
-   */
-  private shouldGenerateWeightRecommendations(trainingPlan: TrainingPlan, weekIndex: number): boolean {
-    return trainingPlan.weightRecommandationBase === WeightRecommendation.LASTWEEK && weekIndex > 0;
   }
 
   /**
@@ -85,9 +94,15 @@ export class TrainingPlanViewService {
   /**
    * Generates weight recommendations based on previous week's exercises.
    */
-  private getWeightRecommendations(currentExercises: Exercise[], previousExercises: Exercise[]): string[] {
+  private getWeightRecommendations(
+    currentExercises: Exercise[],
+    previousExercises: Exercise[],
+  ): string[] {
     return currentExercises.map((currentExercise) => {
-      const matchingExercise = this.findMatchingExercise(currentExercise, previousExercises);
+      const matchingExercise = this.findMatchingExercise(
+        currentExercise,
+        previousExercises,
+      );
       return matchingExercise ? matchingExercise.weight : '';
     });
   }
@@ -95,14 +110,25 @@ export class TrainingPlanViewService {
   /**
    * Finds a matching exercise from the previous week’s training.
    */
-  private findMatchingExercise(currentExercise: Exercise, previousExercises: Exercise[]): Exercise | undefined {
-    return previousExercises.find((previousExercise) => this.isMatchingExercise(currentExercise, previousExercise));
+  private findMatchingExercise(
+    currentExercise: Exercise,
+    previousExercises: Exercise[],
+  ): Exercise | undefined {
+    return previousExercises.find((previousExercise) =>
+      this.isMatchingExercise(currentExercise, previousExercise),
+    );
   }
 
   /**
    * Compares two exercises to determine if they are the same.
    */
-  private isMatchingExercise(currentExercise: Exercise, previousExercise: Exercise): boolean {
-    return previousExercise.exercise === currentExercise.exercise && previousExercise.reps === currentExercise.reps;
+  private isMatchingExercise(
+    currentExercise: Exercise,
+    previousExercise: Exercise,
+  ): boolean {
+    return (
+      previousExercise.exercise === currentExercise.exercise &&
+      previousExercise.reps === currentExercise.reps
+    );
   }
 }
