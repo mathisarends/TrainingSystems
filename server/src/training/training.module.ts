@@ -18,13 +18,13 @@ import { TrainingPlanStatisticsModule } from './training-plan-statistics/trainin
 import { TrainingPlanTimerModule } from './training-plan-timer/training-plan-timer.module';
 import { TrainingPlanViewModule } from './training-plan-view/training-plan-view.module';
 import { TrainingService } from './training.service';
-
-// TODO: aufteilen in trainingModule, trianingPlanModule, statisticsModule und timer Module
-// https://chatgpt.com/g/g-M5xiZJST7-nestjs-copilot/c/671a74bd-528c-8002-8936-14b871d46fa0
+import { MigrationAddIdsToExercises } from './training-day-migration';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: TrainingPlan.name, schema: TrainingPlanSchema }]),
+    MongooseModule.forFeature([
+      { name: TrainingPlan.name, schema: TrainingPlanSchema },
+    ]),
     ExerciseModule,
     PushNotificationsModule,
     UsersModule,
@@ -43,6 +43,7 @@ import { TrainingService } from './training.service';
     PushNotificationsService,
     AutoProgressionService,
     UsersService,
+    MigrationAddIdsToExercises,
   ],
   exports: [TrainingService, TrainingPlanViewValidationService, MongooseModule],
 })

@@ -40,11 +40,9 @@ export class TrainingService {
   }
 
   async getTrainingPlansByUser(userId: string): Promise<TrainingPlan[]> {
-    const trainingPlan = await this.trainingPlanModel.find({
+    return this.trainingPlanModel.find({
       userId: userId,
     });
-
-    return trainingPlan;
   }
 
   async getCertainTrainingDay(userId: string, trainingDayId: string) {
@@ -60,23 +58,6 @@ export class TrainingService {
     }
 
     throw new NotFoundException('Training day with the id could not be found');
-  }
-
-  getTrainingDayById(trainingPlans: TrainingPlan[], trainingDayId: string) {
-    const trainingDayDetails = trainingPlans
-      .flatMap((trainingPlan) =>
-        trainingPlan.trainingWeeks.flatMap((week, weekIndex) =>
-          week.trainingDays.map((day, dayIndex) => ({
-            trainingPlanId: trainingPlan.id,
-            weekIndex,
-            dayIndex,
-            day,
-          })),
-        ),
-      )
-      .find((detail) => detail.day.id === trainingDayId);
-
-    return trainingDayDetails;
   }
 
   async getTrainingPlanByTrainingDay(
