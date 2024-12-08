@@ -1,0 +1,20 @@
+:host {
+  display: flex;
+  justify-content: flex-end; /* Elemente an das Ende (rechte Ecke) schieben */
+  align-items: center; /* Vertikale Zentrierung */
+  gap: 1rem; /* Abstand zwischen Pagination und Navigationspfeilen */
+  color: rgb(109, 109, 109);
+  margin-top: 0.5rem;
+}
+
+@media screen and (max-width: 768px) {
+  :host {
+    flex-direction: column; /* Auf kleinere Bildschirme umstellen */
+    justify-content: center;
+    align-items: center; /* Zentrieren der Elemente */
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+}
+
+/*# sourceMappingURL=training-view-navigation.component.css.map */

@@ -13,27 +13,18 @@ export class SetProgressionService {
     trainingPlanId: string,
     exerciseCategories: ExerciseCategoryType[],
   ): Promise<ChartDataDto> {
-    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(
-      userId,
-      trainingPlanId,
-    );
+    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(userId, trainingPlanId);
 
     const responseData: ChartDataDto = {};
 
     exerciseCategories.forEach((category) => {
-      responseData[capitalize(category)] = this.getSetsPerWeek(
-        trainingPlan,
-        category,
-      );
+      responseData[capitalize(category)] = this.getSetsPerWeek(trainingPlan, category);
     });
 
     return responseData;
   }
 
-  private getSetsPerWeek(
-    trainingPlan: TrainingPlan,
-    exerciseCategory: ExerciseCategoryType,
-  ): number[] {
+  private getSetsPerWeek(trainingPlan: TrainingPlan, exerciseCategory: ExerciseCategoryType): number[] {
     return trainingPlan.trainingWeeks.map((week) =>
       week.trainingDays.reduce(
         (totalSets, trainingDay) =>

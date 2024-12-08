@@ -11,9 +11,7 @@ import { Friendship, FriendshipSchema } from './model/friendship.model';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: Friendship.name, schema: FriendshipSchema },
-    ]),
+    MongooseModule.forFeature([{ name: Friendship.name, schema: FriendshipSchema }]),
     UsersModule,
     ExerciseModule,
     AuthModule,

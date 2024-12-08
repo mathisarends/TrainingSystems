@@ -1,9 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
-import {
-  TrainingDay,
-  TrainingDaySchema,
-} from 'src/training/model/training-day.schema';
+import { TrainingDay, TrainingDaySchema } from 'src/training/model/training-day.schema';
 import { WeightRecommendation } from 'src/training/model/weight-recommandation.enum';
 
 @Schema()
@@ -27,5 +24,4 @@ export class TrainingRoutine extends Document {
   versions: TrainingDay[];
 }
 
-export const TrainingRoutineSchema =
-  SchemaFactory.createForClass(TrainingRoutine);
+export const TrainingRoutineSchema = SchemaFactory.createForClass(TrainingRoutine);

@@ -16,10 +16,7 @@ export class TrainingSessionManagerService {
     private readonly TrainingLogService: TrainingLogService,
   ) {}
 
-  async getOrCreateTracker(
-    trainingDay: TrainingDay,
-    userId: string,
-  ): Promise<TrainingSessionTracker> {
+  async getOrCreateTracker(trainingDay: TrainingDay, userId: string): Promise<TrainingSessionTracker> {
     const trainingDayId = trainingDay.id;
     const tracker = this.getTrackerById(trainingDayId);
 
@@ -48,15 +45,12 @@ export class TrainingSessionManagerService {
 
   isTrainingActivitySignal(fieldName: string, fieldValue: string): boolean {
     const isValidWeightInput = fieldName.endsWith('weight') && !!fieldValue;
-    const isValidActualRpeInput =
-      fieldName.endsWith('actualRPE') && !!fieldValue;
+    const isValidActualRpeInput = fieldName.endsWith('actualRPE') && !!fieldValue;
 
     return isValidWeightInput || isValidActualRpeInput;
   }
 
-  private getTrackerById(
-    trainingDayId: TrainingDayId,
-  ): TrainingSessionTracker | undefined {
+  private getTrackerById(trainingDayId: TrainingDayId): TrainingSessionTracker | undefined {
     return this.trackers.get(trainingDayId);
   }
 }

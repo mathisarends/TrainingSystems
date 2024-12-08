@@ -1,0 +1,47 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+:host p {
+  margin: 0;
+}
+:host .profile-wrapper {
+  width: 55vw;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative;
+}
+
+#file-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 5rem;
+  width: 5rem;
+  border-radius: 1rem;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.list-item-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-top: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+  :host {
+    align-items: unset;
+  }
+  :host .profile-wrapper {
+    width: 100%;
+  }
+}
+
+/*# sourceMappingURL=profile.component.css.map */

@@ -1,0 +1,58 @@
+:host {
+  position: absolute;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  max-width: 150px;
+  background-color: rgba(240, 240, 240, 0.925);
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+@media (max-height: 600px) {
+  :host {
+    transform: translateY(-100%);
+    bottom: 100%;
+    top: auto;
+  }
+}
+:host.bottom {
+  top: 3.5rem;
+  right: 6.5rem;
+}
+:host.left {
+  top: -2rem;
+  right: 10%;
+}
+:host.top {
+  top: -5rem;
+  right: 2.5rem;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+ul li {
+  padding: 10px;
+  cursor: pointer;
+  background-color: inherit;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+ul li:hover {
+  background-color: #f0f0f0;
+}
+ul li:last-child {
+  border-bottom: none;
+}
+
+@media screen and (max-width: 768px) {
+  :host.bottom {
+    right: 0.7rem;
+    top: 3rem;
+  }
+}
+
+/*# sourceMappingURL=more-options-list.component.css.map */

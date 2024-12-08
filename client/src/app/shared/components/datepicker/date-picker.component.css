@@ -1,0 +1,23 @@
+input[type=date] {
+  width: 8rem;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 8px;
+  background-color: #f9f6ff;
+  border: 1px solid white;
+  color: #4a4a4a;
+  box-shadow: 0 4px 8px rgba(159, 122, 234, 0.1);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[type=date]:hover {
+  box-shadow: 0 6px 12px rgba(159, 122, 234, 0.2);
+}
+
+input[type=date]:focus {
+  border-color: #7e5edc; /* Gleicher Farbton wie Hover */
+  box-shadow: 0 6px 12px rgba(159, 122, 234, 0.3);
+  outline: none;
+}
+
+/*# sourceMappingURL=date-picker.component.css.map */

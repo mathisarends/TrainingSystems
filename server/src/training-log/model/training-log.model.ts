@@ -16,6 +16,4 @@ export class TrainingLogNotification extends Document {
   trainingFinishedDate: Date;
 }
 
-export const TrainingLogNotificationSchema = SchemaFactory.createForClass(
-  TrainingLogNotification,
-);
+export const TrainingLogNotificationSchema = SchemaFactory.createForClass(TrainingLogNotification);

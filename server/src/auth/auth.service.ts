@@ -27,16 +27,13 @@ export class AuthService {
       return user;
     }
 
-    const profilePicture =
-      this.setDefaultProfilePictureBasedOnFirstCharacter(name);
+    const profilePicture = this.setDefaultProfilePictureBasedOnFirstCharacter(name);
     const userDto = new CreateUserDto(name, email, profilePicture);
 
     return await this.userService.createUser(userDto);
   }
 
-  private setDefaultProfilePictureBasedOnFirstCharacter(
-    username: string,
-  ): string {
+  private setDefaultProfilePictureBasedOnFirstCharacter(username: string): string {
     const firstLetter = username[0].toUpperCase();
     return `/images/profile/${firstLetter}.webp`;
   }

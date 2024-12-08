@@ -1,8 +1,12 @@
 @if (viewInitialized()) {
-  <div class="training-grid" appSwipe [swipeLeft]="navigateToNextDay"
-       [swipeRight]="navigateToPreviousDay"
-       [swipeDiagonalTopLeftToBottomRight]="navigateToPreviousWeek"
-       [swipeDiagonalTopRightToBottomLeft]="navigateToNextWeek">
+  <div
+    class="training-grid"
+    appSwipe
+    [swipeLeft]="navigateToNextDay"
+    [swipeRight]="navigateToPreviousDay"
+    [swipeDiagonalTopLeftToBottomRight]="navigateToPreviousWeek"
+    [swipeDiagonalTopRightToBottomLeft]="navigateToNextWeek"
+  >
     <div class="column-name">Category</div>
     <div class="column-name">Exercise</div>
     <div class="column-name">Sets</div>

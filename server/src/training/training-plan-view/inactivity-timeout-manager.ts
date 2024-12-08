@@ -12,10 +12,7 @@ export class InactivityTimeoutManager {
    * @param timeoutDuration The duration (in milliseconds) after which the timeout is triggered.
    * @param onTimeoutCallback The callback to execute when the timeout is triggered.
    */
-  constructor(
-    timeoutDuration: number,
-    onTimeoutCallback: () => void | Promise<void>,
-  ) {
+  constructor(timeoutDuration: number, onTimeoutCallback: () => void | Promise<void>) {
     this.timeoutDuration = timeoutDuration;
     this.onTimeoutCallback = onTimeoutCallback;
   }

@@ -1,0 +1,20 @@
+:host {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: smaller;
+}
+
+.tab:hover {
+  cursor: pointer;
+}
+
+.active {
+  text-decoration: underline;
+}
+
+app-icon {
+  transform: translateY(2.5px);
+}
+
+/*# sourceMappingURL=modal-pagination.component.css.map */

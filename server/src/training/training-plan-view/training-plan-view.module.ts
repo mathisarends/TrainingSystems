@@ -11,11 +11,7 @@ import { TrainingSessionTracker } from './training-session-tracker.service';
 import { TrainingPlanViewUpdateService2 } from './training-view-update-2.service';
 
 @Module({
-  imports: [
-    forwardRef(() => TrainingModule),
-    PushNotificationsModule,
-    TrainingLogModule,
-  ],
+  imports: [forwardRef(() => TrainingModule), PushNotificationsModule, TrainingLogModule],
   controllers: [TrainingPlanViewController],
   providers: [
     TrainingPlanViewService,

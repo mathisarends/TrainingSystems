@@ -24,9 +24,7 @@ export class TrainingLogService {
    * @returns Anzahl der gelöschten Logs
    */
   async deleteLogsByUser(userId: string) {
-    const deleteResult = await this.trainingLogModel
-      .deleteMany({ userId })
-      .exec();
+    const deleteResult = await this.trainingLogModel.deleteMany({ userId }).exec();
 
     return deleteResult.deletedCount;
   }
@@ -36,9 +34,7 @@ export class TrainingLogService {
    * @param userId Die ID des Benutzers, für den die Log-Benachrichtigung erstellt wird.
    * @returns Die gespeicherte TrainingLogNotification
    */
-  async createTrainingLogNotification(
-    userId: string,
-  ): Promise<TrainingLogNotification> {
+  async createTrainingLogNotification(userId: string): Promise<TrainingLogNotification> {
     const newLog = new this.trainingLogModel({
       userId: userId,
     });

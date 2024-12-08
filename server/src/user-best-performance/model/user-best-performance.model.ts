@@ -55,8 +55,7 @@ export class UserBestPerformance extends Document {
   }[];
 }
 
-export const UserBestPerformanceSchema =
-  SchemaFactory.createForClass(UserBestPerformance);
+export const UserBestPerformanceSchema = SchemaFactory.createForClass(UserBestPerformance);
 
 /**
  * Middleware to manage the `previousRecords` history.
@@ -70,20 +69,11 @@ UserBestPerformanceSchema.pre('findOneAndUpdate', function (next) {
   const MAX_HISTORY_LENGTH = 3;
   const update = this.getUpdate() as UserBestPerformance;
 
-  if (
-    update.previousRecords &&
-    update.previousRecords.length >= MAX_HISTORY_LENGTH
-  ) {
+  if (update.previousRecords && update.previousRecords.length >= MAX_HISTORY_LENGTH) {
     update.previousRecords.shift();
   }
 
-  if (
-    update.sets &&
-    update.reps &&
-    update.weight &&
-    update.actualRPE &&
-    update.estMax
-  ) {
+  if (update.sets && update.reps && update.weight && update.actualRPE && update.estMax) {
     update.previousRecords = update.previousRecords || [];
     update.previousRecords.push({
       sets: update.sets,
@@ -98,7 +88,4 @@ UserBestPerformanceSchema.pre('findOneAndUpdate', function (next) {
   next();
 });
 
-UserBestPerformanceSchema.index(
-  { userId: 1, exerciseName: 1 },
-  { unique: true },
-);
+UserBestPerformanceSchema.index({ userId: 1, exerciseName: 1 }, { unique: true });

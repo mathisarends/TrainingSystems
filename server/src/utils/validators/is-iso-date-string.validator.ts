@@ -1,8 +1,4 @@
-import {
-  registerDecorator,
-  ValidationArguments,
-  ValidationOptions,
-} from 'class-validator';
+import { registerDecorator, ValidationArguments, ValidationOptions } from 'class-validator';
 
 export function IsIsoDateString(validationOptions?: ValidationOptions) {
   return function (object: Object, propertyName: string) {
@@ -16,8 +12,7 @@ export function IsIsoDateString(validationOptions?: ValidationOptions) {
           if (typeof value !== 'string') {
             return false;
           }
-          const iso8601Regex =
-            /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,3})?Z$/;
+          const iso8601Regex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,3})?Z$/;
           return iso8601Regex.test(value);
         },
         defaultMessage(args: ValidationArguments) {

@@ -1,0 +1,38 @@
+@charset "UTF-8";
+:host {
+  display: flex;
+  align-items: flex-start;
+}
+
+.transparent-input {
+  border: none;
+  background-color: transparent;
+  width: 100%;
+}
+
+.transparent-input:focus {
+  border: none;
+  outline: none;
+}
+
+/* Hide up and down arrows from number inputs */
+input[type=number] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0; /* Chrome, Safari, Edge, Opera */
+}
+
+/* Remove up and down arrows in IE10+ */
+input[type=number] {
+  -ms-appearance: textfield;
+}
+
+.transparent-input option {
+  text-align: left; /* Text in den Optionen linksbündig ausrichten */
+}
+
+/*# sourceMappingURL=dropdown.component.css.map */

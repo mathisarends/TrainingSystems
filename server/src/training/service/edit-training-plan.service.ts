@@ -11,21 +11,13 @@ import { TrainingService } from '../training.service';
 export class EditTrainingPlanService {
   constructor(private readonly trainingService: TrainingService) {}
 
-  async getEditViewOfTrainingPlan(
-    userId: string,
-    trainingPlanId: string,
-  ): Promise<TrainingPlanEditViewDto> {
-    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(
-      userId,
-      trainingPlanId,
-    );
+  async getEditViewOfTrainingPlan(userId: string, trainingPlanId: string): Promise<TrainingPlanEditViewDto> {
+    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(userId, trainingPlanId);
 
     return this.mapToEditViewDto(trainingPlan);
   }
 
-  private mapToEditViewDto(
-    trainingPlan: TrainingPlan,
-  ): TrainingPlanEditViewDto {
+  private mapToEditViewDto(trainingPlan: TrainingPlan): TrainingPlanEditViewDto {
     return {
       id: trainingPlan.id,
       title: trainingPlan.title,
@@ -41,22 +33,10 @@ export class EditTrainingPlanService {
    * Edits an existing training plan based on the provided data.
    * Adjusts the training block length and training frequency as needed.
    */
-  async editTrainingPlan(
-    userId: string,
-    trainingPlanId: string,
-    editTrainingPlanDto: EditTrainingPlanDto,
-  ) {
-    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(
-      userId,
-      trainingPlanId,
-    );
+  async editTrainingPlan(userId: string, trainingPlanId: string, editTrainingPlanDto: EditTrainingPlanDto) {
+    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(userId, trainingPlanId);
 
-    if (
-      this.isBlockLengthChanged(
-        trainingPlan,
-        editTrainingPlanDto.trainingBlockLength,
-      )
-    ) {
+    if (this.isBlockLengthChanged(trainingPlan, editTrainingPlanDto.trainingBlockLength)) {
       this.adjustBlockLength(
         trainingPlan,
         editTrainingPlanDto.trainingBlockLength,
@@ -64,50 +44,30 @@ export class EditTrainingPlanService {
       );
     }
 
-    if (
-      this.isTrainingFrequencyChanged(
-        trainingPlan,
-        editTrainingPlanDto.trainingDays.length,
-      )
-    ) {
-      this.handleTrainingFrequencyChange(
-        trainingPlan,
-        editTrainingPlanDto.trainingDays.length,
-      );
+    if (this.isTrainingFrequencyChanged(trainingPlan, editTrainingPlanDto.trainingDays.length)) {
+      this.handleTrainingFrequencyChange(trainingPlan, editTrainingPlanDto.trainingDays.length);
     }
 
-    return await this.trainingService.updateTrainingPlan(
-      trainingPlan,
-      editTrainingPlanDto,
-    );
+    return await this.trainingService.updateTrainingPlan(trainingPlan, editTrainingPlanDto);
   }
 
   /**
    * Checks if the block length of a training plan has changed..
    */
-  private isBlockLengthChanged(
-    trainingPlan: TrainingPlan,
-    newBlockLength: number,
-  ) {
+  private isBlockLengthChanged(trainingPlan: TrainingPlan, newBlockLength: number) {
     return trainingPlan.trainingWeeks.length !== newBlockLength;
   }
 
   /**
    * Adjusts the block length of a training plan by adding or removing weeks.
    */
-  private adjustBlockLength(
-    trainingPlan: TrainingPlan,
-    newBlockLength: number,
-    daysPerWeek: number,
-  ): void {
+  private adjustBlockLength(trainingPlan: TrainingPlan, newBlockLength: number, daysPerWeek: number): void {
     const currentLength = trainingPlan.trainingWeeks.length;
 
     if (newBlockLength > currentLength) {
       const weeksToAdd = newBlockLength - currentLength;
       trainingPlan.trainingWeeks.push(
-        ...Array.from({ length: weeksToAdd }, () =>
-          this.createNewTrainingWeek(daysPerWeek),
-        ),
+        ...Array.from({ length: weeksToAdd }, () => this.createNewTrainingWeek(daysPerWeek)),
       );
     } else if (newBlockLength < currentLength) {
       trainingPlan.trainingWeeks.splice(newBlockLength);
@@ -119,31 +79,21 @@ export class EditTrainingPlanService {
    */
   private createNewTrainingWeek(daysPerWeek: number): TrainingWeek {
     return {
-      trainingDays: Array.from({ length: daysPerWeek }, () =>
-        this.createEmptyTrainingDay(),
-      ),
+      trainingDays: Array.from({ length: daysPerWeek }, () => this.createEmptyTrainingDay()),
     } as TrainingWeek;
   }
 
   /**
    * Checks if the training frequency (number of training days per week) has changed.
    */
-  private isTrainingFrequencyChanged(
-    trainingPlan: TrainingPlan,
-    newAmountOfDays: number,
-  ): boolean {
-    return (
-      trainingPlan.trainingWeeks[0].trainingDays.length !== newAmountOfDays
-    );
+  private isTrainingFrequencyChanged(trainingPlan: TrainingPlan, newAmountOfDays: number): boolean {
+    return trainingPlan.trainingWeeks[0].trainingDays.length !== newAmountOfDays;
   }
 
   /**
    * Adjusts the number of training days in each week based on the difference between the current and new training frequency.
    */
-  private handleTrainingFrequencyChange(
-    trainingPlan: TrainingPlan,
-    newAmountOfDays: number,
-  ): void {
+  private handleTrainingFrequencyChange(trainingPlan: TrainingPlan, newAmountOfDays: number): void {
     const currentDays = trainingPlan.trainingWeeks[0].trainingDays.length;
     const difference = currentDays - newAmountOfDays;
 
@@ -156,11 +106,7 @@ export class EditTrainingPlanService {
       // Add days
       const numberOfDaysToAdd = Math.abs(difference);
       trainingPlan.trainingWeeks.forEach((week) => {
-        week.trainingDays.push(
-          ...Array.from({ length: numberOfDaysToAdd }, () =>
-            this.createEmptyTrainingDay(),
-          ),
-        );
+        week.trainingDays.push(...Array.from({ length: numberOfDaysToAdd }, () => this.createEmptyTrainingDay()));
       });
     }
   }

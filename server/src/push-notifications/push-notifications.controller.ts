@@ -5,18 +5,13 @@ import { PushNotificationsService } from './push-notifications.service';
 
 @Controller('push-notifications')
 export class PushNotificationsController {
-  constructor(
-    private readonly pushNotiifcationService: PushNotificationsService,
-  ) {}
+  constructor(private readonly pushNotiifcationService: PushNotificationsService) {}
 
   @Post()
   async createPushNotificationSubscriptionForUser(
     @GetUser() userId: string,
     @Body() createPushSubscriptionDto: CreatePushSubscriptionDto,
   ) {
-    await this.pushNotiifcationService.createPushNotificationSubscriptionForUser(
-      userId,
-      createPushSubscriptionDto,
-    );
+    await this.pushNotiifcationService.createPushNotificationSubscriptionForUser(userId, createPushSubscriptionDto);
   }
 }

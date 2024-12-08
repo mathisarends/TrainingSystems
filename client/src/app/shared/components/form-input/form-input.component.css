@@ -1,0 +1,55 @@
+:host {
+  position: relative;
+  width: 100%;
+  color: darkgray;
+}
+:host input {
+  width: 100%;
+  padding: 10px 12px;
+  padding-left: 1.05rem;
+  font-size: 16px;
+  border: 2px solid #ddd;
+  color: rgb(66, 66, 66);
+  border-radius: 4px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+:host input:focus {
+  border-color: var(--accent-color);
+  outline: none;
+}
+:host input.invalid {
+  border-color: var(--error-color);
+  background: #fcf8f8;
+}
+:host .floating-label {
+  font-size: 0.9em;
+  color: #9e9e9e;
+  pointer-events: none;
+  user-select: none;
+  background: white;
+  padding: 0 7.5px;
+  transform: translate(7px, 10px);
+  transition: transform 0.2s ease, color 0.2s linear, font-size 0.2s linear;
+}
+:host .floating-label.active {
+  color: var(--accent-color);
+}
+:host .floating-label.invalid {
+  color: var(--error-color);
+  background: #fcf8f8;
+}
+:host .error-message {
+  font-size: 14px;
+  padding-left: 0.75rem;
+  color: var(--error-color);
+  margin-top: 4px;
+}
+
+app-icon {
+  position: absolute;
+  bottom: 0.9rem;
+  right: 1rem;
+  color: var(--accent-color);
+}
+
+/*# sourceMappingURL=form-input.component.css.map */

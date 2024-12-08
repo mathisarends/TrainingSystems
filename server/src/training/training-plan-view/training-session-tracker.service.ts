@@ -62,9 +62,7 @@ export class TrainingSessionTracker {
     }
 
     const duration =
-      (this.trainingDay.endTime.getTime() -
-        this.trainingDay.startTime.getTime() -
-        this.INACTIVITY_TIMEOUT_DURATION) /
+      (this.trainingDay.endTime.getTime() - this.trainingDay.startTime.getTime() - this.INACTIVITY_TIMEOUT_DURATION) /
       60000;
 
     const roundedDuration = Math.round(duration / 5) * 5;
@@ -72,16 +70,11 @@ export class TrainingSessionTracker {
   }
 
   private async handleSessionTimeout(): Promise<void> {
-    if (
-      !this.isMinimumTrainingDurationMet(this.trainingDay.durationInMinutes!)
-    ) {
+    if (!this.isMinimumTrainingDurationMet(this.trainingDay.durationInMinutes!)) {
       return;
     }
 
-    const trainingDay = await this.trainingService.getCertainTrainingDay(
-      this.userId,
-      this.trainingDay.id,
-    );
+    const trainingDay = await this.trainingService.getCertainTrainingDay(this.userId, this.trainingDay.id);
 
     await this.addRelevantTrackingDataToTrainingDay(trainingDay);
     await this.sendTrainingSummaryPushNotification();
@@ -97,25 +90,16 @@ export class TrainingSessionTracker {
       tag: 'training-summary-notification',
       vibrate: [200, 100, 200],
     };
-    await this.pushNotificationService.sendNotification(
-      this.userId,
-      notificationPayload,
-    );
+    await this.pushNotificationService.sendNotification(this.userId, notificationPayload);
   }
 
-  private async addRelevantTrackingDataToTrainingDay(
-    trainingDay: TrainingDay,
-  ): Promise<void> {
+  private async addRelevantTrackingDataToTrainingDay(trainingDay: TrainingDay): Promise<void> {
     trainingDay.startTime = this.trainingDay.startTime;
     trainingDay.recording = false;
     trainingDay.endTime = this.trainingDay.endTime;
     trainingDay.durationInMinutes = this.trainingDay.durationInMinutes;
 
-    const trainingPlan =
-      await this.trainingService.getTrainingPlanByTrainingDay(
-        this.userId,
-        trainingDay,
-      );
+    const trainingPlan = await this.trainingService.getTrainingPlanByTrainingDay(this.userId, trainingDay);
 
     if (!trainingPlan) {
       throw new Error('TrainingPlan not found');
@@ -137,21 +121,15 @@ export class TrainingSessionTracker {
    * Modifications must be applied at the week level due to the nested structure.
    * @returns True if the training day was successfully updated; otherwise, false.
    */
-  private updateTrainingDayInWeeks(
-    trainingPlan: TrainingPlan,
-    trainingDay: TrainingDay,
-  ): boolean {
+  private updateTrainingDayInWeeks(trainingPlan: TrainingPlan, trainingDay: TrainingDay): boolean {
     for (const week of trainingPlan.trainingWeeks) {
-      const dayIndex = week.trainingDays.findIndex(
-        (day) => day.id === trainingDay.id,
-      );
+      const dayIndex = week.trainingDays.findIndex((day) => day.id === trainingDay.id);
 
       if (dayIndex !== -1) {
         week.trainingDays[dayIndex].startTime = trainingDay.startTime;
         week.trainingDays[dayIndex].endTime = trainingDay.endTime;
         week.trainingDays[dayIndex].recording = trainingDay.recording;
-        week.trainingDays[dayIndex].durationInMinutes =
-          trainingDay.durationInMinutes;
+        week.trainingDays[dayIndex].durationInMinutes = trainingDay.durationInMinutes;
         return true;
       }
     }

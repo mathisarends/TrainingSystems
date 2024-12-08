@@ -1,0 +1,31 @@
+:host {
+  color: rgb(46, 46, 46);
+  border: 1px solid #ddd;
+  font-size: 0.925em;
+  border-radius: 8px;
+  padding: 0.25em 0.5em;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  position: relative;
+  top: 30px;
+}
+:host:hover {
+  cursor: pointer;
+}
+
+app-icon {
+  transform: translateY(1.5px);
+}
+
+@media screen and (max-width: 768px) {
+  :host {
+    flex-direction: column-reverse;
+    align-items: center;
+    transform: unset;
+    padding: 0.45em 0.2em;
+  }
+}
+
+/*# sourceMappingURL=calendar-event.component.css.map */

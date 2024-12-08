@@ -1,0 +1,34 @@
+a {
+  text-decoration: none;
+}
+
+:host {
+  padding: 0.25rem;
+  display: flex;
+  gap: 0.5rem;
+}
+:host a {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  padding: 0;
+  color: #222;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+:host a:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #000;
+  cursor: pointer;
+}
+:host a.is-active {
+  background-color: var(--accent-color);
+  color: white;
+  border-color: var(--accent-color);
+}
+
+/*# sourceMappingURL=pagination.component.css.map */

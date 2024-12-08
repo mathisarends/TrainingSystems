@@ -1,0 +1,27 @@
+:host {
+  display: grid;
+  place-items: center;
+}
+:host:hover {
+  cursor: pointer;
+}
+
+@keyframes tilt {
+  0%, 100% {
+    transform: rotate(0);
+  }
+  25% {
+    transform: rotate(-15deg);
+  }
+  50% {
+    transform: rotate(15deg);
+  }
+  75% {
+    transform: rotate(-15deg);
+  }
+}
+.tilt {
+  animation: tilt 1.5s ease-in-out infinite;
+}
+
+/*# sourceMappingURL=icon.component.css.map */

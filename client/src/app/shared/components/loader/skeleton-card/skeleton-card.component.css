@@ -1,0 +1,26 @@
+.avatar-container {
+  position: absolute;
+  top: 147.5px;
+  left: 10px;
+}
+
+.card {
+  border: none;
+  margin-bottom: 1rem;
+}
+
+.card-body {
+  padding-top: 2.25rem;
+  min-height: 190px;
+}
+
+.card-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  gap: 12px;
+  background-color: inherit;
+  border-top: none;
+}
+
+/*# sourceMappingURL=skeleton-card.component.css.map */

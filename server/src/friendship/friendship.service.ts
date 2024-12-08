@@ -43,19 +43,14 @@ export class FriendshipService {
   }
 
   async getAllFriends(userId: string) {
-    return this.friendshipModel
-      .find({ userId, inviteStatus: InviteStatus.ACCEPTED })
-      .exec();
+    return this.friendshipModel.find({ userId, inviteStatus: InviteStatus.ACCEPTED }).exec();
   }
 
   async getFriendRequests(userId: string, status: InviteStatus) {
     return this.friendshipModel.find({ userId, inviteStatus: status }).exec();
   }
 
-  async getFriendshipsByStatus(
-    userId: string,
-    status: InviteStatus,
-  ): Promise<Friendship[]> {
+  async getFriendshipsByStatus(userId: string, status: InviteStatus): Promise<Friendship[]> {
     return this.friendshipModel
       .find({
         userId,
@@ -66,15 +61,10 @@ export class FriendshipService {
 
   async getFriendSuggestions(userId: string): Promise<User[]> {
     const allUsers = await this.userService.getUsers();
-    const usersFriends = await this.getFriendshipsByStatus(
-      userId,
-      InviteStatus.ACCEPTED,
-    );
+    const usersFriends = await this.getFriendshipsByStatus(userId, InviteStatus.ACCEPTED);
     const usersFriendsIds = usersFriends.map((friend) => friend.friendId);
 
-    const friendSuggestions = allUsers.filter(
-      (user) => !usersFriendsIds.includes(user.id) && user.id !== userId,
-    );
+    const friendSuggestions = allUsers.filter((user) => !usersFriendsIds.includes(user.id) && user.id !== userId);
 
     return friendSuggestions;
   }

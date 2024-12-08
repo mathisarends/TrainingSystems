@@ -1,0 +1,63 @@
+:host {
+  display: contents;
+}
+
+.placeholder {
+  opacity: 0;
+}
+
+.exercise-field {
+  padding: 7.5px;
+  border-bottom: 1px solid var(--calendar-border-color);
+  border-right: 1px solid var(--calendar-border-color);
+  text-align: center;
+}
+.exercise-field:nth-child(9n+1) {
+  border-left: 1px solid var(--calendar-border-color);
+}
+
+.exercise-field:hover {
+  background-color: var(--calendar-hover-color);
+}
+
+.exercise-field:nth-child(9n+1),
+.exercise-field:nth-child(9n+2),
+.exercise-field:nth-child(9n+9) {
+  text-align: left;
+  padding-left: 10px;
+}
+
+@media (max-width: 768px) {
+  :host {
+    display: flex;
+    flex-direction: column;
+    border-top: 4px solid rgb(216, 216, 216);
+  }
+  .exercise-field {
+    display: grid;
+    grid-template-columns: 17ch auto;
+    padding: 0.8rem;
+    border: none;
+  }
+  .exercise-field:last-child {
+    border-bottom: none;
+  }
+  .exercise-field::before {
+    content: attr(data-label) "";
+    text-align: left;
+  }
+  .exercise-field:hover {
+    background-color: unset;
+  }
+  :host:nth-child(even) {
+    background-color: var(--stripe-color-dark);
+  }
+  :host:nth-child(odd) {
+    background-color: var(--stripe-color-light);
+  }
+  :host:first-of-type {
+    border: none;
+  }
+}
+
+/*# sourceMappingURL=training-view-table-row.component.css.map */

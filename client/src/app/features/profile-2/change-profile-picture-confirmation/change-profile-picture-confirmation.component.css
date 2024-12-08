@@ -1,0 +1,13 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 767.98px) {
+  :host {
+    flex-direction: column;
+  }
+}
+
+/*# sourceMappingURL=change-profile-picture-confirmation.component.css.map */

@@ -1,70 +1,70 @@
 @if (exerciseData$ | async; as exerciseData) {
-    @for (category of exerciseData.exerciseCategories; track category; let categoryIndex = $index) {
-      @if (categoryIndex > 0) {
-        <table class="table mb-5 table-hover">
-          <thead>
+  @for (category of exerciseData.exerciseCategories; track category; let categoryIndex = $index) {
+    @if (categoryIndex > 0) {
+      <table class="table mb-5 table-hover">
+        <thead>
+          <tr>
+            <th scope="col">{{ category }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (exercise of exerciseData.categorizedExercises[category]; track exercise; let exerciseIndex = $index) {
             <tr>
-              <th scope="col">{{ category }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (exercise of exerciseData.categorizedExercises[category]; track exercise; let exerciseIndex = $index) {
-              <tr>
-                <td [attr.data-cell]="category">
-                  <app-input
-                    [type]="'text'"
-                    [name]="categoryIndex + '_' + exerciseIndex + '_exercise'"
-                    [value]="exercise ?? ''"
-                    [alignText]="'left'"
-                  />
-                </td>
-              </tr>
-            }
-            <!-- Always show the following rows for each category -->
-            <tr class="top-border">
-              <td [attr.data-cell]="'Rest-time'">
-                <app-dropdown
-                  [name]="categoryIndex + '_categoryPauseTimeSelect'"
-                  [options]="pauseTimeOptions()"
-                  [optionLabels]="pauseTimeLabels()"
-                  [selectedValue]="exerciseData.categoryPauseTimes[category]"
+              <td [attr.data-cell]="category">
+                <app-input
+                  [type]="'text'"
+                  [name]="categoryIndex + '_' + exerciseIndex + '_exercise'"
+                  [value]="exercise ?? ''"
+                  [alignText]="'left'"
                 />
               </td>
             </tr>
-            <tr>
-              <td [attr.data-cell]="'sets'">
-                <app-dropdown
-                  [name]="categoryIndex + '_categoryDefaultSetSelect'"
-                  [options]="amountOfSetsOptions()"
-                  [optionLabels]="amountofSetsLabels()"
-                  [selectedValue]="exerciseData.defaultRepSchemeByCategory[category].defaultSets"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td [attr.data-cell]="'reps'">
-                <app-dropdown
-                  [name]="categoryIndex + '_categoryDefaultRepSelect'"
-                  [options]="repsOptions()"
-                  [optionLabels]="repsOptionsLabels()"
-                  [selectedValue]="exerciseData.defaultRepSchemeByCategory[category].defaultReps"
-                />
-              </td>
-            </tr>
-            <tr>
-              <td [attr.data-cell]="'RPE'">
-                <app-dropdown
-                  [name]="categoryIndex + '_categoryDefaultRPESelect'"
-                  [options]="rpeOptions()"
-                  [optionLabels]="rpeOptionsLabels()"
-                  [selectedValue]="exerciseData.defaultRepSchemeByCategory[category].defaultRPE"
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      }
+          }
+          <!-- Always show the following rows for each category -->
+          <tr class="top-border">
+            <td [attr.data-cell]="'Rest-time'">
+              <app-dropdown
+                [name]="categoryIndex + '_categoryPauseTimeSelect'"
+                [options]="pauseTimeOptions()"
+                [optionLabels]="pauseTimeLabels()"
+                [selectedValue]="exerciseData.categoryPauseTimes[category]"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td [attr.data-cell]="'sets'">
+              <app-dropdown
+                [name]="categoryIndex + '_categoryDefaultSetSelect'"
+                [options]="amountOfSetsOptions()"
+                [optionLabels]="amountofSetsLabels()"
+                [selectedValue]="exerciseData.defaultRepSchemeByCategory[category].defaultSets"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td [attr.data-cell]="'reps'">
+              <app-dropdown
+                [name]="categoryIndex + '_categoryDefaultRepSelect'"
+                [options]="repsOptions()"
+                [optionLabels]="repsOptionsLabels()"
+                [selectedValue]="exerciseData.defaultRepSchemeByCategory[category].defaultReps"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td [attr.data-cell]="'RPE'">
+              <app-dropdown
+                [name]="categoryIndex + '_categoryDefaultRPESelect'"
+                [options]="rpeOptions()"
+                [optionLabels]="rpeOptionsLabels()"
+                [selectedValue]="exerciseData.defaultRepSchemeByCategory[category].defaultRPE"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
     }
+  }
 } @else {
   <app-exercise-table-skeleton />
 }

@@ -5,25 +5,15 @@ import { UserBestPerformanceService } from './user-best-performance.service';
 
 @Controller('user-best-performance')
 export class UserBestPerformanceController {
-  constructor(
-    private readonly userBestPerformanceService: UserBestPerformanceService,
-  ) {}
+  constructor(private readonly userBestPerformanceService: UserBestPerformanceService) {}
 
   @Get()
   async getExerciseRecordsByUserId(@GetUser() userId: string) {
-    return await this.userBestPerformanceService.getExerciseRecordsByUserId(
-      userId,
-    );
+    return await this.userBestPerformanceService.getExerciseRecordsByUserId(userId);
   }
 
   @Put()
-  async createOrUpdateRecord(
-    @GetUser() userId: string,
-    @Body() trainingDayExerciseDto: TrainingDayExerciseDto,
-  ) {
-    return await this.userBestPerformanceService.saveUserRecordByExercise(
-      userId,
-      trainingDayExerciseDto,
-    );
+  async createOrUpdateRecord(@GetUser() userId: string, @Body() trainingDayExerciseDto: TrainingDayExerciseDto) {
+    return await this.userBestPerformanceService.saveUserRecordByExercise(userId, trainingDayExerciseDto);
   }
 }

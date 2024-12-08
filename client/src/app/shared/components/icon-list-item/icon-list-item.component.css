@@ -1,0 +1,34 @@
+:host {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75em 0.5em;
+  background-color: var(--element-background);
+  border-radius: 0.8em;
+  transition: background-color 0.2s ease;
+}
+:host:hover, :host:active {
+  cursor: pointer;
+  background-color: rgb(230, 230, 230);
+}
+
+.icon-label-container {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.icon-label-container p {
+  color: rgb(68, 68, 68);
+  font-size: 1.1rem;
+}
+
+.icon-box {
+  width: 35px;
+  height: 35px;
+  display: grid;
+  place-items: center;
+  border-radius: 0.8rem;
+}
+
+/*# sourceMappingURL=icon-list-item.component.css.map */

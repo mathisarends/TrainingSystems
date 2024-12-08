@@ -1,0 +1,50 @@
+table tr td input[type=number] {
+  text-align: left;
+}
+
+.notes {
+  min-width: 90px;
+}
+
+@media (max-width: 768px) {
+  form {
+    margin-top: -3rem;
+    padding-bottom: 2rem;
+  }
+  table td {
+    display: grid;
+    grid-template-columns: 17ch auto;
+    padding-top: 1em;
+    padding-bottom: 1em;
+  }
+  table th {
+    display: none;
+  }
+  table td::before {
+    content: attr(data-cell) ": ";
+  }
+  table tr:first-child {
+    border: none;
+  }
+  table tr {
+    border-top: 4px solid rgb(216, 216, 216);
+  }
+  table td {
+    border: none;
+    padding: 0.775em;
+  }
+  table {
+    margin-top: 2.75rem;
+  }
+  table tr td input[type=number] {
+    text-align: left;
+  }
+  .actualRPE {
+    text-align: left;
+  }
+  .weight {
+    text-align: left;
+  }
+}
+
+/*# sourceMappingURL=training-view.component.css.map */

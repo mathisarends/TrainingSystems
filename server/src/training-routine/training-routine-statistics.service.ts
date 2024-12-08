@@ -6,62 +6,35 @@ import { TrainingRoutineViewService } from './training-routine-view.service';
 
 @Injectable()
 export class TrainingRoutineStatisticsService {
-  constructor(
-    private readonly trainingRoutineViewService: TrainingRoutineViewService,
-  ) {}
+  constructor(private readonly trainingRoutineViewService: TrainingRoutineViewService) {}
 
-  async getExercisesFromTrainingSession(
-    userId: string,
-    trainingRoutineid: string,
-  ) {
-    const trainingRoutine =
-      await this.trainingRoutineViewService.findTrainingRoutineOrFail(
-        userId,
-        trainingRoutineid,
-      );
+  async getExercisesFromTrainingSession(userId: string, trainingRoutineid: string) {
+    const trainingRoutine = await this.trainingRoutineViewService.findTrainingRoutineOrFail(userId, trainingRoutineid);
     return this.getCommonExercisesForAllSessions(trainingRoutine);
   }
 
-  async getTonnageCharts(
-    userId: string,
-    trainingRoutineid: string,
-    exercises: string[],
-  ) {
-    const trainingRoutine =
-      await this.trainingRoutineViewService.findTrainingRoutineOrFail(
-        userId,
-        trainingRoutineid,
-      );
+  async getTonnageCharts(userId: string, trainingRoutineid: string, exercises: string[]) {
+    const trainingRoutine = await this.trainingRoutineViewService.findTrainingRoutineOrFail(userId, trainingRoutineid);
 
     return this.getTonnageProgressionForExercises(trainingRoutine, exercises);
   }
 
-  async getPerformanceCharts(
-    userId: string,
-    trainingPlanRoutineId: string,
-    exercises: string[],
-  ) {
-    const trainingRoutine =
-      await this.trainingRoutineViewService.findTrainingRoutineOrFail(
-        userId,
-        trainingPlanRoutineId,
-      );
-
-    return this.getBestPerformanceProgressionForExercises(
-      trainingRoutine,
-      exercises,
+  async getPerformanceCharts(userId: string, trainingPlanRoutineId: string, exercises: string[]) {
+    const trainingRoutine = await this.trainingRoutineViewService.findTrainingRoutineOrFail(
+      userId,
+      trainingPlanRoutineId,
     );
+
+    return this.getBestPerformanceProgressionForExercises(trainingRoutine, exercises);
   }
 
   private getCommonExercisesForAllSessions(trainingRoutine: TrainingRoutine) {
     const exerciseSets = trainingRoutine.versions.map(
-      (version) =>
-        new Set(version.exercises.map((exercise) => exercise.exercise) || []),
+      (version) => new Set(version.exercises.map((exercise) => exercise.exercise) || []),
     );
 
     const commonExercises = exerciseSets.reduce(
-      (common, set) =>
-        new Set([...common].filter((exercise) => set.has(exercise))),
+      (common, set) => new Set([...common].filter((exercise) => set.has(exercise))),
       new Set(exerciseSets[0] || []),
     );
 
@@ -78,15 +51,10 @@ export class TrainingRoutineStatisticsService {
     const responseData: ChartDataDto = {};
 
     exercises.forEach((exerciseName) => {
-      const bestPerformanceArray: number[] = trainingRoutine.versions.map(
-        (version) => {
-          const relevantExercises =
-            version.exercises.filter(
-              (exercise) => exercise.exercise === exerciseName,
-            ) || [];
-          return this.getBestPerformanceForExercises(relevantExercises);
-        },
-      );
+      const bestPerformanceArray: number[] = trainingRoutine.versions.map((version) => {
+        const relevantExercises = version.exercises.filter((exercise) => exercise.exercise === exerciseName) || [];
+        return this.getBestPerformanceForExercises(relevantExercises);
+      });
 
       if (bestPerformanceArray.every((performance) => performance > 0)) {
         responseData[exerciseName] = bestPerformanceArray;
@@ -96,18 +64,12 @@ export class TrainingRoutineStatisticsService {
     return responseData;
   }
 
-  private getTonnageProgressionForExercises(
-    trainingRoutine: TrainingRoutine,
-    exercises: string[],
-  ): ChartDataDto {
+  private getTonnageProgressionForExercises(trainingRoutine: TrainingRoutine, exercises: string[]): ChartDataDto {
     const responseData: ChartDataDto = {};
 
     exercises.forEach((exerciseName) => {
       const tonnageArray: number[] = trainingRoutine.versions.map((version) => {
-        const relevantExercises =
-          version.exercises.filter(
-            (exercise) => exercise.exercise === exerciseName,
-          ) || [];
+        const relevantExercises = version.exercises.filter((exercise) => exercise.exercise === exerciseName) || [];
         return this.calculateTonnageForExercises(relevantExercises);
       });
 

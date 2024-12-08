@@ -1,0 +1,8 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+/*# sourceMappingURL=training-plan-type-selection.component.css.map */

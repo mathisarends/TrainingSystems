@@ -19,23 +19,13 @@ export class AutoProgressionService {
     trainingPlanId: string,
     autoProgressionDto: AutoProgressionDto,
   ) {
-    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(
-      userId,
-      trainingPlanId,
-    );
+    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(userId, trainingPlanId);
 
     trainingPlan.trainingWeeks.forEach((_, weekIndex) => {
-      if (
-        autoProgressionDto.withDeloadWeek &&
-        this.isLastWeek(trainingPlan, weekIndex)
-      ) {
+      if (autoProgressionDto.withDeloadWeek && this.isLastWeek(trainingPlan, weekIndex)) {
         this.handleDeloadWeek(trainingPlan, weekIndex);
       } else if (weekIndex !== 0) {
-        this.adjustRPEForWeek(
-          trainingPlan,
-          weekIndex,
-          autoProgressionDto.rpeProgression,
-        );
+        this.adjustRPEForWeek(trainingPlan, weekIndex, autoProgressionDto.rpeProgression);
       }
     });
 
@@ -52,10 +42,7 @@ export class AutoProgressionService {
   /**
    * Adjusts the sets and target RPE for a deload week.
    */
-  private handleDeloadWeek(
-    trainingPlan: TrainingPlan,
-    weekIndex: number,
-  ): void {
+  private handleDeloadWeek(trainingPlan: TrainingPlan, weekIndex: number): void {
     const lastTrainingWeek = trainingPlan.trainingWeeks[weekIndex - 1];
     const deloadTrainingWeek = trainingPlan.trainingWeeks[weekIndex];
 
@@ -63,8 +50,7 @@ export class AutoProgressionService {
       const trainingDayBeforeDeload = lastTrainingWeek.trainingDays[dayIndex];
 
       trainingDay.exercises.forEach((exercise, exerciseIndex) => {
-        const exerciseBeforeDeload =
-          trainingDayBeforeDeload.exercises[exerciseIndex];
+        const exerciseBeforeDeload = trainingDayBeforeDeload.exercises[exerciseIndex];
 
         if (exercise.exercise !== exerciseBeforeDeload.exercise) {
           return;
@@ -90,21 +76,15 @@ export class AutoProgressionService {
   /**
    * Adjusts the target RPE for a specified week based on a provided RPE progression value.
    */
-  private adjustRPEForWeek(
-    trainingPlan: TrainingPlan,
-    weekIndex: number,
-    rpeIncrease: number,
-  ): void {
+  private adjustRPEForWeek(trainingPlan: TrainingPlan, weekIndex: number, rpeIncrease: number): void {
     const previousTrainingWeek = trainingPlan.trainingWeeks[weekIndex - 1];
     const currentTrainingWeek = trainingPlan.trainingWeeks[weekIndex];
 
     currentTrainingWeek.trainingDays.forEach((trainingDay, dayIndex) => {
-      const previousWeekTrainingDay =
-        previousTrainingWeek.trainingDays[dayIndex];
+      const previousWeekTrainingDay = previousTrainingWeek.trainingDays[dayIndex];
 
       trainingDay.exercises.forEach((exercise, exerciseIndex) => {
-        const previousWeekExercise =
-          previousWeekTrainingDay?.exercises[exerciseIndex];
+        const previousWeekExercise = previousWeekTrainingDay?.exercises[exerciseIndex];
 
         if (exercise.exercise !== previousWeekExercise?.exercise) {
           return;

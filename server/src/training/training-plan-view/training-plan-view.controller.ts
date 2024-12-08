@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  ParseIntPipe,
-  Patch,
-  Req,
-} from '@nestjs/common';
-import { Request } from 'express';
+import { Body, Controller, Get, Param, ParseIntPipe, Patch } from '@nestjs/common';
 import { GetUser } from 'src/decorators/user.decorator';
 import { ApiData } from 'src/types/api-data';
 import { TrainingDayExerciseDto } from './dto/training-day-exercise.dto';
@@ -19,11 +10,10 @@ import { TrainingPlanViewUpdateService2 } from './training-view-update-2.service
 export class TrainingPlanViewController {
   constructor(
     private readonly trainingPlanViewService: TrainingPlanViewService,
-    private readonly tariningPlanViewUpdateService: TrainingPlanViewUpdateService,
+    private readonly trainingPlanViewUpdateService: TrainingPlanViewUpdateService,
     private readonly trainingViewUpdateService2: TrainingPlanViewUpdateService2,
   ) {}
 
-  // TOODO: use validation service to retrive training day which can be shared for update and get routes aswell.
   @Get(':id/:week/:day')
   async getTrainingDayData(
     @GetUser() userId: string,
@@ -31,12 +21,7 @@ export class TrainingPlanViewController {
     @Param('week', ParseIntPipe) weekIndex: number,
     @Param('day', ParseIntPipe) dayIndex: number,
   ) {
-    return await this.trainingPlanViewService.getTrainingDayView(
-      userId,
-      trainingPlanId,
-      weekIndex,
-      dayIndex,
-    );
+    return await this.trainingPlanViewService.getTrainingDayView(userId, trainingPlanId, weekIndex, dayIndex);
   }
 
   @Patch(':id/:week/:day/2')
@@ -63,9 +48,8 @@ export class TrainingPlanViewController {
     @Param('week', ParseIntPipe) weekIndex: number,
     @Param('day', ParseIntPipe) dayIndex: number,
     @Body() changedData: ApiData,
-    @Req() req: Request,
   ): Promise<void> {
-    return await this.tariningPlanViewUpdateService.updateTrainingDataForTrainingDay(
+    return await this.trainingPlanViewUpdateService.updateTrainingDataForTrainingDay(
       userId,
       trainingPlanId,
       weekIndex,

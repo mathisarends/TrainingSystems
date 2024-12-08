@@ -21,10 +21,7 @@ export class PushNotificationsService {
     );
   }
 
-  async createPushNotificationSubscriptionForUser(
-    userId: string,
-    pushSubscriptionDto: CreatePushSubscriptionDto,
-  ) {
+  async createPushNotificationSubscriptionForUser(userId: string, pushSubscriptionDto: CreatePushSubscriptionDto) {
     const { endpoint, keys } = pushSubscriptionDto;
 
     const updatedSubscription = await this.subscriptionModel
@@ -44,24 +41,16 @@ export class PushNotificationsService {
   /**
    * Sends a notification to all subscriptions associated with the user.
    */
-  async sendNotification(
-    userId: string,
-    notificationPayloadDto: NotificationPayloadDto,
-  ): Promise<void> {
+  async sendNotification(userId: string, notificationPayloadDto: NotificationPayloadDto): Promise<void> {
     const subscriptions = await this.getSubscriptionsByUserId(userId);
 
     if (subscriptions.length === 0) {
-      throw new NotFoundException(
-        `No push subscriptions found for user with id ${userId}`,
-      );
+      throw new NotFoundException(`No push subscriptions found for user with id ${userId}`);
     }
 
     for (const subscription of subscriptions) {
       try {
-        await webPush.sendNotification(
-          subscription.subscription,
-          JSON.stringify(notificationPayloadDto),
-        );
+        await webPush.sendNotification(subscription.subscription, JSON.stringify(notificationPayloadDto));
       } catch (error) {
         console.error(`Error sending push notification: ${error.message}`);
 
@@ -79,9 +68,7 @@ export class PushNotificationsService {
   /**
    * Retrieves all subscriptions for a given user.
    */
-  private async getSubscriptionsByUserId(
-    userId: string,
-  ): Promise<UserPushSubscription[]> {
+  private async getSubscriptionsByUserId(userId: string): Promise<UserPushSubscription[]> {
     return await this.subscriptionModel.find({ userId }).exec();
   }
 
@@ -89,9 +76,7 @@ export class PushNotificationsService {
    * Deletes a single subscription by its ID and returns the number of deleted entries.
    */
   private async deleteSubscription(subscriptionId: string): Promise<number> {
-    const result = await this.subscriptionModel
-      .deleteOne({ _id: subscriptionId })
-      .exec();
+    const result = await this.subscriptionModel.deleteOne({ _id: subscriptionId }).exec();
     return result.deletedCount || 0;
   }
 

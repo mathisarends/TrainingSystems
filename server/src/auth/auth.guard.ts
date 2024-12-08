@@ -1,9 +1,4 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
@@ -43,9 +38,6 @@ export class AuthGuard implements CanActivate {
    * Checks whether the current route is marked as public (no authentication required).
    */
   private isPublicRoute(context: ExecutionContext) {
-    return this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_ROUTE_KEY, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
+    return this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_ROUTE_KEY, [context.getHandler(), context.getClass()]);
   }
 }

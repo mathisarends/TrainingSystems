@@ -25,5 +25,4 @@ export class UserPushSubscription extends Document {
   };
 }
 
-export const UserPushSubscriptionSchema =
-  SchemaFactory.createForClass(UserPushSubscription);
+export const UserPushSubscriptionSchema = SchemaFactory.createForClass(UserPushSubscription);

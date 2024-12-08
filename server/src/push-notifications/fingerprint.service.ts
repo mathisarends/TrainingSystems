@@ -13,10 +13,7 @@ export class FingerprintService {
 
     const fingerprintSource = `${userAgent}-${clientIp}-${platform}-${model}-${isMobile}`;
 
-    const fingerprint = crypto
-      .createHash('sha256')
-      .update(fingerprintSource)
-      .digest('hex');
+    const fingerprint = crypto.createHash('sha256').update(fingerprintSource).digest('hex');
 
     return fingerprint;
   }

@@ -6,11 +6,7 @@ import { ExerciseService } from './exercise.service';
 import { Exercise, ExerciseSchema } from './model/exercise.model';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([
-      { name: Exercise.name, schema: ExerciseSchema },
-    ]),
-  ],
+  imports: [MongooseModule.forFeature([{ name: Exercise.name, schema: ExerciseSchema }])],
   controllers: [ExerciseController],
   providers: [ExerciseService, ExerciseUpdateService],
   exports: [ExerciseService, MongooseModule],

@@ -1,0 +1,19 @@
+.icon-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: var(--icon-bg-color);
+  color: var(--icon-color);
+}
+.icon-container::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+/*# sourceMappingURL=icon-with-backdrop-color.component.css.map */

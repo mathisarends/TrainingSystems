@@ -1,11 +1,4 @@
-import {
-  ArrayUnique,
-  IsArray,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { ArrayUnique, IsArray, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { IsIsoDateString } from 'src/utils/validators/is-iso-date-string.validator';
 
 export class CreateTrainingPlanDto {

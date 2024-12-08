@@ -1,0 +1,11 @@
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+.skeleton-section {
+  background: inherit;
+  padding: 16px 8px;
+}
+
+/*# sourceMappingURL=skeleton-training-table.component.css.map */

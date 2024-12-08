@@ -5,9 +5,7 @@ import { RestTimerKeepAliveService } from './rest-timer-keep-alive.service';
 
 @Controller('training-timer')
 export class TrainingTimerController {
-  constructor(
-    private readonly restTimerKeepAliveService: RestTimerKeepAliveService,
-  ) {}
+  constructor(private readonly restTimerKeepAliveService: RestTimerKeepAliveService) {}
 
   @Post()
   keepTimerAlive(@GetUser() userId: string, @Req() req: Request) {

@@ -27,8 +27,7 @@ import { UsersModule } from './users/users.module';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
-        const environment =
-          configService.get<string>('NODE_ENV') || 'development';
+        const environment = configService.get<string>('NODE_ENV') || 'development';
         const mongoUri =
           environment === 'development'
             ? configService.get<string>('MONGO_URI_DEV')

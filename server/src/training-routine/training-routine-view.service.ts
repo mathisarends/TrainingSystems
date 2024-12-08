@@ -17,13 +17,9 @@ export class TrainingRoutineViewService {
   ) {}
 
   async startTrainingRoutine(userId: string, trainingRoutineId: string) {
-    const trainingRoutine = await this.findTrainingRoutineOrFail(
-      userId,
-      trainingRoutineId,
-    );
+    const trainingRoutine = await this.findTrainingRoutineOrFail(userId, trainingRoutineId);
 
-    const trainingRoutineTemplate: TrainingDay =
-      this.prepareTrainingSessionTemplate(trainingRoutine);
+    const trainingRoutineTemplate: TrainingDay = this.prepareTrainingSessionTemplate(trainingRoutine);
     trainingRoutine.versions.push(trainingRoutineTemplate);
 
     await trainingRoutine.save();
@@ -39,10 +35,7 @@ export class TrainingRoutineViewService {
     trainingRoutineId: string,
     versionNumber: number,
   ): Promise<TrainingDay> {
-    const trainingRoutine = await this.findTrainingRoutineOrFail(
-      userId,
-      trainingRoutineId,
-    );
+    const trainingRoutine = await this.findTrainingRoutineOrFail(userId, trainingRoutineId);
     this.findVersionByNumberOrFail(trainingRoutine, versionNumber);
 
     return trainingRoutine.versions[versionNumber - 1];
@@ -54,30 +47,18 @@ export class TrainingRoutineViewService {
     versionNumber: number,
     requestBody: ApiData,
   ) {
-    const trainingRoutine = await this.findTrainingRoutineOrFail(
-      userId,
-      trainingRoutineId,
-    );
+    const trainingRoutine = await this.findTrainingRoutineOrFail(userId, trainingRoutineId);
 
-    const trainingRoutineVersion = this.findVersionByNumberOrFail(
-      trainingRoutine,
-      versionNumber,
-    );
+    const trainingRoutineVersion = this.findVersionByNumberOrFail(trainingRoutine, versionNumber);
 
     this.updateExercisesInSessionVersion(trainingRoutineVersion, requestBody);
 
     for (const [fieldName, fieldValue] of Object.entries(requestBody)) {
-      if (
-        this.trainingSessionManager.isTrainingActivitySignal(
-          fieldName,
-          fieldValue,
-        )
-      ) {
-        const trainingSessionTracker =
-          await this.trainingSessionManager.getOrCreateTracker(
-            trainingRoutineVersion,
-            userId,
-          );
+      if (this.trainingSessionManager.isTrainingActivitySignal(fieldName, fieldValue)) {
+        const trainingSessionTracker = await this.trainingSessionManager.getOrCreateTracker(
+          trainingRoutineVersion,
+          userId,
+        );
         trainingSessionTracker.handleActivitySignal();
         break;
       }
@@ -101,10 +82,7 @@ export class TrainingRoutineViewService {
     return trainingRoutine;
   }
 
-  private findVersionByNumberOrFail(
-    trainingRoutine: TrainingRoutine,
-    versionNumber: number,
-  ): TrainingDay {
+  private findVersionByNumberOrFail(trainingRoutine: TrainingRoutine, versionNumber: number): TrainingDay {
     if (!trainingRoutine.versions[versionNumber - 1]) {
       throw new NotFoundException(
         `Training Routine ${trainingRoutine.id} with version number ${versionNumber} was not found`,
@@ -119,9 +97,7 @@ export class TrainingRoutineViewService {
    *
    * - Copies the most recent training day and resets fields like `estMax`, `notes`, `weight`, and `actualRPE` for each exercise.
    */
-  private prepareTrainingSessionTemplate(
-    trainingRoutine: TrainingRoutine,
-  ): TrainingDay {
+  private prepareTrainingSessionTemplate(trainingRoutine: TrainingRoutine): TrainingDay {
     const mostRecentSession = trainingRoutine.versions[0];
     const deepCopyOfMostRecentSession = cloneDeep(mostRecentSession);
 
@@ -135,10 +111,7 @@ export class TrainingRoutineViewService {
     return deepCopyOfMostRecentSession;
   }
 
-  private updateExercisesInSessionVersion(
-    session: TrainingDay,
-    changedData: ApiData,
-  ) {
+  private updateExercisesInSessionVersion(session: TrainingDay, changedData: ApiData) {
     let deleteLogicHappend = false;
 
     for (const [fieldName, fieldValue] of Object.entries(changedData)) {
@@ -147,22 +120,16 @@ export class TrainingRoutineViewService {
       const exercise = session.exercises[exerciseIndex];
 
       if (!exercise && fieldName.endsWith('category')) {
-        const newExercise = this.createExerciseObject(
-          fieldName,
-          fieldValue,
-        ) as Exercise;
+        const newExercise = this.createExerciseObject(fieldName, fieldValue) as Exercise;
         session.exercises.push(newExercise);
       }
 
       if (this.isDeletedExercise(exercise, fieldName, fieldValue)) {
-        let exerciseIndex = session.exercises.findIndex(
-          (ex) => ex === exercise,
-        );
+        let exerciseIndex = session.exercises.findIndex((ex) => ex === exercise);
 
         // Shift exercises one position up
         while (exerciseIndex < session.exercises.length - 1) {
-          session.exercises[exerciseIndex] =
-            session.exercises[exerciseIndex + 1];
+          session.exercises[exerciseIndex] = session.exercises[exerciseIndex + 1];
 
           exerciseIndex++;
         }
@@ -171,22 +138,12 @@ export class TrainingRoutineViewService {
       }
 
       if (exercise && !deleteLogicHappend) {
-        this.updateExercise(
-          fieldName,
-          fieldValue,
-          exercise,
-          session,
-          exerciseIndex + 1,
-        );
+        this.updateExercise(fieldName, fieldValue, exercise, session, exerciseIndex + 1);
       }
     }
   }
 
-  private isDeletedExercise(
-    exercise: Exercise,
-    fieldName: string,
-    fieldValue: string,
-  ) {
+  private isDeletedExercise(exercise: Exercise, fieldName: string, fieldValue: string) {
     return exercise && fieldName.endsWith('category') && !fieldValue;
   }
 
@@ -211,20 +168,12 @@ export class TrainingRoutineViewService {
     exerciseIndex: number,
     copyMode = false,
   ) {
-    if (
-      fieldName.endsWith('category') &&
-      (fieldValue === '- Bitte Auswählen -' || fieldValue === '')
-    ) {
+    if (fieldName.endsWith('category') && (fieldValue === '- Bitte Auswählen -' || fieldValue === '')) {
       trainingDay.exercises.splice(exerciseIndex - 1, 1);
       return;
     }
 
-    if (
-      copyMode &&
-      (fieldName.endsWith('actualRPE') ||
-        fieldName.endsWith('weight') ||
-        fieldName.endsWith('estMax'))
-    ) {
+    if (copyMode && (fieldName.endsWith('actualRPE') || fieldName.endsWith('weight') || fieldName.endsWith('estMax'))) {
       return;
     }
 

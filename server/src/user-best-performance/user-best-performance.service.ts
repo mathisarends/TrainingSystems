@@ -13,16 +13,12 @@ export class UserBestPerformanceService {
   ) {}
 
   async getExerciseRecordsByUserId(userId: string) {
-    const records = await this.userBestPerformanceModel
-      .find({ userId: userId })
-      .exec();
+    const records = await this.userBestPerformanceModel.find({ userId: userId }).exec();
 
     const recordsMap = new Map<string, UserBestPerformance>();
 
     Object.values(ExerciseCategoryType).forEach((category) => {
-      const categoryRecord = records.find(
-        (record) => record.category === category,
-      );
+      const categoryRecord = records.find((record) => record.category === category);
       if (categoryRecord) {
         recordsMap.set(category, categoryRecord);
       }
@@ -40,29 +36,18 @@ export class UserBestPerformanceService {
     recordData: UserBestPerformance,
   ): Promise<UserBestPerformance> {
     return this.userBestPerformanceModel
-      .findOneAndUpdate(
-        { userId, exerciseName },
-        { ...recordData, userId, exerciseName },
-        { new: true, upsert: true },
-      )
+      .findOneAndUpdate({ userId, exerciseName }, { ...recordData, userId, exerciseName }, { new: true, upsert: true })
       .exec();
   }
 
   /**
    * Holt einen bestimmten UserExerciseRecord eines Benutzers für eine bestimmte Übung
    */
-  async getRecordByUserAndExercise(
-    userId: string,
-    exerciseName: string,
-  ): Promise<UserBestPerformance> {
-    const exerciseRecord = await this.userBestPerformanceModel
-      .findOne({ userId, exerciseName })
-      .exec();
+  async getRecordByUserAndExercise(userId: string, exerciseName: string): Promise<UserBestPerformance> {
+    const exerciseRecord = await this.userBestPerformanceModel.findOne({ userId, exerciseName }).exec();
 
     if (!exerciseRecord) {
-      throw new NotFoundException(
-        `No exercise record found for userId ${userId} and exerciseName ${exerciseName}`,
-      );
+      throw new NotFoundException(`No exercise record found for userId ${userId} and exerciseName ${exerciseName}`);
     }
 
     return exerciseRecord;
@@ -72,10 +57,7 @@ export class UserBestPerformanceService {
   /**
    * Saves a new user exercise record or updates an existing one.
    */
-  async saveUserRecordByExercise(
-    userId: string,
-    exercise: TrainingDayExerciseDto,
-  ): Promise<UserBestPerformance> {
+  async saveUserRecordByExercise(userId: string, exercise: TrainingDayExerciseDto): Promise<UserBestPerformance> {
     return await this.userBestPerformanceModel
       .findOneAndUpdate(
         { userId: userId, exerciseName: exercise.exercise },

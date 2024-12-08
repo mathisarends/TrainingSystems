@@ -14,7 +14,7 @@ import { TrainingSesssionStatisticsComponent } from './features/training-session
 import { TrainingView2Component } from './features/training-view-2/training-view-2.component';
 import { StatisticsComponent } from './features/usage-statistics/statistics.component';
 import { SpinnerComponent } from './shared/components/spinner/spinner.component';
-import {VolumeCalculatorComponent} from "./features/volume-calculator/volume-calculator.component";
+import { VolumeCalculatorComponent } from './features/volume-calculator/volume-calculator.component';
 
 export const routes: Routes = [
   { path: 'test', component: TrainingView2Component },

@@ -1,0 +1,71 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+  text-align: center;
+  padding-top: 1.75rem;
+  padding-bottom: 1.75rem;
+  border-radius: 15px;
+}
+
+.timer-display {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.time-remaining {
+  font-size: 2.5rem;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-55%);
+  font-weight: 500;
+  color: #555;
+}
+
+.initial-time {
+  font-size: 1.1rem;
+  color: #999;
+  position: absolute;
+  top: calc(50% + 2rem);
+  transform: translateY(-50%);
+}
+
+.timer-controls {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 10px;
+  margin-top: 20px;
+}
+
+.timer-button {
+  flex: 1;
+  margin: 0 5px;
+  padding: 15px 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.085rem;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.minus-button {
+  color: var(--accent-color);
+  background-color: inherit;
+}
+
+.plus-button {
+  color: var(--accent-color);
+  background-color: inherit;
+}
+
+.skip-button {
+  background-color: var(--accent-color);
+}
+
+/*# sourceMappingURL=rest-timer.component.css.map */

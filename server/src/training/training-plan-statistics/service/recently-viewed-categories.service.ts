@@ -12,26 +12,14 @@ export class RecentlyViewedCategoriesService {
    * @param trainingPlanId Die ID des Trainingsplans
    * @returns Die Liste der kürzlich angesehenen Kategorien
    */
-  async getViewedCategories(
-    userId: string,
-    trainingPlanId: string,
-  ): Promise<string[]> {
-    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(
-      userId,
-      trainingPlanId,
-    );
+  async getViewedCategories(userId: string, trainingPlanId: string): Promise<string[]> {
+    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(userId, trainingPlanId);
 
     if (!trainingPlan) {
       throw new NotFoundException('Training plan not found');
     }
 
-    return (
-      trainingPlan.recentlyViewedCategoriesInStatisticSection ?? [
-        'Squat',
-        'Bench',
-        'Deadlift',
-      ]
-    );
+    return trainingPlan.recentlyViewedCategoriesInStatisticSection ?? ['Squat', 'Bench', 'Deadlift'];
   }
 
   /**
@@ -45,17 +33,13 @@ export class RecentlyViewedCategoriesService {
     trainingPlanId: string,
     exerciseCategories: ExerciseCategoryType[],
   ): Promise<void> {
-    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(
-      userId,
-      trainingPlanId,
-    );
+    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(userId, trainingPlanId);
 
     if (!trainingPlan) {
       throw new NotFoundException('Training plan not found');
     }
 
-    trainingPlan.recentlyViewedCategoriesInStatisticSection =
-      exerciseCategories;
+    trainingPlan.recentlyViewedCategoriesInStatisticSection = exerciseCategories;
 
     // Speichern des aktualisierten Training-Plans
     await trainingPlan.save();

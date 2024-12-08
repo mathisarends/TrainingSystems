@@ -40,8 +40,6 @@ export class TrainingPlanUtilsService {
    * Finds the most recent plan by sorting.
    */
   private getMostRecentPlan(trainingPlans: TrainingPlan[]): TrainingPlan {
-    return trainingPlans.sort(
-      (a, b) => b.lastUpdated.getTime() - a.lastUpdated.getTime(),
-    )[0];
+    return trainingPlans.sort((a, b) => b.lastUpdated.getTime() - a.lastUpdated.getTime())[0];
   }
 }

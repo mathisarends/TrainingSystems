@@ -1,0 +1,21 @@
+:host {
+  position: relative;
+}
+:host app-circular-icon-button {
+  cursor: pointer;
+  position: absolute;
+  right: 2rem;
+  top: 2rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+:host:hover app-circular-icon-button {
+  opacity: 1;
+}
+
+#chart {
+  height: 400px;
+  max-width: 100%;
+}
+
+/*# sourceMappingURL=line-chart.component.css.map */

@@ -1,0 +1,19 @@
+:host {
+  width: 85%;
+  height: 85%;
+  max-width: 4.5rem;
+  max-height: 4.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+:host .rounded-circle {
+  padding: 0.5em;
+  cursor: pointer;
+}
+:host app-icon {
+  margin-left: -0.25rem;
+}
+
+/*# sourceMappingURL=profile-picture.component.css.map */

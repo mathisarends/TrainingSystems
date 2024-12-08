@@ -1,0 +1,74 @@
+@charset "UTF-8";
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0;
+}
+
+.day-name {
+  text-align: center;
+  padding: 8px;
+  font-size: smaller;
+  border-bottom: 1px solid var(--calendar-border-color);
+}
+
+.day {
+  position: relative;
+  padding: 5px;
+  border-bottom: 1px solid var(--calendar-border-color);
+  border-right: 1px solid var(--calendar-border-color);
+  min-height: 7rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+.day:nth-child(7n+1) {
+  border-left: 1px solid var(--calendar-border-color);
+}
+.day .day-number {
+  position: absolute;
+  font-size: smaller;
+  top: 7.5px;
+  right: 7.5px;
+}
+.day .day-content {
+  margin-top: 20px;
+  flex-grow: 1;
+}
+
+.day:hover {
+  background-color: var(--calendar-hover-color);
+}
+
+.current-day {
+  background-color: var(--accent-color);
+  color: white;
+  padding: 2px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  min-width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+
+.other-month {
+  color: #aaa; /* Tage des vorherigen/nächsten Monats abgedunkelt */
+}
+
+.month-navigation-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: flex-end;
+  width: 100%;
+}
+
+/*# sourceMappingURL=training-calendar.component.css.map */

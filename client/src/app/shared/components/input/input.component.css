@@ -1,0 +1,35 @@
+.transparent-input {
+  border: none;
+  background-color: transparent;
+  width: 100%;
+  text-align: center;
+}
+
+.transparent-input:focus {
+  border: none;
+  outline: none;
+}
+
+/* Hide up and down arrows from number inputs */
+input[type=number] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0; /* Chrome, Safari, Edge, Opera */
+}
+
+/* Remove up and down arrows in IE10+ */
+input[type=number] {
+  -ms-appearance: textfield;
+}
+
+@media screen and (max-width: 768px) {
+  .transparent-input {
+    text-align: left;
+  }
+}
+
+/*# sourceMappingURL=input.component.css.map */

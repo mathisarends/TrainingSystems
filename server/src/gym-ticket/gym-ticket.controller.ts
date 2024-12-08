@@ -10,19 +10,12 @@ export class GymTicketController {
 
   @Get()
   async getGymTicketForUser(@GetUser() userId: string, @Res() res: Response) {
-    const ticketBase64Str =
-      await this.gymTicketService.getGymTicketByUserId(userId);
+    const ticketBase64Str = await this.gymTicketService.getGymTicketByUserId(userId);
     return res.status(200).json(ticketBase64Str);
   }
 
   @Put()
-  async updateGymTicketForUser(
-    @GetUser() userId: string,
-    @Body() gymTicketDto: GymTicketDto,
-  ) {
-    return await this.gymTicketService.updateGymTicketForUser(
-      userId,
-      gymTicketDto,
-    );
+  async updateGymTicketForUser(@GetUser() userId: string, @Body() gymTicketDto: GymTicketDto) {
+    return await this.gymTicketService.updateGymTicketForUser(userId, gymTicketDto);
   }
 }

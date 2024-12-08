@@ -6,8 +6,7 @@ export class TrainingCalendarService {
   constructor(private readonly trainingService: TrainingService) {}
 
   async getCalendarDataForUser(userId: string) {
-    const trainingPlans =
-      await this.trainingService.getTrainingPlansByUser(userId);
+    const trainingPlans = await this.trainingService.getTrainingPlansByUser(userId);
 
     const currentDate = new Date();
 
@@ -15,12 +14,7 @@ export class TrainingCalendarService {
       .flatMap((plan) =>
         plan.trainingWeeks.flatMap((week, weekIndex) =>
           week.trainingDays.map((day, dayIndex) => {
-            const trainingDate = this.calculateTrainingDate(
-              plan.startDate,
-              weekIndex,
-              dayIndex,
-              plan.trainingDays,
-            );
+            const trainingDate = this.calculateTrainingDate(plan.startDate, weekIndex, dayIndex, plan.trainingDays);
             return {
               dayId: day.id,
               planTitle: plan.title,
@@ -32,20 +26,13 @@ export class TrainingCalendarService {
           }),
         ),
       )
-      .filter(
-        (day) => day.endTime && day.endTime.getTime() <= currentDate.getTime(),
-      );
+      .filter((day) => day.endTime && day.endTime.getTime() <= currentDate.getTime());
 
     const upComingTrainings = trainingPlans
       .flatMap((plan) =>
         plan.trainingWeeks.flatMap((week, weekIndex) =>
           week.trainingDays.map((day, dayIndex) => {
-            const trainingDate = this.calculateTrainingDate(
-              plan.startDate,
-              weekIndex,
-              dayIndex,
-              plan.trainingDays,
-            );
+            const trainingDate = this.calculateTrainingDate(plan.startDate, weekIndex, dayIndex, plan.trainingDays);
             return {
               dayId: day.id,
               planTitle: plan.title,
@@ -60,33 +47,24 @@ export class TrainingCalendarService {
       .filter((day) => !day.endTime);
 
     return {
-      finishedTrainings: finishedTrainings.map(
-        ({ dayId, planTitle, planId, label, trainingDate }) => ({
-          dayId,
-          planTitle,
-          planId,
-          label,
-          trainingDate,
-        }),
-      ),
-      upComingTrainings: upComingTrainings.map(
-        ({ dayId, planTitle, planId, label, trainingDate }) => ({
-          dayId,
-          planTitle,
-          planId,
-          label,
-          trainingDate,
-        }),
-      ),
+      finishedTrainings: finishedTrainings.map(({ dayId, planTitle, planId, label, trainingDate }) => ({
+        dayId,
+        planTitle,
+        planId,
+        label,
+        trainingDate,
+      })),
+      upComingTrainings: upComingTrainings.map(({ dayId, planTitle, planId, label, trainingDate }) => ({
+        dayId,
+        planTitle,
+        planId,
+        label,
+        trainingDate,
+      })),
     };
   }
 
-  private calculateTrainingDate(
-    startDate: Date,
-    weekIndex: number,
-    dayIndex: number,
-    trainingDays: string[],
-  ): Date {
+  private calculateTrainingDate(startDate: Date, weekIndex: number, dayIndex: number, trainingDays: string[]): Date {
     const dayMap = {
       Mo: 0,
       Di: 1,
@@ -111,11 +89,7 @@ export class TrainingCalendarService {
     const offsetIndex = dayIndex % numTrainingDays;
     const fullWeeksOffset = Math.floor(dayIndex / numTrainingDays) * 7;
 
-    trainingDate.setDate(
-      firstDayOfWeek.getDate() +
-        fullWeeksOffset +
-        trainingDayIndices[offsetIndex],
-    );
+    trainingDate.setDate(firstDayOfWeek.getDate() + fullWeeksOffset + trainingDayIndices[offsetIndex]);
 
     return trainingDate;
   }

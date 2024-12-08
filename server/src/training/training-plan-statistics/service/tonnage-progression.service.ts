@@ -16,8 +16,7 @@ export class TonnageProgressionService {
     const responseData: ChartDataDto = {};
 
     exerciseCategories.forEach((category) => {
-      responseData[capitalize(category)] =
-        this.prepareTonnageForExerciseCategory(trainingPlan, category);
+      responseData[capitalize(category)] = this.prepareTonnageForExerciseCategory(trainingPlan, category);
     });
 
     return responseData;
@@ -32,26 +31,17 @@ export class TonnageProgressionService {
       .filter((tonnage, index) => this.shouldIncludeWeek(tonnage, index));
   }
 
-  private calculateTonnageForWeek(
-    week: TrainingWeek,
-    exerciseCategory: ExerciseCategoryType,
-  ): number {
+  private calculateTonnageForWeek(week: TrainingWeek, exerciseCategory: ExerciseCategoryType): number {
     let totalTonnageForWeek = 0;
 
     week.trainingDays.forEach((trainingDay) => {
-      totalTonnageForWeek += this.calculateTonnageForDayAndCategory(
-        trainingDay,
-        exerciseCategory,
-      );
+      totalTonnageForWeek += this.calculateTonnageForDayAndCategory(trainingDay, exerciseCategory);
     });
 
     return totalTonnageForWeek;
   }
 
-  private calculateTonnageForDayAndCategory(
-    trainingDay: TrainingDay,
-    exerciseCategory: ExerciseCategoryType,
-  ): number {
+  private calculateTonnageForDayAndCategory(trainingDay: TrainingDay, exerciseCategory: ExerciseCategoryType): number {
     let totalTonnageForDay = 0;
 
     trainingDay.exercises.forEach((exercise) => {
@@ -63,10 +53,7 @@ export class TonnageProgressionService {
     return totalTonnageForDay;
   }
 
-  private isMatchingCategory(
-    exercise: Exercise,
-    exerciseCategory: ExerciseCategoryType,
-  ): boolean {
+  private isMatchingCategory(exercise: Exercise, exerciseCategory: ExerciseCategoryType): boolean {
     return exercise.category === exerciseCategory;
   }
 

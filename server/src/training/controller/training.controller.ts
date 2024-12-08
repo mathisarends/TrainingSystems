@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Res,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { GetUser } from 'src/decorators/user.decorator';
 import { UsersService } from 'src/users/users.service';
@@ -36,25 +28,13 @@ export class TrainingController {
   }
 
   @Post()
-  async createTrainingPlan(
-    @GetUser() userId: string,
-    @Body() createTrainingPlanDto: CreateTrainingPlanDto,
-  ) {
-    return await this.createTrainingPlanService.createTrainingPlan(
-      userId,
-      createTrainingPlanDto,
-    );
+  async createTrainingPlan(@GetUser() userId: string, @Body() createTrainingPlanDto: CreateTrainingPlanDto) {
+    return await this.createTrainingPlanService.createTrainingPlan(userId, createTrainingPlanDto);
   }
 
   @Delete(':id')
-  async deleteTrainingPlan(
-    @GetUser() userId: string,
-    @Param('id') trainingPlanId: string,
-  ) {
-    return await this.trainingService.deleteByUserAndTrainingId(
-      userId,
-      trainingPlanId,
-    );
+  async deleteTrainingPlan(@GetUser() userId: string, @Param('id') trainingPlanId: string) {
+    return await this.trainingService.deleteByUserAndTrainingId(userId, trainingPlanId);
   }
 
   @Post(':id/auto-progression')
@@ -72,55 +52,32 @@ export class TrainingController {
 
   @Get('titles')
   async getTrainingPlanTitles(@GetUser() userId: string): Promise<string[]> {
-    return await this.trainingPlanUtilsService.getTrainingPlanTitlesForUser(
-      userId,
-    );
+    return await this.trainingPlanUtilsService.getTrainingPlanTitlesForUser(userId);
   }
 
   @Get('/title/:id')
-  async getTrainingPlanTitleById(
-    @GetUser() userId: string,
-    @Param('id') trainingPlanId: string,
-  ) {
-    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(
-      userId,
-      trainingPlanId,
-    );
+  async getTrainingPlanTitleById(@GetUser() userId: string, @Param('id') trainingPlanId: string) {
+    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(userId, trainingPlanId);
     const title = trainingPlan.title;
     return { title };
   }
 
   @Get(':id/latest')
-  async getLastTrainingDayOfPlan(
-    @GetUser() userId: string,
-    @Param('id') trainingPlanId: string,
-  ) {
-    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(
-      userId,
-      trainingPlanId,
-    );
+  async getLastTrainingDayOfPlan(@GetUser() userId: string, @Param('id') trainingPlanId: string) {
+    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(userId, trainingPlanId);
     return trainingPlan.mostRecentTrainingDayLocator;
   }
 
   @Get('most-recent-plan-link')
-  async getMostRecentTrainingPlanLink(
-    @GetUser() userId: string,
-    @Res() res: Response,
-  ) {
-    const link =
-      await this.trainingPlanUtilsService.getMostRecentTrainingPlanLink(userId);
+  async getMostRecentTrainingPlanLink(@GetUser() userId: string, @Res() res: Response) {
+    const link = await this.trainingPlanUtilsService.getMostRecentTrainingPlanLink(userId);
     return res.status(200).json(link);
   }
 
   @Get('next-available-start-date')
-  async getNextAvailableStartDateForNewTrainingPlan(
-    @GetUser() userId: string,
-    @Res() res: Response,
-  ) {
+  async getNextAvailableStartDateForNewTrainingPlan(@GetUser() userId: string, @Res() res: Response) {
     const nextAvailableStartDate =
-      await this.createTrainingPlanService.getNextAvailableStartDateForNewTrainingPlan(
-        userId,
-      );
+      await this.createTrainingPlanService.getNextAvailableStartDateForNewTrainingPlan(userId);
     return res.json({ startDate: nextAvailableStartDate.toISOString() });
   }
 }

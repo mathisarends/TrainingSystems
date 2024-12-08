@@ -20,7 +20,7 @@ import { PROFILE_PICTURE_URL } from './profile-picture-injection-token';
   templateUrl: './change-profile-picture-confirmation.component.html',
   styleUrl: './change-profile-picture-confirmation.component.scss',
 })
-export class ChangeProfilePictureConfirmationComponent  {
+export class ChangeProfilePictureConfirmationComponent {
   protected readonly IconName = IconName;
 
   oldProfilePicture = signal('');
@@ -43,6 +43,4 @@ export class ChangeProfilePictureConfirmationComponent  {
       { allowSignalWrites: true },
     );
   }
-
-
 }

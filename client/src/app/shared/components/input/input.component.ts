@@ -9,7 +9,14 @@ import { InteractiveElementDirective } from '../../directives/interactive-elemen
 @Component({
   selector: 'app-input',
   standalone: true,
-  imports: [CommonModule, InteractiveElementDirective, WeightInputDirective, RpeInputDirective, RepInputDirective, FormsModule],
+  imports: [
+    CommonModule,
+    InteractiveElementDirective,
+    WeightInputDirective,
+    RpeInputDirective,
+    RepInputDirective,
+    FormsModule,
+  ],
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss',
 })
@@ -53,6 +60,4 @@ export class InputComponent<T extends string | number> {
   directiveUsed = input<
     'interactiveElementDirective' | 'weightInputDirective' | 'rpeInputDirective' | 'repInputDirective'
   >('interactiveElementDirective');
-
-
 }

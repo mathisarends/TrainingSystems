@@ -1,0 +1,39 @@
+.modal-header,
+.modal-body,
+.modal-footer {
+  background-color: transparent !important;
+}
+
+.modal-tab-body {
+  height: 30rem;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  cursor: move;
+}
+
+.pagination-footer {
+  justify-content: space-between;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.modal {
+  animation: fadeIn 0.15s ease-out;
+}
+
+@media screen and (min-width: 1200px) {
+  .modal-content {
+    background: white;
+  }
+}
+
+/*# sourceMappingURL=modal.component.css.map */

@@ -9,18 +9,9 @@ import { TrainingRetrospectivePopupCardInfo } from './dto/training-retrospective
 export class TrainingDayInfoService {
   constructor(private readonly trainingService: TrainingService) {}
 
-  async getTrainingDayInfo(
-    userId: string,
-    planId: string,
-    weekIndex: number,
-    dayIndex: number,
-  ) {
-    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(
-      userId,
-      planId,
-    );
-    const trainingDay =
-      trainingPlan.trainingWeeks[weekIndex].trainingDays[dayIndex];
+  async getTrainingDayInfo(userId: string, planId: string, weekIndex: number, dayIndex: number) {
+    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(userId, planId);
+    const trainingDay = trainingPlan.trainingWeeks[weekIndex].trainingDays[dayIndex];
 
     if (!trainingDay) {
       throw new NotFoundException(
@@ -37,13 +28,9 @@ export class TrainingDayInfoService {
     weekIndex: number,
     dayIndex: number,
   ): Promise<TrainingRetrospectivePopupCardInfo> {
-    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(
-      userId,
-      planId,
-    );
+    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(userId, planId);
 
-    const trainingDay =
-      trainingPlan.trainingWeeks[weekIndex]?.trainingDays[dayIndex];
+    const trainingDay = trainingPlan.trainingWeeks[weekIndex]?.trainingDays[dayIndex];
 
     if (!trainingDay) {
       throw new NotFoundException(
@@ -52,18 +39,11 @@ export class TrainingDayInfoService {
     }
 
     const previousTrainingDay =
-      weekIndex >= 1
-        ? trainingPlan.trainingWeeks[weekIndex - 1]?.trainingDays[dayIndex]
-        : undefined;
+      weekIndex >= 1 ? trainingPlan.trainingWeeks[weekIndex - 1]?.trainingDays[dayIndex] : undefined;
 
-    const tonnageDifferenceFromLastWeek = this.getTonnageDifferenceFromLastWeek(
-      trainingDay,
-      previousTrainingDay,
-    );
-    const durationDifferenceFromLastWeek =
-      this.getDurationDifferenceFromLastWeek(trainingDay, previousTrainingDay);
-    const tonnageComparisonOverWeekSpan =
-      this.getTonnnageComparisonOverWeekSpan(trainingPlan, dayIndex);
+    const tonnageDifferenceFromLastWeek = this.getTonnageDifferenceFromLastWeek(trainingDay, previousTrainingDay);
+    const durationDifferenceFromLastWeek = this.getDurationDifferenceFromLastWeek(trainingDay, previousTrainingDay);
+    const tonnageComparisonOverWeekSpan = this.getTonnnageComparisonOverWeekSpan(trainingPlan, dayIndex);
 
     const tonnage = this.getTonnagePerTrainingDay(trainingDay);
     const durationInMinutes = trainingDay.durationInMinutes;
@@ -114,9 +94,7 @@ export class TrainingDayInfoService {
     });
 
     for (const category in tonnageComparison) {
-      tonnageComparison[category] = this.trimTrailingZeros(
-        tonnageComparison[category],
-      );
+      tonnageComparison[category] = this.trimTrailingZeros(tonnageComparison[category]);
     }
 
     return tonnageComparison;
@@ -130,10 +108,8 @@ export class TrainingDayInfoService {
       return this.getTonnagePerTrainingDay(currentTrainingDay);
     }
 
-    const currentTrainingDayTonnage =
-      this.getTonnagePerTrainingDay(currentTrainingDay);
-    const previousTrainingDayTonnage =
-      this.getTonnagePerTrainingDay(previousTrainingDay);
+    const currentTrainingDayTonnage = this.getTonnagePerTrainingDay(currentTrainingDay);
+    const previousTrainingDayTonnage = this.getTonnagePerTrainingDay(previousTrainingDay);
 
     return currentTrainingDayTonnage - previousTrainingDayTonnage;
   }
@@ -146,10 +122,7 @@ export class TrainingDayInfoService {
       return currentTrainingDay.durationInMinutes;
     }
 
-    return (
-      currentTrainingDay.durationInMinutes -
-      previousTrainingDay.durationInMinutes
-    );
+    return currentTrainingDay.durationInMinutes - previousTrainingDay.durationInMinutes;
   }
 
   private getTonnagePerTrainingDay(trainingDay: TrainingDay): number {

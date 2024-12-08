@@ -18,14 +18,8 @@ export class ExerciseController {
   }
 
   @Patch()
-  async updateUserExercises(
-    @GetUser() userId: string,
-    @Body() updatedExercises: ApiData,
-  ) {
-    return await this.exerciseUpdateService.updateExercisesForUser(
-      userId,
-      updatedExercises,
-    );
+  async updateUserExercises(@GetUser() userId: string, @Body() updatedExercises: ApiData) {
+    return await this.exerciseUpdateService.updateExercisesForUser(userId, updatedExercises);
   }
 
   @Delete()
@@ -35,8 +29,6 @@ export class ExerciseController {
 
   @Get('categories')
   getAvailableCategorys() {
-    return Object.values(ExerciseCategoryType).filter(
-      (category) => category !== ExerciseCategoryType.PLACEHOLDER,
-    );
+    return Object.values(ExerciseCategoryType).filter((category) => category !== ExerciseCategoryType.PLACEHOLDER);
   }
 }

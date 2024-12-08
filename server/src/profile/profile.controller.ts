@@ -13,10 +13,7 @@ export class ProfileController {
   }
 
   @Post()
-  updateProfilePicture(
-    @GetUser() userId: string,
-    @Body() updatedUserDto: UpdateUserDto,
-  ) {
+  updateProfilePicture(@GetUser() userId: string, @Body() updatedUserDto: UpdateUserDto) {
     return this.profileService.updateProfilePicture(userId, updatedUserDto);
   }
 }

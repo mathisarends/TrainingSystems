@@ -2,10 +2,7 @@ import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TrainingModule } from 'src/training/training.module';
 import { TrainingService } from 'src/training/training.service';
-import {
-  TrainingLogNotification,
-  TrainingLogNotificationSchema,
-} from './model/training-log.model';
+import { TrainingLogNotification, TrainingLogNotificationSchema } from './model/training-log.model';
 import { TrainingDayService } from './training-day.service';
 import { TrainingLogController } from './training-log.controller';
 import { TrainingLogService } from './training-log.service';

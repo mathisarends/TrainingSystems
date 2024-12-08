@@ -1,14 +1,10 @@
 import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
 
 @Injectable()
-export class CommaSeparatedStringsPipe
-  implements PipeTransform<string, string[]>
-{
+export class CommaSeparatedStringsPipe implements PipeTransform<string, string[]> {
   transform(value: string): string[] {
     if (!value) {
-      throw new BadRequestException(
-        'No value for CommaSeparatedStringsPipe was given',
-      );
+      throw new BadRequestException('No value for CommaSeparatedStringsPipe was given');
     }
 
     const values = value.split(',').map((plan) => plan.trim());

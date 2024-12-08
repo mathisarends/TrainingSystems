@@ -1,0 +1,12 @@
+:host {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: #333;
+}
+
+.progress-ring__circle {
+  transition: stroke-dashoffset 0.5s ease-out;
+}
+
+/*# sourceMappingURL=percentage-circle-visualisation.component.css.map */

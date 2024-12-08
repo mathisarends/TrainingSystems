@@ -9,9 +9,7 @@ export class RestTimerKeepAliveService {
   private activeSessions: Map<string, NodeJS.Timeout> = new Map();
   private readonly sessionTimeout = 20 * 1000;
 
-  constructor(
-    private readonly pushNotificationService: PushNotificationsService,
-  ) {}
+  constructor(private readonly pushNotificationService: PushNotificationsService) {}
 
   /**
    * Starts the keep-alive timer for a user and fingerprint combination.
@@ -46,10 +44,7 @@ export class RestTimerKeepAliveService {
           this.scheduleKeepAlive(userId);
         }
       } catch (error) {
-        this.logger.error(
-          `Failed to send keep-alive signal to user: ${userId}`,
-          error.stack,
-        );
+        this.logger.error(`Failed to send keep-alive signal to user: ${userId}`, error.stack);
         this.stopTimer(userId);
       }
     }, this.sessionTimeout);

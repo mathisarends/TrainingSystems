@@ -18,13 +18,8 @@ export class AuthController {
   ) {}
 
   @Post('login/oauth2')
-  async loginViahOauth2(
-    @Body() loginOAuth2Dto: LoginOAuth2Dto,
-    @Res() res: Response,
-  ) {
-    const loggedInUser = await this.authService.loginOAuth2User(
-      loginOAuth2Dto.credential,
-    );
+  async loginViahOauth2(@Body() loginOAuth2Dto: LoginOAuth2Dto, @Res() res: Response) {
+    const loggedInUser = await this.authService.loginOAuth2User(loginOAuth2Dto.credential);
     this.tokenService.createAndSetToken({ id: loggedInUser.id }, res);
 
     const redirectUrl =
@@ -40,13 +35,8 @@ export class AuthController {
   }
 
   @Post('login/oauth2/redirect')
-  async loginViahOauth2WithRedirect(
-    @Body() loginOAuth2Dto: LoginOAuth2Dto,
-    @Res() res: Response,
-  ) {
-    const loggedInUser = await this.authService.loginOAuth2User(
-      loginOAuth2Dto.credential,
-    );
+  async loginViahOauth2WithRedirect(@Body() loginOAuth2Dto: LoginOAuth2Dto, @Res() res: Response) {
+    const loggedInUser = await this.authService.loginOAuth2User(loginOAuth2Dto.credential);
     this.tokenService.createAndSetToken({ id: loggedInUser.id }, res);
 
     const redirectUrl =

@@ -38,8 +38,6 @@ export class ActivityCalendarService {
     const dateObj = new Date(date);
 
     const startOfYear = new Date(dateObj.getFullYear(), 0, 1);
-    return Math.floor(
-      (dateObj.getTime() - startOfYear.getTime()) / (1000 * 60 * 60 * 24),
-    );
+    return Math.floor((dateObj.getTime() - startOfYear.getTime()) / (1000 * 60 * 60 * 24));
   }
 }

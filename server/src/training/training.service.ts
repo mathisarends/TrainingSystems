@@ -79,16 +79,11 @@ export class TrainingService {
     return trainingDayDetails;
   }
 
-  async getTrainingPlanByTrainingDay(
-    userId: string,
-    trainingDay: TrainingDay,
-  ): Promise<TrainingPlan | undefined> {
+  async getTrainingPlanByTrainingDay(userId: string, trainingDay: TrainingDay): Promise<TrainingPlan | undefined> {
     const trainingPlans = await this.getTrainingPlansByUser(userId);
 
     return trainingPlans.find((trainingPlan) =>
-      trainingPlan.trainingWeeks.some((week) =>
-        week.trainingDays.some((day) => day.id === trainingDay.id),
-      ),
+      trainingPlan.trainingWeeks.some((week) => week.trainingDays.some((day) => day.id === trainingDay.id)),
     );
   }
 
@@ -103,18 +98,12 @@ export class TrainingService {
     }
   }
 
-  async updateTrainingPlan(
-    existingPlan: TrainingPlan,
-    editTrainingPlanDto: EditTrainingPlanDto,
-  ) {
+  async updateTrainingPlan(existingPlan: TrainingPlan, editTrainingPlanDto: EditTrainingPlanDto) {
     Object.assign(existingPlan, editTrainingPlanDto);
     return await existingPlan.save();
   }
 
-  private findTrainingDayInPlan(
-    trainingPlan: TrainingPlan,
-    trainingDayId: string,
-  ): TrainingDay | undefined {
+  private findTrainingDayInPlan(trainingPlan: TrainingPlan, trainingDayId: string): TrainingDay | undefined {
     for (const trainingWeek of trainingPlan.trainingWeeks) {
       const foundDay = this.findTrainingDayInWeek(trainingWeek, trainingDayId);
       if (foundDay) {
@@ -124,10 +113,7 @@ export class TrainingService {
     return undefined;
   }
 
-  private findTrainingDayInWeek(
-    trainingWeek: TrainingWeek,
-    trainingDayId: string,
-  ): TrainingDay | undefined {
+  private findTrainingDayInWeek(trainingWeek: TrainingWeek, trainingDayId: string): TrainingDay | undefined {
     return trainingWeek.trainingDays.find((day) => day.id === trainingDayId);
   }
 }

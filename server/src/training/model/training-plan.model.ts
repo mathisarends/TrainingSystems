@@ -44,11 +44,7 @@ export class TrainingPlan extends Document {
   @Prop({
     type: [String],
     enum: Object.values(ExerciseCategoryType),
-    default: [
-      ExerciseCategoryType.SQUAT,
-      ExerciseCategoryType.BENCH,
-      ExerciseCategoryType.DEADLIFT,
-    ],
+    default: [ExerciseCategoryType.SQUAT, ExerciseCategoryType.BENCH, ExerciseCategoryType.DEADLIFT],
   })
   recentlyViewedCategoriesInStatisticSection?: ExerciseCategoryType[];
 }

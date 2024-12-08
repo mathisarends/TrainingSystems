@@ -19,9 +19,7 @@ import { FriendshipService } from './friendship.service';
     credentials: true,
   },
 })
-export class FriendshipGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
-{
+export class FriendshipGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
 
@@ -41,9 +39,7 @@ export class FriendshipGateway
       const userClaimsSet = this.tokenService.verifyToken(token) as JwtPayload;
       client.data.userId = userClaimsSet.id;
 
-      console.log(
-        `Client connected: ${client.id}, User ID: ${client.data.userId}`,
-      );
+      console.log(`Client connected: ${client.id}, User ID: ${client.data.userId}`);
     } catch (error) {
       client.disconnect();
       console.error(`Unauthorized client tried to connect: ${error.message}`);

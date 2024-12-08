@@ -30,11 +30,7 @@ export class TrainingStatisticsController {
     @Query('categories', ExerciseCategoryTypePipe)
     exerciseCategories: ExerciseCategoryType[],
   ) {
-    return await this.planComparisonStaticsService.getVolumeComparison(
-      userId,
-      trainingPlanTitles,
-      exerciseCategories,
-    );
+    return await this.planComparisonStaticsService.getVolumeComparison(userId, trainingPlanTitles, exerciseCategories);
   }
 
   @Get('performance-comparison')
@@ -52,14 +48,8 @@ export class TrainingStatisticsController {
   }
 
   @Get('viewedCategories/:id')
-  async getViewedCategories(
-    @GetUser() userId: string,
-    @Param('id') trainingPlanId: string,
-  ) {
-    return await this.recentlyViewedCategoriesService.getViewedCategories(
-      userId,
-      trainingPlanId,
-    );
+  async getViewedCategories(@GetUser() userId: string, @Param('id') trainingPlanId: string) {
+    return await this.recentlyViewedCategoriesService.getViewedCategories(userId, trainingPlanId);
   }
 
   @Post('viewedCategories/:id')
@@ -69,11 +59,7 @@ export class TrainingStatisticsController {
     @Query('categories', ExerciseCategoryTypePipe)
     eerciseCategories: ExerciseCategoryType[],
   ) {
-    return await this.recentlyViewedCategoriesService.updateViewedCategories(
-      userId,
-      trainingPlanId,
-      eerciseCategories,
-    );
+    return await this.recentlyViewedCategoriesService.updateViewedCategories(userId, trainingPlanId, eerciseCategories);
   }
 
   @Get(':id/sets')
@@ -83,11 +69,7 @@ export class TrainingStatisticsController {
     @Query('categories', ExerciseCategoryTypePipe)
     eerciseCategories: ExerciseCategoryType[],
   ) {
-    return await this.setProgressionService.getSetProgressionByCategories(
-      userId,
-      trainingPlanId,
-      eerciseCategories,
-    );
+    return await this.setProgressionService.getSetProgressionByCategories(userId, trainingPlanId, eerciseCategories);
   }
 
   @Get(':id/performance')
@@ -97,14 +79,8 @@ export class TrainingStatisticsController {
     @Query('categories', ExerciseCategoryTypePipe)
     eerciseCategories: ExerciseCategoryType[],
   ) {
-    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(
-      userId,
-      trainingPlanId,
-    );
-    return this.performanceProgressionService.getPerformanceProgressionByCategories(
-      trainingPlan,
-      eerciseCategories,
-    );
+    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(userId, trainingPlanId);
+    return this.performanceProgressionService.getPerformanceProgressionByCategories(trainingPlan, eerciseCategories);
   }
 
   @Get(':id/volume')
@@ -114,14 +90,8 @@ export class TrainingStatisticsController {
     @Query('categories', ExerciseCategoryTypePipe)
     eerciseCategories: ExerciseCategoryType[],
   ) {
-    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(
-      userId,
-      trainingPlanId,
-    );
-    return this.tonnageProgressionService.getTonnageProgressionByCategories(
-      trainingPlan,
-      eerciseCategories,
-    );
+    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(userId, trainingPlanId);
+    return this.tonnageProgressionService.getTonnageProgressionByCategories(trainingPlan, eerciseCategories);
   }
 
   @Get(':id/session-durations')
@@ -129,10 +99,7 @@ export class TrainingStatisticsController {
     @GetUser() userId: string,
     @Param('id') trainingPlanId: string,
   ) {
-    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(
-      userId,
-      trainingPlanId,
-    );
+    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(userId, trainingPlanId);
 
     return this.sessionDurationService.calculateAverageDurations(trainingPlan);
   }

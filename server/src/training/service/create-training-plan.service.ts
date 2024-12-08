@@ -14,10 +14,7 @@ export class CreateTrainingPlanService {
     private readonly trainingService: TrainingService,
   ) {}
 
-  async createTrainingPlan(
-    userId: string,
-    createTrainingPlanDto: CreateTrainingPlanDto,
-  ) {
+  async createTrainingPlan(userId: string, createTrainingPlanDto: CreateTrainingPlanDto) {
     const trainingWeeksPlaceholder = this.createNewTrainingPlanWithPlaceholders(
       createTrainingPlanDto.trainingBlockLength,
       createTrainingPlanDto.trainingDays.length,
@@ -36,11 +33,8 @@ export class CreateTrainingPlanService {
     return await newTrainingPlan.save();
   }
 
-  async getNextAvailableStartDateForNewTrainingPlan(
-    userId: string,
-  ): Promise<Date> {
-    const userTrainingPlans =
-      await this.trainingService.getTrainingPlansByUser(userId);
+  async getNextAvailableStartDateForNewTrainingPlan(userId: string): Promise<Date> {
+    const userTrainingPlans = await this.trainingService.getTrainingPlansByUser(userId);
 
     if (userTrainingPlans.length === 0) {
       const now = new Date();
@@ -50,8 +44,7 @@ export class CreateTrainingPlanService {
       return now;
     }
 
-    const mostRecentTrainingPlanOfUser =
-      this.getMostRecentPlan(userTrainingPlans);
+    const mostRecentTrainingPlanOfUser = this.getMostRecentPlan(userTrainingPlans);
     const startDate = new Date(mostRecentTrainingPlanOfUser.startDate);
     const totalDays = mostRecentTrainingPlanOfUser.trainingWeeks.length * 7;
     startDate.setDate(startDate.getDate() + totalDays);
@@ -59,10 +52,7 @@ export class CreateTrainingPlanService {
     return startDate;
   }
 
-  private createNewTrainingPlanWithPlaceholders(
-    weeks: number,
-    daysPerWeek: number,
-  ) {
+  private createNewTrainingPlanWithPlaceholders(weeks: number, daysPerWeek: number) {
     return Array.from({ length: weeks }, () => ({
       trainingDays: Array.from({ length: daysPerWeek }, () => ({
         id: uuidv4(),
@@ -75,8 +65,6 @@ export class CreateTrainingPlanService {
    * Finds the most recent plan by sorting.
    */
   private getMostRecentPlan(trainingPlans: TrainingPlan[]): TrainingPlan {
-    return trainingPlans.sort(
-      (a, b) => b.lastUpdated.getTime() - a.lastUpdated.getTime(),
-    )[0];
+    return trainingPlans.sort((a, b) => b.lastUpdated.getTime() - a.lastUpdated.getTime())[0];
   }
 }

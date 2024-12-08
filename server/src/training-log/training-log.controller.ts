@@ -8,9 +8,7 @@ export class TrainingLogController {
 
   @Get('notifications')
   async getAmountOfUnseedTrainingLogNotifcations(@GetUser() userId: string) {
-    return await this.trainingLogService.getAmoutOFTrainingLogNotificationsByUserId(
-      userId,
-    );
+    return await this.trainingLogService.getAmoutOFTrainingLogNotificationsByUserId(userId);
   }
 
   @Delete('notifications')

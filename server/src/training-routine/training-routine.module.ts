@@ -11,19 +11,14 @@ import { TrainingModule } from 'src/training/training.module';
 import { TrainingService } from 'src/training/training.service';
 import { UsersModule } from 'src/users/users.module';
 import { UsersService } from 'src/users/users.service';
-import {
-  TrainingRoutine,
-  TrainingRoutineSchema,
-} from './model/training-routine.model';
+import { TrainingRoutine, TrainingRoutineSchema } from './model/training-routine.model';
 import { TrainingRoutineViewService } from './training-routine-view.service';
 import { TrainingRoutineController } from './training-routine.controller';
 import { TrainingRoutineService } from './training-routine.service';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: TrainingRoutine.name, schema: TrainingRoutineSchema },
-    ]),
+    MongooseModule.forFeature([{ name: TrainingRoutine.name, schema: TrainingRoutineSchema }]),
     TrainingLogModule,
     TrainingPlanViewModule,
     PushNotificationsModule,

@@ -18,9 +18,7 @@ import { ExerciseCategoryType } from './types/exercise-category-type.enum';
 
 @Injectable()
 export class ExerciseService {
-  constructor(
-    @InjectModel(Exercise.name) private readonly exerciseModel: Model<Exercise>,
-  ) {}
+  constructor(@InjectModel(Exercise.name) private readonly exerciseModel: Model<Exercise>) {}
 
   /**
    * Fetches and prepares all exercises data for the user by their user ID.
@@ -31,13 +29,8 @@ export class ExerciseService {
       throw new NotFoundException('No exercises found for the given user ID.');
     }
 
-    const {
-      exerciseCategories,
-      categoryPauseTimes,
-      categorizedExercises,
-      defaultRepSchemeByCategory,
-      maxFactors,
-    } = this.prepareExercisesData(exercises);
+    const { exerciseCategories, categoryPauseTimes, categorizedExercises, defaultRepSchemeByCategory, maxFactors } =
+      this.prepareExercisesData(exercises);
 
     return {
       exerciseCategories,
@@ -57,11 +50,7 @@ export class ExerciseService {
     const defaultExercises = this.getDefaultExercisesForUser();
 
     const updatedExerciseDoc = await this.exerciseModel
-      .findOneAndUpdate(
-        { userId },
-        { $set: { exercises: defaultExercises } },
-        { new: true, upsert: true },
-      )
+      .findOneAndUpdate({ userId }, { $set: { exercises: defaultExercises } }, { new: true, upsert: true })
       .exec();
 
     return updatedExerciseDoc;
@@ -95,10 +84,8 @@ export class ExerciseService {
     const categorizedExercises: Record<string, string[]> = {};
     const categoryPauseTimes: Record<string, number> = {};
     const maxFactors: Record<string, number | undefined> = {};
-    const defaultRepSchemeByCategory: Record<
-      string,
-      { defaultSets: number; defaultReps: number; defaultRPE: number }
-    > = {};
+    const defaultRepSchemeByCategory: Record<string, { defaultSets: number; defaultReps: number; defaultRPE: number }> =
+      {};
 
     exercises.forEach((exerciseDoc) => {
       for (const exercise of Object.values(exerciseDoc.exercises)) {
@@ -136,10 +123,7 @@ export class ExerciseService {
       categorizedExercises: Record<string, string[]>;
       categoryPauseTimes: Record<string, number>;
       maxFactors: Record<string, number | undefined>;
-      defaultRepSchemeByCategory: Record<
-        string,
-        { defaultSets: number; defaultReps: number; defaultRPE: number }
-      >;
+      defaultRepSchemeByCategory: Record<string, { defaultSets: number; defaultReps: number; defaultRPE: number }>;
     },
   ) {
     if (!exercise?.category?.name) {
@@ -147,13 +131,7 @@ export class ExerciseService {
       return;
     }
 
-    const {
-      name: categoryName,
-      pauseTime,
-      defaultSets,
-      defaultReps,
-      defaultRPE,
-    } = exercise.category;
+    const { name: categoryName, pauseTime, defaultSets, defaultReps, defaultRPE } = exercise.category;
 
     if (!categorizedExercises[categoryName]) {
       categorizedExercises[categoryName] = [];

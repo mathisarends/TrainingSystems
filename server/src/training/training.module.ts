@@ -24,9 +24,7 @@ import { TrainingService } from './training.service';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      { name: TrainingPlan.name, schema: TrainingPlanSchema },
-    ]),
+    MongooseModule.forFeature([{ name: TrainingPlan.name, schema: TrainingPlanSchema }]),
     ExerciseModule,
     PushNotificationsModule,
     UsersModule,

@@ -15,31 +15,24 @@ export class TrainingRoutineService {
     private readonly userService: UsersService,
   ) {}
 
-  async geTrainingRoutineCardViews(
-    userId: string,
-  ): Promise<TrainingRoutineCardViewDto[]> {
+  async geTrainingRoutineCardViews(userId: string): Promise<TrainingRoutineCardViewDto[]> {
     const trainingRoutines = await this.trainingRoutineModel.find({ userId });
-    const userProfilePicture = (await this.userService.getUserById(userId))
-      .profilePicture;
+    const userProfilePicture = (await this.userService.getUserById(userId)).profilePicture;
 
-    const trainingSessionCardViewDto: TrainingRoutineCardViewDto[] =
-      trainingRoutines.map((trainingSession) => {
-        return {
-          id: trainingSession.id,
-          title: trainingSession.title,
-          lastUpdated: trainingSession.lastUpdated,
-          coverImageBase64: trainingSession.coverImageBase64 ?? '',
-          userProfilePicture: userProfilePicture,
-        };
-      });
+    const trainingSessionCardViewDto: TrainingRoutineCardViewDto[] = trainingRoutines.map((trainingSession) => {
+      return {
+        id: trainingSession.id,
+        title: trainingSession.title,
+        lastUpdated: trainingSession.lastUpdated,
+        coverImageBase64: trainingSession.coverImageBase64 ?? '',
+        userProfilePicture: userProfilePicture,
+      };
+    });
 
     return trainingSessionCardViewDto;
   }
 
-  async getTrainingRoutineByUserAndRoutineId(
-    userId: string,
-    trainingRoutineId: string,
-  ) {
+  async getTrainingRoutineByUserAndRoutineId(userId: string, trainingRoutineId: string) {
     const trainingRoutine = await this.trainingRoutineModel.findOne({
       userId: userId,
       _id: trainingRoutineId,
@@ -54,26 +47,19 @@ export class TrainingRoutineService {
     return trainingRoutine;
   }
 
-  async createTrainingRoutine(
-    userId: string,
-    createTrainingRoutineDto: CreateTrainingRoutineDto,
-  ) {
+  async createTrainingRoutine(userId: string, createTrainingRoutineDto: CreateTrainingRoutineDto) {
     const newTrainingRoutine = new this.trainingRoutineModel({
       userId: userId,
       title: createTrainingRoutineDto.title,
       lastUpdated: new Date(),
-      weightRecommandationBase:
-        createTrainingRoutineDto.weightRecommandationBase,
+      weightRecommandationBase: createTrainingRoutineDto.weightRecommandationBase,
       coverImageBase64: createTrainingRoutineDto.coverImageBase64 ?? '',
     });
 
     return await newTrainingRoutine.save();
   }
 
-  async editTrainingRoutine(
-    userId: string,
-    editTrainingRoutineDto: EditTrainingRoutineDto,
-  ) {
+  async editTrainingRoutine(userId: string, editTrainingRoutineDto: EditTrainingRoutineDto) {
     const trainingRoutine = await this.trainingRoutineModel.findOne({
       userId: userId,
       _id: editTrainingRoutineDto.id,

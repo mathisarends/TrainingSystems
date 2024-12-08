@@ -8,42 +8,27 @@ export class FriendshipController {
   constructor(private readonly friendshipService: FriendshipService) {}
 
   @Post('request/:friendId')
-  async sendFriendRequest(
-    @GetUser() userId: string,
-    @Param('friendId') friendId: string,
-  ) {
+  async sendFriendRequest(@GetUser() userId: string, @Param('friendId') friendId: string) {
     return this.friendshipService.createFriendRequest(userId, friendId);
   }
 
   @Patch('accept/:friendId')
-  async acceptFriendRequest(
-    @GetUser() userId: string,
-    @Param('friendId') friendId: string,
-  ) {
+  async acceptFriendRequest(@GetUser() userId: string, @Param('friendId') friendId: string) {
     return this.friendshipService.acceptFriendRequest(userId, friendId);
   }
 
   @Delete(':friendId')
-  async deleteFriend(
-    @GetUser() userId: string,
-    @Param('friendId') friendId: string,
-  ) {
+  async deleteFriend(@GetUser() userId: string, @Param('friendId') friendId: string) {
     return this.friendshipService.deleteFriend(userId, friendId);
   }
 
   @Get('requests')
   async getAllFriendRequests(@GetUser() userId: string) {
-    return this.friendshipService.getFriendRequests(
-      userId,
-      InviteStatus.PENDING,
-    );
+    return this.friendshipService.getFriendRequests(userId, InviteStatus.PENDING);
   }
 
   @Get('status/:status')
-  async getFriendRequestsByStatus(
-    @GetUser() userId: string,
-    @Param('status') status: InviteStatus,
-  ) {
+  async getFriendRequestsByStatus(@GetUser() userId: string, @Param('status') status: InviteStatus) {
     return this.friendshipService.getFriendshipsByStatus(userId, status);
   }
 

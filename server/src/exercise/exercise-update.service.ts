@@ -13,9 +13,7 @@ import { UserExerciseCategory } from './types/user-exercise-category';
 
 @Injectable()
 export class ExerciseUpdateService {
-  constructor(
-    @InjectModel(Exercise.name) private readonly exerciseModel: Model<Exercise>,
-  ) {}
+  constructor(@InjectModel(Exercise.name) private readonly exerciseModel: Model<Exercise>) {}
 
   async updateExercisesForUser(userId: string, changedData: ApiData) {
     const userExercises = await this.exerciseModel.findOne({ userId }).exec();
@@ -25,20 +23,13 @@ export class ExerciseUpdateService {
 
     const changedCategoriesMap = this.mapChangedDataToCategories(changedData);
 
-    Object.entries(changedCategoriesMap).forEach(
-      ([category, { fieldNames, newValues }]) => {
-        const exercisesForCategory = userExercises.exercises[category];
+    Object.entries(changedCategoriesMap).forEach(([category, { fieldNames, newValues }]) => {
+      const exercisesForCategory = userExercises.exercises[category];
 
-        fieldNames.forEach((fieldName, index) => {
-          this.processExerciseChanges(
-            fieldName,
-            index,
-            newValues,
-            exercisesForCategory,
-          );
-        });
-      },
-    );
+      fieldNames.forEach((fieldName, index) => {
+        this.processExerciseChanges(fieldName, index, newValues, exercisesForCategory);
+      });
+    });
 
     userExercises.markModified('exercises');
     return await userExercises.save();
@@ -56,10 +47,7 @@ export class ExerciseUpdateService {
 
     Object.entries(changedData).forEach(([fieldName, newValue]) => {
       const categoryIndex: number = this.isCategoryIndexAboveTen(fieldName)
-        ? this.concatenateNumbers(
-            Number(fieldName.charAt(0)),
-            Number(fieldName.charAt(1)),
-          )
+        ? this.concatenateNumbers(Number(fieldName.charAt(0)), Number(fieldName.charAt(1)))
         : Number(fieldName.charAt(0));
 
       const category = this.getAssociatedCategoryByIndex(categoryIndex);
@@ -136,8 +124,7 @@ export class ExerciseUpdateService {
         : Number(fieldName.charAt(2));
 
       if (exerciseIndex >= userExerciseField.length) {
-        const exerciseCategoryMetaInfo =
-          this.getCategoryInfoFromList(userExerciseField)!;
+        const exerciseCategoryMetaInfo = this.getCategoryInfoFromList(userExerciseField)!;
         const newUserExercise = this.createExerciseObject(
           exerciseCategoryMetaInfo,
           newValues[index] as string,

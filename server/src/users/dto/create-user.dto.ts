@@ -1,10 +1,4 @@
-import {
-  IsEmail,
-  IsOptional,
-  IsString,
-  Matches,
-  MinLength,
-} from 'class-validator';
+import { IsEmail, IsOptional, IsString, Matches, MinLength } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
@@ -29,12 +23,7 @@ export class CreateUserDto {
   })
   password?: string;
 
-  constructor(
-    name: string,
-    email: string,
-    profilePicture?: string,
-    password?: string,
-  ) {
+  constructor(name: string, email: string, profilePicture?: string, password?: string) {
     this.name = name;
     this.email = email;
     this.profilePicture = profilePicture;

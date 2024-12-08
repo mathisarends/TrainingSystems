@@ -12,24 +12,13 @@ export class PlanComparisonStaticsService {
     private performanceProgressionService: PerformanceProgressionService,
   ) {}
 
-  async getVolumeComparison(
-    userId: string,
-    trainingPlanTitles: string[],
-    exerciseCategories: ExerciseCategoryType[],
-  ) {
+  async getVolumeComparison(userId: string, trainingPlanTitles: string[], exerciseCategories: ExerciseCategoryType[]) {
     const responseData = await Promise.all(
       trainingPlanTitles.map(async (title) => {
-        const trainingPlan = await this.trainingService.getPlanByUserAndTitle(
-          userId,
-          title,
-        );
+        const trainingPlan = await this.trainingService.getPlanByUserAndTitle(userId, title);
 
         return {
-          [title]:
-            this.tonnageProgressionService.getTonnageProgressionByCategories(
-              trainingPlan,
-              exerciseCategories,
-            ),
+          [title]: this.tonnageProgressionService.getTonnageProgressionByCategories(trainingPlan, exerciseCategories),
         };
       }),
     );
@@ -44,17 +33,13 @@ export class PlanComparisonStaticsService {
   ) {
     const responseData = await Promise.all(
       trainingPlanTitles.map(async (title) => {
-        const trainingPlan = await this.trainingService.getPlanByUserAndTitle(
-          userId,
-          title,
-        );
+        const trainingPlan = await this.trainingService.getPlanByUserAndTitle(userId, title);
 
         return {
-          [title]:
-            this.performanceProgressionService.getPerformanceProgressionByCategories(
-              trainingPlan,
-              exerciseCategories,
-            ),
+          [title]: this.performanceProgressionService.getPerformanceProgressionByCategories(
+            trainingPlan,
+            exerciseCategories,
+          ),
         };
       }),
     );

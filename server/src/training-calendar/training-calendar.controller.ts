@@ -23,12 +23,7 @@ export class TrainingCalendarController {
     @Param('weekIndex', ParseIntPipe) weekIndex: number,
     @Param('dayIndex', ParseIntPipe) dayIndex: number,
   ): Promise<TrainingRetrospectivePopupCardInfo> {
-    return await this.trainingDayInfoService.getTrainingRetrospectivePopupCardInfo(
-      userId,
-      planId,
-      weekIndex,
-      dayIndex,
-    );
+    return await this.trainingDayInfoService.getTrainingRetrospectivePopupCardInfo(userId, planId, weekIndex, dayIndex);
   }
 
   @Get('/training-day-info/:planId/:weekIndex/:dayIndex')
@@ -38,11 +33,6 @@ export class TrainingCalendarController {
     @Param('weekIndex', ParseIntPipe) weekIndex: number,
     @Param('dayIndex', ParseIntPipe) dayIndex: number,
   ) {
-    return await this.trainingDayInfoService.getTrainingDayInfo(
-      userId,
-      planId,
-      weekIndex,
-      dayIndex,
-    );
+    return await this.trainingDayInfoService.getTrainingDayInfo(userId, planId, weekIndex, dayIndex);
   }
 }

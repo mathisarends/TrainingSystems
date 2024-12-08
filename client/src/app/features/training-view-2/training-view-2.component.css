@@ -1,0 +1,28 @@
+.training-grid {
+  display: grid;
+  grid-template-columns: minmax(175px, 1fr) minmax(175px, 1fr) repeat(6, 1fr) minmax(175px, 1fr); /* Notes */
+}
+
+.column-name {
+  text-align: center;
+  padding: 8px;
+  padding-left: 4px;
+  border-bottom: 1px solid var(--calendar-border-color);
+}
+
+.column-name:nth-child(1),
+.column-name:nth-child(2) {
+  text-align: left;
+  padding-left: 10px;
+}
+
+@media screen and (max-width: 768px) {
+  .training-grid {
+    grid-template-columns: 1fr;
+  }
+  .column-name {
+    display: none;
+  }
+}
+
+/*# sourceMappingURL=training-view-2.component.css.map */

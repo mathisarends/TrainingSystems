@@ -1,0 +1,83 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  transition: box-shadow 0.3s ease;
+  transition: filter 0.3s ease;
+  border-radius: 0.35rem;
+  background: #fff;
+  color: var(--dark-grey);
+  --bs-bg-opacity: 0.5;
+}
+:host:hover {
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  scale: 1.001;
+  filter: brightness(0.975);
+}
+
+.title-prefix {
+  color: #adadad;
+  font-size: 1.35rem;
+  text-transform: uppercase;
+  margin-right: 0.325rem;
+}
+
+.card-title {
+  margin-bottom: 0.5rem;
+}
+
+.card-text {
+  margin-bottom: 0.25rem;
+  font-size: 0.9em;
+}
+
+.card-banner {
+  height: 175px;
+  min-height: 175px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  border-color: inherit;
+  object-fit: cover;
+  border-top-left-radius: 0.35rem;
+  border-top-right-radius: 0.35rem;
+}
+
+.card-footer {
+  border-bottom-left-radius: 0.35rem;
+  border-bottom-right-radius: 0.35rem;
+}
+
+.card-body,
+.card-footer {
+  padding: 2.125rem 1rem;
+}
+
+.profile-picture img {
+  border-radius: 50%;
+  border: 3px solid rgb(248, 249, 250);
+  box-shadow: 0 0 15px rgba(10, 10, 10, 0.3);
+  position: absolute;
+  top: 152.5px;
+  left: 10px;
+  width: 45px;
+  height: 45px;
+}
+
+.card-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-block: 0.75rem;
+}
+.card-footer app-icon-button {
+  margin-right: 0.65rem;
+}
+
+.bg-white {
+  --bs-bg-opacity: 0.5;
+}
+
+/*# sourceMappingURL=training-plan-card.component.css.map */

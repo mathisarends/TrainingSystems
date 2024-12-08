@@ -1,0 +1,56 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  margin-top: -0.25rem;
+  gap: 10px;
+}
+
+.training-plan-card-container {
+  position: relative;
+  color: white;
+}
+.training-plan-card-container app-circular-icon-button {
+  position: absolute;
+  top: 10rem;
+  right: 0.5rem;
+  cursor: grab;
+}
+.training-plan-card-container app-circular-icon-button:active {
+  cursor: grabbing;
+}
+
+.training-plan-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.empty-training-list-container {
+  display: flex;
+  width: 100%;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+.empty-training-list-container > * {
+  flex: 1 1 50%;
+}
+
+@media screen and (max-width: 1200px) {
+  .empty-training-list-container {
+    flex-direction: column;
+  }
+}
+@media screen and (max-width: 768px) {
+  .container.heading-container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .training-plan-card-container {
+    touch-action: manipulation;
+    transform: none;
+  }
+}
+
+/*# sourceMappingURL=training-plans.component.css.map */

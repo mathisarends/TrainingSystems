@@ -14,10 +14,7 @@ export class GymTicketService {
   /**
    * Updates the gym ticket for a user. If it does not exist, a new entry will be created.
    */
-  async updateGymTicketForUser(
-    userId: string,
-    gymTicketDto: GymTicketDto,
-  ): Promise<GymTicket> {
+  async updateGymTicketForUser(userId: string, gymTicketDto: GymTicketDto): Promise<GymTicket> {
     return await this.gymTicketModel
       .findOneAndUpdate(
         { userId: userId },
@@ -28,10 +25,7 @@ export class GymTicketService {
   }
 
   async getGymTicketByUserId(userId: string): Promise<string> {
-    const result = await this.gymTicketModel
-      .findOne({ userId: userId }, 'gymTicket')
-      .lean()
-      .exec();
+    const result = await this.gymTicketModel.findOne({ userId: userId }, 'gymTicket').lean().exec();
 
     return result ? result.gymTicket : undefined;
   }
