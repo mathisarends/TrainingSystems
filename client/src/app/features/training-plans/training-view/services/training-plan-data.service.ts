@@ -46,12 +46,21 @@ export class TrainingPlanDataService {
     this.exercises.update((entries) => [...entries, newEntry]);
   }
 
-  getIndexOfExercise(exercise: Exercise) {
-    if (exercise.id) {
-      return this.exercises().findIndex((existingExercise) => existingExercise.id === exercise.id);
+  /**
+   * Updates the weight recommendation for the next exercise in the list.
+   */
+  updateWeightRecommendation(currentExercise: Exercise, backoffWeight: number): void {
+    const index = this.exercises().findIndex((ex) => ex.id === currentExercise.id);
+
+    if (index === -1 || index >= this.exercises().length - 1) {
+      return;
     }
 
-    return -1;
+    this.weightRecommendations.update((current) => {
+      const updated = [...current];
+      updated[index + 1] = backoffWeight.toString();
+      return updated;
+    });
   }
 
   /**
@@ -97,8 +106,6 @@ export class TrainingPlanDataService {
         map.set(exercise.id, weightRecommendations[index] || '');
       }
     });
-
-    console.log('map', map);
 
     return map;
   }

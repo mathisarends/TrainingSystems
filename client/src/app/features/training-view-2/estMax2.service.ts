@@ -22,9 +22,32 @@ export class EstMaxService2 {
   }
 
   /**
-   * Calculates the backoff weight for the next set based on planned reps, RPE, and the top set max.
+   * Calculates the backoff weight for the next exercise based on planned reps, RPE, and the top set max.
    */
-  calcBackoff(planedReps: number, planedRPE: number, topSetMax: number): number {
+  calcBackoffForNextExercise(currentExercise: Exercise, allExercises: Exercise[]): number | undefined {
+    const currentIndex = allExercises.findIndex((ex) => ex.id === currentExercise.id);
+    if (currentIndex === -1 || currentIndex >= allExercises.length - 1) {
+      return undefined;
+    }
+
+    const nextExercise = allExercises[currentIndex + 1];
+
+    if (nextExercise.exercise !== currentExercise.exercise) {
+      return undefined;
+    }
+
+    const topSetMax = this.calcEstMax(currentExercise);
+    if (!topSetMax) {
+      return undefined;
+    }
+
+    return this.calcBackoff(nextExercise.reps, nextExercise.targetRPE, topSetMax);
+  }
+
+  /**
+   * Calculates the backoff weight for a single exercise.
+   */
+  private calcBackoff(planedReps: number, planedRPE: number, topSetMax: number): number {
     const totalReps = planedReps + (10 - planedRPE);
     let percentage = (0.484472 * totalReps * totalReps - 33.891 * totalReps + 1023.67) * 0.001;
     let backoffWeight = topSetMax * percentage;
@@ -36,9 +59,6 @@ export class EstMaxService2 {
   /**
    * Checks if the inputs in the exercise object are valid.
    * This includes validating the category, weight, actualRPE, and reps.
-   *
-   * @param exercise - The exercise object to validate.
-   * @returns True if inputs are valid, false otherwise.
    */
   private areInputsValid(exercise: Exercise): boolean {
     const weight = Number(exercise.weight);

@@ -56,13 +56,13 @@ export class TrainingViewTableRowComponent {
   /**
    * Handles changes to the weight input, updates estMax, and starts the pause timer.
    */
-  protected onWeightChanged(weight: string): void {
+  protected async onWeightChanged(weight: string): Promise<void> {
     this.updateExerciseProperty('weight', weight);
 
     // TODO: hier könnte man ansetzen und das weight parsen wenn es im richtigen Foramt ist und dann über einen optionalen
     // Parameter dieses für die estMax calculation nutzen
     this.updateEstMax();
-    this.startPauseTimer();
+    await this.startPauseTimer();
   }
 
   /**
@@ -120,6 +120,9 @@ export class TrainingViewTableRowComponent {
   /**
    * Calculates and updates the estimated max value for the exercise.
    */
+  /**
+   * Calculates and updates the estimated max value for the exercise.
+   */
   private updateEstMax(): void {
     const estMax = this.estMaxService2.calcEstMax(this.exercise());
 
@@ -128,54 +131,16 @@ export class TrainingViewTableRowComponent {
       return;
     }
 
-    if (!this.canCalculateBackoff()) {
-      this.updateExerciseProperty('estMax', estMax);
-      return;
+    const backoffWeight = this.estMaxService2.calcBackoffForNextExercise(
+      this.exercise(),
+      this.trainingPlanDataService.exercises(),
+    );
+
+    if (backoffWeight !== undefined) {
+      this.trainingPlanDataService.updateWeightRecommendation(this.exercise(), backoffWeight);
     }
 
-    const backoffWeight = this.calculateBackoffWeight(estMax);
-
-    this.updateWeightRecommendations(backoffWeight);
     this.updateExerciseProperty('estMax', estMax);
-  }
-
-  /**
-   * Checks if backoff calculation is possible for the current exercise.
-   */
-  private canCalculateBackoff(): boolean {
-    const indexOfCurrentExercise = this.trainingPlanDataService.getIndexOfExercise(this.exercise());
-    const exercises = this.trainingPlanDataService.exercises();
-
-    if (indexOfCurrentExercise === -1 || indexOfCurrentExercise === exercises.length - 1) {
-      return false;
-    }
-
-    const nextExercise = exercises[indexOfCurrentExercise + 1];
-
-    return nextExercise.exercise === this.exercise().exercise;
-  }
-
-  /**
-   * Calculates the backoff weight for the next exercise.
-   */
-  private calculateBackoffWeight(estMax: number): string {
-    const indexOfCurrentExercise = this.trainingPlanDataService.getIndexOfExercise(this.exercise());
-    const nextExercise = this.trainingPlanDataService.exercises()[indexOfCurrentExercise + 1];
-
-    return this.estMaxService2.calcBackoff(nextExercise.reps, nextExercise.targetRPE, estMax).toString();
-  }
-
-  /**
-   * Updates the weight recommendations for the next exercise.
-   */
-  private updateWeightRecommendations(backoffWeight: string): void {
-    const indexOfCurrentExercise = this.trainingPlanDataService.getIndexOfExercise(this.exercise());
-
-    this.trainingPlanDataService.weightRecommendations.update((current) => {
-      const updated = [...current];
-      updated[indexOfCurrentExercise + 1] = backoffWeight;
-      return updated;
-    });
   }
 
   /**

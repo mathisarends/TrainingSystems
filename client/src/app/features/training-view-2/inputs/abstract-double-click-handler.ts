@@ -85,10 +85,8 @@ export abstract class AbstractDoubleClickHandler {
    * Calculates the rounded average of the input values using a specified step.
    */
   protected calculateRoundedAverage(values: number[], step: number): number {
-    console.log('🚀 ~ AbstractInputHandler ~ calculateRoundedAverage ~ values:', values);
     const sum = values.reduce((acc, curr) => acc + curr, 0);
     const average = sum / values.length;
-    console.log('🚀 ~ AbstractInputHandler ~ calculateRoundedAverage ~ average:', average);
     return Math.round(average / step) * step;
   }
 }
