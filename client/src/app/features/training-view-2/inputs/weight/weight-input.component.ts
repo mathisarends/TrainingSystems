@@ -20,7 +20,10 @@ export class WeightInputComponent extends AbstractDoubleClickHandler {
    */
   numberOfSets = input.required<number>();
 
-  placeholder = input('');
+  /**
+   * Weight recommendation that is shown when no value is given.
+   */
+  weightRecommendation = input('');
 
   /**
    * Emits the weight change.
@@ -60,9 +63,12 @@ export class WeightInputComponent extends AbstractDoubleClickHandler {
     });
   }
 
+  /**
+   * Handles a double-click event on the input. Updates the weight value based on placeholder or duplicates last value if needed.
+   */
   protected handleDoubleClick(): void {
-    if (!this.weight() && this.placeholder()) {
-      this.weight.set(this.placeholder());
+    if (!this.weight() && this.weightRecommendation()) {
+      this.weight.set(this.weightRecommendation());
       return;
     }
 
@@ -83,6 +89,9 @@ export class WeightInputComponent extends AbstractDoubleClickHandler {
     }
   }
 
+  /**
+   * Handles changes to the weight input value. Validates and updates the weight and calculates average if necessary.
+   */
   protected onWeightChanged(event: Event): void {
     const newWeight = (event.target as HTMLInputElement).value;
 

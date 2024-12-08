@@ -46,6 +46,14 @@ export class TrainingPlanDataService {
     this.exercises.update((entries) => [...entries, newEntry]);
   }
 
+  getIndexOfExercise(exercise: Exercise) {
+    if (exercise.id) {
+      return this.exercises().findIndex((existingExercise) => existingExercise.id === exercise.id);
+    }
+
+    return -1;
+  }
+
   /**
    * Updates a temporary exercise created on the client-side (without an ID) with server-generated values.
    * This ensures the exercise has an ID, enabling actions like deletion or updates by ID.
@@ -89,6 +97,8 @@ export class TrainingPlanDataService {
         map.set(exercise.id, weightRecommendations[index] || '');
       }
     });
+
+    console.log('map', map);
 
     return map;
   }

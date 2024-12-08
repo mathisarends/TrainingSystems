@@ -9,11 +9,6 @@ export class EstMaxService2 {
 
   /**
    * Calculates the estimated maximum weight using the Wathan formula, incorporating actual reps adjusted for RPE.
-   *
-   * @param weight - The weight lifted.
-   * @param reps - The number of repetitions performed.
-   * @param rpe - The rating of perceived exertion (RPE).
-   * @returns The calculated estimated max weight.
    */
   calcEstMax(exercise: Exercise): number | undefined {
     if (!this.areInputsValid(exercise)) {
@@ -21,19 +16,15 @@ export class EstMaxService2 {
     }
 
     const actualReps = exercise.reps + (10 - Number(exercise.actualRPE));
-    const unroundedValue = Number(exercise.weight) * (1 + actualReps / 30);
+    const rawValue = Number(exercise.weight) * (1 + actualReps / 30);
 
-    return Math.ceil(unroundedValue / 2.5) * 2.5;
+    return Math.ceil(rawValue / 2.5) * 2.5;
   }
 
   /**
    * Calculates the backoff weight for the next set based on planned reps, RPE, and the top set max.
-   * @param planedReps - The planned number of repetitions.
-   * @param planedRPE - The planned rating of perceived exertion.
-   * @param topSetMax - The top set maximum weight.
-   * @returns The calculated backoff weight range as a string.
    */
-  private calcBackoff(planedReps: number, planedRPE: number, topSetMax: number): number {
+  calcBackoff(planedReps: number, planedRPE: number, topSetMax: number): number {
     const totalReps = planedReps + (10 - planedRPE);
     let percentage = (0.484472 * totalReps * totalReps - 33.891 * totalReps + 1023.67) * 0.001;
     let backoffWeight = topSetMax * percentage;
@@ -66,10 +57,6 @@ export class EstMaxService2 {
       return false;
     }
 
-    if (reps <= 0) {
-      return false;
-    }
-
-    return true;
+    return reps > 0;
   }
 }

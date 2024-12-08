@@ -20,11 +20,11 @@ export class TrainingDayExerciseDto {
   @IsString()
   exercise: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   sets: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   reps: number;
 

@@ -26,7 +26,7 @@ import { TrainingPlanDataService } from '../../training-plans/training-view/serv
 export class TrainingViewTableRowComponent {
   exercise = model.required<Exercise>();
 
-  weightPlaceholder = computed(() => this.getWeightRecommendation());
+  weightRecommendation = computed(() => this.getWeightRecommendation());
 
   isPlaceholderCategory = computed(() => this.exercise().category === ExerciseCategories.PLACEHOLDER);
 
@@ -123,7 +123,59 @@ export class TrainingViewTableRowComponent {
   private updateEstMax(): void {
     const estMax = this.estMaxService2.calcEstMax(this.exercise());
 
+    if (!estMax) {
+      this.updateExerciseProperty('estMax', estMax);
+      return;
+    }
+
+    if (!this.canCalculateBackoff()) {
+      this.updateExerciseProperty('estMax', estMax);
+      return;
+    }
+
+    const backoffWeight = this.calculateBackoffWeight(estMax);
+
+    this.updateWeightRecommendations(backoffWeight);
     this.updateExerciseProperty('estMax', estMax);
+  }
+
+  /**
+   * Checks if backoff calculation is possible for the current exercise.
+   */
+  private canCalculateBackoff(): boolean {
+    const indexOfCurrentExercise = this.trainingPlanDataService.getIndexOfExercise(this.exercise());
+    const exercises = this.trainingPlanDataService.exercises();
+
+    if (indexOfCurrentExercise === -1 || indexOfCurrentExercise === exercises.length - 1) {
+      return false;
+    }
+
+    const nextExercise = exercises[indexOfCurrentExercise + 1];
+
+    return nextExercise.exercise === this.exercise().exercise;
+  }
+
+  /**
+   * Calculates the backoff weight for the next exercise.
+   */
+  private calculateBackoffWeight(estMax: number): string {
+    const indexOfCurrentExercise = this.trainingPlanDataService.getIndexOfExercise(this.exercise());
+    const nextExercise = this.trainingPlanDataService.exercises()[indexOfCurrentExercise + 1];
+
+    return this.estMaxService2.calcBackoff(nextExercise.reps, nextExercise.targetRPE, estMax).toString();
+  }
+
+  /**
+   * Updates the weight recommendations for the next exercise.
+   */
+  private updateWeightRecommendations(backoffWeight: string): void {
+    const indexOfCurrentExercise = this.trainingPlanDataService.getIndexOfExercise(this.exercise());
+
+    this.trainingPlanDataService.weightRecommendations.update((current) => {
+      const updated = [...current];
+      updated[indexOfCurrentExercise + 1] = backoffWeight;
+      return updated;
+    });
   }
 
   /**
