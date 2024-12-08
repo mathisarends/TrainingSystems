@@ -9,27 +9,19 @@ import { FormService } from '../../../core/services/form.service';
 import { ModalOptionsBuilder } from '../../../core/services/modal/modal-options-builder';
 import { ModalService } from '../../../core/services/modal/modal.service';
 import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
-import { HeadlineComponent } from '../../../shared/components/headline/headline.component';
-import { IconButtonComponent } from '../../../shared/components/icon-button/icon-button.component';
 import { InputComponent } from '../../../shared/components/input/input.component';
-import { SkeletonTrainingTableComponent } from '../../../shared/components/loader/skeleton-training-table/skeleton-training-table.component';
 import { MoreOptionListItem } from '../../../shared/components/more-options-button/more-option-list-item';
-import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
-import { InteractiveElementDirective } from '../../../shared/directives/interactive-element.directive';
 import { SwipeDirective } from '../../../shared/directives/swipe.directive';
-import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
 import { IconName } from '../../../shared/icon/icon-name';
-import { IconComponent } from '../../../shared/icon/icon.component';
 import { AutoSaveService } from '../../../shared/service/auto-save.service';
-import { UserBestPerformanceService } from '../../../shared/service/user-best-performance/user-best-performance.service';
+import {
+  UserBestPerformanceService,
+} from '../../../shared/service/user-best-performance/user-best-performance.service';
 import { HeaderService } from '../../header/header.service';
 import { SetHeadlineInfo } from '../../header/set-headline-info';
-import { FormatTimePipe } from '../format-time.pipe';
 import { AutoProgressionComponent } from './auto-progression/auto-progression.component';
 import { AutoProgressionService } from './auto-progression/auto-progression.service';
-import { RepInputDirective } from './directives/rep-input.directive';
-import { RpeInputDirective } from './directives/rpe-input.directive';
 import { WeightInputDirective } from './directives/weight-input.directive';
 import { ExerciseDataService } from './exercise-data.service';
 import { NavigationDirection } from './models/navigation-direction.enum';
@@ -50,20 +42,10 @@ import { TrainingViewService } from './training-view-service';
   standalone: true,
   imports: [
     CommonModule,
-    PaginationComponent,
     TrainingViewNavigationComponent,
-    HeadlineComponent,
-    IconButtonComponent,
-    SkeletonTrainingTableComponent,
     WeightInputDirective,
-    RpeInputDirective,
-    InteractiveElementDirective,
-    IconComponent,
     InputComponent,
     DropdownComponent,
-    RepInputDirective,
-    FormatTimePipe,
-    TooltipDirective,
     SpinnerComponent,
     SwipeDirective,
     FormsModule,
@@ -184,14 +166,11 @@ export class TrainingViewComponent implements OnInit, SetHeadlineInfo {
   private loadData(planId: string, week: number, day: number): void {
     forkJoin({
       trainingPlanDto: this.trainingViewService.loadTrainingPlan(planId, week, day),
-      exerciseDataDto: this.trainingViewService.loadExerciseData(),
+      exerciseDataDto: this.exerciseDataService.loadExerciseData(),
     })
       .pipe(
         tap(({ trainingPlanDto, exerciseDataDto }) => {
           this.trainingDataService.initializeFromDto(trainingPlanDto);
-
-          this.exerciseDataService.setExerciseData(exerciseDataDto);
-
           this.setHeadlineInfo(trainingPlanDto.title);
           this.viewInitialized.set(true);
         }),

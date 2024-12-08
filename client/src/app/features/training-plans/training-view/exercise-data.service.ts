@@ -1,22 +1,33 @@
-import { Injectable, signal } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { ExerciseDataDTO } from './exerciseDataDto';
-import { RepSchemeByCategory } from './models/default-rep-scheme-by-category';
 import { Exercise } from './training-exercise';
+import { Observable, of, tap } from 'rxjs';
+import { HttpService } from '../../../core/services/http-client.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ExerciseDataService {
-  exerciseCategories = signal<string[]>([]);
-  categoryPauseTimes = signal<{ [key: string]: number }>({});
-  categorizedExercises = signal<{ [key: string]: string[] }>({});
-  defaultRepSchemeByCategory = signal<RepSchemeByCategory>({});
+  private exerciseData = signal<ExerciseDataDTO | undefined>(undefined);
 
-  setExerciseData(data: Partial<ExerciseDataDTO>): void {
-    this.exerciseCategories.set(data.exerciseCategories || []);
-    this.categoryPauseTimes.set(data.categoryPauseTimes || {});
-    this.categorizedExercises.set(data.categorizedExercises || {});
-    this.defaultRepSchemeByCategory.set(data.defaultRepSchemeByCategory || {});
+  exerciseCategories = computed(() => this.exerciseData()?.exerciseCategories || []);
+  categoryPauseTimes = computed(() => this.exerciseData()?.categoryPauseTimes || {});
+  categorizedExercises = computed(() => this.exerciseData()?.categorizedExercises || {});
+  defaultRepSchemeByCategory = computed(() => this.exerciseData()?.defaultRepSchemeByCategory || {});
+
+  constructor(private httpService: HttpService) {}
+
+  /**
+   * Loads the exercise data, using cached data if available.
+   */
+  loadExerciseData(): Observable<ExerciseDataDTO> {
+    if (this.exerciseData()) {
+      return of(this.exerciseData()!);
+    }
+
+    return this.httpService
+      .get<ExerciseDataDTO>('/exercise')
+      .pipe(tap((exerciseData) => this.exerciseData.set(exerciseData)));
   }
 
   /**

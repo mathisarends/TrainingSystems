@@ -25,15 +25,24 @@ export class TrainingViewTableRowComponent {
 
   isPlaceholderCategory = computed(() => this.exercise().category === ExerciseCategories.PLACEHOLDER);
 
+  private initialized = false;
+
   constructor(
     protected exerciseDataService: ExerciseDataService,
     private estMaxService2: EstMaxService2,
     private pauseTimeService: PauseTimeService,
   ) {
-    effect(() => {
-      const exercise = this.exercise();
-      console.log('exercise', exercise);
-    });
+    effect(
+      () => {
+        if (!this.initialized) {
+          this.initialized = true;
+          return;
+        }
+
+        const exercise = this.exercise();
+      },
+      { allowSignalWrites: true },
+    );
   }
 
   /**

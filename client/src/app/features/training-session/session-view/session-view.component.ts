@@ -135,14 +135,12 @@ export class SessionViewComponent implements OnInit, SetHeadlineInfo {
 
     forkJoin({
       sessionDto: this.trainingSessionService.getTrainingSessionById(this.sessionId()),
-      exerciseData: this.trainingSessionService.loadExerciseData(),
+      exerciseData: this.exerciseDataService.loadExerciseData(),
     }).subscribe(({ sessionDto, exerciseData }) => {
       this.setHeadlineInfo(sessionDto);
 
       const trainingSession = TrainingSession.fromDto(sessionDto);
       this.trainingSession.set(trainingSession);
-
-      this.setExerciseMetadata(exerciseData);
 
       this.setTrainingSessionExercises();
 
@@ -183,16 +181,6 @@ export class SessionViewComponent implements OnInit, SetHeadlineInfo {
         version: version,
       },
     });
-  }
-
-  /**
-   * Sets the exercise metadata for the current training session.
-   *
-   * @param exerciseData The exercise data to set.
-   */
-  private setExerciseMetadata(exerciseData: ExerciseDataDTO) {
-    this.exerciseData.set(exerciseData);
-    this.exerciseDataService.setExerciseData(exerciseData);
   }
 
   /**

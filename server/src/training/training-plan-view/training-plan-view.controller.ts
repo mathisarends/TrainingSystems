@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+} from '@nestjs/common';
 import { GetUser } from 'src/decorators/user.decorator';
 import { ApiData } from 'src/types/api-data';
 import { TrainingDayExerciseDto } from './dto/training-day-exercise.dto';
@@ -21,7 +28,12 @@ export class TrainingPlanViewController {
     @Param('week', ParseIntPipe) weekIndex: number,
     @Param('day', ParseIntPipe) dayIndex: number,
   ) {
-    return await this.trainingPlanViewService.getTrainingDayView(userId, trainingPlanId, weekIndex, dayIndex);
+    return await this.trainingPlanViewService.getTrainingDayView(
+      userId,
+      trainingPlanId,
+      weekIndex,
+      dayIndex,
+    );
   }
 
   @Patch(':id/:week/:day/2')

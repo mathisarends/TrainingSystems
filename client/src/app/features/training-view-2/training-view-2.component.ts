@@ -86,12 +86,7 @@ export class TrainingView2Component implements OnInit {
   }
 
   ngOnInit(): void {
-    this.trainingViewService
-      .loadExerciseData()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((exerciseData) => {
-        this.exerciseDataService.setExerciseData(exerciseData);
-      });
+    this.exerciseDataService.loadExerciseData().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
 
     this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       this.planId.set(params['planId']);
@@ -157,13 +152,11 @@ export class TrainingView2Component implements OnInit {
   private loadData(planId: string, week: number, day: number): void {
     forkJoin({
       trainingPlanDto: this.trainingViewService.loadTrainingPlan(planId, week, day),
-      exerciseDataDto: this.trainingViewService.loadExerciseData(),
+      exerciseDataDto: this.exerciseDataService.loadExerciseData(),
     })
       .pipe(
         tap(({ trainingPlanDto, exerciseDataDto }) => {
           this.trainingPlanDataService.initializeFromDto(trainingPlanDto);
-
-          this.exerciseDataService.setExerciseData(exerciseDataDto);
 
           this.setHeadlineInfo(trainingPlanDto.title);
           this.viewInitialized.set(true);

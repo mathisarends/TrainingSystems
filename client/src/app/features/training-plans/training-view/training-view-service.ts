@@ -1,7 +1,6 @@
-import { Injectable, signal } from '@angular/core';
-import { Observable, of, tap } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
-import { ExerciseDataDTO } from './exerciseDataDto';
 import { Exercise } from './training-exercise';
 import { TrainingPlanDto } from './trainingPlanDto';
 
@@ -11,8 +10,6 @@ import { TrainingPlanDto } from './trainingPlanDto';
  */
 @Injectable()
 export class TrainingViewService {
-  private exerciseData = signal<ExerciseDataDTO | undefined>(undefined);
-
   constructor(private httpService: HttpService) {}
 
   /**
@@ -20,19 +17,6 @@ export class TrainingViewService {
    */
   loadTrainingPlan(planId: string, week: number, day: number): Observable<TrainingPlanDto> {
     return this.httpService.get<TrainingPlanDto>(`/training-plan-view/${planId}/${week}/${day}`);
-  }
-
-  /**
-   * Loads the exercise data, using cached data if available.
-   */
-  loadExerciseData(): Observable<ExerciseDataDTO> {
-    if (this.exerciseData()) {
-      return of(this.exerciseData()!);
-    }
-
-    return this.httpService
-      .get<ExerciseDataDTO>('/exercise')
-      .pipe(tap((exerciseData) => this.exerciseData.set(exerciseData)));
   }
 
   /**
