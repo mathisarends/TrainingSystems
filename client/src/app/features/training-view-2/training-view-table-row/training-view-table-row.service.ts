@@ -20,4 +20,12 @@ export class TrainingViewTableRowService {
 
     return this.httpService.patch(`/training-plan-view/${planId}/${weekIndex}/${dayIndex}/2`, exercise);
   }
+
+  deleteExercise(exercise: Exercise): Observable<Exercise> {
+    const planId = this.trainingDayLocatorService.trainingPlanId();
+    const weekIndex = this.trainingDayLocatorService.trainingWeekIndex();
+    const dayIndex = this.trainingDayLocatorService.trainingDayIndex();
+
+    return this.httpService.patch(`/training-plan-view/${planId}/${weekIndex}/${dayIndex}/2/delete`, exercise);
+  }
 }

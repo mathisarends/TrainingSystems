@@ -38,9 +38,16 @@ export class TrainingViewTableRowComponent {
     toObservable(this.exercise)
       .pipe(skip(1))
       .subscribe((exercise) => {
-        this.trainingViewTableRowService.saveExercise(exercise).subscribe((exercise) => {
-          this.exercise().id = exercise.id;
-        });
+        if (exercise.category === ExerciseCategories.PLACEHOLDER) {
+          this.trainingViewTableRowService.deleteExercise(exercise).subscribe((deletedExercise) => {
+            this.handleExerciseDeletion(deletedExercise);
+          });
+        } else {
+          this.trainingViewTableRowService.saveExercise(exercise).subscribe((savedExercise) => {
+            this.trainingPlanDataService.findTempEntryAndUpdateWithActualValues(savedExercise);
+            this.exercise().id = savedExercise.id;
+          });
+        }
       });
   }
 
@@ -124,6 +131,20 @@ export class TrainingViewTableRowComponent {
     const pauseTime = this.exerciseDataService.categoryPauseTimes()[this.exercise().category];
     if (pauseTime) {
       await this.pauseTimeService.startPauseTimer(pauseTime, this.exercise().exercise);
+    }
+  }
+
+  /**
+   * Handles the deletion of an exercise.
+   * Removes the exercise from the training plan data and updates the table.
+   */
+  private handleExerciseDeletion(deletedExercise: Exercise): void {
+    const indexToRemove = this.trainingPlanDataService
+      .exercises()
+      .findIndex((existingExercise) => existingExercise.id === deletedExercise.id);
+
+    if (indexToRemove !== -1) {
+      this.trainingPlanDataService.exercises().splice(indexToRemove, 1);
     }
   }
 }

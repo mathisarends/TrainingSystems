@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Exercise } from '../model/exercise.schema';
+import { Exercise, ExerciseDto } from '../model/exercise.schema';
 import { TrainingDay } from '../model/training-day.schema';
 import { TrainingPlanViewValidationService } from '../service/training-plan-view-validation.service';
 import { TrainingService } from '../training.service';
@@ -25,7 +25,7 @@ export class TrainingPlanViewUpdateService2 {
     weekIndex: number,
     dayIndex: number,
     updatedExercise: TrainingDayExerciseDto,
-  ) {
+  ): Promise<ExerciseDto> {
     const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(
       userId,
       trainingPlanId,

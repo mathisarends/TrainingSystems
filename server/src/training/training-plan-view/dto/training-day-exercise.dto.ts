@@ -1,10 +1,4 @@
-import {
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsPositive,
-  IsString,
-} from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 /**
  * DTO for validating and transferring Exercise data.
@@ -28,12 +22,10 @@ export class TrainingDayExerciseDto {
 
   @IsNotEmpty()
   @IsNumber()
-  @IsPositive()
   sets: number;
 
   @IsNotEmpty()
   @IsNumber()
-  @IsPositive()
   reps: number;
 
   @IsOptional()
@@ -41,7 +33,6 @@ export class TrainingDayExerciseDto {
 
   @IsNotEmpty()
   @IsNumber()
-  @IsPositive()
   targetRPE: number;
 
   @IsOptional()

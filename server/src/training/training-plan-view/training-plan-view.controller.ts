@@ -13,6 +13,7 @@ import { TrainingPlanViewUpdateService } from './training-plan-view-update.servi
 import { TrainingPlanViewService } from './training-plan-view.service';
 import { TrainingPlanViewUpdateService2 } from './training-view-update-2.service';
 import { ExerciseDto } from '../model/exercise.schema';
+import { TrainingExerciseDeleteService } from './model/training-exercise-delete.service';
 
 @Controller('training-plan-view')
 export class TrainingPlanViewController {
@@ -20,6 +21,7 @@ export class TrainingPlanViewController {
     private readonly trainingPlanViewService: TrainingPlanViewService,
     private readonly trainingPlanViewUpdateService: TrainingPlanViewUpdateService,
     private readonly trainingViewUpdateService2: TrainingPlanViewUpdateService2,
+    private readonly trainingExerciseDeleteService: TrainingExerciseDeleteService,
   ) {}
 
   @Get(':id/:week/:day')
@@ -46,6 +48,23 @@ export class TrainingPlanViewController {
     @Body() trainingDayExerciseDto: TrainingDayExerciseDto,
   ): Promise<ExerciseDto> {
     return await this.trainingViewUpdateService2.updateTrainingDataForTrainingDay(
+      userId,
+      trainingPlanId,
+      weekIndex,
+      dayIndex,
+      trainingDayExerciseDto,
+    );
+  }
+
+  @Patch(':id/:week/:day/2/delete')
+  async deleteExerciseFromTrainingDay(
+    @GetUser() userId: string,
+    @Param('id') trainingPlanId: string,
+    @Param('week', ParseIntPipe) weekIndex: number,
+    @Param('day', ParseIntPipe) dayIndex: number,
+    @Body() trainingDayExerciseDto: TrainingDayExerciseDto,
+  ): Promise<ExerciseDto> {
+    return await this.trainingExerciseDeleteService.deleteExerciseFromTrainingDay(
       userId,
       trainingPlanId,
       weekIndex,

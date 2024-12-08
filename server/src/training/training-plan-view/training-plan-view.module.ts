@@ -9,9 +9,14 @@ import { TrainingPlanViewService } from './training-plan-view.service';
 import { TrainingSessionManagerService } from './training-session-manager.service';
 import { TrainingSessionTracker } from './training-session-tracker.service';
 import { TrainingPlanViewUpdateService2 } from './training-view-update-2.service';
+import { TrainingExerciseDeleteService } from './model/training-exercise-delete.service';
 
 @Module({
-  imports: [forwardRef(() => TrainingModule), PushNotificationsModule, TrainingLogModule],
+  imports: [
+    forwardRef(() => TrainingModule),
+    PushNotificationsModule,
+    TrainingLogModule,
+  ],
   controllers: [TrainingPlanViewController],
   providers: [
     TrainingPlanViewService,
@@ -20,6 +25,7 @@ import { TrainingPlanViewUpdateService2 } from './training-view-update-2.service
     TrainingSessionTracker,
     TrainingSessionManagerService,
     TrainingPlanViewUpdateService2,
+    TrainingExerciseDeleteService,
   ],
   exports: [TrainingSessionManagerService, TrainingSessionTracker],
 })
