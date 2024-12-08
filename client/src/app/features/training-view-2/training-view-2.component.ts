@@ -26,6 +26,7 @@ import { TrainingViewNavigationComponent } from '../training-plans/training-view
 import { TrainingViewService } from '../training-plans/training-view/training-view-service';
 import { AddRowButtonComponent } from './add-row-button/add-row-button.component';
 import { TrainingViewTableRowComponent } from './training-view-table-row/training-view-table-row.component';
+import { SwipeDirective } from '../../shared/directives/swipe.directive';
 
 @Component({
   selector: 'app-training-view-2',
@@ -37,6 +38,7 @@ import { TrainingViewTableRowComponent } from './training-view-table-row/trainin
     TrainingViewTableRowComponent,
     TrainingViewNavigationComponent,
     SpinnerComponent,
+    SwipeDirective,
   ],
   templateUrl: './training-view-2.component.html',
   styleUrls: ['./training-view-2.component.scss'],
