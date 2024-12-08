@@ -6,5 +6,5 @@ export interface TrainingPlanDto {
   trainingFrequency: number;
   trainingBlockLength: number;
   trainingDay: TrainingDay;
-  weightRecommandations: string[];
+  weightRecommendations: string[];
 }

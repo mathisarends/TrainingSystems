@@ -20,6 +20,8 @@ export class WeightInputComponent extends AbstractDoubleClickHandler {
    */
   numberOfSets = input.required<number>();
 
+  placeholder = input('');
+
   /**
    * Emits the weight change.
    */
@@ -59,6 +61,11 @@ export class WeightInputComponent extends AbstractDoubleClickHandler {
   }
 
   protected handleDoubleClick(): void {
+    if (!this.weight() && this.placeholder()) {
+      this.weight.set(this.placeholder());
+      return;
+    }
+
     const weightArray = this.parseInputValues(this.weight() ?? '');
     if (weightArray.length === 0) {
       return;

@@ -36,6 +36,7 @@
 </div>
 <div class="exercise-field" data-label="Weight">
   <app-weight-input
+    [placeholder]="weightPlaceholder()"
     [(weight)]="exercise().weight"
     [numberOfSets]="exercise().sets"
     (weightChanged)="onWeightChanged($event)"

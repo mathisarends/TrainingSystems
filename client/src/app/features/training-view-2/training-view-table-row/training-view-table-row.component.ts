@@ -26,6 +26,8 @@ import { TrainingPlanDataService } from '../../training-plans/training-view/serv
 export class TrainingViewTableRowComponent {
   exercise = model.required<Exercise>();
 
+  weightPlaceholder = computed(() => this.getWeightRecommendation());
+
   isPlaceholderCategory = computed(() => this.exercise().category === ExerciseCategories.PLACEHOLDER);
 
   constructor(
@@ -146,5 +148,15 @@ export class TrainingViewTableRowComponent {
     if (indexToRemove !== -1) {
       this.trainingPlanDataService.exercises().splice(indexToRemove, 1);
     }
+  }
+
+  private getWeightRecommendation(): string {
+    const exerciseId = this.exercise().id;
+
+    if (!exerciseId) {
+      return '';
+    }
+
+    return this.trainingPlanDataService.weightRecommendationMap().get(exerciseId) ?? '';
   }
 }

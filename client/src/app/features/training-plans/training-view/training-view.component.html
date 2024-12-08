@@ -9,17 +9,17 @@
       [swipeDiagonalTopRightToBottomLeft]="swipeDiagonalTopRightToBottomLeft"
     >
       <thead>
-        <tr>
-          <th scope="col">Category</th>
-          <th scope="col">Exercise</th>
-          <th scope="col" class="text-center">Sets</th>
-          <th scope="col" class="text-center">Reps</th>
-          <th scope="col" class="text-center">Weight</th>
-          <th scope="col" class="text-center">RPE</th>
-          <th scope="col" class="text-center">&#64;RPE</th>
-          <th scope="col" class="text-center">Max</th>
-          <th scope="col" class="text-center">Notes</th>
-        </tr>
+      <tr>
+        <th scope="col">Category</th>
+        <th scope="col">Exercise</th>
+        <th scope="col" class="text-center">Sets</th>
+        <th scope="col" class="text-center">Reps</th>
+        <th scope="col" class="text-center">Weight</th>
+        <th scope="col" class="text-center">RPE</th>
+        <th scope="col" class="text-center">&#64;RPE</th>
+        <th scope="col" class="text-center">Max</th>
+        <th scope="col" class="text-center">Notes</th>
+      </tr>
       </thead>
 
       <tbody>
@@ -76,7 +76,6 @@
               />
             </td>
             <td class="weight-data-cell" data-cell="Weight">
-              @let weightRecommandation = trainingDataService.weightRecommendations()[i];
               <input
                 [id]="exercise._id ?? ''"
                 weightInput

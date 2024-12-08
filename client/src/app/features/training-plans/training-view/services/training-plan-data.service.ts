@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { ExerciseCategories } from '../../model/exercise-categories';
 import { Exercise } from '../training-exercise';
 import { TrainingPlanDto } from '../trainingPlanDto';
@@ -13,6 +13,8 @@ export class TrainingPlanDataService {
   exercises = signal<Exercise[]>([]);
   weightRecommendations = signal<string[]>([]);
 
+  weightRecommendationMap = computed(() => this.createWeightRecommendationMap());
+
   /**
    * Initializes the service state with data from a TrainingPlanDto object.
    */
@@ -21,7 +23,7 @@ export class TrainingPlanDataService {
     this.trainingFrequency.set(dto.trainingFrequency);
     this.trainingBlockLength.set(dto.trainingBlockLength);
     this.exercises.set(dto.trainingDay.exercises);
-    this.weightRecommendations.set(dto.weightRecommandations);
+    this.weightRecommendations.set(dto.weightRecommendations);
   }
 
   /**
@@ -67,5 +69,27 @@ export class TrainingPlanDataService {
 
   hasNoExercises(): boolean {
     return this.exercises().length === 0;
+  }
+
+  /**
+   * Creates a map of weight recommendations by exercise ID.
+   * Returns an empty map if exercises and weightRecommendations are not synchronized.
+   */
+  private createWeightRecommendationMap(): Map<string, string> {
+    const exercises = this.exercises();
+    const weightRecommendations = this.weightRecommendations();
+
+    if (!exercises || !weightRecommendations || exercises.length !== weightRecommendations.length) {
+      return new Map<string, string>();
+    }
+
+    const map = new Map<string, string>();
+    exercises.forEach((exercise, index) => {
+      if (exercise.id) {
+        map.set(exercise.id, weightRecommendations[index] || '');
+      }
+    });
+
+    return map;
   }
 }

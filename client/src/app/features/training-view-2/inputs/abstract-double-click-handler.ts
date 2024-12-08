@@ -24,7 +24,7 @@ export abstract class AbstractDoubleClickHandler {
    */
   protected focused = signal(false);
 
-  constructor(protected elementRef: ElementRef) {}
+  protected constructor(protected elementRef: ElementRef) {}
 
   /**
    * Handles double-click events to duplicate the last value or calculate the average.

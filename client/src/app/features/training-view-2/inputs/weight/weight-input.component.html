@@ -1,1 +1,2 @@
-<input type="tel" class="transparent-input" [value]="weight() || ''" (change)="onWeightChanged($event)" />
+<input #weightInput type="tel" class="transparent-input" [value]="weight() || ''" [placeholder]="placeholder()"
+       (change)="onWeightChanged($event)" />

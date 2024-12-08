@@ -10,11 +10,11 @@ import { TrainingService } from '../training.service';
 export class TrainingPlanViewService {
   constructor(
     private readonly trainingService: TrainingService,
-    private trainingPlanViewValidationService: TrainingPlanViewValidationService,
+    private readonly trainingPlanViewValidationService: TrainingPlanViewValidationService,
   ) {}
 
   /**
-   * Retrieves the training day view for a given plan and user.
+   * Retrieves the training day view for a given user, training plan, and day.
    */
   async getTrainingDayView(
     userId: string,
@@ -22,18 +22,12 @@ export class TrainingPlanViewService {
     weekIndex: number,
     dayIndex: number,
   ): Promise<TrainingDayViewDto> {
-    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(
-      userId,
-      trainingPlanId,
+    const trainingPlan = await this.getTrainingPlan(userId, trainingPlanId);
+    const trainingDay = this.getValidatedTrainingDay(
+      trainingPlan,
+      weekIndex,
+      dayIndex,
     );
-
-    const trainingDay =
-      this.trainingPlanViewValidationService.findAndValidateTrainingDay(
-        trainingPlan,
-        weekIndex,
-        dayIndex,
-      );
-
     const weightRecommendations = this.generateWeightRecommendations(
       trainingPlan,
       weekIndex,
@@ -41,9 +35,7 @@ export class TrainingPlanViewService {
       trainingDay,
     );
 
-    await trainingPlan.save();
-
-    return this.toTrainingDayDto(
+    return this.mapToTrainingDayDto(
       trainingPlan,
       trainingDay,
       weightRecommendations,
@@ -51,7 +43,35 @@ export class TrainingPlanViewService {
   }
 
   /**
-   * Generates weight recommendations if the plan is set to last week’s weights.
+   * Retrieves and validates the training plan for a user.
+   */
+  private async getTrainingPlan(
+    userId: string,
+    trainingPlanId: string,
+  ): Promise<TrainingPlan> {
+    return this.trainingService.getPlanByUserAndTrainingId(
+      userId,
+      trainingPlanId,
+    );
+  }
+
+  /**
+   * Validates and retrieves a specific training day from the training plan.
+   */
+  private getValidatedTrainingDay(
+    trainingPlan: TrainingPlan,
+    weekIndex: number,
+    dayIndex: number,
+  ): TrainingDay {
+    return this.trainingPlanViewValidationService.findAndValidateTrainingDay(
+      trainingPlan,
+      weekIndex,
+      dayIndex,
+    );
+  }
+
+  /**
+   * Generates weight recommendations based on the previous week's exercises.
    */
   private generateWeightRecommendations(
     trainingPlan: TrainingPlan,
@@ -59,25 +79,25 @@ export class TrainingPlanViewService {
     dayIndex: number,
     trainingDay: TrainingDay,
   ): string[] {
-    if (weekIndex > 0) {
-      const previousTrainingDay =
-        this.trainingPlanViewValidationService.findAndValidateTrainingDay(
-          trainingPlan,
-          weekIndex,
-          dayIndex,
-        );
-      return this.getWeightRecommendations(
-        trainingDay.exercises,
-        previousTrainingDay.exercises,
-      );
+    if (weekIndex === 0) {
+      return [];
     }
-    return [];
+
+    const previousTrainingDay = this.getValidatedTrainingDay(
+      trainingPlan,
+      weekIndex - 1,
+      dayIndex,
+    );
+    return this.calculateWeightRecommendations(
+      trainingDay.exercises,
+      previousTrainingDay.exercises,
+    );
   }
 
   /**
-   * Maps data to the TrainingDayViewDto object.
+   * Maps the training plan and day data to a DTO.
    */
-  private toTrainingDayDto(
+  private mapToTrainingDayDto(
     trainingPlan: TrainingPlan,
     trainingDay: TrainingDay,
     weightRecommendations: string[],
@@ -86,43 +106,51 @@ export class TrainingPlanViewService {
       title: trainingPlan.title,
       trainingFrequency: trainingPlan.trainingDays.length,
       trainingBlockLength: trainingPlan.trainingWeeks.length,
-      trainingDay,
-      weightRecommandations: weightRecommendations,
+      trainingDay: trainingDay,
+      weightRecommendations: weightRecommendations,
     };
   }
 
   /**
-   * Generates weight recommendations based on previous week's exercises.
+   * Calculates weight recommendations by comparing current and previous week's exercises.
    */
-  private getWeightRecommendations(
+  private calculateWeightRecommendations(
     currentExercises: Exercise[],
     previousExercises: Exercise[],
   ): string[] {
-    return currentExercises.map((currentExercise) => {
-      const matchingExercise = this.findMatchingExercise(
+    return currentExercises.map((currentExercise, index) => {
+      const matchingExercise = this.findMatchingExerciseByIndex(
         currentExercise,
         previousExercises,
+        index,
       );
-      return matchingExercise ? matchingExercise.weight : '';
+
+      return matchingExercise ? matchingExercise.weight || '' : '';
     });
   }
 
   /**
-   * Finds a matching exercise from the previous week’s training.
+   * Finds a matching exercise from the previous week's exercises by index.
    */
-  private findMatchingExercise(
+  private findMatchingExerciseByIndex(
     currentExercise: Exercise,
     previousExercises: Exercise[],
+    index: number,
   ): Exercise | undefined {
-    return previousExercises.find((previousExercise) =>
-      this.isMatchingExercise(currentExercise, previousExercise),
-    );
+    const previousExercise = previousExercises[index];
+    if (!previousExercise) {
+      return undefined;
+    }
+
+    return this.areExercisesMatching(currentExercise, previousExercise)
+      ? previousExercise
+      : undefined;
   }
 
   /**
-   * Compares two exercises to determine if they are the same.
+   * Determines if two exercises are considered a match based on their properties.
    */
-  private isMatchingExercise(
+  private areExercisesMatching(
     currentExercise: Exercise,
     previousExercise: Exercise,
   ): boolean {

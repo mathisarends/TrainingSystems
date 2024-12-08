@@ -2,7 +2,7 @@
   border-top: 3px solid rgb(224, 224, 224);
 }
 
-::ng-deep .transparent-input {
+:host ::ng-deep .transparent-input {
   text-align: left !important;
 }
 

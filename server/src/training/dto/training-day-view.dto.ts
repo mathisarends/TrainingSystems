@@ -5,5 +5,5 @@ export interface TrainingDayViewDto {
   trainingFrequency: number;
   trainingBlockLength: number;
   trainingDay: TrainingDay;
-  weightRecommandations: string[];
+  weightRecommendations: string[];
 }
