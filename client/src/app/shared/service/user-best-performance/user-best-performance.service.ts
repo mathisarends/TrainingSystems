@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
+// @ts-ignore
 import confetti from 'canvas-confetti';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
@@ -8,10 +9,11 @@ import { ToastService } from '../../components/toast/toast.service';
 import { ExerciseName } from './exercise-name.type';
 import { UserBestPerformanceDto } from './user-best-performance.dto';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class UserBestPerformanceService {
   userBestPerformanceMap: Map<ExerciseName, UserBestPerformanceDto> = new Map();
-  isInitialized = signal(false);
 
   constructor(
     private httpService: HttpService,
@@ -22,7 +24,6 @@ export class UserBestPerformanceService {
       this.userBestPerformanceMap = new Map<ExerciseName, UserBestPerformanceDto>(
         Object.entries(response) as [ExerciseName, UserBestPerformanceDto][],
       );
-      this.isInitialized.set(true);
     });
   }
 
@@ -43,11 +44,7 @@ export class UserBestPerformanceService {
       return true;
     }
 
-    if (newEstMax > existingEntry.estMax) {
-      return true;
-    }
-
-    return false;
+    return newEstMax > existingEntry.estMax;
   }
 
   makeNewBestPerformanceEntry(exercise: Exercise, weight: number) {
@@ -67,7 +64,7 @@ export class UserBestPerformanceService {
     return this.httpService.get<{ [key: string]: UserBestPerformanceDto }>('/user-best-performance');
   }
 
-  private startConfetti() {
+  private async startConfetti() {
     setTimeout(() => {
       confetti({
         particleCount: 200,
@@ -78,6 +75,7 @@ export class UserBestPerformanceService {
 
     this.toastService.achievement('New PR');
 
-    new Audio('./audio/new_pr.mp3').play();
+    const prAudio = new Audio('./audio/new_pr.mp3');
+    await prAudio.play();
   }
 }

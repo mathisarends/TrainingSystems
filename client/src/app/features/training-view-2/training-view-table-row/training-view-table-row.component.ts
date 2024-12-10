@@ -14,6 +14,7 @@ import { TrainingViewTableRowService } from './training-view-table-row.service';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { skip } from 'rxjs';
 import { TrainingPlanDataService } from '../../training-plans/training-view/services/training-plan-data.service';
+import { UserBestPerformanceService } from '../../../shared/service/user-best-performance/user-best-performance.service';
 
 @Component({
   selector: 'app-training-view-table-row',
@@ -36,6 +37,7 @@ export class TrainingViewTableRowComponent {
     private trainingPlanDataService: TrainingPlanDataService,
     private estMaxService2: EstMaxService2,
     private pauseTimeService: PauseTimeService,
+    private userBestPerformanceService: UserBestPerformanceService,
   ) {
     toObservable(this.exercise)
       .pipe(skip(1))
@@ -130,6 +132,11 @@ export class TrainingViewTableRowComponent {
       this.updateExerciseProperty('estMax', estMax);
       return;
     }
+
+    // TODO: please fix this and refactor best performance service after it
+    /*if (this.userBestPerformanceService.isNewBestPerformance(this.exercise().category, estMax)) {
+      this.userBestPerformanceService.makeNewBestPerformanceEntry(this.exercise(), estMax);
+    }*/
 
     const backoffWeight = this.estMaxService2.calcBackoffForNextExercise(
       this.exercise(),
