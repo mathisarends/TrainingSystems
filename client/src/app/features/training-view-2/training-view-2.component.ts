@@ -204,13 +204,26 @@ export class TrainingView2Component implements OnInit {
 
   private openTrainingExerciseList(): void {
     const providerMap = new Map().set(TrainingPlanDataService, this.trainingPlanDataService);
+    const previousExercises = structuredClone(this.trainingPlanDataService.exercises());
 
     const modalOptions = new ModalOptionsBuilder()
       .setTitle('Übungen anordnen')
       .setProviderMap(providerMap)
       .setComponent(TrainingExercisesListComponent)
+      .setOnAbortCallback(() => this.trainingPlanDataService.exercises.set(previousExercises))
       .setOnSubmitCallback(async () => {
-        console.log('to be implemented');
+        const planId = this.trainingDayLocatorService.trainingPlanId();
+        const weekIndex = this.trainingDayLocatorService.trainingWeekIndex();
+        const dayIndex = this.trainingDayLocatorService.trainingDayIndex();
+
+        await firstValueFrom(
+          this.trainingViewService.rearrangeExerciseOrder(
+            planId,
+            weekIndex,
+            dayIndex,
+            this.trainingPlanDataService.exercises(),
+          ),
+        );
       })
       .build();
 

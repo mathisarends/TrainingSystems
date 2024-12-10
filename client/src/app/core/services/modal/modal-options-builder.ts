@@ -113,6 +113,11 @@ export class ModalOptionsBuilder {
     return this;
   }
 
+  setOnAbortCallback(onAbortCallback: () => void): this {
+    this.options.onAbortCallback = onAbortCallback;
+    return this;
+  }
+
   /**
    * Builds the modal options and validates that at least a component or a tab group is defined.
    */

@@ -1,11 +1,11 @@
 import {
   ApplicationRef,
   ComponentRef,
+  createComponent,
   EnvironmentInjector,
   Injectable,
   Injector,
   Provider,
-  createComponent,
   signal,
 } from '@angular/core';
 import { BasicInfoComponent } from '../../../shared/components/modal/basic-info/basic-info.component';
@@ -29,6 +29,8 @@ export class ModalService {
   loading = signal(false);
 
   onSubmitCallback?: () => Promise<void>;
+
+  onAbortCallback?: () => void;
 
   onValidateCallback?: () => true | string | void;
 
@@ -58,6 +60,9 @@ export class ModalService {
     });
 
     this.modalComponentRef.instance.cancelled.subscribe(() => {
+      if (this.onAbortCallback) {
+        this.onAbortCallback();
+      }
       this.close();
     });
   }
@@ -146,6 +151,7 @@ export class ModalService {
 
     this.onValidateCallback = undefined;
     this.onSubmitCallback = undefined;
+    this.onAbortCallback = undefined;
 
     this.isVisible.set(false);
   }
@@ -198,6 +204,10 @@ export class ModalService {
 
     if (options.onSubmitCallback) {
       this.onSubmitCallback = options.onSubmitCallback;
+    }
+
+    if (options.onAbortCallback) {
+      this.onAbortCallback = options.onAbortCallback;
     }
 
     if (options.onValidateCallback) {

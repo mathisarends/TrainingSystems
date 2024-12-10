@@ -1,6 +1,7 @@
 import { Injector } from '@angular/core';
 import { ModalTab } from '../../../shared/components/modal/types/modal-tab';
 import { ModalSize } from './modalSize';
+
 /**
  * Interface for modal options.
  */
@@ -77,4 +78,6 @@ export interface ModalOptions {
    * Validates the user input
    */
   onValidateCallback?: () => true | string | void;
+
+  onAbortCallback?: () => void;
 }
