@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { TrainingPlanViewValidationService } from '../service/training-plan-view-validation.service';
 import { TrainingService } from '../training.service';
 import { TrainingDayExercisesRearrangementDto } from '../dto/training-day-exercises-rearrangement.dto';
 import { Exercise } from '../model/exercise.schema';
+import { TrainingPlan } from '../model/training-plan.model';
 
 /**
  * Service responsible for updating training data for a specific training day within a training plan.
@@ -31,12 +32,51 @@ export class TrainingViewExerciseRearrangementService {
     );
 
     trainingDay.exercises = trainingDayExercisesRearrangementDto.exercises as Exercise[];
+    this.propagateChangesToFutureWeeks(trainingPlan, weekIndex, dayIndex, trainingDayExercisesRearrangementDto);
 
     trainingPlan.lastUpdated = new Date();
 
     trainingPlan.markModified('trainingWeeks');
     await trainingPlan.save();
+  }
 
-    // TODO: update for future weeks aswell
+  /**
+   * Propagates changes in a training day to future weeks within the training plan.
+   */
+  private propagateChangesToFutureWeeks(
+    trainingPlan: TrainingPlan,
+    startWeekIndex: number,
+    trainingDayIndex: number,
+    trainingDayExercisesRearrangementDto: TrainingDayExercisesRearrangementDto,
+  ): void {
+    for (let weekIndex = startWeekIndex + 1; weekIndex < trainingPlan.trainingWeeks.length; weekIndex++) {
+      const trainingDay = trainingPlan.trainingWeeks[weekIndex].trainingDays[trainingDayIndex];
+
+      if (!trainingDay) {
+        throw new NotFoundException('Training day was not found');
+      }
+
+      trainingDay.exercises = trainingDay.exercises.map((existingExercise, index) => {
+        const rearrangedExercise = trainingDayExercisesRearrangementDto.exercises[index];
+        if (!rearrangedExercise) {
+          return existingExercise;
+        }
+
+        return {
+          ...existingExercise,
+          id: rearrangedExercise.id,
+          category: rearrangedExercise.category,
+          exercise: rearrangedExercise.exercise,
+          sets: rearrangedExercise.sets,
+          reps: rearrangedExercise.reps,
+          targetRPE: rearrangedExercise.targetRPE,
+          // Retain these fields from the existing exercise
+          weight: existingExercise.weight,
+          actualRPE: existingExercise.actualRPE,
+          estMax: existingExercise.estMax,
+          notes: existingExercise.notes,
+        };
+      }) as Exercise[];
+    }
   }
 }
