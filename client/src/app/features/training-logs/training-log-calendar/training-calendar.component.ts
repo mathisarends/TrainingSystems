@@ -12,8 +12,6 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
-import { BasicInfoModalOptionsBuilder } from '../../../core/services/modal/basic-info/basic-info-modal-options-builder';
-import { ModalService } from '../../../core/services/modal/modal.service';
 import { NavigationArrowsComponent } from '../../../shared/components/navigation-arrows/navigation-arrows.component';
 import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
 import { SwipeDirective } from '../../../shared/directives/swipe.directive';
@@ -67,10 +65,6 @@ export class TrainingLogCalendarComponent implements OnInit, SetHeadlineInfo {
     'November',
     'Dezember',
   ];
-  /**
-   * Signal representing the current day of the month.
-   */
-  currentDay = signal(new Date().getDate());
 
   /**
    * Signal representing the current month (0-based index).
@@ -110,7 +104,6 @@ export class TrainingLogCalendarComponent implements OnInit, SetHeadlineInfo {
   constructor(
     protected notificationService: NotificationService,
     private httpService: HttpService,
-    private modalService: ModalService,
     private headerService: HeaderService,
     private keyboardService: KeyboardService,
     private destroyRef: DestroyRef,
@@ -132,6 +125,7 @@ export class TrainingLogCalendarComponent implements OnInit, SetHeadlineInfo {
     this.navigateToPreviousMonth = this.navigateToPreviousMonth.bind(this);
     this.navigateToNextMonth = this.navigateToNextMonth.bind(this);
   }
+
   /**
    * Updates the headline information in the header based on the current month and year.
    */
@@ -139,18 +133,6 @@ export class TrainingLogCalendarComponent implements OnInit, SetHeadlineInfo {
     this.headerService.setHeadlineInfo({
       title: this.currentMonthName(),
       subTitle: this.currentYear().toString(),
-      buttons: [
-        {
-          icon: IconName.MORE_VERTICAL,
-          options: [
-            {
-              icon: IconName.INFO,
-              label: 'Hinweise',
-              callback: () => this.openInfoModal(),
-            },
-          ],
-        },
-      ],
     });
   }
 
@@ -227,19 +209,5 @@ export class TrainingLogCalendarComponent implements OnInit, SetHeadlineInfo {
       .subscribe(() => {
         this.navigateToNextMonth();
       });
-  }
-
-  /**
-   * Opens an informational modal about the calendar features.
-   */
-  private openInfoModal() {
-    const modalOptions = new BasicInfoModalOptionsBuilder()
-      .setTitle('Hinweise')
-      .setInfoText(
-        'In diesem Kalender werden alle geplanten Trainings aus deinen Trainingsplänen angezeigt. Zusätzlich kannst du retrospektiv alle vergangenen Trainingseinheiten einsehen. Mit einem Klick auf die einzelnen Tage erhältst du detaillierte Informationen zu deiner Trainingsprogression, inklusive der erreichten Ziele und der wichtigsten Leistungsstatistiken.',
-      )
-      .build();
-
-    this.modalService.openBasicInfoModal(modalOptions);
   }
 }

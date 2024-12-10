@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpService } from '../../../core/services/http-client.service';
-import { Exercise } from './training-exercise';
 import { TrainingPlanDto } from './trainingPlanDto';
 
 /**
  * Service responsible for managing and interacting with the training plans and exercises data.
  * Provides methods to load training plans, load exercise data, and submit updated training plans.
  */
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class TrainingViewService {
   constructor(private httpService: HttpService) {}
 
@@ -24,12 +25,5 @@ export class TrainingViewService {
    */
   submitTrainingPlan(planId: string, week: number, day: number, changedData: Record<string, string>): Observable<void> {
     return this.httpService.patch(`/training-plan-view/${planId}/${week}/${day}`, changedData);
-  }
-
-  /**
-   * Submits changes to the training plan for a specific plan ID, week, and day.
-   */
-  submitTrainingPlan2(planId: string, week: number, day: number, exercise: Exercise): Observable<void> {
-    return this.httpService.patch(`/training-plan-view/${planId}/${week}/${day}/2`, { exercise });
   }
 }

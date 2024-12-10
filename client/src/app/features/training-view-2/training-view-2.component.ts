@@ -27,6 +27,7 @@ import { AddRowButtonComponent } from './add-row-button/add-row-button.component
 import { TrainingViewTableRowComponent } from './training-view-table-row/training-view-table-row.component';
 import { SwipeDirective } from '../../shared/directives/swipe.directive';
 import { TrainingDayLocatorService2 } from './training-day-locator.service';
+import { TrainingExercisesListComponent } from '../training-plans/training-view/training-exercises-list/training-exercises-list.component';
 
 @Component({
   selector: 'app-training-view-2',
@@ -42,7 +43,7 @@ import { TrainingDayLocatorService2 } from './training-day-locator.service';
   ],
   templateUrl: './training-view-2.component.html',
   styleUrls: ['./training-view-2.component.scss'],
-  providers: [TrainingViewService, AutoProgressionService, TrainingViewNavigationService],
+  providers: [TrainingViewService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TrainingView2Component implements OnInit {
@@ -207,6 +208,7 @@ export class TrainingView2Component implements OnInit {
     const modalOptions = new ModalOptionsBuilder()
       .setTitle('Übungen anordnen')
       .setProviderMap(providerMap)
+      .setComponent(TrainingExercisesListComponent)
       .setOnSubmitCallback(async () => {
         console.log('to be implemented');
       })

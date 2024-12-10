@@ -3,7 +3,9 @@ import { Observable, tap } from 'rxjs';
 import { HttpService } from '../../../../core/services/http-client.service';
 import { ToastService } from '../../../../shared/components/toast/toast.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class AutoProgressionService {
   rpeProgressionOption = signal(0.5);
 

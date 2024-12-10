@@ -3,7 +3,9 @@ import { Router } from '@angular/router';
 import { NavigationDirection } from './models/navigation-direction.enum';
 import { TrainingPlanDataService } from './services/training-plan-data.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class TrainingViewNavigationService {
   constructor(
     private router: Router,
