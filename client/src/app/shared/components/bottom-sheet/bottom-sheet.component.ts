@@ -1,23 +1,24 @@
-import { Component, OnDestroy } from '@angular/core';
-import { BottomSheetService } from './bottom-sheet.service';
+import { Component, Injector, Input, signal, viewChild } from '@angular/core';
 
 @Component({
   selector: 'app-bottom-sheet',
   standalone: true,
-  template: `
-    <div class="backdrop" (click)="close()"></div>
-    <div class="bottom-sheet">
-      <ng-content></ng-content>
-    </div>
-  `,
+  templateUrl: './bottom-sheet.component.html',
   styleUrls: ['./bottom-sheet.component.scss'],
 })
-export class BottomSheetComponent implements OnDestroy {
-  constructor(private bottomSheetService: BottomSheetService) {}
+export class BottomSheetComponent {
+  bottomSheetComponent = viewChild('bottomSheetComponent');
 
-  close(): void {
-    this.bottomSheetService.close();
+  @Input() childComponentType: any;
+  @Input() childComponentInjector: Injector | null = null;
+
+  isVisible = signal(false);
+
+  open(): void {
+    this.isVisible.set(true);
   }
 
-  ngOnDestroy(): void {}
+  close(): void {
+    this.isVisible.set(false);
+  }
 }

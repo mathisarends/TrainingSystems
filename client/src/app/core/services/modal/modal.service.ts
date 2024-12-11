@@ -175,6 +175,7 @@ export class ModalService {
       environmentInjector: this.environmentInjector,
       elementInjector: modalInjector,
     });
+
     this.appRef.attachView(this.modalComponentRef.hostView);
     document.body.appendChild(this.modalComponentRef.location.nativeElement);
   }

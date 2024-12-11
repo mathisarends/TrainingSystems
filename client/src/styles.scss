@@ -76,6 +76,14 @@ body {
   transition: filter 0.2s ease-in-out;
 }
 
+.gray-filter app-header,
+.gray-filter app-nav-bar,
+.gray-filter .outlet-wrapper {
+  filter: grayscale(0.375);
+  pointer-events: none;
+  transition: filter 0.2s ease-in-out;
+}
+
 .background-image {
   background-image: url('/images/background/white-3.avif');
 }

@@ -22,7 +22,6 @@ import { ModalSize } from '../../../core/services/modal/modalSize';
 import { MobileDeviceDetectionService } from '../../../platform/mobile-device-detection.service';
 import { DraggableDirective } from '../../directives/draggable.directive';
 import { IconName } from '../../icon/icon-name';
-import { IconComponent } from '../../icon/icon.component';
 import { KeyboardService } from '../../service/keyboard.service';
 import { DataMap } from '../../types/data-map';
 import { ButtonComponent } from '../button/button.component';
@@ -36,14 +35,7 @@ import { ModalTab } from './types/modal-tab';
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [
-    ButtonComponent,
-    CommonModule,
-    DraggableDirective,
-    CircularIconButtonComponent,
-    IconComponent,
-    ModalPaginationComponent,
-  ],
+  imports: [ButtonComponent, CommonModule, DraggableDirective, CircularIconButtonComponent, ModalPaginationComponent],
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss'],
   providers: [KeyboardService],
