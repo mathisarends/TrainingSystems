@@ -28,6 +28,7 @@ export class TrainingDayExerciseDto {
   @IsNumber()
   reps: number;
 
+  @IsString()
   @IsOptional()
   weight: string;
 

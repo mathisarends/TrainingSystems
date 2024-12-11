@@ -54,7 +54,7 @@
 </div>
 <div class="exercise-field" data-label="@RPE">
   <app-rpe-input
-    [(rpe)]="exercise().actualRPE"
+    [rpe]="exercise().actualRPE"
     [numberOfSets]="exercise().sets"
     (rpeChanged)="onActualRpeChange($event)"
   />

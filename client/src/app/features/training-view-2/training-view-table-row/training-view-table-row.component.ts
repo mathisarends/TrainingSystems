@@ -79,6 +79,11 @@ export class TrainingViewTableRowComponent {
    * Handles changes to the actual RPE input and updates estMax.
    */
   protected onActualRpeChange(rpe: string): void {
+    if (rpe === this.exercise().actualRPE) {
+      return;
+    }
+
+    this.exercise().actualRPE = rpe;
     this.updateExerciseProperty('actualRPE', rpe);
     this.updateEstMax();
   }
@@ -133,10 +138,9 @@ export class TrainingViewTableRowComponent {
       return;
     }
 
-    // TODO: please fix this and refactor best performance service after it
-    /*if (this.userBestPerformanceService.isNewBestPerformance(this.exercise().category, estMax)) {
-      this.userBestPerformanceService.makeNewBestPerformanceEntry(this.exercise(), estMax);
-    }*/
+    if (this.userBestPerformanceService.isNewBestPerformance(this.exercise().category, estMax)) {
+      this.userBestPerformanceService.makeNewBestPerformanceEntry(this.exercise());
+    }
 
     const backoffWeight = this.estMaxService2.calcBackoffForNextExercise(
       this.exercise(),

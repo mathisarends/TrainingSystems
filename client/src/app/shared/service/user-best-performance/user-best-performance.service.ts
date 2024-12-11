@@ -47,12 +47,9 @@ export class UserBestPerformanceService {
     return newEstMax > existingEntry.estMax;
   }
 
-  makeNewBestPerformanceEntry(exercise: Exercise, weight: number) {
-    if (!exercise.weight) {
-      exercise.weight = weight.toString();
-    }
+  makeNewBestPerformanceEntry(exercise: Exercise) {
     this.httpService
-      .put<UserBestPerformanceDto>('/user-best-performance', { exercise })
+      .put<UserBestPerformanceDto>('/user-best-performance', exercise)
       .subscribe((userBestPerformanceDto) => {
         this.userBestPerformanceMap.set(userBestPerformanceDto.exerciseName, userBestPerformanceDto);
 
