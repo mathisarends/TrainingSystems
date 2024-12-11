@@ -45,16 +45,13 @@ export class BottomSheetService {
   }
 
   close(): void {
-    if (this.bottomSheetRef) {
-      this.bottomSheetRef.instance.close();
+    setTimeout(() => {
       this.appRef.detachView(this.bottomSheetRef.hostView);
       this.bottomSheetRef.destroy();
-    }
 
-    if (this.overlayComponentRef) {
       this.appRef.detachView(this.overlayComponentRef.hostView);
       this.overlayComponentRef.destroy();
-    }
+    }, 300);
   }
 
   private createOverlayComponent(): void {

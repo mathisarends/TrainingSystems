@@ -11,5 +11,5 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 export const toggleCollapseAnimation = trigger('toggleCollapse', [
   state('collapsed', style({ height: '0px', overflow: 'hidden', opacity: 0 })),
   state('expanded', style({ height: '*', overflow: 'hidden', opacity: 1 })),
-  transition('collapsed <=> expanded', [animate('200ms ease-in-out')]),
+  transition('collapsed <=> expanded', [animate('300ms ease-in-out')]),
 ]);

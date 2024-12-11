@@ -3,8 +3,10 @@ import {
   Component,
   ComponentRef,
   createComponent,
+  effect,
   EnvironmentInjector,
   HostBinding,
+  HostListener,
   Injector,
   Input,
   signal,
@@ -12,11 +14,12 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { toggleCollapseAnimation } from '../../animations/toggle-collapse';
+import { BottomSheetService } from './bottom-sheet.service';
 
 @Component({
   selector: 'app-bottom-sheet',
   standalone: true,
-  templateUrl: './bottom-sheet.component.html',
+  template: '<ng-template #content></ng-template>\n',
   styleUrls: ['./bottom-sheet.component.scss'],
   animations: [toggleCollapseAnimation],
 })
@@ -29,11 +32,42 @@ export class BottomSheetComponent implements AfterViewInit {
 
   isVisible = signal(false);
 
+  private clickDisabled = signal(false);
+
   @HostBinding('@toggleCollapse') get toggleAnimationState(): string {
     return this.isVisible() ? 'expanded' : 'collapsed';
   }
 
-  constructor(private environmentInjector: EnvironmentInjector) {}
+  @HostListener('click', ['$event'])
+  onSheetClick(event: MouseEvent): void {
+    event.stopImmediatePropagation();
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (this.clickDisabled()) {
+      return;
+    }
+
+    if (this.isVisible()) {
+      this.close();
+      this.clickDisabled.set(false);
+    }
+  }
+
+  constructor(
+    private environmentInjector: EnvironmentInjector,
+    private bottomSheetService: BottomSheetService,
+  ) {
+    effect(
+      () => {
+        if (this.isVisible()) {
+          this.disableClicksForDuration(300);
+        }
+      },
+      { allowSignalWrites: true },
+    );
+  }
 
   ngAfterViewInit(): void {
     if (!this.bottomSheetContent()) {
@@ -58,5 +92,13 @@ export class BottomSheetComponent implements AfterViewInit {
 
   close(): void {
     this.isVisible.set(false);
+    this.bottomSheetService.close();
+  }
+
+  private disableClicksForDuration(duration: number): void {
+    this.clickDisabled.set(true);
+    setTimeout(() => {
+      this.clickDisabled.set(false);
+    }, duration);
   }
 }
