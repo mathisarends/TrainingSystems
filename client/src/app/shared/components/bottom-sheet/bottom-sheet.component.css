@@ -1,0 +1,31 @@
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+.bottom-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+  transform: translateY(100%);
+  transition: transform 0.3s;
+  padding: 16px;
+}
+
+.bottom-sheet-open .bottom-sheet {
+  transform: translateY(0);
+}
+
+/*# sourceMappingURL=bottom-sheet.component.css.map */

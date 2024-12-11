@@ -1,12 +1,13 @@
-import { Component, Renderer2 } from '@angular/core';
+import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+
 @Component({
   selector: 'app-modal-overlay',
   standalone: true,
   imports: [],
-  templateUrl: './modal-overlay.component.html',
+  template: '',
   styleUrl: './modal-overlay.component.scss',
 })
-export class ModalOverlayComponent {
+export class ModalOverlayComponent implements OnInit, OnDestroy {
   constructor(private renderer: Renderer2) {}
 
   /**

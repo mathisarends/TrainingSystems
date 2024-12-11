@@ -9,5 +9,5 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BasicInfoComponent {
-  infoText = signal('');
+  infoText = signal('123121233');
 }

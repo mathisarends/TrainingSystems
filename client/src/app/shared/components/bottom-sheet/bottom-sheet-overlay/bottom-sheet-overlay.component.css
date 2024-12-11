@@ -1,0 +1,16 @@
+:host {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 80vh;
+  background-repeat: repeat;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+
+/*# sourceMappingURL=bottom-sheet-overlay.component.css.map */

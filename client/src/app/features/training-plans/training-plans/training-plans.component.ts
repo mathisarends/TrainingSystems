@@ -7,7 +7,6 @@ import { ModalService } from '../../../core/services/modal/modal.service';
 import { InfoComponent } from '../../../shared/components/info/info.component';
 import { SkeletonCardComponent } from '../../../shared/components/loader/skeleton-card/skeleton-card.component';
 import { ModalTab } from '../../../shared/components/modal/types/modal-tab';
-import { SpinnerComponent } from '../../../shared/components/spinner/spinner.component';
 import { IconName } from '../../../shared/icon/icon-name';
 import { HeaderService } from '../../header/header.service';
 import { SetHeadlineInfo } from '../../header/set-headline-info';
@@ -17,6 +16,8 @@ import { TrainingPlanCardView } from '../training-view/models/exercise/training-
 import { TrainingPlanService } from '../training-view/services/training-plan.service';
 import { EditTrainingPlanComponent } from './edit-training/edit-training.component';
 import { TrainingSchedulingComponent } from './training-scheduling/training-scheduling.component';
+import { BottomSheetService } from '../../../shared/components/bottom-sheet/bottom-sheet.service';
+import { BasicInfoComponent } from '../../../shared/components/modal/basic-info/basic-info.component';
 
 /**
  * Component to manage and display training plans.
@@ -24,7 +25,7 @@ import { TrainingSchedulingComponent } from './training-scheduling/training-sche
 @Component({
   selector: 'app-training-plans',
   standalone: true,
-  imports: [CommonModule, TrainingPlanCardComponent, SkeletonCardComponent, SpinnerComponent, InfoComponent],
+  imports: [CommonModule, TrainingPlanCardComponent, SkeletonCardComponent, InfoComponent],
   templateUrl: './training-plans.component.html',
   styleUrls: ['./training-plans.component.scss'],
   providers: [TrainingPlanService],
@@ -52,6 +53,7 @@ export class TrainingPlansComponent implements OnInit, SetHeadlineInfo {
     private modalService: ModalService,
     private headerService: HeaderService,
     private destroyRef: DestroyRef,
+    private bottomSheetService: BottomSheetService,
   ) {}
 
   /**
@@ -79,6 +81,10 @@ export class TrainingPlansComponent implements OnInit, SetHeadlineInfo {
       title: 'Training',
       buttons: [{ icon: IconName.PLUS, callback: () => this.openCreateNewPlanModal() }],
     });
+  }
+
+  protected test(): void {
+    this.bottomSheetService.open(BasicInfoComponent);
   }
 
   /**
