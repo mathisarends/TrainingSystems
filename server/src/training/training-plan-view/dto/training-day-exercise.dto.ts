@@ -32,7 +32,7 @@ export class TrainingDayExerciseDto {
   @IsOptional()
   weight: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   targetRPE: number;
 

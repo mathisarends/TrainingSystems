@@ -1,4 +1,5 @@
 import { Directive, ElementRef, HostListener, signal } from '@angular/core';
+import { InputParsingService } from '../../../shared/service/input-parsing.service';
 
 @Directive()
 export abstract class AbstractDoubleClickHandler {
@@ -24,7 +25,10 @@ export abstract class AbstractDoubleClickHandler {
    */
   protected focused = signal(false);
 
-  protected constructor(protected elementRef: ElementRef) {}
+  protected constructor(
+    protected elementRef: ElementRef,
+    protected inputParsingService: InputParsingService,
+  ) {}
 
   /**
    * Handles double-click events to duplicate the last value or calculate the average.
@@ -48,29 +52,6 @@ export abstract class AbstractDoubleClickHandler {
   protected abstract handleDoubleClick(): void;
 
   /**
-   * Parses the input string into an array of numeric values.
-   */
-  protected parseInputValues(input: string): number[] {
-    const cleanedValue = input.replace(/\s+/g, ' ').trim();
-
-    return cleanedValue
-      .split(this.delimiter)
-      .map((value) => parseFloat(value.trim().replace(',', '.')))
-      .filter((value) => !isNaN(value));
-  }
-
-  /**
-   * Validates and sanitizes the input string.
-   */
-  protected validateInput(input: string): string {
-    return input
-      .split(this.delimiter)
-      .map((value) => value.trim().replace(',', '.'))
-      .filter((value) => !isNaN(parseFloat(value)))
-      .join(this.delimiter);
-  }
-
-  /**
    * Duplicates the last value in the array by adding it once.
    */
   protected duplicateLastValue(values: number[], setsToFill: number): number[] {
@@ -79,14 +60,5 @@ export abstract class AbstractDoubleClickHandler {
       return [...values, lastValue];
     }
     return values;
-  }
-
-  /**
-   * Calculates the rounded average of the input values using a specified step.
-   */
-  protected calculateRoundedAverage(values: number[], step: number): number {
-    const sum = values.reduce((acc, curr) => acc + curr, 0);
-    const average = sum / values.length;
-    return Math.round(average / step) * step;
   }
 }

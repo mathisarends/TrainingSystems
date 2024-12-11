@@ -1,6 +1,7 @@
 import { Component, effect, ElementRef, input, model, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AbstractDoubleClickHandler } from '../abstract-double-click-handler';
+import { InputParsingService } from '../../../../shared/service/input-parsing.service';
 
 @Component({
   selector: 'app-rpe-input',
@@ -24,8 +25,11 @@ export class RpeInputComponent extends AbstractDoubleClickHandler {
    */
   rpeChanged = output<string>();
 
-  constructor(protected override elementRef: ElementRef) {
-    super(elementRef);
+  constructor(
+    protected override elementRef: ElementRef,
+    protected override inputParsingService: InputParsingService,
+  ) {
+    super(elementRef, inputParsingService);
 
     effect(() => {
       if (this.rpe()) {
@@ -38,7 +42,7 @@ export class RpeInputComponent extends AbstractDoubleClickHandler {
    * Handles double-click events for RPE input.
    */
   protected handleDoubleClick(): void {
-    const rpeArray = this.parseInputValues(this.rpe() ?? '');
+    const rpeArray = this.inputParsingService.parseInputValues(this.rpe() ?? '');
     if (rpeArray.length === 0) {
       return;
     }
@@ -48,8 +52,8 @@ export class RpeInputComponent extends AbstractDoubleClickHandler {
       this.rpe.set(updatedRpe.join(this.delimiter));
 
       if (updatedRpe.length === this.numberOfSets()) {
-        const rpeArray = this.parseInputValues(this.rpe() ?? '');
-        const averageRpe = this.calculateRoundedAverage(rpeArray, 0.5).toString();
+        const rpeArray = this.inputParsingService.parseInputValues(this.rpe() ?? '');
+        const averageRpe = this.inputParsingService.calculateRoundedAverage(rpeArray, 0.5).toString();
         this.rpe.set(averageRpe);
       }
     }
@@ -64,21 +68,27 @@ export class RpeInputComponent extends AbstractDoubleClickHandler {
     const validatedRpe = this.validateInput(newRpe);
     this.rpe.set(validatedRpe);
 
-    const rpeArray = this.parseInputValues(validatedRpe);
+    const rpeArray = this.inputParsingService.parseInputValues(validatedRpe);
     if (rpeArray.length === this.numberOfSets()) {
-      const averageRpe = this.calculateRoundedAverage(rpeArray, 0.5).toString();
+      const averageRpe = this.inputParsingService.calculateRoundedAverage(rpeArray, 0.5).toString();
       this.rpe.set(averageRpe);
     }
   }
 
-  protected override validateInput(input: string): string {
-    const baseValidatedInput = super.validateInput(input);
+  protected validateInput(input: string): string {
+    const baseValidatedInput = this.inputParsingService.validateInput(input);
 
-    const rpeArray = this.parseInputValues(baseValidatedInput);
+    const rpeArray = this.inputParsingService.parseInputValues(baseValidatedInput);
 
     const validatedRpeArray = rpeArray.map((value) => {
-      if (value < 5) return 5;
-      if (value > 10) return 10;
+      if (value < 5) {
+        return 5;
+      }
+
+      if (value > 10) {
+        return 10;
+      }
+
       return value;
     });
 

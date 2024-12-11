@@ -187,4 +187,16 @@ export class TrainingViewTableRowComponent {
 
     return this.trainingPlanDataService.weightRecommendationMap().get(exerciseId) ?? '';
   }
+
+  /**
+   * Parses the input string into an array of numeric values.
+   */
+  private parseInputValues(input: string): number[] {
+    const cleanedValue = input.replace(/\s+/g, ' ').trim();
+
+    return cleanedValue
+      .split(' ')
+      .map((value) => parseFloat(value.trim().replace(',', '.')))
+      .filter((value) => !isNaN(value));
+  }
 }

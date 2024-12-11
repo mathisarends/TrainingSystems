@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Exercise } from '../training-plans/training-view/training-exercise';
+import { InputParsingService } from '../../shared/service/input-parsing.service';
 
 @Injectable({
   providedIn: 'root',
@@ -7,16 +8,35 @@ import { Exercise } from '../training-plans/training-view/training-exercise';
 export class EstMaxService2 {
   categoriesWithEstMax = ['Squat', 'Bench', 'Deadlift', 'Overheadpress'];
 
+  constructor(private inputParsingService: InputParsingService) {}
+
   /**
    * Calculates the estimated maximum weight using the Wathan formula, incorporating actual reps adjusted for RPE.
    */
   calcEstMax(exercise: Exercise): number | undefined {
-    if (!this.areInputsValid(exercise)) {
+    if (!this.categoriesWithEstMax.includes(exercise.category) || !exercise.weight || !exercise.actualRPE) {
       return undefined;
     }
 
-    const actualReps = exercise.reps + (10 - Number(exercise.actualRPE));
-    const rawValue = Number(exercise.weight) * (1 + actualReps / 30);
+    const weightInputs = this.inputParsingService.parseInputValues(exercise.weight!);
+    const averageWeight = weightInputs.length
+      ? this.inputParsingService.calculateRoundedAverage(weightInputs, 2.5)
+      : undefined;
+
+    const actualRpeInputs = this.inputParsingService.parseInputValues(exercise.actualRPE);
+    const averageActualRpe = actualRpeInputs.length
+      ? this.inputParsingService.calculateRoundedAverage(actualRpeInputs, 0.5)
+      : undefined;
+
+    console.log('averageWeight', averageWeight);
+    console.log('averageActualRpe', averageActualRpe);
+
+    if (!averageWeight || !averageActualRpe) {
+      return undefined;
+    }
+
+    const actualReps = exercise.reps + (10 - averageActualRpe);
+    const rawValue = averageWeight * (1 + actualReps / 30);
 
     return Math.ceil(rawValue / 2.5) * 2.5;
   }
@@ -54,29 +74,5 @@ export class EstMaxService2 {
     backoffWeight = Math.ceil(backoffWeight / 2.5) * 2.5;
 
     return backoffWeight;
-  }
-
-  /**
-   * Checks if the inputs in the exercise object are valid.
-   * This includes validating the category, weight, actualRPE, and reps.
-   */
-  private areInputsValid(exercise: Exercise): boolean {
-    const weight = Number(exercise.weight);
-    const actualRPE = Number(exercise.actualRPE);
-    const reps = exercise.reps;
-
-    if (!this.categoriesWithEstMax.includes(exercise.category)) {
-      return false;
-    }
-
-    if (isNaN(weight)) {
-      return false;
-    }
-
-    if (isNaN(actualRPE)) {
-      return false;
-    }
-
-    return reps > 0;
   }
 }

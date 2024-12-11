@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, effect, ElementRef, input, model, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AbstractDoubleClickHandler } from '../abstract-double-click-handler';
+import { InputParsingService } from '../../../../shared/service/input-parsing.service';
 
 @Component({
   selector: 'app-weight-input',
@@ -40,8 +41,11 @@ export class WeightInputComponent extends AbstractDoubleClickHandler {
    */
   private isInitialized = false;
 
-  constructor(protected override elementRef: ElementRef) {
-    super(elementRef);
+  constructor(
+    protected override elementRef: ElementRef,
+    protected override inputParsingService: InputParsingService,
+  ) {
+    super(elementRef, inputParsingService);
 
     effect(() => {
       if (!this.isInitialized) {
@@ -72,7 +76,7 @@ export class WeightInputComponent extends AbstractDoubleClickHandler {
       return;
     }
 
-    const weightArray = this.parseInputValues(this.weight() ?? '');
+    const weightArray = this.inputParsingService.parseInputValues(this.weight() ?? '');
     if (weightArray.length === 0) {
       return;
     }
@@ -82,8 +86,8 @@ export class WeightInputComponent extends AbstractDoubleClickHandler {
       this.weight.set(updatedWeights.join(this.delimiter));
 
       if (updatedWeights.length === this.numberOfSets()) {
-        const weightArray = this.parseInputValues(this.weight() ?? '');
-        const averageWeight = this.calculateRoundedAverage(weightArray, 2.5).toString();
+        const weightArray = this.inputParsingService.parseInputValues(this.weight() ?? '');
+        const averageWeight = this.inputParsingService.calculateRoundedAverage(weightArray, 2.5).toString();
         this.weight.set(averageWeight);
       }
     }
@@ -95,12 +99,12 @@ export class WeightInputComponent extends AbstractDoubleClickHandler {
   protected onWeightChanged(event: Event): void {
     const newWeight = (event.target as HTMLInputElement).value;
 
-    const validatedWeight = this.validateInput(newWeight);
+    const validatedWeight = this.inputParsingService.validateInput(newWeight);
     this.weight.set(validatedWeight);
 
-    const weightArray = this.parseInputValues(validatedWeight);
+    const weightArray = this.inputParsingService.parseInputValues(validatedWeight);
     if (weightArray.length === this.numberOfSets()) {
-      const averageWeight = this.calculateRoundedAverage(weightArray, 2.5).toString();
+      const averageWeight = this.inputParsingService.calculateRoundedAverage(weightArray, 2.5).toString();
       this.weight.set(averageWeight);
     }
   }
