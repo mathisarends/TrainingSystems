@@ -26,24 +26,23 @@ export class TrainingPlanViewUpdateService2 {
     dayIndex: number,
     updatedExercise: TrainingDayExerciseDto,
   ): Promise<ExerciseDto> {
-    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(
-      userId,
-      trainingPlanId,
-    );
+    const trainingPlan = await this.trainingService.getPlanByUserAndTrainingId(userId, trainingPlanId);
 
-    const trainingDay =
-      this.trainingPlanViewValidationService.findAndValidateTrainingDay(
-        trainingPlan,
-        weekIndex,
-        dayIndex,
-      );
+    const trainingDay = this.trainingPlanViewValidationService.findAndValidateTrainingDay(
+      trainingPlan,
+      weekIndex,
+      dayIndex,
+    );
 
     trainingPlan.lastUpdated = new Date();
 
-    const exercise = this.findExerciseInTrainingDayById(
-      trainingDay,
-      updatedExercise,
-    );
+    const exercise = this.findExerciseInTrainingDayById(trainingDay, updatedExercise);
+
+    if (exercise && this.hasWeightOrActualRpeChanged(exercise, updatedExercise)) {
+      const trainingSessionTracker = await this.trainingSessionManagerService.getOrCreateTracker(trainingDay, userId);
+
+      trainingSessionTracker.handleActivitySignal();
+    }
 
     let newExercise = undefined;
 
@@ -54,25 +53,7 @@ export class TrainingPlanViewUpdateService2 {
       this.updateExerciseProperties(exercise, updatedExercise);
     }
 
-    this.propagateChangesToFutureWeeks(
-      trainingPlan,
-      weekIndex,
-      dayIndex,
-      updatedExercise,
-    );
-
-    if (
-      exercise &&
-      this.hasWeightOrActualRpeChanged(exercise, updatedExercise)
-    ) {
-      const trainingSessionTracker =
-        await this.trainingSessionManagerService.getOrCreateTracker(
-          trainingDay,
-          userId,
-        );
-
-      trainingSessionTracker.handleActivitySignal();
-    }
+    this.propagateChangesToFutureWeeks(trainingPlan, weekIndex, dayIndex, updatedExercise);
 
     trainingPlan.mostRecentTrainingDayLocator = {
       dayIndex: dayIndex,
@@ -96,40 +77,17 @@ export class TrainingPlanViewUpdateService2 {
   ): void {
     const fieldsToPropagate = this.getFieldsToPropagate();
 
-    for (
-      let weekIndex = startWeekIndex + 1;
-      weekIndex < trainingPlan.trainingWeeks.length;
-      weekIndex++
-    ) {
-      const futureTrainingDay = this.getTrainingDay(
-        trainingPlan,
-        weekIndex,
-        trainingDayIndex,
-      );
+    for (let weekIndex = startWeekIndex + 1; weekIndex < trainingPlan.trainingWeeks.length; weekIndex++) {
+      const futureTrainingDay = this.getTrainingDay(trainingPlan, weekIndex, trainingDayIndex);
 
-      const exerciseIndex = this.getExerciseIndex(
-        trainingPlan,
-        startWeekIndex,
-        trainingDayIndex,
-        updatedExercise,
-      );
+      const exerciseIndex = this.getExerciseIndex(trainingPlan, startWeekIndex, trainingDayIndex, updatedExercise);
 
-      if (
-        exerciseIndex !== -1 &&
-        exerciseIndex < futureTrainingDay.exercises.length
-      ) {
+      if (exerciseIndex !== -1 && exerciseIndex < futureTrainingDay.exercises.length) {
         // Update existing exercise
         const futureExercise = futureTrainingDay.exercises[exerciseIndex];
-        this.updateExerciseFields(
-          futureExercise,
-          updatedExercise,
-          fieldsToPropagate,
-        );
+        this.updateExerciseFields(futureExercise, updatedExercise, fieldsToPropagate);
       } else {
-        const newExercise = this.createExerciseFromFields(
-          updatedExercise,
-          fieldsToPropagate,
-        );
+        const newExercise = this.createExerciseFromFields(updatedExercise, fieldsToPropagate);
         futureTrainingDay.exercises.push(newExercise);
       }
     }
@@ -138,11 +96,7 @@ export class TrainingPlanViewUpdateService2 {
   /**
    * Retrieves a training day for a given week and day index.
    */
-  private getTrainingDay(
-    trainingPlan: TrainingPlan,
-    weekIndex: number,
-    dayIndex: number,
-  ): TrainingDay {
+  private getTrainingDay(trainingPlan: TrainingPlan, weekIndex: number, dayIndex: number): TrainingDay {
     return trainingPlan.trainingWeeks[weekIndex].trainingDays[dayIndex];
   }
 
@@ -159,14 +113,8 @@ export class TrainingPlanViewUpdateService2 {
       return -1;
     }
 
-    const trainingDay = this.getTrainingDay(
-      trainingPlan,
-      startWeekIndex,
-      dayIndex,
-    );
-    return trainingDay.exercises.findIndex(
-      (ex) => ex.id === updatedExercise.id,
-    );
+    const trainingDay = this.getTrainingDay(trainingPlan, startWeekIndex, dayIndex);
+    return trainingDay.exercises.findIndex((ex) => ex.id === updatedExercise.id);
   }
 
   /**
@@ -187,10 +135,7 @@ export class TrainingPlanViewUpdateService2 {
   /**
    * Creates a new exercise object based on the specified fields.
    */
-  private createExerciseFromFields(
-    updatedExercise: TrainingDayExerciseDto,
-    fieldsToInclude: string[],
-  ): Exercise {
+  private createExerciseFromFields(updatedExercise: TrainingDayExerciseDto, fieldsToInclude: string[]): Exercise {
     const newExercise: Partial<Exercise> = {};
 
     fieldsToInclude.forEach((field) => {
@@ -223,9 +168,7 @@ export class TrainingPlanViewUpdateService2 {
       return undefined;
     }
 
-    return trainingDay.exercises.find(
-      (exercise) => exercise.id === updatedExercise.id,
-    );
+    return trainingDay.exercises.find((exercise) => exercise.id === updatedExercise.id);
   }
 
   /**
@@ -249,10 +192,7 @@ export class TrainingPlanViewUpdateService2 {
   /**
    * Updates the properties of an existing exercise with data from the DTO.
    */
-  private updateExerciseProperties(
-    exercise: Exercise,
-    updatedExercise: TrainingDayExerciseDto,
-  ): void {
+  private updateExerciseProperties(exercise: Exercise, updatedExercise: TrainingDayExerciseDto): void {
     exercise.category = updatedExercise.category;
     exercise.exercise = updatedExercise.exercise;
     exercise.sets = updatedExercise.sets;
@@ -264,14 +204,8 @@ export class TrainingPlanViewUpdateService2 {
     exercise.notes = updatedExercise.notes;
   }
 
-  private hasWeightOrActualRpeChanged(
-    exercise: Exercise,
-    updatedExercise: TrainingDayExerciseDto,
-  ): boolean {
-    return (
-      exercise.weight !== updatedExercise.weight ||
-      exercise.actualRPE !== updatedExercise.actualRPE
-    );
+  private hasWeightOrActualRpeChanged(exercise: Exercise, updatedExercise: TrainingDayExerciseDto): boolean {
+    return exercise.weight !== updatedExercise.weight || exercise.actualRPE !== updatedExercise.actualRPE;
   }
 
   /**
