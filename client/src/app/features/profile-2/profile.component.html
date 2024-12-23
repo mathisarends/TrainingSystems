@@ -9,7 +9,7 @@
 
       <input type="file" id="file-input" (change)="showProfilePictureChangeDialog($event)" />
 
-      <app-activity-calendar [activityData]="activityCalendarData" />
+      <app-activity-calendar [activityData]="activityCalendarData" [(selectedYear)]="selectedYear" />
 
       <div class="list-item-container">
         @for (item of listItems; track item) {

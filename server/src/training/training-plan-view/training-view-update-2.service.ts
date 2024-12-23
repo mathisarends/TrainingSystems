@@ -40,7 +40,6 @@ export class TrainingPlanViewUpdateService2 {
 
     if (exercise && this.hasWeightOrActualRpeChanged(exercise, updatedExercise)) {
       const trainingSessionTracker = await this.trainingSessionManagerService.getOrCreateTracker(trainingDay, userId);
-
       trainingSessionTracker.handleActivitySignal();
     }
 

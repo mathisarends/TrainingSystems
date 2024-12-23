@@ -5,6 +5,7 @@ import { BasicConfirmationResponse } from '../../../shared/dto/basic-confirmatio
 import { ActivityCalendarData } from '../activity-calendar/activity-calendar-data';
 import { UpdateProfilePictureDto } from './update-profile-picture-dto';
 import { UserProfileDto } from './user-profile-dto';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -68,9 +69,11 @@ export class ProfileService {
   /**
    * Retrieves activity calendar data for the user.
    *
+   * @param year - The year to include in the query parameters.
    * @returns An `Observable` emitting `ActivityCalendarData` that contains the user's activity data.
    */
-  getActivityCalendarData(): Observable<ActivityCalendarData> {
-    return this.httpService.get<ActivityCalendarData>('/activity-calendar');
+  getActivityCalendarData(year: number): Observable<ActivityCalendarData> {
+    const params = new HttpParams().set('year', year.toString());
+    return this.httpService.get<ActivityCalendarData>('/activity-calendar', params);
   }
 }

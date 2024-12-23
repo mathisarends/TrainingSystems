@@ -1,19 +1,36 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, computed, ElementRef, input, OnInit, QueryList, ViewChildren } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  ElementRef,
+  input,
+  model,
+  OnInit,
+  QueryList,
+  signal,
+  ViewChildren,
+} from '@angular/core';
 import { TooltipDirective } from '../../../shared/directives/tooltip.directive';
 import { ActivityCalendarData } from './activity-calendar-data';
 import { ActivityCalendarEntry, Day, Level } from './activity-calendar-entry';
+import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.component';
 
 @Component({
   selector: 'app-activity-calendar',
   standalone: true,
-  imports: [CommonModule, TooltipDirective],
+  imports: [CommonModule, TooltipDirective, DropdownComponent],
   templateUrl: './activity-calendar.component.html',
   styleUrls: ['./activity-calendar.component.scss'],
 })
 export class ActivityCalendar implements OnInit, AfterViewInit {
   @ViewChildren('month') months!: QueryList<ElementRef>;
   activityData = input.required<ActivityCalendarData>();
+
+  yearOptions = signal([2024, 2025]);
+
+  selectedYear = model.required<number>();
+
   grid: ActivityCalendarEntry[] = [];
 
   trainingDays = computed(() => Object.keys(this.activityData()).length);

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom, Observable } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
@@ -46,6 +46,8 @@ export class ProfileComponent2 implements OnInit, SetHeadlineInfo {
 
   @ViewChild('profilePicture', { static: false })
   profilePictureElement!: ElementRef;
+
+  selectedYear = signal(new Date().getFullYear());
 
   /**
    * List of items displayed in the profile menu with their corresponding actions.
@@ -112,11 +114,12 @@ export class ProfileComponent2 implements OnInit, SetHeadlineInfo {
     private imageUploadService: ImageUploadService,
     private gymTicketService: GymTicketService,
     private router: Router,
-  ) {}
+  ) {
+    this.activityCalendarData$ = this.profileService.getActivityCalendarData(this.selectedYear());
+  }
 
   ngOnInit() {
     this.setHeadlineInfo();
-    this.activityCalendarData$ = this.profileService.getActivityCalendarData();
   }
 
   /**
