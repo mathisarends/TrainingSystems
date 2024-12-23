@@ -4,11 +4,11 @@ import { TrainingPlan } from 'src/training/model/training-plan.model';
 
 @Injectable()
 export class ActivityCalendarService {
-  geetActivityCalendar(trainingPlans: TrainingPlan[]) {
+  getActivityCalendar(trainingPlans: TrainingPlan[], year: number) {
     const activityMap = trainingPlans
       .flatMap((plan) => plan.trainingWeeks)
       .flatMap((week) => week.trainingDays)
-      .filter((day) => !!day.endTime)
+      .filter((day) => !!day.endTime && this.isInYear(day.endTime!, year))
       .reduce((map, day) => {
         const tonnagePerTrainingDay = this.getTonnagePerTrainingDay(day);
         const dayIndex = this.getIndexOfDayPerYearFromDate(day.endTime!);
@@ -17,6 +17,11 @@ export class ActivityCalendarService {
       }, new Map<number, number>());
 
     return Object.fromEntries(activityMap);
+  }
+
+  private isInYear(date: Date, year: number): boolean {
+    const dateObj = new Date(date);
+    return dateObj.getFullYear() === year;
   }
 
   private getTonnagePerTrainingDay(trainingDay: TrainingDay): number {

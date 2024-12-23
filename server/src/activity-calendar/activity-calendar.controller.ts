@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, ParseIntPipe, Query } from '@nestjs/common';
 import { GetUser } from 'src/decorators/user.decorator';
 import { TrainingService } from 'src/training/training.service';
 import { ActivityCalendarService } from './activity-calendar.service';
@@ -11,9 +11,12 @@ export class ActivityCalendarController {
   ) {}
 
   @Get()
-  async getActivityCalendar(@GetUser() userId: string) {
+  async getActivityCalendar(
+    @GetUser() userId: string,
+    @Query('year', ParseIntPipe) year: number, // year ist optional
+  ) {
     const trainingPlans = await this.trainingService.getTrainingPlansByUser(userId);
 
-    return this.actvityCalendarService.geetActivityCalendar(trainingPlans);
+    return this.actvityCalendarService.getActivityCalendar(trainingPlans, year);
   }
 }

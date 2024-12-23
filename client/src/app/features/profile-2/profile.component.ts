@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, effect, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { firstValueFrom, Observable } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
@@ -115,7 +115,9 @@ export class ProfileComponent2 implements OnInit, SetHeadlineInfo {
     private gymTicketService: GymTicketService,
     private router: Router,
   ) {
-    this.activityCalendarData$ = this.profileService.getActivityCalendarData(this.selectedYear());
+    effect(() => {
+      this.activityCalendarData$ = this.profileService.getActivityCalendarData(this.selectedYear());
+    });
   }
 
   ngOnInit() {
