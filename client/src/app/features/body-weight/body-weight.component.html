@@ -1,1 +1,15 @@
-body weight works for now
+@if (bodyWeights$ | async; as bodyWeights) {
+  <div
+    class="body-weight-grid"
+  >
+    <div class="body-weight-grid-row header">Körpergewicht</div>
+    <div class="body-weight-grid-row header">Datum</div>
+
+    @for (bodyWeightData of bodyWeights; track bodyWeightData) {
+      <div class="body-weight-grid-row">{{ bodyWeightData.weight }} kg</div>
+      <div class="body-weight-grid-row">{{ bodyWeightData.date | date: 'dd.MM.yyyy' }}</div>
+    }
+  </div>
+} @else {
+  <app-spinner />
+}

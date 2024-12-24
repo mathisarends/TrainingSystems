@@ -3,12 +3,13 @@ import { Component, DestroyRef, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
 import { FormService } from '../../../../core/services/form.service';
-import { BasicInfoModalOptionsBuilder } from '../../../../core/services/modal/basic-info/basic-info-modal-options-builder';
+import {
+  BasicInfoModalOptionsBuilder
+} from '../../../../core/services/modal/basic-info/basic-info-modal-options-builder';
 import { ModalService } from '../../../../core/services/modal/modal.service';
 import { DropdownComponent } from '../../../../shared/components/dropdown/dropdown.component';
 import { InputComponent } from '../../../../shared/components/input/input.component';
 import { MoreOptionListItem } from '../../../../shared/components/more-options-button/more-option-list-item';
-import { InteractiveElementDirective } from '../../../../shared/directives/interactive-element.directive';
 import { IconName } from '../../../../shared/icon/icon-name';
 import { AutoSaveService } from '../../../../shared/service/auto-save.service';
 import { HeaderService } from '../../../header/header.service';
@@ -24,13 +25,7 @@ import { ExerciseTableSkeletonComponent } from '../exercise-table-skeleton/exerc
 @Component({
   selector: 'app-exercises',
   standalone: true,
-  imports: [
-    CommonModule,
-    ExerciseTableSkeletonComponent,
-    InteractiveElementDirective,
-    InputComponent,
-    DropdownComponent,
-  ],
+  imports: [CommonModule, ExerciseTableSkeletonComponent, InputComponent, DropdownComponent],
   providers: [ExerciseService],
   templateUrl: './exercises.component.html',
   styleUrls: ['./exercises.component.scss'],

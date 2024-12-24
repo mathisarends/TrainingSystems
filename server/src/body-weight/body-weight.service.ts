@@ -10,9 +10,18 @@ export class BodyWeightService {
   constructor(@InjectModel(BodyWeight.name) private readonly bodyWeightModel: Model<BodyWeight>) {}
 
   async getBodyWeights(userId: string): Promise<BodyWeightEntry[]> {
-    const bodyWeightDocument = await this.bodyWeightModel.findOne({ userId }).select('weightEntries').exec();
+    // TODO: wieder einkommentieren das hier
+    // const bodyWeightDocument = await this.bodyWeightModel.findOne({ userId });
 
-    return bodyWeightDocument?.weightEntries;
+    // return bodyWeightDocument ? bodyWeightDocument.weightEntries : [];
+
+    return [
+      { date: '2024-12-01', weight: 75.2 },
+      { date: '2024-12-08', weight: 74.8 },
+      { date: '2024-12-15', weight: 74.5 },
+      { date: '2024-12-22', weight: 74.0 },
+      { date: '2024-12-29', weight: 73.8 },
+    ];
   }
 
   async addBodyWeight(userId: string, weightEntry: BodyWeightEntryDto): Promise<void> {

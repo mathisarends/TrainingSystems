@@ -1,11 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from '../../core/services/http-client.service';
+import { BodyWeightEntryDto } from './dto/body-weight-entry-dto';
+import { Observable } from 'rxjs';
 
-/**
- * Service to manage user settings related to permissions, such as email notifications.
- * This service communicates with the backend to fetch and update user permissions.
- */
 @Injectable({ providedIn: 'root' })
 export class BodyWeightService {
+  private readonly baseUrl = ''; // Basis-URL für die API-Endpunkte
+
   constructor(private httpService: HttpService) {}
+
+  getBodyWeights(): Observable<BodyWeightEntryDto[]> {
+    console.log('is called');
+    return this.httpService.get<BodyWeightEntryDto[]>('/body-weight');
+  }
+
+  addBodyWeight(bodyWeightEntryDto: BodyWeightEntryDto): Observable<void> {
+    return this.httpService.post<void>('/body-weight', bodyWeightEntryDto);
+  }
 }

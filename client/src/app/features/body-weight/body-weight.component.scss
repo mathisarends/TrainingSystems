@@ -1,0 +1,28 @@
+:host {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 0.75rem;
+}
+
+.body-weight-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.body-weight-grid-row {
+  padding: 7.5px 10px;
+  border-bottom: 1px solid var(--calendar-border-color);
+  border-right: 1px solid var(--calendar-border-color);
+
+  &:hover {
+    background-color: var(--calendar-hover-color);
+  }
+
+  &:nth-child(2n) {
+    border-right: none;
+  }
+
+  &.header {
+    font-weight: 500;
+  }
+}

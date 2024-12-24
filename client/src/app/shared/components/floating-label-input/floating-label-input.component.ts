@@ -14,7 +14,7 @@ import { FloatingLabelInputItem } from './floating-label-input-item';
 })
 export class FloatingLabelInputComponent {
   /**
-   * The model that holds the value of the input field.
+   * The dto that holds the value of the input field.
    * This is a required value, and its type can be a string or number (depending on input type).
    */
   value = model.required<string | number | boolean>();
