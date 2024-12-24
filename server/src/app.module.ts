@@ -18,6 +18,7 @@ import { TrainingRoutineModule } from './training-routine/training-routine.modul
 import { TrainingModule } from './training/training.module';
 import { UserExerciseRecordModule } from './user-best-performance/user-best-performance.module';
 import { UsersModule } from './users/users.module';
+import { BodyWeightModule } from './body-weight/body-weight.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { UsersModule } from './users/users.module';
     UserExerciseRecordModule,
     TrainingRoutineModule,
     TrainingCalendarModule,
+    BodyWeightModule,
   ],
   controllers: [AppController],
   providers: [
