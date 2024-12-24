@@ -112,7 +112,7 @@ export class TrainingPlanEditView {
    */
 
   isTrainingBlockLengthValid(): boolean {
-    return this.trainingBlockLength() >= 3 && this.trainingBlockLength() <= 8;
+    return this.trainingBlockLength() >= 2 && this.trainingBlockLength() <= 8;
   }
 
   /**

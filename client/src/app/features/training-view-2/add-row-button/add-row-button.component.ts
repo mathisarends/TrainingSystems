@@ -70,7 +70,7 @@ export class AddRowButtonComponent implements AfterViewInit, OnDestroy {
       const isDragging = this.isDragging();
 
       if (isDragging) {
-        this.renderer.setStyle(document.body, 'cursor', 'row-resize');
+        this.renderer.setStyle(document.body, 'cursor', 'move');
       } else {
         this.renderer.removeStyle(document.body, 'cursor');
       }
@@ -78,7 +78,9 @@ export class AddRowButtonComponent implements AfterViewInit, OnDestroy {
 
     effect(
       () => {
-        this.isVisible.set(this.trainingPlanDataService.hasNoExercises());
+        this.isVisible.set(
+          this.trainingPlanDataService.hasNoExercises() || this.mobileDeviceDetectionService.isMobileDevice,
+        );
       },
       { allowSignalWrites: true },
     );
@@ -88,9 +90,7 @@ export class AddRowButtonComponent implements AfterViewInit, OnDestroy {
    * Registers a global mouse move listener after the view is initialized.
    */
   ngAfterViewInit(): void {
-    if (this.mobileDeviceDetectionService.isMobileDevice) {
-      this.isVisible.set(true);
-    } else {
+    if (!this.mobileDeviceDetectionService.isMobileDevice) {
       this.mouseMoveListener = this.checkMousePosition.bind(this);
       document.addEventListener('mousemove', this.mouseMoveListener);
     }

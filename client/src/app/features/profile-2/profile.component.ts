@@ -24,7 +24,6 @@ import { ActivityCalendar } from './activity-calendar/activity-calendar.componen
 import { ChangeProfilePictureConfirmationComponent } from './change-profile-picture-confirmation/change-profile-picture-confirmation.component';
 import { PROFILE_PICTURE_URL } from './change-profile-picture-confirmation/profile-picture-injection-token';
 import { ProfileService } from './service/profileService';
-import { SettingsComponent } from './settings/settings.component';
 
 @Component({
   standalone: true,
@@ -95,7 +94,7 @@ export class ProfileComponent2 implements OnInit, SetHeadlineInfo {
       label: 'Settings',
       iconName: IconName.SETTINGS,
       iconBackgroundColor: IconBackgroundColor.DarkGray,
-      onItemClicked: () => this.showSettingsModal(),
+      onItemClicked: () => this.toastService.success('Not implemented yet'),
     },
     {
       label: 'Account löschen',
@@ -178,19 +177,6 @@ export class ProfileComponent2 implements OnInit, SetHeadlineInfo {
 
   private async uploadProfilePicture(profilePicture: string): Promise<void> {
     await firstValueFrom(this.profileService.uploadProfilePicture({ profilePicture }));
-  }
-
-  /**
-   * Opens the settings modal for modifying user preferences.
-   */
-  private showSettingsModal() {
-    const modalConfig = new ModalOptionsBuilder()
-      .setComponent(SettingsComponent)
-      .setTitle('Einstellungen')
-      .setButtonText('Speichern')
-      .build();
-
-    this.modalService.open(modalConfig);
   }
 
   /**

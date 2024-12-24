@@ -8,7 +8,7 @@ import { BasicConfirmationResponse } from '../../../shared/dto/basic-confirmatio
  * Service to manage user settings related to permissions, such as email notifications.
  * This service communicates with the backend to fetch and update user permissions.
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class SettingsService {
   constructor(private httpService: HttpService) {}
 
