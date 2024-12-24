@@ -13,13 +13,13 @@ import { TrainingSesssionStatisticsComponent } from './features/training-session
 import { TrainingView2Component } from './features/training-view-2/training-view-2.component';
 import { StatisticsComponent } from './features/usage-statistics/statistics.component';
 import { SpinnerComponent } from './shared/components/spinner/spinner.component';
-import { VolumeCalculatorComponent } from './features/volume-calculator/volume-calculator.component';
+import { BodyWeightComponent } from './features/body-weight/body-weight.component';
 
 export const routes: Routes = [
   { path: 'test', component: TrainingView2Component },
   { path: 'getting-started', component: GettingStartedComponent },
   { path: 'profile/progression', component: StatisticsComponent, canActivate: [AuthGuard] },
-  { path: 'profile/volume-calculator', component: VolumeCalculatorComponent, canActivate: [AuthGuard] },
+  { path: 'profile/body-weight', component: BodyWeightComponent, canActivate: [AuthGuard] },
   {
     path: '',
     component: TrainingPlansComponent,

@@ -63,11 +63,11 @@ export class ProfileComponent2 implements OnInit, SetHeadlineInfo {
       },
     },
     {
-      label: 'Volumenrechner',
+      label: 'Körpergewicht',
       iconName: IconName.TRELLO,
       iconBackgroundColor: IconBackgroundColor.MediumSlateBlue,
       onItemClicked: () => {
-        this.router.navigate(['profile/volume-calculator']);
+        this.router.navigate(['profile/body-weight']);
       },
     },
     {
