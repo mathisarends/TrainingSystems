@@ -25,13 +25,13 @@ export class InputComponent<T extends string | number> {
    * The name of the input field, used to uniquely identify the control.
    * This input is required and must be provided by the parent component.
    */
-  name = input.required<string>();
+  name = input<string>();
 
   /**
    * The type of input control (e.g., 'text', 'number', 'password').
    * This input is required and determines the type of input field.
    */
-  type = input.required<'text' | 'number' | 'tel'>();
+  type = input<'text' | 'number' | 'tel'>('text');
 
   /**
    * The placeholder of the input.

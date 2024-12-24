@@ -22,7 +22,8 @@
     }
   </div>
 
-  <app-add-row-button (addRow)="trainingPlanDataService.addExercise()" (removeRow)="removeRow()" />
+  <app-add-row-button (addRow)="trainingPlanDataService.addExercise()" (removeRow)="removeRow()"
+                      [(isVisible)]="isVisible" />
 
   <app-training-view-navigation [trainingWeekIndex]="trainingDayLocatorService.trainingWeekIndex()"
                                 [trainingDayIndex]="trainingDayLocatorService.trainingDayIndex()" />

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -28,6 +28,7 @@ import { TrainingViewTableRowComponent } from './training-view-table-row/trainin
 import { SwipeDirective } from '../../shared/directives/swipe.directive';
 import { TrainingDayLocatorService2 } from './training-day-locator.service';
 import { TrainingExercisesListComponent } from '../training-plans/training-view/training-exercises-list/training-exercises-list.component';
+import { MobileDeviceDetectionService } from '../../platform/mobile-device-detection.service';
 
 @Component({
   selector: 'app-training-view-2',
@@ -57,6 +58,8 @@ export class TrainingView2Component implements OnInit {
    */
   viewInitialized = signal(false);
 
+  isVisible = signal(false);
+
   constructor(
     private modalService: ModalService,
     private trainingViewService: TrainingViewService,
@@ -68,8 +71,18 @@ export class TrainingView2Component implements OnInit {
     private headerService: HeaderService,
     private route: ActivatedRoute,
     private destroyRef: DestroyRef,
+    private mobileDeviceDetectionService: MobileDeviceDetectionService,
   ) {
     this.bindSwipeHandlers();
+
+    effect(
+      () => {
+        this.isVisible.set(
+          this.trainingPlanDataService.hasNoExercises() || this.mobileDeviceDetectionService.isMobileDevice,
+        );
+      },
+      { allowSignalWrites: true },
+    );
   }
 
   ngOnInit(): void {

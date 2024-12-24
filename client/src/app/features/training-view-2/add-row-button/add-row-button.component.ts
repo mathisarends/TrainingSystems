@@ -5,6 +5,7 @@ import {
   effect,
   ElementRef,
   HostBinding,
+  model,
   OnDestroy,
   output,
   Renderer2,
@@ -28,7 +29,7 @@ export class AddRowButtonComponent implements AfterViewInit, OnDestroy {
   /**
    * Controls an animation whether the button is visible via an animation. Only visible when user hovers over last table row.
    */
-  isVisible = signal(false);
+  isVisible = model(false);
 
   /**
    * Signal to store the initial Y-coordinate of the mouse when dragging starts.
@@ -70,20 +71,11 @@ export class AddRowButtonComponent implements AfterViewInit, OnDestroy {
       const isDragging = this.isDragging();
 
       if (isDragging) {
-        this.renderer.setStyle(document.body, 'cursor', 'move');
+        this.renderer.setStyle(document.body, 'cursor', 'pointer');
       } else {
         this.renderer.removeStyle(document.body, 'cursor');
       }
     });
-
-    effect(
-      () => {
-        this.isVisible.set(
-          this.trainingPlanDataService.hasNoExercises() || this.mobileDeviceDetectionService.isMobileDevice,
-        );
-      },
-      { allowSignalWrites: true },
-    );
   }
 
   /**
