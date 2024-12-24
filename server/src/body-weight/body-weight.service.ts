@@ -18,8 +18,21 @@ export class BodyWeightService {
   async addBodyWeight(userId: string, weightEntry: BodyWeightEntryDto): Promise<void> {
     const bodyWeightDocument = await this.bodyWeightModel.findOne({ userId });
 
+    const newEntryDate = new Date(weightEntry.date).toISOString().split('T')[0];
+
     if (bodyWeightDocument) {
-      bodyWeightDocument.weightEntries.push(weightEntry);
+      const existingEntry = bodyWeightDocument.weightEntries.find(
+        (entry: BodyWeightEntryDto) => new Date(entry.date).toISOString().split('T')[0] === newEntryDate,
+      );
+
+      if (existingEntry) {
+        existingEntry.weight = weightEntry.weight;
+
+        bodyWeightDocument.markModified('weightEntries');
+      } else {
+        bodyWeightDocument.weightEntries.push(weightEntry);
+      }
+
       await bodyWeightDocument.save();
     } else {
       const newDocument = new this.bodyWeightModel({

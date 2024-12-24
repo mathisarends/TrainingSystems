@@ -8,15 +8,17 @@
       <div class="body-weight-grid-row header">Datum</div>
       <div class="body-weight-grid-row header">Körpergewicht</div>
 
-      @for (bodyWeightData of bodyWeights(); track bodyWeightData) {
+      @for (bodyWeightData of bodyWeights(); track bodyWeightData.date) {
         <div class="body-weight-grid-row">{{ bodyWeightData.date | date: 'dd.MM.yyyy' }}</div>
 
 
         <div class="body-weight-grid-row">
-          <app-input
-            [value]="bodyWeightData.weight"
-            [type]="'number'"
-            [alignText]="'left'"
+
+          <input
+            type="number"
+            class="transparent-input"
+            [(ngModel)]="bodyWeightData.weight"
+            (change)="onBodyWeightDataChange(bodyWeightData, $event)"
           />
         </div>
       }
