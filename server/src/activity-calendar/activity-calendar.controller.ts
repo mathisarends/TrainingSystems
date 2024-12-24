@@ -11,10 +11,7 @@ export class ActivityCalendarController {
   ) {}
 
   @Get()
-  async getActivityCalendar(
-    @GetUser() userId: string,
-    @Query('year', ParseIntPipe) year: number, // year ist optional
-  ) {
+  async getActivityCalendar(@GetUser() userId: string, @Query('year', ParseIntPipe) year: number) {
     const trainingPlans = await this.trainingService.getTrainingPlansByUser(userId);
 
     return this.actvityCalendarService.getActivityCalendar(trainingPlans, year);

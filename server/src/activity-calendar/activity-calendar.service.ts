@@ -53,7 +53,7 @@ export class ActivityCalendarService {
 
     const startOfYear = new Date(dateObj.getFullYear(), 0, 1);
 
-    const startOfYearIndex = startOfYear.getDay();
+    const startOfYearIndex = startOfYear.getDay() - 1;
 
     const dayOfYearIndex = Math.floor((dateObj.getTime() - startOfYear.getTime()) / (1000 * 60 * 60 * 24));
 
