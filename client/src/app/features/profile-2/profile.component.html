@@ -1,28 +1,26 @@
-@if (profileService.isInitalized()) {
-  @if (activityCalendarData$ | async; as activityCalendarData) {
-    <div class="profile-wrapper">
-      <app-profile-picture-with-info
-        [profilePicture]="profileService.pictureUrl()!"
-        [username]="profileService.username()!"
-        [email]="profileService.email()!"
-      />
+@if (profileService.isInitalized() && activityCalendarData()) {
+  <div class="profile-wrapper">
+    <app-profile-picture-with-info
+      [profilePicture]="profileService.pictureUrl()!"
+      [username]="profileService.username()!"
+      [email]="profileService.email()!"
+    />
 
-      <input type="file" id="file-input" (change)="showProfilePictureChangeDialog($event)" />
+    <input type="file" id="file-input" (change)="showProfilePictureChangeDialog($event)" />
 
-      <app-activity-calendar [activityData]="activityCalendarData" [(selectedYear)]="selectedYear" />
+    <app-activity-calendar [activityData]="activityCalendarData()!" [(selectedYear)]="selectedYear" />
 
-      <div class="list-item-container">
-        @for (item of listItems; track item) {
-          <app-icon-list-item
-            [label]="item.label"
-            [iconName]="item.iconName"
-            [iconBackgroundColor]="item.iconBackgroundColor"
-            [onItemClicked]="item.onItemClicked"
-          />
-        }
-      </div>
+    <div class="list-item-container">
+      @for (item of listItems; track item) {
+        <app-icon-list-item
+          [label]="item.label"
+          [iconName]="item.iconName"
+          [iconBackgroundColor]="item.iconBackgroundColor"
+          [onItemClicked]="item.onItemClicked"
+        />
+      }
     </div>
-  }
+  </div>
 } @else {
   <app-spinner />
 }

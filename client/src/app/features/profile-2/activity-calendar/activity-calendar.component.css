@@ -28,12 +28,9 @@
   border-radius: 10px;
   border: 2px solid #e9ecef;
 }
-.calendar-container .calendar-grid::-webkit-scrollbar-button {
-  display: none;
-}
 .calendar-container .months {
   display: grid;
-  width: calc(46.41rem + 208px);
+  width: calc(46.41rem + 247px);
   grid-template-columns: repeat(12, 1fr);
   padding-left: 0.5rem;
   font-size: 12px;

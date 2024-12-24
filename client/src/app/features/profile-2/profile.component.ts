@@ -47,6 +47,8 @@ export class ProfileComponent2 implements OnInit, SetHeadlineInfo {
   @ViewChild('profilePicture', { static: false })
   profilePictureElement!: ElementRef;
 
+  activityCalendarData = signal<ActivityCalendarData | undefined>(undefined);
+
   selectedYear = signal(new Date().getFullYear());
 
   /**
@@ -116,7 +118,9 @@ export class ProfileComponent2 implements OnInit, SetHeadlineInfo {
     private router: Router,
   ) {
     effect(() => {
-      this.activityCalendarData$ = this.profileService.getActivityCalendarData(this.selectedYear());
+      this.profileService.getActivityCalendarData(this.selectedYear()).subscribe((activityCalendarData) => {
+        this.activityCalendarData.set(activityCalendarData);
+      });
     });
   }
 

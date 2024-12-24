@@ -45,17 +45,13 @@ $legend-color-size: 12px;
       border: 2px solid #e9ecef;
     }
 
-    &::-webkit-scrollbar-button {
-      display: none;
-    }
-
     scrollbar-width: thin;
     scrollbar-color: rgb(199, 199, 199) #e9ecef;
   }
 
   .months {
     display: grid;
-    width: calc(52 * 0.8925rem + 52 * 4px);
+    width: calc(52 * 0.8925rem + 52 * 4.75px);
     grid-template-columns: repeat(12, 1fr);
     padding-left: 0.5rem;
     font-size: 12px;

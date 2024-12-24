@@ -25,9 +25,10 @@ import { DropdownComponent } from '../../../shared/components/dropdown/dropdown.
 })
 export class ActivityCalendar implements OnInit, AfterViewInit {
   @ViewChildren('month') months!: QueryList<ElementRef>;
+
   activityData = input.required<ActivityCalendarData>();
 
-  yearOptions = signal([2024, 2025]);
+  yearOptions = signal(this.getYearOptions());
 
   selectedYear = model.required<number>();
 
@@ -164,9 +165,8 @@ export class ActivityCalendar implements OnInit, AfterViewInit {
 
     if (sortedValues[lowerIndex + 1] !== undefined) {
       return sortedValues[lowerIndex] + fractionalPart * (sortedValues[lowerIndex + 1] - sortedValues[lowerIndex]);
-    } else {
-      return sortedValues[lowerIndex];
     }
+    return sortedValues[lowerIndex];
   }
 
   private handleFewValues(sortedValues: number[]): number[] {
@@ -179,5 +179,11 @@ export class ActivityCalendar implements OnInit, AfterViewInit {
         sortedValues[sortedValues.length - 1],
       ];
     }
+  }
+
+  private getYearOptions(): number[] {
+    const currentYear = new Date().getFullYear() + 1;
+
+    return Array.from({ length: currentYear - 2024 + 1 }, (_, i) => currentYear - i).reverse();
   }
 }

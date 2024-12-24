@@ -39,10 +39,24 @@ export class ActivityCalendarService {
     return tonnage;
   }
 
+  /**
+   * Calculates the adjusted index of a day within a year.
+   *
+   * The index takes into account both the day of the year (starting from January 1st with index 0)
+   * and the weekday on which the year starts (e.g., Monday = 1).
+   *
+   * @param date - The date for which the index should be calculated.
+   * @returns The adjusted index of the day within the year (0-based, shifted by the start weekday of the year).
+   */
   private getIndexOfDayPerYearFromDate(date: Date): number {
     const dateObj = new Date(date);
 
     const startOfYear = new Date(dateObj.getFullYear(), 0, 1);
-    return Math.floor((dateObj.getTime() - startOfYear.getTime()) / (1000 * 60 * 60 * 24));
+
+    const startOfYearIndex = startOfYear.getDay();
+
+    const dayOfYearIndex = Math.floor((dateObj.getTime() - startOfYear.getTime()) / (1000 * 60 * 60 * 24));
+
+    return dayOfYearIndex + startOfYearIndex;
   }
 }
