@@ -1,4 +1,4 @@
-import { Component, computed, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, OnInit, signal } from '@angular/core';
 import { BodyWeightEntryDto } from './dto/body-weight-entry-dto';
 import { BodyWeightService } from './body-weight.service';
 import { CommonModule } from '@angular/common';
@@ -18,7 +18,6 @@ import { ModalOptionsBuilder } from '../../core/services/modal/modal-options-bui
 import { BodyWeightConfigurationComponent } from './body-weight-configuration/body-weight-configuration.component';
 import { BodyWeightConfigurationService } from './body-weight-configuration/body-weight-configuration.service';
 
-// TODO: Ziele festlegen: Tatsächliche Rate mit der geplanten vergleichen und Änderungen vorschlagen
 @Component({
   selector: 'app-body-weight',
   imports: [
@@ -32,6 +31,7 @@ import { BodyWeightConfigurationService } from './body-weight-configuration/body
   standalone: true,
   templateUrl: './body-weight.component.html',
   styleUrls: ['./body-weight.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BodyWeightComponent implements OnInit, SetHeadlineInfo {
   bodyWeights = signal<BodyWeightEntryDto[]>([]);
@@ -51,8 +51,6 @@ export class BodyWeightComponent implements OnInit, SetHeadlineInfo {
       .pipe(skip(2))
       .subscribe((bodyWeightData) => {
         const mostRecentBodyWeight = bodyWeightData[0];
-        console.log('mostRecentBodyWeight', mostRecentBodyWeight);
-
         this.bodyWeightService.addBodyWeight(mostRecentBodyWeight).subscribe(() => {});
       });
   }

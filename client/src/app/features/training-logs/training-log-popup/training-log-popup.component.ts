@@ -8,7 +8,6 @@ import { BarChartDataset } from '../../../shared/components/charts/grouped-bar-c
 import { GroupedBarChartComponent } from '../../../shared/components/charts/grouped-bar-chart/grouped-bar-chart.component';
 import { DashboardCardComponent } from '../../../shared/components/dashboard-card/dashboard-card.component';
 import { IconBackgroundColor } from '../../../shared/components/icon-list-item/icon-background-color';
-import { IconListeItemComponent } from '../../../shared/components/icon-list-item/icon-list-item.component';
 import { ChartSkeletonComponent } from '../../../shared/components/loader/chart-skeleton/chart-skeleton.component';
 import { OnToggleView } from '../../../shared/components/modal/on-toggle-view';
 import { IconName } from '../../../shared/icon/icon-name';
@@ -19,7 +18,7 @@ import { TrainingRetrospectivePopupCardInfo } from './training-retrospective.pop
 
 @Component({
   standalone: true,
-  imports: [DashboardCardComponent, GroupedBarChartComponent, ChartSkeletonComponent, IconListeItemComponent],
+  imports: [DashboardCardComponent, GroupedBarChartComponent, ChartSkeletonComponent],
   selector: 'app-calendar-dashboard-popup',
   templateUrl: './training-log-popup.component.html',
   styleUrls: ['./training-log-popup.component.scss'],

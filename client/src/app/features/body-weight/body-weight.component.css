@@ -1,7 +1,7 @@
 :host {
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 0.75rem;
+  grid-template-columns: 1.85fr 1fr;
+  gap: 1.25rem;
 }
 
 .body-weight-grid {
@@ -26,6 +26,14 @@
 
 .transparent-input {
   text-align: left !important;
+}
+
+@media screen and (max-width: 768px) {
+  :host {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
 }
 
 /*# sourceMappingURL=body-weight.component.css.map */

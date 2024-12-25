@@ -1,13 +1,11 @@
 @if (loadingComplete()) {
   <div class="flex-container">
     <app-dashboard-card
-      [icon]="IconName.BAR_CHART"
       [unit]="tonnage()"
       [differenceFromLastSession]="tonangeDifferenceFromlastWeek()"
       [title]="'Tonnage (in KG)'"
     />
     <app-dashboard-card
-      [icon]="IconName.CLOCK"
       [unit]="duration()"
       [differenceFromLastSession]="durationDifferenceFromLastWeek()"
       [title]="'Dauer (Minuten)'"

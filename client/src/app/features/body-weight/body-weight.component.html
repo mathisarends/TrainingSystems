@@ -26,8 +26,8 @@
     <app-add-row-button (addRow)="addRow()" [isVisible]="true" />
   </div>
 
-
-  <app-grouped-bar-chart [data]="bodyWeightBarChartData()!" yAxisTitle="Körpergewicht (Verlauf)" />
+  <app-grouped-bar-chart [data]="bodyWeightBarChartData()!" [yAxisTitle]="'Körpergewicht (Verlauf)'" />
+  s
 } @else {
   <app-spinner />
 }
