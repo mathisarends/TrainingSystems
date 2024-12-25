@@ -10,6 +10,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastService } from '../../shared/components/toast/toast.service';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { skip } from 'rxjs';
+import { FloatingLabelInputComponent } from '../../shared/components/floating-label-input/floating-label-input.component';
+import { BodyWeightGoal } from './body-weight-goal.enum';
+import { ToDropDownStringOptionsPipe } from '../../shared/components/floating-label-input/to-dropdown-options-from-strings.pipe';
 
 // TODO: Ziele festlegen: Tatsächliche Rate mit der geplanten vergleichen und Änderungen vorschlagen
 @Component({
@@ -21,6 +24,8 @@ import { skip } from 'rxjs';
     AddRowButtonComponent,
     ReactiveFormsModule,
     FormsModule,
+    FloatingLabelInputComponent,
+    ToDropDownStringOptionsPipe,
   ],
   standalone: true,
   templateUrl: './body-weight.component.html',
@@ -33,7 +38,20 @@ export class BodyWeightComponent implements OnInit {
 
   isLoading = signal<boolean>(true);
 
-  isVisible = signal(true);
+  bodyWeightGoalOptions = signal(Object.keys(BodyWeightGoal));
+
+  bodyWeightGoal = signal(BodyWeightGoal.GAIN);
+
+  bodyWeightRates = computed(() => {
+    if (this.bodyWeightGoal() === BodyWeightGoal.GAIN) {
+      return [0.25, 0.5, 0.75, 1, 1.25, 1.5];
+    } else if (this.bodyWeightGoal() === BodyWeightGoal.DIET) {
+      return [-0.25, -0.5, -0.75, -1, -1.25, -1.5];
+    }
+    return [];
+  });
+
+  bodyWeightRate = signal(0.25);
 
   constructor(
     private readonly bodyWeightService: BodyWeightService,
@@ -57,7 +75,6 @@ export class BodyWeightComponent implements OnInit {
       },
       error: () => {
         this.isLoading.set(false);
-        console.error('Failed to fetch body weights');
       },
     });
   }

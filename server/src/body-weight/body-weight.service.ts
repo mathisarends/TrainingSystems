@@ -30,7 +30,7 @@ export class BodyWeightService {
 
         bodyWeightDocument.markModified('weightEntries');
       } else {
-        bodyWeightDocument.weightEntries.push(weightEntry);
+        bodyWeightDocument.weightEntries.unshift(weightEntry);
       }
 
       await bodyWeightDocument.save();
