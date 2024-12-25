@@ -9,16 +9,6 @@
   grid-template-columns: repeat(2, 1fr);
 }
 
-.body-weight-goal-selection {
-  width: 100%;
-  display: flex;
-  gap: 0.7rem;
-  margin-bottom: 1rem;
-
-  & > * {
-    flex-grow: 1;
-  }
-}
 
 .body-weight-grid-row {
   padding: 7.5px 10px;

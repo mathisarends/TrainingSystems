@@ -2,14 +2,6 @@
   <div
     class="body-weight-grid-container"
   >
-
-    <div class="body-weight-goal-selection">
-      <app-floating-label-input [label]="'Ziel'" [options]="bodyWeightGoalOptions()  | toDropdownOptionsFromStrings"
-                                [(value)]="bodyWeightGoal" [type]="'select'" />
-      <app-floating-label-input [label]="'Rate'" [options]="bodyWeightRates() | toDropdownOptionsFromStrings"
-                                [(value)]="bodyWeightRate" [type]="'select'" />
-    </div>
-
     <div
       class="body-weight-grid"
     >

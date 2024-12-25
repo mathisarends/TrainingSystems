@@ -10,9 +10,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastService } from '../../shared/components/toast/toast.service';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { skip } from 'rxjs';
-import { FloatingLabelInputComponent } from '../../shared/components/floating-label-input/floating-label-input.component';
-import { BodyWeightGoal } from './body-weight-goal.enum';
-import { ToDropDownStringOptionsPipe } from '../../shared/components/floating-label-input/to-dropdown-options-from-strings.pipe';
+import { SetHeadlineInfo } from '../header/set-headline-info';
+import { HeaderService } from '../header/header.service';
+import { IconName } from '../../shared/icon/icon-name';
+import { ModalService } from '../../core/services/modal/modal.service';
+import { ModalOptionsBuilder } from '../../core/services/modal/modal-options-builder';
+import { BodyWeightConfigurationComponent } from './body-weight-configuration/body-weight-configuration.component';
+import { BodyWeightConfigurationService } from './body-weight-configuration/body-weight-configuration.service';
 
 // TODO: Ziele festlegen: Tatsächliche Rate mit der geplanten vergleichen und Änderungen vorschlagen
 @Component({
@@ -24,38 +28,24 @@ import { ToDropDownStringOptionsPipe } from '../../shared/components/floating-la
     AddRowButtonComponent,
     ReactiveFormsModule,
     FormsModule,
-    FloatingLabelInputComponent,
-    ToDropDownStringOptionsPipe,
   ],
   standalone: true,
   templateUrl: './body-weight.component.html',
   styleUrls: ['./body-weight.component.scss'],
 })
-export class BodyWeightComponent implements OnInit {
+export class BodyWeightComponent implements OnInit, SetHeadlineInfo {
   bodyWeights = signal<BodyWeightEntryDto[]>([]);
 
   bodyWeightBarChartData = computed(() => this.getWeightGroupedBarChart());
 
   isLoading = signal<boolean>(true);
 
-  bodyWeightGoalOptions = signal(Object.keys(BodyWeightGoal));
-
-  bodyWeightGoal = signal(BodyWeightGoal.GAIN);
-
-  bodyWeightRates = computed(() => {
-    if (this.bodyWeightGoal() === BodyWeightGoal.GAIN) {
-      return [0.25, 0.5, 0.75, 1, 1.25, 1.5];
-    } else if (this.bodyWeightGoal() === BodyWeightGoal.DIET) {
-      return [-0.25, -0.5, -0.75, -1, -1.25, -1.5];
-    }
-    return [];
-  });
-
-  bodyWeightRate = signal(0.25);
-
   constructor(
     private readonly bodyWeightService: BodyWeightService,
     private readonly toastService: ToastService,
+    private headerService: HeaderService,
+    private modalService: ModalService,
+    private bodyWeightConfigurationService: BodyWeightConfigurationService,
   ) {
     toObservable(this.bodyWeights)
       .pipe(skip(2))
@@ -77,6 +67,28 @@ export class BodyWeightComponent implements OnInit {
         this.isLoading.set(false);
       },
     });
+
+    this.setHeadlineInfo();
+  }
+
+  setHeadlineInfo() {
+    this.headerService.setHeadlineInfo({
+      title: 'Training',
+      buttons: [{ icon: IconName.DATABASE, callback: () => this.openConfigurationModal() }],
+    });
+  }
+
+  private openConfigurationModal(): void {
+    const modalOptions = new ModalOptionsBuilder()
+      .setComponent(BodyWeightConfigurationComponent)
+      .setProviderMap(new Map().set(BodyWeightConfigurationService, this.bodyWeightConfigurationService))
+      .setTitle('Einstellungen')
+      .setOnSubmitCallback(async () => {
+        this.bodyWeightService.saveBodyWeightConfiguration();
+      })
+      .build();
+
+    this.modalService.open(modalOptions);
   }
 
   protected addRow(): void {

@@ -17,4 +17,8 @@ export class BodyWeightService {
   addBodyWeight(bodyWeightEntryDto: BodyWeightEntryDto): Observable<void> {
     return this.httpService.post<void>('/body-weight', bodyWeightEntryDto);
   }
+
+  loadBodyWeightConfiguration(): void {}
+
+  saveBodyWeightConfiguration(): void {}
 }

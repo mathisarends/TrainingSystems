@@ -1,0 +1,4 @@
+<app-floating-label-input [label]="'Ziel'" [options]="bodyWeightGoalOptions()  | toDropdownOptionsFromStrings"
+                          [(value)]="bodyWeightGoal" [type]="'select'" />
+<app-floating-label-input [label]="rateLabel()" [options]="bodyWeightRates | toDropdownOptionsFromStrings"
+                          [(value)]="bodyWeightRate" [type]="'select'" />
