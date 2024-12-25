@@ -9,7 +9,7 @@ import { AddRowButtonComponent } from '../training-view-2/add-row-button/add-row
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastService } from '../../shared/components/toast/toast.service';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { skip } from 'rxjs';
+import { firstValueFrom, skip } from 'rxjs';
 import { SetHeadlineInfo } from '../header/set-headline-info';
 import { HeaderService } from '../header/header.service';
 import { IconName } from '../../shared/icon/icon-name';
@@ -84,7 +84,12 @@ export class BodyWeightComponent implements OnInit, SetHeadlineInfo {
       .setProviderMap(new Map().set(BodyWeightConfigurationService, this.bodyWeightConfigurationService))
       .setTitle('Einstellungen')
       .setOnSubmitCallback(async () => {
-        this.bodyWeightService.saveBodyWeightConfiguration();
+        const bodyWeightConfigurationDto = {
+          weightGoal: this.bodyWeightConfigurationService.bodyWeightGoal(),
+          weightGoalRate: parseFloat(this.bodyWeightConfigurationService.bodyWeightRate().toString()),
+        };
+
+        await firstValueFrom(this.bodyWeightService.saveBodyWeightConfiguration(bodyWeightConfigurationDto));
       })
       .build();
 

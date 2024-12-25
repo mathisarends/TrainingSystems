@@ -1,4 +1,8 @@
 <app-floating-label-input [label]="'Ziel'" [options]="bodyWeightGoalOptions()  | toDropdownOptionsFromStrings"
-                          [(value)]="bodyWeightGoal" [type]="'select'" />
-<app-floating-label-input [label]="rateLabel()" [options]="bodyWeightRates | toDropdownOptionsFromStrings"
-                          [(value)]="bodyWeightRate" [type]="'select'" />
+                          [(value)]="bodyWeightConfigurationService.bodyWeightGoal" [type]="'select'" />
+
+@if (bodyWeightConfigurationService.bodyWeightGoal() !== BodyWeightGoal.MAINTAIN) {
+  <app-floating-label-input [label]="rateLabel()" [options]="bodyWeightRates | toDropdownOptionsFromStrings"
+                            [(value)]="bodyWeightConfigurationService.bodyWeightRate" [type]="'select'" />
+}
+

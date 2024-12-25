@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { BodyWeight } from './model/body-weight.model';
 import { BodyWeightEntry } from './model/body-weight-entry.model';
 import { BodyWeightEntryDto } from './dto/body-weight-entry.dto';
+import { UpdateWeightGoalDto } from './dto/body-weight-configuration.dto';
 
 @Injectable()
 export class BodyWeightService {
@@ -41,5 +42,40 @@ export class BodyWeightService {
       });
       await newDocument.save();
     }
+  }
+
+  async getBodyWeightConfiguration(userId: string) {
+    const bodyWeightDocument = await this.bodyWeightModel.findOne({ userId });
+
+    if (bodyWeightDocument) {
+      return {
+        weightGoal: bodyWeightDocument.weightGoal,
+        weightGoalRate: bodyWeightDocument.weightGoalRate,
+      };
+    }
+
+    return {
+      weightGoal: 'MAINTAIN',
+      weightGoalRate: 0,
+    };
+  }
+
+  async saveBodyWeightConfiguration(userId: string, updateWeightGoalDto: UpdateWeightGoalDto) {
+    const bodyWeightDocument = await this.bodyWeightModel.findOne({ userId });
+
+    if (!bodyWeightDocument) {
+      const newDocument = new this.bodyWeightModel({
+        userId,
+        weightEntries: [],
+        weightGoal: updateWeightGoalDto.weightGoal,
+        weightGoalRate: updateWeightGoalDto.weightGoalRate,
+      });
+      return await newDocument.save();
+    }
+
+    bodyWeightDocument.weightGoal = updateWeightGoalDto.weightGoal;
+    bodyWeightDocument.weightGoalRate = updateWeightGoalDto.weightGoalRate;
+
+    return await bodyWeightDocument.save();
   }
 }

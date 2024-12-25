@@ -9,6 +9,19 @@ export class BodyWeight extends Document {
 
   @Prop({ default: [] })
   weightEntries: BodyWeightEntry[];
+
+  @Prop({
+    required: true,
+    enum: ['GAIN', 'LOSE', 'MAINTAIN'],
+    default: 'MAINTAIN',
+  })
+  weightGoal: string;
+
+  @Prop({
+    required: true,
+    type: Number,
+  })
+  weightGoalRate: number;
 }
 
 export const BodyWeightSchema = SchemaFactory.createForClass(BodyWeight);

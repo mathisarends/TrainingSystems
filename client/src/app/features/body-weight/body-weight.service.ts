@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpService } from '../../core/services/http-client.service';
 import { BodyWeightEntryDto } from './dto/body-weight-entry-dto';
 import { Observable } from 'rxjs';
+import { BodyWeightConfigurationDto } from './dto/body-weight-configuration-dto';
 
 @Injectable({ providedIn: 'root' })
 export class BodyWeightService {
@@ -18,7 +19,11 @@ export class BodyWeightService {
     return this.httpService.post<void>('/body-weight', bodyWeightEntryDto);
   }
 
-  loadBodyWeightConfiguration(): void {}
+  loadBodyWeightConfiguration(): Observable<BodyWeightConfigurationDto> {
+    return this.httpService.get<BodyWeightConfigurationDto>('/body-weight/configuration');
+  }
 
-  saveBodyWeightConfiguration(): void {}
+  saveBodyWeightConfiguration(bodyWeightConfigurationDto: BodyWeightConfigurationDto): Observable<any> {
+    return this.httpService.put('/body-weight/configuration', bodyWeightConfigurationDto);
+  }
 }

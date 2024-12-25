@@ -1,4 +1,5 @@
 export enum BodyWeightGoal {
   GAIN = 'GAIN',
-  DIET = 'DIET',
+  LOSE = 'LOSE',
+  MAINTAIN = 'MAINTAIN',
 }
