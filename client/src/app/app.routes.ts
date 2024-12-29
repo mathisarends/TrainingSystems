@@ -20,6 +20,7 @@ export const routes: Routes = [
   { path: 'getting-started', component: GettingStartedComponent },
   { path: 'profile/progression', component: StatisticsComponent, canActivate: [AuthGuard] },
   { path: 'profile/body-weight', component: BodyWeightComponent, canActivate: [AuthGuard] },
+  { path: 'profile/best-performance', component: BestPerformanceComponent, canActivate: [AuthGuard] },
   {
     path: '',
     component: TrainingPlansComponent,

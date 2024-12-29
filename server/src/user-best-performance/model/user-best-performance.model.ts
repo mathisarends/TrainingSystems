@@ -31,7 +31,6 @@ export class UserBestPerformance extends Document {
   @Prop({ default: Date.now })
   achievedAt: Date;
 
-  // Array to store up to two previous records
   @Prop({
     type: [
       {
@@ -56,36 +55,4 @@ export class UserBestPerformance extends Document {
 }
 
 export const UserBestPerformanceSchema = SchemaFactory.createForClass(UserBestPerformance);
-
-/**
- * Middleware to manage the `previousRecords` history.
- *
- * This pre-save hook ensures only the last two performance records are kept.
- * If there are already two records, the oldest one is removed before adding
- * the current performance details. This keeps the history concise and always
- * up to date, allowing for easy restoration of previous states.
- */
-UserBestPerformanceSchema.pre('findOneAndUpdate', function (next) {
-  const MAX_HISTORY_LENGTH = 3;
-  const update = this.getUpdate() as UserBestPerformance;
-
-  if (update.previousRecords && update.previousRecords.length >= MAX_HISTORY_LENGTH) {
-    update.previousRecords.shift();
-  }
-
-  if (update.sets && update.reps && update.weight && update.actualRPE && update.estMax) {
-    update.previousRecords = update.previousRecords || [];
-    update.previousRecords.push({
-      sets: update.sets,
-      reps: update.reps,
-      weight: update.weight,
-      actualRPE: update.actualRPE,
-      estMax: update.estMax,
-      achievedAt: update.achievedAt || new Date(),
-    });
-  }
-
-  next();
-});
-
 UserBestPerformanceSchema.index({ userId: 1, exerciseName: 1 }, { unique: true });

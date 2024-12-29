@@ -138,10 +138,6 @@ export class TrainingViewTableRowComponent {
       return;
     }
 
-    if (this.userBestPerformanceService.isNewBestPerformance(this.exercise().category, estMax)) {
-      this.userBestPerformanceService.makeNewBestPerformanceEntry(this.exercise());
-    }
-
     const backoffWeight = this.estMaxService2.calcBackoffForNextExercise(
       this.exercise(),
       this.trainingPlanDataService.exercises(),
@@ -152,6 +148,10 @@ export class TrainingViewTableRowComponent {
     }
 
     this.updateExerciseProperty('estMax', estMax);
+
+    if (this.userBestPerformanceService.isNewBestPerformance(this.exercise().category, estMax)) {
+      this.userBestPerformanceService.makeNewBestPerformanceEntry(this.exercise());
+    }
   }
 
   /**

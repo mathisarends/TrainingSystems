@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ExerciseCategoryType } from 'src/exercise/types/exercise-category-type.enum';
@@ -28,52 +28,73 @@ export class UserBestPerformanceService {
   }
 
   /**
-   * Erstellt oder aktualisiert einen UserExerciseRecord für eine bestimmte Übung eines Benutzers.
-   */
-  async createOrUpdateRecord(
-    userId: string,
-    exerciseName: string,
-    recordData: UserBestPerformance,
-  ): Promise<UserBestPerformance> {
-    return this.userBestPerformanceModel
-      .findOneAndUpdate({ userId, exerciseName }, { ...recordData, userId, exerciseName }, { new: true, upsert: true })
-      .exec();
-  }
-
-  /**
-   * Holt einen bestimmten UserExerciseRecord eines Benutzers für eine bestimmte Übung
-   */
-  async getRecordByUserAndExercise(userId: string, exerciseName: string): Promise<UserBestPerformance> {
-    const exerciseRecord = await this.userBestPerformanceModel.findOne({ userId, exerciseName }).exec();
-
-    if (!exerciseRecord) {
-      throw new NotFoundException(`No exercise record found for userId ${userId} and exerciseName ${exerciseName}`);
-    }
-
-    return exerciseRecord;
-  }
-
-  // TODO: hier müsste man diese findOneAndUpdate mal korrekt umsetzen?
-  /**
    * Saves a new user exercise record or updates an existing one.
    */
-  async saveUserRecordByExercise(userId: string, exercise: TrainingDayExerciseDto): Promise<UserBestPerformance> {
-    return await this.userBestPerformanceModel
-      .findOneAndUpdate(
-        { userId: userId, exerciseName: exercise.exercise },
-        {
-          userId: userId,
-          category: exercise.category as ExerciseCategoryType,
-          exerciseName: exercise.exercise,
-          sets: exercise.sets,
-          reps: exercise.reps,
-          weight: parseFloat(exercise.weight),
-          actualRPE: parseFloat(exercise.actualRPE),
-          estMax: exercise.estMax,
-          achievedAt: new Date(),
-        },
-        { new: true, upsert: true },
-      )
+  async saveUserRecordByExercise(
+    userId: string,
+    trainingDayExerciseDto: TrainingDayExerciseDto,
+  ): Promise<UserBestPerformance> {
+    const bestPerformanceForExercise = await this.userBestPerformanceModel
+      .findOne({
+        userId: userId,
+        exerciseName: trainingDayExerciseDto.exercise,
+      })
       .exec();
+
+    if (!bestPerformanceForExercise) {
+      return await this.createNewUserBestPerformance(userId, trainingDayExerciseDto);
+    }
+
+    if (trainingDayExerciseDto.estMax < bestPerformanceForExercise.weight) {
+      throw new BadRequestException('The new entry is not a new pr');
+    }
+
+    const previousBestEntry = {
+      sets: bestPerformanceForExercise.sets,
+      reps: bestPerformanceForExercise.reps,
+      weight: bestPerformanceForExercise.weight,
+      actualRPE: bestPerformanceForExercise.actualRPE,
+      estMax: bestPerformanceForExercise.estMax,
+      achievedAt: bestPerformanceForExercise.achievedAt,
+    };
+
+    bestPerformanceForExercise.previousRecords.unshift(previousBestEntry);
+
+    if (bestPerformanceForExercise.previousRecords.length > 10) {
+      bestPerformanceForExercise.previousRecords.pop();
+    }
+
+    // TODO: testen ob diese Parsen hier Probleme macht
+    bestPerformanceForExercise.sets = trainingDayExerciseDto.sets;
+    bestPerformanceForExercise.reps = trainingDayExerciseDto.reps;
+    bestPerformanceForExercise.weight = Number(trainingDayExerciseDto.weight);
+    bestPerformanceForExercise.actualRPE = Number(trainingDayExerciseDto.actualRPE);
+    bestPerformanceForExercise.estMax = trainingDayExerciseDto.estMax;
+    bestPerformanceForExercise.achievedAt = new Date();
+
+    return await bestPerformanceForExercise.save();
+  }
+
+  /**
+   * Creates a new UserBestPerformance entry.
+   */
+  private async createNewUserBestPerformance(
+    userId: string,
+    trainingDayExerciseDto: TrainingDayExerciseDto,
+  ): Promise<UserBestPerformance> {
+    const newBestPerformance = new this.userBestPerformanceModel({
+      userId: userId,
+      exerciseName: trainingDayExerciseDto.exercise,
+      category: trainingDayExerciseDto.category,
+      sets: trainingDayExerciseDto.sets,
+      reps: trainingDayExerciseDto.reps,
+      weight: Number(trainingDayExerciseDto.weight),
+      actualRPE: Number(trainingDayExerciseDto.actualRPE),
+      estMax: trainingDayExerciseDto.estMax,
+      achievedAt: new Date(),
+      previousRecords: [],
+    });
+
+    return await newBestPerformance.save();
   }
 }

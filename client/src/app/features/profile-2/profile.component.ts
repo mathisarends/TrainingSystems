@@ -14,7 +14,6 @@ import { SpinnerComponent } from '../../shared/components/spinner/spinner.compon
 import { ToastService } from '../../shared/components/toast/toast.service';
 import { IconName } from '../../shared/icon/icon-name';
 import { ImageUploadService } from '../../shared/service/image-upload.service';
-import { UserBestPerformanceService } from '../../shared/service/user-best-performance/user-best-performance.service';
 import { GymTicketComponent } from '../gym-ticket/gym-ticket.component';
 import { GymTicketService } from '../gym-ticket/gym-ticket.service';
 import { HeaderService } from '../header/header.service';
@@ -63,18 +62,20 @@ export class ProfileComponent2 implements OnInit, SetHeadlineInfo {
       },
     },
     {
+      label: 'Bestleistungen',
+      iconName: IconName.AWARD,
+      iconBackgroundColor: IconBackgroundColor.Orange,
+      onItemClicked: () => {
+        this.router.navigate(['profile/best-performance']);
+      },
+    },
+    {
       label: 'Körpergewicht',
       iconName: IconName.TRELLO,
       iconBackgroundColor: IconBackgroundColor.MediumSlateBlue,
       onItemClicked: () => {
         this.router.navigate(['profile/body-weight']);
       },
-    },
-    {
-      label: 'Bestleistungen',
-      iconName: IconName.AWARD,
-      iconBackgroundColor: IconBackgroundColor.Orange,
-      onItemClicked: () => this.showUserbestPerformanceModal(),
     },
     {
       label: 'Progression',
@@ -177,19 +178,6 @@ export class ProfileComponent2 implements OnInit, SetHeadlineInfo {
 
   private async uploadProfilePicture(profilePicture: string): Promise<void> {
     await firstValueFrom(this.profileService.uploadProfilePicture({ profilePicture }));
-  }
-
-  /**
-   * Opens the modal to display user best performance data.
-   */
-  private showUserbestPerformanceModal(): void {
-    const modalOptions = new ModalOptionsBuilder()
-      .setComponent(UserBestPerformanceService)
-      .setTitle('Bestleistungen')
-      .setButtonText('Verstanden')
-      .build();
-
-    this.modalService.open(modalOptions);
   }
 
   /**
