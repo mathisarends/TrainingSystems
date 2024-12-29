@@ -4,16 +4,8 @@
   gap: 2rem;
 }
 
-section {
-  display: flex;
-  flex-direction: column;
-  gap: 7.5px;
-}
 
-app-grouped-bar-chart {
-  position: relative;
-  left: -20px;
-}
+
 
 @media screen and (max-width: 768px) {
   :host {

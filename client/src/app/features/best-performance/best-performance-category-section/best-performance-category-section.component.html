@@ -1,0 +1,7 @@
+<app-dashboard-card
+  [title]="categoryPerformanceCardInfo()!.title"
+  [unit]="categoryPerformanceCardInfo()!.unit"
+  [differenceFromLastSession]="categoryPerformanceCardInfo()!.prIncrement"
+/>
+
+<app-grouped-bar-chart [data]="categoryChartData()!" />

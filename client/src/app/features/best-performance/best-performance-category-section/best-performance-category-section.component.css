@@ -1,0 +1,12 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 7.5px;
+}
+
+app-grouped-bar-chart {
+  position: relative;
+  left: -20px;
+}
+
+/*# sourceMappingURL=best-performance-category-section.component.css.map */
