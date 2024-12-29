@@ -1,20 +1,59 @@
 @if (isInitialized()) {
-  @if (squatPerformance() && squatPerformanceDashboardCardInfo()) {
-    <app-dashboard-card
-      [title]="squatPerformanceDashboardCardInfo()!.title"
-      [unit]="squatPerformanceDashboardCardInfo()!.unit"
-      [differenceFromLastSession]="squatPerformanceDashboardCardInfo()!.prIncrement"
-    />
-  }
 
-  @if (benchPerformance() && benchPerformanceDashboardCardInfo()) {
-  }
+  <section>
+    @if (squatPerformance()) {
+      <app-dashboard-card
+        [title]="squatPerformanceDashboardCardInfo()!.title"
+        [unit]="squatPerformanceDashboardCardInfo()!.unit"
+        [differenceFromLastSession]="squatPerformanceDashboardCardInfo()!.prIncrement"
+      />
 
-  @if (deadliftPerformance() && deadliftPerformanceDashboardCardInfo()) {
-  }
+      <app-grouped-bar-chart [data]="squatChartData()!" />
+    }
+  </section>
 
-  @if (overheadpressPerformance() && overheadpressPerformanceDashboardCardInfo()) {
-  }
+  <section>
+    @if (benchPerformance()) {
+      <app-dashboard-card
+        [title]="benchPerformanceDashboardCardInfo()!.title"
+        [unit]="benchPerformanceDashboardCardInfo()!.unit"
+        [differenceFromLastSession]="benchPerformanceDashboardCardInfo()!.prIncrement"
+      />
+    }
+
+    <app-grouped-bar-chart [data]="benchChartData()!" />
+  </section>
+
+
+  <section>
+    @if (deadliftPerformance()) {
+      <app-dashboard-card
+        [title]="deadliftPerformanceDashboardCardInfo()!.title"
+        [unit]="deadliftPerformanceDashboardCardInfo()!.unit"
+        [differenceFromLastSession]="deadliftPerformanceDashboardCardInfo()!.prIncrement"
+      />
+
+      <app-grouped-bar-chart [data]="deadliftChartData()!" />
+    }
+
+  </section>
+
+  <section>
+    @if (overheadpressPerformance()) {
+      <app-dashboard-card
+        [title]="overheadpressPerformanceDashboardCardInfo()!.title"
+        [unit]="overheadpressPerformanceDashboardCardInfo()!.unit"
+        [differenceFromLastSession]="overheadpressPerformanceDashboardCardInfo()!.prIncrement"
+      />
+    }
+
+    @if (overheadpressChartData()) {
+      <app-grouped-bar-chart [data]="overheadpressChartData()!" />
+
+    }
+
+  </section>
+
 } @else {
   <app-chart-skeleton />
 }

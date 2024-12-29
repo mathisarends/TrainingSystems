@@ -17,6 +17,7 @@ import { ModalService } from '../../core/services/modal/modal.service';
 import { ModalOptionsBuilder } from '../../core/services/modal/modal-options-builder';
 import { BodyWeightConfigurationComponent } from './body-weight-configuration/body-weight-configuration.component';
 import { BodyWeightConfigurationService } from './body-weight-configuration/body-weight-configuration.service';
+import { ChartData } from '../../shared/components/charts/chart-data';
 
 @Component({
   selector: 'app-body-weight',
@@ -128,7 +129,7 @@ export class BodyWeightComponent implements OnInit, SetHeadlineInfo {
   /**
    * Maps body weight data to the format required by the bar chart.
    */
-  private getWeightGroupedBarChart() {
+  private getWeightGroupedBarChart(): ChartData<BarChartDataset> {
     const labels = this.bodyWeights().map((entry) => new Date(entry.date).toLocaleDateString('de-DE'));
     const data = this.bodyWeights().map((entry) => entry.weight);
 

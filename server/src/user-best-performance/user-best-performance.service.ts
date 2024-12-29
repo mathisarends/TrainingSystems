@@ -58,10 +58,10 @@ export class UserBestPerformanceService {
       achievedAt: bestPerformanceForExercise.achievedAt,
     };
 
-    bestPerformanceForExercise.previousRecords.unshift(previousBestEntry);
+    bestPerformanceForExercise.previousRecords.push(previousBestEntry);
 
     if (bestPerformanceForExercise.previousRecords.length > 10) {
-      bestPerformanceForExercise.previousRecords.pop();
+      bestPerformanceForExercise.previousRecords.shift();
     }
 
     if (isNaN(bestPerformanceForExercise.weight) || isNaN(bestPerformanceForExercise.actualRPE)) {
