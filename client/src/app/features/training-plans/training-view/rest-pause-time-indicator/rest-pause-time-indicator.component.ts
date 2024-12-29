@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, effect, HostBinding, HostListener, Injector, OnInit, signal } from '@angular/core';
 import { ModalService } from '../../../../core/services/modal/modal.service';
 import { toggleCollapseAnimation } from '../../../../shared/animations/toggle-collapse';
-import { IconBackgroundColor } from '../../../../shared/components/icon-list-item/icon-background-color';
 import { IconName } from '../../../../shared/icon/icon-name';
 import { IconComponent } from '../../../../shared/icon/icon.component';
 import { FormatTimePipe } from '../../format-time.pipe';
@@ -23,7 +22,6 @@ import { ToPauseTimeProgressPercentagePipe } from './to-pause-time-progress-perc
 })
 export class RestPauseTimeIndicatorComponent implements OnInit {
   protected readonly IconName = IconName;
-  protected readonly IconBackgroundColor = IconBackgroundColor;
 
   isCollapsed = signal(true);
 

@@ -64,9 +64,7 @@ export class BasicInfoModalOptionsBuilder {
     if (!this.options.title) {
       throw new Error('The "title" field is required.');
     }
-    if (!this.options.infoText) {
-      throw new Error('The "infoText" field is required.');
-    }
+
     return this.options as BasicInfoModalOptions;
   }
 }

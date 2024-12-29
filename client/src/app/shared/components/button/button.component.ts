@@ -2,11 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, HostListener, input, output } from '@angular/core';
 import { ModalValidationService } from '../modal/modal-validation.service';
 import { ButtonLoaderComponent } from './button-loader/button-loader.component';
+import { IconComponent } from '../../icon/icon.component';
+import { IconName } from '../../icon/icon-name';
 
 @Component({
   selector: 'app-button',
   standalone: true,
-  imports: [CommonModule, ButtonLoaderComponent],
+  imports: [CommonModule, ButtonLoaderComponent, IconComponent],
   templateUrl: './button.component.html',
   styleUrl: './button.component.scss',
 })
@@ -27,6 +29,8 @@ export class ButtonComponent {
    * This input is required.
    */
   textContent = input.required<string>();
+
+  icon = input<IconName | undefined>(undefined);
 
   /**
    * Emits an event when the button is clicked.

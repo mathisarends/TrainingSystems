@@ -5,3 +5,11 @@
 />
 
 <app-grouped-bar-chart [data]="categoryChartData()!" />
+
+
+<div [@toggleCollapse]="hovered() ? 'expanded' : 'collapsed'" class="toggle-button-container">
+  <app-button [variant]="'SECONDARY'" [textContent]="'Letzten Eintrag löschen'" [icon]="IconName.Trash"
+              (clicked)="showDeleteMostRecentEntryModal()" />
+</div>
+
+

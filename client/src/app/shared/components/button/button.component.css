@@ -27,15 +27,15 @@
 }
 
 .btn-secondary {
-  background-color: transparent;
+  background-color: #f6f8fa;
   color: var(--dark-grey);
   border: unset;
 }
 
 .btn-secondary:hover {
-  background-color: #f6f8fa;
-  color: #444d56;
-  border-color: #c1c7cd;
+  background-color: #ebedef;
+  color: #2d3338;
+  border-color: #a9b0b6;
 }
 
 .btn-secondary:active {

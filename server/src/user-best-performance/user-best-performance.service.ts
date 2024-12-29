@@ -27,6 +27,29 @@ export class UserBestPerformanceService {
     return Object.fromEntries(recordsMap);
   }
 
+  async deleteMostRecentBestPerformanceEntryForExerciseName(userId: string, exerciseName: string): Promise<void> {
+    const bestPerformanceForExercise = await this.userBestPerformanceModel
+      .findOne({
+        userId: userId,
+        exerciseName: exerciseName,
+      })
+      .exec();
+
+    const secondNewestBestPerformanceEntry =
+      bestPerformanceForExercise.previousRecords[bestPerformanceForExercise.previousRecords.length - 1];
+
+    bestPerformanceForExercise.sets = secondNewestBestPerformanceEntry.sets;
+    bestPerformanceForExercise.reps = secondNewestBestPerformanceEntry.reps;
+    bestPerformanceForExercise.weight = secondNewestBestPerformanceEntry.weight;
+    bestPerformanceForExercise.actualRPE = secondNewestBestPerformanceEntry.actualRPE;
+    bestPerformanceForExercise.estMax = secondNewestBestPerformanceEntry.estMax;
+    bestPerformanceForExercise.achievedAt = secondNewestBestPerformanceEntry.achievedAt;
+
+    bestPerformanceForExercise.previousRecords.pop();
+
+    await bestPerformanceForExercise.save();
+  }
+
   /**
    * Saves a new user exercise record or updates an existing one.
    */

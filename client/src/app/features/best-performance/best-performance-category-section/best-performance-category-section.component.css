@@ -5,8 +5,7 @@
 }
 
 app-grouped-bar-chart {
-  position: relative;
-  left: -20px;
+  transform: translateX(-20px);
 }
 
 /*# sourceMappingURL=best-performance-category-section.component.css.map */

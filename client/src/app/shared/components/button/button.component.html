@@ -7,6 +7,9 @@
     'btn-destructive': variant() === 'DESTRUCTIVE',
   }"
 >
+  @if (icon()) {
+    <app-icon [name]="icon()!" />
+  }
   {{ textContent() }}
 
   @if (isLoading()) {

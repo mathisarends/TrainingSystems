@@ -60,4 +60,5 @@ export enum IconName {
   CHECK_CIRCLE = 'check-circle',
   REFRESH_CW = 'refresh-cw',
   TRELLO = 'trello',
+  REWIND = 'rewind',
 }

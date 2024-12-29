@@ -8,6 +8,7 @@ import { Exercise } from '../../../features/training-plans/training-view/trainin
 import { ToastService } from '../../components/toast/toast.service';
 import { ExerciseName } from './exercise-name.type';
 import { UserBestPerformanceDto } from './user-best-performance.dto';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -63,6 +64,12 @@ export class UserBestPerformanceService {
 
   fetchUserBestPerformanceData(): Observable<{ [key: string]: UserBestPerformanceDto }> {
     return this.httpService.get<{ [key: string]: UserBestPerformanceDto }>('/user-best-performance');
+  }
+
+  deleteMostRecentBestPerformanceEntryForExerciseName(exerciseName: string): Observable<void> {
+    const httpParams = new HttpParams().set('exerciseName', exerciseName);
+
+    return this.httpService.delete('/user-best-performance', httpParams);
   }
 
   private async startConfetti() {
