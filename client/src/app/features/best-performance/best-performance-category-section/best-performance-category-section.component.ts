@@ -32,21 +32,19 @@ export class BestPerformanceCategorySectionComponent {
   }
 
   private getBestPerformanceProgression(userBestPerformanceDto: UserBestPerformanceDto): ChartData<BarChartDataset> {
-    const labels = userBestPerformanceDto.previousRecords.map((previousRecord) => {
-      const achievedAtFormatted = new Date(previousRecord.achievedAt).toLocaleDateString('de-DE', {
-        day: '2-digit',
-        month: '2-digit',
-        year: '2-digit',
-      });
-      return `${userBestPerformanceDto.exerciseName} ${achievedAtFormatted}`;
-    });
+    const labels = userBestPerformanceDto.previousRecords.map((previousRecord) =>
+      this.convertDateToStringRepresentation(previousRecord.achievedAt),
+    );
 
-    const data = userBestPerformanceDto.previousRecords.map((previousRecord) => previousRecord.estMax);
+    labels.push(this.convertDateToStringRepresentation(userBestPerformanceDto.achievedAt));
+
+    const bestPerformanceData = userBestPerformanceDto.previousRecords.map((previousRecord) => previousRecord.estMax);
+    bestPerformanceData.push(userBestPerformanceDto.estMax);
 
     const datasets: BarChartDataset[] = [
       {
         label: `${userBestPerformanceDto.exerciseName} PR`,
-        data: data,
+        data: bestPerformanceData,
         backgroundColor: 'rgba(99, 132, 255, 0.6)',
         borderColor: 'rgba(99, 132, 255, 1)',
       },
@@ -56,6 +54,15 @@ export class BestPerformanceCategorySectionComponent {
       labels: labels,
       datasets: datasets,
     };
+  }
+
+  private convertDateToStringRepresentation(date: string | Date): string {
+    const parsedDate = date instanceof Date ? date : new Date(date);
+    return parsedDate.toLocaleDateString('de-DE', {
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit',
+    });
   }
 
   private getMostRecentPrIncrement(userBestPerformanceDto: UserBestPerformanceDto): number {
