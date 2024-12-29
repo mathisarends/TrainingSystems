@@ -34,7 +34,7 @@ export class EstMaxService {
 
       const exercise = this.userBestPerformanceService.determineExerciseBasedOnFieldName(estMaxInput.name);
 
-      if (exercise && this.userBestPerformanceService.isNewBestPerformance(exercise.category, estMax)) {
+      if (exercise && this.userBestPerformanceService.isNewValidBestPerformance(exercise, estMax)) {
         this.ensureRelevantDataIsSetInExercise(exercise, reps, weight, rpe);
         this.userBestPerformanceService.makeNewBestPerformanceEntry(exercise);
       }

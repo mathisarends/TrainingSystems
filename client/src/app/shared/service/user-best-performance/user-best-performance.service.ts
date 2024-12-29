@@ -37,8 +37,12 @@ export class UserBestPerformanceService {
     return this.trainingPlanDataService.exercises()[exerciseNumber - 1];
   }
 
-  isNewBestPerformance(exerciseCategory: string, newEstMax: number): boolean {
-    const existingEntry = this.userBestPerformanceMap.get(exerciseCategory);
+  isNewValidBestPerformance(exercise: Exercise, newEstMax: number): boolean {
+    if (isNaN(Number(exercise.weight)) || isNaN(Number(exercise.actualRPE))) {
+      return false;
+    }
+
+    const existingEntry = this.userBestPerformanceMap.get(exercise.category);
 
     if (!existingEntry) {
       return true;

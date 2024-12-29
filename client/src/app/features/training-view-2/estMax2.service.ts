@@ -28,9 +28,6 @@ export class EstMaxService2 {
       ? this.inputParsingService.calculateRoundedAverage(actualRpeInputs, 0.5)
       : undefined;
 
-    console.log('averageWeight', averageWeight);
-    console.log('averageActualRpe', averageActualRpe);
-
     if (!averageWeight || !averageActualRpe) {
       return undefined;
     }

@@ -64,7 +64,10 @@ export class UserBestPerformanceService {
       bestPerformanceForExercise.previousRecords.pop();
     }
 
-    // TODO: testen ob diese Parsen hier Probleme macht
+    if (isNaN(bestPerformanceForExercise.weight) || isNaN(bestPerformanceForExercise.actualRPE)) {
+      throw new BadRequestException('Parsing error: weight or actualRPE could not be converted to a number.');
+    }
+
     bestPerformanceForExercise.sets = trainingDayExerciseDto.sets;
     bestPerformanceForExercise.reps = trainingDayExerciseDto.reps;
     bestPerformanceForExercise.weight = Number(trainingDayExerciseDto.weight);

@@ -132,6 +132,7 @@ export class TrainingViewTableRowComponent {
    */
   private updateEstMax(): void {
     const estMax = this.estMaxService2.calcEstMax(this.exercise());
+    console.log('estMax', estMax);
 
     if (!estMax) {
       this.updateExerciseProperty('estMax', estMax);
@@ -149,7 +150,7 @@ export class TrainingViewTableRowComponent {
 
     this.updateExerciseProperty('estMax', estMax);
 
-    if (this.userBestPerformanceService.isNewBestPerformance(this.exercise().category, estMax)) {
+    if (this.userBestPerformanceService.isNewValidBestPerformance(this.exercise(), estMax)) {
       this.userBestPerformanceService.makeNewBestPerformanceEntry(this.exercise());
     }
   }
