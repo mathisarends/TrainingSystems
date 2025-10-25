@@ -133,10 +133,8 @@ export class FormInputComponent<T extends string | number> {
    */
   private checkRequired(): boolean {
     const currentValue = this.value();
-    if (this.required() && (currentValue === '' || currentValue === null)) {
-      return false;
-    }
-    return true;
+    return !(this.required() && (currentValue === '' || currentValue === null));
+
   }
 
   /**
